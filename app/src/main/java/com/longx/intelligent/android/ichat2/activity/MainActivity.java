@@ -27,7 +27,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.RootSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.behavior.ServerContentUpdater;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
@@ -45,7 +45,7 @@ import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 import java.util.Date;
 import java.util.Objects;
 
-public class MainActivity extends BaseActivity implements ServerContentUpdater.OnServerContentUpdateYier, ServerMessageService.OnOnlineStateChangeYier {
+public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, ServerMessageService.OnOnlineStateChangeYier {
     private ActivityMainBinding binding;
     private NavHostFragment navHostFragment;
 
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity implements ServerContentUpdater.O
         setupYier();
         setupUi();
         showNavHeaderInfo();
-        GlobalYiersHolder.holdYier(ServerContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(ServerMessageService.OnOnlineStateChangeYier.class, this);
         animateNavIconVisibility(navHostFragment);
         requestPermissions();
@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements ServerContentUpdater.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GlobalYiersHolder.removeYier(ServerContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.removeYier(ServerMessageService.OnOnlineStateChangeYier.class, this);
     }
 
@@ -270,7 +270,7 @@ public class MainActivity extends BaseActivity implements ServerContentUpdater.O
             try{
                 binding.updateIndicator.setVisibility(View.GONE);
             }catch (NullPointerException ignore){}
-            if(id.equals(ServerContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
+            if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 showNavHeaderInfo();
             }
         });

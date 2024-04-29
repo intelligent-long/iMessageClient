@@ -1,8 +1,7 @@
 package com.longx.intelligent.android.ichat2.yier;
 
-import com.longx.intelligent.android.ichat2.behavior.ServerContentUpdater;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,8 +52,8 @@ public class GlobalYiersHolder {
     private static <T> void triggerStickyEvent(Class<T> clazz, T yier){
         if(yier instanceof ServerMessageService.OnOnlineStateChangeYier && clazz.isAssignableFrom(ServerMessageService.OnOnlineStateChangeYier.class)){
             checkAndTriggerOnlineStateEvent((ServerMessageService.OnOnlineStateChangeYier)yier);
-        }else if(yier instanceof ServerContentUpdater.OnServerContentUpdateYier && clazz.isAssignableFrom(ServerContentUpdater.OnServerContentUpdateYier.class)){
-            checkAndTriggerContentUpdateEvent((ServerContentUpdater.OnServerContentUpdateYier) yier);
+        }else if(yier instanceof ContentUpdater.OnServerContentUpdateYier && clazz.isAssignableFrom(ContentUpdater.OnServerContentUpdateYier.class)){
+            checkAndTriggerContentUpdateEvent((ContentUpdater.OnServerContentUpdateYier) yier);
         }
     }
 
@@ -70,11 +69,11 @@ public class GlobalYiersHolder {
         }
     }
 
-    private static void checkAndTriggerContentUpdateEvent(ServerContentUpdater.OnServerContentUpdateYier onServerContentUpdateYier){
-        synchronized (ServerContentUpdater.class) {
-            boolean updating = ServerContentUpdater.isUpdating();
+    private static void checkAndTriggerContentUpdateEvent(ContentUpdater.OnServerContentUpdateYier onServerContentUpdateYier){
+        synchronized (ContentUpdater.class) {
+            boolean updating = ContentUpdater.isUpdating();
             if (updating) {
-                List<String> updatingIds = ServerContentUpdater.getUpdatingIds();
+                List<String> updatingIds = ContentUpdater.getUpdatingIds();
                 updatingIds.forEach(onServerContentUpdateYier::onStartUpdate);
             }
         }

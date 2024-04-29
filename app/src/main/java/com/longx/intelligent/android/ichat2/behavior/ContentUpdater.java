@@ -8,6 +8,7 @@ import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideHelper;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
@@ -22,7 +23,7 @@ import retrofit2.Response;
 /**
  * Created by LONG on 2024/4/1 at 4:41 AM.
  */
-public class ServerContentUpdater {
+public class ContentUpdater {
     private static final List<String> updatingIds = new ArrayList<>();
 
     public interface OnServerContentUpdateYier {
@@ -42,7 +43,7 @@ public class ServerContentUpdater {
 
         @Override
         public void start(Call<T> call) {
-            synchronized (ServerContentUpdater.class) {
+            synchronized (ContentUpdater.class) {
                 updatingIds.add(updateId);
                 super.start(call);
                 onStartUpdate(updateId);
@@ -51,7 +52,7 @@ public class ServerContentUpdater {
 
         @Override
         public void complete(Call<T> call) {
-            synchronized (ServerContentUpdater.class) {
+            synchronized (ContentUpdater.class) {
                 updatingIds.remove(updateId);
                 super.complete(call);
                 onUpdateComplete(updateId);
@@ -87,7 +88,7 @@ public class ServerContentUpdater {
 
     public static void updateCurrentUserInfo(Context context, SelfInfo selfInfo) {
         if(selfInfo != null){
-            fetchAvatarAndStoreUserInfoAndAvatar(context, selfInfo);
+            fetchAvatarAndStoreSelfInfoAndAvatar(context, selfInfo);
         }else {
             UserApiCaller.whoAmI(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO) {
                 @Override
@@ -95,14 +96,14 @@ public class ServerContentUpdater {
                     super.ok(data, row, call);
                     data.commonHandleSuccessResult(() -> {
                         SelfInfo selfInfo = data.getData(SelfInfo.class);
-                        fetchAvatarAndStoreUserInfoAndAvatar(context, selfInfo);
+                        fetchAvatarAndStoreSelfInfoAndAvatar(context, selfInfo);
                     });
                 }
             });
         }
     }
 
-    private static void fetchAvatarAndStoreUserInfoAndAvatar(Context context, SelfInfo selfInfo) {
+    private static void fetchAvatarAndStoreSelfInfoAndAvatar(Context context, SelfInfo selfInfo) {
         if (selfInfo.getAvatarHash() != null) {
             UserApiCaller.fetchAvatar(null, selfInfo.getAvatarHash(), new ContentUpdateApiYier<ResponseBody>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO) {
                 @Override

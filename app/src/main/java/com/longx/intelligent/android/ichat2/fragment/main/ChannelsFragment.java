@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.fragment.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,22 +17,32 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.adapter.ChannelListRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelListRecyclerAdapter.ItemData> {
+public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelListRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier {
     private FragmentChannelsBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     @Override
@@ -100,5 +111,17 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         binding.fab.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), SearchChannelActivity.class));
         });
+    }
+
+    @Override
+    public void onStartUpdate(String id) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
+            setupRecyclerView(getLayoutInflater());
+        }
     }
 }

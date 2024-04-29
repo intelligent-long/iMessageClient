@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
@@ -76,6 +78,7 @@ public class ChannelListRecyclerAdapter extends WrappableRecyclerViewAdapter<Cha
         } else {
             GlideApp.with(activity.getApplicationContext())
                     .load(avatarFile)
+                    .signature(new ObjectKey(itemData.channelInfo.getAvatarHash()))
                     .into(holder.binding.avatar);
         }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));

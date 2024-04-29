@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -15,12 +18,13 @@ import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.File;
 import java.util.Objects;
 
-public class ChannelActivity extends BaseActivity {
+public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChannelBinding binding;
     private ChannelInfo channelInfo;
     private SelfInfo selfInfo;
@@ -36,6 +40,13 @@ public class ChannelActivity extends BaseActivity {
         bindValues();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     /**
@@ -88,12 +99,14 @@ public class ChannelActivity extends BaseActivity {
             if(avatarFile != null) {
                 GlideApp.with(getApplicationContext())
                         .load(avatarFile)
+                        .signature(new ObjectKey(avatarHash))
                         .into(binding.avatar);
             }else {
                 CacheFilesAccessor.cacheAvatarTempFromServer(getApplicationContext(), avatarHash, results -> {
                     avatarFile = (File) results[0];
                     GlideApp.with(getApplicationContext())
                             .load(avatarFile)
+                            .signature(new ObjectKey(avatarHash))
                             .into(binding.avatar);
                 });
             }
@@ -123,7 +136,7 @@ public class ChannelActivity extends BaseActivity {
 
     private void setupYiers() {
         binding.avatar.setOnClickListener(v -> {
-            if(selfInfo.getAvatarHash() != null) {
+            if((selfInfo != null && selfInfo.getAvatarHash() != null) || (channelInfo != null && channelInfo.getAvatarHash() != null)) {
                 if (avatarFile != null) {
                     Intent intent = new Intent(this, AvatarActivity.class);
                     intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());
@@ -135,5 +148,18 @@ public class ChannelActivity extends BaseActivity {
         binding.editMyInfoButton.setOnClickListener(v -> {
             startActivity(new Intent(this, EditUserSettingsActivity.class));
         });
+    }
+
+    @Override
+    public void onStartUpdate(String id) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
+            bindValues();
+            showContent();
+        }
     }
 }

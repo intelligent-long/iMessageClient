@@ -23,7 +23,7 @@ import com.longx.intelligent.android.ichat2.activity.edituser.ChangeSexActivity;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeUsernameActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.behavior.ServerContentUpdater;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.EditAvatarBottomSheet;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -62,7 +62,7 @@ public class EditUserSettingsActivity extends BaseActivity{
         }
     }
 
-    public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, ServerContentUpdater.OnServerContentUpdateYier {
+    public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, ContentUpdater.OnServerContentUpdateYier {
         private ChangeAvatarPreference preferenceChangeAvatar;
         private Material3Preference preferenceChangeIchatIdUser;
         private Material3Preference preferenceChangeUsername;
@@ -85,13 +85,13 @@ public class EditUserSettingsActivity extends BaseActivity{
         protected void init(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences_edit_user, rootKey);
             doDefaultActions();
-            GlobalYiersHolder.holdYier(ServerContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override
         public void onDestroy() {
             super.onDestroy();
-            GlobalYiersHolder.removeYier(ServerContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override
@@ -179,7 +179,7 @@ public class EditUserSettingsActivity extends BaseActivity{
 
         @Override
         public void onUpdateComplete(String id) {
-            if(id.equals(ServerContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
+            if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 showInfo();
             }
         }

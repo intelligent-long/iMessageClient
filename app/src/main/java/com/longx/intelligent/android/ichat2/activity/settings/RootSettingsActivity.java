@@ -14,7 +14,7 @@ import com.longx.intelligent.android.ichat2.activity.edituser.ChangeEmailActivit
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
-import com.longx.intelligent.android.ichat2.behavior.ServerContentUpdater;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
@@ -49,7 +49,7 @@ public class RootSettingsActivity extends BaseActivity {
         }
     }
 
-    public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, ServerContentUpdater.OnServerContentUpdateYier {
+    public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, ContentUpdater.OnServerContentUpdateYier {
         private Material3Preference preferenceEditUser;
         private Material3Preference preferenceLogout;
         private Material3Preference preferencePrivacy;
@@ -72,13 +72,13 @@ public class RootSettingsActivity extends BaseActivity {
             setPreferencesFromResource(R.xml.preferences_root, rootKey);
             doDefaultActions();
             initNightMode = SharedPreferencesAccessor.DefaultPref.getNightMode(getContext());
-            GlobalYiersHolder.holdYier(ServerContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override
         public void onDestroy() {
             super.onDestroy();
-            GlobalYiersHolder.removeYier(ServerContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override
@@ -195,7 +195,7 @@ public class RootSettingsActivity extends BaseActivity {
 
         @Override
         public void onUpdateComplete(String id) {
-            if(id.equals(ServerContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
+            if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 updateEmailSummary();
             }
         }
