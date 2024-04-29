@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_app_settings"
+        app:icon="@drawable/open_in_new_24px"
+        app:title="设置"/>
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_permission"
+        app:title="权限"
+        app:showDivider="true"/>
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_restart"
+        app:title="重启" />
+</PreferenceScreen>

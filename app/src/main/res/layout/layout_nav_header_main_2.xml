@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_offline_time">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="24dp"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+        android:clipToOutline="true"
+        android:orientation="vertical"
+        android:background="@drawable/shape_card_background_radius_26">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54.5dp"
+            android:paddingHorizontal="20dp"
+            android:background="?attr/colorErrorContainer">
+
+            <TextView
+                android:id="@+id/offline_time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="离线时间"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/offline_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/offline_time_label"
+                android:gravity="end"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:textColor="?attr/colorOnErrorContainer"
+                android:textSize="16sp"
+                android:fontFamily="@font/ping_fang_sc_regular"/>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

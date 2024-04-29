@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="13dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center|bottom"
+        android:orientation="vertical"
+        android:paddingTop="55dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatar"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="25dp"
+            android:background="@android:color/transparent"
+            app:shapeAppearanceOverlay="@style/CircleImageAppearance"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card_background_radius_26"
+            android:clipChildren="true"
+            android:clipToPadding="true"
+            android:clipToOutline="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54.5dp"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    android:id="@+id/username_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="名称"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/ping_fang_sc_medium"/>
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@id/username_label"
+                    android:gravity="end"
+                    android:layout_centerVertical="true"
+                    android:singleLine="true"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/ping_fang_sc_medium"/>
+            </RelativeLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                app:dividerColor="?attr/colorSurfaceContainerLow"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54.5dp"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    android:id="@+id/ichat_id_user_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="iChat ID"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/ping_fang_sc_medium"/>
+
+                <TextView
+                    android:id="@+id/ichat_id_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@id/ichat_id_user_label"
+                    android:gravity="end"
+                    android:layout_centerVertical="true"
+                    android:singleLine="true"
+                    android:textAppearance="@style/MainNavInfo"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/ping_fang_sc_regular"/>
+            </RelativeLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                app:dividerColor="?attr/colorSurfaceContainerLow"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54.5dp"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    android:id="@+id/email_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="邮箱"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/ping_fang_sc_medium"/>
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@id/email_label"
+                    android:gravity="end"
+                    android:layout_centerVertical="true"
+                    android:singleLine="true"
+                    android:textAppearance="@style/MainNavInfo"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/ping_fang_sc_regular"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/sex_space"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    app:dividerColor="?attr/colorSurfaceContainerLow"
+                    android:layout_alignParentTop="true"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="54.5dp"
+                    android:paddingHorizontal="20dp"
+                    android:layout_below="@id/sex_space">
+
+                    <TextView
+                        android:id="@+id/sex_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:text="性别"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/ping_fang_sc_medium"/>
+
+                    <ImageView
+                        android:id="@+id/sex"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="15dp"
+                        tools:ignore="ContentDescription"
+                        android:theme="@style/MainNavInfo"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_region"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/region_space"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="?attr/colorSurfaceContainerLow"
+                    android:layout_alignParentTop="true"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="54.5dp"
+                    android:paddingHorizontal="20dp"
+                    android:layout_below="@id/region_space">
+
+                    <TextView
+                        android:id="@+id/region_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:text="地区"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/ping_fang_sc_medium"/>
+
+                    <TextView
+                        android:id="@+id/region"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@id/region_label"
+                        android:gravity="end"
+                        android:layout_centerVertical="true"
+                        android:singleLine="true"
+                        android:textAppearance="@style/MainNavInfo"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/ping_fang_sc_regular"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_offline_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/offline_time_space"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    app:dividerColor="?attr/colorSurfaceContainerLow"
+                    android:layout_alignParentTop="true"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="54.5dp"
+                    android:paddingHorizontal="20dp"
+                    android:layout_below="@id/offline_time_space"
+                    android:background="?attr/colorErrorContainer">
+
+                    <TextView
+                        android:id="@+id/offline_time_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:text="离线时间"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/ping_fang_sc_medium"/>
+
+                    <TextView
+                        android:id="@+id/offline_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@id/offline_time_label"
+                        android:gravity="end"
+                        android:layout_centerVertical="true"
+                        android:singleLine="true"
+                        android:textAppearance="@style/MainNavInfo"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/ping_fang_sc_regular"/>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/user_info_page"
+            android:layout_width="match_parent"
+            android:layout_height="60.5dp"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_marginTop="14dp"
+            app:cornerRadius="26dp"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="16sp"
+            android:text="用户界面"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

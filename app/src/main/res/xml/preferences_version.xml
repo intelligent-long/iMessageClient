@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_author"
+        app:title="作者"/>
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_version_name"
+        app:title="版本"/>
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_version_code"
+        app:title="版本号"/>
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_open_source_licenses"
+        app:title="开源许可"/>
+</PreferenceScreen>

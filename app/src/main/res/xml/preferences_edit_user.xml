@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="主要资料">
+
+        <com.longx.intelligent.android.ichat2.preference.ChangeAvatarPreference
+            app:key="@string/preference_key_change_avatar"
+            app:summary="头像" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_change_ichat_id_user"
+            app:summary="iChat ID" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_change_username"
+            app:summary="名称" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_change_email"
+            app:summary="邮箱" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="附加资料">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_change_sex"
+            app:summary="性别" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_change_region"
+            app:summary="地区" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+</PreferenceScreen>

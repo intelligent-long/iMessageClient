@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="65dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="9dp"
+        android:background="@drawable/shape_card_background_radius_26"
+        android:clipToOutline="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/new_channel_icon"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/person_add_outline_24px"
+                app:tint="?colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/new_channel_title"
+                style="@style/TextAppearance.Material3.TitleLarge"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/new_channel_icon"
+                android:text="@string/title_new_channel"
+                android:textSize="18sp"/>
+
+            <LinearLayout
+                android:id="@+id/new_channel_badge_host"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="65dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/shape_card_background_radius_26"
+        android:clipToOutline="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/tag_icon"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/tag_24px"
+                app:tint="?colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tag_title"
+                style="@style/TextAppearance.Material3.TitleLarge"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/tag_icon"
+                android:text="@string/title_tag"
+                android:textSize="18sp"/>
+
+            <LinearLayout
+                android:id="@+id/tag_badge_host"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal" />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            style="?attr/collapsingToolbarLayoutLargeStyle"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:title="@string/title_login"
+            app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start_larger"
+            app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
+            app:expandedTitleGravity="bottom"
+            app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:menu="@menu/toolbar_activity_auth"
+                app:navigationContentDescription="@string/more"
+                app:navigationIcon="@drawable/expand_more_24px"
+                app:navigationIconTint="?attr/colorControlNormal" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:id="@+id/layout_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_way_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="30dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+                <AutoCompleteTextView
+                    android:id="@+id/login_way_auto_complete_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_ichat_id_user_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_ichat_id_user_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="iChat ID"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_email_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_email_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="邮箱"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_password_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleDrawable="@drawable/visibility_fill_24px">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_password_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_verify_code_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke"
+                app:endIconDrawable="@drawable/send_fill_24px"
+                app:endIconMode="custom"
+                app:endIconTint="?attr/colorPrimary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_verify_code_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="验证码"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/login_create_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:paddingVertical="9dp"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:textSize="15sp"
+                android:text="创建新用户"/>
+
+            <TextView
+                android:id="@+id/login_forgot_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:paddingVertical="9dp"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:textSize="15sp"
+                android:text="忘记密码"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/layout_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_email_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="30dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/register_email_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="邮箱"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_username_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/register_username_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="用户名"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_password_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleDrawable="@drawable/visibility_fill_24px">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/register_password_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_verify_code_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke"
+                app:endIconDrawable="@drawable/send_fill_24px"
+                app:endIconMode="custom"
+                app:endIconTint="?attr/colorPrimary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/register_verify_code_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="验证码"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/register_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:paddingVertical="9dp"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:textSize="15sp"
+                android:text="登录"/>
+
+            <TextView
+                android:id="@+id/register_forgot_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:paddingVertical="9dp"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:textSize="15sp"
+                android:text="忘记密码"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/layout_reset_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/reset_password_email_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="30dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reset_password_email_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="邮箱"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/reset_password_password_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleDrawable="@drawable/visibility_fill_24px">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reset_password_password_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="新密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/reset_password_verify_code_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="100dp"
+                app:boxCornerRadiusBottomStart="100dp"
+                app:boxCornerRadiusTopEnd="100dp"
+                app:boxCornerRadiusTopStart="100dp"
+                app:boxStrokeColor="@color/selector_text_input_layout_stroke"
+                app:endIconDrawable="@drawable/send_fill_24px"
+                app:endIconMode="custom"
+                app:endIconTint="?attr/colorPrimary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reset_password_verify_code_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="0dp"
+                    android:hint="验证码"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/reset_password_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:paddingVertical="9dp"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:textSize="15sp"
+                android:text="登录"/>
+
+            <TextView
+                android:id="@+id/reset_password_create_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:paddingVertical="9dp"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:textSize="15sp"
+                android:text="创建新用户"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/version_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="21dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:fontFamily="@font/ping_fang_sc_medium"
+            android:textColor="?attr/colorOutline"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

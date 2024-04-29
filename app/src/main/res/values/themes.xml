@@ -1,0 +1,62 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.IChat2Client" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+    </style>
+
+    <style name="Theme.MainActivity" parent="Theme.IChat2Client">
+        <item name="android:navigationBarColor">?attr/colorSurfaceContainer</item>
+    </style>
+
+    <style name="SettingsActivity" parent="Theme.IChat2Client">c
+        <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
+        <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
+        <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
+    </style>
+
+    <style name="ExpandedTitleTextAppearance" parent="">
+        <item name="android:textSize">37sp</item>
+    </style>
+
+    <style name="CircleImageAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="MainActivityDrawerItemTextStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:navigationBarColor">?attr/colorSurfaceContainerLow</item>
+    </style>
+
+    <style name="BottomSheetItemTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="ConfirmMaterialAlertDialog" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered">
+        <item name="materialAlertDialogTitleTextStyle">@style/ConfirmMaterialAlertDialogTitle</item>
+    </style>
+
+    <style name="ConfirmMaterialAlertDialogTitle" parent="@style/MaterialAlertDialog.Material3.Title.Text.CenterStacked">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleLarge</item>
+    </style>
+
+    <style name="MainNavInfo">
+        <item name="android:textColor">?attr/colorOnSecondaryFixedVariant</item>
+        <item name="android:tint">?attr/colorOnSecondaryFixedVariant</item>
+    </style>
+
+    <style name="WindowBackgroundColorBackground">
+        <item name="background">?attr/colorSurface</item>
+    </style>
+
+    <style name="WindowBackgroundColorDividerColor">
+        <item name="dividerColor">?attr/colorSurface</item>
+    </style>
+</resources>

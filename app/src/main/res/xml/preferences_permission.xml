@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.ichat2.preference.PermissionPreference
+        app:key="@string/preference_key_battery_restriction"
+        app:title="电池优化"
+        app:summary="取消此应用的电池用量限制，应用的功能才能全部正常运行"/>
+
+    <com.longx.intelligent.android.ichat2.preference.PermissionPreference
+        app:key="@string/preference_key_storage"
+        app:title="存储空间"
+        app:summary="访问设备存储资源"/>
+</PreferenceScreen>

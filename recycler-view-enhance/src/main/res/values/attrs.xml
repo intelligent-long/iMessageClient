@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RecyclerView">
+        <attr name="bottom_init" format="boolean"/>
+        <attr name="bottom_init_behavior"/>
+    </declare-styleable>
+    <attr name="bottom_init_behavior">
+        <enum name="always" value="0" />
+        <enum name="once" value="1" />
+    </attr>
+</resources>

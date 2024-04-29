@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_message"
+        android:icon="@drawable/selector_bottom_nav_message"
+        android:title="@string/title_message"/>
+
+    <item
+        android:id="@+id/navigation_channel"
+        android:icon="@drawable/selector_bottom_nav_channel"
+        android:title="@string/title_channel"/>
+
+    <item
+        android:id="@+id/navigation_broadcast"
+        android:icon="@drawable/selector_bottom_nav_broadcast"
+        android:title="@string/title_broadcast"/>
+
+</menu>

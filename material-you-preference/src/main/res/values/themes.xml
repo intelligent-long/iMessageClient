@@ -1,0 +1,65 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MaterialYouPreference" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
+        <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
+        <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
+    </style>
+
+    <style name="MaterialYouPreference.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="dialogCornerRadius">28dp</item>
+        <item name="android:colorBackground">?attr/colorSurfaceContainer</item>
+    </style>
+
+    <style name="MaterialYouPreference.Category" parent="">
+        <item name="android:layout">@layout/material_preference_category</item>
+    </style>
+
+    <style name="Theme.MaterialYouPreference.MaterialPreference">
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+    </style>
+
+    <style name="Theme.MaterialYouPreference.MaterialPreferenceHeaderSwitch">
+        <item name="background">@drawable/header_switch_background</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+    </style>
+
+    <style name="Theme.MaterialYouPreference.MaterialPreference.Icon">
+        <item name="android:tint">?colorOnSurface</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:layout_marginEnd">24dp</item>
+    </style>
+
+    <style name="Theme.MaterialYouPreference.MaterialPreference.Summary" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:tint">?colorOnSurface</item>
+        <item name="android:layout_gravity">fill</item>
+    </style>
+
+    <style name="Theme.MaterialYouPreference.MaterialPreference.Switch">
+        <item name="track">@drawable/switch_track</item>
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <item name="trackTint">@color/switch_track_color</item>
+        <item name="thumbTint">@color/switch_thumb_color</item>
+    </style>
+
+    <style name="Theme.MaterialYouPreference.MaterialPreferenceCategory.Text" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+</resources>

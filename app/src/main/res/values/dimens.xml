@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="collapsing_toolbar_layout_expanded_title_margin_start">20dp</dimen>
+    <dimen name="collapsing_toolbar_layout_expanded_title_margin_start_larger">28dp</dimen>
+    <dimen name="collapsing_toolbar_layout_expanded_title_margin_bottom">34dp</dimen>
+    <dimen name="fab_margin_end">17dp</dimen>
+    <dimen name="fab_margin_bottom">17dp</dimen>
+</resources>

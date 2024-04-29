@@ -1,0 +1,65 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="用户">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_edit_user"
+            app:title="编辑用户" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_logout"
+            app:title="退出登录" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="隐私和安全">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_privacy"
+            app:title="隐私" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_email"
+            app:title="邮箱"/>
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_reset_password"
+            app:title="重设密码" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="应用">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_server_setting"
+            app:title="服务器" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
+            app:key="@string/preference_key_night_mode"
+            app:entries="@array/night_mode_entries"
+            app:entryValues="@array/night_mode_values"
+            app:defaultValue="0"
+            app:title="夜间模式"/>
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
+            app:key="@string/preference_key_use_dynamic_color"
+            app:title="动态颜色" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_other_app_settings"
+            app:title="其他" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="关于">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_share"
+            app:title="分享" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_version"
+            app:title="版本"/>
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+</PreferenceScreen>
