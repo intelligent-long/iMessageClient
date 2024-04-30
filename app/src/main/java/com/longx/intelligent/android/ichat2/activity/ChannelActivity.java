@@ -129,6 +129,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }
         if(regionDesc == null){
             binding.layoutRegion.setVisibility(View.GONE);
+            binding.regionDivider.setVisibility(View.GONE);
         }else {
             binding.region.setText(regionDesc);
         }
