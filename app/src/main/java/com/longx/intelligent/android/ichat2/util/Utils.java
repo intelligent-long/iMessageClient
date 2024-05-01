@@ -1,5 +1,8 @@
 package com.longx.intelligent.android.ichat2.util;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import java.io.ByteArrayOutputStream;
@@ -22,5 +25,11 @@ public class Utils {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(compressFormat, quality, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
+    }
+
+    public static void copyTextToClipboard(Context context, String label, String text) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(label, text);
+        clipboard.setPrimaryClip(clip);
     }
 }

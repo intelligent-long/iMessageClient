@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
@@ -149,6 +150,14 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         binding.editMyInfoButton.setOnClickListener(v -> {
             startActivity(new Intent(this, EditUserSettingsActivity.class));
         });
+        setLongClickCopyYiers();
+    }
+
+    private void setLongClickCopyYiers() {
+        binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.ichatIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
     }
 
     @Override
