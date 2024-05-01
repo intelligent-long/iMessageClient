@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.R;
@@ -28,6 +29,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.RootSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
@@ -35,6 +37,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -42,6 +45,7 @@ import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 
+import java.io.File;
 import java.util.Date;
 import java.util.Objects;
 
@@ -127,13 +131,17 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private void showNavHeaderInfo() {
         View headerView1 = binding.navigationDrawer1.getHeaderView(0);
         SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
-        Bitmap avatarBitmap;
-        if(selfInfo.getAvatarHash() == null){
-            avatarBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar);
-        }else {
-            avatarBitmap = BitmapFactory.decodeStream(PrivateFilesAccessor.getCurrentUserAvatar(this));
+        ShapeableImageView avatarImageView = (ShapeableImageView) headerView1.findViewById(R.id.avatar);
+        if (selfInfo.getAvatarHash() == null) {
+            GlideApp.with(getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(avatarImageView);
+        } else {
+            GlideApp.with(getApplicationContext())
+                    .load(selfInfo.getAvatarFile(this))
+                    .signature(new ObjectKey(selfInfo.getAvatarHash()))
+                    .into(avatarImageView);
         }
-        ((ShapeableImageView)headerView1.findViewById(R.id.avatar)).setImageBitmap(avatarBitmap);
         String username = selfInfo.getUsername();
         String ichatIdUser = selfInfo.getIchatIdUser();
         String email = selfInfo.getEmail();

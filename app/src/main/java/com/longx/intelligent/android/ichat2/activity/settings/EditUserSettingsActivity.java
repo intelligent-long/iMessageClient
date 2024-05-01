@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
+import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeAvatarActivity;
@@ -35,6 +37,7 @@ import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFrag
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.preference.ChangeAvatarPreference;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
@@ -106,7 +109,7 @@ public class EditUserSettingsActivity extends BaseActivity{
 
         @Override
         protected void showInfo() {
-            SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(getContext());
+            SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
             String doNotSet = getString(R.string.do_not_set);
             String ichatIdUser = selfInfo.getIchatIdUser();
             String username = selfInfo.getUsername();
@@ -119,13 +122,7 @@ public class EditUserSettingsActivity extends BaseActivity{
             preferenceChangeSex.setTitle(sexString);
             String regionDesc = selfInfo.buildRegionDesc();
             preferenceChangeRegion.setTitle(regionDesc == null ? doNotSet : regionDesc);
-            Bitmap avatarBitmap;
-            if(selfInfo.getAvatarHash() == null){
-                avatarBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar);
-            }else {
-                avatarBitmap = BitmapFactory.decodeStream(PrivateFilesAccessor.getCurrentUserAvatar(requireContext()));
-            }
-            preferenceChangeAvatar.setAvatar(avatarBitmap);
+            preferenceChangeAvatar.setAvatar(selfInfo.getAvatarHash(), selfInfo.getAvatarFile(requireContext()));
         }
 
         @Override
