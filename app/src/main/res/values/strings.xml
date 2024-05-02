@@ -39,6 +39,10 @@
     <string name="title_tag">标签</string>
     <string name="search_by_ichat_id_user">iChat ID</string>
     <string name="search_by_email">邮箱</string>
+    <string name="channel_addition_activity_pending">待处理</string>
+    <string name="channel_addition_activity_send">发出</string>
+    <string name="channel_addition_activity_receive">收到</string>
+    <string name="no_content">无内容</string>
 
     <string name="fab_text_add_channel">添加频道</string>
 

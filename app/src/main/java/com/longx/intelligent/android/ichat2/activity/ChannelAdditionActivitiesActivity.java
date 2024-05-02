@@ -14,10 +14,13 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChannelAdditionA
 
 public class ChannelAdditionActivitiesActivity extends BaseActivity {
     private ActivityChannelAdditionActivitiesBinding binding;
-    private static final String[] PAGER_TITLES = {"待处理", "发出", "收到"};
+    private static String[] PAGER_TITLES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PAGER_TITLES = new String[]{getString(R.string.channel_addition_activity_pending),
+                getString(R.string.channel_addition_activity_send),
+                getString(R.string.channel_addition_activity_receive)};
         super.onCreate(savedInstanceState);
         binding = ActivityChannelAdditionActivitiesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
