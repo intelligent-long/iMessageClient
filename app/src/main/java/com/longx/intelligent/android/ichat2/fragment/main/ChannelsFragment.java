@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.ichat2.fragment.main;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
+import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
@@ -23,7 +22,7 @@ import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.adapter.ChannelListRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -32,6 +31,7 @@ import java.util.ArrayList;
 
 public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelListRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier {
     private FragmentChannelsBinding binding;
+    private LayoutChannelRecyclerViewHeaderBinding headerViewBinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChannelsBinding.inflate(inflater, container, false);
         setupRecyclerView(inflater);
-        setupFab();
+        setupYiers();
         return binding.getRoot();
     }
 
@@ -85,8 +85,8 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         ChannelListRecyclerAdapter channelListRecyclerAdapter = new ChannelListRecyclerAdapter(requireActivity(), itemDataList);
         channelListRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelListRecyclerAdapter);
-        View headerView = inflater.inflate(R.layout.layout_channel_recycler_view_header, null, false);
-        binding.recyclerView.setHeaderView(headerView);
+        headerViewBinding = LayoutChannelRecyclerViewHeaderBinding.inflate(inflater);
+        binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
         binding.recyclerView.addOnScrollUpDownYier(new RecyclerView.OnScrollUpDownYier() {
             @Override
             public void onScrollUp() {
@@ -107,9 +107,12 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         startActivity(intent);
     }
 
-    private void setupFab() {
+    private void setupYiers() {
         binding.fab.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), SearchChannelActivity.class));
+        });
+        headerViewBinding.layoutNewChannel.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), ChannelAdditionActivitiesActivity.class));
         });
     }
 

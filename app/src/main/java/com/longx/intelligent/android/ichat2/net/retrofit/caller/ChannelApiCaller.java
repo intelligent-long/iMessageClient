@@ -2,9 +2,13 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
 import androidx.lifecycle.LifecycleOwner;
 
+import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChannelApi;
 import com.xcheng.retrofit.CompletableCall;
+
+import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2024/4/28 at 1:10 AM.
@@ -14,14 +18,32 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         return getApiImplementation(ChannelApi.class);
     }
 
-    public static CompletableCall<OperationData> searchChannelByIchatIdUser(LifecycleOwner lifecycleOwner, String ichatIdUser, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().searchChannelByIchatIdUser(ichatIdUser);
+    public static CompletableCall<OperationData> findChannelByIchatIdUser(LifecycleOwner lifecycleOwner, String ichatIdUser, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().findChannelByIchatIdUser(ichatIdUser);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> searchChannelByEmail(LifecycleOwner lifecycleOwner, String email, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().searchChannelByEmail(email);
+    public static CompletableCall<OperationData> findChannelByEmail(LifecycleOwner lifecycleOwner, String email, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().findChannelByEmail(email);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> requestAddChannel(LifecycleOwner lifecycleOwner, RequestAddChannelPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().requestAddChannel(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> getAllAdditionActivities(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().getAllAdditionActivities();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> viewAllAdditionActivities(LifecycleOwner lifecycleOwner, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().viewAllAdditionActivities();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

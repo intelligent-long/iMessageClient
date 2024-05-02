@@ -78,7 +78,7 @@ public class SearchChannelActivity extends BaseActivity {
             }
             if(item.getItemId() == R.id.search_channel){
                 if(Objects.equals(UiUtil.getEditTextString(binding.searchByAutoComplete), searchByNames[0])){
-                    ChannelApiCaller.searchChannelByIchatIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
+                    ChannelApiCaller.findChannelByIchatIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
                         @Override
                         public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                             super.ok(data, row, call);
@@ -91,7 +91,7 @@ public class SearchChannelActivity extends BaseActivity {
                         }
                     });
                 }else if(Objects.equals(UiUtil.getEditTextString(binding.searchByAutoComplete), searchByNames[1])){
-                    ChannelApiCaller.searchChannelByEmail(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
+                    ChannelApiCaller.findChannelByEmail(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
                         @Override
                         public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                             super.ok(data, row, call);

@@ -19,6 +19,7 @@
         android:clipToOutline="true">
 
         <RelativeLayout
+            android:id="@+id/layout_new_channel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -65,6 +66,7 @@
         android:clipToOutline="true">
 
         <RelativeLayout
+            android:id="@+id/layout_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
