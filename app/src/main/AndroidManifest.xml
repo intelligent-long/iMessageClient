@@ -28,6 +28,9 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.RequestAddChannelActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ChannelAdditionActivitiesActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

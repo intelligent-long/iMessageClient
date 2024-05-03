@@ -137,6 +137,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void setupYiers() {
+        setLongClickCopyYiers();
         binding.avatar.setOnClickListener(v -> {
             if((selfInfo != null && selfInfo.getAvatarHash() != null) || (channelInfo != null && channelInfo.getAvatarHash() != null)) {
                 if (avatarFile != null) {
@@ -150,7 +151,11 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         binding.editMyInfoButton.setOnClickListener(v -> {
             startActivity(new Intent(this, EditUserSettingsActivity.class));
         });
-        setLongClickCopyYiers();
+        binding.addChannelButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RequestAddChannelActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL_INFO, channelInfo);
+            startActivity(intent);
+        });
     }
 
     private void setLongClickCopyYiers() {
