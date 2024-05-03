@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.da.cachefile;
 
 import android.content.Context;
 
+import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileAccessor;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
@@ -28,7 +29,7 @@ public class CacheFilesAccessor {
                 InputStream contentStream = data.byteStream();
                 String fileName = FileUtil.extractFileNameInHttpHeader(row.headers().get("Content-Disposition"));
                 String extension = FileUtil.getFileExtension(fileName);
-                String avatarCachePath = CacheFilePaths.getAvatarCachePath(context, avatarHash, extension);
+                String avatarCachePath = DataPaths.Cache.getAvatarCachePath(context, avatarHash, extension);
                 FileAccessor.save(contentStream, avatarCachePath);
                 resultsYier.onResults(getAvatarTemp(context, avatarHash, extension));
             }
@@ -36,7 +37,7 @@ public class CacheFilesAccessor {
     }
 
     public static File getAvatarTemp(Context context, String avatarHash, String extension){
-        String avatarCachePath = CacheFilePaths.getAvatarCachePath(context, avatarHash, extension);
+        String avatarCachePath = DataPaths.Cache.getAvatarCachePath(context, avatarHash, extension);
         return new File(avatarCachePath);
     }
 }

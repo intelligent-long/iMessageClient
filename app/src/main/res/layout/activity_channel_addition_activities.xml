@@ -39,6 +39,7 @@
             app:tabIndicatorHeight="44dp"
             app:tabIndicatorGravity="center"
             app:tabIndicatorColor="?attr/colorSurfaceContainer"
+            app:tabIndicatorAnimationMode="linear"
             android:background="@null"
             app:tabTextAppearance="@style/ChannelAdditionActivitiesTabTextAppearance"
             app:tabTextColor="?attr/colorControlNormal"

@@ -88,13 +88,13 @@ public class EditUserSettingsActivity extends BaseActivity{
         protected void init(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences_edit_user, rootKey);
             doDefaultActions();
-            GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override
         public void onDestroy() {
             super.onDestroy();
-            GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.removeYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override

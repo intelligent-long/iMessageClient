@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.R;
@@ -65,8 +66,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         setupYier();
         setupUi();
         showNavHeaderInfo();
-        GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.holdYier(ServerMessageService.OnOnlineStateChangeYier.class, this);
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         animateNavIconVisibility(navHostFragment);
         requestPermissions();
     }
@@ -120,8 +121,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.removeYier(ServerMessageService.OnOnlineStateChangeYier.class, this);
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
     }
 
     public ActivityMainBinding getViewBinding(){

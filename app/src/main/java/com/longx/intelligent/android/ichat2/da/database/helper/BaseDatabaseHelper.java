@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.longx.intelligent.android.ichat2.da.DataPaths;
-import com.longx.intelligent.android.ichat2.da.database.DatabaseFilePaths;
 
 import java.io.File;
 import java.util.Objects;
@@ -16,7 +15,7 @@ import java.util.Objects;
 public abstract class BaseDatabaseHelper extends SQLiteOpenHelper {
 
     public BaseDatabaseHelper(Context context, String databaseFileName, SQLiteDatabase.CursorFactory factory, int version, String ichatId) {
-        super(context, DatabaseFilePaths.getDatabaseFilePath(context, ichatId, databaseFileName), factory, version);
-        Objects.requireNonNull(new File(DatabaseFilePaths.getDatabaseFilePath(context, ichatId, databaseFileName)).getParentFile()).mkdirs();
+        super(context, DataPaths.Database.getDatabaseFilePath(context, ichatId, databaseFileName), factory, version);
+        Objects.requireNonNull(new File(DataPaths.Database.getDatabaseFilePath(context, ichatId, databaseFileName)).getParentFile()).mkdirs();
     }
 }

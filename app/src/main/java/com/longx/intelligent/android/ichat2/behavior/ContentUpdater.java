@@ -2,19 +2,24 @@ package com.longx.intelligent.android.ichat2.behavior;
 
 import android.content.Context;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelAdditionActivityDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
-import com.longx.intelligent.android.ichat2.ui.glide.GlideHelper;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -28,6 +33,7 @@ public class ContentUpdater {
 
     public interface OnServerContentUpdateYier {
         String ID_CURRENT_USER_INFO = "current_user_info";
+        String ID_CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
 
         void onStartUpdate(String id);
 
@@ -36,9 +42,11 @@ public class ContentUpdater {
 
     private static class ContentUpdateApiYier<T> extends RetrofitApiCaller.BaseYier<T>{
         private final String updateId;
+        private final Context context;
 
-        public ContentUpdateApiYier(String updateId) {
+        public ContentUpdateApiYier(String updateId, Context context) {
             this.updateId = updateId;
+            this.context = context;
         }
 
         @Override
@@ -48,6 +56,18 @@ public class ContentUpdater {
                 super.start(call);
                 onStartUpdate(updateId);
             }
+        }
+
+        @Override
+        public void notOk(int code, String message, Response<T> row, Call<T> call) {
+            super.notOk(code, message, row, call);
+            MessageDisplayer.autoShow(context, "数据更新 HTTP 状态码异常 (" + updateId + ")  >  " + code, MessageDisplayer.Duration.LONG);
+        }
+
+        @Override
+        public void failure(Throwable t, Call<T> call) {
+            super.failure(t, call);
+            MessageDisplayer.autoShow(context, "数据更新出错 (" + updateId + ")  >  " + t.getClass().getName(), MessageDisplayer.Duration.LONG);
         }
 
         @Override
@@ -90,7 +110,7 @@ public class ContentUpdater {
         if(selfInfo != null){
             fetchAvatarAndStoreSelfInfoAndAvatar(context, selfInfo);
         }else {
-            UserApiCaller.whoAmI(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO) {
+            UserApiCaller.whoAmI(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO, context) {
                 @Override
                 public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                     super.ok(data, row, call);
@@ -105,7 +125,7 @@ public class ContentUpdater {
 
     private static void fetchAvatarAndStoreSelfInfoAndAvatar(Context context, SelfInfo selfInfo) {
         if (selfInfo.getAvatarHash() != null) {
-            UserApiCaller.fetchAvatar(null, selfInfo.getAvatarHash(), new ContentUpdateApiYier<ResponseBody>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO) {
+            UserApiCaller.fetchAvatar(null, selfInfo.getAvatarHash(), new ContentUpdateApiYier<ResponseBody>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO, context) {
                 @Override
                 public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
                     super.ok(data, row, call);
@@ -120,6 +140,24 @@ public class ContentUpdater {
         } else {
             SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, selfInfo);
         }
+    }
+
+    public static void updateChannelAdditionActivities(Context context){
+        ChannelApiCaller.getAllAdditionActivities(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNEL_ADDITION_ACTIVITIES, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                List<ChannelAdditionInfo> channelAdditionInfos = data.getData(new TypeReference<List<ChannelAdditionInfo>>() {
+                });
+                boolean allSuccess = ChannelAdditionActivityDatabaseManager.getInstance().insertOrIgnore(channelAdditionInfos);
+                List<ChannelAdditionInfo> channelAdditionInfosFind = ChannelAdditionActivityDatabaseManager.getInstance().findAll();
+                AtomicInteger notViewCount = new AtomicInteger();
+                channelAdditionInfosFind.forEach(channelAdditionInfo -> {
+                    if(!channelAdditionInfo.isViewed()) notViewCount.getAndIncrement();
+                });
+                SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewCount.get());
+            }
+        });
     }
 
 }

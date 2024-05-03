@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.yier;
 
+import android.content.Context;
+
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 
@@ -32,13 +34,13 @@ public class GlobalYiersHolder {
         yierList.remove(yier);
     }
 
-    public static <T> void holdYier(Class<T> clazz, T yier){
-        triggerStickyEvent(clazz, yier);
+    public static <T> void holdYier(Context context, Class<T> clazz, T yier, Object... objects){
+        triggerStickyEvent(context, clazz, yier, objects);
         addToMap(clazz, yier);
     }
 
-    public static <T> void removeYier(Class<T> clazz, T yier){
-        triggerStickyEvent(clazz, yier);
+    public static <T> void removeYier(Context context, Class<T> clazz, T yier, Object... objects){
+        triggerStickyEvent(context, clazz, yier, objects);
         removeFromMap(clazz, yier);
     }
 
@@ -49,11 +51,13 @@ public class GlobalYiersHolder {
         return Optional.ofNullable((List<T>) yiersMap.get(clazz));
     }
 
-    private static <T> void triggerStickyEvent(Class<T> clazz, T yier){
+    private static <T> void triggerStickyEvent(Context context, Class<T> clazz, T yier, Object... objects){
         if(yier instanceof ServerMessageService.OnOnlineStateChangeYier && clazz.isAssignableFrom(ServerMessageService.OnOnlineStateChangeYier.class)){
             checkAndTriggerOnlineStateEvent((ServerMessageService.OnOnlineStateChangeYier)yier);
         }else if(yier instanceof ContentUpdater.OnServerContentUpdateYier && clazz.isAssignableFrom(ContentUpdater.OnServerContentUpdateYier.class)){
             checkAndTriggerContentUpdateEvent((ContentUpdater.OnServerContentUpdateYier) yier);
+        }else if(yier instanceof NewContentBadgeDisplayYier && clazz.isAssignableFrom(NewContentBadgeDisplayYier.class)){
+            triggerNewContentBadgeDisplayEvent(context, (NewContentBadgeDisplayYier) yier, (NewContentBadgeDisplayYier.ID) objects[0]);
         }
     }
 
@@ -77,5 +81,9 @@ public class GlobalYiersHolder {
                 updatingIds.forEach(onServerContentUpdateYier::onStartUpdate);
             }
         }
+    }
+
+    private static void triggerNewContentBadgeDisplayEvent(Context context, NewContentBadgeDisplayYier yier, NewContentBadgeDisplayYier.ID id){
+        yier.autoShowNewContentBadge(context, id);
     }
 }

@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2;
 
+import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
 import com.longx.intelligent.android.ichat2.net.OkHttpClientCreator;
@@ -25,6 +26,7 @@ public class Application extends android.app.Application {
         CookieJar.create(this);
         OkHttpClientCreator.create();
         RetrofitCreator.create(this);
+        DatabaseInitiator.initAll(this);
         boolean loginState = SharedPreferencesAccessor.NetPref.getLoginState(this);
         if(loginState) {
             ServerMessageService.work(this);

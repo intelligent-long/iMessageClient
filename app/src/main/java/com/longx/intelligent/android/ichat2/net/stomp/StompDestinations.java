@@ -10,4 +10,5 @@ public class StompDestinations {
     public static final String PREFIX_USER = "/user";
 
     public static final String USER_INFO_UPDATE = "/user" +  PREFIX_QUEUE + "/user_info_update";
+    public static final String CHANNEL_ADDITIONS_UPDATE = "/user" +  PREFIX_QUEUE + "/channel_additions_update";
 }

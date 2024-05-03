@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,26 +24,34 @@ import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.adapter.ChannelListRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
+import com.longx.intelligent.android.ichat2.ui.BadgeInitiator;
+import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelListRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier {
+import q.rorbin.badgeview.Badge;
+
+public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelListRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier, NewContentBadgeDisplayYier {
     private FragmentChannelsBinding binding;
     private LayoutChannelRecyclerViewHeaderBinding headerViewBinding;
+    private int channelAdditionActivitiesNewContentCount;
+    private Badge newChannelBadge;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
     }
 
     @Override
@@ -86,6 +95,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         channelListRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelListRecyclerAdapter);
         headerViewBinding = LayoutChannelRecyclerViewHeaderBinding.inflate(inflater);
+        newChannelBadge = BadgeInitiator.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
         binding.recyclerView.addOnScrollUpDownYier(new RecyclerView.OnScrollUpDownYier() {
             @Override
@@ -125,6 +135,16 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     public void onUpdateComplete(String id) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
             setupRecyclerView(getLayoutInflater());
+        }
+    }
+
+    @Override
+    public void showNewContentBadge(ID id, int newContentCount) {
+        if(id.equals(ID.CHANNEL_ADDITION_ACTIVITIES)){
+            channelAdditionActivitiesNewContentCount = newContentCount;
+            if(newChannelBadge != null){
+                newChannelBadge.setBadgeNumber(newContentCount);
+            }
         }
     }
 }

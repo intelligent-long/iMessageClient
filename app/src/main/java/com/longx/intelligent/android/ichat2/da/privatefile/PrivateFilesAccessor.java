@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.da.privatefile;
 
 import android.content.Context;
 
+import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
@@ -14,7 +15,7 @@ import java.io.InputStream;
  */
 public class PrivateFilesAccessor {
     public static void saveAvatar(Context context, InputStream contentStream, String ichatId, String extension){
-        String path = PrivateFilePaths.getAvatar(context, ichatId, extension);
+        String path = DataPaths.File.getAvatar(context, ichatId, extension);
         FileAccessor.save(contentStream, path);
     }
 
@@ -29,12 +30,12 @@ public class PrivateFilesAccessor {
     }
 
     public static InputStream getAvatar(Context context, String ichatId, String extension){
-        String path = PrivateFilePaths.getAvatar(context, ichatId, extension);
+        String path = DataPaths.File.getAvatar(context, ichatId, extension);
         return FileAccessor.streamOf(path);
     }
 
     public static File getAvatarFile(Context context, String ichatId, String extension) {
-        String path = PrivateFilePaths.getAvatar(context, ichatId, extension);
+        String path = DataPaths.File.getAvatar(context, ichatId, extension);
         return new File(path);
     }
 

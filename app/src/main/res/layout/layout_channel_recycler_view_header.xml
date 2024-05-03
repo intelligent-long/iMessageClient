@@ -49,7 +49,7 @@
 
             <LinearLayout
                 android:id="@+id/new_channel_badge_host"
-                android:layout_width="40dp"
+                android:layout_width="49dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:orientation="horizontal" />
@@ -96,7 +96,7 @@
 
             <LinearLayout
                 android:id="@+id/tag_badge_host"
-                android:layout_width="40dp"
+                android:layout_width="49dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:orientation="horizontal" />

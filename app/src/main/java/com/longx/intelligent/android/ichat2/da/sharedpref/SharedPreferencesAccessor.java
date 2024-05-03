@@ -246,4 +246,26 @@ public class SharedPreferencesAccessor {
         }
     }
 
+    public static class NewContentCount {
+        private static final String NAME = "new_content_count";
+        private static class Key{
+            private static final String CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
+        }
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        }
+
+        public static void saveChannelAdditionActivities(Context context, int newContentCount){
+            getSharedPreferences(context)
+                    .edit()
+                    .putInt(Key.CHANNEL_ADDITION_ACTIVITIES, newContentCount)
+                    .apply();
+        }
+
+        public static int getChannelAdditionActivities(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.CHANNEL_ADDITION_ACTIVITIES, 0);
+        }
+    }
+
 }

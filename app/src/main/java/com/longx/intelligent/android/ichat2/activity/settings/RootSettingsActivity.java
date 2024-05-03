@@ -72,13 +72,13 @@ public class RootSettingsActivity extends BaseActivity {
             setPreferencesFromResource(R.xml.preferences_root, rootKey);
             doDefaultActions();
             initNightMode = SharedPreferencesAccessor.DefaultPref.getNightMode(getContext());
-            GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override
         public void onDestroy() {
             super.onDestroy();
-            GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+            GlobalYiersHolder.removeYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
         }
 
         @Override

@@ -41,13 +41,13 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         bindValues();
         showContent();
         setupYiers();
-        GlobalYiersHolder.holdYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GlobalYiersHolder.removeYier(ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     /**
