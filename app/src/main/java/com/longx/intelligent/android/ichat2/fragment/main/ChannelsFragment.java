@@ -25,6 +25,7 @@ import com.longx.intelligent.android.ichat2.adapter.ChannelListRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
 import com.longx.intelligent.android.ichat2.ui.BadgeInitiator;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -83,13 +84,12 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 selfInfo.getIchatIdUser(),
                 selfInfo.getEmail(),
                 selfInfo.getUsername(),
-                selfInfo.getAvatarHash(),
+                selfInfo.getAvatarInfo(),
                 selfInfo.getSex(),
                 selfInfo.getFirstRegion(),
                 selfInfo.getSecondRegion(),
                 selfInfo.getThirdRegion(),
-                true,
-                selfInfo.getAvatarExtension());
+                true);
         itemDataList.add(new ChannelListRecyclerAdapter.ItemData(selfChannelInfo));
         ChannelListRecyclerAdapter channelListRecyclerAdapter = new ChannelListRecyclerAdapter(requireActivity(), itemDataList);
         channelListRecyclerAdapter.setOnItemClickYier(this);

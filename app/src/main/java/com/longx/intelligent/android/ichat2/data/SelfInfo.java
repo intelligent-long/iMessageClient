@@ -22,30 +22,27 @@ public class SelfInfo extends UserInfo{
     private final String email;
     private final Date registerTime;
     private final String username;
-    private final String avatarHash;
+    private final AvatarInfo avatarInfo;
     private final Integer sex;
     private final Region firstRegion;
     private final Region secondRegion;
     private final Region thirdRegion;
-    @JsonIgnore
-    private final String avatarExtension;
 
     public SelfInfo() {
-        this(null, null, null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null);
     }
 
-    public SelfInfo(String ichatId, String ichatIdUser, String email, Date registerTime, String username, String avatarHash, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarExtension) {
+    public SelfInfo(String ichatId, String ichatIdUser, String email, Date registerTime, String username, AvatarInfo avatarInfo, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion) {
         this.ichatId = ichatId;
         this.ichatIdUser = ichatIdUser;
         this.email = email;
         this.registerTime = registerTime;
         this.username = username;
-        this.avatarHash = avatarHash;
+        this.avatarInfo = avatarInfo;
         this.sex = sex;
         this.firstRegion = firstRegion;
         this.secondRegion = secondRegion;
         this.thirdRegion = thirdRegion;
-        this.avatarExtension = avatarExtension;
     }
 
     public String getIchatId() {
@@ -68,8 +65,8 @@ public class SelfInfo extends UserInfo{
         return username;
     }
 
-    public String getAvatarHash() {
-        return avatarHash;
+    public AvatarInfo getAvatarInfo() {
+        return avatarInfo;
     }
 
     public Integer getSex() {
@@ -88,16 +85,8 @@ public class SelfInfo extends UserInfo{
         return thirdRegion;
     }
 
-    public String getAvatarExtension() {
-        return avatarExtension;
-    }
-
-    public SelfInfo setAvatarExtension(String avatarExtension){
-        return new SelfInfo(ichatId, ichatIdUser, email, registerTime, username, avatarHash, sex, firstRegion, secondRegion, thirdRegion, avatarExtension);
-    }
-
     public File getAvatarFile(Context context) {
-        if(avatarExtension == null) return null;
-        return PrivateFilesAccessor.getAvatarFile(context, ichatId, avatarExtension);
+        if(avatarInfo == null || avatarInfo.getExtension() == null) return null;
+        return PrivateFilesAccessor.getAvatarFile(context, ichatId, avatarInfo.getExtension());
     }
 }

@@ -12,7 +12,7 @@ import androidx.core.graphics.ColorUtils;
 public class ColorUtil {
 
     public static int getAlphaColor(int color, int alpha){
-        return ColorUtils.setAlphaComponent(color, 230);
+        return ColorUtils.setAlphaComponent(color, alpha);
     }
 
     public static int getAlphaAttrColor(Context context, int attrResId, int alpha){

@@ -14,14 +14,24 @@ public class DatabaseUtil {
     }
 
     @SuppressLint("Range")
-    public static long getLong(Cursor cursor, String columnName){
-        return cursor.getLong(cursor.getColumnIndex(columnName));
+    public static Long getLong(Cursor cursor, String columnName){
+        int columnIndex = cursor.getColumnIndex(columnName);
+        if (cursor.isNull(columnIndex)) {
+            return null;
+        } else {
+            return cursor.getLong(columnIndex);
+        }
     }
 
     @SuppressLint("Range")
-    public static boolean getBoolean(Cursor cursor, String columnName){
-        int value = cursor.getInt(cursor.getColumnIndex(columnName));
-        return value == 1;
+    public static Boolean getBoolean(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        if(cursor.isNull(columnIndex)){
+            return null;
+        }else {
+            int value = cursor.getInt(cursor.getColumnIndex(columnName));
+            return value == 1;
+        }
     }
 
 }

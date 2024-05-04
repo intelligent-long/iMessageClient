@@ -10,9 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesActivity;
+import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.databinding.FragmentReceiveBinding;
+import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
-public class ReceiveFragment extends Fragment {
+import java.util.List;
+
+public class ReceiveFragment extends Fragment implements ChannelAdditionActivitiesFetchYier {
     private FragmentReceiveBinding binding;
 
     @Override
@@ -24,5 +29,15 @@ public class ReceiveFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReceiveBinding.inflate(inflater, container, false);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStartFetch() {
+
+    }
+
+    @Override
+    public void onFetched(List<ChannelAdditionInfo> channelAdditionInfos) {
+
     }
 }

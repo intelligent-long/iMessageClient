@@ -16,7 +16,7 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateChannelAdditionActivities(Context context){
-        ContentUpdater.updateChannelAdditionActivities(context);
+        ContentUpdater.updateChannelAdditionNotViewCount(context);
         GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
             newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
                 newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.CHANNEL_ADDITION_ACTIVITIES);

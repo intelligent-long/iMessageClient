@@ -9,6 +9,14 @@ public class RequestAddChannelPostBody {
 
     private String message;
 
+    public RequestAddChannelPostBody() {
+    }
+
+    public RequestAddChannelPostBody(String ichatIdUser, String message) {
+        this.ichatIdUser = ichatIdUser;
+        this.message = message;
+    }
+
     public String getIchatIdUser() {
         return ichatIdUser;
     }

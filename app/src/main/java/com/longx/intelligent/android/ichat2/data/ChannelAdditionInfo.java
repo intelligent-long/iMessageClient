@@ -7,18 +7,22 @@ import java.util.Date;
  */
 public class ChannelAdditionInfo {
     private final String uuid;
-    private final String requesterIchatId;
-    private final String responderIchatId;
+    private final ChannelInfo requesterChannelInfo;
+    private final ChannelInfo responderChannelInfo;
     private final String message;
     private final Date requestTime;
     private final Date respondTime;
     private final boolean isAccepted;
     private final boolean isViewed;
 
-    public ChannelAdditionInfo(String uuid, String requesterIchatId, String responderIchatId, String message, Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed) {
+    public ChannelAdditionInfo() {
+        this(null, null, null, null, null, null, false, false);
+    }
+
+    public ChannelAdditionInfo(String uuid, ChannelInfo requesterChannelInfo, ChannelInfo responderChannelInfo, String message, Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed) {
         this.uuid = uuid;
-        this.requesterIchatId = requesterIchatId;
-        this.responderIchatId = responderIchatId;
+        this.requesterChannelInfo = requesterChannelInfo;
+        this.responderChannelInfo = responderChannelInfo;
         this.message = message;
         this.requestTime = requestTime;
         this.respondTime = respondTime;
@@ -30,12 +34,12 @@ public class ChannelAdditionInfo {
         return uuid;
     }
 
-    public String getRequesterIchatId() {
-        return requesterIchatId;
+    public ChannelInfo getRequesterChannelInfo() {
+        return requesterChannelInfo;
     }
 
-    public String getResponderIchatId() {
-        return responderIchatId;
+    public ChannelInfo getResponderChannelInfo() {
+        return responderChannelInfo;
     }
 
     public String getMessage() {

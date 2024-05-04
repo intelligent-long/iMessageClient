@@ -13,17 +13,24 @@ import com.longx.intelligent.android.ichat2.fragment.channeladdition.SendFragmen
  * Created by LONG on 2024/5/2 at 7:10 PM.
  */
 public class ChannelAdditionActivitiesViewPagerAdapter extends FragmentStateAdapter {
+    private final PendingFragment pendingFragment;
+    private final SendFragment sendFragment;
+    private final ReceiveFragment receiveFragment;
+
     public ChannelAdditionActivitiesViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
+        pendingFragment = new PendingFragment();
+        sendFragment = new SendFragment();
+        receiveFragment = new ReceiveFragment();
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0: return new PendingFragment();
-            case 1: return new SendFragment();
-            case 2: return new ReceiveFragment();
+            case 0: return pendingFragment;
+            case 1: return sendFragment;
+            case 2: return receiveFragment;
         }
         return new PendingFragment();
     }
@@ -31,5 +38,17 @@ public class ChannelAdditionActivitiesViewPagerAdapter extends FragmentStateAdap
     @Override
     public int getItemCount() {
         return 3;
+    }
+
+    public PendingFragment getPendingFragment() {
+        return pendingFragment;
+    }
+
+    public SendFragment getSendFragment() {
+        return sendFragment;
+    }
+
+    public ReceiveFragment getReceiveFragment() {
+        return receiveFragment;
     }
 }

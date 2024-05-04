@@ -8,14 +8,18 @@ import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChannelApi;
 import com.xcheng.retrofit.CompletableCall;
 
-import retrofit2.http.Body;
-
 /**
  * Created by LONG on 2024/4/28 at 1:10 AM.
  */
 public class ChannelApiCaller extends RetrofitApiCaller{
     public static ChannelApi getApiImplementation(){
         return getApiImplementation(ChannelApi.class);
+    }
+
+    public static CompletableCall<OperationData> findChannelByIchatId(LifecycleOwner lifecycleOwner, String ichatId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().findChannelByIchatId(ichatId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
     }
 
     public static CompletableCall<OperationData> findChannelByIchatIdUser(LifecycleOwner lifecycleOwner, String ichatIdUser, BaseYier<OperationData> yier){
@@ -36,8 +40,14 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> getAllAdditionActivities(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().getAllAdditionActivities();
+    public static CompletableCall<OperationData> fetchChannelAdditionNotViewCount(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchChannelAdditionNotViewCount();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> fetchAllAdditionActivities(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllAdditionActivities();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

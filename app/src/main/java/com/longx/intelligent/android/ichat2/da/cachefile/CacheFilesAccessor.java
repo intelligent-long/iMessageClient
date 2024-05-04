@@ -21,7 +21,7 @@ import retrofit2.Response;
  */
 public class CacheFilesAccessor {
 
-    public static void cacheAvatarTempFromServer(Context context, String avatarHash, ResultsYier resultsYier){
+    public static void cacheAvatarTempFromServer(Context context, String avatarHash, String ichatId, ResultsYier resultsYier){
         UserApiCaller.fetchAvatar(null, avatarHash, new RetrofitApiCaller.CommonYier<ResponseBody>() {
             @Override
             public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
@@ -29,15 +29,15 @@ public class CacheFilesAccessor {
                 InputStream contentStream = data.byteStream();
                 String fileName = FileUtil.extractFileNameInHttpHeader(row.headers().get("Content-Disposition"));
                 String extension = FileUtil.getFileExtension(fileName);
-                String avatarCachePath = DataPaths.Cache.getAvatarCachePath(context, avatarHash, extension);
+                String avatarCachePath = DataPaths.Cache.getAvatarCachePath(context, ichatId, extension);
                 FileAccessor.save(contentStream, avatarCachePath);
-                resultsYier.onResults(getAvatarTemp(context, avatarHash, extension));
+                resultsYier.onResults(getAvatarCache(context, ichatId, extension));
             }
         });
     }
 
-    public static File getAvatarTemp(Context context, String avatarHash, String extension){
-        String avatarCachePath = DataPaths.Cache.getAvatarCachePath(context, avatarHash, extension);
+    public static File getAvatarCache(Context context, String ichatId, String extension){
+        String avatarCachePath = DataPaths.Cache.getAvatarCachePath(context, ichatId, extension);
         return new File(avatarCachePath);
     }
 }

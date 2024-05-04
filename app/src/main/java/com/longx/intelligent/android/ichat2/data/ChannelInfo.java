@@ -19,31 +19,28 @@ public class ChannelInfo extends UserInfo implements Parcelable {
     private final String ichatIdUser;
     private final String email;
     private final String username;
-    private final String avatarHash;
+    private final AvatarInfo avatarInfo;
     private final Integer sex;
     private final Region firstRegion;
     private final Region secondRegion;
     private final Region thirdRegion;
     private final boolean connected;
-    @JsonIgnore
-    private final String avatarExtension;
 
     public ChannelInfo() {
-        this(null, null, null, null, null, null, null, null, null, false , null);
+        this(null, null, null, null, null, null, null, null, null, false);
     }
 
-    public ChannelInfo(String ichatId, String ichatIdUser, String email, String username, String avatarHash, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean connected, String avatarExtension) {
+    public ChannelInfo(String ichatId, String ichatIdUser, String email, String username, AvatarInfo avatarInfo, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean connected) {
         this.ichatId = ichatId;
         this.ichatIdUser = ichatIdUser;
         this.email = email;
         this.username = username;
-        this.avatarHash = avatarHash;
+        this.avatarInfo = avatarInfo;
         this.sex = sex;
         this.firstRegion = firstRegion;
         this.secondRegion = secondRegion;
         this.thirdRegion = thirdRegion;
         this.connected = connected;
-        this.avatarExtension = avatarExtension;
     }
 
     public String getIchatId() {
@@ -78,25 +75,17 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         return email;
     }
 
-    public String getAvatarHash() {
-        return avatarHash;
+    public AvatarInfo getAvatarInfo() {
+        return avatarInfo;
     }
 
     public boolean isConnected() {
         return connected;
     }
 
-    public ChannelInfo setAvatarExtension(String avatarExtension){
-        return new ChannelInfo(ichatId, ichatIdUser, email, username, avatarHash, sex, firstRegion, secondRegion, thirdRegion, connected, avatarExtension);
-    }
-
-    public String getAvatarExtension() {
-        return avatarExtension;
-    }
-
     public File getAvatarFile(Context context) {
-        if(avatarExtension == null) return null;
-        return PrivateFilesAccessor.getAvatarFile(context, ichatId, avatarExtension);
+        if(avatarInfo == null || avatarInfo.getExtension() == null) return null;
+        return PrivateFilesAccessor.getAvatarFile(context, ichatId, avatarInfo.getExtension());
     }
 
     public static final Creator<ChannelInfo> CREATOR = new Creator<ChannelInfo>() {
@@ -121,13 +110,12 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         ichatIdUser = in.readString();
         email = in.readString();
         username = in.readString();
-        avatarHash = in.readString();
+        avatarInfo = in.readParcelable(getClass().getClassLoader());
         sex = (Integer) in.readValue(getClass().getClassLoader());
         firstRegion = in.readParcelable(getClass().getClassLoader());
         secondRegion = in.readParcelable(getClass().getClassLoader());
         thirdRegion = in.readParcelable(getClass().getClassLoader());
         connected = in.readInt() == 1;
-        avatarExtension = in.readString();
     }
 
     @Override
@@ -136,12 +124,11 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         dest.writeString(ichatIdUser);
         dest.writeString(email);
         dest.writeString(username);
-        dest.writeString(avatarHash);
+        dest.writeParcelable(avatarInfo, flags);
         dest.writeValue(sex);
         dest.writeParcelable(firstRegion, flags);
         dest.writeParcelable(secondRegion, flags);
         dest.writeParcelable(thirdRegion, flags);
         dest.writeInt(connected ? 1 : 0);
-        dest.writeString(avatarExtension);
     }
 }

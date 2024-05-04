@@ -13,6 +13,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -78,7 +79,7 @@ public class ChannelListRecyclerAdapter extends WrappableRecyclerViewAdapter<Cha
         } else {
             GlideApp.with(activity.getApplicationContext())
                     .load(avatarFile)
-                    .signature(new ObjectKey(itemData.channelInfo.getAvatarHash()))
+                    .signature(new ObjectKey(itemData.channelInfo.getAvatarInfo().getHash()))
                     .into(holder.binding.avatar);
         }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));

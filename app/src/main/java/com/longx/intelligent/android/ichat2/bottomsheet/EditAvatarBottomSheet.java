@@ -39,7 +39,7 @@ public class EditAvatarBottomSheet extends AbstractBottomSheet {
     @Override
     protected void onCreate() {
         bottomSheetEditAvatarBinding = BottomSheetEditAvatarBinding.inflate(getActivity().getLayoutInflater());
-        if(SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(getActivity()).getAvatarHash() == null){
+        if(SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(getActivity()).getAvatarInfo().getHash() == null){
             bottomSheetEditAvatarBinding.removeAvatar.setVisibility(View.GONE);
         }
         setContentView(bottomSheetEditAvatarBinding.getRoot());

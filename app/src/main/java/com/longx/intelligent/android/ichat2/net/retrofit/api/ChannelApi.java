@@ -15,6 +15,9 @@ import retrofit2.http.Path;
  */
 public interface ChannelApi {
 
+    @GET("channel/find/ichat_id/{ichatId}")
+    CompletableCall<OperationData> findChannelByIchatId(@Path("ichatId") String ichatId);
+
     @GET("channel/find/ichat_id_user/{ichatIdUser}")
     CompletableCall<OperationData> findChannelByIchatIdUser(@Path("ichatIdUser") String ichatIdUser);
 
@@ -24,8 +27,11 @@ public interface ChannelApi {
     @POST("channel/add/request")
     CompletableCall<OperationStatus> requestAddChannel(@Body RequestAddChannelPostBody postBody);
 
+    @GET("channel/add/activity/not_view_count")
+    CompletableCall<OperationData> fetchChannelAdditionNotViewCount();
+
     @GET("channel/add/activity/get_all")
-    CompletableCall<OperationData> getAllAdditionActivities();
+    CompletableCall<OperationData> fetchAllAdditionActivities();
 
     @POST("channel/add/activity/view_all")
     CompletableCall<OperationStatus> viewAllAdditionActivities();

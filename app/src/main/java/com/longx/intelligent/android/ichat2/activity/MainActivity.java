@@ -133,14 +133,14 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         View headerView1 = binding.navigationDrawer1.getHeaderView(0);
         SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         ShapeableImageView avatarImageView = (ShapeableImageView) headerView1.findViewById(R.id.avatar);
-        if (selfInfo.getAvatarHash() == null) {
+        if (selfInfo.getAvatarInfo() == null || selfInfo.getAvatarInfo().getHash() == null) {
             GlideApp.with(getApplicationContext())
                     .load(R.drawable.default_avatar)
                     .into(avatarImageView);
         } else {
             GlideApp.with(getApplicationContext())
                     .load(selfInfo.getAvatarFile(this))
-                    .signature(new ObjectKey(selfInfo.getAvatarHash()))
+                    .signature(new ObjectKey(selfInfo.getAvatarInfo().getHash()))
                     .into(avatarImageView);
         }
         String username = selfInfo.getUsername();
@@ -246,7 +246,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         ShapeableImageView avatarImageView = (ShapeableImageView) headerView.findViewById(R.id.avatar);
         avatarImageView.setOnClickListener(v -> {
             SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
-            if(selfInfo.getAvatarHash() != null) {
+            if(selfInfo.getAvatarInfo() != null && selfInfo.getAvatarInfo().getHash() != null) {
                 Intent intent = new Intent(this, AvatarActivity.class);
                 intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());
                 intent.putExtra(ExtraKeys.AVATAR_FILE_PATH, selfInfo.getAvatarFile(this).getAbsolutePath());

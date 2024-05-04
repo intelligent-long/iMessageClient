@@ -21,12 +21,12 @@ public class PrivateFilesAccessor {
 
     public static InputStream getCurrentUserAvatar(Context context){
         SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context);
-        return getAvatar(context, selfInfo.getIchatId(), selfInfo.getAvatarExtension());
+        return getAvatar(context, selfInfo.getIchatId(), selfInfo.getAvatarInfo().getExtension());
     }
 
     public static File getCurrentUserAvatarFile(Context context) {
         SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context);
-        return getAvatarFile(context, selfInfo.getIchatId(), selfInfo.getAvatarExtension());
+        return getAvatarFile(context, selfInfo.getIchatId(), selfInfo.getAvatarInfo().getExtension());
     }
 
     public static InputStream getAvatar(Context context, String ichatId, String extension){

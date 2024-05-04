@@ -7,12 +7,19 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.data.AvatarInfo;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.net.ServerProperties;
+import com.longx.intelligent.android.ichat2.util.JsonUtil;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by LONG on 2024/3/26 at 11:22 PM.
@@ -154,7 +161,9 @@ public class SharedPreferencesAccessor {
             private static final String REGISTER_TIME = "register_time";
             private static final String USERNAME = "username";
             private static final String AVATAR_HASH = "avatar_hash";
+            private static final String AVATAR_ICHAT_ID = "avatar_ichat_id";
             private static final String AVATAR_EXTENSION = "avatar_extension";
+            private static final String AVATAR_TIME = "avatar_time";
             private static final String SEX = "sex";
             private static final String FIRST_REGION_ADCODE = "first_region_adcode";
             private static final String FIRST_REGION_NAME = "first_region_name";
@@ -176,8 +185,10 @@ public class SharedPreferencesAccessor {
                     .putString(Key.EMAIL, selfInfo.getEmail())
                     .putLong(Key.REGISTER_TIME, selfInfo.getRegisterTime().getTime())
                     .putString(Key.USERNAME, selfInfo.getUsername())
-                    .putString(Key.AVATAR_HASH, selfInfo.getAvatarHash())
-                    .putString(Key.AVATAR_EXTENSION, selfInfo.getAvatarExtension())
+                    .putString(Key.AVATAR_HASH, selfInfo.getAvatarInfo().getHash())
+                    .putString(Key.AVATAR_ICHAT_ID, selfInfo.getAvatarInfo().getIchatId())
+                    .putString(Key.AVATAR_EXTENSION, selfInfo.getAvatarInfo().getExtension())
+                    .putLong(Key.AVATAR_TIME, selfInfo.getAvatarInfo().getTime().getTime())
                     .putInt(Key.SEX, selfInfo.getSex() == null ? -1 : selfInfo.getSex())
                     .putInt(Key.FIRST_REGION_ADCODE, selfInfo.getFirstRegion() == null ? -1 : selfInfo.getFirstRegion().getAdcode())
                     .putString(Key.FIRST_REGION_NAME, selfInfo.getFirstRegion() == null ? null : selfInfo.getFirstRegion().getName())
@@ -193,13 +204,19 @@ public class SharedPreferencesAccessor {
             String ichatId = sharedPreferences.getString(Key.ICHAT_ID, null);
             String ichatIdUser = sharedPreferences.getString(Key.ICHAT_ID_USER, null);
             String email = sharedPreferences.getString(Key.EMAIL, null);
-            long time = sharedPreferences.getLong(Key.REGISTER_TIME, -1);
+            long registerTimeLong = sharedPreferences.getLong(Key.REGISTER_TIME, -1);
             String username = sharedPreferences.getString(Key.USERNAME, null);
             String avatarHash = sharedPreferences.getString(Key.AVATAR_HASH, null);
+            String avatarIchatId = sharedPreferences.getString(Key.AVATAR_ICHAT_ID, null);
             String avatarExtension = sharedPreferences.getString(Key.AVATAR_EXTENSION, null);
+            long avatarTimeLong = sharedPreferences.getLong(Key.AVATAR_TIME, -1);
             Date registerTime = null;
-            if(time != -1){
-                registerTime = new Date(time);
+            Date avatarTime = null;
+            if(registerTimeLong != -1){
+                registerTime = new Date(registerTimeLong);
+            }
+            if(avatarTimeLong != -1){
+                avatarTime = new Date(avatarTimeLong);
             }
             int sex = sharedPreferences.getInt(Key.SEX, -1);
             int firstRegionAdcode = sharedPreferences.getInt(Key.FIRST_REGION_ADCODE, -1);
@@ -208,12 +225,12 @@ public class SharedPreferencesAccessor {
             String secondRegionName = sharedPreferences.getString(Key.SECOND_REGION_NAME, null);
             int thirdRegionAdcode = sharedPreferences.getInt(Key.THIRD_REGION_ADCODE, -1);
             String thirdRegionName = sharedPreferences.getString(Key.THIRD_REGION_NAME, null);
-            return new SelfInfo(ichatId, ichatIdUser, email, registerTime, username, avatarHash,
+            return new SelfInfo(ichatId, ichatIdUser, email, registerTime, username,
+                    new AvatarInfo(avatarHash, avatarIchatId, avatarExtension, avatarTime),
                     sex == -1 ? null : sex,
                     (firstRegionAdcode == -1 && firstRegionName == null) ? null : new UserInfo.Region(firstRegionAdcode, firstRegionName),
                     (secondRegionAdcode == -1 && secondRegionName == null) ? null : new UserInfo.Region(secondRegionAdcode, secondRegionName),
-                    (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new UserInfo.Region(thirdRegionAdcode, thirdRegionName),
-                    avatarExtension);
+                    (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new UserInfo.Region(thirdRegionAdcode, thirdRegionName));
         }
 
         @SuppressLint("ApplySharedPref")
@@ -265,6 +282,67 @@ public class SharedPreferencesAccessor {
         public static int getChannelAdditionActivities(Context context){
             return getSharedPreferences(context)
                     .getInt(Key.CHANNEL_ADDITION_ACTIVITIES, 0);
+        }
+    }
+
+    public static class ApiJson{
+        private static final String NAME = "api_json";
+        private static class Key{
+            private static final String CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
+        }
+        private static final int MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE = 500;
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        }
+
+        private static class PaginatedApiJson{
+            private final int pn;
+            private final String json;
+
+            public PaginatedApiJson() {
+                this(0, null);
+            }
+
+            public PaginatedApiJson(int pn, String json) {
+                this.pn = pn;
+                this.json = json;
+            }
+        }
+
+        public static void addChannelAdditionActivities(Context context, String json){
+            Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
+            if(paginatedJsonSet.size() > MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
+            int pn = paginatedJsonSet.size() + 1;
+            PaginatedApiJson paginatedApiJson = new PaginatedApiJson(pn, json);
+            String paginatedJson = JsonUtil.toJson(paginatedApiJson);
+            HashSet<String> paginatedJsonSetCopy = new HashSet<>(paginatedJsonSet);
+            paginatedJsonSetCopy.add(paginatedJson);
+            getSharedPreferences(context)
+                    .edit()
+                    .putStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, paginatedJsonSetCopy)
+                    .apply();
+        }
+
+        public static void clearChannelAdditionActivities(Context context){
+            getSharedPreferences(context)
+                    .edit()
+                    .remove(Key.CHANNEL_ADDITION_ACTIVITIES)
+                    .apply();
+        }
+
+        public static List<String> getChannelAdditionActivities(Context context){
+            List<String> result = new ArrayList<>();
+            Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
+            List<PaginatedApiJson> paginatedApiJsonList = new ArrayList<>();
+            paginatedJsonSet.forEach(paginatedJson -> {
+                PaginatedApiJson paginatedApiJson = JsonUtil.toObject(paginatedJson, PaginatedApiJson.class);
+                paginatedApiJsonList.add(paginatedApiJson);
+            });
+            paginatedApiJsonList.sort(Comparator.comparingInt(o -> o.pn));
+            paginatedApiJsonList.forEach(paginatedApiJson -> {
+                result.add(paginatedApiJson.json);
+            });
+            return result;
         }
     }
 

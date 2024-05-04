@@ -77,7 +77,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         binding.addChannelButton.setVisibility(View.GONE);
         binding.sendMessageButton.setVisibility(View.GONE);
         avatarFile = selfInfo.getAvatarFile(this);
-        showContent(selfInfo.getAvatarHash(), selfInfo.getUsername(), selfInfo.getSex(), selfInfo.getIchatIdUser(), selfInfo.getEmail(), selfInfo.buildRegionDesc());
+        showContent(selfInfo.getAvatarInfo().getHash(), selfInfo.getUsername(), selfInfo.getSex(), selfInfo.getIchatId(), selfInfo.getIchatIdUser(), selfInfo.getEmail(), selfInfo.buildRegionDesc());
     }
 
     private void showChannelContent() {
@@ -88,10 +88,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             binding.sendMessageButton.setVisibility(View.GONE);
         }
         avatarFile = channelInfo.getAvatarFile(this);
-        showContent(channelInfo.getAvatarHash(), channelInfo.getUsername(), channelInfo.getSex(), channelInfo.getIchatIdUser(), channelInfo.getEmail(), channelInfo.buildRegionDesc());
+        showContent(channelInfo.getAvatarInfo().getHash(), channelInfo.getUsername(), channelInfo.getSex(), channelInfo.getIchatId(), channelInfo.getIchatIdUser(), channelInfo.getEmail(), channelInfo.buildRegionDesc());
     }
 
-    private void showContent(String avatarHash, String username, Integer sex, String ichatIdUser, String email, String regionDesc){
+    private void showContent(String avatarHash, String username, Integer sex, String ichatId, String ichatIdUser, String email, String regionDesc){
         if (avatarHash == null) {
             GlideApp.with(getApplicationContext())
                     .load(R.drawable.default_avatar)
@@ -103,7 +103,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                         .signature(new ObjectKey(avatarHash))
                         .into(binding.avatar);
             }else {
-                CacheFilesAccessor.cacheAvatarTempFromServer(getApplicationContext(), avatarHash, results -> {
+                CacheFilesAccessor.cacheAvatarTempFromServer(getApplicationContext(), avatarHash, ichatId, results -> {
                     avatarFile = (File) results[0];
                     GlideApp.with(getApplicationContext())
                             .load(avatarFile)
@@ -139,7 +139,8 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void setupYiers() {
         setLongClickCopyYiers();
         binding.avatar.setOnClickListener(v -> {
-            if((selfInfo != null && selfInfo.getAvatarHash() != null) || (channelInfo != null && channelInfo.getAvatarHash() != null)) {
+            if((selfInfo != null && selfInfo.getAvatarInfo() != null && selfInfo.getAvatarInfo().getHash() != null)
+                    || (channelInfo != null && channelInfo.getAvatarInfo() != null && channelInfo.getAvatarInfo().getHash() != null)) {
                 if (avatarFile != null) {
                     Intent intent = new Intent(this, AvatarActivity.class);
                     intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());

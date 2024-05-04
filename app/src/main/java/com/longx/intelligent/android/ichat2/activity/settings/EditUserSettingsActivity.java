@@ -122,7 +122,7 @@ public class EditUserSettingsActivity extends BaseActivity{
             preferenceChangeSex.setTitle(sexString);
             String regionDesc = selfInfo.buildRegionDesc();
             preferenceChangeRegion.setTitle(regionDesc == null ? doNotSet : regionDesc);
-            preferenceChangeAvatar.setAvatar(selfInfo.getAvatarHash(), selfInfo.getAvatarFile(requireContext()));
+            preferenceChangeAvatar.setAvatar(selfInfo.getAvatarInfo().getHash(), selfInfo.getAvatarFile(requireContext()));
         }
 
         @Override
