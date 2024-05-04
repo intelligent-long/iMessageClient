@@ -67,6 +67,13 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
         pagerAdapter.getReceiveFragment().onFetched(channelAdditionInfos);
     }
 
+    @Override
+    public void onFailure(String failureMessage) {
+        pagerAdapter.getPendingFragment().onFailure(failureMessage);
+        pagerAdapter.getSendFragment().onFailure(failureMessage);
+        pagerAdapter.getReceiveFragment().onFailure(failureMessage);
+    }
+
     private void fetchAndShowContent() {
         onStartFetch();
         ChannelApiCaller.fetchAllAdditionActivities(this, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
@@ -76,6 +83,18 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
                 List<ChannelAdditionInfo> channelAdditionInfos = data.getData(new TypeReference<List<ChannelAdditionInfo>>() {
                 });
                 onFetched(channelAdditionInfos);
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<OperationData> row, Call<OperationData> call) {
+                super.notOk(code, message, row, call);
+                ChannelAdditionActivitiesActivity.this.onFailure("HTTP 状态码异常 > " + code);
+            }
+
+            @Override
+            public void failure(Throwable t, Call<OperationData> call) {
+                super.failure(t, call);
+                ChannelAdditionActivitiesActivity.this.onFailure("出错了 > " + t.getClass().getName());
             }
         });
     }

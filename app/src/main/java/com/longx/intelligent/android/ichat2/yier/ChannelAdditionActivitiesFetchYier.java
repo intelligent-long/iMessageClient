@@ -10,4 +10,5 @@ import java.util.List;
 public interface ChannelAdditionActivitiesFetchYier {
     void onStartFetch();
     void onFetched(List<ChannelAdditionInfo> channelAdditionInfos);
+    void onFailure(String failureMessage);
 }

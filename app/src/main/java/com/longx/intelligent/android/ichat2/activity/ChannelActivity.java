@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.ObjectKey;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
-import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
@@ -20,17 +19,15 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
-import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.File;
-import java.util.Objects;
 
 public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChannelBinding binding;
     private ChannelInfo channelInfo;
     private SelfInfo selfInfo;
+    private boolean isNetworkFetched;
     private boolean isSelf;
-    private File avatarFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +51,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
      * to use self or channel
      */
     private void bindValues() {
+        isNetworkFetched = getIntent().getBooleanExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
         String ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
         channelInfo = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_INFO);
         selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
@@ -76,7 +74,6 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void showSelfContent() {
         binding.addChannelButton.setVisibility(View.GONE);
         binding.sendMessageButton.setVisibility(View.GONE);
-        avatarFile = selfInfo.getAvatarFile(this);
         showContent(selfInfo.getAvatarInfo().getHash(), selfInfo.getUsername(), selfInfo.getSex(), selfInfo.getIchatId(), selfInfo.getIchatIdUser(), selfInfo.getEmail(), selfInfo.buildRegionDesc());
     }
 
@@ -87,35 +84,20 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }else {
             binding.sendMessageButton.setVisibility(View.GONE);
         }
-        avatarFile = channelInfo.getAvatarFile(this);
         showContent(channelInfo.getAvatarInfo().getHash(), channelInfo.getUsername(), channelInfo.getSex(), channelInfo.getIchatId(), channelInfo.getIchatIdUser(), channelInfo.getEmail(), channelInfo.buildRegionDesc());
     }
 
     private void showContent(String avatarHash, String username, Integer sex, String ichatId, String ichatIdUser, String email, String regionDesc){
         if (avatarHash == null) {
-            GlideApp.with(getApplicationContext())
-                    .load(R.drawable.default_avatar)
-                    .into(binding.avatar);
+            GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, binding.avatar);
         } else {
-            if(avatarFile != null) {
-                GlideApp.with(getApplicationContext())
-                        .load(avatarFile)
-                        .signature(new ObjectKey(avatarHash))
-                        .into(binding.avatar);
-            }else {
-                CacheFilesAccessor.cacheAvatarTempFromServer(getApplicationContext(), avatarHash, ichatId, results -> {
-                    avatarFile = (File) results[0];
-                    GlideApp.with(getApplicationContext())
-                            .load(avatarFile)
-                            .signature(new ObjectKey(avatarHash))
-                            .into(binding.avatar);
-                });
-            }
+            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, avatarHash), binding.avatar);
         }
         binding.username.setText(username);
         if(sex == null || (sex != 0 && sex != 1)){
             binding.sexIcon.setVisibility(View.GONE);
         }else {
+            binding.sexIcon.setVisibility(View.VISIBLE);
             if(sex == 0){
                 binding.sexIcon.setImageResource(R.drawable.female_24px);
             }else {
@@ -126,12 +108,15 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(email == null){
             binding.layoutEmail.setVisibility(View.GONE);
         }else {
+            binding.layoutEmail.setVisibility(View.VISIBLE);
             binding.email.setText(email);
         }
         if(regionDesc == null){
             binding.layoutRegion.setVisibility(View.GONE);
             binding.regionDivider.setVisibility(View.GONE);
         }else {
+            binding.layoutRegion.setVisibility(View.VISIBLE);
+            binding.regionDivider.setVisibility(View.VISIBLE);
             binding.region.setText(regionDesc);
         }
     }
@@ -141,12 +126,11 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         binding.avatar.setOnClickListener(v -> {
             if((selfInfo != null && selfInfo.getAvatarInfo() != null && selfInfo.getAvatarInfo().getHash() != null)
                     || (channelInfo != null && channelInfo.getAvatarInfo() != null && channelInfo.getAvatarInfo().getHash() != null)) {
-                if (avatarFile != null) {
                     Intent intent = new Intent(this, AvatarActivity.class);
-                    intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());
-                    intent.putExtra(ExtraKeys.AVATAR_FILE_PATH, avatarFile.getAbsolutePath());
+                    intent.putExtra(ExtraKeys.ICHAT_ID, isSelf ? selfInfo.getIchatId() : channelInfo.getIchatId());
+                    intent.putExtra(ExtraKeys.AVATAR_HASH, isSelf ? selfInfo.getAvatarInfo().getHash() : channelInfo.getAvatarInfo().getHash());
+                    intent.putExtra(ExtraKeys.AVATAR_EXTENSION, isSelf ? selfInfo.getAvatarInfo().getExtension() : channelInfo.getAvatarInfo().getExtension());
                     startActivity(intent);
-                }
             }
         });
         binding.editMyInfoButton.setOnClickListener(v -> {

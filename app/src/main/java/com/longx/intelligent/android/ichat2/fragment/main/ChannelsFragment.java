@@ -114,6 +114,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     public void onItemClick(int position, ChannelListRecyclerAdapter.ItemData data) {
         Intent intent = new Intent(requireContext(), ChannelActivity.class);
         intent.putExtra(ExtraKeys.ICHAT_ID, data.getChannelInfo().getIchatId());
+        intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
         startActivity(intent);
     }
 

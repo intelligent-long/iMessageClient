@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.ObjectKey;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
+import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
@@ -71,16 +73,11 @@ public class ChannelListRecyclerAdapter extends WrappableRecyclerViewAdapter<Cha
     @Override
     public void onBindViewHolder(@NonNull ChannelListRecyclerAdapter.ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        File avatarFile = itemData.channelInfo.getAvatarFile(activity);
-        if (avatarFile == null) {
-            GlideApp.with(activity.getApplicationContext())
-                    .load(R.drawable.default_avatar)
-                    .into(holder.binding.avatar);
+        String avatarHash = itemData.channelInfo.getAvatarInfo().getHash();
+        if (avatarHash == null) {
+            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
         } else {
-            GlideApp.with(activity.getApplicationContext())
-                    .load(avatarFile)
-                    .signature(new ObjectKey(itemData.channelInfo.getAvatarInfo().getHash()))
-                    .into(holder.binding.avatar);
+            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
         }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
         int previousPosition = position - 1;

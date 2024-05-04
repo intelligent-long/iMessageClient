@@ -28,6 +28,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.RootSettingsActivity;
+import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
@@ -36,6 +37,7 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
@@ -132,16 +134,11 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private void showNavHeaderInfo() {
         View headerView1 = binding.navigationDrawer1.getHeaderView(0);
         SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
-        ShapeableImageView avatarImageView = (ShapeableImageView) headerView1.findViewById(R.id.avatar);
+        ShapeableImageView avatarImageView = headerView1.findViewById(R.id.avatar);
         if (selfInfo.getAvatarInfo() == null || selfInfo.getAvatarInfo().getHash() == null) {
-            GlideApp.with(getApplicationContext())
-                    .load(R.drawable.default_avatar)
-                    .into(avatarImageView);
+            GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, avatarImageView);
         } else {
-            GlideApp.with(getApplicationContext())
-                    .load(selfInfo.getAvatarFile(this))
-                    .signature(new ObjectKey(selfInfo.getAvatarInfo().getHash()))
-                    .into(avatarImageView);
+            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, selfInfo.getAvatarInfo().getHash()), avatarImageView);
         }
         String username = selfInfo.getUsername();
         String ichatIdUser = selfInfo.getIchatIdUser();
@@ -174,6 +171,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         headerView1.findViewById(R.id.user_info_page).setOnClickListener(v -> {
             Intent intent = new Intent(this, ChannelActivity.class);
             intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());
+            intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
             startActivity(intent);
         });
     }
@@ -243,13 +241,14 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
             return true;
         });
         View headerView = binding.navigationDrawer1.getHeaderView(0);
-        ShapeableImageView avatarImageView = (ShapeableImageView) headerView.findViewById(R.id.avatar);
+        ShapeableImageView avatarImageView = headerView.findViewById(R.id.avatar);
         avatarImageView.setOnClickListener(v -> {
             SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
             if(selfInfo.getAvatarInfo() != null && selfInfo.getAvatarInfo().getHash() != null) {
                 Intent intent = new Intent(this, AvatarActivity.class);
                 intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());
-                intent.putExtra(ExtraKeys.AVATAR_FILE_PATH, selfInfo.getAvatarFile(this).getAbsolutePath());
+                intent.putExtra(ExtraKeys.AVATAR_HASH, selfInfo.getAvatarInfo().getHash());
+                intent.putExtra(ExtraKeys.AVATAR_EXTENSION, selfInfo.getAvatarInfo().getExtension());
                 startActivity(intent);
             }
         });

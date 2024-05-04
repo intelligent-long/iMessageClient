@@ -86,6 +86,7 @@ public class SearchChannelActivity extends BaseActivity {
                                 ChannelInfo channelInfo = data.getData(ChannelInfo.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);
                                 intent.putExtra(ExtraKeys.CHANNEL_INFO, channelInfo);
+                                intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, true);
                                 startActivity(intent);
                             });
                         }
@@ -99,6 +100,7 @@ public class SearchChannelActivity extends BaseActivity {
                                 ChannelInfo channelInfo = data.getData(ChannelInfo.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);
                                 intent.putExtra(ExtraKeys.CHANNEL_INFO, channelInfo);
+                                intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, true);
                                 startActivity(intent);
                             });
                         }

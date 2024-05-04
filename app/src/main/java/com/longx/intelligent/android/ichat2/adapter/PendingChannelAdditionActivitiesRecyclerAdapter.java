@@ -6,13 +6,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.signature.ObjectKey;
+import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemPendingChannelAdditionActivityBinding;
+import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
@@ -80,21 +81,8 @@ public class PendingChannelAdditionActivitiesRecyclerAdapter extends WrappableRe
         }
         String username = channelInfo.getUsername();
         String avatarHash = channelInfo.getAvatarInfo().getHash();
-        String avatarExtension = channelInfo.getAvatarInfo().getExtension();
-        String ichatId = channelInfo.getIchatId();
         holder.binding.username.setText(username);
         holder.binding.message.setText(itemData.channelAdditionInfo.getMessage());
-        File avatarCache = CacheFilesAccessor.getAvatarCache(activity, ichatId, avatarExtension);
-        GlideApp.with(activity.getApplicationContext())
-                .load(avatarCache)
-                .signature(new ObjectKey(avatarHash))
-                .into(holder.binding.avatar);
-        CacheFilesAccessor.cacheAvatarTempFromServer(activity, avatarHash, ichatId, results -> {
-            File avatarCacheFile = (File) results[0];
-            GlideApp.with(activity.getApplicationContext())
-                    .load(avatarCacheFile)
-                    .signature(new ObjectKey(avatarHash))
-                    .into(holder.binding.avatar);
-        });
+        GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
     }
 }

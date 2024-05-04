@@ -14,29 +14,29 @@ import java.io.InputStream;
  * Created by LONG on 2024/1/21 at 8:19 PM.
  */
 public class PrivateFilesAccessor {
-    public static void saveAvatar(Context context, InputStream contentStream, String ichatId, String extension){
-        String path = DataPaths.File.getAvatar(context, ichatId, extension);
-        FileAccessor.save(contentStream, path);
-    }
-
-    public static InputStream getCurrentUserAvatar(Context context){
-        SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context);
-        return getAvatar(context, selfInfo.getIchatId(), selfInfo.getAvatarInfo().getExtension());
-    }
-
-    public static File getCurrentUserAvatarFile(Context context) {
-        SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context);
-        return getAvatarFile(context, selfInfo.getIchatId(), selfInfo.getAvatarInfo().getExtension());
-    }
-
-    public static InputStream getAvatar(Context context, String ichatId, String extension){
-        String path = DataPaths.File.getAvatar(context, ichatId, extension);
-        return FileAccessor.streamOf(path);
-    }
-
-    public static File getAvatarFile(Context context, String ichatId, String extension) {
-        String path = DataPaths.File.getAvatar(context, ichatId, extension);
-        return new File(path);
-    }
+//    public static void saveAvatar(Context context, InputStream contentStream, String ichatId, String extension){
+//        String path = DataPaths.File.getAvatar(context, ichatId, extension);
+//        FileAccessor.save(contentStream, path);
+//    }
+//
+//    public static InputStream getCurrentUserAvatar(Context context){
+//        SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context);
+//        return getAvatar(context, selfInfo.getIchatId(), selfInfo.getAvatarInfo().getExtension());
+//    }
+//
+//    public static File getCurrentUserAvatarFile(Context context) {
+//        SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context);
+//        return getAvatarFile(context, selfInfo.getIchatId(), selfInfo.getAvatarInfo().getExtension());
+//    }
+//
+//    public static InputStream getAvatar(Context context, String ichatId, String extension){
+//        String path = DataPaths.File.getAvatar(context, ichatId, extension);
+//        return FileAccessor.streamOf(path);
+//    }
+//
+//    public static File getAvatarFile(Context context, String ichatId, String extension) {
+//        String path = DataPaths.File.getAvatar(context, ichatId, extension);
+//        return new File(path);
+//    }
 
 }

@@ -103,7 +103,7 @@ public class ContentUpdater {
 
     public static void updateCurrentUserInfo(Context context, SelfInfo selfInfo) {
         if(selfInfo != null){
-            fetchAvatarAndStoreSelfInfoAndAvatar(context, selfInfo);
+            SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, selfInfo);
         }else {
             UserApiCaller.whoAmI(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO, context) {
                 @Override
@@ -111,28 +111,10 @@ public class ContentUpdater {
                     super.ok(data, row, call);
                     data.commonHandleSuccessResult(() -> {
                         SelfInfo selfInfo = data.getData(SelfInfo.class);
-                        fetchAvatarAndStoreSelfInfoAndAvatar(context, selfInfo);
+                        SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, selfInfo);
                     });
                 }
             });
-        }
-    }
-
-    private static void fetchAvatarAndStoreSelfInfoAndAvatar(Context context, SelfInfo selfInfo) {
-        if (selfInfo.getAvatarInfo() != null && selfInfo.getAvatarInfo().getHash() != null) {
-            UserApiCaller.fetchAvatar(null, selfInfo.getAvatarInfo().getHash(), new ContentUpdateApiYier<ResponseBody>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO, context) {
-                @Override
-                public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                    super.ok(data, row, call);
-                    InputStream contentStream = data.byteStream();
-                    String fileName = FileUtil.extractFileNameInHttpHeader(row.headers().get("Content-Disposition"));
-                    String extension = FileUtil.getFileExtension(fileName);
-                    SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, selfInfo);
-                    PrivateFilesAccessor.saveAvatar(context, contentStream, selfInfo.getIchatId(), extension);
-                }
-            });
-        } else {
-            SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, selfInfo);
         }
     }
 

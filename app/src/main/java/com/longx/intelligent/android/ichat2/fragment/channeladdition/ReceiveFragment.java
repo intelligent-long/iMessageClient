@@ -40,4 +40,9 @@ public class ReceiveFragment extends Fragment implements ChannelAdditionActiviti
     public void onFetched(List<ChannelAdditionInfo> channelAdditionInfos) {
 
     }
+
+    @Override
+    public void onFailure(String failureMessage) {
+
+    }
 }

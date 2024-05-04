@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 
 import java.io.File;
@@ -83,10 +84,18 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         return connected;
     }
 
-    public File getAvatarFile(Context context) {
-        if(avatarInfo == null || avatarInfo.getExtension() == null) return null;
-        return PrivateFilesAccessor.getAvatarFile(context, ichatId, avatarInfo.getExtension());
-    }
+//    public File getAvatarFile(Context context) {
+//        return getAvatarFile(context, false);
+//    }
+//
+//    public File getAvatarFile(Context context, boolean isCache) {
+//        if(avatarInfo == null || avatarInfo.getExtension() == null) return null;
+//        if(!isCache) {
+//            return PrivateFilesAccessor.getAvatarFile(context, ichatId, avatarInfo.getExtension());
+//        }else {
+//            return CacheFilesAccessor.getAvatarCacheFile(context, ichatId, avatarInfo.getExtension());
+//        }
+//    }
 
     public static final Creator<ChannelInfo> CREATOR = new Creator<ChannelInfo>() {
         @Override

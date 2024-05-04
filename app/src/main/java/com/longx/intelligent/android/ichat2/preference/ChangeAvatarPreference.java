@@ -12,6 +12,8 @@ import androidx.preference.PreferenceViewHolder;
 import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
@@ -37,9 +39,8 @@ public class ChangeAvatarPreference extends Material3Preference {
         showAvatar();
     }
 
-    public void setAvatar(String avatarHash, File avatarFile){
+    public void setAvatar(String avatarHash){
         this.avatarHash = avatarHash;
-        this.avatarFile = avatarFile;
         if(avatarView != null){
             showAvatar();
         }
@@ -47,14 +48,9 @@ public class ChangeAvatarPreference extends Material3Preference {
 
     private void showAvatar() {
         if(avatarHash == null){
-            GlideApp.with(getContext())
-                    .load(R.drawable.default_avatar)
-                    .into(avatarView);
+            GlideBehaviours.loadToImageView(getContext(), R.drawable.default_avatar, avatarView);
         }else {
-            GlideApp.with(getContext())
-                    .load(avatarFile)
-                    .signature(new ObjectKey(avatarHash))
-                    .into(avatarView);
+            GlideBehaviours.loadToImageView(getContext(), NetDataUrls.getAvatarUrl(getContext(), avatarHash), avatarView);
         }
     }
 }

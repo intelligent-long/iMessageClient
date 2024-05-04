@@ -23,10 +23,6 @@ public class DataPaths {
         public static String getCacheFolderPath(Context context) {
             return context.getCacheDir().getAbsolutePath();
         }
-
-        public static String getAvatarCachePath(Context context, String ichatId, String extension){
-            return getCacheFolderPath(context) + java.io.File.separator + "avatar" + java.io.File.separator + ichatId + extension;
-        }
     }
 
     public static class File{

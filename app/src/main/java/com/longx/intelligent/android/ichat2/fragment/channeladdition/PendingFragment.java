@@ -25,6 +25,7 @@ import java.util.List;
 public class PendingFragment extends Fragment implements ChannelAdditionActivitiesFetchYier {
     private FragmentPendingBinding binding;
     private boolean fetchingVisible;
+    private String failureMessage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
 
     private void showContent() {
         if(fetchingVisible) toFetchingVisible();
+        if(failureMessage != null) toFetchFailureMessageVisible(failureMessage);
         showCachedContent();
     }
 
@@ -57,7 +59,7 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
                 pendingChannelAdditionInfos.add(channelAdditionInfo);
             }
         });
-        if(!(pendingChannelAdditionInfos.size() > 0)){
+        if(pendingChannelAdditionInfos.size() == 0){
             if(!fetchingVisible) toNoContentVisible();
         }else {
             if(!fetchingVisible) toRecyclerViewVisible();
@@ -74,18 +76,29 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
         if(binding != null) binding.noContentTextView.setVisibility(View.VISIBLE);
         if(binding != null) binding.recyclerView.setVisibility(View.GONE);
         if(binding != null) binding.fetchingIndicatorLayout.setVisibility(View.GONE);
+        if(binding != null) binding.fetchFailureMessageLayout.setVisibility(View.GONE);
     }
 
     private void toRecyclerViewVisible() {
         if(binding != null) binding.noContentTextView.setVisibility(View.GONE);
         if(binding != null) binding.recyclerView.setVisibility(View.VISIBLE);
         if(binding != null) binding.fetchingIndicatorLayout.setVisibility(View.GONE);
+        if(binding != null) binding.fetchFailureMessageLayout.setVisibility(View.GONE);
     }
 
     private void toFetchingVisible(){
         if(binding != null) binding.noContentTextView.setVisibility(View.GONE);
         if(binding != null) binding.recyclerView.setVisibility(View.VISIBLE);
         if(binding != null) binding.fetchingIndicatorLayout.setVisibility(View.VISIBLE);
+        if(binding != null) binding.fetchFailureMessageLayout.setVisibility(View.GONE);
+    }
+
+    private void toFetchFailureMessageVisible(String message){
+        if(binding != null) binding.noContentTextView.setVisibility(View.GONE);
+        if(binding != null) binding.recyclerView.setVisibility(View.VISIBLE);
+        if(binding != null) binding.fetchingIndicatorLayout.setVisibility(View.GONE);
+        if(binding != null) binding.fetchFailureMessageLayout.setVisibility(View.VISIBLE);
+        if(binding != null) binding.fetchFailureMessage.setText(message);
     }
 
     @Override
@@ -113,5 +126,11 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
             PendingChannelAdditionActivitiesRecyclerAdapter recyclerAdapter = new PendingChannelAdditionActivitiesRecyclerAdapter(requireActivity(), itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
         }
+    }
+
+    @Override
+    public void onFailure(String failureMessage) {
+        this.failureMessage = failureMessage;
+        toFetchFailureMessageVisible(failureMessage);
     }
 }
