@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -13,6 +14,7 @@ import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityRequestAddChannelBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -45,17 +47,22 @@ public class RequestAddChannelActivity extends BaseActivity {
 
     private void setupYiers() {
         binding.sendRequestButton.setOnClickListener(v -> {
-            String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
-            RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channelInfo.getIchatIdUser(), inputtedMessage);
-            ChannelApiCaller.requestAddChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
-                @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
-                    data.commonHandleResult(RequestAddChannelActivity.this, new int[]{-101, -102, -103, -104}, () -> {
-                        new MessageDialog(RequestAddChannelActivity.this, "发送请求", "已向对方发送添加频道请求").show();
-                    });
-                }
-            });
+            new ConfirmDialog(this, "是否发送添加频道请求？")
+                    .setNegativeButton(null)
+                    .setPositiveButton((dialog, which) -> {
+                        String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
+                        RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channelInfo.getIchatIdUser(), inputtedMessage);
+                        ChannelApiCaller.requestAddChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                                super.ok(data, row, call);
+                                data.commonHandleResult(RequestAddChannelActivity.this, new int[]{-101, -102, -103, -104}, () -> {
+                                    new MessageDialog(RequestAddChannelActivity.this, "发送请求", "已向对方发送添加频道请求").show();
+                                });
+                            }
+                        });
+                    })
+                    .show();
         });
     }
 }
