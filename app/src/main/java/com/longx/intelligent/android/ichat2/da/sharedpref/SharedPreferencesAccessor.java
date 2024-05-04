@@ -307,6 +307,14 @@ public class SharedPreferencesAccessor {
                 this.pn = pn;
                 this.json = json;
             }
+
+            public int getPn() {
+                return pn;
+            }
+
+            public String getJson() {
+                return json;
+            }
         }
 
         public static void addChannelAdditionActivities(Context context, String json){

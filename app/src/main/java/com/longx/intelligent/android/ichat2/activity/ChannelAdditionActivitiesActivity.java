@@ -11,11 +11,13 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesViewPagerAdapter;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelAdditionActivitiesBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
 import java.util.List;
@@ -56,6 +58,10 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
 
     @Override
     public void onFetched(List<ChannelAdditionInfo> channelAdditionInfos) {
+        SharedPreferencesAccessor.ApiJson.clearChannelAdditionActivities(this);
+        channelAdditionInfos.forEach(channelAdditionInfo -> {
+            SharedPreferencesAccessor.ApiJson.addChannelAdditionActivities(this, JsonUtil.toJson(channelAdditionInfo));
+        });
         pagerAdapter.getPendingFragment().onFetched(channelAdditionInfos);
         pagerAdapter.getSendFragment().onFetched(channelAdditionInfos);
         pagerAdapter.getReceiveFragment().onFetched(channelAdditionInfos);

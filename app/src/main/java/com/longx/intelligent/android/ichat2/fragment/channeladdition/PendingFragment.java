@@ -15,6 +15,7 @@ import com.longx.intelligent.android.ichat2.adapter.PendingChannelAdditionActivi
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.databinding.FragmentPendingBinding;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
@@ -45,17 +46,20 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
 
     private void showCachedContent() {
         List<String> channelAdditionActivitiesApiJsons = SharedPreferencesAccessor.ApiJson.getChannelAdditionActivities(requireContext());
+        ErrorLogger.log("channelAdditionActivitiesApiJsonsSize: " + channelAdditionActivitiesApiJsons.size());
         List<ChannelAdditionInfo> channelAdditionInfos = new ArrayList<>();
         channelAdditionActivitiesApiJsons.forEach(channelAdditionActivitiesApiJson -> {
             ChannelAdditionInfo channelAdditionInfo = JsonUtil.toObject(channelAdditionActivitiesApiJson, ChannelAdditionInfo.class);
             channelAdditionInfos.add(channelAdditionInfo);
         });
+        ErrorLogger.log("channelAdditionInfosSize: " + channelAdditionInfos.size());
         List<ChannelAdditionInfo> pendingChannelAdditionInfos = new ArrayList<>();
         channelAdditionInfos.forEach(channelAdditionInfo -> {
             if(channelAdditionInfo.getRespondTime() == null){
                 pendingChannelAdditionInfos.add(channelAdditionInfo);
             }
         });
+        ErrorLogger.log("pendingChannelAdditionInfosSize: " + pendingChannelAdditionInfos.size());
         if(!(pendingChannelAdditionInfos.size() > 0)){
             if(!fetchingVisible) toNoContentVisible();
         }else {
@@ -64,7 +68,7 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
             pendingChannelAdditionInfos.forEach(channelAdditionInfo -> {
                 itemDataList.add(new PendingChannelAdditionActivitiesRecyclerAdapter.ItemData(channelAdditionInfo));
             });
-            PendingChannelAdditionActivitiesRecyclerAdapter recyclerAdapter = new PendingChannelAdditionActivitiesRecyclerAdapter((AppCompatActivity) requireActivity(), itemDataList);
+            PendingChannelAdditionActivitiesRecyclerAdapter recyclerAdapter = new PendingChannelAdditionActivitiesRecyclerAdapter(requireActivity(), itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
         }
     }
