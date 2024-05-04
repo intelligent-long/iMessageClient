@@ -46,20 +46,17 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
 
     private void showCachedContent() {
         List<String> channelAdditionActivitiesApiJsons = SharedPreferencesAccessor.ApiJson.getChannelAdditionActivities(requireContext());
-        ErrorLogger.log("channelAdditionActivitiesApiJsonsSize: " + channelAdditionActivitiesApiJsons.size());
         List<ChannelAdditionInfo> channelAdditionInfos = new ArrayList<>();
         channelAdditionActivitiesApiJsons.forEach(channelAdditionActivitiesApiJson -> {
             ChannelAdditionInfo channelAdditionInfo = JsonUtil.toObject(channelAdditionActivitiesApiJson, ChannelAdditionInfo.class);
             channelAdditionInfos.add(channelAdditionInfo);
         });
-        ErrorLogger.log("channelAdditionInfosSize: " + channelAdditionInfos.size());
         List<ChannelAdditionInfo> pendingChannelAdditionInfos = new ArrayList<>();
         channelAdditionInfos.forEach(channelAdditionInfo -> {
             if(channelAdditionInfo.getRespondTime() == null){
                 pendingChannelAdditionInfos.add(channelAdditionInfo);
             }
         });
-        ErrorLogger.log("pendingChannelAdditionInfosSize: " + pendingChannelAdditionInfos.size());
         if(!(pendingChannelAdditionInfos.size() > 0)){
             if(!fetchingVisible) toNoContentVisible();
         }else {
