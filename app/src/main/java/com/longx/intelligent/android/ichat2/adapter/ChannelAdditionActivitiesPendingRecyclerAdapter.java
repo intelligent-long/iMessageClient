@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -13,6 +14,8 @@ import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivityPendingBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.List;
@@ -89,5 +92,6 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
             holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
             holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
         }
+        ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
     }
 }

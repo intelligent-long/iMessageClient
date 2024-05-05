@@ -57,4 +57,10 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationStatus> viewOneAdditionActivity(LifecycleOwner lifecycleOwner, String uuid, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().viewOneAdditionActivity(uuid);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

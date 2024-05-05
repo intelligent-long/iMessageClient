@@ -35,4 +35,7 @@ public interface ChannelApi {
 
     @POST("channel/add/activity/view_all")
     CompletableCall<OperationStatus> viewAllAdditionActivities();
+
+    @POST("channel/add/activity/view/{uuid}")
+    CompletableCall<OperationStatus> viewOneAdditionActivity(@Path("uuid") String uuid);
 }
