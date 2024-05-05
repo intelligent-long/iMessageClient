@@ -54,12 +54,27 @@
                 android:textSize="17sp"/>
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:text="验证"/>
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/added_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="已添加"
+                android:textColor="?attr/colorOutline"/>
+
+            <TextView
+                android:id="@+id/expired_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="已过期"
+                android:textColor="?attr/colorOutline"/>
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

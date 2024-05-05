@@ -295,21 +295,21 @@ public class SharedPreferencesAccessor {
             return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         }
 
-        private static class PaginatedApiJson{
-            private final int pn;
+        private static class IndexedApiJson {
+            private final int index;
             private final String json;
 
-            public PaginatedApiJson() {
+            public IndexedApiJson() {
                 this(0, null);
             }
 
-            public PaginatedApiJson(int pn, String json) {
-                this.pn = pn;
+            public IndexedApiJson(int index, String json) {
+                this.index = index;
                 this.json = json;
             }
 
-            public int getPn() {
-                return pn;
+            public int getIndex() {
+                return index;
             }
 
             public String getJson() {
@@ -320,9 +320,9 @@ public class SharedPreferencesAccessor {
         public static void addChannelAdditionActivities(Context context, String json){
             Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
             if(paginatedJsonSet.size() > MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
-            int pn = paginatedJsonSet.size() + 1;
-            PaginatedApiJson paginatedApiJson = new PaginatedApiJson(pn, json);
-            String paginatedJson = JsonUtil.toJson(paginatedApiJson);
+            int index = paginatedJsonSet.size();
+            IndexedApiJson indexedApiJson = new IndexedApiJson(index, json);
+            String paginatedJson = JsonUtil.toJson(indexedApiJson);
             HashSet<String> paginatedJsonSetCopy = new HashSet<>(paginatedJsonSet);
             paginatedJsonSetCopy.add(paginatedJson);
             getSharedPreferences(context)
@@ -341,14 +341,14 @@ public class SharedPreferencesAccessor {
         public static List<String> getChannelAdditionActivities(Context context){
             List<String> result = new ArrayList<>();
             Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
-            List<PaginatedApiJson> paginatedApiJsonList = new ArrayList<>();
+            List<IndexedApiJson> indexedApiJsonList = new ArrayList<>();
             paginatedJsonSet.forEach(paginatedJson -> {
-                PaginatedApiJson paginatedApiJson = JsonUtil.toObject(paginatedJson, PaginatedApiJson.class);
-                paginatedApiJsonList.add(paginatedApiJson);
+                IndexedApiJson indexedApiJson = JsonUtil.toObject(paginatedJson, IndexedApiJson.class);
+                indexedApiJsonList.add(indexedApiJson);
             });
-            paginatedApiJsonList.sort(Comparator.comparingInt(o -> o.pn));
-            paginatedApiJsonList.forEach(paginatedApiJson -> {
-                result.add(paginatedApiJson.json);
+            indexedApiJsonList.sort(Comparator.comparingInt(o -> o.index));
+            indexedApiJsonList.forEach(indexedApiJson -> {
+                result.add(indexedApiJson.json);
             });
             return result;
         }

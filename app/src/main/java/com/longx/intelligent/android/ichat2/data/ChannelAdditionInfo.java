@@ -14,12 +14,13 @@ public class ChannelAdditionInfo {
     private final Date respondTime;
     private final boolean isAccepted;
     private final boolean isViewed;
+    private final boolean isExpired;
 
     public ChannelAdditionInfo() {
-        this(null, null, null, null, null, null, false, false);
+        this(null, null, null, null, null, null, false, false, false);
     }
 
-    public ChannelAdditionInfo(String uuid, ChannelInfo requesterChannelInfo, ChannelInfo responderChannelInfo, String message, Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed) {
+    public ChannelAdditionInfo(String uuid, ChannelInfo requesterChannelInfo, ChannelInfo responderChannelInfo, String message, Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed, boolean isExpired) {
         this.uuid = uuid;
         this.requesterChannelInfo = requesterChannelInfo;
         this.responderChannelInfo = responderChannelInfo;
@@ -28,6 +29,7 @@ public class ChannelAdditionInfo {
         this.respondTime = respondTime;
         this.isAccepted = isAccepted;
         this.isViewed = isViewed;
+        this.isExpired = isExpired;
     }
 
     public String getUuid() {
@@ -60,5 +62,9 @@ public class ChannelAdditionInfo {
 
     public boolean isViewed() {
         return isViewed;
+    }
+
+    public boolean isExpired() {
+        return isExpired;
     }
 }

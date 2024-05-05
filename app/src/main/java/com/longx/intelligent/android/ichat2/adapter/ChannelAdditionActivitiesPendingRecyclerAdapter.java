@@ -1,32 +1,30 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.bumptech.glide.signature.ObjectKey;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemPendingChannelAdditionActivityBinding;
+import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivityPendingBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Created by LONG on 2024/5/3 at 10:53 PM.
  */
-public class PendingChannelAdditionActivitiesRecyclerAdapter extends WrappableRecyclerViewAdapter<PendingChannelAdditionActivitiesRecyclerAdapter.ViewHolder, PendingChannelAdditionActivitiesRecyclerAdapter.ItemData> {
+public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelAdditionActivitiesPendingRecyclerAdapter.ViewHolder, ChannelAdditionActivitiesPendingRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
 
-    public PendingChannelAdditionActivitiesRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
+    public ChannelAdditionActivitiesPendingRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
         this.itemDataList = itemDataList;
     }
@@ -44,9 +42,9 @@ public class PendingChannelAdditionActivitiesRecyclerAdapter extends WrappableRe
     }
 
     public static class ViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder{
-        private final RecyclerItemPendingChannelAdditionActivityBinding binding;
+        private final RecyclerItemChannelAdditionActivityPendingBinding binding;
 
-        public ViewHolder(RecyclerItemPendingChannelAdditionActivityBinding binding) {
+        public ViewHolder(RecyclerItemChannelAdditionActivityPendingBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -55,7 +53,7 @@ public class PendingChannelAdditionActivitiesRecyclerAdapter extends WrappableRe
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemPendingChannelAdditionActivityBinding binding = RecyclerItemPendingChannelAdditionActivityBinding.inflate(activity.getLayoutInflater());
+        RecyclerItemChannelAdditionActivityPendingBinding binding = RecyclerItemChannelAdditionActivityPendingBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
@@ -71,8 +69,8 @@ public class PendingChannelAdditionActivitiesRecyclerAdapter extends WrappableRe
 
     private void showItem(ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        String currentUserIchatId = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity).getIchatId();
-        boolean isCurrentUserRequester = currentUserIchatId.equals(itemData.channelAdditionInfo.getRequesterChannelInfo().getIchatId());
+        SelfInfo currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity);
+        boolean isCurrentUserRequester = currentUserInfo.getIchatId().equals(itemData.channelAdditionInfo.getRequesterChannelInfo().getIchatId());
         ChannelInfo channelInfo;
         if(isCurrentUserRequester){
             channelInfo = itemData.channelAdditionInfo.getResponderChannelInfo();
@@ -84,5 +82,12 @@ public class PendingChannelAdditionActivitiesRecyclerAdapter extends WrappableRe
         holder.binding.username.setText(username);
         holder.binding.message.setText(itemData.channelAdditionInfo.getMessage());
         GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+        if(isCurrentUserRequester){
+            holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
+            holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
+            holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
+        }
     }
 }

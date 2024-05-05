@@ -29,10 +29,6 @@ public class DataPaths {
         public static String getPrivateFileFolderPath(Context context){
             return context.getFilesDir().getAbsolutePath();
         }
-
-        public static String getAvatar(Context context, String ichatId, String extension){
-            return getPrivateFileFolderPath(context)  + java.io.File.separator + "avatar"  + java.io.File.separator + ichatId + extension;
-        }
     }
 
     public static class Database{
