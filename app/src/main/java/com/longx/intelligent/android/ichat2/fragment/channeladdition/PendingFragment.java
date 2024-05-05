@@ -14,6 +14,7 @@ import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesPen
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.databinding.FragmentPendingBinding;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
@@ -107,7 +108,7 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
     private void setupRecyclerView(List<ChannelAdditionInfo> channelAdditionInfos) {
         List<ChannelAdditionInfo> pendingChannelAdditionInfos = new ArrayList<>();
         channelAdditionInfos.forEach(channelAdditionInfo -> {
-            if(channelAdditionInfo.getRespondTime() == null) {
+            if(channelAdditionInfo.getRespondTime() == null && !channelAdditionInfo.isExpired()) {
                 pendingChannelAdditionInfos.add(channelAdditionInfo);
             }
         });

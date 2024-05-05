@@ -79,6 +79,13 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
             holder.binding.username.setText(username);
             holder.binding.message.setText(itemData.channelAdditionInfo.getMessage());
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+            if(itemData.channelAdditionInfo.isAccepted()){
+                holder.binding.addedText.setVisibility(View.VISIBLE);
+                holder.binding.expiredText.setVisibility(View.GONE);
+            }else if(itemData.channelAdditionInfo.isExpired()){
+                holder.binding.addedText.setVisibility(View.GONE);
+                holder.binding.expiredText.setVisibility(View.VISIBLE);
+            }
         }else {
             holder.binding.getRoot().setVisibility(View.GONE);
         }

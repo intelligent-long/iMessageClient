@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 /**
@@ -12,8 +14,11 @@ public class ChannelAdditionInfo {
     private final String message;
     private final Date requestTime;
     private final Date respondTime;
+    @JsonProperty("isAccepted")
     private final boolean isAccepted;
+    @JsonProperty("isViewed")
     private final boolean isViewed;
+    @JsonProperty("isExpired")
     private final boolean isExpired;
 
     public ChannelAdditionInfo() {
