@@ -38,6 +38,7 @@
     <string name="sex_nv">女</string>
     <string name="title_new_channel">新的频道</string>
     <string name="title_tag">标签</string>
+    <string name="title_add_channel">添加频道</string>
     <string name="search_by_ichat_id_user">iChat ID</string>
     <string name="search_by_email">邮箱</string>
     <string name="channel_addition_activity_pending">待处理</string>

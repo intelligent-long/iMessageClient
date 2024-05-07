@@ -107,13 +107,13 @@ public class TimeUtil {
         return simpleDateFormat.format(date);
     }
 
-    public static boolean isDateAfter(long compareTo, long compare, long thresholdMillis) {
-        return isDateAfter(new Date(compareTo), new Date(compare), thresholdMillis);
+    public static boolean isDateAfter(long less, long greater, long thresholdMillis) {
+        return isDateAfter(new Date(less), new Date(greater), thresholdMillis);
     }
 
-    public static boolean isDateAfter(Date compareTo, Date compare, long thresholdMillis) {
-        long referenceTime = compareTo.getTime();
-        long targetTime = compare.getTime();
+    public static boolean isDateAfter(Date less, Date greater, long thresholdMillis) {
+        long referenceTime = less.getTime();
+        long targetTime = greater.getTime();
         return targetTime - referenceTime > thresholdMillis;
     }
 

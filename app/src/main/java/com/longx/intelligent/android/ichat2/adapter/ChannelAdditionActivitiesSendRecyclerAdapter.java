@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -14,8 +15,16 @@ import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivityPendingBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivitySendBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,9 +33,26 @@ import java.util.List;
 public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelAdditionActivitiesSendRecyclerAdapter.ViewHolder, ChannelAdditionActivitiesSendRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
+    private static final Date now = new Date();
+    private static final List<Pair<Long, String>> timePairs = new ArrayList<>();
+    static {
+        timePairs.add(new ImmutablePair<>(3 * 24 * 60 * 60 * 1000L, "三天前"));
+        timePairs.add(new ImmutablePair<>(7 * 24 * 60 * 60 * 1000L, "一周前"));
+        timePairs.add(new ImmutablePair<>(30 * 24 * 60 * 60 * 1000L, "一月前"));
+        timePairs.add(new ImmutablePair<>(365 * 24 * 60 * 60 * 1000L, "一年前"));
+    }
 
     public ChannelAdditionActivitiesSendRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
+        itemDataList.sort((o1, o2) -> {
+            Date o1RequestTime = o1.getChannelAdditionInfo().getRequestTime();
+            Date o1RespondTime = o1.getChannelAdditionInfo().getRespondTime();
+            Date o1Time = o1RespondTime == null ? o1RequestTime : o1RespondTime;
+            Date o2RequestTime = o2.getChannelAdditionInfo().getRequestTime();
+            Date o2RespondTime = o2.getChannelAdditionInfo().getRespondTime();
+            Date o2Time = o2RespondTime == null ? o2RequestTime : o2RespondTime;
+            return o1Time.compareTo(o2Time);
+        });
         this.itemDataList = itemDataList;
     }
 
@@ -89,5 +115,38 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
         }else {
             holder.binding.getRoot().setVisibility(View.GONE);
         }
+        checkAndShowTimeText(holder, position, itemData);
+        ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
+    }
+
+    private void checkAndShowTimeText(ViewHolder holder, int position, ItemData itemData) {
+        boolean hideTimeText = false;
+        Date time = itemData.channelAdditionInfo.getRespondTime() == null ? itemData.channelAdditionInfo.getRequestTime() : itemData.channelAdditionInfo.getRespondTime();
+        int timeTextIndex = getTimeTextIndex(time);
+        if(timeTextIndex == -1){
+            hideTimeText = true;
+        }else {
+            if (position > 0) {
+                ItemData itemDataPrevious = itemDataList.get(position - 1);
+                Date timePrevious = itemDataPrevious.channelAdditionInfo.getRespondTime() == null ? itemDataPrevious.channelAdditionInfo.getRequestTime() : itemDataPrevious.channelAdditionInfo.getRespondTime();
+                int timeTextIndexPrevious = getTimeTextIndex(timePrevious);
+                if (timeTextIndex == timeTextIndexPrevious) hideTimeText = true;
+            }
+        }
+        if(hideTimeText) {
+            holder.binding.timeText.setVisibility(View.GONE);
+        }else {
+            holder.binding.timeText.setText(timePairs.get(timeTextIndex).getValue());
+            holder.binding.timeText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private static int getTimeTextIndex(Date time) {
+        for (int i = 0; i < timePairs.size(); i++) {
+            if(TimeUtil.isDateAfter(time, now, timePairs.get(i).getKey())){
+                return i;
+            }
+        }
+        return -1;
     }
 }
