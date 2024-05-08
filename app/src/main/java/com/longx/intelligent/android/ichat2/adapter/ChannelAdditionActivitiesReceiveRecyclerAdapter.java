@@ -15,12 +15,11 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivityPendingBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivityReceiveBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivitySendBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -34,7 +33,7 @@ import java.util.List;
 /**
  * Created by LONG on 2024/5/3 at 10:53 PM.
  */
-public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelAdditionActivitiesSendRecyclerAdapter.ViewHolder, ChannelAdditionActivitiesSendRecyclerAdapter.ItemData> {
+public class ChannelAdditionActivitiesReceiveRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelAdditionActivitiesReceiveRecyclerAdapter.ViewHolder, ChannelAdditionActivitiesReceiveRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
     private static final Date now = new Date();
@@ -46,7 +45,7 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
         timePairs.add(new ImmutablePair<>(365 * 24 * 60 * 60 * 1000L, "一年前"));
     }
 
-    public ChannelAdditionActivitiesSendRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
+    public ChannelAdditionActivitiesReceiveRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
         itemDataList.sort((o1, o2) -> {
             Date o1RequestTime = o1.getChannelAdditionInfo().getRequestTime();
@@ -73,9 +72,9 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     }
 
     public static class ViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder{
-        private final RecyclerItemChannelAdditionActivitySendBinding binding;
+        private final RecyclerItemChannelAdditionActivityReceiveBinding binding;
 
-        public ViewHolder(RecyclerItemChannelAdditionActivitySendBinding binding) {
+        public ViewHolder(RecyclerItemChannelAdditionActivityReceiveBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -84,7 +83,7 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemChannelAdditionActivitySendBinding binding = RecyclerItemChannelAdditionActivitySendBinding.inflate(activity.getLayoutInflater());
+        RecyclerItemChannelAdditionActivityReceiveBinding binding = RecyclerItemChannelAdditionActivityReceiveBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
@@ -110,9 +109,9 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     private void showItem(ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         SelfInfo currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity);
-        boolean isCurrentUserRequester = currentUserInfo.getIchatId().equals(itemData.channelAdditionInfo.getRequesterChannelInfo().getIchatId());
-        if(isCurrentUserRequester){
-            ChannelInfo channelInfo = itemData.channelAdditionInfo.getResponderChannelInfo();
+        boolean isCurrentUserResponder = currentUserInfo.getIchatId().equals(itemData.channelAdditionInfo.getResponderChannelInfo().getIchatId());
+        if(isCurrentUserResponder){
+            ChannelInfo channelInfo = itemData.channelAdditionInfo.getRequesterChannelInfo();
             String username = channelInfo.getUsername();
             String avatarHash = channelInfo.getAvatarInfo().getHash();
             holder.binding.username.setText(username);

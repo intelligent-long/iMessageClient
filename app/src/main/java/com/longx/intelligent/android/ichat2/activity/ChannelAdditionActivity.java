@@ -88,6 +88,14 @@ public class ChannelAdditionActivity extends BaseActivity {
             binding.region.setText(regionDesc);
         }
         binding.requestTime.setText(SIMPLE_DATE_FORMAT.format(channelAdditionInfo.getRequestTime()));
+        if(channelAdditionInfo.getRespondTime() == null){
+            binding.respondTimeDivider.setVisibility(View.GONE);
+            binding.layoutRespondTime.setVisibility(View.GONE);
+        }else {
+            binding.respondTimeDivider.setVisibility(View.VISIBLE);
+            binding.layoutRespondTime.setVisibility(View.VISIBLE);
+            binding.respondTime.setText(SIMPLE_DATE_FORMAT.format(channelAdditionInfo.getRespondTime()));
+        }
         String message = channelAdditionInfo.getMessage();
         if(message == null || message.equals("")){
             binding.messageLayout.setVisibility(View.GONE);
@@ -99,10 +107,12 @@ public class ChannelAdditionActivity extends BaseActivity {
             binding.addedText.setVisibility(View.VISIBLE);
             binding.expiredText.setVisibility(View.GONE);
             binding.acceptAddButton.setVisibility(View.GONE);
+            binding.pendingConfirmText.setVisibility(View.GONE);
         }else if(channelAdditionInfo.isExpired()){
             binding.addedText.setVisibility(View.GONE);
             binding.expiredText.setVisibility(View.VISIBLE);
             binding.acceptAddButton.setVisibility(View.GONE);
+            binding.pendingConfirmText.setVisibility(View.GONE);
         }else {
             binding.addedText.setVisibility(View.GONE);
             binding.expiredText.setVisibility(View.GONE);
