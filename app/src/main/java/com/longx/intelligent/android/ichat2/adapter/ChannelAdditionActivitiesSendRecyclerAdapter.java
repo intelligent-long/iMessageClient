@@ -17,6 +17,7 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAddit
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -112,11 +113,13 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
                 holder.binding.addedText.setVisibility(View.GONE);
                 holder.binding.expiredText.setVisibility(View.VISIBLE);
             }
+            if(!itemData.channelAdditionInfo.isViewed()) {
+                ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
+            }
         }else {
             holder.binding.getRoot().setVisibility(View.GONE);
         }
         checkAndShowTimeText(holder, position, itemData);
-        ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
     }
 
     private void checkAndShowTimeText(ViewHolder holder, int position, ItemData itemData) {

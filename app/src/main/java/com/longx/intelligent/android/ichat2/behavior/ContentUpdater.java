@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -118,13 +119,14 @@ public class ContentUpdater {
         }
     }
 
-    public static void updateChannelAdditionNotViewCount(Context context){
+    public static void updateChannelAdditionNotViewCount(Context context, ResultsYier resultsYier){
         ChannelApiCaller.fetchChannelAdditionNotViewCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNEL_ADDITION_ACTIVITIES, context){
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
                 Integer notViewCount = data.getData(Integer.class);
                 SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewCount);
+                resultsYier.onResults();
             }
         });
     }

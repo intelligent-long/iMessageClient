@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAddit
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -137,7 +138,7 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
             holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
         }
         checkAndShowTimeText(holder, position, itemData);
-        if(!itemData.channelAdditionInfo.isViewed()) {
+        if (!itemData.channelAdditionInfo.isViewed()) {
             ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
         }
     }
