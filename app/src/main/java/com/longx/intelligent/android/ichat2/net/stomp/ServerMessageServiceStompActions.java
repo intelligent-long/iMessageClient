@@ -3,6 +3,8 @@ package com.longx.intelligent.android.ichat2.net.stomp;
 import android.content.Context;
 
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 
@@ -16,6 +18,12 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateChannelAdditionActivities(Context context){
+        GlobalYiersHolder.getYiers(ChannelAdditionActivitiesUpdateYier.class).ifPresent(channelAdditionActivitiesUpdateYiers -> {
+            channelAdditionActivitiesUpdateYiers.forEach(ChannelAdditionActivitiesUpdateYier::onChannelAdditionActivitiesUpdate);
+        });
+    }
+
+    public static void updateChannelAdditionsNotViewCount(Context context){
         ContentUpdater.updateChannelAdditionNotViewCount(context);
         GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
             newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {

@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivity;
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
@@ -92,10 +94,19 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
     }
 
     private void setupYiers(ViewHolder holder, int position) {
-        holder.binding.clickView.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, ChannelAdditionActivity.class);
-            activity.startActivity(intent);
-        });
+        View.OnClickListener onClickYier = getOnClickYier(holder, position);
+        holder.binding.clickView.setOnClickListener(onClickYier);
+        holder.binding.goConfirmButton.setOnClickListener(onClickYier);
+    }
+
+    private View.OnClickListener getOnClickYier(ViewHolder viewHolder, int position){
+        return v -> {
+            if(v.getId() == viewHolder.binding.clickView.getId() || v.getId() == viewHolder.binding.goConfirmButton.getId()){
+                Intent intent = new Intent(activity, ChannelAdditionActivity.class);
+                intent.putExtra(ExtraKeys.CHANNEL_ADDITION_INFO, itemDataList.get(position).channelAdditionInfo);
+                activity.startActivity(intent);
+            }
+        };
     }
 
     @Override
@@ -126,7 +137,9 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
             holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
         }
         checkAndShowTimeText(holder, position, itemData);
-        ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
+        if(!itemData.channelAdditionInfo.isViewed()) {
+            ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
+        }
     }
 
     private void checkAndShowTimeText(ViewHolder holder, int position, ItemData itemData) {

@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
 import androidx.lifecycle.LifecycleOwner;
 
+import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -36,6 +37,12 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> requestAddChannel(LifecycleOwner lifecycleOwner, RequestAddChannelPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().requestAddChannel(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> acceptAddChannel(LifecycleOwner lifecycleOwner, AcceptAddChannelPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().acceptAddChannel(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

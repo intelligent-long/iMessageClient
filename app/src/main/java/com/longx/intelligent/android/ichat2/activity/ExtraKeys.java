@@ -11,4 +11,5 @@ public class ExtraKeys {
     public static final String AVATAR_HASH = "avatar_hash";
     public static final String AVATAR_EXTENSION = "avatar_extension";
     public static final String IS_NETWORK_FETCHED = "is_network_fetched";
+    public static final String CHANNEL_ADDITION_INFO = "channel_addition_info";
 }

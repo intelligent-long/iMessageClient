@@ -57,7 +57,7 @@ public class RequestAddChannelActivity extends BaseActivity {
                             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                                 super.ok(data, row, call);
                                 data.commonHandleResult(RequestAddChannelActivity.this, new int[]{-101, -102, -103, -104}, () -> {
-                                    new MessageDialog(RequestAddChannelActivity.this, "发送请求", "已向对方发送添加频道请求").show();
+                                    new MessageDialog(RequestAddChannelActivity.this, "发送请求", "已发送添加频道请求").show();
                                 });
                             }
                         });

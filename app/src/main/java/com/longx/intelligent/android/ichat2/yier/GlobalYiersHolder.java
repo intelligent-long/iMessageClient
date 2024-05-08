@@ -58,6 +58,8 @@ public class GlobalYiersHolder {
             checkAndTriggerContentUpdateEvent((ContentUpdater.OnServerContentUpdateYier) yier);
         }else if(yier instanceof NewContentBadgeDisplayYier && clazz.isAssignableFrom(NewContentBadgeDisplayYier.class)){
             triggerNewContentBadgeDisplayEvent(context, (NewContentBadgeDisplayYier) yier, (NewContentBadgeDisplayYier.ID) objects[0]);
+        }else if(yier instanceof ChannelAdditionActivitiesUpdateYier && clazz.isAssignableFrom(ChannelAdditionActivitiesUpdateYier.class)){
+            triggerChannelAdditionActivitiesUpdateEvent((ChannelAdditionActivitiesUpdateYier) yier);
         }
     }
 
@@ -85,5 +87,9 @@ public class GlobalYiersHolder {
 
     private static void triggerNewContentBadgeDisplayEvent(Context context, NewContentBadgeDisplayYier yier, NewContentBadgeDisplayYier.ID id){
         yier.autoShowNewContentBadge(context, id);
+    }
+
+    private static void triggerChannelAdditionActivitiesUpdateEvent(ChannelAdditionActivitiesUpdateYier yier){
+        yier.onChannelAdditionActivitiesUpdate();
     }
 }

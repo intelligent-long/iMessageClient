@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
+import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -26,6 +27,9 @@ public interface ChannelApi {
 
     @POST("channel/add/request")
     CompletableCall<OperationStatus> requestAddChannel(@Body RequestAddChannelPostBody postBody);
+
+    @POST("channel/add/accept")
+    CompletableCall<OperationStatus> acceptAddChannel(@Body AcceptAddChannelPostBody postBody);
 
     @GET("channel/add/activity/not_view_count")
     CompletableCall<OperationData> fetchChannelAdditionNotViewCount();

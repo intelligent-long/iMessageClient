@@ -19,13 +19,15 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
+import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesUpdateYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChannelAdditionActivitiesActivity extends BaseActivity implements ChannelAdditionActivitiesFetchYier {
+public class ChannelAdditionActivitiesActivity extends BaseActivity implements ChannelAdditionActivitiesFetchYier, ChannelAdditionActivitiesUpdateYier {
     private ActivityChannelAdditionActivitiesBinding binding;
     private static String[] PAGER_TITLES;
     private ChannelAdditionActivitiesViewPagerAdapter pagerAdapter;
@@ -40,7 +42,13 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupUi();
-        fetchAndShowContent();
+        GlobalYiersHolder.holdYier(this, ChannelAdditionActivitiesUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ChannelAdditionActivitiesUpdateYier.class, this);
     }
 
     private void setupUi() {
@@ -97,5 +105,10 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
                 ChannelAdditionActivitiesActivity.this.onFailure("出错了 > " + t.getClass().getName());
             }
         });
+    }
+
+    @Override
+    public void onChannelAdditionActivitiesUpdate() {
+        runOnUiThread(this::fetchAndShowContent);
     }
 }
