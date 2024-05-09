@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.ChangeSexPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChangeSexBinding;
@@ -35,7 +35,7 @@ public class ChangeSexActivity extends BaseActivity {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.change){
                 String sexName = UiUtil.getEditTextString(binding.sexAutoCompleteTextView);
-                Integer sex = SelfInfo.sexStringToValue(this, sexName);
+                Integer sex = Self.sexStringToValue(this, sexName);
                 ChangeSexPostBody postBody = new ChangeSexPostBody(sex);
                 UserApiCaller.changeSex(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                     @Override
@@ -53,7 +53,7 @@ public class ChangeSexActivity extends BaseActivity {
 
     private void onCreateSetupChangeSexAutoCompleteTextView() {
         Integer sex = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this).getSex();
-        String currentSexName = SelfInfo.sexValueToString(this, sex);
+        String currentSexName = Self.sexValueToString(this, sex);
         binding.sexAutoCompleteTextView.setText(currentSexName);
     }
 

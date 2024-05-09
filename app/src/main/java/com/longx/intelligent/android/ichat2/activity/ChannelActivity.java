@@ -4,28 +4,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.bumptech.glide.signature.ObjectKey;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
-import java.io.File;
-
 public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChannelBinding binding;
-    private ChannelInfo channelInfo;
-    private SelfInfo selfInfo;
+    private Channel channel;
+    private Self self;
     private boolean isNetworkFetched;
     private boolean isSelf;
 
@@ -53,13 +48,13 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void bindValues() {
         isNetworkFetched = getIntent().getBooleanExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
         String ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
-        channelInfo = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_INFO);
-        selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
-        isSelf = (ichatId == null && channelInfo == null)
-                || (ichatId != null && ichatId.equals(selfInfo.getIchatId())
-                || (channelInfo != null && channelInfo.getIchatId().equals(selfInfo.getIchatId())));
-        if(!isSelf && channelInfo == null){
-            channelInfo = channelInfo; //TODO: get channelInfo by ichatId
+        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_INFO);
+        self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
+        isSelf = (ichatId == null && channel == null)
+                || (ichatId != null && ichatId.equals(self.getIchatId())
+                || (channel != null && channel.getIchatId().equals(self.getIchatId())));
+        if(!isSelf && channel == null){
+            channel = channel; //TODO: get channelInfo by ichatId
         }
     }
 
@@ -74,17 +69,17 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void showSelfContent() {
         binding.addChannelButton.setVisibility(View.GONE);
         binding.sendMessageButton.setVisibility(View.GONE);
-        showContent(selfInfo.getAvatarInfo().getHash(), selfInfo.getUsername(), selfInfo.getSex(), selfInfo.getIchatId(), selfInfo.getIchatIdUser(), selfInfo.getEmail(), selfInfo.buildRegionDesc());
+        showContent(self.getAvatar().getHash(), self.getUsername(), self.getSex(), self.getIchatId(), self.getIchatIdUser(), self.getEmail(), self.buildRegionDesc());
     }
 
     private void showChannelContent() {
         binding.editMyInfoButton.setVisibility(View.GONE);
-        if(channelInfo.isAssociated()){
+        if(channel.isAssociated()){
             binding.addChannelButton.setVisibility(View.GONE);
         }else {
             binding.sendMessageButton.setVisibility(View.GONE);
         }
-        showContent(channelInfo.getAvatarInfo().getHash(), channelInfo.getUsername(), channelInfo.getSex(), channelInfo.getIchatId(), channelInfo.getIchatIdUser(), channelInfo.getEmail(), channelInfo.buildRegionDesc());
+        showContent(channel.getAvatar().getHash(), channel.getUsername(), channel.getSex(), channel.getIchatId(), channel.getIchatIdUser(), channel.getEmail(), channel.buildRegionDesc());
     }
 
     private void showContent(String avatarHash, String username, Integer sex, String ichatId, String ichatIdUser, String email, String regionDesc){
@@ -124,12 +119,12 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void setupYiers() {
         setLongClickCopyYiers();
         binding.avatar.setOnClickListener(v -> {
-            if((selfInfo != null && selfInfo.getAvatarInfo() != null && selfInfo.getAvatarInfo().getHash() != null)
-                    || (channelInfo != null && channelInfo.getAvatarInfo() != null && channelInfo.getAvatarInfo().getHash() != null)) {
+            if((self != null && self.getAvatar() != null && self.getAvatar().getHash() != null)
+                    || (channel != null && channel.getAvatar() != null && channel.getAvatar().getHash() != null)) {
                     Intent intent = new Intent(this, AvatarActivity.class);
-                    intent.putExtra(ExtraKeys.ICHAT_ID, isSelf ? selfInfo.getIchatId() : channelInfo.getIchatId());
-                    intent.putExtra(ExtraKeys.AVATAR_HASH, isSelf ? selfInfo.getAvatarInfo().getHash() : channelInfo.getAvatarInfo().getHash());
-                    intent.putExtra(ExtraKeys.AVATAR_EXTENSION, isSelf ? selfInfo.getAvatarInfo().getExtension() : channelInfo.getAvatarInfo().getExtension());
+                    intent.putExtra(ExtraKeys.ICHAT_ID, isSelf ? self.getIchatId() : channel.getIchatId());
+                    intent.putExtra(ExtraKeys.AVATAR_HASH, isSelf ? self.getAvatar().getHash() : channel.getAvatar().getHash());
+                    intent.putExtra(ExtraKeys.AVATAR_EXTENSION, isSelf ? self.getAvatar().getExtension() : channel.getAvatar().getExtension());
                     startActivity(intent);
             }
         });
@@ -138,7 +133,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         });
         binding.addChannelButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, RequestAddChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL_INFO, channelInfo);
+            intent.putExtra(ExtraKeys.CHANNEL_INFO, channel);
             startActivity(intent);
         });
     }

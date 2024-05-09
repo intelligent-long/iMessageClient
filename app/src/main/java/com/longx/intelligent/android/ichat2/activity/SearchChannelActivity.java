@@ -10,7 +10,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
+import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySearchChannelBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -83,9 +83,9 @@ public class SearchChannelActivity extends BaseActivity {
                         public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                             super.ok(data, row, call);
                             data.commonHandleResult(SearchChannelActivity.this, new int[]{-101}, () -> {
-                                ChannelInfo channelInfo = data.getData(ChannelInfo.class);
+                                Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);
-                                intent.putExtra(ExtraKeys.CHANNEL_INFO, channelInfo);
+                                intent.putExtra(ExtraKeys.CHANNEL_INFO, channel);
                                 intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, true);
                                 startActivity(intent);
                             });
@@ -97,9 +97,9 @@ public class SearchChannelActivity extends BaseActivity {
                         public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                             super.ok(data, row, call);
                             data.commonHandleResult(SearchChannelActivity.this, new int[]{-101}, () -> {
-                                ChannelInfo channelInfo = data.getData(ChannelInfo.class);
+                                Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);
-                                intent.putExtra(ExtraKeys.CHANNEL_INFO, channelInfo);
+                                intent.putExtra(ExtraKeys.CHANNEL_INFO, channel);
                                 intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, true);
                                 startActivity(intent);
                             });

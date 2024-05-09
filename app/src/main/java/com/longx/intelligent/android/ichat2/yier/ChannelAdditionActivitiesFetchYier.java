@@ -1,6 +1,6 @@
 package com.longx.intelligent.android.ichat2.yier;
 
-import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
+import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 
 import java.util.List;
 
@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface ChannelAdditionActivitiesFetchYier {
     void onStartFetch();
-    void onFetched(List<ChannelAdditionInfo> channelAdditionInfos);
+    void onFetched(List<ChannelAddition> channelAdditions);
     void onFailure(String failureMessage);
 }

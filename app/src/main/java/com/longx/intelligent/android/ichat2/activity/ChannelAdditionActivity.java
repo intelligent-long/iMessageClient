@@ -1,18 +1,14 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
+import com.longx.intelligent.android.ichat2.data.ChannelAddition;
+import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelAdditionBinding;
@@ -21,7 +17,6 @@ import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 
 import java.text.SimpleDateFormat;
@@ -32,9 +27,9 @@ import retrofit2.Response;
 
 public class ChannelAdditionActivity extends BaseActivity {
     private ActivityChannelAdditionBinding binding;
-    private ChannelAdditionInfo channelAdditionInfo;
+    private ChannelAddition channelAddition;
     private boolean isRequester;
-    private ChannelInfo channelInfo;
+    private Channel channel;
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-HH-mm dd:MM:ss", Locale.CHINA);
 
     @Override
@@ -43,42 +38,42 @@ public class ChannelAdditionActivity extends BaseActivity {
         binding = ActivityChannelAdditionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        channelAdditionInfo = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_ADDITION_INFO);
-        isRequester = channelAdditionInfo.isRequester(this);
+        channelAddition = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_ADDITION_INFO);
+        isRequester = channelAddition.isRequester(this);
         if(isRequester){
-            channelInfo = channelAdditionInfo.getResponderChannelInfo();
+            channel = channelAddition.getResponderChannel();
         }else {
-            channelInfo = channelAdditionInfo.getRequesterChannelInfo();
+            channel = channelAddition.getRequesterChannel();
         }
         showContent();
         setupYiers();
     }
 
     private void showContent(){
-        if (channelInfo.getAvatarInfo().getHash() == null) {
+        if (channel.getAvatar().getHash() == null) {
             GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, binding.avatar);
         } else {
-            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, channelInfo.getAvatarInfo().getHash()), binding.avatar);
+            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, channel.getAvatar().getHash()), binding.avatar);
         }
-        binding.username.setText(channelInfo.getUsername());
-        if(channelInfo.getSex() == null || (channelInfo.getSex() != 0 && channelInfo.getSex() != 1)){
+        binding.username.setText(channel.getUsername());
+        if(channel.getSex() == null || (channel.getSex() != 0 && channel.getSex() != 1)){
             binding.sexIcon.setVisibility(View.GONE);
         }else {
             binding.sexIcon.setVisibility(View.VISIBLE);
-            if(channelInfo.getSex() == 0){
+            if(channel.getSex() == 0){
                 binding.sexIcon.setImageResource(R.drawable.female_24px);
             }else {
                 binding.sexIcon.setImageResource(R.drawable.male_24px);
             }
         }
-        binding.ichatIdUser.setText(channelInfo.getIchatIdUser());
-        if(channelInfo.getEmail() == null){
+        binding.ichatIdUser.setText(channel.getIchatIdUser());
+        if(channel.getEmail() == null){
             binding.layoutEmail.setVisibility(View.GONE);
         }else {
             binding.layoutEmail.setVisibility(View.VISIBLE);
-            binding.email.setText(channelInfo.getEmail());
+            binding.email.setText(channel.getEmail());
         }
-        String regionDesc = channelInfo.buildRegionDesc();
+        String regionDesc = channel.buildRegionDesc();
         if(regionDesc == null){
             binding.layoutRegion.setVisibility(View.GONE);
             binding.regionDivider.setVisibility(View.GONE);
@@ -87,28 +82,28 @@ public class ChannelAdditionActivity extends BaseActivity {
             binding.regionDivider.setVisibility(View.VISIBLE);
             binding.region.setText(regionDesc);
         }
-        binding.requestTime.setText(SIMPLE_DATE_FORMAT.format(channelAdditionInfo.getRequestTime()));
-        if(channelAdditionInfo.getRespondTime() == null){
+        binding.requestTime.setText(SIMPLE_DATE_FORMAT.format(channelAddition.getRequestTime()));
+        if(channelAddition.getRespondTime() == null){
             binding.respondTimeDivider.setVisibility(View.GONE);
             binding.layoutRespondTime.setVisibility(View.GONE);
         }else {
             binding.respondTimeDivider.setVisibility(View.VISIBLE);
             binding.layoutRespondTime.setVisibility(View.VISIBLE);
-            binding.respondTime.setText(SIMPLE_DATE_FORMAT.format(channelAdditionInfo.getRespondTime()));
+            binding.respondTime.setText(SIMPLE_DATE_FORMAT.format(channelAddition.getRespondTime()));
         }
-        String message = channelAdditionInfo.getMessage();
+        String message = channelAddition.getMessage();
         if(message == null || message.equals("")){
             binding.messageLayout.setVisibility(View.GONE);
         }else {
             binding.messageLayout.setVisibility(View.VISIBLE);
             binding.messageText.setText(message);
         }
-        if(channelAdditionInfo.isAccepted()){
+        if(channelAddition.isAccepted()){
             binding.addedText.setVisibility(View.VISIBLE);
             binding.expiredText.setVisibility(View.GONE);
             binding.acceptAddButton.setVisibility(View.GONE);
             binding.pendingConfirmText.setVisibility(View.GONE);
-        }else if(channelAdditionInfo.isExpired()){
+        }else if(channelAddition.isExpired()){
             binding.addedText.setVisibility(View.GONE);
             binding.expiredText.setVisibility(View.VISIBLE);
             binding.acceptAddButton.setVisibility(View.GONE);
@@ -129,11 +124,11 @@ public class ChannelAdditionActivity extends BaseActivity {
     private void setupYiers() {
         setLongClickCopyYiers();
         binding.avatar.setOnClickListener(v -> {
-            if(channelInfo != null && channelInfo.getAvatarInfo() != null && channelInfo.getAvatarInfo().getHash() != null) {
+            if(channel != null && channel.getAvatar() != null && channel.getAvatar().getHash() != null) {
                 Intent intent = new Intent(this, AvatarActivity.class);
-                intent.putExtra(ExtraKeys.ICHAT_ID, channelInfo.getIchatId());
-                intent.putExtra(ExtraKeys.AVATAR_HASH, channelInfo.getAvatarInfo().getHash());
-                intent.putExtra(ExtraKeys.AVATAR_EXTENSION, channelInfo.getAvatarInfo().getExtension());
+                intent.putExtra(ExtraKeys.ICHAT_ID, channel.getIchatId());
+                intent.putExtra(ExtraKeys.AVATAR_HASH, channel.getAvatar().getHash());
+                intent.putExtra(ExtraKeys.AVATAR_EXTENSION, channel.getAvatar().getExtension());
                 startActivity(intent);
             }
         });
@@ -141,7 +136,7 @@ public class ChannelAdditionActivity extends BaseActivity {
             new ConfirmDialog(this, "是否接受添加频道请求？")
                     .setNegativeButton("取消", null)
                     .setPositiveButton("确定", (dialog, which) -> {
-                        ChannelApiCaller.acceptAddChannel(this, new AcceptAddChannelPostBody(channelAdditionInfo.getUuid()), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                        ChannelApiCaller.acceptAddChannel(this, new AcceptAddChannelPostBody(channelAddition.getUuid()), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                                 super.ok(data, row, call);

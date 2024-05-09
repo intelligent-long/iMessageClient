@@ -12,15 +12,13 @@ import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivityPendingBinding;
+import com.longx.intelligent.android.ichat2.data.ChannelAddition;
+import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAdditionActivitySendBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -61,14 +59,14 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     }
 
     public static class ItemData{
-        private final ChannelAdditionInfo channelAdditionInfo;
+        private final ChannelAddition channelAddition;
 
-        public ItemData(ChannelAdditionInfo channelAdditionInfo) {
-            this.channelAdditionInfo = channelAdditionInfo;
+        public ItemData(ChannelAddition channelAddition) {
+            this.channelAddition = channelAddition;
         }
 
-        public ChannelAdditionInfo getChannelAdditionInfo() {
-            return channelAdditionInfo;
+        public ChannelAddition getChannelAdditionInfo() {
+            return channelAddition;
         }
     }
 
@@ -102,31 +100,31 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.clickView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelAdditionActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL_ADDITION_INFO, itemDataList.get(position).channelAdditionInfo);
+            intent.putExtra(ExtraKeys.CHANNEL_ADDITION_INFO, itemDataList.get(position).channelAddition);
             activity.startActivity(intent);
         });
     }
 
     private void showItem(ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        SelfInfo currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity);
-        boolean isCurrentUserRequester = currentUserInfo.getIchatId().equals(itemData.channelAdditionInfo.getRequesterChannelInfo().getIchatId());
+        Self currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity);
+        boolean isCurrentUserRequester = currentUserInfo.getIchatId().equals(itemData.channelAddition.getRequesterChannel().getIchatId());
         if(isCurrentUserRequester){
-            ChannelInfo channelInfo = itemData.channelAdditionInfo.getResponderChannelInfo();
-            String username = channelInfo.getUsername();
-            String avatarHash = channelInfo.getAvatarInfo().getHash();
+            Channel channel = itemData.channelAddition.getResponderChannel();
+            String username = channel.getUsername();
+            String avatarHash = channel.getAvatar().getHash();
             holder.binding.username.setText(username);
-            holder.binding.message.setText(itemData.channelAdditionInfo.getMessage());
+            holder.binding.message.setText(itemData.channelAddition.getMessage());
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
-            if(itemData.channelAdditionInfo.isAccepted()){
+            if(itemData.channelAddition.isAccepted()){
                 holder.binding.addedText.setVisibility(View.VISIBLE);
                 holder.binding.expiredText.setVisibility(View.GONE);
-            }else if(itemData.channelAdditionInfo.isExpired()){
+            }else if(itemData.channelAddition.isExpired()){
                 holder.binding.addedText.setVisibility(View.GONE);
                 holder.binding.expiredText.setVisibility(View.VISIBLE);
             }
-            if(!itemData.channelAdditionInfo.isViewed()) {
-                ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAdditionInfo.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
+            if(!itemData.channelAddition.isViewed()) {
+                ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAddition.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
             }
         }else {
             holder.binding.getRoot().setVisibility(View.GONE);
@@ -136,14 +134,14 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
 
     private void checkAndShowTimeText(ViewHolder holder, int position, ItemData itemData) {
         boolean hideTimeText = false;
-        Date time = itemData.channelAdditionInfo.getRespondTime() == null ? itemData.channelAdditionInfo.getRequestTime() : itemData.channelAdditionInfo.getRespondTime();
+        Date time = itemData.channelAddition.getRespondTime() == null ? itemData.channelAddition.getRequestTime() : itemData.channelAddition.getRespondTime();
         int timeTextIndex = getTimeTextIndex(time);
         if(timeTextIndex == -1){
             hideTimeText = true;
         }else {
             if (position > 0) {
                 ItemData itemDataPrevious = itemDataList.get(position - 1);
-                Date timePrevious = itemDataPrevious.channelAdditionInfo.getRespondTime() == null ? itemDataPrevious.channelAdditionInfo.getRequestTime() : itemDataPrevious.channelAdditionInfo.getRespondTime();
+                Date timePrevious = itemDataPrevious.channelAddition.getRespondTime() == null ? itemDataPrevious.channelAddition.getRequestTime() : itemDataPrevious.channelAddition.getRespondTime();
                 int timeTextIndexPrevious = getTimeTextIndex(timePrevious);
                 if (timeTextIndex == timeTextIndexPrevious) hideTimeText = true;
             }

@@ -1,18 +1,14 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesViewPagerAdapter;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
+import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelAdditionActivitiesBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -65,14 +61,14 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
     }
 
     @Override
-    public void onFetched(List<ChannelAdditionInfo> channelAdditionInfos) {
+    public void onFetched(List<ChannelAddition> channelAdditions) {
         SharedPreferencesAccessor.ApiJson.clearChannelAdditionActivities(this);
-        channelAdditionInfos.forEach(channelAdditionInfo -> {
+        channelAdditions.forEach(channelAdditionInfo -> {
             SharedPreferencesAccessor.ApiJson.addChannelAdditionActivities(this, JsonUtil.toJson(channelAdditionInfo));
         });
-        pagerAdapter.getPendingFragment().onFetched(channelAdditionInfos);
-        pagerAdapter.getSendFragment().onFetched(channelAdditionInfos);
-        pagerAdapter.getReceiveFragment().onFetched(channelAdditionInfos);
+        pagerAdapter.getPendingFragment().onFetched(channelAdditions);
+        pagerAdapter.getSendFragment().onFetched(channelAdditions);
+        pagerAdapter.getReceiveFragment().onFetched(channelAdditions);
     }
 
     @Override
@@ -88,9 +84,9 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                List<ChannelAdditionInfo> channelAdditionInfos = data.getData(new TypeReference<List<ChannelAdditionInfo>>() {
+                List<ChannelAddition> channelAdditions = data.getData(new TypeReference<List<ChannelAddition>>() {
                 });
-                onFetched(channelAdditionInfos);
+                onFetched(channelAdditions);
             }
 
             @Override

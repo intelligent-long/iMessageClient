@@ -14,10 +14,10 @@ import java.util.Date;
 /**
  * Created by LONG on 2024/5/2 at 1:11 AM.
  */
-public class ChannelAdditionInfo implements Parcelable {
+public class ChannelAddition implements Parcelable {
     private final String uuid;
-    private final ChannelInfo requesterChannelInfo;
-    private final ChannelInfo responderChannelInfo;
+    private final Channel requesterChannel;
+    private final Channel responderChannel;
     private final String message;
     private final Date requestTime;
     private final Date respondTime;
@@ -28,14 +28,14 @@ public class ChannelAdditionInfo implements Parcelable {
     @JsonProperty("isExpired")
     private final boolean isExpired;
 
-    public ChannelAdditionInfo() {
+    public ChannelAddition() {
         this(null, null, null, null, null, null, false, false, false);
     }
 
-    public ChannelAdditionInfo(String uuid, ChannelInfo requesterChannelInfo, ChannelInfo responderChannelInfo, String message, Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed, boolean isExpired) {
+    public ChannelAddition(String uuid, Channel requesterChannel, Channel responderChannel, String message, Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed, boolean isExpired) {
         this.uuid = uuid;
-        this.requesterChannelInfo = requesterChannelInfo;
-        this.responderChannelInfo = responderChannelInfo;
+        this.requesterChannel = requesterChannel;
+        this.responderChannel = responderChannel;
         this.message = message;
         this.requestTime = requestTime;
         this.respondTime = respondTime;
@@ -48,12 +48,12 @@ public class ChannelAdditionInfo implements Parcelable {
         return uuid;
     }
 
-    public ChannelInfo getRequesterChannelInfo() {
-        return requesterChannelInfo;
+    public Channel getRequesterChannel() {
+        return requesterChannel;
     }
 
-    public ChannelInfo getResponderChannelInfo() {
-        return responderChannelInfo;
+    public Channel getResponderChannel() {
+        return responderChannel;
     }
 
     public String getMessage() {
@@ -81,25 +81,25 @@ public class ChannelAdditionInfo implements Parcelable {
     }
 
     public boolean isRequester(Context context){
-        return requesterChannelInfo.getIchatId().equals(SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId());
+        return requesterChannel.getIchatId().equals(SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId());
     }
 
-    public static final Creator<ChannelAdditionInfo> CREATOR = new Creator<ChannelAdditionInfo>() {
+    public static final Creator<ChannelAddition> CREATOR = new Creator<ChannelAddition>() {
         @Override
-        public ChannelAdditionInfo createFromParcel(Parcel in) {
-            return new ChannelAdditionInfo(in);
+        public ChannelAddition createFromParcel(Parcel in) {
+            return new ChannelAddition(in);
         }
 
         @Override
-        public ChannelAdditionInfo[] newArray(int size) {
-            return new ChannelAdditionInfo[size];
+        public ChannelAddition[] newArray(int size) {
+            return new ChannelAddition[size];
         }
     };
 
-    protected ChannelAdditionInfo(Parcel in){
+    protected ChannelAddition(Parcel in){
         uuid = in.readString();
-        requesterChannelInfo = in.readParcelable(getClass().getClassLoader());
-        responderChannelInfo = in.readParcelable(getClass().getClassLoader());
+        requesterChannel = in.readParcelable(getClass().getClassLoader());
+        responderChannel = in.readParcelable(getClass().getClassLoader());
         message = in.readString();
         requestTime = (Date) in.readValue(getClass().getClassLoader());
         respondTime = (Date) in.readValue(getClass().getClassLoader());
@@ -116,28 +116,13 @@ public class ChannelAdditionInfo implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(uuid);
-        dest.writeParcelable(requesterChannelInfo, flags);
-        dest.writeParcelable(responderChannelInfo, flags);
+        dest.writeParcelable(requesterChannel, flags);
+        dest.writeParcelable(responderChannel, flags);
         dest.writeString(message);
         dest.writeValue(requestTime);
         dest.writeValue(respondTime);
         dest.writeInt(isAccepted ? 1 : 0);
         dest.writeInt(isViewed ? 1 : 0);
         dest.writeInt(isExpired ? 1 : 0);
-    }
-
-    @Override
-    public String toString() {
-        return "ChannelAdditionInfo{" +
-                "uuid='" + uuid + '\'' +
-                ", requesterChannelInfo=" + requesterChannelInfo +
-                ", responderChannelInfo=" + responderChannelInfo +
-                ", message='" + message + '\'' +
-                ", requestTime=" + requestTime +
-                ", respondTime=" + respondTime +
-                ", isAccepted=" + isAccepted +
-                ", isViewed=" + isViewed +
-                ", isExpired=" + isExpired +
-                '}';
     }
 }

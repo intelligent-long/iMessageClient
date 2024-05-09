@@ -4,24 +4,19 @@ import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
-import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
-import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
-import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -107,17 +102,17 @@ public class ContentUpdater {
         updateCurrentUserInfo(context, null);
     }
 
-    public static void updateCurrentUserInfo(Context context, SelfInfo selfInfo) {
-        if(selfInfo != null){
-            SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, selfInfo);
+    public static void updateCurrentUserInfo(Context context, Self self) {
+        if(self != null){
+            SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, self);
         }else {
             UserApiCaller.whoAmI(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO, context) {
                 @Override
                 public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                     super.ok(data, row, call);
                     data.commonHandleSuccessResult(() -> {
-                        SelfInfo selfInfo = data.getData(SelfInfo.class);
-                        SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, selfInfo);
+                        Self self = data.getData(Self.class);
+                        SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, self);
                     });
                 }
             });

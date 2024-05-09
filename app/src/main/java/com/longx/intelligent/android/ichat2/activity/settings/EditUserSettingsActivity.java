@@ -8,13 +8,9 @@ import androidx.preference.Preference;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
-import com.bumptech.glide.signature.ObjectKey;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeAvatarActivity;
@@ -27,9 +23,8 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.EditAvatarBottomSheet;
-import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserSettingsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -37,7 +32,6 @@ import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFrag
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.preference.ChangeAvatarPreference;
-import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
@@ -109,20 +103,20 @@ public class EditUserSettingsActivity extends BaseActivity{
 
         @Override
         protected void showInfo() {
-            SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+            Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
             String doNotSet = getString(R.string.do_not_set);
-            String ichatIdUser = selfInfo.getIchatIdUser();
-            String username = selfInfo.getUsername();
-            String email = selfInfo.getEmail();
-            Integer sex = selfInfo.getSex();
-            String sexString = SelfInfo.sexValueToString(requireContext(), sex);
+            String ichatIdUser = self.getIchatIdUser();
+            String username = self.getUsername();
+            String email = self.getEmail();
+            Integer sex = self.getSex();
+            String sexString = Self.sexValueToString(requireContext(), sex);
             preferenceChangeIchatIdUser.setTitle(ichatIdUser == null ? doNotSet : ichatIdUser);
             preferenceChangeUsername.setTitle(username == null ? doNotSet : username);
             preferenceChangeEmail.setTitle(email == null ? doNotSet : email);
             preferenceChangeSex.setTitle(sexString);
-            String regionDesc = selfInfo.buildRegionDesc();
+            String regionDesc = self.buildRegionDesc();
             preferenceChangeRegion.setTitle(regionDesc == null ? doNotSet : regionDesc);
-            preferenceChangeAvatar.setAvatar(selfInfo.getAvatarInfo().getHash());
+            preferenceChangeAvatar.setAvatar(self.getAvatar().getHash());
         }
 
         @Override

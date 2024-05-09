@@ -1,16 +1,11 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Parcelable;
 
-import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityRequestAddChannelBinding;
@@ -26,8 +21,8 @@ import retrofit2.Response;
 
 public class RequestAddChannelActivity extends BaseActivity {
     private ActivityRequestAddChannelBinding binding;
-    private ChannelInfo channelInfo;
-    private  SelfInfo currentUserInfo;
+    private Channel channel;
+    private Self currentUserInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +30,7 @@ public class RequestAddChannelActivity extends BaseActivity {
         binding = ActivityRequestAddChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        channelInfo = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_INFO);
+        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_INFO);
         currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         showContent();
         setupYiers();
@@ -51,7 +46,7 @@ public class RequestAddChannelActivity extends BaseActivity {
                     .setNegativeButton(null)
                     .setPositiveButton((dialog, which) -> {
                         String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
-                        RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channelInfo.getIchatIdUser(), inputtedMessage);
+                        RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channel.getIchatIdUser(), inputtedMessage);
                         ChannelApiCaller.requestAddChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {

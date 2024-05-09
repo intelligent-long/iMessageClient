@@ -21,8 +21,8 @@ import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.adapter.ChannelsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
@@ -83,22 +83,22 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
         ArrayList<ChannelsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
-        ChannelInfo selfChannelInfo = new ChannelInfo(
-                selfInfo.getIchatId(),
-                selfInfo.getIchatIdUser(),
-                selfInfo.getEmail(),
-                selfInfo.getUsername(),
-                selfInfo.getAvatarInfo(),
-                selfInfo.getSex(),
-                selfInfo.getFirstRegion(),
-                selfInfo.getSecondRegion(),
-                selfInfo.getThirdRegion(),
+        Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+        Channel selfChannel = new Channel(
+                self.getIchatId(),
+                self.getIchatIdUser(),
+                self.getEmail(),
+                self.getUsername(),
+                self.getAvatar(),
+                self.getSex(),
+                self.getFirstRegion(),
+                self.getSecondRegion(),
+                self.getThirdRegion(),
                 true);
-        itemDataList.add(new ChannelsRecyclerAdapter.ItemData(selfChannelInfo));
+        itemDataList.add(new ChannelsRecyclerAdapter.ItemData(selfChannel));
         List<ChannelAssociation> channelAssociations = ChannelsDatabaseManager.getInstance().findAll();
         channelAssociations.forEach(channelAssociation -> {
-            itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannelInfo()));
+            itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannel()));
         });
         ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), itemDataList);
         channelsRecyclerAdapter.setOnItemClickYier(this);
@@ -122,8 +122,9 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     @Override
     public void onItemClick(int position, ChannelsRecyclerAdapter.ItemData data) {
         Intent intent = new Intent(requireContext(), ChannelActivity.class);
-        intent.putExtra(ExtraKeys.ICHAT_ID, data.getChannelInfo().getIchatId());
+        intent.putExtra(ExtraKeys.ICHAT_ID, data.getChannel().getIchatId());
         intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
+        intent.putExtra(ExtraKeys.CHANNEL_INFO, data.getChannel());
         startActivity(intent);
     }
 

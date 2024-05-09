@@ -7,9 +7,9 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.data.AvatarInfo;
+import com.longx.intelligent.android.ichat2.data.Avatar;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.net.ServerProperties;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
@@ -177,29 +177,29 @@ public class SharedPreferencesAccessor {
         }
 
         @SuppressLint("ApplySharedPref")
-        public static void saveCurrentUserInfo(Context context, SelfInfo selfInfo){
+        public static void saveCurrentUserInfo(Context context, Self self){
             getSharedPreferences(context)
                     .edit()
-                    .putString(Key.ICHAT_ID, selfInfo.getIchatId())
-                    .putString(Key.ICHAT_ID_USER, selfInfo.getIchatIdUser())
-                    .putString(Key.EMAIL, selfInfo.getEmail())
-                    .putLong(Key.REGISTER_TIME, selfInfo.getRegisterTime().getTime())
-                    .putString(Key.USERNAME, selfInfo.getUsername())
-                    .putString(Key.AVATAR_HASH, selfInfo.getAvatarInfo().getHash())
-                    .putString(Key.AVATAR_ICHAT_ID, selfInfo.getAvatarInfo().getIchatId())
-                    .putString(Key.AVATAR_EXTENSION, selfInfo.getAvatarInfo().getExtension())
-                    .putLong(Key.AVATAR_TIME, selfInfo.getAvatarInfo().getTime().getTime())
-                    .putInt(Key.SEX, selfInfo.getSex() == null ? -1 : selfInfo.getSex())
-                    .putInt(Key.FIRST_REGION_ADCODE, selfInfo.getFirstRegion() == null ? -1 : selfInfo.getFirstRegion().getAdcode())
-                    .putString(Key.FIRST_REGION_NAME, selfInfo.getFirstRegion() == null ? null : selfInfo.getFirstRegion().getName())
-                    .putInt(Key.SECOND_REGION_ADCODE, selfInfo.getSecondRegion() == null ? -1 : selfInfo.getSecondRegion().getAdcode())
-                    .putString(Key.SECOND_REGION_NAME, selfInfo.getSecondRegion() == null ? null : selfInfo.getSecondRegion().getName())
-                    .putInt(Key.THIRD_REGION_ADCODE, selfInfo.getThirdRegion() == null ? -1 : selfInfo.getThirdRegion().getAdcode())
-                    .putString(Key.THIRD_REGION_NAME, selfInfo.getThirdRegion() == null ? null : selfInfo.getThirdRegion().getName())
+                    .putString(Key.ICHAT_ID, self.getIchatId())
+                    .putString(Key.ICHAT_ID_USER, self.getIchatIdUser())
+                    .putString(Key.EMAIL, self.getEmail())
+                    .putLong(Key.REGISTER_TIME, self.getRegisterTime().getTime())
+                    .putString(Key.USERNAME, self.getUsername())
+                    .putString(Key.AVATAR_HASH, self.getAvatar().getHash())
+                    .putString(Key.AVATAR_ICHAT_ID, self.getAvatar().getIchatId())
+                    .putString(Key.AVATAR_EXTENSION, self.getAvatar().getExtension())
+                    .putLong(Key.AVATAR_TIME, self.getAvatar().getTime().getTime())
+                    .putInt(Key.SEX, self.getSex() == null ? -1 : self.getSex())
+                    .putInt(Key.FIRST_REGION_ADCODE, self.getFirstRegion() == null ? -1 : self.getFirstRegion().getAdcode())
+                    .putString(Key.FIRST_REGION_NAME, self.getFirstRegion() == null ? null : self.getFirstRegion().getName())
+                    .putInt(Key.SECOND_REGION_ADCODE, self.getSecondRegion() == null ? -1 : self.getSecondRegion().getAdcode())
+                    .putString(Key.SECOND_REGION_NAME, self.getSecondRegion() == null ? null : self.getSecondRegion().getName())
+                    .putInt(Key.THIRD_REGION_ADCODE, self.getThirdRegion() == null ? -1 : self.getThirdRegion().getAdcode())
+                    .putString(Key.THIRD_REGION_NAME, self.getThirdRegion() == null ? null : self.getThirdRegion().getName())
                     .commit();
         }
 
-        public static SelfInfo getCurrentUserInfo(Context context){
+        public static Self getCurrentUserInfo(Context context){
             SharedPreferences sharedPreferences = getSharedPreferences(context);
             String ichatId = sharedPreferences.getString(Key.ICHAT_ID, null);
             String ichatIdUser = sharedPreferences.getString(Key.ICHAT_ID_USER, null);
@@ -225,8 +225,8 @@ public class SharedPreferencesAccessor {
             String secondRegionName = sharedPreferences.getString(Key.SECOND_REGION_NAME, null);
             int thirdRegionAdcode = sharedPreferences.getInt(Key.THIRD_REGION_ADCODE, -1);
             String thirdRegionName = sharedPreferences.getString(Key.THIRD_REGION_NAME, null);
-            return new SelfInfo(ichatId, ichatIdUser, email, registerTime, username,
-                    new AvatarInfo(avatarHash, avatarIchatId, avatarExtension, avatarTime),
+            return new Self(ichatId, ichatIdUser, email, registerTime, username,
+                    new Avatar(avatarHash, avatarIchatId, avatarExtension, avatarTime),
                     sex == -1 ? null : sex,
                     (firstRegionAdcode == -1 && firstRegionName == null) ? null : new UserInfo.Region(firstRegionAdcode, firstRegionName),
                     (secondRegionAdcode == -1 && secondRegionName == null) ? null : new UserInfo.Region(secondRegionAdcode, secondRegionName),

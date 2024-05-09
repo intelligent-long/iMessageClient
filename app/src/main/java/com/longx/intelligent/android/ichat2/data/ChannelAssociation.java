@@ -16,7 +16,7 @@ public class ChannelAssociation {
     private Date acceptTime;
     private boolean isActive;
     @JsonProperty("channel")
-    private ChannelInfo channelInfo;
+    private Channel channel;
 
     public ChannelAssociation() {
     }
@@ -31,9 +31,9 @@ public class ChannelAssociation {
         this.isActive = isActive;
     }
 
-    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean isActive, ChannelInfo channelInfo) {
+    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean isActive, Channel channel) {
         this(associationId, ichatId, channelIchatId, isRequester, requestTime, acceptTime, isActive);
-        this.channelInfo = channelInfo;
+        this.channel = channel;
     }
 
     public String getAssociationId() {
@@ -64,7 +64,7 @@ public class ChannelAssociation {
         return isActive;
     }
 
-    public ChannelInfo getChannelInfo() {
-        return channelInfo;
+    public Channel getChannel() {
+        return channel;
     }
 }

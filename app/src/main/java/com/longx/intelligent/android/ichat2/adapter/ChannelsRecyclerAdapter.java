@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
+import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
@@ -31,22 +31,22 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
 
     public static class ItemData{
         private Character indexChar;
-        private ChannelInfo channelInfo;
+        private Channel channel;
 
-        public ItemData(ChannelInfo channelInfo) {
-            indexChar = PinyinUtil.getPinyin(channelInfo.getUsername()).toUpperCase().charAt(0);
+        public ItemData(Channel channel) {
+            indexChar = PinyinUtil.getPinyin(channel.getUsername()).toUpperCase().charAt(0);
             if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
                 indexChar = '#';
             }
-            this.channelInfo = channelInfo;
+            this.channel = channel;
         }
 
         public Character getIndexChar() {
             return indexChar;
         }
 
-        public ChannelInfo getChannelInfo() {
-            return channelInfo;
+        public Channel getChannel() {
+            return channel;
         }
     }
 
@@ -68,7 +68,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
     @Override
     public void onBindViewHolder(@NonNull ChannelsRecyclerAdapter.ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        String avatarHash = itemData.channelInfo.getAvatarInfo().getHash();
+        String avatarHash = itemData.channel.getAvatar().getHash();
         if (avatarHash == null) {
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
         } else {
@@ -86,7 +86,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
                 holder.binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        holder.binding.username.setText(itemData.channelInfo.getUsername());
+        holder.binding.username.setText(itemData.channel.getUsername());
         holder.binding.clickItem.setOnClickListener(v -> {
             getOnItemClickYier().onItemClick(position, itemData);
         });

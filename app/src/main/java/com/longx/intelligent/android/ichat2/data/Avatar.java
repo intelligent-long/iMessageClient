@@ -10,16 +10,16 @@ import java.util.Date;
 /**
  * Created by LONG on 2024/4/29 at 9:28 PM.
  */
-public class AvatarInfo implements Parcelable {
+public class Avatar implements Parcelable {
     private String hash;
     private String ichatId;
     private String extension;
     private Date time;
 
-    public AvatarInfo() {
+    public Avatar() {
     }
 
-    public AvatarInfo(String hash, String ichatId, String extension, Date time) {
+    public Avatar(String hash, String ichatId, String extension, Date time) {
         this.hash = hash;
         this.ichatId = ichatId;
         this.extension = extension;
@@ -42,15 +42,15 @@ public class AvatarInfo implements Parcelable {
         return hash;
     }
 
-    public static final Creator<AvatarInfo> CREATOR = new Creator<AvatarInfo>() {
+    public static final Creator<Avatar> CREATOR = new Creator<Avatar>() {
         @Override
-        public AvatarInfo createFromParcel(Parcel in) {
-            return new AvatarInfo(in);
+        public Avatar createFromParcel(Parcel in) {
+            return new Avatar(in);
         }
 
         @Override
-        public AvatarInfo[] newArray(int size) {
-            return new AvatarInfo[size];
+        public Avatar[] newArray(int size) {
+            return new Avatar[size];
         }
     };
 
@@ -59,7 +59,7 @@ public class AvatarInfo implements Parcelable {
         return 0;
     }
 
-    protected AvatarInfo(Parcel in) {
+    protected Avatar(Parcel in) {
         hash = in.readString();
         ichatId = in.readString();
         extension = in.readString();

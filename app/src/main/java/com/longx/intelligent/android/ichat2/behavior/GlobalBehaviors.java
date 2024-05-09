@@ -8,7 +8,7 @@ import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.EmailLoginPostBody;
 import com.longx.intelligent.android.ichat2.data.request.IchatIdUserLoginPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendVerifyCodePostBody;
@@ -42,8 +42,8 @@ public class GlobalBehaviors {
                     public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                         super.ok(data, row, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
-                            SelfInfo selfInfo = data.getData(SelfInfo.class);
-                            onLoginSuccess(activity, selfInfo);
+                            Self self = data.getData(Self.class);
+                            onLoginSuccess(activity, self);
                         });
                     }
                 });
@@ -56,8 +56,8 @@ public class GlobalBehaviors {
                     public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                         super.ok(data, row, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
-                            SelfInfo selfInfo = data.getData(SelfInfo.class);
-                            onLoginSuccess(activity, selfInfo);
+                            Self self = data.getData(Self.class);
+                            onLoginSuccess(activity, self);
                         });
                     }
                 });
@@ -70,8 +70,8 @@ public class GlobalBehaviors {
                     public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                         super.ok(data, row, call);
                         data.commonHandleResult(activity, new int[]{-101, -102, -103}, () -> {
-                            SelfInfo selfInfo = data.getData(SelfInfo.class);
-                            onLoginSuccess(activity, selfInfo);
+                            Self self = data.getData(Self.class);
+                            onLoginSuccess(activity, self);
                         });
                     }
                 });
@@ -80,7 +80,7 @@ public class GlobalBehaviors {
         }
     }
 
-    private static void onLoginSuccess(Context context, SelfInfo userInfo){
+    private static void onLoginSuccess(Context context, Self userInfo){
         SharedPreferencesAccessor.NetPref.saveLoginState(context, true);
         reloadWhenAccountSwitched(context, userInfo);
         ServerMessageService.work((Application) context.getApplicationContext());
@@ -139,9 +139,9 @@ public class GlobalBehaviors {
         });
     }
 
-    public static void reloadWhenAccountSwitched(Context context, SelfInfo selfInfo){
+    public static void reloadWhenAccountSwitched(Context context, Self self){
         SharedPreferencesAccessor.UserInfoPref.clear(context);
-        ContentUpdater.updateCurrentUserInfo(context, selfInfo);
+        ContentUpdater.updateCurrentUserInfo(context, self);
         DatabaseInitiator.initAll(context);
     }
 

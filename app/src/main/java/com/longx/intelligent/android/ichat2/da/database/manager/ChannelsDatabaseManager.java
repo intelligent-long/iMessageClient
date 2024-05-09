@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.longx.intelligent.android.ichat2.da.database.helper.ChannelsDatabaseHelper;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.AvatarInfo;
+import com.longx.intelligent.android.ichat2.data.Avatar;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
-import com.longx.intelligent.android.ichat2.data.ChannelInfo;
+import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
 
@@ -60,25 +60,25 @@ public class ChannelsDatabaseManager extends BaseDatabaseManager{
                     result.set(false);
                 }
                 ContentValues values1 = new ContentValues();
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID, channelAssociation.getChannelInfo().getIchatId());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER, channelAssociation.getChannelInfo().getIchatIdUser());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.EMAIL, channelAssociation.getChannelInfo().getEmail());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.USERNAME, channelAssociation.getChannelInfo().getUsername());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_HASH, channelAssociation.getChannelInfo().getAvatarInfo().getHash());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID, channelAssociation.getChannelInfo().getAvatarInfo().getIchatId());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION, channelAssociation.getChannelInfo().getAvatarInfo().getExtension());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_TIME, channelAssociation.getChannelInfo().getAvatarInfo().getTime().getTime());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.SEX, channelAssociation.getChannelInfo().getSex());
-                UserInfo.Region firstRegion = channelAssociation.getChannelInfo().getFirstRegion();
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID, channelAssociation.getChannel().getIchatId());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER, channelAssociation.getChannel().getIchatIdUser());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.EMAIL, channelAssociation.getChannel().getEmail());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.USERNAME, channelAssociation.getChannel().getUsername());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_HASH, channelAssociation.getChannel().getAvatar().getHash());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID, channelAssociation.getChannel().getAvatar().getIchatId());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION, channelAssociation.getChannel().getAvatar().getExtension());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.AVATAR_TIME, channelAssociation.getChannel().getAvatar().getTime().getTime());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.SEX, channelAssociation.getChannel().getSex());
+                UserInfo.Region firstRegion = channelAssociation.getChannel().getFirstRegion();
                 values1.put(ChannelsDatabaseHelper.TableChannelsColumns.FIRST_REGION_ADCODE, firstRegion == null ? null : firstRegion.getAdcode());
                 values1.put(ChannelsDatabaseHelper.TableChannelsColumns.FIRST_REGION_NAME, firstRegion == null ? null : firstRegion.getName());
-                UserInfo.Region secondRegion = channelAssociation.getChannelInfo().getSecondRegion();
+                UserInfo.Region secondRegion = channelAssociation.getChannel().getSecondRegion();
                 values1.put(ChannelsDatabaseHelper.TableChannelsColumns.SECOND_REGION_ADCODE, secondRegion == null ? null : secondRegion.getAdcode());
                 values1.put(ChannelsDatabaseHelper.TableChannelsColumns.SECOND_REGION_NAME, secondRegion == null ? null : secondRegion.getName());
-                UserInfo.Region thirdRegion = channelAssociation.getChannelInfo().getThirdRegion();
+                UserInfo.Region thirdRegion = channelAssociation.getChannel().getThirdRegion();
                 values1.put(ChannelsDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE, thirdRegion == null ? null : thirdRegion.getAdcode());
                 values1.put(ChannelsDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME, thirdRegion == null ? null : thirdRegion.getName());
-                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.ASSOCIATED, channelAssociation.getChannelInfo().isAssociated());
+                values1.put(ChannelsDatabaseHelper.TableChannelsColumns.ASSOCIATED, channelAssociation.getChannel().isAssociated());
                 long id1 = getDatabase().insertWithOnConflict(ChannelsDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null,
                         values1, SQLiteDatabase.CONFLICT_IGNORE);
                 if(id1 == -1){
@@ -125,10 +125,11 @@ public class ChannelsDatabaseManager extends BaseDatabaseManager{
                 String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelsDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
                 Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelsDatabaseHelper.TableChannelsColumns.ASSOCIATED);
                 result.add(new ChannelAssociation(associationId, associationTableIchatId, channelIchatId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
-                        new ChannelInfo(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, new AvatarInfo(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
-                                channelTableSex, new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
-                                new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
-                                new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
+                        new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+                                channelTableSex,
+                                channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
+                                channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
+                                channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
                                 Boolean.TRUE.equals(channelTableAssociated))));
             }
             return result;

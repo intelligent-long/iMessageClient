@@ -11,7 +11,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.bottomsheet.AuthMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.ChangePasswordPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RegistrationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ResetPasswordPostBody;
@@ -243,8 +243,8 @@ public class AuthActivity extends BaseActivity {
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
                 data.commonHandleResult(AuthActivity.this, new int[]{-101, -102, -103}, () -> {
-                    SelfInfo selfInfo = data.getData(SelfInfo.class);
-                    String message = "邮箱: " + selfInfo.getEmail() + "\n注册成功，是否登录？";
+                    Self self = data.getData(Self.class);
+                    String message = "邮箱: " + self.getEmail() + "\n注册成功，是否登录？";
                     new ConfirmDialog(AuthActivity.this, message)
                             .setPositiveButton((dialogInterface, i) -> {
                                 binding.loginEmailInput.setText(registerEmail);

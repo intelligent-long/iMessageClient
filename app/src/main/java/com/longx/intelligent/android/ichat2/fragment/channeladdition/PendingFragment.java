@@ -12,22 +12,19 @@ import android.view.ViewGroup;
 
 import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesPendingRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ChannelAdditionInfo;
+import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.databinding.FragmentPendingBinding;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class PendingFragment extends Fragment implements ChannelAdditionActivitiesFetchYier {
     private FragmentPendingBinding binding;
     private boolean fetchingVisible;
     private String failureMessage;
-    private List<ChannelAdditionInfo> fetchedChannelAdditionInfos;
+    private List<ChannelAddition> fetchedChannelAdditions;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,21 +42,21 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
     private void showContent() {
         if(fetchingVisible) toFetchingVisible();
         if(failureMessage != null) toFetchFailureMessageVisible(failureMessage);
-        if(fetchedChannelAdditionInfos == null) {
+        if(fetchedChannelAdditions == null) {
             showCachedContent();
         }else {
-            setupRecyclerView(fetchedChannelAdditionInfos);
+            setupRecyclerView(fetchedChannelAdditions);
         }
     }
 
     private void showCachedContent() {
         List<String> channelAdditionActivitiesApiJsons = SharedPreferencesAccessor.ApiJson.getChannelAdditionActivities(requireContext());
-        List<ChannelAdditionInfo> channelAdditionInfos = new ArrayList<>();
+        List<ChannelAddition> channelAdditions = new ArrayList<>();
         channelAdditionActivitiesApiJsons.forEach(channelAdditionActivitiesApiJson -> {
-            ChannelAdditionInfo channelAdditionInfo = JsonUtil.toObject(channelAdditionActivitiesApiJson, ChannelAdditionInfo.class);
-            channelAdditionInfos.add(channelAdditionInfo);
+            ChannelAddition channelAddition = JsonUtil.toObject(channelAdditionActivitiesApiJson, ChannelAddition.class);
+            channelAdditions.add(channelAddition);
         });
-        setupRecyclerView(channelAdditionInfos);
+        setupRecyclerView(channelAdditions);
     }
 
     private void toNoContentVisible() {
@@ -98,28 +95,28 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
     }
 
     @Override
-    public void onFetched(List<ChannelAdditionInfo> channelAdditionInfos) {
+    public void onFetched(List<ChannelAddition> channelAdditions) {
         fetchingVisible = false;
         if(binding == null) {
-            fetchedChannelAdditionInfos = channelAdditionInfos;
+            fetchedChannelAdditions = channelAdditions;
         }else {
-            setupRecyclerView(channelAdditionInfos);
+            setupRecyclerView(channelAdditions);
         }
     }
 
-    private void setupRecyclerView(List<ChannelAdditionInfo> channelAdditionInfos) {
-        List<ChannelAdditionInfo> pendingChannelAdditionInfos = new ArrayList<>();
-        channelAdditionInfos.forEach(channelAdditionInfo -> {
+    private void setupRecyclerView(List<ChannelAddition> channelAdditions) {
+        List<ChannelAddition> pendingChannelAdditions = new ArrayList<>();
+        channelAdditions.forEach(channelAdditionInfo -> {
             if(channelAdditionInfo.getRespondTime() == null && !channelAdditionInfo.isExpired()) {
-                pendingChannelAdditionInfos.add(channelAdditionInfo);
+                pendingChannelAdditions.add(channelAdditionInfo);
             }
         });
-        if(pendingChannelAdditionInfos.size() == 0){
+        if(pendingChannelAdditions.size() == 0){
             if(!fetchingVisible) toNoContentVisible();
         }else {
             if(!fetchingVisible) toRecyclerViewVisible();
             List<ChannelAdditionActivitiesPendingRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-            pendingChannelAdditionInfos.forEach(pendingChannelAdditionInfo -> {
+            pendingChannelAdditions.forEach(pendingChannelAdditionInfo -> {
                 itemDataList.add(new ChannelAdditionActivitiesPendingRecyclerAdapter.ItemData(pendingChannelAdditionInfo));
             });
             ChannelAdditionActivitiesPendingRecyclerAdapter recyclerAdapter = new ChannelAdditionActivitiesPendingRecyclerAdapter(requireActivity(), itemDataList);

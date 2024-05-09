@@ -11,8 +11,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -20,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.signature.ObjectKey;
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.R;
@@ -31,16 +27,13 @@ import com.longx.intelligent.android.ichat2.activity.settings.RootSettingsActivi
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
-import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
-import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
-import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -48,7 +41,6 @@ import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 
-import java.io.File;
 import java.util.Date;
 import java.util.Objects;
 
@@ -133,18 +125,18 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     private void showNavHeaderInfo() {
         View headerView1 = binding.navigationDrawer1.getHeaderView(0);
-        SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
+        Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         ShapeableImageView avatarImageView = headerView1.findViewById(R.id.avatar);
-        if (selfInfo.getAvatarInfo() == null || selfInfo.getAvatarInfo().getHash() == null) {
+        if (self.getAvatar() == null || self.getAvatar().getHash() == null) {
             GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, avatarImageView);
         } else {
-            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, selfInfo.getAvatarInfo().getHash()), avatarImageView);
+            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, self.getAvatar().getHash()), avatarImageView);
         }
-        String username = selfInfo.getUsername();
-        String ichatIdUser = selfInfo.getIchatIdUser();
-        String email = selfInfo.getEmail();
-        Integer sex = selfInfo.getSex();
-        String regionDesc = selfInfo.buildRegionDesc();
+        String username = self.getUsername();
+        String ichatIdUser = self.getIchatIdUser();
+        String email = self.getEmail();
+        Integer sex = self.getSex();
+        String regionDesc = self.buildRegionDesc();
         ((TextView)headerView1.findViewById(R.id.username)).setText(username);
         ((TextView)headerView1.findViewById(R.id.ichat_id_user)).setText(ichatIdUser);
         ((TextView)headerView1.findViewById(R.id.email)).setText(email);
@@ -170,7 +162,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
         headerView1.findViewById(R.id.user_info_page).setOnClickListener(v -> {
             Intent intent = new Intent(this, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());
+            intent.putExtra(ExtraKeys.ICHAT_ID, self.getIchatId());
             intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
             startActivity(intent);
         });
@@ -243,12 +235,12 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         View headerView = binding.navigationDrawer1.getHeaderView(0);
         ShapeableImageView avatarImageView = headerView.findViewById(R.id.avatar);
         avatarImageView.setOnClickListener(v -> {
-            SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
-            if(selfInfo.getAvatarInfo() != null && selfInfo.getAvatarInfo().getHash() != null) {
+            Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
+            if(self.getAvatar() != null && self.getAvatar().getHash() != null) {
                 Intent intent = new Intent(this, AvatarActivity.class);
-                intent.putExtra(ExtraKeys.ICHAT_ID, selfInfo.getIchatId());
-                intent.putExtra(ExtraKeys.AVATAR_HASH, selfInfo.getAvatarInfo().getHash());
-                intent.putExtra(ExtraKeys.AVATAR_EXTENSION, selfInfo.getAvatarInfo().getExtension());
+                intent.putExtra(ExtraKeys.ICHAT_ID, self.getIchatId());
+                intent.putExtra(ExtraKeys.AVATAR_HASH, self.getAvatar().getHash());
+                intent.putExtra(ExtraKeys.AVATAR_EXTENSION, self.getAvatar().getExtension());
                 startActivity(intent);
             }
         });

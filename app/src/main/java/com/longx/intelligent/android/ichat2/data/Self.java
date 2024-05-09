@@ -3,43 +3,37 @@ package com.longx.intelligent.android.ichat2.data;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
-import android.content.Context;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
-import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 
-import java.io.File;
 import java.util.Date;
 
 /**
  * Created by LONG on 2024/3/30 at 12:56 PM.
  */
 @JsonAutoDetect(getterVisibility = NONE, fieldVisibility = ANY)
-public class SelfInfo extends UserInfo{
+public class Self extends UserInfo{
     private final String ichatId;
     private final String ichatIdUser;
     private final String email;
     private final Date registerTime;
     private final String username;
-    private final AvatarInfo avatarInfo;
+    private final Avatar avatar;
     private final Integer sex;
     private final Region firstRegion;
     private final Region secondRegion;
     private final Region thirdRegion;
 
-    public SelfInfo() {
+    public Self() {
         this(null, null, null, null, null, null, null, null, null, null);
     }
 
-    public SelfInfo(String ichatId, String ichatIdUser, String email, Date registerTime, String username, AvatarInfo avatarInfo, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion) {
+    public Self(String ichatId, String ichatIdUser, String email, Date registerTime, String username, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion) {
         this.ichatId = ichatId;
         this.ichatIdUser = ichatIdUser;
         this.email = email;
         this.registerTime = registerTime;
         this.username = username;
-        this.avatarInfo = avatarInfo;
+        this.avatar = avatar;
         this.sex = sex;
         this.firstRegion = firstRegion;
         this.secondRegion = secondRegion;
@@ -66,8 +60,8 @@ public class SelfInfo extends UserInfo{
         return username;
     }
 
-    public AvatarInfo getAvatarInfo() {
-        return avatarInfo;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
     public Integer getSex() {

@@ -17,7 +17,7 @@ import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
-import com.longx.intelligent.android.ichat2.data.SelfInfo;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityRootSettingsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.ServerSettingDialog;
@@ -145,8 +145,8 @@ public class RootSettingsActivity extends BaseActivity {
         }
 
         private void updateEmailSummary(){
-            SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
-            preferenceEmail.setSummary(selfInfo.getEmail());
+            Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+            preferenceEmail.setSummary(self.getEmail());
         }
 
         private void updateServerSettingSummary(){
