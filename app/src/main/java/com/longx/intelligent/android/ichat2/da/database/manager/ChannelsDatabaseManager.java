@@ -137,4 +137,14 @@ public class ChannelsDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
     }
+
+    public void clear(){
+        openDatabaseIfClosed();
+        try {
+            getDatabase().delete(ChannelsDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS, "1=1", null);
+            getDatabase().delete(ChannelsDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, "1=1", null);
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
 }

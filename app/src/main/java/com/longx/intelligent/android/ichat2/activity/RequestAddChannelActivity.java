@@ -30,7 +30,7 @@ public class RequestAddChannelActivity extends BaseActivity {
         binding = ActivityRequestAddChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_INFO);
+        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
         currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         showContent();
         setupYiers();

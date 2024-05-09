@@ -7,7 +7,7 @@ public class ExtraKeys {
     public static final String CHANGE_PASSWORD_MODE = "change_password_mode";
     public static final String URI = "uri";
     public static final String ICHAT_ID = "ichat_id";
-    public static final String CHANNEL_INFO = "channel_info";
+    public static final String CHANNEL = "channel_info";
     public static final String AVATAR_HASH = "avatar_hash";
     public static final String AVATAR_EXTENSION = "avatar_extension";
     public static final String IS_NETWORK_FETCHED = "is_network_fetched";

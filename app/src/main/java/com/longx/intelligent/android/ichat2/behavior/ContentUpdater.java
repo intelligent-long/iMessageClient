@@ -136,6 +136,7 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
+                ChannelsDatabaseManager.getInstance().clear();
                 List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
                 });
                 ChannelsDatabaseManager.getInstance().insertOrIgnore(channelAssociations);

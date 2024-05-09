@@ -124,7 +124,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         Intent intent = new Intent(requireContext(), ChannelActivity.class);
         intent.putExtra(ExtraKeys.ICHAT_ID, data.getChannel().getIchatId());
         intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
-        intent.putExtra(ExtraKeys.CHANNEL_INFO, data.getChannel());
+        intent.putExtra(ExtraKeys.CHANNEL, data.getChannel());
         startActivity(intent);
     }
 

@@ -48,7 +48,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void bindValues() {
         isNetworkFetched = getIntent().getBooleanExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
         String ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
-        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_INFO);
+        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
         self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         isSelf = (ichatId == null && channel == null)
                 || (ichatId != null && ichatId.equals(self.getIchatId())
@@ -133,7 +133,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         });
         binding.addChannelButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, RequestAddChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL_INFO, channel);
+            intent.putExtra(ExtraKeys.CHANNEL, channel);
             startActivity(intent);
         });
     }
