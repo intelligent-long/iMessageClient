@@ -7,29 +7,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.ObjectKey;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Created by LONG on 2024/4/25 at 5:35 PM.
  */
-public class ChannelListRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelListRecyclerAdapter.ViewHolder, ChannelListRecyclerAdapter.ItemData> {
+public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelsRecyclerAdapter.ViewHolder, ChannelsRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
 
-    public ChannelListRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
+    public ChannelsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
         this.itemDataList = itemDataList;
     }
@@ -65,13 +60,13 @@ public class ChannelListRecyclerAdapter extends WrappableRecyclerViewAdapter<Cha
 
     @NonNull
     @Override
-    public ChannelListRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ChannelsRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerItemChannelBinding binding = RecyclerItemChannelBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChannelListRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChannelsRecyclerAdapter.ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.channelInfo.getAvatarInfo().getHash();
         if (avatarHash == null) {

@@ -9,6 +9,6 @@ import com.longx.intelligent.android.ichat2.net.ServerProperties;
  */
 public class NetDataUrls {
     public static String getAvatarUrl(Context context, String avatarHash){
-        return ServerProperties.getBaseUrl(context) + "user/info/avatar/get/" + avatarHash;
+        return ServerProperties.getBaseUrl(context) + "user/info/avatar/" + avatarHash;
     }
 }

@@ -18,24 +18,27 @@ import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesAc
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChannelInfo;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
-import com.longx.intelligent.android.ichat2.adapter.ChannelListRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.ChannelsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
 import com.longx.intelligent.android.ichat2.ui.BadgeInitiator;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.ChannelsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import q.rorbin.badgeview.Badge;
 
-public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelListRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier, NewContentBadgeDisplayYier {
+public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelsRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier, NewContentBadgeDisplayYier, ChannelsUpdateYier {
     private FragmentChannelsBinding binding;
     private LayoutChannelRecyclerViewHeaderBinding headerViewBinding;
     private int channelAdditionActivitiesNewContentCount;
@@ -46,6 +49,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         super.onCreate(savedInstanceState);
         GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.holdYier(requireContext(), ChannelsUpdateYier.class, this);
     }
 
     @Override
@@ -53,6 +57,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         super.onDestroy();
         GlobalYiersHolder.removeYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.removeYier(requireContext(), ChannelsUpdateYier.class, this);
     }
 
     @Override
@@ -77,7 +82,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     private void setupRecyclerView(LayoutInflater inflater) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
-        ArrayList<ChannelListRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+        ArrayList<ChannelsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         SelfInfo selfInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
         ChannelInfo selfChannelInfo = new ChannelInfo(
                 selfInfo.getIchatId(),
@@ -90,10 +95,14 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 selfInfo.getSecondRegion(),
                 selfInfo.getThirdRegion(),
                 true);
-        itemDataList.add(new ChannelListRecyclerAdapter.ItemData(selfChannelInfo));
-        ChannelListRecyclerAdapter channelListRecyclerAdapter = new ChannelListRecyclerAdapter(requireActivity(), itemDataList);
-        channelListRecyclerAdapter.setOnItemClickYier(this);
-        binding.recyclerView.setAdapter(channelListRecyclerAdapter);
+        itemDataList.add(new ChannelsRecyclerAdapter.ItemData(selfChannelInfo));
+        List<ChannelAssociation> channelAssociations = ChannelsDatabaseManager.getInstance().findAll();
+        channelAssociations.forEach(channelAssociation -> {
+            itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannelInfo()));
+        });
+        ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), itemDataList);
+        channelsRecyclerAdapter.setOnItemClickYier(this);
+        binding.recyclerView.setAdapter(channelsRecyclerAdapter);
         headerViewBinding = LayoutChannelRecyclerViewHeaderBinding.inflate(inflater);
         newChannelBadge = BadgeInitiator.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
@@ -111,7 +120,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     }
 
     @Override
-    public void onItemClick(int position, ChannelListRecyclerAdapter.ItemData data) {
+    public void onItemClick(int position, ChannelsRecyclerAdapter.ItemData data) {
         Intent intent = new Intent(requireContext(), ChannelActivity.class);
         intent.putExtra(ExtraKeys.ICHAT_ID, data.getChannelInfo().getIchatId());
         intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
@@ -147,5 +156,10 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 newChannelBadge.setBadgeNumber(newContentCount);
             }
         }
+    }
+
+    @Override
+    public void onChannelsUpdate() {
+
     }
 }

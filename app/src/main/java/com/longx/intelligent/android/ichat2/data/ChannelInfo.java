@@ -25,13 +25,13 @@ public class ChannelInfo extends UserInfo implements Parcelable {
     private final Region firstRegion;
     private final Region secondRegion;
     private final Region thirdRegion;
-    private final boolean connected;
+    private final boolean associated;
 
     public ChannelInfo() {
         this(null, null, null, null, null, null, null, null, null, false);
     }
 
-    public ChannelInfo(String ichatId, String ichatIdUser, String email, String username, AvatarInfo avatarInfo, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean connected) {
+    public ChannelInfo(String ichatId, String ichatIdUser, String email, String username, AvatarInfo avatarInfo, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean associated) {
         this.ichatId = ichatId;
         this.ichatIdUser = ichatIdUser;
         this.email = email;
@@ -41,7 +41,7 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         this.firstRegion = firstRegion;
         this.secondRegion = secondRegion;
         this.thirdRegion = thirdRegion;
-        this.connected = connected;
+        this.associated = associated;
     }
 
     public String getIchatId() {
@@ -80,8 +80,8 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         return avatarInfo;
     }
 
-    public boolean isConnected() {
-        return connected;
+    public boolean isAssociated() {
+        return associated;
     }
 
     public static final Creator<ChannelInfo> CREATOR = new Creator<ChannelInfo>() {
@@ -111,7 +111,7 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         firstRegion = in.readParcelable(getClass().getClassLoader());
         secondRegion = in.readParcelable(getClass().getClassLoader());
         thirdRegion = in.readParcelable(getClass().getClassLoader());
-        connected = in.readInt() == 1;
+        associated = in.readInt() == 1;
     }
 
     @Override
@@ -125,6 +125,6 @@ public class ChannelInfo extends UserInfo implements Parcelable {
         dest.writeParcelable(firstRegion, flags);
         dest.writeParcelable(secondRegion, flags);
         dest.writeParcelable(thirdRegion, flags);
-        dest.writeInt(connected ? 1 : 0);
+        dest.writeInt(associated ? 1 : 0);
     }
 }

@@ -70,4 +70,10 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationData> fetchAllAssociations(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllAssociations();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

@@ -2,8 +2,11 @@ package com.longx.intelligent.android.ichat2.behavior;
 
 import android.content.Context;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.SelfInfo;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -14,6 +17,7 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,7 @@ public class ContentUpdater {
     public interface OnServerContentUpdateYier {
         String ID_CURRENT_USER_INFO = "current_user_info";
         String ID_CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
+        String ID_CHANNELS = "channels";
 
         void onStartUpdate(String id);
 
@@ -127,6 +132,19 @@ public class ContentUpdater {
                 Integer notViewCount = data.getData(Integer.class);
                 SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewCount);
                 resultsYier.onResults();
+            }
+        });
+    }
+
+    public static void updateChannels(Context context, ResultsYier resultsYier){
+        ChannelApiCaller.fetchAllAssociations(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNELS, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
+                });
+                boolean success = ChannelsDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
+                if(success) resultsYier.onResults();
             }
         });
     }

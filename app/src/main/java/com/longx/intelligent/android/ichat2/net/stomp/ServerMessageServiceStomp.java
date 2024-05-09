@@ -87,6 +87,9 @@ public class ServerMessageServiceStomp {
         stomp.subscribe(StompDestinations.CHANNEL_ADDITIONS_NOT_VIEW_COUNT_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateChannelAdditionsNotViewCount(context);
         });
+        stomp.subscribe(StompDestinations.CHANNELS_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateChannels(context);
+        });
     }
 
     public static synchronized boolean isConnected(){

@@ -79,7 +79,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
 
     private void showChannelContent() {
         binding.editMyInfoButton.setVisibility(View.GONE);
-        if(channelInfo.isConnected()){
+        if(channelInfo.isAssociated()){
             binding.addChannelButton.setVisibility(View.GONE);
         }else {
             binding.sendMessageButton.setVisibility(View.GONE);
