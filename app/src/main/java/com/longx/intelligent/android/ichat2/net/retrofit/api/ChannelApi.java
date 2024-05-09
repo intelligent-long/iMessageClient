@@ -31,15 +31,15 @@ public interface ChannelApi {
     @POST("channel/add/accept")
     CompletableCall<OperationStatus> acceptAddChannel(@Body AcceptAddChannelPostBody postBody);
 
-    @GET("channel/add/activity/not_view_count")
+    @GET("channel/add/activities/unviewed_count")
     CompletableCall<OperationData> fetchChannelAdditionNotViewCount();
 
-    @GET("channel/add/activity/get_all")
+    @GET("channel/add/activities")
     CompletableCall<OperationData> fetchAllAdditionActivities();
 
-    @POST("channel/add/activity/view_all")
+    @POST("channel/add/activities/view_all")
     CompletableCall<OperationStatus> viewAllAdditionActivities();
 
-    @POST("channel/add/activity/view/{uuid}")
+    @POST("channel/add/activity/{uuid}/view")
     CompletableCall<OperationStatus> viewOneAdditionActivity(@Path("uuid") String uuid);
 }

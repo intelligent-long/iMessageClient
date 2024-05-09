@@ -27,7 +27,7 @@ public interface UserApi {
     CompletableCall<OperationData> whoAmI();
 
     @Streaming
-    @GET("user/info/avatar/get/{avatarHash}")
+    @GET("user/info/avatar/{avatarHash}")
     CompletableCall<ResponseBody> fetchAvatar(@Path("avatarHash") String avatarHash);
 
     @Multipart
@@ -52,13 +52,13 @@ public interface UserApi {
     @POST("user/info/sex/change")
     CompletableCall<OperationStatus> changeSex(@Body ChangeSexPostBody postBody);
 
-    @GET("user/region/first_region/get_all")
+    @GET("user/region/first_regions")
     CompletableCall<OperationData> fetchAllFirstRegions();
 
-    @GET("user/region/second_region/{firstRegionAdcode}/get_all")
+    @GET("user/region/second_regions/{firstRegionAdcode}")
     CompletableCall<OperationData> fetchAllSecondRegions(@Path("firstRegionAdcode") int firstRegionAdcode);
 
-    @GET("user/region/third_region/{secondRegionAdcode}/get_all")
+    @GET("user/region/third_regions/{secondRegionAdcode}")
     CompletableCall<OperationData> fetchAllThirdRegions(@Path("secondRegionAdcode") int secondRegionAdcode);
 
     @POST("user/info/region/change")
