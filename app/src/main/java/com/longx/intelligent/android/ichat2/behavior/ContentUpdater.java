@@ -28,7 +28,7 @@ public class ContentUpdater {
 
     public interface OnServerContentUpdateYier {
         String ID_CURRENT_USER_INFO = "current_user_info";
-        String ID_CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
+        String ID_CHANNEL_ADDITIONS_UNVIEWED_COUNT = "channel_additions_unviewed_count";
         String ID_CHANNELS = "channels";
 
         void onStartUpdate(String id);
@@ -120,7 +120,7 @@ public class ContentUpdater {
     }
 
     public static void updateChannelAdditionNotViewCount(Context context, ResultsYier resultsYier){
-        ChannelApiCaller.fetchChannelAdditionNotViewCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNEL_ADDITION_ACTIVITIES, context){
+        ChannelApiCaller.fetchChannelAdditionUnviewedCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNEL_ADDITIONS_UNVIEWED_COUNT, context){
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
@@ -131,15 +131,14 @@ public class ContentUpdater {
         });
     }
 
-    public static void updateChannels(Context context, ResultsYier resultsYier){
+    public static void updateChannels(Context context){
         ChannelApiCaller.fetchAllAssociations(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNELS, context){
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
                 List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
                 });
-                boolean success = ChannelsDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
-                if(success) resultsYier.onResults();
+                ChannelsDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
             }
         });
     }

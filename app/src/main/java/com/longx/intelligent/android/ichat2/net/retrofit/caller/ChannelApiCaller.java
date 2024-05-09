@@ -47,7 +47,7 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchChannelAdditionNotViewCount(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+    public static CompletableCall<OperationData> fetchChannelAdditionUnviewedCount(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchChannelAdditionNotViewCount();
         call.enqueue(lifecycleOwner, yier);
         return call;

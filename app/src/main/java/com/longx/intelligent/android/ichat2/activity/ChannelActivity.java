@@ -152,9 +152,11 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
 
     @Override
     public void onUpdateComplete(String id) {
-        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
-            bindValues();
-            showContent();
+        if(isSelf) {
+            if (id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)) {
+                bindValues();
+                showContent();
+            }
         }
     }
 }

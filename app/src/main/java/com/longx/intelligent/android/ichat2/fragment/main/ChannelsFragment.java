@@ -146,6 +146,8 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     public void onUpdateComplete(String id) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
             setupRecyclerView(getLayoutInflater());
+        }else if (id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNELS)){
+            setupRecyclerView(getLayoutInflater());
         }
     }
 

@@ -36,11 +36,7 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateChannels(Context context){
-        ContentUpdater.updateChannels(context, results -> {
-            GlobalYiersHolder.getYiers(ChannelsUpdateYier.class).ifPresent(channelsUpdateYiers -> {
-                channelsUpdateYiers.forEach(ChannelsUpdateYier::onChannelsUpdate);
-            });
-        });
+        ContentUpdater.updateChannels(context);
     }
 
 }
