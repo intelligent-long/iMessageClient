@@ -151,10 +151,10 @@ public class ChannelAdditionActivity extends BaseActivity {
     }
 
     private void setLongClickCopyYiers() {
-        binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.username.getText().toString()));
         binding.ichatIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
-        binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
-        binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.email.getText().toString()));
+        binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.region.getText().toString()));
     }
 
 }

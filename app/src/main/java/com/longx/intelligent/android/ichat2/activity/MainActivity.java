@@ -163,7 +163,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         headerView1.findViewById(R.id.user_info_page).setOnClickListener(v -> {
             Intent intent = new Intent(this, ChannelActivity.class);
             intent.putExtra(ExtraKeys.ICHAT_ID, self.getIchatId());
-            intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
             startActivity(intent);
         });
     }

@@ -96,7 +96,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 self.getThirdRegion(),
                 true);
         itemDataList.add(new ChannelsRecyclerAdapter.ItemData(selfChannel));
-        List<ChannelAssociation> channelAssociations = ChannelsDatabaseManager.getInstance().findAll();
+        List<ChannelAssociation> channelAssociations = ChannelsDatabaseManager.getInstance().findAllAssociations();
         channelAssociations.forEach(channelAssociation -> {
             itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannel()));
         });
@@ -123,7 +123,6 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     public void onItemClick(int position, ChannelsRecyclerAdapter.ItemData data) {
         Intent intent = new Intent(requireContext(), ChannelActivity.class);
         intent.putExtra(ExtraKeys.ICHAT_ID, data.getChannel().getIchatId());
-        intent.putExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
         intent.putExtra(ExtraKeys.CHANNEL, data.getChannel());
         startActivity(intent);
     }

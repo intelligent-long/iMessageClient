@@ -9,6 +9,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
@@ -19,9 +20,9 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChannelBinding binding;
+    private String ichatId;
     private Channel channel;
     private Self self;
-    private boolean isNetworkFetched;
     private boolean isSelf;
 
     @Override
@@ -30,8 +31,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         binding = ActivityChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        bindValues();
-        showContent();
+        getUserInfoAndShow();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
@@ -42,19 +42,22 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
-    /**
-     * to use self or channel
-     */
-    private void bindValues() {
-        isNetworkFetched = getIntent().getBooleanExtra(ExtraKeys.IS_NETWORK_FETCHED, false);
-        String ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
+    private void getUserInfoAndShow() {
+        ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
         self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         isSelf = (ichatId == null && channel == null)
                 || (ichatId != null && ichatId.equals(self.getIchatId())
                 || (channel != null && channel.getIchatId().equals(self.getIchatId())));
-        if(!isSelf && channel == null){
-            channel = channel; //TODO: get channelInfo by ichatId
+        if(isSelf || channel != null){
+            showContent();
+        }else {
+            channel = ChannelsDatabaseManager.getInstance().findOneChannel(ichatId);
+            if(channel != null){
+                showContent();
+            }else {
+                // TODO: Fetch from server
+            }
         }
     }
 
@@ -139,10 +142,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void setLongClickCopyYiers() {
-        binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.username.getText().toString()));
         binding.ichatIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
-        binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
-        binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.email.getText().toString()));
+        binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.region.getText().toString()));
     }
 
     @Override
@@ -154,8 +157,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     public void onUpdateComplete(String id) {
         if(isSelf) {
             if (id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)) {
-                bindValues();
-                showContent();
+                getUserInfoAndShow();
             }
         }
     }
