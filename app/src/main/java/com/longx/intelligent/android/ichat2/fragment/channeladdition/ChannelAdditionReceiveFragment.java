@@ -10,18 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesPendingRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesReceiveRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
-import com.longx.intelligent.android.ichat2.databinding.FragmentPendingBinding;
+import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.databinding.FragmentChannelAdditionReceiveBinding;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PendingFragment extends Fragment implements ChannelAdditionActivitiesFetchYier {
-    private FragmentPendingBinding binding;
+public class ChannelAdditionReceiveFragment extends Fragment implements ChannelAdditionActivitiesFetchYier {
+    private FragmentChannelAdditionReceiveBinding binding;
     private boolean fetchingVisible;
     private String failureMessage;
     private List<ChannelAddition> fetchedChannelAdditions;
@@ -33,7 +34,7 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentPendingBinding.inflate(inflater, container, false);
+        binding = FragmentChannelAdditionReceiveBinding.inflate(inflater, container, false);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         showContent();
         return binding.getRoot();
@@ -105,21 +106,22 @@ public class PendingFragment extends Fragment implements ChannelAdditionActiviti
     }
 
     private void setupRecyclerView(List<ChannelAddition> channelAdditions) {
-        List<ChannelAddition> pendingChannelAdditions = new ArrayList<>();
+        List<ChannelAddition> sendChannelAdditions = new ArrayList<>();
+        Self currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
         channelAdditions.forEach(channelAdditionInfo -> {
-            if(channelAdditionInfo.getRespondTime() == null && !channelAdditionInfo.isExpired()) {
-                pendingChannelAdditions.add(channelAdditionInfo);
-            }
+            if ((channelAdditionInfo.getRespondTime() != null || channelAdditionInfo.isExpired())
+                    && channelAdditionInfo.getResponderChannel().getIchatId().equals(currentUserInfo.getIchatId()))
+                sendChannelAdditions.add(channelAdditionInfo);
         });
-        if(pendingChannelAdditions.size() == 0){
+        if (sendChannelAdditions.size() == 0) {
             if(!fetchingVisible) toNoContentVisible();
-        }else {
+        } else {
             if(!fetchingVisible) toRecyclerViewVisible();
-            List<ChannelAdditionActivitiesPendingRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-            pendingChannelAdditions.forEach(pendingChannelAdditionInfo -> {
-                itemDataList.add(new ChannelAdditionActivitiesPendingRecyclerAdapter.ItemData(pendingChannelAdditionInfo));
+            List<ChannelAdditionActivitiesReceiveRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+            sendChannelAdditions.forEach(sendChannelAdditionInfo -> {
+                itemDataList.add(new ChannelAdditionActivitiesReceiveRecyclerAdapter.ItemData(sendChannelAdditionInfo));
             });
-            ChannelAdditionActivitiesPendingRecyclerAdapter recyclerAdapter = new ChannelAdditionActivitiesPendingRecyclerAdapter(requireActivity(), itemDataList);
+            ChannelAdditionActivitiesReceiveRecyclerAdapter recyclerAdapter = new ChannelAdditionActivitiesReceiveRecyclerAdapter(requireActivity(), itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
         }
     }

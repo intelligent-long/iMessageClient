@@ -5,34 +5,34 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.longx.intelligent.android.ichat2.fragment.channeladdition.PendingFragment;
-import com.longx.intelligent.android.ichat2.fragment.channeladdition.ReceiveFragment;
-import com.longx.intelligent.android.ichat2.fragment.channeladdition.SendFragment;
+import com.longx.intelligent.android.ichat2.fragment.channeladdition.ChannelAdditionPendingFragment;
+import com.longx.intelligent.android.ichat2.fragment.channeladdition.ChannelAdditionReceiveFragment;
+import com.longx.intelligent.android.ichat2.fragment.channeladdition.ChannelAdditionSendFragment;
 
 /**
  * Created by LONG on 2024/5/2 at 7:10 PM.
  */
 public class ChannelAdditionActivitiesViewPagerAdapter extends FragmentStateAdapter {
-    private final PendingFragment pendingFragment;
-    private final SendFragment sendFragment;
-    private final ReceiveFragment receiveFragment;
+    private final ChannelAdditionPendingFragment channelAdditionPendingFragment;
+    private final ChannelAdditionSendFragment channelAdditionSendFragment;
+    private final ChannelAdditionReceiveFragment channelAdditionReceiveFragment;
 
     public ChannelAdditionActivitiesViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-        pendingFragment = new PendingFragment();
-        sendFragment = new SendFragment();
-        receiveFragment = new ReceiveFragment();
+        channelAdditionPendingFragment = new ChannelAdditionPendingFragment();
+        channelAdditionSendFragment = new ChannelAdditionSendFragment();
+        channelAdditionReceiveFragment = new ChannelAdditionReceiveFragment();
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0: return pendingFragment;
-            case 1: return sendFragment;
-            case 2: return receiveFragment;
+            case 0: return channelAdditionPendingFragment;
+            case 1: return channelAdditionSendFragment;
+            case 2: return channelAdditionReceiveFragment;
         }
-        return new PendingFragment();
+        return new ChannelAdditionPendingFragment();
     }
 
     @Override
@@ -40,15 +40,15 @@ public class ChannelAdditionActivitiesViewPagerAdapter extends FragmentStateAdap
         return 3;
     }
 
-    public PendingFragment getPendingFragment() {
-        return pendingFragment;
+    public ChannelAdditionPendingFragment getPendingFragment() {
+        return channelAdditionPendingFragment;
     }
 
-    public SendFragment getSendFragment() {
-        return sendFragment;
+    public ChannelAdditionSendFragment getSendFragment() {
+        return channelAdditionSendFragment;
     }
 
-    public ReceiveFragment getReceiveFragment() {
-        return receiveFragment;
+    public ChannelAdditionReceiveFragment getReceiveFragment() {
+        return channelAdditionReceiveFragment;
     }
 }

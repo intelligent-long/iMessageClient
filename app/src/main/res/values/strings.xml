@@ -47,6 +47,7 @@
     <string name="no_content">无内容</string>
 
     <string name="fab_text_add_channel">添加频道</string>
+    <string name="fab_text_start_chat">开始聊天</string>
 
     <string name="notification_title_server_message_service_foreground">iChat 前台服务通知</string>
     <string name="notification_message_server_message_service_foreground">iChat 使用前台服务与服务器通信\n这条通知应该被关闭</string>

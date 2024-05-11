@@ -64,8 +64,13 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChannelsBinding.inflate(inflater, container, false);
         setupRecyclerView(inflater);
-        setupYiers();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupYiers();
     }
 
     @Override

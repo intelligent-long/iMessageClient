@@ -10,19 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesReceiveRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesSendRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.Self;
-import com.longx.intelligent.android.ichat2.databinding.FragmentReceiveBinding;
+import com.longx.intelligent.android.ichat2.databinding.FragmentChannelAdditionSendBinding;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReceiveFragment extends Fragment implements ChannelAdditionActivitiesFetchYier {
-    private FragmentReceiveBinding binding;
+public class ChannelAdditionSendFragment extends Fragment implements ChannelAdditionActivitiesFetchYier {
+    private FragmentChannelAdditionSendBinding binding;
     private boolean fetchingVisible;
     private String failureMessage;
     private List<ChannelAddition> fetchedChannelAdditions;
@@ -34,7 +34,7 @@ public class ReceiveFragment extends Fragment implements ChannelAdditionActiviti
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentReceiveBinding.inflate(inflater, container, false);
+        binding = FragmentChannelAdditionSendBinding.inflate(inflater, container, false);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         showContent();
         return binding.getRoot();
@@ -110,18 +110,18 @@ public class ReceiveFragment extends Fragment implements ChannelAdditionActiviti
         Self currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
         channelAdditions.forEach(channelAdditionInfo -> {
             if ((channelAdditionInfo.getRespondTime() != null || channelAdditionInfo.isExpired())
-                    && channelAdditionInfo.getResponderChannel().getIchatId().equals(currentUserInfo.getIchatId()))
+                    && channelAdditionInfo.getRequesterChannel().getIchatId().equals(currentUserInfo.getIchatId()))
                 sendChannelAdditions.add(channelAdditionInfo);
         });
         if (sendChannelAdditions.size() == 0) {
             if(!fetchingVisible) toNoContentVisible();
         } else {
             if(!fetchingVisible) toRecyclerViewVisible();
-            List<ChannelAdditionActivitiesReceiveRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+            List<ChannelAdditionActivitiesSendRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
             sendChannelAdditions.forEach(sendChannelAdditionInfo -> {
-                itemDataList.add(new ChannelAdditionActivitiesReceiveRecyclerAdapter.ItemData(sendChannelAdditionInfo));
+                itemDataList.add(new ChannelAdditionActivitiesSendRecyclerAdapter.ItemData(sendChannelAdditionInfo));
             });
-            ChannelAdditionActivitiesReceiveRecyclerAdapter recyclerAdapter = new ChannelAdditionActivitiesReceiveRecyclerAdapter(requireActivity(), itemDataList);
+            ChannelAdditionActivitiesSendRecyclerAdapter recyclerAdapter = new ChannelAdditionActivitiesSendRecyclerAdapter(requireActivity(), itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
         }
     }
