@@ -100,23 +100,20 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         channelAssociations.forEach(channelAssociation -> {
             itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannel()));
         });
+        itemDataList.addAll(itemDataList);
+        itemDataList.addAll(itemDataList);
+        itemDataList.addAll(itemDataList);
+        itemDataList.addAll(itemDataList);
+        itemDataList.addAll(itemDataList);
+        itemDataList.addAll(itemDataList);
+        itemDataList.addAll(itemDataList);
+        itemDataList.addAll(itemDataList);
         ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), itemDataList);
         channelsRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelsRecyclerAdapter);
         headerViewBinding = LayoutChannelRecyclerViewHeaderBinding.inflate(inflater);
         newChannelBadge = BadgeInitiator.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
-        binding.recyclerView.addOnScrollUpDownYier(new RecyclerView.OnScrollUpDownYier() {
-            @Override
-            public void onScrollUp() {
-                binding.fab.shrink();
-            }
-
-            @Override
-            public void onScrollDown() {
-                binding.fab.extend();
-            }
-        });
     }
 
     @Override
@@ -128,6 +125,18 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     }
 
     private void setupYiers() {
+        binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50){
+
+            @Override
+            public void onScrollUp() {
+                if(binding.fab.isExtended()) binding.fab.shrink();
+            }
+
+            @Override
+            public void onScrollDown() {
+                if(!binding.fab.isExtended()) binding.fab.extend();
+            }
+        });
         binding.fab.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), SearchChannelActivity.class));
         });

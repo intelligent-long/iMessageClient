@@ -22,10 +22,11 @@ import java.util.Set;
 public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
     private RecyclerViewAdapterWrapper recyclerViewAdapterWrapper;
     private boolean bottomInit;
-    private int bottomInitBehavior;
-    private List<ApproachEdgeYierTrigger> approachEdgeYierTriggers = new ArrayList<>();
-    private List<OnApproachEdgeYier> onApproachEdgeYiers = new ArrayList<>();
-    private Set<OnScrollUpDownYier> onScrollUpDownYiers = new HashSet<>();
+    private final int bottomInitBehavior;
+    private final List<ApproachEdgeYierTrigger> approachEdgeYierTriggers = new ArrayList<>();
+    private final List<OnApproachEdgeYier> onApproachEdgeYiers = new ArrayList<>();
+    private final Set<OnScrollUpDownYier> onScrollUpDownYiers = new HashSet<>();
+    private final Set<OnThresholdScrollUpDownYier> onThresholdScrollUpDownYiers = new HashSet<>();
 
     public RecyclerView(@NonNull Context context) {
         this(context, null);
@@ -68,8 +69,18 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
             public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0) {
+                    onThresholdScrollUpDownYiers.forEach(onThresholdScrollUpDownYier -> {
+                        if(Math.abs(dy) > onThresholdScrollUpDownYier.threshold){
+                            onThresholdScrollUpDownYier.onScrollUp();
+                        }
+                    });
                     onScrollUpDownYiers.forEach(OnScrollUpDownYier::onScrollUp);
                 } else if (dy < 0) {
+                    onThresholdScrollUpDownYiers.forEach(onThresholdScrollUpDownYier -> {
+                        if(Math.abs(dy) > onThresholdScrollUpDownYier.threshold){
+                            onThresholdScrollUpDownYier.onScrollDown();
+                        }
+                    });
                     onScrollUpDownYiers.forEach(OnScrollUpDownYier::onScrollDown);
                 }
             }
@@ -244,5 +255,26 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
 
     public void removeOnScrollUpDownYier(OnScrollUpDownYier onScrollUpDownYier){
         onScrollUpDownYiers.remove(onScrollUpDownYier);
+    }
+
+
+    public static abstract class OnThresholdScrollUpDownYier implements OnScrollUpDownYier{
+        private final int threshold;
+
+        public OnThresholdScrollUpDownYier(int threshold) {
+            this.threshold = threshold;
+        }
+
+        public int getThreshold() {
+            return threshold;
+        }
+    }
+
+    public void addOnThresholdScrollUpDownYier(OnThresholdScrollUpDownYier onScrollUpDownYier){
+        onThresholdScrollUpDownYiers.add(onScrollUpDownYier);
+    }
+
+    public void removeOnThresholdScrollUpDownYier(OnThresholdScrollUpDownYier onScrollUpDownYier){
+        onThresholdScrollUpDownYiers.remove(onScrollUpDownYier);
     }
 }
