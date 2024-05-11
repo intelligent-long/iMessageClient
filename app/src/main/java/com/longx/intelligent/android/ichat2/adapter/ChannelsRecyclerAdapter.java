@@ -15,6 +15,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
     public ChannelsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
         this.itemDataList = itemDataList;
+        itemDataList.sort(Comparator.comparing(o -> o.indexChar));
     }
 
     public static class ItemData{

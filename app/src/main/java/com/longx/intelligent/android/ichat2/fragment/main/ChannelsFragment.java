@@ -100,14 +100,6 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         channelAssociations.forEach(channelAssociation -> {
             itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannel()));
         });
-        itemDataList.addAll(itemDataList);
-        itemDataList.addAll(itemDataList);
-        itemDataList.addAll(itemDataList);
-        itemDataList.addAll(itemDataList);
-        itemDataList.addAll(itemDataList);
-        itemDataList.addAll(itemDataList);
-        itemDataList.addAll(itemDataList);
-        itemDataList.addAll(itemDataList);
         ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), itemDataList);
         channelsRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelsRecyclerAdapter);
