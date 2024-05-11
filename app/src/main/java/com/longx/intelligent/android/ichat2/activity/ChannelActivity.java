@@ -20,7 +20,6 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChannelBinding binding;
-    private String ichatId;
     private Channel channel;
     private Self self;
     private boolean isSelf;
@@ -43,7 +42,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void getUserInfoAndShow() {
-        ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
+        String ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
         self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         isSelf = (ichatId == null && channel == null)

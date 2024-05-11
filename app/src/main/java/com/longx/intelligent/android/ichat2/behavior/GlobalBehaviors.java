@@ -102,9 +102,9 @@ public class GlobalBehaviors {
 
     private static void onLogoutSuccess(Context context){
         SharedPreferencesAccessor.NetPref.saveLoginState(context, false);
-//        try {
-//            CloudService.stop();
-//        }catch (Exception ignore){} TODO
+        try {
+            ServerMessageService.stop();
+        }catch (Exception ignore){}
         ActivityOperator.switchToAuth(context);
     }
 

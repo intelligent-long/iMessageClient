@@ -48,7 +48,7 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
 
     public static synchronized void rework(){
         if(ServerMessageService.instance == null){
-            throw new RuntimeException("Cloud Service is not started.");
+            throw new RuntimeException("Server Message Service is not started.");
         }
         Optional<ServerMessageService> cloudServiceOptional = ServerMessageService.getInstance();
         cloudServiceOptional.ifPresent(cloudService -> {
@@ -59,7 +59,7 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
 
     public static synchronized void stop(){
         if(ServerMessageService.instance == null){
-            throw new RuntimeException("Cloud Service is not started.");
+            throw new RuntimeException("Server Message Service is not started.");
         }
         Optional<ServerMessageService> cloudServiceOptional = ServerMessageService.getInstance();
         cloudServiceOptional.ifPresent(ServerMessageService::onStop);
