@@ -10,6 +10,9 @@ import androidx.core.graphics.ColorUtils;
  * Created by LONG on 2024/1/11 at 2:17 PM.
  */
 public class ColorUtil {
+    public static int getColor(Context context, int color){
+        return context.getColor(color);
+    }
 
     public static int getAlphaColor(int color, int alpha){
         return ColorUtils.setAlphaComponent(color, alpha);

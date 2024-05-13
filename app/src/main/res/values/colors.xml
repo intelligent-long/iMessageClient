@@ -6,4 +6,5 @@
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="gray">#F0F0F0</color>
     <color name="badge_red">#F21339</color>
+    <color name="ichat">#65A9E0</color>
 </resources>

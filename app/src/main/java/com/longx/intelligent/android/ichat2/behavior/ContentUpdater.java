@@ -144,4 +144,8 @@ public class ContentUpdater {
         });
     }
 
+    public static void updateChatMessages(Context context){
+
+    }
+
 }

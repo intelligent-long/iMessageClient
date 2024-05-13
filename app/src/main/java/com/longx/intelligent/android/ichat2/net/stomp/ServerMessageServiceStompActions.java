@@ -39,4 +39,8 @@ public class ServerMessageServiceStompActions {
         ContentUpdater.updateChannels(context);
     }
 
+    public static void updateChatMessages(Context context){
+        ContentUpdater.updateChatMessages(context);
+    }
+
 }

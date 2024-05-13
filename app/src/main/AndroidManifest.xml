@@ -28,6 +28,11 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.ChatActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/ChatActivity"/>
+        <activity
             android:name=".activity.ChannelAdditionActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

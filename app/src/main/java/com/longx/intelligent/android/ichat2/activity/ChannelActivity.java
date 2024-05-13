@@ -138,6 +138,11 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             intent.putExtra(ExtraKeys.CHANNEL, channel);
             startActivity(intent);
         });
+        binding.sendMessageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ChatActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, channel);
+            startActivity(intent);
+        });
     }
 
     private void setLongClickCopyYiers() {

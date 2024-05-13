@@ -90,6 +90,9 @@ public class ServerMessageServiceStomp {
         stomp.subscribe(StompDestinations.CHANNELS_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateChannels(context);
         });
+        stomp.subscribe(StompDestinations.CHAT_MESSAGES_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateChatMessages(context);
+        });
     }
 
     public static synchronized boolean isConnected(){

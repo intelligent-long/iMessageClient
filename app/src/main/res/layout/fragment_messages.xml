@@ -60,8 +60,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin_end"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
-        app:iconSize="22dp"
-        app:iconPadding="14dp"
-        app:icon="@drawable/chat_outline_24px"
+        app:icon="@drawable/chat"
         android:text="@string/fab_text_start_chat"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

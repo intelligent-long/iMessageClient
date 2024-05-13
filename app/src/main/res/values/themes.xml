@@ -63,4 +63,13 @@
     <style name="ChannelAdditionActivitiesTabTextAppearance" parent="">
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="ChatActivity" parent="Theme.IChat2Client">
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+    </style>
+
+    <style name="ChatActivityTitleText">
+        <item name="fontFamily">@font/ping_fang_sc_medium</item>
+        <item name="android:textSize">21.6sp</item>
+    </style>
 </resources>

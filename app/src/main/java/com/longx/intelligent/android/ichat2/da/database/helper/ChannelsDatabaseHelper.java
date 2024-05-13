@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class ChannelsDatabaseHelper extends BaseDatabaseHelper{
     public static class DatabaseInfo{
-        public static final String DATABASE_NAME = "channels.db";
+        public static final String DATABASE_NAME = "channel.db";
         public static final int FIRST_VERSION = 1;
         public static final int DATABASE_VERSION = 1;
         public static final String TABLE_NAME_CHANNEL_ASSOCIATIONS = "channel_associations";
