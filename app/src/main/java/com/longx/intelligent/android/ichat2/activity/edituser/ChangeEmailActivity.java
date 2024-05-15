@@ -1,14 +1,11 @@
 package com.longx.intelligent.android.ichat2.activity.edituser;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.data.request.ChangeEmailPostBody;
-import com.longx.intelligent.android.ichat2.data.request.ChangeUsernamePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChangeEmailBinding;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;

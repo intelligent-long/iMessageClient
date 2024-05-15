@@ -28,6 +28,7 @@ import java.util.Set;
 public class BaseActivity extends HoldableActivity implements LinkPermissionOperatorActivity {
     private Bundle savedInstanceState;
     private final Set<PermissionOperator> permissionOperators = new HashSet<>();
+    private boolean autoCancelInput = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +64,13 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
         }
     }
 
+    public void setAutoCancelInput(boolean autoCancelInput) {
+        this.autoCancelInput = autoCancelInput;
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        UiUtil.autoCancelInput(this, event);
+        if(autoCancelInput) UiUtil.autoCancelInput(this, event);
         return super.dispatchTouchEvent(event);
     }
 

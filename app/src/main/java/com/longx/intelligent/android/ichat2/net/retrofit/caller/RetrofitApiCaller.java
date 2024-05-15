@@ -1,7 +1,5 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
-import android.view.WindowManager;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -91,48 +89,21 @@ public abstract class RetrofitApiCaller {
         }
     }
 
-    public static class CommonYier<T> extends BaseYier<T> {
+    public static class BaseCommonYier<T> extends BaseYier<T> {
         private AppCompatActivity activity;
-        private boolean showOperationDialog = true;
         private boolean showErrorInfo = true;
-        private OperationDialog operationDialog;
         private boolean beCanceled;
 
-        public CommonYier() {
+        public BaseCommonYier() {
         }
 
-        public CommonYier(AppCompatActivity activity) {
+        public BaseCommonYier(AppCompatActivity activity) {
             this.activity = activity;
         }
 
-        public CommonYier(AppCompatActivity activity, boolean showOperationDialog, boolean showErrorInfo) {
+        public BaseCommonYier(AppCompatActivity activity, boolean showErrorInfo) {
             this(activity);
-            this.showOperationDialog = showOperationDialog;
             this.showErrorInfo = showErrorInfo;
-        }
-
-        @Override
-        public void start(Call<T> call) {
-            if(showOperationDialog){
-                if(activity != null) {
-                    showOperationDialog(call);
-                }
-            }
-        }
-
-        protected void showOperationDialog(Call<T> call) {
-            activity.runOnUiThread(() -> {
-                operationDialog = new OperationDialog(activity, () -> {
-                    beCanceled = true;
-                    call.cancel();
-                });
-                operationDialog.show();
-            });
-        }
-
-        @Override
-        public void ok(T data, Response<T> row, Call<T> call) {
-
         }
 
         @Override
@@ -155,21 +126,57 @@ public abstract class RetrofitApiCaller {
             }
         }
 
-        @Override
-        public void complete(Call<T> call) {
-            if (operationDialog != null) {
-                if(activity != null) {
-                    activity.runOnUiThread(() -> operationDialog.dismiss());
-                }
-            }
-        }
-
         public AppCompatActivity getActivity() {
             return activity;
         }
 
         public void setBeCanceled(boolean beCanceled) {
             this.beCanceled = beCanceled;
+        }
+    }
+
+    public static class CommonYier<T> extends BaseCommonYier<T> {
+        private boolean showOperationDialog = true;
+        private OperationDialog operationDialog;
+
+        public CommonYier() {
+        }
+
+        public CommonYier(AppCompatActivity activity) {
+            super(activity);
+        }
+
+        public CommonYier(AppCompatActivity activity, boolean showOperationDialog, boolean showErrorInfo) {
+            super(activity, showErrorInfo);
+            this.showOperationDialog = showOperationDialog;
+        }
+
+        @Override
+        public void start(Call<T> call) {
+            if(showOperationDialog){
+                if(getActivity() != null) {
+                    showOperationDialog(call);
+                }
+            }
+        }
+
+        protected void showOperationDialog(Call<T> call) {
+            getActivity().runOnUiThread(() -> {
+                operationDialog = new OperationDialog(getActivity(), () -> {
+                    setBeCanceled(true);
+                    call.cancel();
+                });
+                operationDialog.show();
+            });
+        }
+
+        @Override
+        public void complete(Call<T> call) {
+            if (operationDialog != null) {
+                if(getActivity() != null) {
+                    getActivity().runOnUiThread(() -> operationDialog.dismiss());
+                }
+            }
         }
     }
 

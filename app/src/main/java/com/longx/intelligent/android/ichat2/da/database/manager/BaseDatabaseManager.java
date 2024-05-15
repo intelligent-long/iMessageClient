@@ -32,4 +32,8 @@ public abstract class BaseDatabaseManager {
     public SQLiteDatabase getDatabase() {
         return database;
     }
+
+    public SQLiteOpenHelper getHelper() {
+        return helper;
+    }
 }

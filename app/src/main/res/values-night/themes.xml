@@ -20,4 +20,9 @@
     <style name="WindowBackgroundColorDividerColor">
         <item name="dividerColor">@color/black</item>
     </style>
+
+    <style name="ChatActivity" parent="Theme.IChat2Client">
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
 </resources>

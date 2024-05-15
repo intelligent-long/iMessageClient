@@ -26,6 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IChat2Client"
         tools:ignore="LockedOrientationActivity"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
             android:name=".activity.ChatActivity"

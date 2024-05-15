@@ -7,4 +7,6 @@
     <color name="gray">#F0F0F0</color>
     <color name="badge_red">#F21339</color>
     <color name="ichat">#65A9E0</color>
+    <color name="chat_message_text">#171717</color>
+    <color name="chat_message_send_background">#87ED7B</color>
 </resources>

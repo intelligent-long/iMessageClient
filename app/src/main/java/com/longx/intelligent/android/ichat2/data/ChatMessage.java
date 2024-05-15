@@ -1,5 +1,9 @@
 package com.longx.intelligent.android.ichat2.data;
 
+import android.content.Context;
+
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+
 import java.util.Date;
 
 /**
@@ -51,5 +55,9 @@ public class ChatMessage {
 
     public Date getTime() {
         return time;
+    }
+
+    public boolean isSelfSender(Context context){
+        return SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId().equals(from);
     }
 }

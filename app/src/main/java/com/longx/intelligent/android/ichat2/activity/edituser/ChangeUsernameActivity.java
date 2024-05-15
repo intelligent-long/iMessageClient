@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.data.request.ChangeIchatIdUserPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUsernamePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChangeUsernameBinding;
