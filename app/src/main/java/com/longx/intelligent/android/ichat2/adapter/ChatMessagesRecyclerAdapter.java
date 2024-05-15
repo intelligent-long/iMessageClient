@@ -60,8 +60,13 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        String timeText = TimeUtil.formatRelativeTime(itemData.chatMessage.getTime());
-        holder.binding.time.setText(timeText);
+        if(itemData.chatMessage.isShowTime()) {
+            holder.binding.time.setVisibility(View.VISIBLE);
+            String timeText = TimeUtil.formatRelativeTime(itemData.chatMessage.getTime());
+            holder.binding.time.setText(timeText);
+        }else {
+            holder.binding.time.setVisibility(View.GONE);
+        }
         if(itemData.chatMessage.isSelfSender(activity)){
             holder.binding.layoutReceive.setVisibility(View.GONE);
             holder.binding.layoutSend.setVisibility(View.VISIBLE);
@@ -97,6 +102,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         return itemDataList.size();
     }
 
+    private static void sort(List<ItemData> itemDataList) {
+        itemDataList.sort(Comparator.comparing(o -> o.chatMessage.getTime()));
+    }
+
     public synchronized void addItemToEndAndShow(ChatMessage chatMessage){
         ItemData itemData = new ItemData(chatMessage);
         itemDataList.add(itemData);
@@ -111,10 +120,6 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         sort(itemDatas);
         itemDataList.addAll(0, itemDatas);
         notifyItemRangeInserted(0, itemDatas.size());
-    }
-
-    private static void sort(List<ItemData> itemDataList) {
-        itemDataList.sort(Comparator.comparing(o -> o.chatMessage.getTime()));
     }
 
     public void clearAndShow(){

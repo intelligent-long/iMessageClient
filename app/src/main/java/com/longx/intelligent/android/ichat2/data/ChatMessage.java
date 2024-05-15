@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.data;
 
 import android.content.Context;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 
 import java.util.Date;
@@ -20,6 +21,9 @@ public class ChatMessage {
     private String to;
     private String text;
     private Date time;
+
+    @JsonIgnore
+    private boolean showTime;
 
     public ChatMessage() {
     }
@@ -59,5 +63,13 @@ public class ChatMessage {
 
     public boolean isSelfSender(Context context){
         return SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId().equals(from);
+    }
+
+    public boolean isShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
     }
 }

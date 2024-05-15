@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessagesDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.request.SendChatMessagePostBody;
@@ -151,8 +152,13 @@ public class ChatActivity extends BaseActivity {
                     data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
                         binding.messageInput.setText(null);
                         ChatMessage chatMessage = data.getData(ChatMessage.class);
+                        boolean showTime = SharedPreferencesAccessor.ChatMessageTimeShowing.isShowTime(ChatActivity.this, channel.getIchatId(), chatMessage.getTime());
+                        chatMessage.setShowTime(showTime);
                         adapter.addItemToEndAndShow(chatMessage);
-                        chatMessagesDatabaseManager.insertOrIgnore(chatMessage);
+                        boolean success = chatMessagesDatabaseManager.insertOrIgnore(chatMessage);
+                        if(success && showTime){
+                            SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(ChatActivity.this, channel.getIchatId(), chatMessage.getTime());
+                        }
                     });
                 }
 

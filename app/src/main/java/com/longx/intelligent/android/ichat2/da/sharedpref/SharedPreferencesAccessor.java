@@ -13,6 +13,8 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.net.ServerProperties;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -351,6 +353,26 @@ public class SharedPreferencesAccessor {
                 result.add(indexedApiJson.json);
             });
             return result;
+        }
+    }
+
+    public static class ChatMessageTimeShowing{
+        private static final String NAME = "chat_message_time_showing";
+
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        }
+
+        public static void saveLastShowingTime(Context context, String channelIchatId, Date time){
+            getSharedPreferences(context)
+                    .edit()
+                    .putLong(channelIchatId, time.getTime())
+                    .apply();
+        }
+
+        public static boolean isShowTime(Context context, String channelIchatId, Date time){
+            long lastShowingTime = getSharedPreferences(context).getLong(channelIchatId, -1);
+            return lastShowingTime == -1 || TimeUtil.isDateAfter(lastShowingTime, time.getTime(), Constants.CHAT_MESSAGE_SHOW_TIME_INTERVAL);
         }
     }
 

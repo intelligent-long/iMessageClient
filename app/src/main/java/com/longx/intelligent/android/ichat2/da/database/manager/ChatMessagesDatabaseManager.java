@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.longx.intelligent.android.ichat2.da.database.helper.ChatMessagesDatabaseHelper;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,6 +61,7 @@ public class ChatMessagesDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TO, chatMessage.getTo());
             contentValues.put(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TEXT, chatMessage.getText());
             contentValues.put(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TIME, chatMessage.getTime().getTime());
+            contentValues.put(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME, chatMessage.isShowTime());
             long id = getDatabase().insertWithOnConflict(((ChatMessagesDatabaseHelper)getHelper()).getTableName(), null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             return id != -1;
         }finally {
@@ -75,13 +77,16 @@ public class ChatMessagesDatabaseManager extends BaseDatabaseManager{
                 null, desc ? ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TIME + " DESC" : ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TIME,
                 startIndex + "," + number)) {
             while (cursor.moveToNext()) {
-                int type = cursor.getInt(cursor.getColumnIndex(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TYPE));
-                String uuid = cursor.getString(cursor.getColumnIndex(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.UUID));
-                String from = cursor.getString(cursor.getColumnIndex(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.REAL_FROM));
-                String to = cursor.getString(cursor.getColumnIndex(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.REAL_TO));
-                String text = cursor.getString(cursor.getColumnIndex(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TEXT));
-                Date time = new Date(cursor.getLong(cursor.getColumnIndex(ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TIME)));
-                result.add(new ChatMessage(type, uuid, from, to, text, time));
+                Integer type = DatabaseUtil.getInteger(cursor, ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TYPE);
+                String uuid = DatabaseUtil.getString(cursor, ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.UUID);
+                String from = DatabaseUtil.getString(cursor, ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.REAL_FROM);
+                String to = DatabaseUtil.getString(cursor, ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.REAL_TO);
+                String text = DatabaseUtil.getString(cursor, ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
+                Date time = DatabaseUtil.getTime(cursor, ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.TIME);
+                Boolean showTime = DatabaseUtil.getBoolean(cursor, ChatMessagesDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME);
+                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, text, time);
+                chatMessage.setShowTime(Boolean.TRUE.equals(showTime));
+                result.add(chatMessage);
             }
         } finally {
             releaseDatabaseIfUnused();

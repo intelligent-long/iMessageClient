@@ -23,6 +23,7 @@ public class ChatMessagesDatabaseHelper extends BaseDatabaseHelper{
         public static final String REAL_TO = "to";
         public static final String TEXT = "text";
         public static final String TIME = "time";
+        public static final String SHOW_TIME = "show_time";
     }
 
     public ChatMessagesDatabaseHelper(Context context, String channelIchatId, String ichatId) {
@@ -39,6 +40,7 @@ public class ChatMessagesDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.TO + " VARCHAR,"
                 + TableChannelChatMessagesColumns.TEXT + " VARCHAR,"
                 + TableChannelChatMessagesColumns.TIME + " DATETIME,"
+                + TableChannelChatMessagesColumns.SHOW_TIME + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableChannelChatMessagesColumns.TYPE + ","
                 + TableChannelChatMessagesColumns.UUID + ","
