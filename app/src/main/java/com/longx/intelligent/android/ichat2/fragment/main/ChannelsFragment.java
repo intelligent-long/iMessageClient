@@ -18,7 +18,7 @@ import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesAc
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -26,7 +26,7 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.adapter.ChannelsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
-import com.longx.intelligent.android.ichat2.ui.BadgeInitiator;
+import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.yier.ChannelsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
@@ -101,7 +101,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 self.getThirdRegion(),
                 true);
         itemDataList.add(new ChannelsRecyclerAdapter.ItemData(selfChannel));
-        List<ChannelAssociation> channelAssociations = ChannelsDatabaseManager.getInstance().findAllAssociations();
+        List<ChannelAssociation> channelAssociations = ChannelDatabaseManager.getInstance().findAllAssociations();
         channelAssociations.forEach(channelAssociation -> {
             itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannel()));
         });
@@ -109,7 +109,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         channelsRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelsRecyclerAdapter);
         headerViewBinding = LayoutChannelRecyclerViewHeaderBinding.inflate(inflater);
-        newChannelBadge = BadgeInitiator.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
+        newChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
     }
 

@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Created by LONG on 2024/5/13 at 2:15 AM.
  */
-public class ChatMessagesDatabaseHelper extends BaseDatabaseHelper{
+public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
     private final String channelIchatId;
     public static class DatabaseInfo{
         public static final String DATABASE_NAME = "chat_messages.db";
@@ -24,9 +24,10 @@ public class ChatMessagesDatabaseHelper extends BaseDatabaseHelper{
         public static final String TEXT = "text";
         public static final String TIME = "time";
         public static final String SHOW_TIME = "show_time";
+        public static final String VIEWED = "viewed";
     }
 
-    public ChatMessagesDatabaseHelper(Context context, String channelIchatId, String ichatId) {
+    public ChatMessageDatabaseHelper(Context context, String channelIchatId, String ichatId) {
         super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, ichatId);
         this.channelIchatId = channelIchatId;
     }
@@ -41,6 +42,7 @@ public class ChatMessagesDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.TEXT + " VARCHAR,"
                 + TableChannelChatMessagesColumns.TIME + " DATETIME,"
                 + TableChannelChatMessagesColumns.SHOW_TIME + " BOOLEAN,"
+                + TableChannelChatMessagesColumns.VIEWED + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableChannelChatMessagesColumns.TYPE + ","
                 + TableChannelChatMessagesColumns.UUID + ","

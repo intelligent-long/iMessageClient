@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * Created by LONG on 2024/5/9 at 7:43 PM.
  */
-public class ChannelsDatabaseHelper extends BaseDatabaseHelper{
+public class ChannelDatabaseHelper extends BaseDatabaseHelper{
     public static class DatabaseInfo{
         public static final String DATABASE_NAME = "channel.db";
         public static final int FIRST_VERSION = 1;
@@ -44,7 +44,7 @@ public class ChannelsDatabaseHelper extends BaseDatabaseHelper{
         public static final String ASSOCIATED = "associated";
     }
 
-    public ChannelsDatabaseHelper(Context context, String ichatId) {
+    public ChannelDatabaseHelper(Context context, String ichatId) {
         super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, ichatId);
     }
 

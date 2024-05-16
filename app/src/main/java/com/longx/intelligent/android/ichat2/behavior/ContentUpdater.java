@@ -3,11 +3,12 @@ package com.longx.intelligent.android.ichat2.behavior;
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.longx.intelligent.android.ichat2.activity.ChatActivity;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -15,11 +16,14 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -141,10 +145,13 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                ChannelsDatabaseManager.getInstance().clear();
+                ChannelDatabaseManager.getInstance().clear();
                 List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
                 });
-                ChannelsDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
+                ChannelDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
+                GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                    openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                });
             }
         });
     }
@@ -157,9 +164,25 @@ public class ContentUpdater {
                 List<ChatMessage> chatMessages = data.getData(new TypeReference<List<ChatMessage>>() {
                 });
                 chatMessages.sort(Comparator.comparing(ChatMessage::getTime));
+                Map<String, List<ChatMessage>> chatMessageMap = new HashMap<>();
                 chatMessages.forEach(chatMessage -> {
-                    ChatMessage.determineShowTime(chatMessage, context);
-                    ChatMessage.insertToDatabase(chatMessage, context);
+                    chatMessage.setViewed(false);
+                    ChatMessage.insertToDatabaseAndDetermineShowTime(chatMessage, context);
+                    String key = chatMessage.getOther(context);
+                    List<ChatMessage> chatMessageList;
+                    if(chatMessageMap.get(key) == null){
+                        chatMessageList = new ArrayList<>();
+                        chatMessageMap.put(key, chatMessageList);
+                    }else {
+                        chatMessageList = chatMessageMap.get(key);
+                    }
+                    chatMessageList.add(chatMessage);
+                });
+                chatMessageMap.forEach((s, chatMessageList) -> {
+                    OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, chatMessageList.size(), true));
+                });
+                GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                    openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
                 });
             }
         });

@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessagesDatabaseManager;
-import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.request.SendChatMessagePostBody;
@@ -35,7 +34,7 @@ public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private Channel channel;
     private ChatMessagesRecyclerAdapter adapter;
-    private ChatMessagesDatabaseManager chatMessagesDatabaseManager;
+    private ChatMessageDatabaseManager chatMessageDatabaseManager;
     private static final int PS = 50;
     private int previousPn = 0;
     private int nextPn = -1;
@@ -49,7 +48,7 @@ public class ChatActivity extends BaseActivity {
         setAutoCancelInput(false);
         setupDefaultBackNavigation(binding.toolbar, ColorUtil.getColor(this, R.color.ichat));
         channel = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.CHANNEL));
-        chatMessagesDatabaseManager = ChatMessagesDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
+        chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
         showContent();
         setupYiers();
     }
@@ -70,7 +69,7 @@ public class ChatActivity extends BaseActivity {
 
     private synchronized void previousPage(){
         if(reachStart) return;
-        List<ChatMessage> chatMessages = chatMessagesDatabaseManager.findLimit(previousPn * PS, PS, true);
+        List<ChatMessage> chatMessages = chatMessageDatabaseManager.findLimit(previousPn * PS, PS, true);
         if (chatMessages.size() == 0) {
             reachStart = true;
             return;
@@ -152,9 +151,9 @@ public class ChatActivity extends BaseActivity {
                     data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
                         binding.messageInput.setText(null);
                         ChatMessage chatMessage = data.getData(ChatMessage.class);
-                        ChatMessage.determineShowTime(chatMessage, ChatActivity.this);
+                        chatMessage.setViewed(true);
+                        ChatMessage.insertToDatabaseAndDetermineShowTime(chatMessage, ChatActivity.this);
                         adapter.addItemToEndAndShow(chatMessage);
-                        ChatMessage.insertToDatabase(chatMessage, ChatActivity.this);
                     });
                 }
 

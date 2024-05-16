@@ -12,7 +12,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
@@ -100,7 +100,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
                 activity.startActivity(intent);
             });
-            String avatarHash = ChannelsDatabaseManager.getInstance().findOneChannel(itemData.chatMessage.getFrom()).getAvatar().getHash();
+            String avatarHash = ChannelDatabaseManager.getInstance().findOneChannel(itemData.chatMessage.getFrom()).getAvatar().getHash();
             if (avatarHash == null) {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarReceive);
             } else {

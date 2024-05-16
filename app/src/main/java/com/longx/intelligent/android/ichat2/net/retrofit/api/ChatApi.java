@@ -8,6 +8,7 @@ import com.xcheng.retrofit.CompletableCall;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2024/5/15 at 4:07 AM.
@@ -18,4 +19,7 @@ public interface ChatApi {
 
     @GET("chat/message/new/all")
     CompletableCall<OperationData> fetchAllNewChatMessages();
+
+    @POST("chat/message/new/view/{messageUuid}")
+    CompletableCall<OperationData> viewNewMessage(@Path("messageUuid") String messageUuid);
 }

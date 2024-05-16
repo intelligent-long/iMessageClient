@@ -1,22 +1,29 @@
 package com.longx.intelligent.android.ichat2.fragment.main;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.longx.intelligent.android.ichat2.adapter.OpenedChatRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
+import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.FragmentMessagesBinding;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 
-public class MessagesFragment extends BaseMainFragment {
+import java.util.List;
+
+public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier {
     private FragmentMessagesBinding binding;
+    private OpenedChatRecyclerAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,15 +31,29 @@ public class MessagesFragment extends BaseMainFragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(requireContext(), OpenedChatsUpdateYier.class, this);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMessagesBinding.inflate(inflater, container, false);
-        toNoContent();
+        toContent();
         setupYiers();
+        setupRecyclerView();
+        GlobalYiersHolder.holdYier(requireContext(), OpenedChatsUpdateYier.class, this);
         return binding.getRoot();
     }
 
     private void setupYiers() {
         binding.startChatFab.setOnClickListener((View.OnClickListener) getActivity());
+    }
+
+    private void setupRecyclerView() {
+        adapter = new OpenedChatRecyclerAdapter(requireActivity());
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -61,5 +82,11 @@ public class MessagesFragment extends BaseMainFragment {
         binding.noContentLayout.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.VISIBLE);
 
+    }
+
+    @Override
+    public void onOpenedChatsUpdate() {
+        List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
+        adapter.changeAllItemsAndShow(allShowOpenedChats);
     }
 }

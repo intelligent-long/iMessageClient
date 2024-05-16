@@ -11,7 +11,7 @@ import q.rorbin.badgeview.QBadgeView;
 /**
  * Created by LONG on 2024/5/3 at 4:54 PM.
  */
-public class BadgeInitiator {
+public class BadgeDisplayer {
 
     public static Badge initBadge( Context context, View targetView, int initNumber, int gravity){
         return new QBadgeView(context)

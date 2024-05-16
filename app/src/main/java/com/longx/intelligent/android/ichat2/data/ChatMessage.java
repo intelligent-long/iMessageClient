@@ -3,8 +3,7 @@ package com.longx.intelligent.android.ichat2.data;
 import android.content.Context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.longx.intelligent.android.ichat2.activity.ChatActivity;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessagesDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 
 import java.util.Date;
@@ -26,6 +25,8 @@ public class ChatMessage {
 
     @JsonIgnore
     private Boolean showTime;
+    @JsonIgnore
+    private Boolean viewed;
 
     public ChatMessage() {
     }
@@ -84,14 +85,23 @@ public class ChatMessage {
         this.showTime = showTime;
     }
 
+    public Boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(Boolean viewed) {
+        this.viewed = viewed;
+    }
+
     public static void determineShowTime(ChatMessage chatMessage, Context context) {
         chatMessage.showTime = SharedPreferencesAccessor.ChatMessageTimeShowing.isShowTime(context, chatMessage.getOther(context), chatMessage.getTime());
     }
 
-    public static void insertToDatabase(ChatMessage chatMessage, Context context){
+    public static void insertToDatabaseAndDetermineShowTime(ChatMessage chatMessage, Context context){
+        ChatMessage.determineShowTime(chatMessage, context);
         String other = chatMessage.getOther(context);
-        ChatMessagesDatabaseManager chatMessagesDatabaseManager = ChatMessagesDatabaseManager.getInstanceOrInitAndGet(context, other);
-        boolean success = chatMessagesDatabaseManager.insertOrIgnore(chatMessage);
+        ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
+        boolean success = chatMessageDatabaseManager.insertOrIgnore(chatMessage);
         if(success && chatMessage.isShowTime()){
             SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(context, other, chatMessage.getTime());
         }

@@ -9,7 +9,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
@@ -51,7 +51,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(isSelf || channel != null){
             showContent();
         }else {
-            channel = ChannelsDatabaseManager.getInstance().findOneChannel(ichatId);
+            channel = ChannelDatabaseManager.getInstance().findOneChannel(ichatId);
             if(channel != null){
                 showContent();
             }else {
