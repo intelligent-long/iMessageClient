@@ -126,15 +126,15 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
 
             @Override
             public void onScrollUp() {
-                if(binding.fab.isExtended()) binding.fab.shrink();
+                if(binding.addChannelFab.isExtended()) binding.addChannelFab.shrink();
             }
 
             @Override
             public void onScrollDown() {
-                if(!binding.fab.isExtended()) binding.fab.extend();
+                if(!binding.addChannelFab.isExtended()) binding.addChannelFab.extend();
             }
         });
-        binding.fab.setOnClickListener(v -> {
+        binding.addChannelFab.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), SearchChannelActivity.class));
         });
         headerViewBinding.layoutNewChannel.setOnClickListener(v -> {

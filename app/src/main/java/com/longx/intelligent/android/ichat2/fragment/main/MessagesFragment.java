@@ -27,7 +27,12 @@ public class MessagesFragment extends BaseMainFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMessagesBinding.inflate(inflater, container, false);
         toNoContent();
+        setupYiers();
         return binding.getRoot();
+    }
+
+    private void setupYiers() {
+        binding.startChatFab.setOnClickListener((View.OnClickListener) getActivity());
     }
 
     @Override

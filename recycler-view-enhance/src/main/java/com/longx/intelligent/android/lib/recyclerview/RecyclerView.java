@@ -99,7 +99,7 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         recyclerViewAdapterWrapper = new RecyclerViewAdapterWrapper((WrappableRecyclerViewAdapter) adapter);
         super.setAdapter(recyclerViewAdapterWrapper);
         if (bottomInit) {
-            scrollToEnd();
+            scrollToEnd(false);
             if (bottomInitBehavior == 1) {
                 bottomInit = false;
             }
@@ -187,12 +187,16 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         }
     }
 
-    public void scrollToEnd(){
+    public void scrollToEnd(boolean smooth){
         Adapter<?> adapter = getWrapAdapter();
         if(adapter == null){
             throw new RuntimeException("You must set an adapter before!");
         }
-        scrollToPosition(adapter.getItemCount() - 1);
+        if(smooth){
+            smoothScrollToPosition(adapter.getItemCount() - 1);
+        }else {
+            scrollToPosition(adapter.getItemCount() - 1);
+        }
     }
 
     public interface OnApproachEdgeYier{

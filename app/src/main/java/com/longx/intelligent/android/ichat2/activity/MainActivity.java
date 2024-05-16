@@ -44,7 +44,7 @@ import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 import java.util.Date;
 import java.util.Objects;
 
-public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, ServerMessageService.OnOnlineStateChangeYier {
+public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener {
     private ActivityMainBinding binding;
     private NavHostFragment navHostFragment;
 
@@ -299,5 +299,12 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 headerView1.findViewById(R.id.layout_offline_time).setVisibility(View.VISIBLE);
             }catch (NullPointerException ignore){}
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.start_chat_fab){
+            binding.bottomNavigation.setSelectedItemId(R.id.navigation_channel);
+        }
     }
 }

@@ -65,7 +65,7 @@ public class ChatActivity extends BaseActivity {
 
     private void showChatMessages() {
         previousPage();
-        binding.recyclerView.scrollToEnd();
+        binding.recyclerView.scrollToEnd(false);
     }
 
     private synchronized void previousPage(){
@@ -127,7 +127,7 @@ public class ChatActivity extends BaseActivity {
                     adapter.clearAndShow();
                     previousPage();
                 }
-                binding.recyclerView.scrollToEnd();
+                binding.recyclerView.scrollToEnd(true);
             }
 
             @Override
