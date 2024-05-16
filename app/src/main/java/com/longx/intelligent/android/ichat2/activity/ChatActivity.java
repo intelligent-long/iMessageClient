@@ -152,13 +152,9 @@ public class ChatActivity extends BaseActivity {
                     data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
                         binding.messageInput.setText(null);
                         ChatMessage chatMessage = data.getData(ChatMessage.class);
-                        boolean showTime = SharedPreferencesAccessor.ChatMessageTimeShowing.isShowTime(ChatActivity.this, channel.getIchatId(), chatMessage.getTime());
-                        chatMessage.setShowTime(showTime);
+                        ChatMessage.determineShowTime(chatMessage, ChatActivity.this);
                         adapter.addItemToEndAndShow(chatMessage);
-                        boolean success = chatMessagesDatabaseManager.insertOrIgnore(chatMessage);
-                        if(success && showTime){
-                            SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(ChatActivity.this, channel.getIchatId(), chatMessage.getTime());
-                        }
+                        ChatMessage.insertToDatabase(chatMessage, ChatActivity.this);
                     });
                 }
 

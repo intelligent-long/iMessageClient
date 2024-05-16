@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="chat_message_receive_text">#F9F9F9</color>
 </resources>

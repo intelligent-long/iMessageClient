@@ -21,4 +21,10 @@ public class ChatApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationData> fetchAllNewChatMessages(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllNewChatMessages();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

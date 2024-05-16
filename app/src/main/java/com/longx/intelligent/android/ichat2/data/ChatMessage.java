@@ -3,6 +3,8 @@ package com.longx.intelligent.android.ichat2.data;
 import android.content.Context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.longx.intelligent.android.ichat2.activity.ChatActivity;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessagesDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 
 import java.util.Date;
@@ -23,7 +25,7 @@ public class ChatMessage {
     private Date time;
 
     @JsonIgnore
-    private boolean showTime;
+    private Boolean showTime;
 
     public ChatMessage() {
     }
@@ -65,11 +67,33 @@ public class ChatMessage {
         return SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId().equals(from);
     }
 
+    public String getOther(Context context){
+        if(isSelfSender(context)){
+            return getTo();
+        }else {
+            return getFrom();
+        }
+    }
+
     public boolean isShowTime() {
+        if(showTime == null) throw new RuntimeException();
         return showTime;
     }
 
-    public void setShowTime(boolean showTime) {
+    public void setShowTime(Boolean showTime) {
         this.showTime = showTime;
+    }
+
+    public static void determineShowTime(ChatMessage chatMessage, Context context) {
+        chatMessage.showTime = SharedPreferencesAccessor.ChatMessageTimeShowing.isShowTime(context, chatMessage.getOther(context), chatMessage.getTime());
+    }
+
+    public static void insertToDatabase(ChatMessage chatMessage, Context context){
+        String other = chatMessage.getOther(context);
+        ChatMessagesDatabaseManager chatMessagesDatabaseManager = ChatMessagesDatabaseManager.getInstanceOrInitAndGet(context, other);
+        boolean success = chatMessagesDatabaseManager.insertOrIgnore(chatMessage);
+        if(success && chatMessage.isShowTime()){
+            SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(context, other, chatMessage.getTime());
+        }
     }
 }

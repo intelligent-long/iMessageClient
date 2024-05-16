@@ -12,6 +12,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
@@ -35,7 +36,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     public static class ItemData{
-        private ChatMessage chatMessage;
+        private final ChatMessage chatMessage;
 
         public ItemData(ChatMessage chatMessage) {
             this.chatMessage = chatMessage;
@@ -60,6 +61,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
+        //时间
         if(itemData.chatMessage.isShowTime()) {
             holder.binding.time.setVisibility(View.VISIBLE);
             String timeText = TimeUtil.formatRelativeTime(itemData.chatMessage.getTime());
@@ -67,28 +69,44 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }else {
             holder.binding.time.setVisibility(View.GONE);
         }
+        //发送还是接收
         if(itemData.chatMessage.isSelfSender(activity)){
             holder.binding.layoutReceive.setVisibility(View.GONE);
             holder.binding.layoutSend.setVisibility(View.VISIBLE);
+            //头像
             holder.binding.avatarSend.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, ChannelActivity.class);
                 intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
                 activity.startActivity(intent);
             });
-            switch (itemData.chatMessage.getType()){
-                case ChatMessage.TYPE_TEXT:{
-                    holder.binding.textSend.setText(itemData.chatMessage.getText());
-                }
-            }
             String avatarHash = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity).getAvatar().getHash();
             if (avatarHash == null) {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarSend);
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarSend);
             }
+            //不同消息类型
+            switch (itemData.chatMessage.getType()){
+                case ChatMessage.TYPE_TEXT:{
+                    holder.binding.textSend.setText(itemData.chatMessage.getText());
+                }
+            }
         }else {
             holder.binding.layoutReceive.setVisibility(View.VISIBLE);
             holder.binding.layoutSend.setVisibility(View.GONE);
+            //头像
+            holder.binding.avatarReceive.setOnClickListener(v -> {
+                Intent intent = new Intent(activity, ChannelActivity.class);
+                intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
+                activity.startActivity(intent);
+            });
+            String avatarHash = ChannelsDatabaseManager.getInstance().findOneChannel(itemData.chatMessage.getFrom()).getAvatar().getHash();
+            if (avatarHash == null) {
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarReceive);
+            } else {
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarReceive);
+            }
+            //不同消息类型
             switch (itemData.chatMessage.getType()){
                 case ChatMessage.TYPE_TEXT:{
                     holder.binding.textReceive.setText(itemData.chatMessage.getText());

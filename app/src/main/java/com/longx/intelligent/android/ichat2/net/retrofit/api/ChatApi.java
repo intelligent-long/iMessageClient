@@ -15,4 +15,7 @@ import retrofit2.http.POST;
 public interface ChatApi {
     @POST("chat/message/send")
     CompletableCall<OperationData> sendChatMessage(@Body SendChatMessagePostBody postBody);
+
+    @GET("chat/message/new/all")
+    CompletableCall<OperationData> fetchAllNewChatMessages();
 }

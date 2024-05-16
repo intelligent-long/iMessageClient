@@ -185,7 +185,7 @@ public class ChannelsDatabaseManager extends BaseDatabaseManager{
 
     public Channel findOneChannel(String ichatId){
         openDatabaseIfClosed();
-        try (Cursor cursor = getDatabase().query(ChannelsDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null, ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID + " = " + ichatId, null, null, null, null)){
+        try (Cursor cursor = getDatabase().query(ChannelsDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null, ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID + " = \"" + ichatId + "\"", null, null, null, null)){
             cursor.moveToNext();
             String channelTableIchatId = DatabaseUtil.getString(cursor, ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID);
             String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelsDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);

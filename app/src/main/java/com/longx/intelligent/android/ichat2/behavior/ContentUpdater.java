@@ -3,18 +3,22 @@ package com.longx.intelligent.android.ichat2.behavior;
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelsDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
+import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,6 +34,7 @@ public class ContentUpdater {
         String ID_CURRENT_USER_INFO = "current_user_info";
         String ID_CHANNEL_ADDITIONS_UNVIEWED_COUNT = "channel_additions_unviewed_count";
         String ID_CHANNELS = "channels";
+        String ID_CHAT_MESSAGES = "chat_messages";
 
         void onStartUpdate(String id);
 
@@ -145,7 +150,19 @@ public class ContentUpdater {
     }
 
     public static void updateChatMessages(Context context){
-
+        ChatApiCaller.fetchAllNewChatMessages(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHAT_MESSAGES, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                List<ChatMessage> chatMessages = data.getData(new TypeReference<List<ChatMessage>>() {
+                });
+                chatMessages.sort(Comparator.comparing(ChatMessage::getTime));
+                chatMessages.forEach(chatMessage -> {
+                    ChatMessage.determineShowTime(chatMessage, context);
+                    ChatMessage.insertToDatabase(chatMessage, context);
+                });
+            }
+        });
     }
 
 }
