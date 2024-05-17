@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.ViewGroup;
 
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.ChatActivity;
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
@@ -31,11 +34,11 @@ import q.rorbin.badgeview.Badge;
 /**
  * Created by LONG on 2024/5/16 at 9:45 PM.
  */
-public class OpenedChatRecyclerAdapter extends WrappableRecyclerViewAdapter<OpenedChatRecyclerAdapter.ViewHolder, OpenedChatRecyclerAdapter.ItemData> {
+public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<OpenedChatsRecyclerAdapter.ViewHolder, OpenedChatsRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList = new ArrayList<>();
 
-    public OpenedChatRecyclerAdapter(Activity activity) {
+    public OpenedChatsRecyclerAdapter(Activity activity) {
         this.activity = activity;
     }
     public static class ItemData{
@@ -47,8 +50,8 @@ public class OpenedChatRecyclerAdapter extends WrappableRecyclerViewAdapter<Open
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemOpenedChatBinding binding;
-        private Badge badge;
+        private final RecyclerItemOpenedChatBinding binding;
+        private final Badge badge;
         public ViewHolder(Context context, RecyclerItemOpenedChatBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -94,6 +97,17 @@ public class OpenedChatRecyclerAdapter extends WrappableRecyclerViewAdapter<Open
         }
         holder.binding.time.setText(TimeUtil.formatSimpleRelativeTime(newestChatMessage.getTime()));
         holder.badge.setBadgeNumber(itemData.openedChat.getNotViewedCount());
+        setupYiers(holder, position);
+    }
+
+    private void setupYiers(@NonNull ViewHolder holder, int position) {
+        ItemData itemData = itemDataList.get(position);
+        Channel channel = itemData.openedChat.getChannel();
+        holder.binding.clickView.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ChatActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, channel);
+            activity.startActivity(intent);
+        });
     }
 
     @SuppressLint("NotifyDataSetChanged")

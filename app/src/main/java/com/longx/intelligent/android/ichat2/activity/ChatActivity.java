@@ -20,6 +20,8 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.SoftKeyBoardYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -57,7 +59,7 @@ public class ChatActivity extends BaseActivity {
         binding.toolbar.setTitle(channel.getUsername());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatMessagesRecyclerAdapter(this);
+        adapter = new ChatMessagesRecyclerAdapter(this, binding.recyclerView);
         binding.recyclerView.setAdapter(adapter);
         showChatMessages();
     }
@@ -154,6 +156,9 @@ public class ChatActivity extends BaseActivity {
                         chatMessage.setViewed(true);
                         ChatMessage.insertToDatabaseAndDetermineShowTime(chatMessage, ChatActivity.this);
                         adapter.addItemToEndAndShow(chatMessage);
+                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                        });
                     });
                 }
 

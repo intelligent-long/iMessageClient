@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.longx.intelligent.android.ichat2.adapter.OpenedChatRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.OpenedChatsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.FragmentMessagesBinding;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier {
     private FragmentMessagesBinding binding;
-    private OpenedChatRecyclerAdapter adapter;
+    private OpenedChatsRecyclerAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     }
 
     private void setupRecyclerView() {
-        adapter = new OpenedChatRecyclerAdapter(requireActivity());
+        adapter = new OpenedChatsRecyclerAdapter(requireActivity());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
     }

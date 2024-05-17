@@ -1,11 +1,11 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -17,6 +17,9 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
+import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -28,12 +31,15 @@ import java.util.List;
  * Created by LONG on 2024/5/15 at 1:11 PM.
  */
 public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<ChatMessagesRecyclerAdapter.ViewHolder, ChatMessagesRecyclerAdapter.ItemData> {
-    private final Activity activity;
+    private final AppCompatActivity activity;
+    private com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ChatMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
 
-    public ChatMessagesRecyclerAdapter(Activity activity) {
+    public ChatMessagesRecyclerAdapter(AppCompatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView) {
         this.activity = activity;
+        this.recyclerView = recyclerView;
     }
+    private RecyclerViewScrollDisabler scrollDisabler;
 
     public static class ItemData{
         private final ChatMessage chatMessage;
@@ -61,6 +67,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
+        //Yier
+        setupYiers(holder, position);
         //时间
         if(itemData.chatMessage.isShowTime()) {
             holder.binding.time.setVisibility(View.VISIBLE);
@@ -113,6 +121,25 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 }
             }
         }
+    }
+
+    private void setupYiers(@NonNull ViewHolder holder, int position) {
+        scrollDisabler = new RecyclerViewScrollDisabler();
+        recyclerView.addOnItemTouchListener(scrollDisabler);
+        ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity);
+        holder.binding.layoutTextReceive.setOnLongClickListener(v -> {
+            scrollDisabler.setScrollingDisabled(true);
+            popupWindow.show(holder.binding.layoutTextReceive, false);
+            return true;
+        });
+        holder.binding.layoutTextSend.setOnLongClickListener(v -> {
+            scrollDisabler.setScrollingDisabled(true);
+            popupWindow.show(holder.binding.layoutTextSend, true);
+            return true;
+        });
+        popupWindow.getPopupWindow().setOnDismissListener(() -> {
+            scrollDisabler.setScrollingDisabled(false);
+        });
     }
 
     @Override
