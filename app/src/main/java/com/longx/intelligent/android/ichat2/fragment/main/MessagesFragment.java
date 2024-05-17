@@ -17,6 +17,7 @@ import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDataba
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.FragmentMessagesBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 
@@ -40,7 +41,6 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMessagesBinding.inflate(inflater, container, false);
-        toContent();
         setupYiers();
         setupRecyclerView();
         GlobalYiersHolder.holdYier(requireContext(), OpenedChatsUpdateYier.class, this);
@@ -89,5 +89,10 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     public void onOpenedChatsUpdate() {
         List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
         adapter.changeAllItemsAndShow(allShowOpenedChats);
+        if(allShowOpenedChats.size() == 0){
+            toNoContent();
+        }else {
+            toContent();
+        }
     }
 }

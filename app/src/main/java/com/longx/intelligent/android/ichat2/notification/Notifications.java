@@ -15,8 +15,10 @@ import com.longx.intelligent.android.ichat2.data.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by LONG on 2024/4/6 at 5:51 PM.
@@ -74,13 +76,17 @@ public class Notifications {
         }
     }
 
-    public static void notifyPendingNotifications(NotificationId notificationId){
+    public synchronized static void notifyPendingNotifications(NotificationId notificationId){
         List<Runnable> runnables = pendingNotificationMap.get(notificationId);
+        Set<Runnable> runnableSet = new HashSet<>();
         if(runnables != null){
             runnables.forEach(runnable -> {
                 runnable.run();
-                runnables.remove(runnable);
+                runnableSet.add(runnable);
             });
+        }
+        if(runnables != null) {
+            runnableSet.forEach(runnables::remove);
         }
     }
 }

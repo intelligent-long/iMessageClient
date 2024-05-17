@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.R;
@@ -305,6 +306,18 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     public void onClick(View v) {
         if(v.getId() == R.id.start_chat_fab){
             binding.bottomNavigation.setSelectedItemId(R.id.navigation_channel);
+        }
+    }
+
+    public void showNavigationMessageBadge(){
+        BadgeDrawable badge = binding.bottomNavigation.getOrCreateBadge(R.id.navigation_message);
+        badge.setVisible(true);
+    }
+
+    public void hideNavigationMessageBadge(){
+        BadgeDrawable badge = binding.bottomNavigation.getBadge(R.id.navigation_message);
+        if(badge != null) {
+            badge.setVisible(false);
         }
     }
 }

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.MainActivity;
+import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
@@ -28,6 +30,7 @@ import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapt
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import q.rorbin.badgeview.Badge;
 
@@ -43,6 +46,7 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
     }
     public static class ItemData{
         private final OpenedChat openedChat;
+        private int notViewedCount;
 
         public ItemData(OpenedChat openedChat) {
             this.openedChat = openedChat;
@@ -96,8 +100,24 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
                 holder.binding.newestChatMessage.setText(newestChatMessageText);
         }
         holder.binding.time.setText(TimeUtil.formatSimpleRelativeTime(newestChatMessage.getTime()));
-        holder.badge.setBadgeNumber(itemData.openedChat.getNotViewedCount());
+        displayBadges(holder, itemData);
         setupYiers(holder, position);
+    }
+
+    private void displayBadges(@NonNull ViewHolder holder, ItemData itemData) {
+        int notViewedCount = itemData.openedChat.getNotViewedCount();
+        holder.badge.setBadgeNumber(notViewedCount);
+        itemData.notViewedCount = notViewedCount;
+        AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
+        itemDataList.forEach(itemData1 -> {
+            if(itemData1.notViewedCount > 0) hideNavigationMessageBadge.set(false);
+        });
+        List<MainActivity> mainActivities = ActivityOperator.getActivitiesOf(MainActivity.class);
+        if(hideNavigationMessageBadge.get()){
+            mainActivities.forEach(MainActivity::hideNavigationMessageBadge);
+        }else {
+            mainActivities.forEach(MainActivity::showNavigationMessageBadge);
+        }
     }
 
     private void setupYiers(@NonNull ViewHolder holder, int position) {
