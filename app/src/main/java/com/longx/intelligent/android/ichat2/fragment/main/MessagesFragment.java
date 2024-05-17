@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.fragment.main;
 
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -89,9 +90,9 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     public void onOpenedChatsUpdate() {
         List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
         adapter.changeAllItemsAndShow(allShowOpenedChats);
-        if(allShowOpenedChats.size() == 0){
+        if (allShowOpenedChats.size() == 0) {
             toNoContent();
-        }else {
+        } else {
             toContent();
         }
     }

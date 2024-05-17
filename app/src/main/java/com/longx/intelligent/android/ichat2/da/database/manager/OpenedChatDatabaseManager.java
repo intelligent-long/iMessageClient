@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.da.database.helper.OpenedChatDatabas
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;

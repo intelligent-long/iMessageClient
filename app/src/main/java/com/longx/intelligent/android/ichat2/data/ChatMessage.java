@@ -5,6 +5,9 @@ import android.content.Context;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 
 import java.util.Date;
 
