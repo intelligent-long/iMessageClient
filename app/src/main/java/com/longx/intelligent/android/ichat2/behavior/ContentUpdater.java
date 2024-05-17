@@ -3,9 +3,12 @@ package com.longx.intelligent.android.ichat2.behavior;
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.longx.intelligent.android.ichat2.activity.helper.ActivityHolder;
+import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
@@ -15,6 +18,8 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
+import com.longx.intelligent.android.ichat2.notification.Notifications;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
@@ -149,11 +154,16 @@ public class ContentUpdater {
                 List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
                 });
                 ChannelDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
-                GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
-                    openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
-                });
+                afterChannelFetched();
             }
         });
+    }
+
+    private static void afterChannelFetched(){
+        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+        });
+        Notifications.notifyPendingNotifications(Notifications.NotificationId.CHAT_MESSAGE);
     }
 
     public static void updateChatMessages(Context context){
@@ -181,6 +191,11 @@ public class ContentUpdater {
                 chatMessageMap.forEach((s, chatMessageList) -> {
                     OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, chatMessageList.size(), true));
                 });
+                if(ActivityOperator.getActivitiesOf(ChatApiCaller.class).size() == 0){
+                    chatMessages.forEach(chatMessage -> {
+                        Notifications.notifyChatMessage(context, chatMessage);
+                    });
+                }
                 GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                     openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
                 });

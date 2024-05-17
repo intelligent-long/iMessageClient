@@ -9,4 +9,9 @@ public class NotificationChannels {
         static final String ID_SERVER_MESSAGE_SERVICE_NOT_RUNNING = "SERVER_MESSAGE_SERVICE_NOT_RUNNING";
         static final String NAME_SERVER_MESSAGE_SERVICE_NOT_RUNNING = "服务长时间未运行";
     }
+
+    public static class ChatMessage{
+        static final String ID_CHAT_MESSAGE = "CHAT_MESSAGE";
+        static final String NAME_CHAT_MESSAGE = "聊天消息";
+    }
 }

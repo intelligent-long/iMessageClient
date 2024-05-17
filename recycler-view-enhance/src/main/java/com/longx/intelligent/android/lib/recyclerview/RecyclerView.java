@@ -3,10 +3,12 @@ package com.longx.intelligent.android.lib.recyclerview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.lib.recyclerviewenhance.R;
@@ -194,7 +196,20 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         }
         try {
             if (smooth) {
-                smoothScrollToPosition(adapter.getItemCount() - 1);
+                int itemCount = adapter.getItemCount();
+                LayoutManager layoutManager = getLayoutManager();
+                int firstVisibleItemPosition = -1;
+                if(layoutManager instanceof LinearLayoutManager) {
+                    firstVisibleItemPosition = ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition();
+                }
+                if(firstVisibleItemPosition == -1 || itemCount - firstVisibleItemPosition > 21) {
+                    int position = itemCount - 21;
+                    if(position <= 0){
+                        position = itemCount;
+                    }
+                    scrollToPosition(position);
+                }
+                smoothScrollToPosition(itemCount - 1);
             } else {
                 scrollToPosition(adapter.getItemCount() - 1);
             }
