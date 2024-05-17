@@ -22,4 +22,7 @@ public interface ChatApi {
 
     @POST("chat/message/new/view/{messageUuid}")
     CompletableCall<OperationData> viewNewMessage(@Path("messageUuid") String messageUuid);
+
+    @POST("chat/message/new/view/all/{other}")
+    CompletableCall<OperationStatus> viewAllNewMessage(@Path("other") String other);
 }

@@ -192,11 +192,13 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         if(adapter == null){
             throw new RuntimeException("You must set an adapter before!");
         }
-        if(smooth){
-            smoothScrollToPosition(adapter.getItemCount() - 1);
-        }else {
-            scrollToPosition(adapter.getItemCount() - 1);
-        }
+        try {
+            if (smooth) {
+                smoothScrollToPosition(adapter.getItemCount() - 1);
+            } else {
+                scrollToPosition(adapter.getItemCount() - 1);
+            }
+        }catch (IllegalArgumentException ignore){};
     }
 
     public interface OnApproachEdgeYier{

@@ -6,10 +6,16 @@ package com.longx.intelligent.android.ichat2.data;
 public class MessageViewed {
     private final int notViewedCount;
     private final String viewedUuid;
+    private final String other;
 
-    public MessageViewed(int notViewedCount, String viewedUuid) {
+    public MessageViewed(){
+        this(-1, null, null);
+    }
+
+    public MessageViewed(int notViewedCount, String viewedUuid, String other) {
         this.notViewedCount = notViewedCount;
         this.viewedUuid = viewedUuid;
+        this.other = other;
     }
 
     public int getNotViewedCount() {
@@ -18,5 +24,9 @@ public class MessageViewed {
 
     public String getViewedUuid() {
         return viewedUuid;
+    }
+
+    public String getOther() {
+        return other;
     }
 }

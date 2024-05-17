@@ -11,10 +11,12 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.request.SendChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -37,6 +39,7 @@ public class ChatActivity extends BaseActivity {
     private Channel channel;
     private ChatMessagesRecyclerAdapter adapter;
     private ChatMessageDatabaseManager chatMessageDatabaseManager;
+    private OpenedChatDatabaseManager openedChatDatabaseManager;
     private static final int PS = 50;
     private int previousPn = 0;
     private int nextPn = -1;
@@ -51,6 +54,7 @@ public class ChatActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar, ColorUtil.getColor(this, R.color.ichat));
         channel = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.CHANNEL));
         chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
+        openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
         showContent();
         setupYiers();
     }
@@ -62,11 +66,30 @@ public class ChatActivity extends BaseActivity {
         adapter = new ChatMessagesRecyclerAdapter(this, binding.recyclerView);
         binding.recyclerView.setAdapter(adapter);
         showChatMessages();
+        if(openedChatDatabaseManager.findNotViewedCount(channel.getIchatId()) > 0) {
+            viewAllNewChatMessages();
+        }
     }
 
     private void showChatMessages() {
         previousPage();
         binding.recyclerView.scrollToEnd(false);
+    }
+
+    private void viewAllNewChatMessages() {
+        ChatApiCaller.viewAllNewMessage(this, channel.getIchatId(), new RetrofitApiCaller.BaseCommonYier<OperationStatus>(this){
+            @Override
+            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                super.ok(data, row, call);
+                data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
+                    openedChatDatabaseManager.updateNotViewedCount(0, channel.getIchatId());
+                    chatMessageDatabaseManager.setAllToViewed();
+                    GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                        openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                    });
+                });
+            }
+        });
     }
 
     private synchronized void previousPage(){

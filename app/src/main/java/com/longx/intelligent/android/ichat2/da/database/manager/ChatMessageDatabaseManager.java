@@ -106,4 +106,16 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         }
     }
 
+    public void setAllToViewed(){
+        openDatabaseIfClosed();
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED, true);
+            getDatabase().update(((ChatMessageDatabaseHelper) getHelper()).getTableName(), contentValues,
+                    "1=1", null);
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
 }

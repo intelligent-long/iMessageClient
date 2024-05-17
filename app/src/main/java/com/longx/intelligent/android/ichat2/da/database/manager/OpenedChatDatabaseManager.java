@@ -69,4 +69,33 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
     }
+
+    public boolean updateNotViewedCount(int notViewedCount, String channelIchatId){
+        openDatabaseIfClosed();
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(OpenedChatDatabaseHelper.Columns.NOT_VIEWED_COUNT, notViewedCount);
+            int update = getDatabase().update(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, contentValues,
+                    OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID + "=?", new String[]{channelIchatId});
+            return update == 1;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public int findNotViewedCount(String channelIchatId){
+        openDatabaseIfClosed();
+        try (Cursor cursor = getDatabase().query(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, null,
+                OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID + "=?",
+                new String[]{channelIchatId}, null, null, null)){
+            if(cursor.moveToNext()) {
+                Integer notViewedCount = DatabaseUtil.getInteger(cursor, OpenedChatDatabaseHelper.Columns.NOT_VIEWED_COUNT);
+                return notViewedCount == null ? 0 : notViewedCount;
+            }else {
+                return 0;
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
 }
