@@ -29,7 +29,7 @@ public class ChatMessageActionsPopupWindow {
     public void show(View anchorView, boolean right) {
         int yOffset = -anchorView.getHeight() - UiUtil.dpToPx(activity, HEIGHT_DP + 5);
         int xOffset;
-        if(!right){
+        if(right){
             xOffset = 0;
         }else {
             xOffset = -UiUtil.dpToPx(activity, 210);
