@@ -168,6 +168,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         ItemData itemData = new ItemData(chatMessage);
         itemDataList.add(itemData);
         notifyItemInserted(getItemCount() - 1);
+        recyclerView.scrollToEnd(true);
     }
 
     public synchronized void addAllToStartAndShow(List<ChatMessage> chatMessages){
