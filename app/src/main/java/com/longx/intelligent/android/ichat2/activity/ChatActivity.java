@@ -24,19 +24,22 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.SoftKeyBoardYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier {
     private ActivityChatBinding binding;
     private Channel channel;
     private ChatMessagesRecyclerAdapter adapter;
@@ -46,6 +49,7 @@ public class ChatActivity extends BaseActivity {
     private int previousPn = 0;
     private int nextPn = -1;
     private boolean reachStart;
+    private int initialChatMessageCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +61,27 @@ public class ChatActivity extends BaseActivity {
         channel = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.CHANNEL));
         chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
+        GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
         showContent();
         setupYiers();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ChatMessageUpdateYier.class, this);
     }
 
     private void showContent(){
         binding.toolbar.setTitle(channel.getUsername());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatMessagesRecyclerAdapter(this, binding.recyclerView);
-        binding.recyclerView.setAdapter(adapter);
-        showChatMessages();
+        synchronized (this) {
+            initialChatMessageCount = chatMessageDatabaseManager.count();
+            adapter = new ChatMessagesRecyclerAdapter(this, binding.recyclerView);
+            binding.recyclerView.setAdapter(adapter);
+            showChatMessages();
+        }
         if(openedChatDatabaseManager.findNotViewedCount(channel.getIchatId()) > 0) {
             viewAllNewChatMessages();
         }
@@ -76,6 +90,22 @@ public class ChatActivity extends BaseActivity {
     private void showChatMessages() {
         previousPage();
         binding.recyclerView.scrollToEnd(false);
+    }
+
+    @Override
+    public void onNewChatMessage(List<ChatMessage> newChatMessages) {
+        List<ChatMessage> thisChannelNewMessages = new ArrayList<>();
+        newChatMessages.forEach(newChatMessage -> {
+            if(newChatMessage.getOther(this).equals(channel.getIchatId())){
+                thisChannelNewMessages.add(newChatMessage);
+            }
+        });
+        thisChannelNewMessages.sort(Comparator.comparing(ChatMessage::getTime));
+        synchronized (this) {
+            thisChannelNewMessages.forEach(thisChannelNewMessage -> {
+                if(adapter != null) adapter.addItemToEndAndShow(thisChannelNewMessage);
+            });
+        }
     }
 
     private void viewAllNewChatMessages() {
@@ -96,7 +126,10 @@ public class ChatActivity extends BaseActivity {
 
     private synchronized void previousPage(){
         if(reachStart) return;
-        List<ChatMessage> chatMessages = chatMessageDatabaseManager.findLimit(previousPn * PS, PS, true);
+        int startIndex = previousPn * PS;
+        int currentChatMessageCount = chatMessageDatabaseManager.count();
+        startIndex += (currentChatMessageCount - initialChatMessageCount);
+        List<ChatMessage> chatMessages = chatMessageDatabaseManager.findLimit(startIndex, PS, true);
         if (chatMessages.size() == 0) {
             reachStart = true;
             return;

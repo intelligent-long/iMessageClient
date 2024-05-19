@@ -36,6 +36,7 @@ import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapt
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -59,6 +60,19 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
 
         public ItemData(ChatMessage chatMessage) {
             this.chatMessage = chatMessage;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ItemData itemData = (ItemData) o;
+            return chatMessage.equals(itemData.chatMessage);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(chatMessage);
         }
     }
 
@@ -165,6 +179,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     public synchronized void addItemToEndAndShow(ChatMessage chatMessage){
+        if(itemDataList.contains(new ItemData(chatMessage))) return;
         ItemData itemData = new ItemData(chatMessage);
         itemDataList.add(itemData);
         notifyItemInserted(getItemCount() - 1);

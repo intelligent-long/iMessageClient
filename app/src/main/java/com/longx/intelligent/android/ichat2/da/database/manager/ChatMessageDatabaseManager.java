@@ -118,4 +118,18 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         }
     }
 
+    public int count(){
+        openDatabaseIfClosed();
+        int count = 0;
+        String query = "SELECT COUNT(*) FROM " + ((ChatMessageDatabaseHelper) getHelper()).getTableName();
+        try (Cursor cursor = getDatabase().rawQuery(query, null)){
+            if (cursor != null && cursor.moveToFirst()) {
+                count = cursor.getInt(0);
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return count;
+    }
+
 }
