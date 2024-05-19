@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.ui;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -28,6 +29,16 @@ public class BadgeDisplayer {
                 .setBadgeText("")
                 .setBadgeGravity(gravity)
                 .setShowShadow(false)
+                .setBadgeBackgroundColor(context.getColor(R.color.badge_red));
+    }
+
+    public static Badge initIndicatorBadge(Context context, View targetView, int gravity, int offsetX, int offsetY, boolean isDpValue){
+        return new QBadgeView(context)
+                .bindTarget(targetView)
+                .setBadgeText("")
+                .setBadgeGravity(gravity)
+                .setShowShadow(false)
+                .setGravityOffset(offsetX, offsetY, isDpValue)
                 .setBadgeBackgroundColor(context.getColor(R.color.badge_red));
     }
 }

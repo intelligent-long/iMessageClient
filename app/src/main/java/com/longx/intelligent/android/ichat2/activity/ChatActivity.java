@@ -100,11 +100,14 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 thisChannelNewMessages.add(newChatMessage);
             }
         });
-        thisChannelNewMessages.sort(Comparator.comparing(ChatMessage::getTime));
-        synchronized (this) {
-            thisChannelNewMessages.forEach(thisChannelNewMessage -> {
-                if(adapter != null) adapter.addItemToEndAndShow(thisChannelNewMessage);
-            });
+        if(thisChannelNewMessages.size() > 0) {
+            viewAllNewChatMessages();
+            thisChannelNewMessages.sort(Comparator.comparing(ChatMessage::getTime));
+            synchronized (this) {
+                thisChannelNewMessages.forEach(thisChannelNewMessage -> {
+                    if (adapter != null) adapter.addItemToEndAndShow(thisChannelNewMessage);
+                });
+            }
         }
     }
 

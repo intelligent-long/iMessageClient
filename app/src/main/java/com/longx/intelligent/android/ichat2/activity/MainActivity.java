@@ -13,12 +13,14 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.R;
@@ -35,7 +37,9 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
+import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -45,9 +49,12 @@ import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 import java.util.Date;
 import java.util.Objects;
 
+import q.rorbin.badgeview.Badge;
+
 public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener {
     private ActivityMainBinding binding;
     private NavHostFragment navHostFragment;
+    private Badge messageNavBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,16 +316,17 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
     }
 
-    public void showNavigationMessageBadge(){
-        BadgeDrawable badge = binding.bottomNavigation.getOrCreateBadge(R.id.navigation_message);
-        badge.setBackgroundColor(getColor(R.color.badge_red));
-        badge.setVisible(true);
+    public synchronized void showNavigationMessageBadge(){
+        if(messageNavBadge == null) {
+            View view = ((BottomNavigationMenuView) binding.bottomNavigation.getChildAt(0)).getChildAt(0);
+            messageNavBadge = BadgeDisplayer.initIndicatorBadge(this, view, Gravity.START | Gravity.BOTTOM, 73, 56, true);
+        }
     }
 
-    public void hideNavigationMessageBadge(){
-        BadgeDrawable badge = binding.bottomNavigation.getBadge(R.id.navigation_message);
-        if(badge != null) {
-            badge.setVisible(false);
+    public synchronized void hideNavigationMessageBadge(){
+        if(messageNavBadge != null) {
+            messageNavBadge.hide(true);
+            messageNavBadge = null;
         }
     }
 }
