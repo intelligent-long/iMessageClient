@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.longx.intelligent.android.ichat2.activity.MainActivity;
+import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.adapter.OpenedChatsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
@@ -23,6 +25,7 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier {
     private FragmentMessagesBinding binding;
@@ -96,6 +99,21 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
             } else {
                 toContent();
             }
+        }
+        showMainActivityBottomNavigationBadge();
+    }
+
+    private void showMainActivityBottomNavigationBadge() {
+        AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
+        List<OpenedChat> showOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
+        showOpenedChats.forEach(showOpenedChat -> {
+            if(showOpenedChat.getNotViewedCount() > 0) hideNavigationMessageBadge.set(false);
+        });
+        List<MainActivity> mainActivities = ActivityOperator.getActivitiesOf(MainActivity.class);
+        if(hideNavigationMessageBadge.get()){
+            mainActivities.forEach(MainActivity::hideNavigationMessageBadge);
+        }else {
+            mainActivities.forEach(MainActivity::showNavigationMessageBadge);
         }
     }
 }

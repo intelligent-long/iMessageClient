@@ -312,9 +312,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     public void showNavigationMessageBadge(){
         BadgeDrawable badge = binding.bottomNavigation.getOrCreateBadge(R.id.navigation_message);
         badge.setBackgroundColor(getColor(R.color.badge_red));
-        badge.setText("");
-        badge.setHorizontalPadding(-100);
-        badge.setVerticalPadding(-100);
         badge.setVisible(true);
     }
 

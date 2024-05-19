@@ -47,7 +47,6 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
     }
     public static class ItemData{
         private final OpenedChat openedChat;
-        private int notViewedCount;
 
         public ItemData(OpenedChat openedChat) {
             this.openedChat = openedChat;
@@ -108,17 +107,6 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
     private void displayBadges(@NonNull ViewHolder holder, ItemData itemData) {
         int notViewedCount = itemData.openedChat.getNotViewedCount();
         holder.badge.setBadgeNumber(notViewedCount);
-        itemData.notViewedCount = notViewedCount;
-        AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
-        itemDataList.forEach(itemData1 -> {
-            if(itemData1.notViewedCount > 0) hideNavigationMessageBadge.set(false);
-        });
-        List<MainActivity> mainActivities = ActivityOperator.getActivitiesOf(MainActivity.class);
-        if(hideNavigationMessageBadge.get()){
-            mainActivities.forEach(MainActivity::hideNavigationMessageBadge);
-        }else {
-            mainActivities.forEach(MainActivity::showNavigationMessageBadge);
-        }
     }
 
     private void setupYiers(@NonNull ViewHolder holder, int position) {
