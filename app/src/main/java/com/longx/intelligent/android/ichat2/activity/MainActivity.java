@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private ActivityMainBinding binding;
     private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
+    private Badge channelNavBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -327,6 +328,20 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         if(messageNavBadge != null) {
             messageNavBadge.hide(true);
             messageNavBadge = null;
+        }
+    }
+
+    public synchronized void showNavigationChannelBadge(){
+        if(channelNavBadge == null) {
+            View view = ((BottomNavigationMenuView) binding.bottomNavigation.getChildAt(0)).getChildAt(1);
+            channelNavBadge = BadgeDisplayer.initIndicatorBadge(this, view, Gravity.START | Gravity.BOTTOM, 73, 56, true);
+        }
+    }
+
+    public synchronized void hideNavigationChannelBadge(){
+        if(channelNavBadge != null) {
+            channelNavBadge.hide(true);
+            channelNavBadge = null;
         }
     }
 }

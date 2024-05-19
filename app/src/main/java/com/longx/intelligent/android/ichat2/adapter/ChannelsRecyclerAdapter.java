@@ -70,7 +70,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
     @Override
     public void onBindViewHolder(@NonNull ChannelsRecyclerAdapter.ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        String avatarHash = itemData.channel.getAvatar().getHash();
+        String avatarHash = itemData.channel.getAvatar() == null ? null : itemData.channel.getAvatar().getHash();
         if (avatarHash == null) {
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
         } else {

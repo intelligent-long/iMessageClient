@@ -59,25 +59,26 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                     result.set(false);
                 }
                 ContentValues values1 = new ContentValues();
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID, channelAssociation.getChannel().getIchatId());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER, channelAssociation.getChannel().getIchatIdUser());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.EMAIL, channelAssociation.getChannel().getEmail());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.USERNAME, channelAssociation.getChannel().getUsername());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH, channelAssociation.getChannel().getAvatar().getHash());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID, channelAssociation.getChannel().getAvatar().getIchatId());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION, channelAssociation.getChannel().getAvatar().getExtension());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME, channelAssociation.getChannel().getAvatar().getTime().getTime());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.SEX, channelAssociation.getChannel().getSex());
-                UserInfo.Region firstRegion = channelAssociation.getChannel().getFirstRegion();
+                Channel channel = channelAssociation.getChannel();
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID, channel.getIchatId());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER, channel.getIchatIdUser());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.EMAIL, channel.getEmail());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.USERNAME, channel.getUsername());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH, channel.getAvatar() == null ? null : channel.getAvatar().getHash());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID, channel.getAvatar() == null ? null : channel.getAvatar().getIchatId());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION, channel.getAvatar() == null ? null : channel.getAvatar().getExtension());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME, channel.getAvatar() == null ? null : channel.getAvatar().getTime().getTime());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.SEX, channel.getSex());
+                UserInfo.Region firstRegion = channel.getFirstRegion();
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_ADCODE, firstRegion == null ? null : firstRegion.getAdcode());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_NAME, firstRegion == null ? null : firstRegion.getName());
-                UserInfo.Region secondRegion = channelAssociation.getChannel().getSecondRegion();
+                UserInfo.Region secondRegion = channel.getSecondRegion();
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_ADCODE, secondRegion == null ? null : secondRegion.getAdcode());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_NAME, secondRegion == null ? null : secondRegion.getName());
-                UserInfo.Region thirdRegion = channelAssociation.getChannel().getThirdRegion();
+                UserInfo.Region thirdRegion = channel.getThirdRegion();
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE, thirdRegion == null ? null : thirdRegion.getAdcode());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME, thirdRegion == null ? null : thirdRegion.getName());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED, channelAssociation.getChannel().isAssociated());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED, channel.isAssociated());
                 long id1 = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null,
                         values1, SQLiteDatabase.CONFLICT_IGNORE);
                 if(id1 == -1){

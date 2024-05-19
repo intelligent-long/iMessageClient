@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
@@ -112,10 +113,14 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
         if(isCurrentUserRequester){
             Channel channel = itemData.channelAddition.getResponderChannel();
             String username = channel.getUsername();
-            String avatarHash = channel.getAvatar().getHash();
+            String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
             holder.binding.username.setText(username);
             holder.binding.message.setText(itemData.channelAddition.getMessage());
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+            if(avatarHash == null){
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+            }else {
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+            }
             if(itemData.channelAddition.isAccepted()){
                 holder.binding.addedText.setVisibility(View.VISIBLE);
                 holder.binding.expiredText.setVisibility(View.GONE);

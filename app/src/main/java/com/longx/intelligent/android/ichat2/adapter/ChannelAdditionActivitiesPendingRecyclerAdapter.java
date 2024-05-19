@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
@@ -120,11 +121,14 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
         }else {
             channel = itemData.channelAddition.getRequesterChannel();
         }
-        String username = channel.getUsername();
-        String avatarHash = channel.getAvatar().getHash();
-        holder.binding.username.setText(username);
+        holder.binding.username.setText(channel.getUsername());
         holder.binding.message.setText(itemData.channelAddition.getMessage());
-        GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+        if(channel.getAvatar() != null) {
+            String avatarHash = channel.getAvatar().getHash();
+            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+        }else {
+            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+        }
         if(isCurrentUserRequester){
             holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
             holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);

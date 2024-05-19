@@ -50,7 +50,7 @@ public class ChannelAdditionActivity extends BaseActivity {
     }
 
     private void showContent(){
-        if (channel.getAvatar().getHash() == null) {
+        if (channel.getAvatar() == null || channel.getAvatar().getHash() == null) {
             GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, binding.avatar);
         } else {
             GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, channel.getAvatar().getHash()), binding.avatar);

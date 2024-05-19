@@ -13,6 +13,7 @@ import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeAvatarActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetEditAvatarBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -39,7 +40,8 @@ public class EditAvatarBottomSheet extends AbstractBottomSheet {
     @Override
     protected void onCreate() {
         bottomSheetEditAvatarBinding = BottomSheetEditAvatarBinding.inflate(getActivity().getLayoutInflater());
-        if(SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(getActivity()).getAvatar().getHash() == null){
+        Self currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(getActivity());
+        if(currentUserInfo.getAvatar() == null || currentUserInfo.getAvatar().getHash() == null){
             bottomSheetEditAvatarBinding.removeAvatar.setVisibility(View.GONE);
         }
         setContentView(bottomSheetEditAvatarBinding.getRoot());

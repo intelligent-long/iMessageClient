@@ -71,7 +71,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void showSelfContent() {
         binding.addChannelButton.setVisibility(View.GONE);
         binding.sendMessageButton.setVisibility(View.GONE);
-        showContent(self.getAvatar().getHash(), self.getUsername(), self.getSex(), self.getIchatId(), self.getIchatIdUser(), self.getEmail(), self.buildRegionDesc());
+        showContent(self.getAvatar() == null ? null : self.getAvatar().getHash(), self.getUsername(), self.getSex(), self.getIchatId(), self.getIchatIdUser(), self.getEmail(), self.buildRegionDesc());
     }
 
     private void showChannelContent() {
@@ -81,7 +81,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }else {
             binding.sendMessageButton.setVisibility(View.GONE);
         }
-        showContent(channel.getAvatar().getHash(), channel.getUsername(), channel.getSex(), channel.getIchatId(), channel.getIchatIdUser(), channel.getEmail(), channel.buildRegionDesc());
+        showContent(channel.getAvatar() == null ? null : channel.getAvatar().getHash(), channel.getUsername(), channel.getSex(), channel.getIchatId(), channel.getIchatIdUser(), channel.getEmail(), channel.buildRegionDesc());
     }
 
     private void showContent(String avatarHash, String username, Integer sex, String ichatId, String ichatIdUser, String email, String regionDesc){

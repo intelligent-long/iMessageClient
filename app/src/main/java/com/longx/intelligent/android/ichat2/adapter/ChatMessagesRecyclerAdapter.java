@@ -17,8 +17,10 @@ import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseM
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.MessageViewed;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
@@ -114,7 +116,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
                 activity.startActivity(intent);
             });
-            String avatarHash = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity).getAvatar().getHash();
+            Self currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity);
+            String avatarHash = currentUserInfo.getAvatar() == null ? null : currentUserInfo.getAvatar().getHash();
             if (avatarHash == null) {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarSend);
             } else {
@@ -135,7 +138,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
                 activity.startActivity(intent);
             });
-            String avatarHash = ChannelDatabaseManager.getInstance().findOneChannel(itemData.chatMessage.getFrom()).getAvatar().getHash();
+            Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(itemData.chatMessage.getFrom());
+            String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
             if (avatarHash == null) {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarReceive);
             } else {
@@ -153,7 +157,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private void setupYiers(@NonNull ViewHolder holder, int position) {
         scrollDisabler = new RecyclerViewScrollDisabler();
         recyclerView.addOnItemTouchListener(scrollDisabler);
-        ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity);
+        ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity, itemDataList.get(position).chatMessage);
         holder.binding.layoutTextReceive.setOnLongClickListener(v -> {
             scrollDisabler.setScrollingDisabled(true);
             popupWindow.show(holder.binding.layoutTextReceive, false);

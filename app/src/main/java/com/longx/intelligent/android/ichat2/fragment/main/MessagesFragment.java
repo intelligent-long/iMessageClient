@@ -22,12 +22,13 @@ import com.longx.intelligent.android.ichat2.databinding.FragmentMessagesBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier {
+public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier, NewContentBadgeDisplayYier {
     private FragmentMessagesBinding binding;
     private OpenedChatsRecyclerAdapter adapter;
 
@@ -40,6 +41,7 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     public void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(requireContext(), OpenedChatsUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
     }
 
     @Override
@@ -48,6 +50,7 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
         setupYiers();
         setupRecyclerView();
         GlobalYiersHolder.holdYier(requireContext(), OpenedChatsUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         return binding.getRoot();
     }
 
@@ -100,7 +103,18 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
                 toContent();
             }
         }
-        showMainActivityBottomNavigationBadge();
+        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                newContentBadgeDisplayYier.autoShowNewContentBadge(requireContext(), ID.MESSAGES);
+            });
+        });
+    }
+
+    @Override
+    public void showNewContentBadge(ID id, int newContentCount) {
+        if(id.equals(ID.MESSAGES)){
+            showMainActivityBottomNavigationBadge();
+        }
     }
 
     private void showMainActivityBottomNavigationBadge() {

@@ -81,7 +81,7 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
         ChatMessage newestChatMessage = itemData.openedChat.getNewestChatMessage();
         Channel channel = itemData.openedChat.getChannel();
         if(channel != null) {
-            String avatarHash = channel.getAvatar().getHash();
+            String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
             if (avatarHash == null) {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
             } else {

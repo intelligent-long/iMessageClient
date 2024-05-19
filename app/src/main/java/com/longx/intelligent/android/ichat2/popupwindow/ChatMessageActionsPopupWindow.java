@@ -8,7 +8,11 @@ import android.widget.PopupWindow;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.databinding.PopupWindowChatMessageActionsBinding;
+import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 /**
@@ -16,14 +20,25 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
  */
 public class ChatMessageActionsPopupWindow {
     private final AppCompatActivity activity;
+    private final ChatMessage chatMessage;
     private final PopupWindow popupWindow;
-    private final View popupView;
+    private final PopupWindowChatMessageActionsBinding binding;
     private final int HEIGHT_DP = 86;
 
-    public ChatMessageActionsPopupWindow(AppCompatActivity activity) {
+    public ChatMessageActionsPopupWindow(AppCompatActivity activity, ChatMessage chatMessage) {
         this.activity = activity;
-        popupView = activity.getLayoutInflater().inflate(R.layout.popup_window_chat_message_actions, null);
-        popupWindow = new PopupWindow(popupView,  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
+        this.chatMessage = chatMessage;
+        binding = PopupWindowChatMessageActionsBinding.inflate(activity.getLayoutInflater());
+        popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
+        setupYiers();
+    }
+
+    private void setupYiers() {
+        binding.clickViewTime.setOnClickListener(v -> {
+            popupWindow.dismiss();
+            String timeText = TimeUtil.formatRelativeTime(chatMessage.getTime());
+            new MessageDialog(activity, timeText).show();
+        });
     }
 
     public void show(View anchorView, boolean right) {

@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
+import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -27,6 +29,7 @@ import com.longx.intelligent.android.ichat2.adapter.ChannelsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.ChannelsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
@@ -162,6 +165,12 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
             channelAdditionActivitiesNewContentCount = newContentCount;
             if(newChannelBadge != null){
                 newChannelBadge.setBadgeNumber(newContentCount);
+            }
+            List<MainActivity> mainActivities = ActivityOperator.getActivitiesOf(MainActivity.class);
+            if(newContentCount > 0) {
+                mainActivities.forEach(MainActivity::showNavigationChannelBadge);
+            } else {
+                mainActivities.forEach(MainActivity::hideNavigationChannelBadge);
             }
         }
     }
