@@ -1,10 +1,14 @@
 package com.longx.intelligent.android.ichat2.behavior;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.longx.intelligent.android.ichat2.activity.ChatActivity;
+import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityHolder;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
+import com.longx.intelligent.android.ichat2.activity.helper.HoldableActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -191,11 +195,18 @@ public class ContentUpdater {
                 chatMessageMap.forEach((s, chatMessageList) -> {
                     OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, chatMessageList.size(), true));
                 });
-                if(ActivityOperator.getActivitiesOf(ChatApiCaller.class).size() == 0){
-                    chatMessages.forEach(chatMessage -> {
+                chatMessages.forEach(chatMessage -> {
+                    if (ActivityOperator.getActivityList().size() == 0) {
                         Notifications.notifyChatMessage(context, chatMessage);
-                    });
-                }
+                    } else {
+                        HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);
+                        if (!(topActivity instanceof MainActivity)) {
+                            if (!(topActivity instanceof ChatActivity && ((ChatActivity) topActivity).getChannel().getIchatId().equals(chatMessage.getOther(context)))) {
+                                Notifications.notifyChatMessage(context, chatMessage);
+                            }
+                        }
+                    }
+                });
                 GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                     openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
                 });

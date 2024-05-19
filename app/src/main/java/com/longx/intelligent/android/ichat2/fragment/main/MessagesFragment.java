@@ -88,12 +88,14 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
 
     @Override
     public void onOpenedChatsUpdate() {
-        List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
-        adapter.changeAllItemsAndShow(allShowOpenedChats);
-        if (allShowOpenedChats.size() == 0) {
-            toNoContent();
-        } else {
-            toContent();
+        if(adapter != null) {
+            List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
+            adapter.changeAllItemsAndShow(allShowOpenedChats);
+            if (allShowOpenedChats.size() == 0) {
+                toNoContent();
+            } else {
+                toContent();
+            }
         }
     }
 }

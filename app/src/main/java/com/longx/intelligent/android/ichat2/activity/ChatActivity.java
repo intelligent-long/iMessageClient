@@ -197,4 +197,8 @@ public class ChatActivity extends BaseActivity {
             });
         });
     }
+
+    public Channel getChannel() {
+        return channel;
+    }
 }

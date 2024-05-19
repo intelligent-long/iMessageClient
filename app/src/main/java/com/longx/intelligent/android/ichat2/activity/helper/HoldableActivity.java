@@ -21,4 +21,15 @@ public abstract class HoldableActivity extends AppCompatActivity {
         ActivityHolder.removeActivity(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ActivityHolder.addToList(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ActivityHolder.removeFromList(this);
+    }
 }

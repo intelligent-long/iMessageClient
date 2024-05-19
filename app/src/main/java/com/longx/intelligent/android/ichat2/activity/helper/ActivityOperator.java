@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity.helper;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -68,5 +69,9 @@ public class ActivityOperator extends ActivityHolder{
             }
         }
         return results;
+    }
+
+    public static List<HoldableActivity> getActivityList(){
+        return ActivityHolder.getActivityList();
     }
 }
