@@ -26,6 +26,7 @@ import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
@@ -160,14 +161,19 @@ public class ContentUpdater {
                 List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
                 });
                 ChannelDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
-                afterChannelFetched();
+                afterChannelFetched(context);
             }
         });
     }
 
-    private static void afterChannelFetched(){
+    private static void afterChannelFetched(Context context){
         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+        });
+        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.MESSAGES);
+            });
         });
         Notifications.notifyPendingNotifications(Notifications.NotificationId.CHAT_MESSAGE);
     }
@@ -211,6 +217,11 @@ public class ContentUpdater {
                 });
                 GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                     openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                });
+                GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                    newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                        newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.MESSAGES);
+                    });
                 });
                 GlobalYiersHolder.getYiers(ChatMessageUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
                     chatMessageUpdateYiers.forEach(chatMessageUpdateYier -> {

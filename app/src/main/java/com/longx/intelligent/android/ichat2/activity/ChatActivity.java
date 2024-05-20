@@ -26,6 +26,7 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.SoftKeyBoardYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
@@ -121,6 +122,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     chatMessageDatabaseManager.setAllToViewed();
                     GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                         openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                    });
+                    GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                        newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                            newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                        });
                     });
                 });
             }
@@ -220,6 +226,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                        });
+
+                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                            });
                         });
                     });
                 }

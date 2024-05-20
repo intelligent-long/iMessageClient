@@ -28,7 +28,7 @@ import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier, NewContentBadgeDisplayYier {
+public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier {
     private FragmentMessagesBinding binding;
     private OpenedChatsRecyclerAdapter adapter;
 
@@ -41,7 +41,6 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     public void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(requireContext(), OpenedChatsUpdateYier.class, this);
-        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
     }
 
     @Override
@@ -50,7 +49,6 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
         setupYiers();
         setupRecyclerView();
         GlobalYiersHolder.holdYier(requireContext(), OpenedChatsUpdateYier.class, this);
-        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         return binding.getRoot();
     }
 
@@ -89,7 +87,6 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         binding.noContentLayout.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.VISIBLE);
-
     }
 
     @Override
@@ -102,32 +99,6 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
             } else {
                 toContent();
             }
-        }
-        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
-            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
-                newContentBadgeDisplayYier.autoShowNewContentBadge(requireContext(), ID.MESSAGES);
-            });
-        });
-    }
-
-    @Override
-    public void showNewContentBadge(ID id, int newContentCount) {
-        if(id.equals(ID.MESSAGES)){
-            showMainActivityBottomNavigationBadge();
-        }
-    }
-
-    private void showMainActivityBottomNavigationBadge() {
-        AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
-        List<OpenedChat> showOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
-        showOpenedChats.forEach(showOpenedChat -> {
-            if(showOpenedChat.getNotViewedCount() > 0) hideNavigationMessageBadge.set(false);
-        });
-        List<MainActivity> mainActivities = ActivityOperator.getActivitiesOf(MainActivity.class);
-        if(hideNavigationMessageBadge.get()){
-            mainActivities.forEach(MainActivity::hideNavigationMessageBadge);
-        }else {
-            mainActivities.forEach(MainActivity::showNavigationMessageBadge);
         }
     }
 }

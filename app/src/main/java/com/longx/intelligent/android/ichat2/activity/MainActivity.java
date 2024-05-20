@@ -30,7 +30,9 @@ import com.longx.intelligent.android.ichat2.activity.settings.RootSettingsActivi
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -45,13 +47,17 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
+import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import q.rorbin.badgeview.Badge;
 
-public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener {
+public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier,
+        ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener, NewContentBadgeDisplayYier {
     private ActivityMainBinding binding;
     private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
@@ -71,8 +77,19 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         showNavHeaderInfo();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
+        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
+        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
         animateNavIconVisibility(navHostFragment);
         requestPermissions();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
+        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
+        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
     }
 
     private void requestPermissions(){
@@ -119,13 +136,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 }
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
     }
 
     public ActivityMainBinding getViewBinding(){
@@ -342,6 +352,31 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         if(channelNavBadge != null) {
             channelNavBadge.hide(true);
             channelNavBadge = null;
+        }
+    }
+
+    @Override
+    public void showNewContentBadge(ID id, int newContentCount) {
+        switch (id){
+            case MESSAGES:
+                AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
+                List<OpenedChat> showOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
+                showOpenedChats.forEach(showOpenedChat -> {
+                    if(showOpenedChat.getNotViewedCount() > 0) hideNavigationMessageBadge.set(false);
+                });
+                if(hideNavigationMessageBadge.get()){
+                    hideNavigationMessageBadge();
+                }else {
+                    showNavigationMessageBadge();
+                }
+                break;
+            case CHANNEL_ADDITION_ACTIVITIES:
+                if(newContentCount > 0) {
+                    showNavigationChannelBadge();
+                } else {
+                    hideNavigationChannelBadge();
+                }
+                break;
         }
     }
 }
