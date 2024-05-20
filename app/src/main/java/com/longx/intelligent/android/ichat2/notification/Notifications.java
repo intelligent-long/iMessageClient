@@ -7,6 +7,7 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -24,8 +25,26 @@ import java.util.Set;
  * Created by LONG on 2024/4/6 at 5:51 PM.
  */
 public class Notifications {
-    public enum NotificationId{SERVER_MESSAGE_SERVICE_NOT_RUNNING, CHAT_MESSAGE}
+    public enum NotificationId{
+        SERVER_MESSAGE_SERVICE_NOT_RUNNING,
+        CHAT_MESSAGE,
+        CHANNEL_ADDITION_ACTIVITY
+    }
     private static final Map<NotificationId, List<Runnable>> pendingNotificationMap = new HashMap<>();
+
+    public synchronized static void notifyPendingNotifications(NotificationId notificationId){
+        List<Runnable> runnables = pendingNotificationMap.get(notificationId);
+        Set<Runnable> runnableSet = new HashSet<>();
+        if(runnables != null){
+            runnables.forEach(runnable -> {
+                runnable.run();
+                runnableSet.add(runnable);
+            });
+        }
+        if(runnables != null) {
+            runnableSet.forEach(runnables::remove);
+        }
+    }
 
     public static void notifyServerMessageServiceNotRunning(Context context){
         new Notification.Builder(context,
@@ -76,17 +95,19 @@ public class Notifications {
         }
     }
 
-    public synchronized static void notifyPendingNotifications(NotificationId notificationId){
-        List<Runnable> runnables = pendingNotificationMap.get(notificationId);
-        Set<Runnable> runnableSet = new HashSet<>();
-        if(runnables != null){
-            runnables.forEach(runnable -> {
-                runnable.run();
-                runnableSet.add(runnable);
-            });
-        }
-        if(runnables != null) {
-            runnableSet.forEach(runnables::remove);
-        }
+    public static void notifyChannelAdditionActivity(Context context, int notViewedCount){
+        Intent intent = new Intent(context, ChannelAdditionActivitiesActivity.class);
+        new Notification.Builder(context,
+                NotificationChannels.ChannelAdditionActivity.ID_CHANNEL_ADDITION_ACTIVITY,
+                NotificationChannels.ChannelAdditionActivity.NAME_CHANNEL_ADDITION_ACTIVITY)
+                .intent(intent)
+                .importance(NotificationManager.IMPORTANCE_HIGH)
+                .title("新的频道")
+                .text(notViewedCount + " 个新的频道添加请求")
+                .smallIcon(R.drawable.person_add_fill_24px)
+                .autoCancel(true)
+                .build()
+                .show();
+
     }
 }

@@ -145,14 +145,14 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                Integer notViewCount = data.getData(Integer.class);
-                SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewCount);
-                resultsYier.onResults();
+                Integer notViewedCount = data.getData(Integer.class);
+                SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewedCount);
+                resultsYier.onResults(notViewedCount);
             }
         });
     }
 
-    public static void updateChannels(Context context){
+    public static void updateChannels(Context context, ResultsYier resultsYier){
         ChannelApiCaller.fetchAllAssociations(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNELS, context){
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
@@ -161,24 +161,12 @@ public class ContentUpdater {
                 List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
                 });
                 ChannelDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
-                afterChannelFetched(context);
+                resultsYier.onResults();
             }
         });
     }
 
-    private static void afterChannelFetched(Context context){
-        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
-            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
-        });
-        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
-            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
-                newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.MESSAGES);
-            });
-        });
-        Notifications.notifyPendingNotifications(Notifications.NotificationId.CHAT_MESSAGE);
-    }
-
-    public static void updateChatMessages(Context context){
+    public static void updateChatMessages(Context context, ResultsYier resultsYier){
         ChatApiCaller.fetchAllNewChatMessages(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHAT_MESSAGES, context){
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
@@ -203,31 +191,7 @@ public class ContentUpdater {
                 chatMessageMap.forEach((s, chatMessageList) -> {
                     OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, chatMessageList.size(), true));
                 });
-                chatMessages.forEach(chatMessage -> {
-                    if (ActivityOperator.getActivityList().size() == 0) {
-                        Notifications.notifyChatMessage(context, chatMessage);
-                    } else {
-                        HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);
-                        if (!(topActivity instanceof MainActivity)) {
-                            if (!(topActivity instanceof ChatActivity && ((ChatActivity) topActivity).getChannel().getIchatId().equals(chatMessage.getOther(context)))) {
-                                Notifications.notifyChatMessage(context, chatMessage);
-                            }
-                        }
-                    }
-                });
-                GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
-                    openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
-                });
-                GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
-                    newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
-                        newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.MESSAGES);
-                    });
-                });
-                GlobalYiersHolder.getYiers(ChatMessageUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
-                    chatMessageUpdateYiers.forEach(chatMessageUpdateYier -> {
-                        chatMessageUpdateYier.onNewChatMessage(chatMessages);
-                    });
-                });
+                resultsYier.onResults(chatMessages);
             }
         });
     }

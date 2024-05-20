@@ -14,4 +14,9 @@ public class NotificationChannels {
         static final String ID_CHAT_MESSAGE = "CHAT_MESSAGE";
         static final String NAME_CHAT_MESSAGE = "聊天消息";
     }
+
+    public static class ChannelAdditionActivity{
+        static final String ID_CHANNEL_ADDITION_ACTIVITY = "CHANNEL_ADDITION_ACTIVITY";
+        static final String NAME_CHANNEL_ADDITION_ACTIVITY = "新的频道消息";
+    }
 }
