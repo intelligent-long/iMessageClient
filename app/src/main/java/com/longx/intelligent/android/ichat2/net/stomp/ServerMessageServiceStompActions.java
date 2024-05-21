@@ -7,6 +7,7 @@ import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.HoldableActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
@@ -37,14 +38,14 @@ public class ServerMessageServiceStompActions {
 
     public static void updateChannelAdditionsNotViewCount(Context context) {
         ContentUpdater.updateChannelAdditionNotViewCount(context, results -> {
-            Integer notViewedCount = (Integer) results[0];
-            if(notViewedCount != null && notViewedCount != 0) {
+            ChannelAdditionNotViewedCount notViewedCount = (ChannelAdditionNotViewedCount) results[0];
+            if(notViewedCount != null) {
                 if (ActivityOperator.getActivityList().size() == 0) {
-                    Notifications.notifyChannelAdditionActivity(context, notViewedCount);
+                    Notifications.notifyChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
                 } else {
                     HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);
                     if (!(topActivity instanceof MainActivity)) {
-                        Notifications.notifyChannelAdditionActivity(context, notViewedCount);
+                        Notifications.notifyChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
                     }
                 }
             }

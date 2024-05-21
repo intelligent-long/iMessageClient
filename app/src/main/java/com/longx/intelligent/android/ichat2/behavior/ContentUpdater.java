@@ -13,6 +13,7 @@ import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseM
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
@@ -145,7 +146,7 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                Integer notViewedCount = data.getData(Integer.class);
+                ChannelAdditionNotViewedCount notViewedCount = data.getData(ChannelAdditionNotViewedCount.class);
                 SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewedCount);
                 resultsYier.onResults(notViewedCount);
             }

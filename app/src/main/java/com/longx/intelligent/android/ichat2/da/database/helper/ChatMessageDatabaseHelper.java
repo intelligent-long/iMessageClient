@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.da.database.helper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Created by LONG on 2024/5/13 at 2:15 AM.

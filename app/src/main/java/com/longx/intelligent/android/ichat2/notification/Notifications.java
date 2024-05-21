@@ -13,6 +13,7 @@ import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,15 +96,28 @@ public class Notifications {
         }
     }
 
-    public static void notifyChannelAdditionActivity(Context context, int notViewedCount){
+    public static void notifyChannelAdditionActivity(Context context, int notificationRequest, int notificationRespond){
         Intent intent = new Intent(context, ChannelAdditionActivitiesActivity.class);
+        String text;
+        if(notificationRequest != 0 && notificationRespond != 0) {
+            text = notificationRequest + " 个新的频道添加请求, " + notificationRespond  + " 个新的频道添加回应";
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
+        }else if(notificationRequest != 0){
+            text = notificationRequest + " 个新的频道添加请求";
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
+        }else if(notificationRespond != 0){
+            text = notificationRespond + " 个新的频道添加回应";
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+        }else {
+            return;
+        }
         new Notification.Builder(context,
                 NotificationChannels.ChannelAdditionActivity.ID_CHANNEL_ADDITION_ACTIVITY,
                 NotificationChannels.ChannelAdditionActivity.NAME_CHANNEL_ADDITION_ACTIVITY)
                 .intent(intent)
                 .importance(NotificationManager.IMPORTANCE_HIGH)
                 .title("新的频道")
-                .text(notViewedCount + " 个新的频道添加请求")
+                .text(text)
                 .smallIcon(R.drawable.person_add_fill_24px)
                 .autoCancel(true)
                 .build()

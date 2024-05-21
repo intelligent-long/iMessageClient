@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.longx.intelligent.android.ichat2.da.database.helper.ChatMessageDatabaseHelper;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -31,6 +32,12 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
     private synchronized static void initInstance(Context context, String channelIchatId) {
         ChatMessageDatabaseHelper chatMessageDatabaseHelper = new ChatMessageDatabaseHelper(context, channelIchatId, SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId());
         ChatMessageDatabaseManager messageDatabaseManager = new ChatMessageDatabaseManager(chatMessageDatabaseHelper);
+        messageDatabaseManager.openDatabaseIfClosed();
+        try {
+            chatMessageDatabaseHelper.onCreate(messageDatabaseManager.getDatabase());
+        }finally {
+            messageDatabaseManager.releaseDatabaseIfUnused();
+        }
         instanceMap.put(channelIchatId, messageDatabaseManager);
     }
 

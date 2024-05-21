@@ -11,7 +11,8 @@ public interface NewContentBadgeDisplayYier {
     enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES}
 
     static int getChannelAdditionActivitiesNewContentCount(Context context){
-        return SharedPreferencesAccessor.NewContentCount.getChannelAdditionActivities(context);
+        return SharedPreferencesAccessor.NewContentCount.getChannelAdditionActivitiesRequester(context)
+                + SharedPreferencesAccessor.NewContentCount.getChannelAdditionActivitiesResponder(context);
     }
 
     default void autoShowNewContentBadge(Context context, ID id){

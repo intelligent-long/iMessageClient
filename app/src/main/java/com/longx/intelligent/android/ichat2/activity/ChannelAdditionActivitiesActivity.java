@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.os.Bundle;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
@@ -25,6 +26,7 @@ import retrofit2.Response;
 
 public class ChannelAdditionActivitiesActivity extends BaseActivity implements ChannelAdditionActivitiesFetchYier, ChannelAdditionActivitiesUpdateYier {
     private ActivityChannelAdditionActivitiesBinding binding;
+    private int initTabIndex;
     private static String[] PAGER_TITLES;
     private ChannelAdditionActivitiesViewPagerAdapter pagerAdapter;
 
@@ -34,6 +36,7 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
                 getString(R.string.channel_addition_activity_send),
                 getString(R.string.channel_addition_activity_receive)};
         super.onCreate(savedInstanceState);
+        initTabIndex = getIntent().getIntExtra(ExtraKeys.INIT_TAB_INDEX, 0);
         binding = ActivityChannelAdditionActivitiesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
@@ -51,6 +54,12 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
         pagerAdapter = new ChannelAdditionActivitiesViewPagerAdapter(this);
         binding.viewPager.setAdapter(pagerAdapter);
         new TabLayoutMediator(binding.tabs, binding.viewPager, (tab, position) -> tab.setText(PAGER_TITLES[position])).attach();
+        binding.tabs.post(() -> {
+            TabLayout.Tab tab = binding.tabs.getTabAt(initTabIndex);
+            if (tab != null) {
+                tab.select();
+            }
+        });
     }
 
     @Override

@@ -8,6 +8,7 @@ import androidx.preference.PreferenceManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.data.Avatar;
+import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
@@ -268,22 +269,29 @@ public class SharedPreferencesAccessor {
     public static class NewContentCount {
         private static final String NAME = "new_content_count";
         private static class Key{
-            private static final String CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
+            private static final String CHANNEL_ADDITION_ACTIVITIES_REQUESTER = "channel_addition_activities_requester";
+            private static final String CHANNEL_ADDITION_ACTIVITIES_RESPONDER = "channel_addition_activities_responder";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         }
 
-        public static void saveChannelAdditionActivities(Context context, int newContentCount){
+        public static void saveChannelAdditionActivities(Context context, ChannelAdditionNotViewedCount newContentCount){
             getSharedPreferences(context)
                     .edit()
-                    .putInt(Key.CHANNEL_ADDITION_ACTIVITIES, newContentCount)
+                    .putInt(Key.CHANNEL_ADDITION_ACTIVITIES_REQUESTER, newContentCount.getRequester())
+                    .putInt(Key.CHANNEL_ADDITION_ACTIVITIES_RESPONDER, newContentCount.getResponder())
                     .apply();
         }
 
-        public static int getChannelAdditionActivities(Context context){
+        public static int getChannelAdditionActivitiesRequester(Context context){
             return getSharedPreferences(context)
-                    .getInt(Key.CHANNEL_ADDITION_ACTIVITIES, 0);
+                    .getInt(Key.CHANNEL_ADDITION_ACTIVITIES_REQUESTER, 0);
+        }
+
+        public static int getChannelAdditionActivitiesResponder(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.CHANNEL_ADDITION_ACTIVITIES_RESPONDER, 0);
         }
     }
 
