@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,6 +21,7 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelAddit
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -135,6 +137,12 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
             holder.binding.getRoot().setVisibility(View.GONE);
         }
         checkAndShowTimeText(holder, position, itemData);
+        if(!itemData.channelAddition.isViewed()) {
+            holder.binding.badgeHost.setVisibility(View.VISIBLE);
+            BadgeDisplayer.initIndicatorBadge(activity, holder.binding.badgeHost, Gravity.CENTER);
+        }else {
+            holder.binding.badgeHost.setVisibility(View.GONE);
+        }
     }
 
     private void checkAndShowTimeText(ViewHolder holder, int position, ItemData itemData) {
