@@ -48,8 +48,6 @@ import q.rorbin.badgeview.Badge;
 public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelsRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier, NewContentBadgeDisplayYier, ChannelsUpdateYier {
     private FragmentChannelsBinding binding;
     private LayoutChannelRecyclerViewHeaderBinding headerViewBinding;
-    private Parcelable recyclerViewState;
-    private int appBarVerticalOffset;
     private int channelAdditionActivitiesNewContentCount;
     private Badge newChannelBadge;
 
@@ -74,14 +72,14 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         super.onSaveInstanceState(outState);
 
         if (binding.recyclerView.getLayoutManager() != null) {
-            recyclerViewState = binding.recyclerView.getLayoutManager().onSaveInstanceState();
+            Parcelable recyclerViewState = binding.recyclerView.getLayoutManager().onSaveInstanceState();
             outState.putParcelable(InstanceStateKeys.ChannelsFragment.RECYCLER_VIEW_STATE, recyclerViewState);
         }
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appbar.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
         if (behavior != null) {
-            appBarVerticalOffset = behavior.getTopAndBottomOffset();
+            int appBarVerticalOffset = behavior.getTopAndBottomOffset();
             outState.putInt(InstanceStateKeys.ChannelsFragment.APP_BAR_LAYOUT_STATE, appBarVerticalOffset);
         }
 
@@ -98,9 +96,9 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            recyclerViewState = savedInstanceState.getParcelable(InstanceStateKeys.ChannelsFragment.RECYCLER_VIEW_STATE);
+            Parcelable recyclerViewState = savedInstanceState.getParcelable(InstanceStateKeys.ChannelsFragment.RECYCLER_VIEW_STATE);
             binding.recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-            appBarVerticalOffset = savedInstanceState.getInt(InstanceStateKeys.ChannelsFragment.APP_BAR_LAYOUT_STATE, 0);
+            int appBarVerticalOffset = savedInstanceState.getInt(InstanceStateKeys.ChannelsFragment.APP_BAR_LAYOUT_STATE, 0);
             binding.appbar.post(() -> binding.appbar.setExpanded(appBarVerticalOffset == 0, false));
             boolean isFabExpanded = savedInstanceState.getBoolean(InstanceStateKeys.ChannelsFragment.FAB_EXPANDED_STATE, true);
             if (isFabExpanded) {
