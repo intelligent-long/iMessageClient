@@ -71,9 +71,9 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
 
     @Override
     public void onFetched(List<ChannelAddition> channelAdditions) {
-        SharedPreferencesAccessor.ApiJson.clearChannelAdditionActivities(this);
+        SharedPreferencesAccessor.ApiJson.ChannelAdditionActivities.clearRecords(this);
         channelAdditions.forEach(channelAdditionInfo -> {
-            SharedPreferencesAccessor.ApiJson.addChannelAdditionActivities(this, JsonUtil.toJson(channelAdditionInfo));
+            SharedPreferencesAccessor.ApiJson.ChannelAdditionActivities.addRecord(this, channelAdditionInfo);
         });
         pagerAdapter.getPendingFragment().onFetched(channelAdditions);
         pagerAdapter.getSendFragment().onFetched(channelAdditions);

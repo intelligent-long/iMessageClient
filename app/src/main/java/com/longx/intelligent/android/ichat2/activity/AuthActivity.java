@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.bottomsheet.AuthMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.OfflineDetail;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.ChangePasswordPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RegistrationPostBody;
@@ -23,16 +24,25 @@ import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OfflineDetailShowYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class AuthActivity extends BaseActivity {
+public class AuthActivity extends BaseActivity implements OfflineDetailShowYier {
     private ActivityAuthBinding binding;
     private String[] loginWayNames;
     private GlobalBehaviors.LoginWay currentLoginWay;
+
     private enum AuthAction{LOGIN, REGISTER, RESET_PASSWORD}
     private AuthAction currentAuthAction;
 
@@ -50,12 +60,21 @@ public class AuthActivity extends BaseActivity {
         setupYiers();
         showVersionInfo();
         checkAndSwitchMode();
+        GlobalYiersHolder.holdYier(this, OfflineDetailShowYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, OfflineDetailShowYier.class, this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         onResumeSetupLoginWayAutoCompleteTextView();
+        showOfflineDetail();
+        checkAndFetchAndShowOfflineDetail();
     }
 
     private void checkAndSwitchMode() {
@@ -325,5 +344,39 @@ public class AuthActivity extends BaseActivity {
         String versionName = AppUtil.getVersionName(this);
         int versionCode = AppUtil.getVersionCode(this);
         binding.versionInfo.setText(versionName + " (" + versionCode + ")");
+    }
+
+    private void checkAndFetchAndShowOfflineDetail() {
+        boolean offlineDetailNeedFetch = SharedPreferencesAccessor.AuthPref.isOfflineDetailNeedFetch(this);
+        if(!offlineDetailNeedFetch) return;
+        AuthApiCaller.fetchOfflineDetail(null, new RetrofitApiCaller.BaseYier<OperationData>(){
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
+                SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(AuthActivity.this, offlineDetail);
+                SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(AuthActivity.this, false);
+                showOfflineDetail();
+            }
+        });
+    }
+
+    @Override
+    public void showOfflineDetail() {
+        List<OfflineDetail> offlineDetails = SharedPreferencesAccessor.ApiJson.OfflineDetails.getAllRecords(this);
+        Date showedOfflineDetailTime = SharedPreferencesAccessor.AuthPref.getShowedOfflineDetailTime(this);
+        ErrorLogger.log(offlineDetails);
+        ErrorLogger.log(showedOfflineDetailTime);
+        List<OfflineDetail> needShowOfflineDetails = new ArrayList<>();
+        offlineDetails.forEach(offlineDetail -> {
+            if(showedOfflineDetailTime == null || offlineDetail.getTime().after(showedOfflineDetailTime)){
+                needShowOfflineDetails.add(offlineDetail);
+            }
+        });
+        needShowOfflineDetails.sort(Comparator.comparing(OfflineDetail::getTime));
+        needShowOfflineDetails.forEach(needShowOfflineDetail -> {
+            new MessageDialog(this, "登陆会话已失效", needShowOfflineDetail.getDesc()).show();
+            SharedPreferencesAccessor.AuthPref.saveShowedOfflineDetailTime(this, needShowOfflineDetail.getTime());
+        });
     }
 }

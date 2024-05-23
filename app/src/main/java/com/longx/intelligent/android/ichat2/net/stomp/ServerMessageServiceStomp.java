@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.net.stomp;
 
 import android.content.Context;
 
+import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
@@ -57,8 +58,10 @@ public class ServerMessageServiceStomp {
                     }
                     if (close.getCode() == 4000) {
                         serverMessageService.cancelBackingOnline();
+                        GlobalBehaviors.onOtherOnline(serverMessageService.getContext());
                     } else if (close.getCode() == 4001) {
                         serverMessageService.cancelBackingOnline();
+                        GlobalBehaviors.onOtherOnline(serverMessageService.getContext());
                     } else {
                         serverMessageService.onGetDisconnected();
                     }

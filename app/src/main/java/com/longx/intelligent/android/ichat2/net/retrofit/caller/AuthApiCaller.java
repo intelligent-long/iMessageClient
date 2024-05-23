@@ -80,4 +80,10 @@ public class AuthApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationData> fetchOfflineDetail(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchOfflineDetail();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

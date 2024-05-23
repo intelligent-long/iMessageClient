@@ -43,17 +43,17 @@ public class ActivityOperator extends ActivityHolder{
     }
 
     public static void switchToAuth(Context context){
-        switchTo(context, AuthActivity.class);
+        switchTo(context, AuthActivity.class, true);
     }
 
     public static void switchToMain(Context context){
-        switchTo(context, MainActivity.class);
+        switchTo(context, MainActivity.class, false);
     }
 
-    private static void switchTo(Context context, Class<?> clazz){
+    private static void switchTo(Context context, Class<?> clazz, boolean newTask){
         finishAll();
         Intent intent = new Intent(context, clazz);
-        if(context instanceof Service){
+        if(newTask || context instanceof Service){
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         context.startActivity(intent);

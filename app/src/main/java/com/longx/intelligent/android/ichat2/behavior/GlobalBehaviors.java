@@ -8,6 +8,7 @@ import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.OfflineDetail;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.EmailLoginPostBody;
 import com.longx.intelligent.android.ichat2.data.request.IchatIdUserLoginPostBody;
@@ -22,6 +23,9 @@ import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OfflineDetailShowYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import retrofit2.Call;
@@ -87,13 +91,13 @@ public class GlobalBehaviors {
         ActivityOperator.switchToMain(context);
     }
 
-    public static void doLogout(AppCompatActivity activity, String failureBaseUrl, ResultsYier resultsYier){
-        tryLogout(activity, null, null, results -> {
+    public static void doLogout(Context context, String failureBaseUrl, ResultsYier resultsYier){
+        tryLogout(context, null, null, results -> {
             Boolean success = (Boolean) results[0];
             Boolean failure = (Boolean) results[2];
             if (!success && failureBaseUrl != null && failure) {
                 String cookie = CookieJar.getCookieString(RetrofitCreator.retrofit.baseUrl().toString());
-                tryLogout(activity, failureBaseUrl, cookie, resultsYier);
+                tryLogout(context, failureBaseUrl, cookie, resultsYier);
             } else {
                 if (resultsYier != null) resultsYier.onResults(success);
             }
@@ -108,7 +112,8 @@ public class GlobalBehaviors {
         ActivityOperator.switchToAuth(context);
     }
 
-    private static void tryLogout(AppCompatActivity activity, String failureBaseUrl, String cookie, ResultsYier resultsYier){
+    private static void tryLogout(Context context, String failureBaseUrl, String cookie, ResultsYier resultsYier){
+        AppCompatActivity activity = context instanceof AppCompatActivity ? ((AppCompatActivity) context) : null;
         AuthApiCaller.logout(activity, failureBaseUrl, cookie, new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
             @Override
             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
@@ -120,15 +125,17 @@ public class GlobalBehaviors {
 
             @Override
             public void notOk(int code, String message, Response<OperationStatus> row, Call<OperationStatus> call) {
-                new ConfirmDialog(activity, "状态码异常 (" + code + ")，是否强制退出登录？")
-                        .setPositiveButton((dialog, which) -> {
-                            onLogoutSuccess(activity);
-                            if (resultsYier != null) resultsYier.onResults(true, call, false);
-                        })
-                        .setNegativeButton((dialog, which) -> {
-                            if (resultsYier != null) resultsYier.onResults(false, call, false);
-                        })
-                        .show();
+                if(activity != null) {
+                    new ConfirmDialog(activity, "状态码异常 (" + code + ")，是否强制退出登录？")
+                            .setPositiveButton((dialog, which) -> {
+                                onLogoutSuccess(activity);
+                                if (resultsYier != null) resultsYier.onResults(true, call, false);
+                            })
+                            .setNegativeButton((dialog, which) -> {
+                                if (resultsYier != null) resultsYier.onResults(false, call, false);
+                            })
+                            .show();
+                }
             }
 
             @Override
@@ -157,5 +164,26 @@ public class GlobalBehaviors {
                 });
             }
         });
+    }
+
+    public static void onOtherOnline(Context context){
+        SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(context, true);
+        AuthApiCaller.fetchOfflineDetail(null, new RetrofitApiCaller.BaseYier<OperationData>(){
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
+                SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(context, offlineDetail);
+                SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(context, false);
+                GlobalYiersHolder.getYiers(OfflineDetailShowYier.class).ifPresent(offlineDetailShowYiers -> {
+                    offlineDetailShowYiers.forEach(OfflineDetailShowYier::showOfflineDetail);
+                });
+            }
+        });
+        SharedPreferencesAccessor.NetPref.saveLoginState(context, false);
+        try {
+            ServerMessageService.stop();
+        }catch (Exception ignore){}
+        ActivityOperator.switchToAuth(context);
     }
 }

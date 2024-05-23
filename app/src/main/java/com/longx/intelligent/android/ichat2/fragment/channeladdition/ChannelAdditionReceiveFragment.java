@@ -51,12 +51,7 @@ public class ChannelAdditionReceiveFragment extends Fragment implements ChannelA
     }
 
     private void showCachedContent() {
-        List<String> channelAdditionActivitiesApiJsons = SharedPreferencesAccessor.ApiJson.getChannelAdditionActivities(requireContext());
-        List<ChannelAddition> channelAdditions = new ArrayList<>();
-        channelAdditionActivitiesApiJsons.forEach(channelAdditionActivitiesApiJson -> {
-            ChannelAddition channelAddition = JsonUtil.toObject(channelAdditionActivitiesApiJson, ChannelAddition.class);
-            channelAdditions.add(channelAddition);
-        });
+        List<ChannelAddition> channelAdditions = SharedPreferencesAccessor.ApiJson.ChannelAdditionActivities.getAllRecords(requireContext());
         setupRecyclerView(channelAdditions);
     }
 

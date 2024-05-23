@@ -12,6 +12,7 @@ import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
 
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -43,5 +44,8 @@ public interface AuthApi {
 
     @POST("auth/logout")
     CompletableCall<OperationStatus> logout(@Header("Cookie") String cookie);
+
+    @GET("auth/offline_detail")
+    CompletableCall<OperationData> fetchOfflineDetail();
 
 }

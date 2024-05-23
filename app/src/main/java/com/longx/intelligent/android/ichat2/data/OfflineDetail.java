@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.data;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -12,14 +13,15 @@ public class OfflineDetail {
     public static int REASON_RESET_PASSWORD = 3;
     private int reason;
     private Date time;
-    private String byIp;
+    private String ip;
+    private String desc;
 
     public OfflineDetail(){}
 
-    public OfflineDetail(int reason, Date time, String byIp) {
+    public OfflineDetail(int reason, Date time, String ip) {
         this.reason = reason;
         this.time = time;
-        this.byIp = byIp;
+        this.ip = ip;
     }
 
     public int getReason() {
@@ -30,7 +32,11 @@ public class OfflineDetail {
         return time;
     }
 
-    public String getByIp() {
-        return byIp;
+    public String getIp() {
+        return ip;
+    }
+
+    public String getDesc() {
+        return desc;
     }
 }

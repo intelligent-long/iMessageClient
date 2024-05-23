@@ -156,6 +156,10 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
         backingOnlineTimer.schedule(new TimerTask() {
             @Override
             public void run() {
+                if(!working){
+                    cancel();
+                    return;
+                }
                 if(!ServerMessageServiceStomp.isConnected()){
                     rework();
                 }

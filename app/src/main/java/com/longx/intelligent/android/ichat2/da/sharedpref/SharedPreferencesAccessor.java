@@ -8,7 +8,9 @@ import androidx.preference.PreferenceManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.data.Avatar;
+import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
+import com.longx.intelligent.android.ichat2.data.OfflineDetail;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
@@ -296,15 +298,6 @@ public class SharedPreferencesAccessor {
     }
 
     public static class ApiJson{
-        private static final String NAME = "api_json";
-        private static class Key{
-            private static final String CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
-        }
-        private static final int MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE = 500;
-        private static SharedPreferences getSharedPreferences(Context context) {
-            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
-        }
-
         private static class IndexedApiJson {
             private final int index;
             private final String json;
@@ -326,41 +319,86 @@ public class SharedPreferencesAccessor {
                 return json;
             }
         }
-
-        public static void addChannelAdditionActivities(Context context, String json){
-            Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
-            if(paginatedJsonSet.size() > MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
-            int index = paginatedJsonSet.size();
-            IndexedApiJson indexedApiJson = new IndexedApiJson(index, json);
-            String paginatedJson = JsonUtil.toJson(indexedApiJson);
-            HashSet<String> paginatedJsonSetCopy = new HashSet<>(paginatedJsonSet);
-            paginatedJsonSetCopy.add(paginatedJson);
-            getSharedPreferences(context)
-                    .edit()
-                    .putStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, paginatedJsonSetCopy)
-                    .apply();
+        private static final String NAME = "api_json";
+        private static class Key{
+            private static final String CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
+            private static final String OFFLINE_DETAILS = "offline_details";
+        }
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         }
 
-        public static void clearChannelAdditionActivities(Context context){
-            getSharedPreferences(context)
-                    .edit()
-                    .remove(Key.CHANNEL_ADDITION_ACTIVITIES)
-                    .apply();
+        public static class ChannelAdditionActivities{
+            private static final int MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE = 500;
+
+            public static void addRecord(Context context, ChannelAddition channelAddition){
+                String json = JsonUtil.toJson(channelAddition);
+                Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
+                if(paginatedJsonSet.size() > MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
+                int index = paginatedJsonSet.size();
+                ApiJson.IndexedApiJson indexedApiJson = new ApiJson.IndexedApiJson(index, json);
+                String paginatedJson = JsonUtil.toJson(indexedApiJson);
+                HashSet<String> paginatedJsonSetCopy = new HashSet<>(paginatedJsonSet);
+                paginatedJsonSetCopy.add(paginatedJson);
+                getSharedPreferences(context)
+                        .edit()
+                        .putStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, paginatedJsonSetCopy)
+                        .apply();
+            }
+
+            public static void clearRecords(Context context){
+                getSharedPreferences(context)
+                        .edit()
+                        .remove(Key.CHANNEL_ADDITION_ACTIVITIES)
+                        .apply();
+            }
+
+            public static List<ChannelAddition> getAllRecords(Context context){
+                List<ChannelAddition> result = new ArrayList<>();
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
+                List<ApiJson.IndexedApiJson> indexedApiJsonList = new ArrayList<>();
+                jsonSet.forEach(paginatedJson -> {
+                    ApiJson.IndexedApiJson indexedApiJson = JsonUtil.toObject(paginatedJson, ApiJson.IndexedApiJson.class);
+                    indexedApiJsonList.add(indexedApiJson);
+                });
+                indexedApiJsonList.sort(Comparator.comparingInt(o -> o.index));
+                indexedApiJsonList.forEach(indexedApiJson -> {
+                    result.add(JsonUtil.toObject(indexedApiJson.json, ChannelAddition.class));
+                });
+                return result;
+            }
         }
 
-        public static List<String> getChannelAdditionActivities(Context context){
-            List<String> result = new ArrayList<>();
-            Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
-            List<IndexedApiJson> indexedApiJsonList = new ArrayList<>();
-            paginatedJsonSet.forEach(paginatedJson -> {
-                IndexedApiJson indexedApiJson = JsonUtil.toObject(paginatedJson, IndexedApiJson.class);
-                indexedApiJsonList.add(indexedApiJson);
-            });
-            indexedApiJsonList.sort(Comparator.comparingInt(o -> o.index));
-            indexedApiJsonList.forEach(indexedApiJson -> {
-                result.add(indexedApiJson.json);
-            });
-            return result;
+        public static class OfflineDetails{
+            public static void addRecord(Context context, OfflineDetail offlineDetail){
+                if(offlineDetail == null) return;
+                String json = JsonUtil.toJson(offlineDetail);
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.OFFLINE_DETAILS, new HashSet<>());
+                HashSet<String> jsonSetCopy = new HashSet<>(jsonSet);
+                jsonSetCopy.add(json);
+                getSharedPreferences(context)
+                        .edit()
+                        .putStringSet(Key.OFFLINE_DETAILS, jsonSetCopy)
+                        .apply();
+            }
+
+            public static void clearRecords(Context context){
+                getSharedPreferences(context)
+                        .edit()
+                        .remove(Key.OFFLINE_DETAILS)
+                        .apply();
+            }
+
+            public static List<OfflineDetail> getAllRecords(Context context){
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.OFFLINE_DETAILS, new HashSet<>());
+                List<OfflineDetail> offlineDetails = new ArrayList<>();
+                jsonSet.forEach(s -> {
+                    OfflineDetail offlineDetail = JsonUtil.toObject(s, OfflineDetail.class);
+                    offlineDetails.add(offlineDetail);
+                });
+                offlineDetails.sort(Comparator.comparing(OfflineDetail::getTime));
+                return offlineDetails;
+            }
         }
     }
 
@@ -382,6 +420,43 @@ public class SharedPreferencesAccessor {
             long lastShowingTime = getSharedPreferences(context).getLong(channelIchatId, -1);
             return lastShowingTime == -1 || TimeUtil.isDateAfter(lastShowingTime, time.getTime(), Constants.CHAT_MESSAGE_SHOW_TIME_INTERVAL);
         }
+    }
+
+    public static class AuthPref{
+        private static final String NAME = "auth";
+        private static class Key{
+            private static final String OFFLINE_DETAIL_NEED_FETCH = "offline_detail_need_fetch";
+            private static final String SHOWED_OFFLINE_DETAIL_TIME = "showed_offline_detail_time";
+        }
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        }
+
+        public static boolean isOfflineDetailNeedFetch(Context context){
+            return getSharedPreferences(context)
+                    .getBoolean(AuthPref.Key.OFFLINE_DETAIL_NEED_FETCH, false);
+        }
+
+        public static void saveOfflineDetailNeedFetch(Context context, boolean need){
+            getSharedPreferences(context)
+                    .edit()
+                    .putBoolean(AuthPref.Key.OFFLINE_DETAIL_NEED_FETCH, need)
+                    .apply();
+        }
+
+        public static void saveShowedOfflineDetailTime(Context context, Date time){
+            getSharedPreferences(context)
+                    .edit()
+                    .putLong(Key.SHOWED_OFFLINE_DETAIL_TIME, time.getTime())
+                    .apply();
+        }
+
+        public static Date getShowedOfflineDetailTime(Context context){
+            long timeLong = getSharedPreferences(context).getLong(Key.SHOWED_OFFLINE_DETAIL_TIME, -1);
+            if(timeLong == -1) return null;
+            return new Date(timeLong);
+        }
+
     }
 
 }
