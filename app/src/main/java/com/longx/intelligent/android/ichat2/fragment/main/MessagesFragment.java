@@ -146,10 +146,6 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     public void onOpenedChatsUpdate() {
         if(adapter != null) {
             List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
-            OpenedChat[] openedChats = allShowOpenedChats.toArray(new OpenedChat[0]);
-            for (int i = 0; i < 21; i++) {
-                allShowOpenedChats.addAll(Arrays.asList(openedChats));
-            }
             adapter.changeAllItemsAndShow(allShowOpenedChats);
             if (allShowOpenedChats.size() == 0) {
                 toNoContent();
