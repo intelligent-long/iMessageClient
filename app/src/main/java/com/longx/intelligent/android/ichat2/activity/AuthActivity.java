@@ -365,8 +365,6 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
     public void showOfflineDetail() {
         List<OfflineDetail> offlineDetails = SharedPreferencesAccessor.ApiJson.OfflineDetails.getAllRecords(this);
         Date showedOfflineDetailTime = SharedPreferencesAccessor.AuthPref.getShowedOfflineDetailTime(this);
-        ErrorLogger.log(offlineDetails);
-        ErrorLogger.log(showedOfflineDetailTime);
         List<OfflineDetail> needShowOfflineDetails = new ArrayList<>();
         offlineDetails.forEach(offlineDetail -> {
             if(showedOfflineDetailTime == null || offlineDetail.getTime().after(showedOfflineDetailTime)){

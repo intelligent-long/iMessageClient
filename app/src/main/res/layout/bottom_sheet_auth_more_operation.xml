@@ -32,6 +32,24 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/offline_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="离线信息"
+            android:textAppearance="@style/BottomSheetItemTitle"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/software_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,24 +63,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="软件更新"
-            android:textAppearance="@style/BottomSheetItemTitle"
-            android:textSize="20sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/offline_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="下线信息"
             android:textAppearance="@style/BottomSheetItemTitle"
             android:textSize="20sp"/>
     </LinearLayout>

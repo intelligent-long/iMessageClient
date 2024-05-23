@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.interfce.OnlineKeeper;
 import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStomp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ServerEventYier;
 
@@ -97,9 +98,9 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
 
     @Override
     public synchronized void onGetDisconnected() {
+        toOffline();
         cancelBackingOnline();
         tryBackOnline();
-        toOffline();
     }
 
     private synchronized void toOffline() {
@@ -118,8 +119,8 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
 
     @Override
     public synchronized void onGetOnline() {
-        cancelBackingOnline();
         toOnline();
+        cancelBackingOnline();
     }
 
     private synchronized void toOnline() {
@@ -156,10 +157,6 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
         backingOnlineTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!working){
-                    cancel();
-                    return;
-                }
                 if(!ServerMessageServiceStomp.isConnected()){
                     rework();
                 }
