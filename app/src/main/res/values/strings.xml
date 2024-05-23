@@ -28,6 +28,7 @@
     <string name="title_change_region">更改地区</string>
     <string name="title_change_avatar">更改头像</string>
     <string name="title_avatar">头像</string>
+    <string name="title_offline_detail">离线信息</string>
     <string name="title_open_source_licenses">开放源代码许可</string>
     <string name="title_search_channel">搜索频道</string>
     <string name="title_request_add_channel">请求添加频道</string>
