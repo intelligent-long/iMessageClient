@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.behavior;
 
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.longx.intelligent.android.ichat2.net.CookieJar;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
@@ -173,6 +175,9 @@ public class GlobalBehaviors {
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
                 OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
+                if(ActivityOperator.getActivityList().size() == 0) {
+                    Notifications.notifyGoOfflineBecauseOfOtherOnline(context, offlineDetail);
+                }
                 SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(context, offlineDetail);
                 SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(context, false);
                 GlobalYiersHolder.getYiers(OfflineDetailShowYier.class).ifPresent(offlineDetailShowYiers -> {

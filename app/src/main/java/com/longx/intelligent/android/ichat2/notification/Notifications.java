@@ -7,12 +7,14 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.data.OfflineDetail;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
@@ -29,7 +31,8 @@ public class Notifications {
     public enum NotificationId{
         SERVER_MESSAGE_SERVICE_NOT_RUNNING,
         CHAT_MESSAGE,
-        CHANNEL_ADDITION_ACTIVITY
+        CHANNEL_ADDITION_ACTIVITY,
+        OTHER_ONLINE
     }
     private static final Map<NotificationId, List<Runnable>> pendingNotificationMap = new HashMap<>();
 
@@ -122,6 +125,20 @@ public class Notifications {
                 .autoCancel(true)
                 .build()
                 .show();
+    }
 
+    public static void notifyGoOfflineBecauseOfOtherOnline(Context context, OfflineDetail offlineDetail){
+        Intent intent = new Intent(context, AuthActivity.class);
+        new Notification.Builder(context,
+                NotificationChannels.OtherOnline.ID_OTHER_ONLINE,
+                NotificationChannels.OtherOnline.NAME_OTHER_ONLINE)
+                .intent(intent)
+                .importance(NotificationManager.IMPORTANCE_HIGH)
+                .title("登陆会话已失效")
+                .text(offlineDetail.getDesc())
+                .smallIcon(R.drawable.no_accounts_fill_24px)
+                .autoCancel(true)
+                .build()
+                .show();
     }
 }

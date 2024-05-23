@@ -19,4 +19,9 @@ public class NotificationChannels {
         static final String ID_CHANNEL_ADDITION_ACTIVITY = "CHANNEL_ADDITION_ACTIVITY";
         static final String NAME_CHANNEL_ADDITION_ACTIVITY = "新的频道消息";
     }
+
+    public static class OtherOnline{
+        static final String ID_OTHER_ONLINE = "OTHER_ONLINE";
+        static final String NAME_OTHER_ONLINE = "登陆会话失效";
+    }
 }
