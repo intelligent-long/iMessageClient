@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,7 +48,9 @@ public class PermissionOperator {
 
         @Override
         public void onPermissionDenied(List<String> deniedPermissions) {
-            if(!rationaleShowed) MessageDisplayer.autoShow(activity, "请到系统设置中的此应用信息界面允许权限", MessageDisplayer.Duration.LONG);
+            if(!rationaleShowed) MessageDisplayer.autoShow(activity,
+                    "请到系统设置中的此应用信息界面允许权限 > \n" + Arrays.toString(deniedPermissions.toArray(new String[0])),
+                    MessageDisplayer.Duration.LONG);
         }
 
         @Override

@@ -12,6 +12,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -38,6 +39,9 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
+import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
+import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -57,7 +61,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import q.rorbin.badgeview.Badge;
 
 public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier,
-        ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener, NewContentBadgeDisplayYier {
+        ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener, NewContentBadgeDisplayYier,
+        LinkPermissionOperatorActivity {
     private ActivityMainBinding binding;
     private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
@@ -111,6 +116,13 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                             SharedPreferencesAccessor.DefaultPref.disableRequestIgnoreBatteryOptimize(this);
                         })
                         .show();
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if(!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.showNotification)){
+                new PermissionOperator(this, ToRequestPermissionsItems.showNotification,
+                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
+                        .requestPermissions(this);
             }
         }
     }
