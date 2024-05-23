@@ -101,9 +101,9 @@ public class ChangeRegionActivity extends BaseActivity {
                         }
                     }
                     binding.firstRegionAutoCompleteTextView.setText(adapter.getItem(position));
-                    binding.firstRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
                     binding.firstRegionAutoCompleteTextView.setAdapter(adapter);
                     resultsYier.onResults();
+                    binding.firstRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
                 });
             }
         });
@@ -117,9 +117,9 @@ public class ChangeRegionActivity extends BaseActivity {
                     R.layout.layout_auto_complete_text_view_text, allSecondRegionNames);
             int position = 0;
             binding.secondRegionAutoCompleteTextView.setText(adapter.getItem(position));
-            binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
             binding.secondRegionAutoCompleteTextView.setAdapter(adapter);
             resultsYier.onResults();
+            binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
         }else {
             UserApiCaller.fetchAllSecondRegions(this, firstRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
                 @Override
@@ -149,9 +149,9 @@ public class ChangeRegionActivity extends BaseActivity {
                             }
                         }
                         binding.secondRegionAutoCompleteTextView.setText(adapter.getItem(position));
-                        binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
                         binding.secondRegionAutoCompleteTextView.setAdapter(adapter);
                         resultsYier.onResults();
+                        binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
                     });
                 }
             });
@@ -166,9 +166,9 @@ public class ChangeRegionActivity extends BaseActivity {
                     R.layout.layout_auto_complete_text_view_text, allThirdRegionNames);
             int position = 0;
             binding.thirdRegionAutoCompleteTextView.setText(adapter.getItem(position));
-            binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
             binding.thirdRegionAutoCompleteTextView.setAdapter(adapter);
             resultsYier.onResults();
+            binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
         }else {
             UserApiCaller.fetchAllThirdRegions(this, secondRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
                 @Override
@@ -198,9 +198,9 @@ public class ChangeRegionActivity extends BaseActivity {
                             }
                         }
                         binding.thirdRegionAutoCompleteTextView.setText(adapter.getItem(position));
-                        binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
                         binding.thirdRegionAutoCompleteTextView.setAdapter(adapter);
                         resultsYier.onResults();
+                        binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
                     });
                 }
             });
@@ -212,6 +212,7 @@ public class ChangeRegionActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 super.onItemClick(parent, view, position, id);
+                setRegionLayoutsAndChangeMenuItemEnabled(false);
                 currentSecondRegionAdcode = null;
                 currentThirdRegionAdcode = null;
                 int realPosition = position - 1;
