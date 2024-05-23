@@ -121,8 +121,8 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void setupYiers() {
         setLongClickCopyYiers();
         binding.avatar.setOnClickListener(v -> {
-            if((self != null && self.getAvatar() != null && self.getAvatar().getHash() != null)
-                    || (channel != null && channel.getAvatar() != null && channel.getAvatar().getHash() != null)) {
+            if(isSelf ? (self != null && self.getAvatar() != null && self.getAvatar().getHash() != null)
+                    : (channel != null && channel.getAvatar() != null && channel.getAvatar().getHash() != null)) {
                     Intent intent = new Intent(this, AvatarActivity.class);
                     intent.putExtra(ExtraKeys.ICHAT_ID, isSelf ? self.getIchatId() : channel.getIchatId());
                     intent.putExtra(ExtraKeys.AVATAR_HASH, isSelf ? self.getAvatar().getHash() : channel.getAvatar().getHash());
