@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -188,6 +189,60 @@ public class WindowAndSystemUiUtil {
                 controller.setSystemBarsAppearance(systemBarsAppearance, flag);
             }
         }
+    }
+
+    public static void setLightStatusBar(Activity activity, boolean light){
+        View decorView = activity.getWindow().getDecorView();
+        int flag = decorView.getSystemUiVisibility();
+        if(light) {
+            flag |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        }else {
+            flag &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        }
+        decorView.setSystemUiVisibility(flag);
+    }
+
+    public static int getActionBarSize(Context context){
+        TypedValue tv = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+        }
+        return -1;
+    }
+
+    public static void setTransparentStatusBar(Activity activity) {
+        Window window = activity.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
+    }
+
+    public static void setLayoutExtendedToStatusBar(Activity activity) {
+        View decorView = activity.getWindow().getDecorView();
+        int flags = decorView.getSystemUiVisibility();
+        flags |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        decorView.setSystemUiVisibility(flags);
+    }
+
+    public static void setSystemUIShown(Activity activity, boolean show) {
+        int showFlag = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        int hideFlag = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        View decorView = activity.getWindow().getDecorView();
+        int systemUiVisibility = decorView.getSystemUiVisibility();
+        if(show){
+            systemUiVisibility &= ~hideFlag;
+            systemUiVisibility |= showFlag;
+        }else {
+            systemUiVisibility |= hideFlag;
+            systemUiVisibility &= ~ showFlag;
+        }
+        decorView.setSystemUiVisibility(systemUiVisibility);
     }
 
 }

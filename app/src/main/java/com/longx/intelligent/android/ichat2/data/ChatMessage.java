@@ -17,9 +17,11 @@ import java.util.Objects;
  */
 public class ChatMessage {
     public static final int TYPE_TEXT = 0;
-    public static final int TYPE_NOTICE = 1;
+    public static final int TYPE_VOICE = 1;
     public static final int TYPE_IMAGE = 2;
-    public static final int TYPE_VOICE = 3;
+    public static final int TYPE_VIDEO = 3;
+    public static final int TYPE_FILE = 4;
+    public static final int TYPE_NOTICE = 5;
     private int type;
     private String uuid;
     private String from;

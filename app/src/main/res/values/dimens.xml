@@ -7,4 +7,6 @@
     <dimen name="collapsing_toolbar_layout_expanded_title_margin_bottom">34dp</dimen>
     <dimen name="fab_margin_end">17dp</dimen>
     <dimen name="fab_margin_bottom">17dp</dimen>
+    <dimen name="media_page_margin">16dp</dimen>
+    <dimen name="media_page_offset">12dp</dimen>
 </resources>

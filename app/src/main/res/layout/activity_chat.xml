@@ -103,7 +103,7 @@
                 app:iconTint="@color/ichat"
                 android:textColor="@color/ichat"
                 app:rippleColor="@android:color/transparent"
-                app:cornerRadius="100dp" />
+                app:cornerRadius="0dp" />
 
             <FrameLayout
                 android:id="@+id/buttons"
@@ -173,6 +173,7 @@
             android:visibility="gone">
 
             <LinearLayout
+                android:id="@+id/more_panel_image"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_columnWeight="1"

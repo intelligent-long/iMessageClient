@@ -2,7 +2,8 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
 import androidx.lifecycle.LifecycleOwner;
 
-import com.longx.intelligent.android.ichat2.data.request.SendChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChatApi;
@@ -16,8 +17,14 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return getApiImplementation(ChatApi.class);
     }
 
-    public static CompletableCall<OperationData> sendChatMessage(LifecycleOwner lifecycleOwner, SendChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().sendChatMessage(postBody);
+    public static CompletableCall<OperationData> sendTextChatMessage(LifecycleOwner lifecycleOwner, SendTextChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().sendTextChatMessage(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, SendImageChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

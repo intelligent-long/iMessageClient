@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.longx.intelligent.android.ichat2.ui.PassThroughCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/shape_gallery_top_bar_background"
+        app:liftOnScroll="false">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/GalleryToolbar"
+            app:menu="@menu/toolbar_activity_send_image_messages">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="发送图片"
+                    android:textSize="24sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/ping_fang_sc_medium" />
+            </RelativeLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/ping_fang_sc_medium"/>
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="17sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/ping_fang_sc_medium"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.longx.intelligent.android.lib.recyclerview.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:bottom_init="true"
+        app:bottom_init_behavior="always"/>
+</com.longx.intelligent.android.ichat2.ui.PassThroughCoordinatorLayout>

@@ -14,4 +14,6 @@ public class ExtraKeys {
     public static final String CHANNEL_ADDITION_INFO = "channel_addition_info";
     public static final String INIT_TAB_INDEX = "init_tab_index";
     public static final String NEED_RESTORE_INSTANCE_STATE = "need_restore_instance_state";
+    public static final String POSITION = "position";
+    public static final String MEDIA_INFO_LIST = "media_info_list";
 }

@@ -11,10 +11,18 @@
         <item name="android:navigationBarColor">?attr/colorSurfaceContainer</item>
     </style>
 
-    <style name="SettingsActivity" parent="Theme.IChat2Client">c
+    <style name="SettingsActivity" parent="Theme.IChat2Client">
         <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
+    </style>
+
+    <style name="SendImageMessagesActivity" parent="Theme.IChat2Client">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="PreviewToSendImageActivity" parent="Theme.IChat2Client">
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="ExpandedTitleTextAppearance" parent="">
@@ -72,5 +80,9 @@
     <style name="ChatActivityTitleText">
         <item name="fontFamily">@font/ping_fang_sc_medium</item>
         <item name="android:textSize">21.6sp</item>
+    </style>
+
+    <style name="GalleryToolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 </resources>

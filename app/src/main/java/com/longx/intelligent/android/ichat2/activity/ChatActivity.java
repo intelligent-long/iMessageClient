@@ -16,15 +16,15 @@ import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDataba
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
-import com.longx.intelligent.android.ichat2.data.request.SendChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
@@ -212,8 +212,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendButton.setOnClickListener(v -> {
             String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
             if(inputtedMessage == null || inputtedMessage.equals("")) return;
-            SendChatMessagePostBody postBody = new SendChatMessagePostBody(SendChatMessagePostBody.TYPE_TEXT, channel.getIchatId(), inputtedMessage);
-            ChatApiCaller.sendChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+            SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(channel.getIchatId(), inputtedMessage);
+            ChatApiCaller.sendTextChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
                 @Override
                 public void start(Call<OperationData> call) {
                     super.start(call);
@@ -279,6 +279,9 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         });
         binding.messageInput.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus) hideMorePanel();
+        });
+        binding.morePanelImage.setOnClickListener(v -> {
+            startActivity(new Intent(this, SendImageMessagesActivity.class));
         });
     }
 
