@@ -4,20 +4,30 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:visibility="gone"
-        android:id="@+id/layout_video_duration"
+        android:id="@+id/layout_check_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:elevation="100dp">
 
-        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
-            android:id="@+id/video_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="@color/white"
-            android:fontFamily="@font/ping_fang_sc_medium"
-            android:layout_marginEnd="9dp"
-            android:layout_marginBottom="9dp"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:visibility="gone"
+            android:id="@+id/cancel_check_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/check_circle_fill_24px"
+            android:tint="@color/ichat"
+            android:padding="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/check_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/radio_button_unchecked_outline_24px"
+            android:tint="@color/white"
+            android:background="@drawable/shape_send_image_check_button_background"
+            android:padding="8dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>

@@ -29,6 +29,8 @@ import java.util.List;
 public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<SendImageMessagesRecyclerAdapter.ViewHolder, SendImageMessagesRecyclerAdapter.ItemData> {
     private final AppCompatActivity activity;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
+    private RecyclerItemYiers.OnRecyclerItemActionYier onCheckButtonActionYier;
+    private RecyclerItemYiers.OnRecyclerItemActionYier onCancelCheckButtonActionYier;
     private final List<SendImageMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
 
     public SendImageMessagesRecyclerAdapter(AppCompatActivity activity, List<SendImageMessagesRecyclerAdapter.ItemData> itemDataList) {
@@ -65,6 +67,14 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
         this.onRecyclerItemClickYier = onRecyclerItemClickYier;
     }
 
+    public void setOnCheckButtonActionYier(RecyclerItemYiers.OnRecyclerItemActionYier onCheckButtonActionYier) {
+        this.onCheckButtonActionYier = onCheckButtonActionYier;
+    }
+
+    public void setOnCancelCheckButtonActionYier(RecyclerItemYiers.OnRecyclerItemActionYier onCancelCheckButtonActionYier) {
+        this.onCancelCheckButtonActionYier = onCancelCheckButtonActionYier;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -83,8 +93,6 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
 
     private void resetItemView(@NonNull ViewHolder holder) {
         holder.binding.imageView.setImageBitmap(null);
-        holder.binding.videoDuration.setText("");
-        holder.binding.layoutVideoDuration.setVisibility(View.GONE);
         holder.binding.imageView.bringToFront();
         GlideApp.with(activity.getApplicationContext()).clear(holder.binding.imageView);
     }
@@ -92,12 +100,22 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetItemView(holder);
+        ItemData itemData = itemDataList.get(position);
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.binding.getRoot().setOnClickListener(v -> {
             if (onRecyclerItemClickYier != null)
                 onRecyclerItemClickYier.onRecyclerItemClick(position, v);
         });
-        ItemData itemData = itemDataList.get(position);
+        holder.binding.checkButton.setOnClickListener(v -> {
+            holder.binding.checkButton.setVisibility(View.GONE);
+            holder.binding.cancelCheckButton.setVisibility(View.VISIBLE);
+            if(onCheckButtonActionYier != null) onCheckButtonActionYier.onRecyclerItemAction(position, itemData.mediaInfo.getUri());
+        });
+        holder.binding.cancelCheckButton.setOnClickListener(v -> {
+            holder.binding.checkButton.setVisibility(View.VISIBLE);
+            holder.binding.cancelCheckButton.setVisibility(View.GONE);
+            if(onCancelCheckButtonActionYier != null) onCancelCheckButtonActionYier.onRecyclerItemAction(position, itemData.mediaInfo.getUri());
+        });
         switch (itemData.mediaInfo.getMediaType()){
             case IMAGE:{
                 showPreviewImage(itemData.mediaInfo.getUri(), holder);
