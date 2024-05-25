@@ -36,7 +36,7 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/ChatActivity" />
+            android:theme="@style/ChatActivity"/>
         <activity
             android:name=".activity.ChannelAdditionActivity"
             android:exported="false"

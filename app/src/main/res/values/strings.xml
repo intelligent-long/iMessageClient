@@ -81,6 +81,4 @@
     <string name="preference_key_author">author</string>
     <string name="preference_key_battery_restriction">battery_restriction</string>
     <string name="preference_key_storage">storage</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

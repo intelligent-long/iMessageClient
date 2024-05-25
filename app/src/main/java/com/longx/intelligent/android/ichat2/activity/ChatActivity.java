@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,9 +27,9 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
-import com.longx.intelligent.android.ichat2.yier.SoftKeyBoardYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -51,6 +52,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private int nextPn = -1;
     private boolean reachStart;
     private int initialChatMessageCount;
+    private boolean showingMorePanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,9 +188,9 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 }
             }
         });
-        SoftKeyBoardYier.setListener(this, new SoftKeyBoardYier.OnSoftKeyBoardChangeListener() {
+        KeyboardVisibilityYier.setYier(this, new KeyboardVisibilityYier.Yier() {
             @Override
-            public void keyBoardShow() {
+            public void onKeyboardOpened() {
                 if(!(nextPn < 0)){
                     previousPn = 0;
                     nextPn = -1;
@@ -196,10 +198,15 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     previousPage();
                 }
                 binding.recyclerView.scrollToEnd(true);
+                hideMorePanel();
             }
 
             @Override
-            public void keyBoardHide() {
+            public void onKeyboardClosed() {
+                if(showingMorePanel) {
+                    showMorePanel();
+                    showingMorePanel = false;
+                }
             }
         });
         binding.sendButton.setOnClickListener(v -> {
@@ -244,6 +251,52 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 }
             });
         });
+        binding.voiceButton.setOnClickListener(v -> {
+            binding.voiceButton.setVisibility(View.GONE);
+            binding.textButton.setVisibility(View.VISIBLE);
+            binding.messageInput.setVisibility(View.GONE);
+            binding.holdToTalkButton.setVisibility(View.VISIBLE);
+            UiUtil.hideKeyboard(binding.messageInput);
+        });
+        binding.textButton.setOnClickListener(v -> {
+            binding.voiceButton.setVisibility(View.VISIBLE);
+            binding.textButton.setVisibility(View.GONE);
+            binding.messageInput.setVisibility(View.VISIBLE);
+            binding.holdToTalkButton.setVisibility(View.GONE);
+            UiUtil.openKeyboard(binding.messageInput);
+        });
+        binding.moreButton.setOnClickListener(v -> {
+            if(KeyboardVisibilityYier.isKeyboardVisible(this)) {
+                UiUtil.hideKeyboard(binding.messageInput);
+                showingMorePanel = true;
+            }else {
+                showMorePanel();
+            }
+        });
+        binding.hideMoreButton.setOnClickListener(v -> {
+            hideMorePanel();
+        });
+        binding.messageInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus) hideMorePanel();
+        });
+    }
+
+    private void showMorePanel(){
+        binding.morePanel.setVisibility(View.VISIBLE);
+        binding.moreButton.setVisibility(View.GONE);
+        binding.hideMoreButton.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.bar.getLayoutParams();
+        params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        binding.bar.setLayoutParams(params);
+    }
+
+    private void hideMorePanel(){
+        binding.morePanel.setVisibility(View.GONE);
+        binding.moreButton.setVisibility(View.VISIBLE);
+        binding.hideMoreButton.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.bar.getLayoutParams();
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        binding.bar.setLayoutParams(params);
     }
 
     public Channel getChannel() {

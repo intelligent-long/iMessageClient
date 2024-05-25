@@ -37,30 +37,79 @@
             android:layout_height="wrap_content"
             android:minHeight="70dp"
             android:background="?attr/colorSurfaceContainerLowest"
+            android:layout_above="@id/more_panel"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/voice_text_switch_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/voice_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ripple_round_selectable_background"
+                    android:padding="11dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/graphic_eq_24px"
+                    android:tint="@color/ichat"/>
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:visibility="gone"
+                    android:id="@+id/text_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ripple_round_selectable_background"
+                    android:padding="11dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/keyboard_outline_24px"
+                    android:tint="@color/ichat"/>
+            </FrameLayout>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/message_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="17dp"
                 android:background="@null"
                 android:hint="消息"
                 android:textSize="19sp"
                 android:maxHeight="200dp"
                 android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
+                android:layout_toEndOf="@id/voice_text_switch_buttons"
                 android:layout_toStartOf="@id/buttons"
                 android:paddingVertical="10dp"
                 android:textCursorDrawable="@drawable/shape_chat_message_cursor"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:visibility="gone"
+                android:id="@+id/hold_to_talk_button"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="11dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/voice_text_switch_buttons"
+                android:layout_toStartOf="@id/buttons"
+                android:text="按住 说话"
+                app:icon="@drawable/mic_fill_24px"
+                app:iconTint="@color/ichat"
+                android:textColor="@color/ichat"
+                app:rippleColor="@android:color/transparent"
+                app:cornerRadius="100dp" />
 
             <FrameLayout
                 android:id="@+id/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true">
@@ -99,7 +148,211 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/icf_more_vertical_circle"
                     android:tint="@color/ichat"/>
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:visibility="gone"
+                    android:id="@+id/hide_more_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ripple_round_selectable_background"
+                    android:padding="11dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/cancel_fill_24px"
+                    android:tint="@color/ichat"/>
             </FrameLayout>
         </RelativeLayout>
+
+        <GridLayout
+            android:id="@+id/more_panel"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:paddingHorizontal="10dp"
+            android:layout_alignParentBottom="true"
+            android:columnCount="4"
+            android:rowCount="2"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/image_fill_24px"
+                    app:tint="?attr/colorControlNormal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="图片"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/slideshow_fill_24px"
+                    app:tint="?attr/colorControlNormal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="视频"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="0"
+                android:layout_column="2"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/call_fill_24px"
+                    app:tint="?attr/colorControlNormal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="语音通话"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="0"
+                android:layout_column="3"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/videocam_fill_24px"
+                    app:tint="?attr/colorControlNormal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="视频通话" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/photo_camera_fill_24px"
+                    app:tint="?attr/colorControlNormal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="拍摄"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/draft_fill_24px"
+                    app:tint="?attr/colorControlNormal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="文件"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="1"
+                android:layout_column="2"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/notifications_fill_24px"
+                    app:tint="?attr/colorControlNormal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="提醒"/>
+            </LinearLayout>
+        </GridLayout>
     </RelativeLayout>
 </RelativeLayout>
