@@ -36,7 +36,7 @@ import com.longx.intelligent.android.lib.materialyoupreference.preferences.Mater
 
 public class RootSettingsActivity extends BaseActivity {
     private ActivityRootSettingsBinding binding;
-    private static final Bundle instanceState = new Bundle();
+    public static final Bundle instanceState = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +45,16 @@ public class RootSettingsActivity extends BaseActivity {
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupPreferenceFragment(savedInstanceState);
-        onRestoreInstanceState();
+        boolean needRestoreInstanceState = getIntent().getBooleanExtra(ExtraKeys.NEED_RESTORE_INSTANCE_STATE, true);
+        if(needRestoreInstanceState){
+            onRestoreInstanceState();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        getIntent().putExtra(ExtraKeys.NEED_RESTORE_INSTANCE_STATE, true);
         onSaveInstanceState();
     }
 

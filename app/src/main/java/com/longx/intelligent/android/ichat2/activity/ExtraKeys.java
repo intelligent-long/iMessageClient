@@ -13,4 +13,5 @@ public class ExtraKeys {
     public static final String IS_NETWORK_FETCHED = "is_network_fetched";
     public static final String CHANNEL_ADDITION_INFO = "channel_addition_info";
     public static final String INIT_TAB_INDEX = "init_tab_index";
+    public static final String NEED_RESTORE_INSTANCE_STATE = "need_restore_instance_state";
 }

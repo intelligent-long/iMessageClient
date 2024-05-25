@@ -258,7 +258,9 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private void setupYier() {
         binding.navigationDrawer2.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_settings) {
-                startActivity(new Intent(MainActivity.this, RootSettingsActivity.class));
+                Intent intent = new Intent(MainActivity.this, RootSettingsActivity.class);
+                intent.putExtra(ExtraKeys.NEED_RESTORE_INSTANCE_STATE, false);
+                startActivity(intent);
             }
             return true;
         });
