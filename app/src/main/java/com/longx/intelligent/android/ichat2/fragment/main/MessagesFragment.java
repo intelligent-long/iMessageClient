@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.adapter.OpenedChatsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
@@ -29,9 +30,7 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     private FragmentMessagesBinding binding;
     private OpenedChatsRecyclerAdapter adapter;
     private boolean stopped;
-    private Parcelable recyclerViewState;
-    private int appBarVerticalOffset;
-    private boolean fabExtended;
+    private static final Bundle instanceState = new Bundle();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,22 +60,26 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
 
     public void saveState() {
         if (binding.recyclerView.getLayoutManager() != null) {
-            recyclerViewState = binding.recyclerView.getLayoutManager().onSaveInstanceState();
+            Parcelable recyclerViewState = binding.recyclerView.getLayoutManager().onSaveInstanceState();
+            instanceState.putParcelable(InstanceStateKeys.MessagesFragment.RECYCLER_VIEW_STATE, recyclerViewState);
         }
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appbar.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
         if (behavior != null) {
-            appBarVerticalOffset = behavior.getTopAndBottomOffset();
+            int appBarVerticalOffset = behavior.getTopAndBottomOffset();
+            instanceState.putInt(InstanceStateKeys.MessagesFragment.APP_BAR_LAYOUT_STATE, appBarVerticalOffset);
         }
 
-        fabExtended = binding.startChatFab.isExtended();
+        instanceState.putBoolean(InstanceStateKeys.MessagesFragment.FAB_EXPANDED_STATE, binding.startChatFab.isExtended());
     }
 
     private void restoreState() {
-        binding.recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+        binding.recyclerView.getLayoutManager().onRestoreInstanceState(instanceState.getParcelable(InstanceStateKeys.MessagesFragment.RECYCLER_VIEW_STATE));
+        int appBarVerticalOffset = instanceState.getInt(InstanceStateKeys.MessagesFragment.APP_BAR_LAYOUT_STATE, 0);
         binding.appbar.post(() -> binding.appbar.setExpanded(appBarVerticalOffset == 0, false));
-        if (fabExtended) {
+        boolean isFabExpanded = instanceState.getBoolean(InstanceStateKeys.MessagesFragment.FAB_EXPANDED_STATE, true);
+        if (isFabExpanded) {
             binding.startChatFab.extend();
         } else {
             binding.startChatFab.shrink();

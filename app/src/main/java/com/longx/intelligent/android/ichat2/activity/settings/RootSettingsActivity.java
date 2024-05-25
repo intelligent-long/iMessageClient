@@ -2,14 +2,19 @@ package com.longx.intelligent.android.ichat2.activity.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.preference.Preference;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeEmailActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
@@ -23,6 +28,7 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.ServerSettingDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
@@ -30,6 +36,7 @@ import com.longx.intelligent.android.lib.materialyoupreference.preferences.Mater
 
 public class RootSettingsActivity extends BaseActivity {
     private ActivityRootSettingsBinding binding;
+    private static final Bundle instanceState = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,27 @@ public class RootSettingsActivity extends BaseActivity {
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupPreferenceFragment(savedInstanceState);
+        onRestoreInstanceState();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        onSaveInstanceState();
+    }
+
+    public void onSaveInstanceState() {
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appbar.getLayoutParams();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+        if (behavior != null) {
+            int appBarVerticalOffset = behavior.getTopAndBottomOffset();
+            instanceState.putInt(InstanceStateKeys.RootSettingsActivity.APP_BAR_LAYOUT_STATE, appBarVerticalOffset);
+        }
+    }
+
+    protected void onRestoreInstanceState() {
+        int appBarVerticalOffset = instanceState.getInt(InstanceStateKeys.RootSettingsActivity.APP_BAR_LAYOUT_STATE, 0);
+        binding.appbar.setExpanded(appBarVerticalOffset == 0, false);
     }
 
     private void setupPreferenceFragment(Bundle savedInstanceState) {

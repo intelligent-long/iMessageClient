@@ -257,6 +257,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             binding.messageInput.setVisibility(View.GONE);
             binding.holdToTalkButton.setVisibility(View.VISIBLE);
             UiUtil.hideKeyboard(binding.messageInput);
+            hideMorePanel();
         });
         binding.textButton.setOnClickListener(v -> {
             binding.voiceButton.setVisibility(View.VISIBLE);

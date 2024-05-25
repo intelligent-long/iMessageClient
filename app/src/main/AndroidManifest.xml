@@ -30,7 +30,8 @@
         tools:targetApi="34">
         <activity
             android:name=".OfflineDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatActivity"
             android:exported="false"
