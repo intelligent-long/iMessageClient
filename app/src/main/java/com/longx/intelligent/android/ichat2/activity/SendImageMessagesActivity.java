@@ -1,8 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.documentfile.provider.DocumentFile;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
@@ -23,17 +20,13 @@ import com.longx.intelligent.android.ichat2.media.helper.LocationHelper;
 import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
 import com.longx.intelligent.android.ichat2.ui.LocationNameSwitcher;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.MediaUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
-import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.value.Variables;
-import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -99,11 +92,10 @@ public class SendImageMessagesActivity extends BaseActivity{
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.send){
-                checkedImageUris.forEach(uri -> {
-                    String imageBase64 = MediaUtil.readUriToBase64(uri, getApplicationContext());
-                    String extension = DocumentFile.fromSingleUri(this, uri).getType().replace("image/", "");
-
-                });
+                Intent intent = new Intent();
+                intent.putExtra(ExtraKeys.TO_SEND_URIS, checkedImageUris.toArray(new Uri[0]));
+                setResult(RESULT_OK, intent);
+                finish();
             }
             return true;
         });

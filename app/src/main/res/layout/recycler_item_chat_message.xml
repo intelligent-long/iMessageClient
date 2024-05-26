@@ -27,9 +27,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar_receive"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
+            android:layout_width="@dimen/chat_message_min_size"
+            android:layout_height="@dimen/chat_message_min_size"
             app:shapeAppearanceOverlay="@style/CircleImageAppearance"
             android:scaleType="centerCrop"/>
 
@@ -41,8 +40,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:minHeight="50dp">
+            android:minHeight="@dimen/chat_message_min_size">
 
             <TextView
                 android:id="@+id/text_receive"
@@ -55,6 +53,18 @@
                 android:textColor="@color/chat_message_receive_text"
                 android:textSize="18sp" />
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_receive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toEndOf="@id/avatar_receive"
+            android:minHeight="@dimen/chat_message_min_size"
+            android:maxWidth="200dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
 
     </RelativeLayout>
 
@@ -77,8 +87,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:minHeight="50dp">
+            android:minHeight="@dimen/chat_message_min_size">
 
             <TextView
                 android:id="@+id/text_send"
@@ -92,11 +101,23 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@id/avatar_send"
+            android:minHeight="@dimen/chat_message_min_size"
+            android:maxWidth="200dp"
+            android:maxHeight="200dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar_send"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
+            android:layout_width="@dimen/chat_message_min_size"
+            android:layout_height="@dimen/chat_message_min_size"
             app:shapeAppearanceOverlay="@style/CircleImageAppearance"
             android:scaleType="centerCrop"
             android:layout_alignParentEnd="true"/>

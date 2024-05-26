@@ -6,42 +6,36 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
-import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
-import com.longx.intelligent.android.ichat2.data.MessageViewed;
 import com.longx.intelligent.android.ichat2.data.Self;
-import com.longx.intelligent.android.ichat2.data.response.OperationData;
-import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
-import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
-import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
-import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by LONG on 2024/5/15 at 1:11 PM.
@@ -50,10 +44,14 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private final AppCompatActivity activity;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ChatMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+    private final RequestOptions requestOptions;
 
     public ChatMessagesRecyclerAdapter(AppCompatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView) {
         this.activity = activity;
         this.recyclerView = recyclerView;
+        requestOptions = new RequestOptions()
+                .transform(new RoundedCorners(UiUtil.dpToPx(activity, 7)))
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
     }
     private RecyclerViewScrollDisabler scrollDisabler;
 
@@ -126,7 +124,22 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             //不同消息类型
             switch (itemData.chatMessage.getType()){
                 case ChatMessage.TYPE_TEXT:{
+                    holder.binding.layoutTextSend.setVisibility(View.VISIBLE);
+                    holder.binding.imageSend.setVisibility(View.GONE);
                     holder.binding.textSend.setText(itemData.chatMessage.getText());
+                    break;
+                }
+                case ChatMessage.TYPE_IMAGE:{
+                    holder.binding.layoutTextSend.setVisibility(View.GONE);
+                    holder.binding.imageSend.setVisibility(View.VISIBLE);
+                    setupImageViewSize(holder.binding.imageSend, itemData);
+                    String imageFilePath = itemData.chatMessage.getImageFilePath();
+                    GlideApp.with(activity.getApplicationContext())
+                            .load(new File(imageFilePath))
+                            .apply(requestOptions)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.binding.imageSend);
+                    break;
                 }
             }
         }else {
@@ -148,10 +161,42 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             //不同消息类型
             switch (itemData.chatMessage.getType()){
                 case ChatMessage.TYPE_TEXT:{
+                    holder.binding.layoutTextReceive.setVisibility(View.VISIBLE);
+                    holder.binding.imageReceive.setVisibility(View.GONE);
                     holder.binding.textReceive.setText(itemData.chatMessage.getText());
+                    break;
+                }
+                case ChatMessage.TYPE_IMAGE:{
+                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                    holder.binding.imageReceive.setVisibility(View.VISIBLE);
+                    setupImageViewSize(holder.binding.imageReceive, itemData);
+                    String imageFilePath = itemData.chatMessage.getImageFilePath();
+                    GlideApp.with(activity.getApplicationContext())
+                            .load(new File(imageFilePath))
+                            .apply(requestOptions)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.binding.imageReceive);
+                    break;
                 }
             }
         }
+    }
+
+    private void setupImageViewSize(@NonNull View imageView, ItemData itemData) {
+        int imageWidth = itemData.chatMessage.getImageSize().getWidth();
+        int imageHeight = itemData.chatMessage.getImageSize().getHeight();
+        int viewWidth;
+        int viewHeight;
+        if (imageWidth >= imageHeight) {
+            viewWidth = UiUtil.dpToPx(activity, Constants.CHAT_IMAGE_VIEW_MAX_SIZE_DP);
+            viewHeight = (int) Math.round((viewWidth / (double) imageWidth) * imageHeight);
+        } else {
+            viewHeight = UiUtil.dpToPx(activity, Constants.CHAT_IMAGE_VIEW_MAX_SIZE_DP);
+            viewWidth = (int) Math.round((viewHeight / (double) imageHeight) * imageWidth);
+        }
+        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+        layoutParams.width = viewWidth;
+        layoutParams.height = viewHeight;
     }
 
     private void setupYiers(@NonNull ViewHolder holder, int position) {

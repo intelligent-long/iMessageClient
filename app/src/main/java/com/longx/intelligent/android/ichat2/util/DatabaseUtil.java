@@ -46,6 +46,16 @@ public class DatabaseUtil {
         }
     }
 
+    @SuppressLint("Range")
+    public static byte[] getBlob(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        if(cursor.isNull(columnIndex)){
+            return null;
+        }else {
+            return cursor.getBlob(cursor.getColumnIndex(columnName));
+        }
+    }
+
     public static Date getTime(Cursor cursor, String columnName){
         int columnIndex = cursor.getColumnIndex(columnName);
         if(cursor.isNull(columnIndex)){

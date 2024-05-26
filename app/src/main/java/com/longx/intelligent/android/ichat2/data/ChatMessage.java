@@ -1,13 +1,18 @@
 package com.longx.intelligent.android.ichat2.data;
 
 import android.content.Context;
+import android.util.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
+
+import org.apache.commons.codec.binary.Base64;
 
 import java.util.Date;
 import java.util.Objects;
@@ -16,6 +21,26 @@ import java.util.Objects;
  * Created by LONG on 2024/5/13 at 12:08 AM.
  */
 public class ChatMessage {
+    public static void determineShowTime(ChatMessage chatMessage, Context context) {
+        chatMessage.showTime = SharedPreferencesAccessor.ChatMessageTimeShowing.isShowTime(context, chatMessage.getOther(context), chatMessage.getTime());
+    }
+
+    public static void insertToDatabaseAndDetermineShowTime(ChatMessage chatMessage, Context context){
+        if(chatMessage.getType() == ChatMessage.TYPE_IMAGE){
+            String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage);
+            chatMessage.setImageFilePath(imageFilePath);
+            Size imageSize = MediaHelper.getImageSize(Base64.decodeBase64(chatMessage.getImageBase64()));
+            chatMessage.setImageSize(imageSize);
+        }
+        ChatMessage.determineShowTime(chatMessage, context);
+        String other = chatMessage.getOther(context);
+        ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
+        boolean success = chatMessageDatabaseManager.insertOrIgnore(chatMessage);
+        if(success && chatMessage.isShowTime()){
+            SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(context, other, chatMessage.getTime());
+        }
+    }
+
     public static final int TYPE_TEXT = 0;
     public static final int TYPE_VOICE = 1;
     public static final int TYPE_IMAGE = 2;
@@ -26,24 +51,32 @@ public class ChatMessage {
     private String uuid;
     private String from;
     private String to;
-    private String text;
     private Date time;
+    private String text;
+    private String imageBase64;
+    private String imageExtension;
 
     @JsonIgnore
     private Boolean showTime;
     @JsonIgnore
     private Boolean viewed;
+    @JsonIgnore
+    private String imageFilePath;
+    @JsonIgnore
+    private Size imageSize;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(int type, String uuid, String from, String to, String text, Date time) {
+    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String imageBase64, String imageExtension) {
         this.type = type;
         this.uuid = uuid;
         this.from = from;
         this.to = to;
         this.text = text;
         this.time = time;
+        this.imageBase64 = imageBase64;
+        this.imageExtension = imageExtension;
     }
 
     public int getType() {
@@ -68,6 +101,14 @@ public class ChatMessage {
 
     public Date getTime() {
         return time;
+    }
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public String getImageExtension() {
+        return imageExtension;
     }
 
     public boolean isSelfSender(Context context){
@@ -99,18 +140,20 @@ public class ChatMessage {
         this.viewed = viewed;
     }
 
-    public static void determineShowTime(ChatMessage chatMessage, Context context) {
-        chatMessage.showTime = SharedPreferencesAccessor.ChatMessageTimeShowing.isShowTime(context, chatMessage.getOther(context), chatMessage.getTime());
+    public String getImageFilePath() {
+        return imageFilePath;
     }
 
-    public static void insertToDatabaseAndDetermineShowTime(ChatMessage chatMessage, Context context){
-        ChatMessage.determineShowTime(chatMessage, context);
-        String other = chatMessage.getOther(context);
-        ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
-        boolean success = chatMessageDatabaseManager.insertOrIgnore(chatMessage);
-        if(success && chatMessage.isShowTime()){
-            SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(context, other, chatMessage.getTime());
-        }
+    public void setImageFilePath(String imageFilePath) {
+        this.imageFilePath = imageFilePath;
+    }
+
+    public Size getImageSize() {
+        return imageSize;
+    }
+
+    public void setImageSize(Size imageSize) {
+        this.imageSize = imageSize;
     }
 
     @Override
@@ -118,11 +161,11 @@ public class ChatMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatMessage that = (ChatMessage) o;
-        return uuid.equals(that.uuid);
+        return type == that.type && Objects.equals(uuid, that.uuid) && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
+        return Objects.hash(type, uuid, from, to, time);
     }
 }

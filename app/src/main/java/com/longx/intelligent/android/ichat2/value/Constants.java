@@ -14,4 +14,5 @@ public class Constants {
     public static final String TIME_FORMAT_PATTERN_Y_M_D = "yyyy 年 M 月 d 日";
     public static final String TIME_FORMAT_PATTERN_D = "d 日";
     public static final String TIME_FORMAT_PATTERN_M_D = "M 月 d 日";
+    public static final int CHAT_IMAGE_VIEW_MAX_SIZE_DP = 200;
 }

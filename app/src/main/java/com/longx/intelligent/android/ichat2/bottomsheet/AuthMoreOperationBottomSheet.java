@@ -1,11 +1,10 @@
 package com.longx.intelligent.android.ichat2.bottomsheet;
 
 import android.content.Intent;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.longx.intelligent.android.ichat2.OfflineDetailsActivity;
+import com.longx.intelligent.android.ichat2.activity.OfflineDetailsActivity;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAuthMoreOperationBinding;
 import com.longx.intelligent.android.ichat2.dialog.ServerSettingDialog;
 

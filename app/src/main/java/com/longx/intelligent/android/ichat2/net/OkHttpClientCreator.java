@@ -1,6 +1,6 @@
 package com.longx.intelligent.android.ichat2.net;
 
-import com.xcheng.retrofit.LogInterceptor;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

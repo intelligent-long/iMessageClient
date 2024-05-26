@@ -10,6 +10,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideRequest;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 
 /**
@@ -46,6 +47,22 @@ public class GlideBehaviours {
         }
         glideRequest
                 .load(id)
+                .into(imageView);
+    }
+
+    public static void loadToImageView(Context context, byte[] bytes, ImageView imageView){
+        loadToImageView(context, bytes, imageView, false);
+    }
+
+    public static void loadToImageView(Context context, byte[] bytes, ImageView imageView, boolean originalSize){
+        GlideRequest<Bitmap> glideRequest = GlideApp
+                .with(context)
+                .asBitmap();
+        if(originalSize){
+            glideRequest = glideRequest.override(Target.SIZE_ORIGINAL);
+        }
+        glideRequest
+                .load(new ByteArrayInputStream(bytes))
                 .into(imageView);
     }
 

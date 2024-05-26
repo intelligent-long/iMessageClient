@@ -176,7 +176,7 @@ public class ServerSettingDialog extends AbstractDialog{
                 MessageDisplayer.showSnackbar(getActivity(), "服务器设置不合法", Snackbar.LENGTH_SHORT);
             }
             try {
-                File dataFolder = new File(DataPaths.Data.getDataFolderPath(getActivity()));
+                File dataFolder = new File(DataPaths.PrivateFile.getPrivateFileFolderPath(getActivity()));
                 dataFolder.mkdirs();
                 String dataFolderName = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(getActivity()).getDataFolder();
                 boolean dataFolderExist = FileUtil.dirContainsFile(Objects.requireNonNull(dataFolder.getParentFile()), dataFolderName);
@@ -191,7 +191,7 @@ public class ServerSettingDialog extends AbstractDialog{
                 try {
                     OkHttpClientCreator.create();
                     RetrofitCreator.create(getActivity());
-                    new File(DataPaths.Data.getDataFolderPath(getActivity())).mkdirs();
+                    new File(DataPaths.PrivateFile.getPrivateFileFolderPath(getActivity())).mkdirs();
                 } catch (Exception e) {
                     ErrorLogger.log(getClass(), e);
                     MessageDisplayer.showSnackbar(getActivity(), "出错了", Snackbar.LENGTH_LONG);

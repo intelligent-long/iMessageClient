@@ -9,4 +9,5 @@
     <dimen name="fab_margin_bottom">17dp</dimen>
     <dimen name="media_page_margin">16dp</dimen>
     <dimen name="media_page_offset">12dp</dimen>
+    <dimen name="chat_message_min_size">48dp</dimen>
 </resources>

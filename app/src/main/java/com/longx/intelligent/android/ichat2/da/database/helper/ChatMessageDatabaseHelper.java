@@ -26,6 +26,10 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String TIME = "time";
         public static final String SHOW_TIME = "show_time";
         public static final String VIEWED = "viewed";
+        public static final String IMAGE_FILE_PATH = "image_file_path";
+        public static final String IMAGE_EXTENSION = "image_extension";
+        public static final String IMAGE_WIDTH = "image_width";
+        public static final String IMAGE_HEIGHT = "image_height";
     }
 
     public ChatMessageDatabaseHelper(Context context, String channelIchatId, String ichatId) {
@@ -44,6 +48,10 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.TIME + " DATETIME,"
                 + TableChannelChatMessagesColumns.SHOW_TIME + " BOOLEAN,"
                 + TableChannelChatMessagesColumns.VIEWED + " BOOLEAN,"
+                + TableChannelChatMessagesColumns.IMAGE_FILE_PATH + " VARCHAR,"
+                + TableChannelChatMessagesColumns.IMAGE_EXTENSION + " VARCHAR,"
+                + TableChannelChatMessagesColumns.IMAGE_WIDTH + " INTEGER,"
+                + TableChannelChatMessagesColumns.IMAGE_HEIGHT + " INTEGER,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableChannelChatMessagesColumns.TYPE + ","
                 + TableChannelChatMessagesColumns.UUID + ","

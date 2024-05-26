@@ -48,6 +48,8 @@ public class GlideModule extends AppGlideModule {
     public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
         super.registerComponents(context, glide, registry);
         registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(OkHttpClientCreator.client));
+        registry.append(byte[].class, InputStream.class, new ByteBufferModelLoader.Factory());
+        registry.append(InputStream.class, InputStream.class, new InputStreamModelLoader.Factory());
     }
 
     @Override

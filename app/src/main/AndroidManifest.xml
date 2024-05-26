@@ -28,6 +28,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/Theme.IChat2Client"
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
@@ -42,7 +43,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/SendImageMessagesActivity" />
         <activity
-            android:name=".OfflineDetailsActivity"
+            android:name=".activity.OfflineDetailsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

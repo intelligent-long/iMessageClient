@@ -1,11 +1,16 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -16,6 +21,7 @@ import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDataba
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
+import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -23,8 +29,9 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.MediaUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
-import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
@@ -234,7 +241,6 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
                         });
-
                         GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
                             newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
                                 newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
@@ -280,8 +286,58 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.messageInput.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus) hideMorePanel();
         });
+        ActivityResultLauncher<Intent> startForResult = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = Objects.requireNonNull(result.getData());
+                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.TO_SEND_URIS));
+                        for (Parcelable parcelableUri : parcelableArrayExtra) {
+                            Uri uri = (Uri) parcelableUri;
+                            String imageBase64 = MediaUtil.readUriToBase64(uri, getApplicationContext());
+                            String extension = DocumentFile.fromSingleUri(this, uri).getType().replace("image/", "");
+                            SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), imageBase64, extension);
+                            ChatApiCaller.sendImageChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+                                @Override
+                                public void start(Call<OperationData> call) {
+                                    super.start(call);
+                                    binding.sendButton.setVisibility(View.GONE);
+                                    binding.sendIndicator.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                                    super.ok(data, row, call);
+                                    data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
+                                        ChatMessage chatMessage = data.getData(ChatMessage.class);
+                                        chatMessage.setViewed(true);
+                                        ChatMessage.insertToDatabaseAndDetermineShowTime(chatMessage, ChatActivity.this);
+                                        adapter.addItemToEndAndShow(chatMessage);
+                                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                                        });
+                                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                                newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                            });
+                                        });
+                                    });
+                                }
+
+                                @Override
+                                public void complete(Call<OperationData> call) {
+                                    super.complete(call);
+                                    binding.sendButton.setVisibility(View.VISIBLE);
+                                    binding.sendIndicator.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
+                }
+        );
         binding.morePanelImage.setOnClickListener(v -> {
-            startActivity(new Intent(this, SendImageMessagesActivity.class));
+            startForResult.launch(new Intent(this, SendImageMessagesActivity.class));
         });
     }
 
