@@ -41,6 +41,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
+import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
@@ -118,9 +119,22 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                         .show();
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (PermissionUtil.needNotificationPermission()) {
             if(!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.showNotification)){
                 new PermissionOperator(this, ToRequestPermissionsItems.showNotification,
+                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
+                        .requestPermissions(this);
+            }
+        }
+        if (PermissionUtil.needReadMediaImageAndVideoPermission()) {
+            if(!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.readMediaImagesAndVideos)){
+                new PermissionOperator(this, ToRequestPermissionsItems.readMediaImagesAndVideos,
+                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
+                        .requestPermissions(this);
+            }
+        } else if(PermissionUtil.needExternalStoragePermission()) {
+            if (!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.writeAndReadExternalStorage)) {
+                new PermissionOperator(this, ToRequestPermissionsItems.writeAndReadExternalStorage,
                         new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
                         .requestPermissions(this);
             }

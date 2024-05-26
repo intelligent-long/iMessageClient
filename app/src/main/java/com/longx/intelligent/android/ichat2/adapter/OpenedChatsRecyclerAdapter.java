@@ -98,6 +98,10 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
                     }
                 }
                 holder.binding.newestChatMessage.setText(newestChatMessageText);
+                break;
+            case ChatMessage.TYPE_IMAGE:
+                holder.binding.newestChatMessage.setText("[图片]");
+
         }
         holder.binding.time.setText(TimeUtil.formatSimpleRelativeTime(newestChatMessage.getTime()));
         displayBadges(holder, itemData);

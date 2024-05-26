@@ -81,4 +81,6 @@
     <string name="preference_key_author">author</string>
     <string name="preference_key_battery_restriction">battery_restriction</string>
     <string name="preference_key_storage">storage</string>
+    <string name="preference_key_read_media_images_and_videos">read_media_images_and_videos</string>
+    <string name="preference_key_notification">notification</string>
 </resources>

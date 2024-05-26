@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -59,7 +60,9 @@ public class PermissionActivity extends BaseActivity {
 
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
         private PermissionPreference preferenceBatteryRestriction;
+        private PermissionPreference preferenceNotification;
         private PermissionPreference preferenceStorage;
+        private PermissionPreference preferenceReadMediaImagesAndVideos;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
@@ -70,13 +73,17 @@ public class PermissionActivity extends BaseActivity {
         @Override
         protected void bindPreferences() {
             preferenceBatteryRestriction = findPreference(getString(R.string.preference_key_battery_restriction));
+            preferenceNotification = findPreference(getString(R.string.preference_key_notification));
             preferenceStorage = findPreference(getString(R.string.preference_key_storage));
+            preferenceReadMediaImagesAndVideos = findPreference(getString(R.string.preference_key_read_media_images_and_videos));
         }
 
         @Override
         protected void showInfo() {
             showBatteryRestriction();
+            showNotification();
             showStoragePermission();
+            showReadMediaImagesAndVideosPermission();
         }
 
         @Override
@@ -90,19 +97,39 @@ public class PermissionActivity extends BaseActivity {
             preferenceBatteryRestriction.setChecked(ignoringBatteryOptimizations);
         }
 
+        private void showNotification() {
+            if(PermissionUtil.needNotificationPermission()){
+                boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.showNotification);
+                preferenceNotification.setChecked(hasPermissions);
+            }else {
+                preferenceNotification.setVisible(false);
+            }
+        }
+
         private void showStoragePermission() {
             if(PermissionUtil.needExternalStoragePermission()) {
-                boolean hasWriteAndReadExternalStoragePermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.writeAndReadExternalStorage);
-                preferenceStorage.setChecked(hasWriteAndReadExternalStoragePermissions);
+                boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.writeAndReadExternalStorage);
+                preferenceStorage.setChecked(hasPermissions);
             }else {
                 preferenceStorage.setVisible(false);
+            }
+        }
+
+        private void showReadMediaImagesAndVideosPermission() {
+            if(PermissionUtil.needReadMediaImageAndVideoPermission()) {
+                boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.readMediaImagesAndVideos);
+                preferenceReadMediaImagesAndVideos.setChecked(hasPermissions);
+            }else {
+                preferenceReadMediaImagesAndVideos.setVisible(false);
             }
         }
 
         @Override
         protected void setupYiers() {
             preferenceBatteryRestriction.setOnPreferenceClickListener(this);
+            preferenceNotification.setOnPreferenceClickListener(this);
             preferenceStorage.setOnPreferenceClickListener(this);
+            preferenceReadMediaImagesAndVideos.setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -127,6 +154,34 @@ public class PermissionActivity extends BaseActivity {
                         }).requestPermissions((LinkPermissionOperatorActivity) requireActivity());
                 if(!requested){
                     showPermissionGrantedMessage();
+                }
+            }else if(preference.equals(preferenceReadMediaImagesAndVideos)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    boolean requested = new PermissionOperator(requireActivity(), ToRequestPermissionsItems.readMediaImagesAndVideos,
+                            new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()) {
+                                @Override
+                                public void onPermissionGranted() {
+                                    super.onPermissionGranted();
+                                    showReadMediaImagesAndVideosPermission();
+                                }
+                            }).requestPermissions((LinkPermissionOperatorActivity) requireActivity());
+                    if(!requested){
+                        showPermissionGrantedMessage();
+                    }
+                }
+            }else if(preference.equals(preferenceNotification)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    boolean requested = new PermissionOperator(requireActivity(), ToRequestPermissionsItems.showNotification,
+                            new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()){
+                                @Override
+                                public void onPermissionGranted() {
+                                    super.onPermissionGranted();
+                                    showNotification();
+                                }
+                            }).requestPermissions((LinkPermissionOperatorActivity) requireActivity());
+                    if(!requested){
+                        showPermissionGrantedMessage();
+                    }
                 }
             }
             return true;

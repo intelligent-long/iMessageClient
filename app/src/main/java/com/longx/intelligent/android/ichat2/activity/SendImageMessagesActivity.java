@@ -18,8 +18,12 @@ import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBindi
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.media.helper.LocationHelper;
 import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
+import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
+import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.ui.LocationNameSwitcher;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -156,6 +160,8 @@ public class SendImageMessagesActivity extends BaseActivity{
     }
 
     private void updateInfos() {
+        SendImageMessagesRecyclerAdapter sendImageMessagesRecyclerAdapter = (SendImageMessagesRecyclerAdapter) binding.recyclerView.getAdapter();
+        if(sendImageMessagesRecyclerAdapter.getItemDataList().size() == 0) return;
         androidx.recyclerview.widget.RecyclerView.LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
         if(layoutManager instanceof LinearLayoutManager){
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
@@ -175,7 +181,6 @@ public class SendImageMessagesActivity extends BaseActivity{
                 firstItemPosition --;
                 lastItemPosition --;
             }
-            SendImageMessagesRecyclerAdapter sendImageMessagesRecyclerAdapter = (SendImageMessagesRecyclerAdapter) binding.recyclerView.getAdapter();
             SendImageMessagesRecyclerAdapter.ItemData firstItem = sendImageMessagesRecyclerAdapter.getItemDataList().get(firstItemPosition);
             SendImageMessagesRecyclerAdapter.ItemData lastItem = sendImageMessagesRecyclerAdapter.getItemDataList().get(lastItemPosition);
             updateTimeRange(firstItem, lastItem);
@@ -190,12 +195,18 @@ public class SendImageMessagesActivity extends BaseActivity{
     }
 
     private void updateLocation(SendImageMessagesRecyclerAdapter.ItemData firstItem, SendImageMessagesRecyclerAdapter.ItemData lastItem){
-        ExifInterface exif = firstItem.getMediaInfo().readExif(this);
-        if(exif != null) {
-            updateLocation(exif);
-        }else {
-            exif = lastItem.getMediaInfo().readExif(this);
-            updateLocation(exif);
+        try {
+            ExifInterface exif = firstItem.getMediaInfo().readExif(this);
+            if(exif != null) {
+                updateLocation(exif);
+            }else {
+                exif = lastItem.getMediaInfo().readExif(this);
+                if(exif != null) {
+                    updateLocation(exif);
+                }
+            }
+        }catch (Exception e){
+            ErrorLogger.log(getClass(), e);
         }
     }
 
