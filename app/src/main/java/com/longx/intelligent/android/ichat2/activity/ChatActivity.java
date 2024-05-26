@@ -342,6 +342,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     }
 
     private void showMorePanel(){
+        binding.morePanel.postDelayed(() -> binding.recyclerView.scrollToEnd(true), 21);
         binding.morePanel.setVisibility(View.VISIBLE);
         binding.moreButton.setVisibility(View.GONE);
         binding.hideMoreButton.setVisibility(View.VISIBLE);

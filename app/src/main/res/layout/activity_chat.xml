@@ -103,7 +103,7 @@
                 app:iconTint="@color/ichat"
                 android:textColor="@color/ichat"
                 app:rippleColor="@android:color/transparent"
-                app:cornerRadius="0dp" />
+                app:cornerRadius="5dp" />
 
             <FrameLayout
                 android:id="@+id/buttons"
