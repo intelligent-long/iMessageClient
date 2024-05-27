@@ -152,4 +152,17 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         return count;
     }
 
+    public boolean existsByUuid(String uuid) {
+        openDatabaseIfClosed();
+        boolean exists = false;
+        String query = "SELECT COUNT(*) FROM " + ((ChatMessageDatabaseHelper) getHelper()).getTableName() + " WHERE " + ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + " = ?";
+        try (Cursor cursor = getDatabase().rawQuery(query, new String[]{uuid})) {
+            if (cursor != null && cursor.moveToFirst()) {
+                exists = cursor.getInt(0) > 0;
+            }
+        } finally {
+            releaseDatabaseIfUnused();
+        }
+        return exists;
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
@@ -169,6 +170,10 @@ public class ContentUpdater {
                 Map<String, List<ChatMessage>> chatMessageMap = new HashMap<>();
                 AtomicInteger doneCount = new AtomicInteger();
                 chatMessages.forEach(chatMessage -> {
+                    doneCount.getAndIncrement();
+                    String other = chatMessage.getOther(context);
+                    ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
+                    if(chatMessageDatabaseManager.existsByUuid(chatMessage.getUuid())) return;
                     chatMessage.setViewed(false);
                     ChatMessage.mainDoOnNewChatMessage(chatMessage, context, results -> {
                         String key = chatMessage.getOther(context);
@@ -180,7 +185,6 @@ public class ContentUpdater {
                             chatMessageList = chatMessageMap.get(key);
                         }
                         chatMessageList.add(chatMessage);
-                        doneCount.getAndIncrement();
                         if(doneCount.get() == chatMessages.size()){
                             chatMessageMap.forEach((s, list) -> {
                                 OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, list.size(), true));

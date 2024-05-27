@@ -131,6 +131,10 @@ public abstract class RetrofitApiCaller {
         public void setBeCanceled(boolean beCanceled) {
             this.beCanceled = beCanceled;
         }
+
+        public Context getContext() {
+            return context;
+        }
     }
 
     public static class CommonYier<T> extends BaseCommonYier<T> {
@@ -148,6 +152,7 @@ public abstract class RetrofitApiCaller {
 
         public CommonYier(AppCompatActivity activity, boolean showOperationDialog, boolean showErrorInfo) {
             super(activity, showErrorInfo);
+            this.activity = activity;
             this.showOperationDialog = showOperationDialog;
         }
 
