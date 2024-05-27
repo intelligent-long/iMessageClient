@@ -42,6 +42,7 @@ import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperato
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
@@ -54,6 +55,7 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -119,26 +121,24 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                         .show();
             }
         }
+        List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
         if (PermissionUtil.needNotificationPermission()) {
             if(!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.showNotification)){
-                new PermissionOperator(this, ToRequestPermissionsItems.showNotification,
-                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
-                        .requestPermissions(this);
+                toRequestPermissionsList.add(ToRequestPermissionsItems.showNotification);
             }
         }
         if (PermissionUtil.needReadMediaImageAndVideoPermission()) {
             if(!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.readMediaImagesAndVideos)){
-                new PermissionOperator(this, ToRequestPermissionsItems.readMediaImagesAndVideos,
-                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
-                        .requestPermissions(this);
+                toRequestPermissionsList.add(ToRequestPermissionsItems.readMediaImagesAndVideos);
             }
         } else if(PermissionUtil.needExternalStoragePermission()) {
             if (!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.writeAndReadExternalStorage)) {
-                new PermissionOperator(this, ToRequestPermissionsItems.writeAndReadExternalStorage,
-                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
-                        .requestPermissions(this);
+                toRequestPermissionsList.add(ToRequestPermissionsItems.writeAndReadExternalStorage);
             }
         }
+        new PermissionOperator(this, toRequestPermissionsList,
+                new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
+                .startRequestPermissions(this);
     }
 
     private void startServerMessageService() {

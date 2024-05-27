@@ -18,9 +18,13 @@ import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperato
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.preference.PermissionPreference;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PermissionActivity extends BaseActivity {
     private ActivityPermissionBinding binding;
@@ -144,43 +148,52 @@ public class PermissionActivity extends BaseActivity {
                     showPermissionGrantedMessage();
                 }
             } else if (preference.equals(preferenceStorage)) {
-                boolean requested = new PermissionOperator(requireActivity(), ToRequestPermissionsItems.writeAndReadExternalStorage,
-                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()) {
-                            @Override
-                            public void onPermissionGranted() {
-                                super.onPermissionGranted();
-                                showStoragePermission();
-                            }
-                        }).requestPermissions((LinkPermissionOperatorActivity) requireActivity());
-                if(!requested){
+                if(PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.writeAndReadExternalStorage)){
                     showPermissionGrantedMessage();
+                }else {
+                    List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
+                    toRequestPermissionsList.add(ToRequestPermissionsItems.writeAndReadExternalStorage);
+                    new PermissionOperator(requireActivity(), toRequestPermissionsList,
+                            new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()) {
+                                @Override
+                                public void onPermissionGranted(int requestCode) {
+                                    super.onPermissionGranted(requestCode);
+                                    showStoragePermission();
+                                }
+                            }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
                 }
             }else if(preference.equals(preferenceReadMediaImagesAndVideos)){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    boolean requested = new PermissionOperator(requireActivity(), ToRequestPermissionsItems.readMediaImagesAndVideos,
-                            new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()) {
-                                @Override
-                                public void onPermissionGranted() {
-                                    super.onPermissionGranted();
-                                    showReadMediaImagesAndVideosPermission();
-                                }
-                            }).requestPermissions((LinkPermissionOperatorActivity) requireActivity());
-                    if(!requested){
+                    if(PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.readMediaImagesAndVideos)){
                         showPermissionGrantedMessage();
+                    }else {
+                        List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
+                        toRequestPermissionsList.add(ToRequestPermissionsItems.readMediaImagesAndVideos);
+                        new PermissionOperator(requireActivity(), toRequestPermissionsList,
+                                new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()) {
+                                    @Override
+                                    public void onPermissionGranted(int requestCode) {
+                                        super.onPermissionGranted(requestCode);
+                                        showReadMediaImagesAndVideosPermission();
+                                    }
+                                }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
                     }
                 }
             }else if(preference.equals(preferenceNotification)){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    boolean requested = new PermissionOperator(requireActivity(), ToRequestPermissionsItems.showNotification,
-                            new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()){
-                                @Override
-                                public void onPermissionGranted() {
-                                    super.onPermissionGranted();
-                                    showNotification();
-                                }
-                            }).requestPermissions((LinkPermissionOperatorActivity) requireActivity());
-                    if(!requested){
+                    if(PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.showNotification)){
                         showPermissionGrantedMessage();
+                    }else {
+                        List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
+                        toRequestPermissionsList.add(ToRequestPermissionsItems.showNotification);
+                        new PermissionOperator(requireActivity(), toRequestPermissionsList,
+                                new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()) {
+                                    @Override
+                                    public void onPermissionGranted(int requestCode) {
+                                        super.onPermissionGranted(requestCode);
+                                        showNotification();
+                                    }
+                                }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
                     }
                 }
             }

@@ -19,8 +19,4 @@ public class PermissionUtil {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU;
     }
 
-    public static boolean needAccessMediaLocationPermission(){
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
-    }
-
 }

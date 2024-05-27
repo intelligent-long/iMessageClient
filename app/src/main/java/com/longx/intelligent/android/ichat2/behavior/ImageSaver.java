@@ -12,6 +12,7 @@ import androidx.core.content.FileProvider;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
@@ -21,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,17 +44,20 @@ public class ImageSaver {
     public static void saveImageToDcim(Context context, File sourceImageFile, String saveFileName, String dcimRelativePath, ResultsYier yier){
         if(context instanceof BaseActivity && PermissionUtil.needExternalStoragePermission()) {
             BaseActivity baseActivity = (BaseActivity) context;
-            boolean requested = new PermissionOperator(baseActivity, ToRequestPermissionsItems.writeAndReadExternalStorage,
-                    new PermissionOperator.ShowCommonMessagePermissionResultCallback(baseActivity){
-                        @Override
-                        public void onPermissionGranted() {
-                            Uri uri = doSaveImageToDcim(baseActivity, sourceImageFile, saveFileName, dcimRelativePath);
-                            yier.onResults(uri);
-                        }
-                    }).requestPermissions(baseActivity);
-            if(!requested){
+            if(PermissionOperator.hasPermissions(baseActivity, ToRequestPermissionsItems.writeAndReadExternalStorage)){
                 Uri uri = doSaveImageToDcim(context, sourceImageFile, saveFileName, dcimRelativePath);
                 yier.onResults(uri);
+            }else {
+                List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
+                toRequestPermissionsList.add(ToRequestPermissionsItems.writeAndReadExternalStorage);
+                new PermissionOperator(baseActivity, toRequestPermissionsList,
+                        new PermissionOperator.ShowCommonMessagePermissionResultCallback(baseActivity) {
+                            @Override
+                            public void onPermissionGranted(int requestCode) {
+                                Uri uri = doSaveImageToDcim(baseActivity, sourceImageFile, saveFileName, dcimRelativePath);
+                                yier.onResults(uri);
+                            }
+                        }).startRequestPermissions(baseActivity);
             }
         }else {
             Uri uri = doSaveImageToDcim(context, sourceImageFile, saveFileName, dcimRelativePath);

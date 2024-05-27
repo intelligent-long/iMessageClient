@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,19 +19,20 @@ import java.util.List;
  */
 public class PermissionOperator {
     private final Activity activity;
-    private final ToRequestPermissions toRequestPermissions;
+    private final List<ToRequestPermissions> toRequestPermissionsList;
     private final PermissionResultCallback callback;
+    private int currentRequestIndex;
 
-    public PermissionOperator(Activity activity, ToRequestPermissions toRequestPermissions, PermissionResultCallback callback) {
+    public PermissionOperator(Activity activity, List<ToRequestPermissions> toRequestPermissionsList, PermissionResultCallback callback) {
         this.activity = activity;
-        this.toRequestPermissions = toRequestPermissions;
+        this.toRequestPermissionsList = toRequestPermissionsList;
         this.callback = callback;
     }
 
     public interface PermissionResultCallback {
-        void onPermissionGranted();
-        void onPermissionDenied(List<String> deniedPermissions);
-        void onPermissionRationaleShouldBeShown();
+        void onPermissionGranted(int requestCode);
+        void onPermissionDenied(int requestCode, List<String> deniedPermissions);
+        void onPermissionRationaleShouldBeShown(int requestCode);
     }
 
     public static class ShowCommonMessagePermissionResultCallback implements PermissionResultCallback{
@@ -42,19 +44,19 @@ public class PermissionOperator {
         }
 
         @Override
-        public void onPermissionGranted() {
+        public void onPermissionGranted(int requestCode) {
 
         }
 
         @Override
-        public void onPermissionDenied(List<String> deniedPermissions) {
+        public void onPermissionDenied(int requestCode, List<String> deniedPermissions) {
             if(!rationaleShowed) MessageDisplayer.autoShow(activity,
                     "请到系统设置中的此应用信息界面允许权限 > \n" + Arrays.toString(deniedPermissions.toArray(new String[0])),
                     MessageDisplayer.Duration.LONG);
         }
 
         @Override
-        public void onPermissionRationaleShouldBeShown() {
+        public void onPermissionRationaleShouldBeShown(int requestCode) {
             rationaleShowed = true;
             MessageDisplayer.autoShow(activity, "请允许使用权限", MessageDisplayer.Duration.LONG);
         }
@@ -69,20 +71,23 @@ public class PermissionOperator {
         return true;
     }
 
-    public boolean requestPermissions(LinkPermissionOperatorActivity linkPermissionOperatorActivity) {
+    public void startRequestPermissions(LinkPermissionOperatorActivity linkPermissionOperatorActivity){
+        linkPermissionOperatorActivity.linkPermissionOperator(this);
+        requestPermissions();
+    }
+
+    private void requestPermissions() {
+        if(currentRequestIndex == toRequestPermissionsList.size()) return;
+        ToRequestPermissions toRequestPermissions = toRequestPermissionsList.get(currentRequestIndex);
         if (!hasPermissions(activity, toRequestPermissions)) {
-            linkPermissionOperatorActivity.linkPermissionOperator(this);
             int requestCode = toRequestPermissions.getRequestCode();
             String[] permissions = toRequestPermissions.getPermissions();
             if (shouldShowRationale(permissions)) {
-                callback.onPermissionRationaleShouldBeShown();
+                callback.onPermissionRationaleShouldBeShown(requestCode);
                 ActivityCompat.requestPermissions(activity, permissions, requestCode);
             } else {
                 ActivityCompat.requestPermissions(activity, permissions, requestCode);
             }
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -96,7 +101,10 @@ public class PermissionOperator {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (this.toRequestPermissions.getRequestCode() == requestCode) {
+        if(currentRequestIndex == toRequestPermissionsList.size()) return;
+        ToRequestPermissions toRequestPermissions = toRequestPermissionsList.get(currentRequestIndex);
+        if (toRequestPermissions.getRequestCode() == requestCode) {
+            currentRequestIndex ++;
             List<String> deniedPermissions = new ArrayList<>();
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
@@ -105,10 +113,11 @@ public class PermissionOperator {
             }
 
             if (deniedPermissions.isEmpty()) {
-                callback.onPermissionGranted();
+                callback.onPermissionGranted(requestCode);
             } else {
-                callback.onPermissionDenied(deniedPermissions);
+                callback.onPermissionDenied(requestCode, deniedPermissions);
             }
+            requestPermissions();
         }
     }
 }
