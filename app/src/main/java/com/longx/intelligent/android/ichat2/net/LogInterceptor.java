@@ -25,7 +25,6 @@ public class LogInterceptor implements Interceptor {
     private static final String LOG_LEVEL = "LogLevel";
     private final Logger logger;
     private volatile Level level = Level.NONE;
-    private static final int MAX_LOG_LENGTH = 1024;
 
     public LogInterceptor() {
         this(Logger.DEFAULT);
@@ -55,12 +54,12 @@ public class LogInterceptor implements Interceptor {
             return chain.proceed(chain.request());
 
         final StringBuilder builder = new StringBuilder();
-        final boolean[] notOverLimit = {true};
-        HttpLoggingInterceptor httpInterceptor = new HttpLoggingInterceptor(message -> {
-            if(!notOverLimit[0]) return;
-            notOverLimit[0] = append(builder, message);
+        HttpLoggingInterceptor httpInterceptor = new HttpLoggingInterceptor(new Logger() {
+            @Override
+            public void log(@NonNull String message) {
+                append(builder, message);
+            }
         });
-        if(!notOverLimit[0]) builder.append("...(truncated)");
         //可以单独为某个请求设置日志的级别，避免全局设置的局限性
         httpInterceptor.setLevel(level);
         Response response = httpInterceptor.intercept(chain);
@@ -86,12 +85,9 @@ public class LogInterceptor implements Interceptor {
         return level;
     }
 
-    private static boolean append(StringBuilder builder, String message) {
-        if(builder.length() > MAX_LOG_LENGTH){
-            return false;
-        }
+    private static void append(StringBuilder builder, String message) {
         if (TextUtils.isEmpty(message)) {
-            return true;
+            return;
         }
         try {
             // 以{}或者[]形式的说明是响应结果的json数据，需要进行格式化
@@ -104,11 +100,6 @@ public class LogInterceptor implements Interceptor {
             }
         } catch (JSONException ignored) {
         }
-        if (builder.length() + message.length() + 1 > MAX_LOG_LENGTH) {
-            return false;
-        }
         builder.append(message).append('\n');
-        return true;
     }
 }
-

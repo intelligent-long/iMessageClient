@@ -187,11 +187,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         int imageHeight = itemData.chatMessage.getImageSize().getHeight();
         int viewWidth;
         int viewHeight;
-        if (imageWidth >= imageHeight) {
-            viewWidth = UiUtil.dpToPx(activity, Constants.CHAT_IMAGE_VIEW_MAX_SIZE_DP);
+        if(imageWidth / (double) imageHeight > Constants.CHAT_IMAGE_VIEW_MAX_WIDTH_DP / (double)Constants.CHAT_IMAGE_VIEW_MAX_HEIGHT_DP){
+            viewWidth = UiUtil.dpToPx(activity, Constants.CHAT_IMAGE_VIEW_MAX_WIDTH_DP);
             viewHeight = (int) Math.round((viewWidth / (double) imageWidth) * imageHeight);
-        } else {
-            viewHeight = UiUtil.dpToPx(activity, Constants.CHAT_IMAGE_VIEW_MAX_SIZE_DP);
+        }else {
+            viewHeight = UiUtil.dpToPx(activity, Constants.CHAT_IMAGE_VIEW_MAX_HEIGHT_DP);
             viewWidth = (int) Math.round((viewHeight / (double) imageHeight) * imageWidth);
         }
         ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();

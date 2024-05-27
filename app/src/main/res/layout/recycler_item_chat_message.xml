@@ -62,7 +62,6 @@
             android:layout_marginEnd="12dp"
             android:layout_toEndOf="@id/avatar_receive"
             android:minHeight="@dimen/chat_message_min_size"
-            android:maxWidth="200dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
 
@@ -109,8 +108,6 @@
             android:layout_marginEnd="12dp"
             android:layout_toStartOf="@id/avatar_send"
             android:minHeight="@dimen/chat_message_min_size"
-            android:maxWidth="200dp"
-            android:maxHeight="200dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
 

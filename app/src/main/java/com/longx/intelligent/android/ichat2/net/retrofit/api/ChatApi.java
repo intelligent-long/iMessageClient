@@ -8,6 +8,7 @@ import com.xcheng.retrofit.CompletableCall;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -18,9 +19,11 @@ public interface ChatApi {
     @POST("chat/message/text/send")
     CompletableCall<OperationData> sendTextChatMessage(@Body SendTextChatMessagePostBody postBody);
 
+    @Headers("LogLevel:BASIC")
     @POST("chat/message/image/send")
     CompletableCall<OperationData> sendImageChatMessage(@Body SendImageChatMessagePostBody postBody);
 
+    @Headers("LogLevel:BASIC")
     @GET("chat/message/new/all")
     CompletableCall<OperationData> fetchAllNewChatMessages();
 
