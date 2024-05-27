@@ -29,7 +29,6 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.MediaUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
@@ -235,15 +234,16 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         binding.messageInput.setText(null);
                         ChatMessage chatMessage = data.getData(ChatMessage.class);
                         chatMessage.setViewed(true);
-                        ChatMessage.insertToDatabaseAndDetermineShowTime(chatMessage, ChatActivity.this);
-                        adapter.addItemToEndAndShow(chatMessage);
-                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
-                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
-                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
-                        });
-                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
-                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
-                                newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                        ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
+                            adapter.addItemToEndAndShow(chatMessage);
+                            OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                            });
+                            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                    newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                });
                             });
                         });
                     });
@@ -294,10 +294,10 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.TO_SEND_URIS));
                         for (Parcelable parcelableUri : parcelableArrayExtra) {
                             Uri uri = (Uri) parcelableUri;
-                            String imageBase64 = MediaUtil.readUriToBase64(uri, getApplicationContext());
+                            byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
                             String extension = DocumentFile.fromSingleUri(this, uri).getType().replace("image/", "");
-                            SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), imageBase64, extension);
-                            ChatApiCaller.sendImageChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+                            SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), extension);
+                            ChatApiCaller.sendImageChatMessage(this, imageBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
                                 @Override
                                 public void start(Call<OperationData> call) {
                                     super.start(call);
@@ -311,15 +311,16 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                                     data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
                                         ChatMessage chatMessage = data.getData(ChatMessage.class);
                                         chatMessage.setViewed(true);
-                                        ChatMessage.insertToDatabaseAndDetermineShowTime(chatMessage, ChatActivity.this);
-                                        adapter.addItemToEndAndShow(chatMessage);
-                                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
-                                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
-                                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
-                                        });
-                                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
-                                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
-                                                newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                        ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
+                                            adapter.addItemToEndAndShow(chatMessage);
+                                            OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                                            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                                            });
+                                            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                                    newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                                });
                                             });
                                         });
                                     });

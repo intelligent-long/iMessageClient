@@ -1,18 +1,11 @@
 package com.longx.intelligent.android.ichat2.behavior;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.longx.intelligent.android.ichat2.activity.ChatActivity;
-import com.longx.intelligent.android.ichat2.activity.MainActivity;
-import com.longx.intelligent.android.ichat2.activity.helper.ActivityHolder;
-import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
-import com.longx.intelligent.android.ichat2.activity.helper.HoldableActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
@@ -23,12 +16,8 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
-import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
-import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
-import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
-import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.util.ArrayList;
@@ -36,7 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -178,23 +167,28 @@ public class ContentUpdater {
                 });
                 chatMessages.sort(Comparator.comparing(ChatMessage::getTime));
                 Map<String, List<ChatMessage>> chatMessageMap = new HashMap<>();
+                AtomicInteger doneCount = new AtomicInteger();
                 chatMessages.forEach(chatMessage -> {
                     chatMessage.setViewed(false);
-                    ChatMessage.insertToDatabaseAndDetermineShowTime(chatMessage, context);
-                    String key = chatMessage.getOther(context);
-                    List<ChatMessage> chatMessageList;
-                    if(chatMessageMap.get(key) == null){
-                        chatMessageList = new ArrayList<>();
-                        chatMessageMap.put(key, chatMessageList);
-                    }else {
-                        chatMessageList = chatMessageMap.get(key);
-                    }
-                    chatMessageList.add(chatMessage);
+                    ChatMessage.mainDoOnNewChatMessage(chatMessage, context, results -> {
+                        String key = chatMessage.getOther(context);
+                        List<ChatMessage> chatMessageList;
+                        if(chatMessageMap.get(key) == null){
+                            chatMessageList = new ArrayList<>();
+                            chatMessageMap.put(key, chatMessageList);
+                        }else {
+                            chatMessageList = chatMessageMap.get(key);
+                        }
+                        chatMessageList.add(chatMessage);
+                        doneCount.getAndIncrement();
+                        if(doneCount.get() == chatMessages.size()){
+                            chatMessageMap.forEach((s, list) -> {
+                                OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, list.size(), true));
+                            });
+                            resultsYier.onResults(chatMessages);
+                        }
+                    });
                 });
-                chatMessageMap.forEach((s, chatMessageList) -> {
-                    OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, chatMessageList.size(), true));
-                });
-                resultsYier.onResults(chatMessages);
             }
         });
     }

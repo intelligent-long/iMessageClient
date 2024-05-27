@@ -7,7 +7,14 @@ import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePost
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChatApi;
+import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.xcheng.retrofit.CompletableCall;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.http.Part;
 
 /**
  * Created by LONG on 2024/5/15 at 4:09 AM.
@@ -23,14 +30,23 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, SendImageChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(postBody);
+    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, byte[] imageBytes, SendImageChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
+        RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageBytes);
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", "." + postBody.getImageExtension(), imageRequestBody);
+        RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+        CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(imagePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
     public static CompletableCall<OperationData> fetchAllNewChatMessages(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchAllNewChatMessages();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<ResponseBody> fetchChatMessageImage(LifecycleOwner lifecycleOwner, String imageId, BaseYier<ResponseBody> yier){
+        CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageImage(imageId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

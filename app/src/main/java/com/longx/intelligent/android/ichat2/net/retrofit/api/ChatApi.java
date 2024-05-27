@@ -6,11 +6,17 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Streaming;
 
 /**
  * Created by LONG on 2024/5/15 at 4:07 AM.
@@ -19,13 +25,16 @@ public interface ChatApi {
     @POST("chat/message/text/send")
     CompletableCall<OperationData> sendTextChatMessage(@Body SendTextChatMessagePostBody postBody);
 
-    @Headers("LogLevel:HEADERS")
+    @Multipart
     @POST("chat/message/image/send")
-    CompletableCall<OperationData> sendImageChatMessage(@Body SendImageChatMessagePostBody postBody);
+    CompletableCall<OperationData> sendImageChatMessage(@Part MultipartBody.Part image, @Part("metadata") RequestBody metadata);
 
-    @Headers("LogLevel:HEADERS")
     @GET("chat/message/new/all")
     CompletableCall<OperationData> fetchAllNewChatMessages();
+
+    @Streaming
+    @GET("chat/message/image/new/{imageId}")
+    CompletableCall<ResponseBody> fetchChatMessageImage(@Path("imageId") String imageId);
 
     @POST("chat/message/new/view/{messageUuid}")
     CompletableCall<OperationData> viewNewMessage(@Path("messageUuid") String messageUuid);

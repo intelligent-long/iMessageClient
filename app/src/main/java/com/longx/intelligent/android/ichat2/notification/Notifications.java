@@ -63,9 +63,19 @@ public class Notifications {
     }
 
     public static void notifyChatMessage(Context context, ChatMessage chatMessage){
+        String text = null;
+        switch (chatMessage.getType()){
+            case ChatMessage.TYPE_TEXT:
+                text = chatMessage.getText();
+                break;
+            case ChatMessage.TYPE_IMAGE:
+                text = "[图片]";
+                break;
+        }
         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(chatMessage.getOther(context));
         if(channel == null){
             pendingNotificationMap.computeIfAbsent(NotificationId.CHAT_MESSAGE, k -> new ArrayList<>());
+            String finalText = text;
             pendingNotificationMap.get(NotificationId.CHAT_MESSAGE).add(() -> {
                     Channel channel1 = ChannelDatabaseManager.getInstance().findOneChannel(chatMessage.getOther(context));
                     Intent intent = new Intent(context, ChatActivity.class);
@@ -76,7 +86,7 @@ public class Notifications {
                             .intent(intent)
                             .importance(NotificationManager.IMPORTANCE_HIGH)
                             .title(channel1.getUsername())
-                            .text(chatMessage.getText())
+                            .text(finalText)
                             .smallIcon(R.drawable.chat_fill_24px)
                             .autoCancel(true)
                             .build()
@@ -91,7 +101,7 @@ public class Notifications {
                     .intent(intent)
                     .importance(NotificationManager.IMPORTANCE_HIGH)
                     .title(channel.getUsername())
-                    .text(chatMessage.getText())
+                    .text(text)
                     .smallIcon(R.drawable.chat_fill_24px)
                     .autoCancel(true)
                     .build()

@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -90,15 +92,15 @@ public abstract class RetrofitApiCaller {
     }
 
     public static class BaseCommonYier<T> extends BaseYier<T> {
-        private AppCompatActivity activity;
+        private Context context;
         private boolean showErrorInfo = true;
         private boolean beCanceled;
 
         public BaseCommonYier() {
         }
 
-        public BaseCommonYier(AppCompatActivity activity) {
-            this.activity = activity;
+        public BaseCommonYier(Context context) {
+            this.context = context;
         }
 
         public BaseCommonYier(AppCompatActivity activity, boolean showErrorInfo) {
@@ -109,8 +111,8 @@ public abstract class RetrofitApiCaller {
         @Override
         public void notOk(int code, String message, Response<T> row, Call<T> call) {
             if(showErrorInfo) {
-                if (activity != null) {
-                    MessageDisplayer.autoShow(activity, "HTTP 状态码异常  >  " + code, MessageDisplayer.Duration.LONG);
+                if (context != null) {
+                    MessageDisplayer.autoShow(context, "HTTP 状态码异常  >  " + code, MessageDisplayer.Duration.LONG);
                 }
             }
         }
@@ -120,14 +122,10 @@ public abstract class RetrofitApiCaller {
             if(beCanceled) return;
             ErrorLogger.log(getClass(), t);
             if(showErrorInfo) {
-                if (activity != null) {
-                    MessageDisplayer.autoShow(activity, "无法连接到服务器 > " + t.getClass().getName(), MessageDisplayer.Duration.LONG);
+                if (context != null) {
+                    MessageDisplayer.autoShow(context, "无法连接到服务器 > " + t.getClass().getName(), MessageDisplayer.Duration.LONG);
                 }
             }
-        }
-
-        public AppCompatActivity getActivity() {
-            return activity;
         }
 
         public void setBeCanceled(boolean beCanceled) {
@@ -136,6 +134,7 @@ public abstract class RetrofitApiCaller {
     }
 
     public static class CommonYier<T> extends BaseCommonYier<T> {
+        private AppCompatActivity activity;
         private boolean showOperationDialog = true;
         private OperationDialog operationDialog;
 
@@ -144,6 +143,7 @@ public abstract class RetrofitApiCaller {
 
         public CommonYier(AppCompatActivity activity) {
             super(activity);
+            this.activity = activity;
         }
 
         public CommonYier(AppCompatActivity activity, boolean showOperationDialog, boolean showErrorInfo) {
@@ -177,6 +177,10 @@ public abstract class RetrofitApiCaller {
                     getActivity().runOnUiThread(() -> operationDialog.dismiss());
                 }
             }
+        }
+
+        public AppCompatActivity getActivity() {
+            return activity;
         }
     }
 
