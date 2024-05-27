@@ -9,10 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendImageMessagesBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -102,7 +104,7 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
             holder.binding.cancelCheckButton.setVisibility(View.VISIBLE);
             holder.binding.darkCover.setVisibility(View.VISIBLE);
             holder.binding.index.setVisibility(View.VISIBLE);
-            holder.binding.index.setText(String.valueOf(checkedImageUris.indexOf(uri)));
+            holder.binding.index.setText(String.valueOf(checkedImageUris.indexOf(uri) + 1));
         }else {
             holder.binding.checkButton.setVisibility(View.VISIBLE);
             holder.binding.cancelCheckButton.setVisibility(View.GONE);
@@ -111,6 +113,10 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
             holder.binding.index.setText(null);
         }
         holder.binding.checkButton.setOnClickListener(v -> {
+            if(checkedImageUris.size() == Constants.SEND_CHAT_IMAGE_MAX_CHECK_COUNT){
+                MessageDisplayer.autoShow(activity, "最多选择 " + Constants.SEND_CHAT_IMAGE_MAX_CHECK_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
+                return;
+            }
             checkedImageUris.add(uri);
             checkedPositions.add((Integer) (position + 1));
             notifyItemChanged(position + 1);

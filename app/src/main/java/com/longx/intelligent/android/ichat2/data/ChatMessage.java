@@ -54,7 +54,7 @@ public class ChatMessage {
         }
     }
 
-    private static void commonDoOfMainDoOnNewChatMessage(ChatMessage chatMessage, Context context) {
+    private static synchronized void commonDoOfMainDoOnNewChatMessage(ChatMessage chatMessage, Context context) {
         ChatMessage.determineShowTime(chatMessage, context);
         String other = chatMessage.getOther(context);
         ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
