@@ -84,7 +84,9 @@ public class GlobalYiersHolder {
             boolean updating = ContentUpdater.isUpdating();
             if (updating) {
                 List<String> updatingIds = ContentUpdater.getUpdatingIds();
-                updatingIds.forEach(onServerContentUpdateYier::onStartUpdate);
+                updatingIds.forEach(updatingId -> {
+                    onServerContentUpdateYier.onStartUpdate(updatingId, updatingIds);
+                });
             }
         }
     }

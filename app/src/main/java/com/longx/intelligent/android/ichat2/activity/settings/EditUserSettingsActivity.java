@@ -35,6 +35,8 @@ import com.longx.intelligent.android.ichat2.preference.ChangeAvatarPreference;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -164,12 +166,12 @@ public class EditUserSettingsActivity extends BaseActivity{
         }
 
         @Override
-        public void onStartUpdate(String id) {
+        public void onStartUpdate(String id, List<String> updatingIds) {
 
         }
 
         @Override
-        public void onUpdateComplete(String id) {
+        public void onUpdateComplete(String id, List<String> updatingIds) {
             if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 showInfo();
             }

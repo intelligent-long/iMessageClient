@@ -34,6 +34,8 @@ import com.longx.intelligent.android.lib.materialyoupreference.preferences.Mater
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
 
+import java.util.List;
+
 public class RootSettingsActivity extends BaseActivity {
     private ActivityRootSettingsBinding binding;
     public static final Bundle instanceState = new Bundle();
@@ -221,12 +223,12 @@ public class RootSettingsActivity extends BaseActivity {
         }
 
         @Override
-        public void onStartUpdate(String id) {
+        public void onStartUpdate(String id, List<String> updatingIds) {
 
         }
 
         @Override
-        public void onUpdateComplete(String id) {
+        public void onUpdateComplete(String id,List<String> updatingIds) {
             if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 updateEmailSummary();
             }

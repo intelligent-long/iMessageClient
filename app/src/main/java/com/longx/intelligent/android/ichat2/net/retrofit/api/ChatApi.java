@@ -19,11 +19,11 @@ public interface ChatApi {
     @POST("chat/message/text/send")
     CompletableCall<OperationData> sendTextChatMessage(@Body SendTextChatMessagePostBody postBody);
 
-    @Headers("LogLevel:BASIC")
+    @Headers("LogLevel:HEADERS")
     @POST("chat/message/image/send")
     CompletableCall<OperationData> sendImageChatMessage(@Body SendImageChatMessagePostBody postBody);
 
-    @Headers("LogLevel:BASIC")
+    @Headers("LogLevel:HEADERS")
     @GET("chat/message/new/all")
     CompletableCall<OperationData> fetchAllNewChatMessages();
 

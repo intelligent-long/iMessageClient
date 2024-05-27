@@ -302,7 +302,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     @Override
-    public void onStartUpdate(String id) {
+    public void onStartUpdate(String id, List<String> updatingIds) {
         runOnUiThread(() -> {
             if (!isFinishing() && binding != null) {
                 binding.updateIndicator.setVisibility(View.VISIBLE);
@@ -311,10 +311,10 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     @Override
-    public void onUpdateComplete(String id) {
+    public void onUpdateComplete(String id, List<String> updatingIds) {
         runOnUiThread(() -> {
             try{
-                binding.updateIndicator.setVisibility(View.GONE);
+                if(updatingIds.size() == 0) binding.updateIndicator.setVisibility(View.GONE);
             }catch (NullPointerException ignore){}
             if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 showNavHeaderInfo();

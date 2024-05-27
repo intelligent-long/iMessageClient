@@ -53,9 +53,9 @@ public class ContentUpdater {
         String ID_CHANNELS = "channels";
         String ID_CHAT_MESSAGES = "chat_messages";
 
-        void onStartUpdate(String id);
+        void onStartUpdate(String id, List<String> updatingIds);
 
-        void onUpdateComplete(String id);
+        void onUpdateComplete(String id, List<String> updatingIds);
     }
 
     private static class ContentUpdateApiYier<T> extends RetrofitApiCaller.BaseYier<T>{
@@ -107,16 +107,18 @@ public class ContentUpdater {
     }
 
     private static void onStartUpdate(String updateId) {
+        ErrorLogger.log("onStartUpdate > " + updateId);
         GlobalYiersHolder.getYiers(OnServerContentUpdateYier.class)
                 .ifPresent(onServerContentUpdateYiers -> onServerContentUpdateYiers.forEach(onServerContentUpdateYier -> {
-                    onServerContentUpdateYier.onStartUpdate(updateId);
+                    onServerContentUpdateYier.onStartUpdate(updateId, new ArrayList<>(updatingIds));
                 }));
     }
 
     private static void onUpdateComplete(String updateId) {
+        ErrorLogger.log("onUpdateComplete > " + updateId);
         GlobalYiersHolder.getYiers(OnServerContentUpdateYier.class)
                 .ifPresent(onServerContentUpdateYiers -> onServerContentUpdateYiers.forEach(onServerContentUpdateYier -> {
-                    onServerContentUpdateYier.onUpdateComplete(updateId);
+                    onServerContentUpdateYier.onUpdateComplete(updateId, new ArrayList<>(updatingIds));
                 }));
     }
 

@@ -136,7 +136,7 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
             openedChat.setChannel(channel);
             itemDataList.add(new ItemData(openedChat));
         });
-        itemDataList.sort(Comparator.comparing(o -> o.openedChat.getNewestChatMessage().getTime()));
+        itemDataList.sort((o1, o2) -> -o1.openedChat.getNewestChatMessage().getTime().compareTo(o2.openedChat.getNewestChatMessage().getTime()));
         notifyDataSetChanged();
     }
 }

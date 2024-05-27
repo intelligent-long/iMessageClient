@@ -18,6 +18,8 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
+import java.util.List;
+
 public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChannelBinding binding;
     private Channel channel;
@@ -153,12 +155,12 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     @Override
-    public void onStartUpdate(String id) {
+    public void onStartUpdate(String id, List<String> updatingIds) {
 
     }
 
     @Override
-    public void onUpdateComplete(String id) {
+    public void onUpdateComplete(String id, List<String> updatingIds) {
         if(isSelf) {
             if (id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)) {
                 getUserInfoAndShow();
