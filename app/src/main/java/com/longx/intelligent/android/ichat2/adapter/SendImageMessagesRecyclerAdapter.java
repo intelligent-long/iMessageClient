@@ -9,17 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.longx.intelligent.android.ichat2.data.OfflineDetail;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemOfflineDetailBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendImageMessagesBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,9 +27,9 @@ import java.util.List;
 public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<SendImageMessagesRecyclerAdapter.ViewHolder, SendImageMessagesRecyclerAdapter.ItemData> {
     private final AppCompatActivity activity;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
-    private RecyclerItemYiers.OnRecyclerItemActionYier onCheckButtonActionYier;
-    private RecyclerItemYiers.OnRecyclerItemActionYier onCancelCheckButtonActionYier;
     private final List<SendImageMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+    private final List<Integer> checkedPositions = new ArrayList<>();
+    private final List<Uri> checkedImageUris = new ArrayList<>();
 
     public SendImageMessagesRecyclerAdapter(AppCompatActivity activity, List<SendImageMessagesRecyclerAdapter.ItemData> itemDataList) {
         this.activity = activity;
@@ -67,14 +65,6 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
         this.onRecyclerItemClickYier = onRecyclerItemClickYier;
     }
 
-    public void setOnCheckButtonActionYier(RecyclerItemYiers.OnRecyclerItemActionYier onCheckButtonActionYier) {
-        this.onCheckButtonActionYier = onCheckButtonActionYier;
-    }
-
-    public void setOnCancelCheckButtonActionYier(RecyclerItemYiers.OnRecyclerItemActionYier onCancelCheckButtonActionYier) {
-        this.onCancelCheckButtonActionYier = onCancelCheckButtonActionYier;
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -101,20 +91,39 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetItemView(holder);
         ItemData itemData = itemDataList.get(position);
+        Uri uri = itemData.mediaInfo.getUri();
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.binding.getRoot().setOnClickListener(v -> {
             if (onRecyclerItemClickYier != null)
                 onRecyclerItemClickYier.onRecyclerItemClick(position, v);
         });
-        holder.binding.checkButton.setOnClickListener(v -> {
+        if(checkedPositions.contains((Integer) (position + 1))){
             holder.binding.checkButton.setVisibility(View.GONE);
             holder.binding.cancelCheckButton.setVisibility(View.VISIBLE);
-            if(onCheckButtonActionYier != null) onCheckButtonActionYier.onRecyclerItemAction(position, itemData.mediaInfo.getUri());
-        });
-        holder.binding.cancelCheckButton.setOnClickListener(v -> {
+            holder.binding.darkCover.setVisibility(View.VISIBLE);
+            holder.binding.index.setVisibility(View.VISIBLE);
+            holder.binding.index.setText(String.valueOf(checkedImageUris.indexOf(uri)));
+        }else {
             holder.binding.checkButton.setVisibility(View.VISIBLE);
             holder.binding.cancelCheckButton.setVisibility(View.GONE);
-            if(onCancelCheckButtonActionYier != null) onCancelCheckButtonActionYier.onRecyclerItemAction(position, itemData.mediaInfo.getUri());
+            holder.binding.darkCover.setVisibility(View.GONE);
+            holder.binding.index.setVisibility(View.GONE);
+            holder.binding.index.setText(null);
+        }
+        holder.binding.checkButton.setOnClickListener(v -> {
+            checkedImageUris.add(uri);
+            checkedPositions.add((Integer) (position + 1));
+            notifyItemChanged(position + 1);
+        });
+        holder.binding.cancelCheckButton.setOnClickListener(v -> {
+            int index = checkedImageUris.indexOf(uri);
+            checkedImageUris.remove(uri);
+            checkedPositions.remove((Integer) (position + 1));
+            notifyItemChanged(position + 1);
+            checkedImageUris.forEach(uri1 -> {
+                int index1 = checkedImageUris.indexOf(uri1);
+                if(index1 >= index) notifyItemChanged(checkedPositions.get(index1));
+            });
         });
         switch (itemData.mediaInfo.getMediaType()){
             case IMAGE:{
@@ -134,5 +143,9 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
                     .override(width, height)
                     .into(holder.binding.imageView);
         });
+    }
+
+    public List<Uri> getCheckedImageUris() {
+        return checkedImageUris;
     }
 }

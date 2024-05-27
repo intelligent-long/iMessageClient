@@ -44,7 +44,6 @@ public class SendImageMessagesActivity extends BaseActivity{
     private SpaceGridDecorationSetter spaceGridDecorationSetter;
     private int headerSpaceOriginalHeight;
     private LocationNameSwitcher locationNameSwitcher;
-    private final Set<Uri> checkedImageUris = new LinkedHashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,16 +87,10 @@ public class SendImageMessagesActivity extends BaseActivity{
             intent.putExtra(ExtraKeys.URI, imageInfoList.get(position).getUri());
             startActivity(intent);
         });
-        adapter.setOnCheckButtonActionYier((position, o) -> {
-            checkedImageUris.add((Uri) o[0]);
-        });
-        adapter.setOnCancelCheckButtonActionYier((position, o) -> {
-            checkedImageUris.remove((Uri) o[0]);
-        });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.send){
                 Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.TO_SEND_URIS, checkedImageUris.toArray(new Uri[0]));
+                intent.putExtra(ExtraKeys.TO_SEND_URIS, adapter.getCheckedImageUris().toArray(new Uri[0]));
                 setResult(RESULT_OK, intent);
                 finish();
             }
