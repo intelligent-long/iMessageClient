@@ -36,6 +36,7 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -59,6 +61,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private boolean reachStart;
     private int initialChatMessageCount;
     private boolean showingMorePanel;
+    private boolean sendingState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,9 +191,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 if(s.length() > 0){
                     binding.layoutSendButtonAndIndicator.setVisibility(View.VISIBLE);
                     binding.moreButton.setVisibility(View.GONE);
+                    binding.sendButton.setVisibility(View.VISIBLE);
                 }else {
                     binding.layoutSendButtonAndIndicator.setVisibility(View.GONE);
                     binding.moreButton.setVisibility(View.VISIBLE);
+                    binding.sendButton.setVisibility(View.GONE);
                 }
             }
         });
@@ -223,8 +228,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 @Override
                 public void start(Call<OperationData> call) {
                     super.start(call);
-                    binding.sendButton.setVisibility(View.GONE);
-                    binding.sendIndicator.setVisibility(View.VISIBLE);
+                    toSendingState();
                 }
 
                 @Override
@@ -252,8 +256,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 @Override
                 public void complete(Call<OperationData> call) {
                     super.complete(call);
-                    binding.sendButton.setVisibility(View.VISIBLE);
-                    binding.sendIndicator.setVisibility(View.GONE);
+                    toNormalState();
                 }
             });
         });
@@ -292,53 +295,97 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = Objects.requireNonNull(result.getData());
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.TO_SEND_URIS));
+                        List<Uri> uriList = new ArrayList<>();
                         for (Parcelable parcelableUri : parcelableArrayExtra) {
-                            Uri uri = (Uri) parcelableUri;
-                            byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
-                            String extension = DocumentFile.fromSingleUri(this, uri).getType().replace("image/", "");
-                            SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), extension);
-                            ChatApiCaller.sendImageChatMessage(this, imageBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
-                                @Override
-                                public void start(Call<OperationData> call) {
-                                    super.start(call);
-                                    binding.sendButton.setVisibility(View.GONE);
-                                    binding.sendIndicator.setVisibility(View.VISIBLE);
-                                }
-
-                                @Override
-                                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                                    super.ok(data, row, call);
-                                    data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
-                                        ChatMessage chatMessage = data.getData(ChatMessage.class);
-                                        chatMessage.setViewed(true);
-                                        ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
-                                            adapter.addItemToEndAndShow(chatMessage);
-                                            OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
-                                            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
-                                                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
-                                            });
-                                            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
-                                                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
-                                                    newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
-                                                });
-                                            });
-                                        });
-                                    });
-                                }
-
-                                @Override
-                                public void complete(Call<OperationData> call) {
-                                    super.complete(call);
-                                    binding.sendButton.setVisibility(View.VISIBLE);
-                                    binding.sendIndicator.setVisibility(View.GONE);
-                                }
-                            });
+                            uriList.add((Uri) parcelableUri);
                         }
+                        onSendImageMessages(uriList);
                     }
                 }
         );
         binding.morePanelImage.setOnClickListener(v -> {
             startForResult.launch(new Intent(this, SendImageMessagesActivity.class));
+        });
+    }
+
+    private void toSendingState(){
+        sendingState = true;
+        hideMorePanel();
+        binding.voiceButton.setVisibility(View.GONE);
+        binding.textButton.setVisibility(View.GONE);
+        binding.messageInput.setVisibility(View.GONE);
+        binding.messageInput.setText(null);
+        binding.holdToTalkButton.setVisibility(View.GONE);
+        binding.layoutSendButtonAndIndicator.setVisibility(View.VISIBLE);
+        binding.moreButton.setVisibility(View.GONE);
+        binding.sendButton.setVisibility(View.GONE);
+        binding.sendIndicator.setVisibility(View.VISIBLE);
+    }
+
+    private void toNormalState(){
+        sendingState = false;
+        hideMorePanel();
+        binding.voiceButton.setVisibility(View.VISIBLE);
+        binding.textButton.setVisibility(View.GONE);
+        binding.messageInput.setVisibility(View.VISIBLE);
+        binding.messageInput.setText(null);
+        binding.holdToTalkButton.setVisibility(View.GONE);
+        binding.layoutSendButtonAndIndicator.setVisibility(View.GONE);
+        binding.moreButton.setVisibility(View.VISIBLE);
+        binding.sendButton.setVisibility(View.GONE);
+        binding.sendIndicator.setVisibility(View.GONE);
+    }
+
+    private void onSendImageMessages(List<Uri> uriList){
+        AtomicInteger index = new AtomicInteger();
+        sendImageMessages(uriList, index);
+    }
+
+    private void sendImageMessages(List<Uri> uriList, AtomicInteger index){
+        Uri uri = uriList.get(index.get());
+        byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
+        String extension = DocumentFile.fromSingleUri(this, uri).getType().replace("image/", "");
+        SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), extension);
+        ChatApiCaller.sendImageChatMessage(this, imageBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+            @Override
+            public void start(Call<OperationData> call) {
+                super.start(call);
+                if(index.get() == 0) {
+                    toSendingState();
+                }
+            }
+
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
+                    ChatMessage chatMessage = data.getData(ChatMessage.class);
+                    chatMessage.setViewed(true);
+                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
+                        adapter.addItemToEndAndShow(chatMessage);
+                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                        });
+                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                            });
+                        });
+                    });
+                });
+                index.incrementAndGet();
+                if(index.get() == uriList.size()) return;
+                sendImageMessages(uriList, index);
+            }
+
+            @Override
+            public void complete(Call<OperationData> call) {
+                super.complete(call);
+                if(index.get() == uriList.size()){
+                    toNormalState();
+                }
+            }
         });
     }
 
