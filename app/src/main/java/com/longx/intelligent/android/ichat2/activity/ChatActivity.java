@@ -342,6 +342,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     }
 
     private void sendImageMessages(List<Uri> uriList, AtomicInteger index){
+        if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
         byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
         String extension = DocumentFile.fromSingleUri(this, uri).getType().replace("image/", "");
@@ -375,7 +376,6 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     });
                 });
                 index.incrementAndGet();
-                if(index.get() == uriList.size()) return;
                 sendImageMessages(uriList, index);
             }
 

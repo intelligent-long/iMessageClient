@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.longx.intelligent.android.ichat2.ui.PassThroughCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,8 +24,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:orientation="vertical">
+                android:layout_height="?attr/actionBarSize">
 
                 <TextView
                     android:id="@+id/title"
@@ -35,6 +35,29 @@
                     android:textSize="24sp"
                     android:textColor="@color/white"
                     android:fontFamily="@font/ping_fang_sc_medium" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/directory_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:layout_toEndOf="@id/title"
+                    android:layout_marginHorizontal="15dp"
+                    app:boxCornerRadiusBottomEnd="100dp"
+                    app:boxCornerRadiusBottomStart="100dp"
+                    app:boxCornerRadiusTopEnd="100dp"
+                    app:boxCornerRadiusTopStart="100dp"
+                    app:boxStrokeColor="@color/selector_text_input_layout_send_chat_image_directory_stroke">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/directory_auto_complete_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:padding="0dp"
+                        android:inputType="none"
+                        tools:ignore="LabelFor" />
+                </com.google.android.material.textfield.TextInputLayout>
             </RelativeLayout>
         </com.google.android.material.appbar.MaterialToolbar>
 

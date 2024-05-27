@@ -11,6 +11,8 @@ import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -372,6 +374,18 @@ public class MediaStoreHelper {
     }
 
     public static List<DirectoryInfo> getAllMediaDirectories(Context context) {
+        return getMediaDirectories(context, null);
+    }
+
+    public static List<DirectoryInfo> getAllImageDirectories(Context context) {
+        return getMediaDirectories(context, MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
+    }
+
+    public static List<DirectoryInfo> getAllVideoDirectories(Context context) {
+        return getMediaDirectories(context, MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO);
+    }
+
+    private static List<DirectoryInfo> getMediaDirectories(Context context, @Nullable String selection) {
         Map<String, DirectoryInfo> tempMap = new HashMap<>();
         String[] projection = new String[]{
                 MediaStore.Files.FileColumns.DATA,
@@ -389,11 +403,15 @@ public class MediaStoreHelper {
                 MediaStore.Video.Media.HEIGHT,
                 MediaStore.Video.Media.WIDTH,
         };
-        String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-                + " OR "
-                + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+
+        if (selection == null) {
+            selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+                    + " OR "
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+        }
+
         Uri queryUri = MediaStore.Files.getContentUri("external");
         try (Cursor cursor = context.getContentResolver().query(
                 queryUri,
@@ -429,20 +447,20 @@ public class MediaStoreHelper {
                     String directoryPath = currentFilePath.substring(0, currentFilePath.lastIndexOf("/"));
                     Uri currentFileUri;
                     if (currentMediaType.equals(MediaType.IMAGE)) {
-                            currentFileUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaId));
-                            dateAdded = cursor.getLong(columnIndexImageDateAdded);
-                            dateTaken = cursor.getLong(columnIndexImagesDateTaken);
-                            dateModified = cursor.getLong(columnIndexImageDateModified);
-                            imageWidth = cursor.getInt(columnIndexImageWidth);
-                            imageHeight = cursor.getInt(columnIndexImageHeight);
+                        currentFileUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaId));
+                        dateAdded = cursor.getLong(columnIndexImageDateAdded);
+                        dateTaken = cursor.getLong(columnIndexImagesDateTaken);
+                        dateModified = cursor.getLong(columnIndexImageDateModified);
+                        imageWidth = cursor.getInt(columnIndexImageWidth);
+                        imageHeight = cursor.getInt(columnIndexImageHeight);
                     } else {
-                            currentFileUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaId));
-                            dateAdded = cursor.getLong(columnIndexVideoDateAdded);
-                            dateTaken = cursor.getLong(columnIndexVideoDateTaken);
-                            dateModified = cursor.getLong(columnIndexVideoDateModified);
-                            videoDuration = cursor.getLong(columnIndexDuration);
-                            videoWidth = cursor.getInt(columnIndexVideoWidth);
-                            videoHeight = cursor.getInt(columnIndexVideoHeight);
+                        currentFileUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaId));
+                        dateAdded = cursor.getLong(columnIndexVideoDateAdded);
+                        dateTaken = cursor.getLong(columnIndexVideoDateTaken);
+                        dateModified = cursor.getLong(columnIndexVideoDateModified);
+                        videoDuration = cursor.getLong(columnIndexDuration);
+                        videoWidth = cursor.getInt(columnIndexVideoWidth);
+                        videoHeight = cursor.getInt(columnIndexVideoHeight);
                     }
                     DirectoryInfo directoryInfo = tempMap.getOrDefault(directoryPath, new DirectoryInfo(directoryPath, 0, Long.MAX_VALUE, Long.MIN_VALUE, new MediaInfo(currentFileUri, currentFilePath, currentMediaType, dateAdded, dateModified, dateTaken, videoDuration, imageWidth, imageHeight, videoWidth, videoHeight)));
                     int mediaCount = directoryInfo.getMediaCount() + 1;
@@ -458,6 +476,7 @@ public class MediaStoreHelper {
         }
         return new ArrayList<>(tempMap.values());
     }
+
 
     public static int getImagesCount(Context context){
         return getImagesCount(context, null);
