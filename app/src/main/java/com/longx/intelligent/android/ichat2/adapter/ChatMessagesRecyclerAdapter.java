@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -27,6 +28,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -201,9 +203,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     private void setupYiers(@NonNull ViewHolder holder, int position) {
+        ItemData currentItemData = itemDataList.get(position);
         scrollDisabler = new RecyclerViewScrollDisabler();
         recyclerView.addOnItemTouchListener(scrollDisabler);
-        ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity, itemDataList.get(position).chatMessage);
+        ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity, currentItemData.chatMessage);
         View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
             scrollDisabler.setScrollingDisabled(true);
             popupWindow.show(holder.binding.layoutMessageReceive, false);
@@ -221,14 +224,23 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
         });
-        holder.binding.imageSend.setOnClickListener(v -> {
+        View.OnClickListener onImageClickYier = v -> {
             Intent intent = new Intent(activity, ChatImageActivity.class);
+            ArrayList<String> imageFilePaths = new ArrayList<>();
+            itemDataList.forEach(itemData -> {
+                ChatMessage chatMessage = itemData.chatMessage;
+                if(chatMessage.getType() == ChatMessage.TYPE_IMAGE) {
+                    imageFilePaths.add(chatMessage.getImageFilePath());
+                    if (currentItemData.chatMessage.equals(chatMessage)) {
+                        intent.putExtra(ExtraKeys.POSITION, imageFilePaths.size() - 1);
+                    }
+                }
+            });
+            intent.putStringArrayListExtra(ExtraKeys.FILE_PATHS, imageFilePaths);
             activity.startActivity(intent);
-        });
-        holder.binding.imageReceive.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, ChatImageActivity.class);
-            activity.startActivity(intent);
-        });
+        };
+        holder.binding.imageSend.setOnClickListener(onImageClickYier);
+        holder.binding.imageReceive.setOnClickListener(onImageClickYier);
     }
 
     @Override

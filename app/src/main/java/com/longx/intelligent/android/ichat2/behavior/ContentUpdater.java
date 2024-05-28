@@ -97,7 +97,6 @@ public class ContentUpdater {
     }
 
     private static void onStartUpdate(String updateId) {
-        ErrorLogger.log("onStartUpdate > " + updateId);
         GlobalYiersHolder.getYiers(OnServerContentUpdateYier.class)
                 .ifPresent(onServerContentUpdateYiers -> onServerContentUpdateYiers.forEach(onServerContentUpdateYier -> {
                     onServerContentUpdateYier.onStartUpdate(updateId, new ArrayList<>(updatingIds));
@@ -105,7 +104,6 @@ public class ContentUpdater {
     }
 
     private static void onUpdateComplete(String updateId) {
-        ErrorLogger.log("onUpdateComplete > " + updateId);
         GlobalYiersHolder.getYiers(OnServerContentUpdateYier.class)
                 .ifPresent(onServerContentUpdateYiers -> onServerContentUpdateYiers.forEach(onServerContentUpdateYier -> {
                     onServerContentUpdateYier.onUpdateComplete(updateId, new ArrayList<>(updatingIds));

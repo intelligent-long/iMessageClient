@@ -17,4 +17,5 @@ public class ExtraKeys {
     public static final String POSITION = "position";
     public static final String MEDIA_INFO_LIST = "media_info_list";
     public static final String URIS = "uris";
+    public static final String FILE_PATHS = "file_paths";
 }
