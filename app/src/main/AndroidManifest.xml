@@ -25,18 +25,21 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/Theme.IChat2Client"
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.ChatImageActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.PreviewToSendImageActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/PreviewToSendImageActivity"/>
+            android:theme="@style/PreviewToSendImageActivity" />
         <activity
             android:name=".activity.SendImageMessagesActivity"
             android:exported="false"

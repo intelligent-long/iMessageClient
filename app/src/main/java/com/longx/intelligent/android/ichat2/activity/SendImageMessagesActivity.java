@@ -54,6 +54,7 @@ public class SendImageMessagesActivity extends BaseActivity{
     private LocationNameSwitcher locationNameSwitcher;
     private List<DirectoryInfo> allImageDirectories;
     private String currentDirectoryPath;
+    private boolean uiInited;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +73,6 @@ public class SendImageMessagesActivity extends BaseActivity{
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initAutoCompleteTextView();
-        binding.recyclerView.scrollToEnd(false);
-    }
-
-
     private void init() {
         headerBinding = LayoutGalleryHeaderBinding.inflate(getLayoutInflater());
         footerBinding = LayoutGalleryFooterBinding.inflate(getLayoutInflater());
@@ -87,6 +80,15 @@ public class SendImageMessagesActivity extends BaseActivity{
         locationNameSwitcher = new LocationNameSwitcher(this, binding.location);
         UiUtil.setViewHeight(footerBinding.navigationSpace, WindowAndSystemUiUtil.getNavigationBarHeight(this));
         initAutoCompleteTextView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(uiInited) return;
+        uiInited = true;
+        initAutoCompleteTextView();
+        binding.recyclerView.scrollToEnd(false);
     }
 
     private void initAutoCompleteTextView() {
@@ -145,6 +147,7 @@ public class SendImageMessagesActivity extends BaseActivity{
                 }
                 showContent();
                 setupYiers();
+                binding.recyclerView.scrollToEnd(false);
             }
         });
     }
@@ -204,7 +207,7 @@ public class SendImageMessagesActivity extends BaseActivity{
     }
 
     private void showTotalSize(){
-        int imagesCount = MediaStoreHelper.getImagesCount(this, currentDirectoryPath);
+        int imagesCount = MediaStoreHelper.getImagesCount(this, currentDirectoryPath, false);
         footerBinding.total.setText(imagesCount + "张照片");
     }
 

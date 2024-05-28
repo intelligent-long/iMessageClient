@@ -479,17 +479,26 @@ public class MediaStoreHelper {
 
 
     public static int getImagesCount(Context context){
-        return getImagesCount(context, null);
+        return getImagesCount(context, null, true);
     }
 
-    public static int getImagesCount(Context context, String directoryPath) {
+    public static int getImagesCount(Context context, String directoryPath, boolean includeSubdirectories) {
         String[] projection = {MediaStore.Images.Media._ID};
         String selection = null;
         String[] selectionArgs = null;
+
         if (directoryPath != null) {
-            selection = MediaStore.Images.Media.DATA + " LIKE ?";
-            selectionArgs = new String[]{directoryPath + "%"};
+            if (includeSubdirectories) {
+                // 包含子文件夹
+                selection = MediaStore.Images.Media.DATA + " LIKE ?";
+                selectionArgs = new String[]{directoryPath + "%"};
+            } else {
+                // 不包含子文件夹
+                selection = MediaStore.Images.Media.DATA + " LIKE ? AND " + MediaStore.Images.Media.DATA + " NOT LIKE ?";
+                selectionArgs = new String[]{directoryPath + "/%", directoryPath + "/%/%"};
+            }
         }
+
         ContentResolver contentResolver = context.getContentResolver();
         Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
@@ -502,4 +511,5 @@ public class MediaStoreHelper {
         }
         return 0;
     }
+
 }
