@@ -12,12 +12,12 @@ import com.longx.intelligent.android.ichat2.fragment.channeladdition.ChannelAddi
 /**
  * Created by LONG on 2024/5/2 at 7:10 PM.
  */
-public class ChannelAdditionActivitiesViewPagerAdapter extends FragmentStateAdapter {
+public class ChannelAdditionActivitiesPagerAdapter extends FragmentStateAdapter {
     private final ChannelAdditionPendingFragment channelAdditionPendingFragment;
     private final ChannelAdditionSendFragment channelAdditionSendFragment;
     private final ChannelAdditionReceiveFragment channelAdditionReceiveFragment;
 
-    public ChannelAdditionActivitiesViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public ChannelAdditionActivitiesPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
         channelAdditionPendingFragment = new ChannelAdditionPendingFragment();
         channelAdditionSendFragment = new ChannelAdditionSendFragment();

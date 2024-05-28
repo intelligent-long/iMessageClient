@@ -140,15 +140,10 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
     }
 
     private void showPreviewImage(Uri imageFileUri, SendImageMessagesRecyclerAdapter.ViewHolder holder) {
-        holder.binding.imageView.post(() -> {
-            int width = holder.binding.imageView.getWidth();
-            int height = holder.binding.imageView.getHeight();
-            GlideApp
-                    .with(activity.getApplicationContext())
-                    .load(imageFileUri)
-                    .override(width, height)
-                    .into(holder.binding.imageView);
-        });
+        GlideApp
+                .with(activity.getApplicationContext())
+                .load(imageFileUri)
+                .into(holder.binding.imageView);
     }
 
     public List<Uri> getCheckedImageUris() {
