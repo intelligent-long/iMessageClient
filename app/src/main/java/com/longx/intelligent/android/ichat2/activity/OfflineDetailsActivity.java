@@ -35,7 +35,7 @@ public class OfflineDetailsActivity extends BaseActivity {
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.clear){
-                new ConfirmDialog(this, "清空记录，是否继续？")
+                new ConfirmDialog(this, "是否继续？")
                         .setPositiveButton((dialog, which) -> {
                             SharedPreferencesAccessor.ApiJson.OfflineDetails.clearRecords(this);
                             showContent();

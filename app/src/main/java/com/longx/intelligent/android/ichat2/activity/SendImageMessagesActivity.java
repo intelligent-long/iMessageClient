@@ -38,6 +38,7 @@ import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecora
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,22 +72,39 @@ public class SendImageMessagesActivity extends BaseActivity{
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
     }
 
-    private void init(){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initAutoCompleteTextView();
+        binding.recyclerView.scrollToEnd(false);
+    }
+
+
+    private void init() {
         headerBinding = LayoutGalleryHeaderBinding.inflate(getLayoutInflater());
         footerBinding = LayoutGalleryFooterBinding.inflate(getLayoutInflater());
         spaceGridDecorationSetter = new SpaceGridDecorationSetter();
         locationNameSwitcher = new LocationNameSwitcher(this, binding.location);
         UiUtil.setViewHeight(footerBinding.navigationSpace, WindowAndSystemUiUtil.getNavigationBarHeight(this));
-        binding.directoryAutoCompleteTextView.setText("所有图片");
+        initAutoCompleteTextView();
+    }
+
+    private void initAutoCompleteTextView() {
         allImageDirectories = MediaStoreHelper.getAllImageDirectories(this);
         List<String> directoryNames = new ArrayList<>();
         directoryNames.add("所有图片");
         allImageDirectories.forEach(imageDirectory -> {
             directoryNames.add(new File(imageDirectory.getPath()).getName());
         });
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, R.layout.layout_auto_complete_text_view_text, directoryNames);
         binding.directoryAutoCompleteTextView.setAdapter(adapter);
+
+        if (!directoryNames.isEmpty()) {
+            binding.directoryAutoCompleteTextView.setText(directoryNames.get(0), false);
+            currentDirectoryPath = null;
+        }
     }
 
     private void setupYiers() {

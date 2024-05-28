@@ -48,12 +48,14 @@
                     app:boxCornerRadiusBottomStart="100dp"
                     app:boxCornerRadiusTopEnd="100dp"
                     app:boxCornerRadiusTopStart="100dp"
+                    app:endIconTint="#C2BDC4"
                     app:boxStrokeColor="@color/selector_text_input_layout_send_chat_image_directory_stroke">
 
                     <AutoCompleteTextView
                         android:id="@+id/directory_auto_complete_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
+                        android:textColor="#E6E0E9"
                         android:padding="0dp"
                         android:inputType="none"
                         tools:ignore="LabelFor" />
