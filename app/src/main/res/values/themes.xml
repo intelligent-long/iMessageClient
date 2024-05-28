@@ -17,11 +17,7 @@
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
     </style>
 
-    <style name="SendImageMessagesActivity" parent="Theme.IChat2Client">
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="PreviewToSendImageActivity" parent="Theme.IChat2Client">
+    <style name="DarkStatusBarActivity" parent="Theme.IChat2Client">
         <item name="android:windowLightStatusBar">false</item>
     </style>
 

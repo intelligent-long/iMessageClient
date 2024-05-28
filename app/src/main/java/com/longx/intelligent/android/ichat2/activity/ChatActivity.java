@@ -31,12 +31,12 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.MediaUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
-import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -294,11 +294,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = Objects.requireNonNull(result.getData());
-                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.TO_SEND_URIS));
-                        List<Uri> uriList = new ArrayList<>();
-                        for (Parcelable parcelableUri : parcelableArrayExtra) {
-                            uriList.add((Uri) parcelableUri);
-                        }
+                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
+                        List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
                         onSendImageMessages(uriList);
                     }
                 }

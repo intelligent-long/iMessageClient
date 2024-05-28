@@ -16,5 +16,5 @@ public class ExtraKeys {
     public static final String NEED_RESTORE_INSTANCE_STATE = "need_restore_instance_state";
     public static final String POSITION = "position";
     public static final String MEDIA_INFO_LIST = "media_info_list";
-    public static final String TO_SEND_URIS = "to_send_uris";
+    public static final String URIS = "uris";
 }

@@ -35,17 +35,18 @@
         <activity
             android:name=".activity.ChatImageActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkStatusBarActivity" />
         <activity
             android:name=".activity.PreviewToSendImageActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/PreviewToSendImageActivity" />
+            android:theme="@style/DarkStatusBarActivity" />
         <activity
             android:name=".activity.SendImageMessagesActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/SendImageMessagesActivity" />
+            android:theme="@style/DarkStatusBarActivity" />
         <activity
             android:name=".activity.OfflineDetailsActivity"
             android:exported="false"

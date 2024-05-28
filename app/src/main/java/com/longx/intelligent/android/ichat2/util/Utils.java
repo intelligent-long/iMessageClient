@@ -4,8 +4,15 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Parcelable;
+
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -31,5 +38,13 @@ public class Utils {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, text);
         clipboard.setPrimaryClip(clip);
+    }
+
+    public static <T> List<T> parseParcelableArray(Parcelable[] parcelableArray){
+        List<T> uriList = new ArrayList<>();
+        for (Parcelable parcelableUri : parcelableArray) {
+            uriList.add((T) parcelableUri);
+        }
+        return uriList;
     }
 }

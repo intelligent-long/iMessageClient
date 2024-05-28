@@ -22,9 +22,6 @@ import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.media.helper.LocationHelper;
 import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
-import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
-import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
-import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.ui.LocationNameSwitcher;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
@@ -33,15 +30,11 @@ import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.value.Variables;
 import com.longx.intelligent.android.ichat2.yier.AutoCompleteTextViewAutoSelectOnItemClickYier;
-import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SendImageMessagesActivity extends BaseActivity{
     private ActivitySendImageMessagesBinding binding;
@@ -129,7 +122,7 @@ public class SendImageMessagesActivity extends BaseActivity{
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.send){
                 Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.TO_SEND_URIS, adapter.getCheckedImageUris().toArray(new Uri[0]));
+                intent.putExtra(ExtraKeys.URIS, adapter.getCheckedImageUris().toArray(new Uri[0]));
                 setResult(RESULT_OK, intent);
                 finish();
             }
