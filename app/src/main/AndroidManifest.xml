@@ -34,7 +34,8 @@
         tools:targetApi="34">
         <activity
             android:name=".activity.ChatImageActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PreviewToSendImageActivity"
             android:exported="false"

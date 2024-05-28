@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
+import com.longx.intelligent.android.ichat2.activity.ChatImageActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -203,18 +204,30 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         scrollDisabler = new RecyclerViewScrollDisabler();
         recyclerView.addOnItemTouchListener(scrollDisabler);
         ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity, itemDataList.get(position).chatMessage);
-        holder.binding.layoutTextReceive.setOnLongClickListener(v -> {
+        View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
             scrollDisabler.setScrollingDisabled(true);
-            popupWindow.show(holder.binding.layoutTextReceive, false);
+            popupWindow.show(holder.binding.layoutMessageReceive, false);
             return true;
-        });
-        holder.binding.layoutTextSend.setOnLongClickListener(v -> {
+        };
+        View.OnLongClickListener onMessageSendLongClickYier = v -> {
             scrollDisabler.setScrollingDisabled(true);
-            popupWindow.show(holder.binding.layoutTextSend, true);
+            popupWindow.show(holder.binding.layoutMessageSend, true);
             return true;
-        });
+        };
+        holder.binding.layoutTextReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
+        holder.binding.layoutTextSend.setOnLongClickListener(onMessageSendLongClickYier);
+        holder.binding.imageReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
+        holder.binding.imageSend.setOnLongClickListener(onMessageSendLongClickYier);
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
+        });
+        holder.binding.imageSend.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ChatImageActivity.class);
+            activity.startActivity(intent);
+        });
+        holder.binding.imageReceive.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ChatImageActivity.class);
+            activity.startActivity(intent);
         });
     }
 
