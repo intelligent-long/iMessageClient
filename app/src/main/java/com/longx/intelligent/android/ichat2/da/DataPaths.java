@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.ChatMessage;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by LONG on 2024/3/28 at 6:05 PM.
@@ -48,7 +50,9 @@ public class DataPaths {
             return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "iChat";
         }
 
-        public static String getChatImageFilePath(String fileName){
+        public static String getChatImageFilePath(ChatMessage chatMessage){
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + chatMessage.getImageExtension();
             return getPublicFilePath() + File.separator + "聊天图片" + File.separator + fileName;
         }
     }

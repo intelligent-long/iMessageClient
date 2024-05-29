@@ -16,27 +16,43 @@ import java.util.Objects;
  * Created by LONG on 2024/1/21 at 9:23 PM.
  */
 public class FileAccessHelper {
-    public static boolean save(InputStream contentStream, String path) {
+    public static String save(InputStream contentStream, String path) {
         File file = new File(path);
+        int number = 1;
+        while (file.exists()){
+            String pathWithoutExtension = path.substring(0, path.indexOf('.'));
+            String extension = path.substring(path.indexOf('.'));
+            file = new File(pathWithoutExtension + " (" + number + ")" + extension);
+            number ++;
+        }
         Objects.requireNonNull(file.getParentFile()).mkdirs();
         try {
             FileOutputStream outputStream = new FileOutputStream(file);
-            return FileUtil.transfer(contentStream, outputStream);
+            boolean transfer = FileUtil.transfer(contentStream, outputStream);
+            if(transfer) return file.getAbsolutePath();
         }catch (IOException e){
             ErrorLogger.log(FileAccessHelper.class, e);
-            return false;
+            return null;
         }
+        return null;
     }
 
-    public static boolean save(byte[] bytes, String path) {
+    public static String save(byte[] bytes, String path) {
         File file = new File(path);
+        int number = 1;
+        while (file.exists()){
+            String pathWithoutExtension = path.substring(0, path.indexOf('.'));
+            String extension = path.substring(path.indexOf('.'));
+            file = new File(pathWithoutExtension + " (" + number + ")" + extension);
+            number ++;
+        }
         Objects.requireNonNull(file.getParentFile()).mkdirs();
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(bytes);
-            return true;
+            return file.getAbsolutePath();
         } catch (IOException e) {
             ErrorLogger.log(FileAccessHelper.class, e);
-            return false;
+            return null;
         }
     }
 

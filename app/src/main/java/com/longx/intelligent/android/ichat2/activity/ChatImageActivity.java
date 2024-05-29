@@ -10,6 +10,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatImagePagerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
+import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatImageBinding;
 import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
     private ActivityChatImageBinding binding;
     private List<String> imageFilePaths;
-    private List<String> imageSaveFileNames;
+    private List<ChatMessage> chatMessages;
     private int position;
     private ChatImagePagerAdapter adapter;
     private boolean purePhoto;
@@ -42,7 +43,7 @@ public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers
 
     private void getIntentData() {
         imageFilePaths = getIntent().getStringArrayListExtra(ExtraKeys.FILE_PATHS);
-        imageSaveFileNames = getIntent().getStringArrayListExtra(ExtraKeys.FILE_NAMES);
+        chatMessages = getIntent().getParcelableArrayListExtra(ExtraKeys.CHAT_MESSAGES);
         position = getIntent().getIntExtra(ExtraKeys.POSITION, 0);
     }
 
@@ -64,7 +65,7 @@ public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers
                 new Thread(() -> {
                     OperationDialog operationDialog = new OperationDialog(this);
                     operationDialog.show();
-                    String saved = PublicFileAccessor.ChatImage.save(imageFilePaths.get(currentItem), imageSaveFileNames.get(currentItem));
+                    String saved = PublicFileAccessor.ChatImage.save(imageFilePaths.get(currentItem), chatMessages.get(currentItem));
                     operationDialog.dismiss();
                     if(saved != null){
                         MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);

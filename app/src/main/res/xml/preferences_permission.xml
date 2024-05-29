@@ -18,6 +18,11 @@
         app:summary="访问设备存储资源"/>
 
     <com.longx.intelligent.android.ichat2.preference.PermissionPreference
+        app:key="@string/preference_key_manage_storage"
+        app:title="管理储存空间"
+        app:summary="管理设备储存资源"/>
+
+    <com.longx.intelligent.android.ichat2.preference.PermissionPreference
         app:key="@string/preference_key_read_media_images_and_videos"
         app:title="照片和视频"
         app:summary="访问设备照片和视频媒体资源"/>

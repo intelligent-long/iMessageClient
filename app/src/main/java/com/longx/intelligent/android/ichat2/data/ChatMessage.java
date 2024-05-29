@@ -217,6 +217,7 @@ public class ChatMessage implements Parcelable {
         uuid = in.readString();
         from = in.readString();
         to = in.readString();
+        time = new Date(in.readLong());
         text = in.readString();
         imageId = in.readString();
         imageExtension = in.readString();
@@ -258,6 +259,7 @@ public class ChatMessage implements Parcelable {
         dest.writeString(uuid);
         dest.writeString(from);
         dest.writeString(to);
+        dest.writeLong(time.getTime());
         dest.writeString(text);
         dest.writeString(imageId);
         dest.writeString(imageExtension);

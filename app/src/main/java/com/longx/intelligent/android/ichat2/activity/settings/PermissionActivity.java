@@ -66,6 +66,7 @@ public class PermissionActivity extends BaseActivity {
         private PermissionPreference preferenceNotification;
         private PermissionPreference preferenceStorage;
         private PermissionPreference preferenceReadMediaImagesAndVideos;
+        private PermissionPreference preferenceManageExternalStorage;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
@@ -79,6 +80,13 @@ public class PermissionActivity extends BaseActivity {
             preferenceNotification = findPreference(getString(R.string.preference_key_notification));
             preferenceStorage = findPreference(getString(R.string.preference_key_storage));
             preferenceReadMediaImagesAndVideos = findPreference(getString(R.string.preference_key_read_media_images_and_videos));
+            preferenceManageExternalStorage = findPreference(getString(R.string.preference_key_manage_storage));
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            showInfo();
         }
 
         @Override
@@ -87,12 +95,7 @@ public class PermissionActivity extends BaseActivity {
             showNotification();
             showStoragePermission();
             showReadMediaImagesAndVideosPermission();
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            showInfo();
+            showManageExternalStoragePermission();
         }
 
         private void showBatteryRestriction() {
@@ -127,12 +130,22 @@ public class PermissionActivity extends BaseActivity {
             }
         }
 
+        private void showManageExternalStoragePermission(){
+            if(PermissionUtil.needManageExternalStoragePermission()){
+                boolean externalStorageManager = SpecialPermissionOperator.isExternalStorageManager();
+                preferenceManageExternalStorage.setChecked(externalStorageManager);
+            }else {
+                preferenceManageExternalStorage.setVisible(false);
+            }
+        }
+
         @Override
         protected void setupYiers() {
             preferenceBatteryRestriction.setOnPreferenceClickListener(this);
             preferenceNotification.setOnPreferenceClickListener(this);
             preferenceStorage.setOnPreferenceClickListener(this);
             preferenceReadMediaImagesAndVideos.setOnPreferenceClickListener(this);
+            preferenceManageExternalStorage.setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -193,6 +206,15 @@ public class PermissionActivity extends BaseActivity {
                                         showNotification();
                                     }
                                 }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
+                    }
+                }
+            }else if(preference.equals(preferenceManageExternalStorage)){
+                if(SpecialPermissionOperator.isExternalStorageManager()){
+                    showPermissionGrantedMessage();
+                }else {
+                    boolean success = SpecialPermissionOperator.requestManageExternalStorage(requireActivity());
+                    if(!success){
+                        MessageDisplayer.autoShow(requireActivity(), "错误", MessageDisplayer.Duration.LONG);
                     }
                 }
             }

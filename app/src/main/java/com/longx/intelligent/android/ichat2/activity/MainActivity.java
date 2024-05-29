@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -136,6 +137,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
             }
         }
         if (!SpecialPermissionOperator.isExternalStorageManager()) {
+            MessageDisplayer.showToast(this, "请允许本应用的所有文件访问权限", Toast.LENGTH_LONG);
             boolean success = SpecialPermissionOperator.requestManageExternalStorage(this);
             if(!success){
                 MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.LONG);

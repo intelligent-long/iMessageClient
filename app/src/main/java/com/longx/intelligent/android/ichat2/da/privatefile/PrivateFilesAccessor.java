@@ -17,11 +17,7 @@ public class PrivateFilesAccessor {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String imageFilePath = DataPaths.PrivateFile.getChatImageFilePath(context, other, chatMessage.getUuid());
             byte[] imageBytes = chatMessage.getImageBytes();
-            if(FileAccessHelper.save(imageBytes, imageFilePath)){
-                return imageFilePath;
-            }else {
-                return null;
-            }
+            return FileAccessHelper.save(imageBytes, imageFilePath);
         }
 
         public static InputStream streamOf(String path){

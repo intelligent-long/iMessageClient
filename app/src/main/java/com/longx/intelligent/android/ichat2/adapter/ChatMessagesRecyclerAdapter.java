@@ -35,6 +35,7 @@ import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -227,19 +228,19 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         View.OnClickListener onImageClickYier = v -> {
             Intent intent = new Intent(activity, ChatImageActivity.class);
             ArrayList<String> imageFilePaths = new ArrayList<>();
-            ArrayList<String> imageFileNames = new ArrayList<>();
+            ArrayList<ChatMessage> chatMessages = new ArrayList<>();
             itemDataList.forEach(itemData -> {
                 ChatMessage chatMessage = itemData.chatMessage;
                 if(chatMessage.getType() == ChatMessage.TYPE_IMAGE) {
                     imageFilePaths.add(chatMessage.getImageFilePath());
-                    imageFileNames.add(chatMessage.getUuid() + "." + chatMessage.getImageExtension());
+                    chatMessages.add(chatMessage);
                     if (currentItemData.chatMessage.equals(chatMessage)) {
                         intent.putExtra(ExtraKeys.POSITION, imageFilePaths.size() - 1);
                     }
                 }
             });
             intent.putStringArrayListExtra(ExtraKeys.FILE_PATHS, imageFilePaths);
-            intent.putStringArrayListExtra(ExtraKeys.FILE_NAMES, imageFileNames);
+            intent.putParcelableArrayListExtra(ExtraKeys.CHAT_MESSAGES, chatMessages);
             activity.startActivity(intent);
         };
         holder.binding.imageSend.setOnClickListener(onImageClickYier);
