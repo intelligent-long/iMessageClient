@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.PopupWindowChatMessageActionsBinding;
+import com.longx.intelligent.android.ichat2.dialog.CopyTextDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
@@ -44,6 +45,10 @@ public class ChatMessageActionsPopupWindow {
             popupWindow.dismiss();
             String timeText = TimeUtil.formatRelativeTime(chatMessage.getTime());
             new MessageDialog(activity, timeText).show();
+        });
+        binding.clickViewCopy.setOnClickListener(v -> {
+            popupWindow.dismiss();
+            new CopyTextDialog(activity, chatMessage.getText()).show();
         });
     }
 
