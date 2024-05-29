@@ -29,6 +29,12 @@ public class ChatMessageActionsPopupWindow {
         this.activity = activity;
         this.chatMessage = chatMessage;
         binding = PopupWindowChatMessageActionsBinding.inflate(activity.getLayoutInflater());
+        switch (chatMessage.getType()){
+            case ChatMessage.TYPE_IMAGE:{
+                binding.clickViewCopy.setVisibility(View.GONE);
+                break;
+            }
+        }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
         setupYiers();
     }
