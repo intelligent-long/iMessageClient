@@ -42,6 +42,9 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
     private static final List<Pair<Long, String>> timePairs = new ArrayList<>();
     static {
         timePairs.add(new ImmutablePair<>(3 * 24 * 60 * 60 * 1000L, "三天前"));
+        timePairs.add(new ImmutablePair<>(7 * 24 * 60 * 60 * 1000L, "一周前"));
+        timePairs.add(new ImmutablePair<>(30 * 24 * 60 * 60 * 1000L, "一月前"));
+        timePairs.add(new ImmutablePair<>(365 * 24 * 60 * 60 * 1000L, "一年前"));
     }
 
     public ChannelAdditionActivitiesPendingRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
@@ -173,7 +176,7 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
     }
 
     private static int getTimeTextIndex(Date time) {
-        for (int i = 0; i < timePairs.size(); i++) {
+        for (int i = timePairs.size() - 1; i >= 0; i--) {
             if(TimeUtil.isDateAfter(time, now, timePairs.get(i).getKey())){
                 return i;
             }

@@ -168,7 +168,7 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     }
 
     private static int getTimeTextIndex(Date time) {
-        for (int i = 0; i < timePairs.size(); i++) {
+        for (int i = timePairs.size() - 1; i >= 0; i--) {
             if(TimeUtil.isDateAfter(time, now, timePairs.get(i).getKey())){
                 return i;
             }
