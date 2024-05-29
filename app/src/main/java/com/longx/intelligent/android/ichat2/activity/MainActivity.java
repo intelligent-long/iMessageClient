@@ -12,15 +12,15 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.Application;
@@ -38,7 +38,7 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
+import com.longx.intelligent.android.ichat2.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
@@ -47,7 +47,6 @@ import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -101,14 +100,14 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     private void requestPermissions(){
-        if(BatteryRestrictionOperator.isIgnoringBatteryOptimizations(this)){
+        if(SpecialPermissionOperator.isIgnoringBatteryOptimizations(this)){
             SharedPreferencesAccessor.DefaultPref.enableRequestIgnoreBatteryOptimize(this);
         }
         if(SharedPreferencesAccessor.DefaultPref.isRequestIgnoreBatteryOptimizeStateEnabled(this)){
-            if(!BatteryRestrictionOperator.isIgnoringBatteryOptimizations(this)){
+            if(!SpecialPermissionOperator.isIgnoringBatteryOptimizations(this)){
                 new ConfirmDialog(this, "取消此应用的电池用量限制，应用的功能才能全部正常运行")
                         .setPositiveButton("确定", (dialog, which) -> {
-                            boolean success = BatteryRestrictionOperator.requestIgnoreBatteryOptimizations(this);
+                            boolean success = SpecialPermissionOperator.requestIgnoreBatteryOptimizations(this);
                             if(!success){
                                 MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.LONG);
                             }
@@ -134,6 +133,12 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         } else if(PermissionUtil.needExternalStoragePermission()) {
             if (!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.writeAndReadExternalStorage)) {
                 toRequestPermissionsList.add(ToRequestPermissionsItems.writeAndReadExternalStorage);
+            }
+        }
+        if (!SpecialPermissionOperator.isExternalStorageManager()) {
+            boolean success = SpecialPermissionOperator.requestManageExternalStorage(this);
+            if(!success){
+                MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.LONG);
             }
         }
         new PermissionOperator(this, toRequestPermissionsList,

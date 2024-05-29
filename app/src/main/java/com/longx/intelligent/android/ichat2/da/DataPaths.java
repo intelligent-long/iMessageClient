@@ -1,8 +1,11 @@
 package com.longx.intelligent.android.ichat2.da;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+
+import java.io.File;
 
 /**
  * Created by LONG on 2024/3/28 at 6:05 PM.
@@ -32,12 +35,21 @@ public class DataPaths {
                     java.io.File.separator + databaseFileName;
         }
 
-        public static String getChatMessageImageFilePath(Context context, String ichatId, String imageFileName){
+        public static String getChatImageFilePath(Context context, String ichatId, String imageFileName){
             return PrivateFile.getPrivateFileFolderPath(context) +
                     java.io.File.separator + "chat_image" +
                     java.io.File.separator + ichatId +
                     java.io.File.separator + imageFileName;
         }
+    }
 
+    public static class PublicFile{
+        public static String getPublicFilePath(){
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "iChat";
+        }
+
+        public static String getChatImageFilePath(String fileName){
+            return getPublicFilePath() + File.separator + "聊天图片" + File.separator + fileName;
+        }
     }
 }

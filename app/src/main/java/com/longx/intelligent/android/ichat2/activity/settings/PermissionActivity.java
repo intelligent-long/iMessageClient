@@ -14,14 +14,13 @@ import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPermissionBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
-import com.longx.intelligent.android.ichat2.permission.BatteryRestrictionOperator;
+import com.longx.intelligent.android.ichat2.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.preference.PermissionPreference;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +51,8 @@ public class PermissionActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == BatteryRestrictionOperator.REQUEST_CODE){
-            if(BatteryRestrictionOperator.isIgnoringBatteryOptimizations(this)){
+        if(requestCode == SpecialPermissionOperator.IGNORE_BATTERY_OPTIMIZATIONS_REQUEST_CODE){
+            if(SpecialPermissionOperator.isIgnoringBatteryOptimizations(this)){
                 SharedPreferencesAccessor.DefaultPref.enableRequestIgnoreBatteryOptimize(this);
             }
             if(settingsFragment != null){
@@ -97,7 +96,7 @@ public class PermissionActivity extends BaseActivity {
         }
 
         private void showBatteryRestriction() {
-            boolean ignoringBatteryOptimizations = BatteryRestrictionOperator.isIgnoringBatteryOptimizations(requireContext());
+            boolean ignoringBatteryOptimizations = SpecialPermissionOperator.isIgnoringBatteryOptimizations(requireContext());
             preferenceBatteryRestriction.setChecked(ignoringBatteryOptimizations);
         }
 
@@ -139,8 +138,8 @@ public class PermissionActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
             if (preference.equals(preferenceBatteryRestriction)) {
-                if(!BatteryRestrictionOperator.isIgnoringBatteryOptimizations(requireContext())){
-                    boolean success = BatteryRestrictionOperator.requestIgnoreBatteryOptimizations(requireActivity());
+                if(!SpecialPermissionOperator.isIgnoringBatteryOptimizations(requireContext())){
+                    boolean success = SpecialPermissionOperator.requestIgnoreBatteryOptimizations(requireActivity());
                     if(!success){
                         MessageDisplayer.autoShow(requireContext(), "错误", MessageDisplayer.Duration.LONG);
                     }

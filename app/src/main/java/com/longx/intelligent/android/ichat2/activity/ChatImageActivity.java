@@ -1,29 +1,27 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatImagePagerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatImageBinding;
+import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
     private ActivityChatImageBinding binding;
     private List<String> imageFilePaths;
+    private List<String> imageSaveFileNames;
     private int position;
     private ChatImagePagerAdapter adapter;
     private boolean purePhoto;
@@ -44,6 +42,7 @@ public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers
 
     private void getIntentData() {
         imageFilePaths = getIntent().getStringArrayListExtra(ExtraKeys.FILE_PATHS);
+        imageSaveFileNames = getIntent().getStringArrayListExtra(ExtraKeys.FILE_NAMES);
         position = getIntent().getIntExtra(ExtraKeys.POSITION, 0);
     }
 
@@ -59,6 +58,23 @@ public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers
 
     private void setupYiers() {
         setupRestorePrevious();
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.save){
+                int currentItem = binding.viewPager.getCurrentItem();
+                new Thread(() -> {
+                    OperationDialog operationDialog = new OperationDialog(this);
+                    operationDialog.show();
+                    String saved = PublicFileAccessor.ChatImage.save(imageFilePaths.get(currentItem), imageSaveFileNames.get(currentItem));
+                    operationDialog.dismiss();
+                    if(saved != null){
+                        MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
+                    }else {
+                        MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
+                    }
+                }).start();
+            }
+            return true;
+        });
     }
 
     private void setupPageSwitchTransformer() {

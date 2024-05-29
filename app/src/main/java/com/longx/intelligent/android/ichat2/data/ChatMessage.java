@@ -1,7 +1,12 @@
 package com.longx.intelligent.android.ichat2.data;
 
 import android.content.Context;
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Size;
+
+import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
@@ -27,7 +32,8 @@ import retrofit2.Response;
 /**
  * Created by LONG on 2024/5/13 at 12:08 AM.
  */
-public class ChatMessage {
+public class ChatMessage implements Parcelable {
+
     public static void mainDoOnNewChatMessage(ChatMessage chatMessage, Context context, ResultsYier resultsYier){
         if(chatMessage.getType() == ChatMessage.TYPE_IMAGE){
             ChatApiCaller.fetchChatMessageImage(null, chatMessage.imageId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
@@ -204,5 +210,66 @@ public class ChatMessage {
     @Override
     public int hashCode() {
         return Objects.hash(type, uuid, from, to, time);
+    }
+
+    protected ChatMessage(Parcel in) {
+        type = in.readInt();
+        uuid = in.readString();
+        from = in.readString();
+        to = in.readString();
+        text = in.readString();
+        imageId = in.readString();
+        imageExtension = in.readString();
+        byte tmpShowTime = in.readByte();
+        showTime = tmpShowTime == 0 ? null : tmpShowTime == 1;
+        byte tmpViewed = in.readByte();
+        viewed = tmpViewed == 0 ? null : tmpViewed == 1;
+        imageFilePath = in.readString();
+        imageSize = in.readSize();
+        int imageBytesLength = in.readInt();
+        if (imageBytesLength >= 0) {
+            imageBytes = new byte[imageBytesLength];
+            in.readByteArray(imageBytes);
+        } else {
+            imageBytes = null;
+        }
+    }
+
+    public static final Creator<ChatMessage> CREATOR = new Creator<ChatMessage>() {
+        @Override
+        public ChatMessage createFromParcel(Parcel in) {
+            return new ChatMessage(in);
+        }
+
+        @Override
+        public ChatMessage[] newArray(int size) {
+            return new ChatMessage[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(type);
+        dest.writeString(uuid);
+        dest.writeString(from);
+        dest.writeString(to);
+        dest.writeString(text);
+        dest.writeString(imageId);
+        dest.writeString(imageExtension);
+        dest.writeByte((byte) (showTime == null ? 0 : showTime ? 1 : 2));
+        dest.writeByte((byte) (viewed == null ? 0 : viewed ? 1 : 2));
+        dest.writeString(imageFilePath);
+        dest.writeSize(imageSize);
+        if (imageBytes != null) {
+            dest.writeInt(imageBytes.length);
+            dest.writeByteArray(imageBytes);
+        } else {
+            dest.writeInt(-1);
+        }
     }
 }

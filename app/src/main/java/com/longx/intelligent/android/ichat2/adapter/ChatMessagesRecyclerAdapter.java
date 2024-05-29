@@ -227,16 +227,19 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         View.OnClickListener onImageClickYier = v -> {
             Intent intent = new Intent(activity, ChatImageActivity.class);
             ArrayList<String> imageFilePaths = new ArrayList<>();
+            ArrayList<String> imageFileNames = new ArrayList<>();
             itemDataList.forEach(itemData -> {
                 ChatMessage chatMessage = itemData.chatMessage;
                 if(chatMessage.getType() == ChatMessage.TYPE_IMAGE) {
                     imageFilePaths.add(chatMessage.getImageFilePath());
+                    imageFileNames.add(chatMessage.getUuid() + "." + chatMessage.getImageExtension());
                     if (currentItemData.chatMessage.equals(chatMessage)) {
                         intent.putExtra(ExtraKeys.POSITION, imageFilePaths.size() - 1);
                     }
                 }
             });
             intent.putStringArrayListExtra(ExtraKeys.FILE_PATHS, imageFilePaths);
+            intent.putStringArrayListExtra(ExtraKeys.FILE_NAMES, imageFileNames);
             activity.startActivity(intent);
         };
         holder.binding.imageSend.setOnClickListener(onImageClickYier);
