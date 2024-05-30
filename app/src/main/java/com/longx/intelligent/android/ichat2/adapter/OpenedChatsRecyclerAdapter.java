@@ -139,4 +139,9 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
         itemDataList.sort((o1, o2) -> -o1.openedChat.getNewestChatMessage().getTime().compareTo(o2.openedChat.getNewestChatMessage().getTime()));
         notifyDataSetChanged();
     }
+
+    public void remove(int position){
+        itemDataList.remove(position);
+        notifyItemRemoved(position);
+    }
 }

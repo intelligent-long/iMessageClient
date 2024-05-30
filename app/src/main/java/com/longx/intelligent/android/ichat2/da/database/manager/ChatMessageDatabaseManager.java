@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.util.Size;
 
 import com.longx.intelligent.android.ichat2.da.database.helper.ChatMessageDatabaseHelper;
@@ -14,12 +13,12 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
 
-import org.apache.commons.codec.binary.Base64;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -164,5 +163,59 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
         return exists;
+    }
+
+    public boolean delete(String uuid){
+        openDatabaseIfClosed();
+        try {
+            int row = getDatabase().delete(((ChatMessageDatabaseHelper) getHelper()).getTableName(), ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + "=?", new String[]{uuid});
+            return row > 0;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public ChatMessage findNextChatMessage(Date time){
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().query(((ChatMessageDatabaseHelper) getHelper()).getTableName(), null,
+                ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME + ">" + time.getTime(), null,
+                null, null, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME, 0 + "," + 1)) {
+            if (cursor.moveToNext()) {
+                Integer type = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TYPE);
+                String uuid = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID);
+                String from = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.REAL_FROM);
+                String to = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.REAL_TO);
+                String text = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
+                Date timeFound = DatabaseUtil.getTime(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME);
+                Boolean showTime = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME);
+                Boolean viewed = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED);
+                String imageFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH);
+                String imageExtension = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_EXTENSION);
+                Integer imageWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_WIDTH);
+                Integer imageHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_HEIGHT);
+                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, null, imageExtension);
+                chatMessage.setImageFilePath(imageFilePath);
+                chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
+                chatMessage.setShowTime(Boolean.TRUE.equals(showTime));
+                chatMessage.setViewed(viewed);
+                return chatMessage;
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return null;
+    }
+
+    public boolean updateShowTime(String uuid, boolean showTime){
+        openDatabaseIfClosed();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME, showTime);
+        try {
+            int updatedNum = getDatabase().update(((ChatMessageDatabaseHelper) getHelper()).getTableName(),
+                    contentValues, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + "=?", new String[]{uuid});
+            return updatedNum > 0;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
     }
 }

@@ -60,7 +60,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private int nextPn = -1;
     private boolean reachStart;
     private int initialChatMessageCount;
-    private boolean showingMorePanel;
+    private boolean showMorePanelOnKeyboardClosed;
+    private Runnable showMessagePopupOnKeyboardClosed;
     private boolean sendingState;
 
     @Override
@@ -214,9 +215,13 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
             @Override
             public void onKeyboardClosed() {
-                if(showingMorePanel) {
+                if(showMorePanelOnKeyboardClosed) {
                     showMorePanel();
-                    showingMorePanel = false;
+                    showMorePanelOnKeyboardClosed = false;
+                }
+                if(showMessagePopupOnKeyboardClosed != null){
+                    showMessagePopupOnKeyboardClosed.run();
+                    showMessagePopupOnKeyboardClosed = null;
                 }
             }
         });
@@ -278,7 +283,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.moreButton.setOnClickListener(v -> {
             if(KeyboardVisibilityYier.isKeyboardVisible(this)) {
                 UiUtil.hideKeyboard(binding.messageInput);
-                showingMorePanel = true;
+                showMorePanelOnKeyboardClosed = true;
             }else {
                 showMorePanel();
             }
@@ -407,5 +412,9 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
     public Channel getChannel() {
         return channel;
+    }
+
+    public void setShowMessagePopupOnKeyboardClosed(Runnable showMessagePopupOnKeyboardClosed) {
+        this.showMessagePopupOnKeyboardClosed = showMessagePopupOnKeyboardClosed;
     }
 }

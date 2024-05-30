@@ -412,8 +412,12 @@ public class SharedPreferencesAccessor {
         public static void saveLastShowingTime(Context context, String channelIchatId, Date time){
             getSharedPreferences(context)
                     .edit()
-                    .putLong(channelIchatId, time.getTime())
+                    .putLong(channelIchatId, time == null ? -1 : time.getTime())
                     .apply();
+        }
+
+        public static Date getLastShowingTime(Context context, String channelIchatId){
+            return new Date(getSharedPreferences(context).getLong(channelIchatId, -1));
         }
 
         public static boolean isShowTime(Context context, String channelIchatId, Date time){

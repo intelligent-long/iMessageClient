@@ -15,6 +15,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
+import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatImageActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
@@ -32,6 +33,7 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
@@ -45,12 +47,12 @@ import java.util.Objects;
  * Created by LONG on 2024/5/15 at 1:11 PM.
  */
 public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<ChatMessagesRecyclerAdapter.ViewHolder, ChatMessagesRecyclerAdapter.ItemData> {
-    private final AppCompatActivity activity;
+    private final ChatActivity activity;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ChatMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
     private final RequestOptions requestOptions;
 
-    public ChatMessagesRecyclerAdapter(AppCompatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView) {
+    public ChatMessagesRecyclerAdapter(ChatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         requestOptions = new RequestOptions()
@@ -208,14 +210,32 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         scrollDisabler = new RecyclerViewScrollDisabler();
         recyclerView.addOnItemTouchListener(scrollDisabler);
         ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity, currentItemData.chatMessage);
+        popupWindow.setOnDeletedYier(updateNextToShowTime -> {
+            if(updateNextToShowTime){
+                itemDataList.get(position + 1).chatMessage.setShowTime(true);
+                notifyItemChanged(position + 1);
+            }
+            itemDataList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, itemDataList.size() - position);
+        });
         View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
+            UiUtil.hideKeyboard(activity);
             scrollDisabler.setScrollingDisabled(true);
             popupWindow.show(holder.binding.layoutMessageReceive, false);
             return true;
         };
         View.OnLongClickListener onMessageSendLongClickYier = v -> {
-            scrollDisabler.setScrollingDisabled(true);
-            popupWindow.show(holder.binding.layoutMessageSend, true);
+            if(KeyboardVisibilityYier.isKeyboardVisible(activity)) {
+                activity.setShowMessagePopupOnKeyboardClosed(() -> {
+                    scrollDisabler.setScrollingDisabled(true);
+                    popupWindow.show(holder.binding.layoutMessageSend, true);
+                });
+                UiUtil.hideKeyboard(activity);
+            }else {
+                scrollDisabler.setScrollingDisabled(true);
+                popupWindow.show(holder.binding.layoutMessageSend, true);
+            }
             return true;
         };
         holder.binding.layoutTextReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
