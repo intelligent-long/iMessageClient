@@ -91,17 +91,20 @@
             <com.google.android.material.button.MaterialButton
                 android:visibility="gone"
                 android:id="@+id/hold_to_talk_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="11dp"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/voice_text_switch_buttons"
                 android:layout_toStartOf="@id/buttons"
+                android:backgroundTint="?attr/colorSurfaceContainer"
                 android:text="按住 说话"
                 app:icon="@drawable/mic_fill_24px"
-                app:iconTint="@color/ichat"
-                android:textColor="@color/ichat"
+                app:iconTint="?attr/colorControlNormal"
+                android:textColor="?attr/colorControlNormal"
+                android:textSize="16sp"
+                android:fontFamily="@font/ping_fang_sc_medium"
                 app:rippleColor="@android:color/transparent"
                 app:cornerRadius="5dp" />
 

@@ -2,13 +2,17 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.bottomsheet.ChannelMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -33,6 +37,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         getUserInfoAndShow();
+        setupUi();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
@@ -41,6 +46,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     protected void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    private void setupUi() {
+        if(isSelf) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
     }
 
     private void getUserInfoAndShow() {
@@ -144,6 +153,12 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             Intent intent = new Intent(this, ChatActivity.class);
             intent.putExtra(ExtraKeys.CHANNEL, channel);
             startActivity(intent);
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.more){
+                new ChannelMoreOperationBottomSheet(this).show();
+            }
+            return true;
         });
     }
 
