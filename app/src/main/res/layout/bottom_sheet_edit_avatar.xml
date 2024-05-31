@@ -27,8 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="设置头像"
-            android:textAppearance="@style/BottomSheetItemTitle"
-            android:textSize="20sp" />
+            android:textAppearance="@style/BottomSheetItemTitle" />
     </LinearLayout>
 
     <LinearLayout
@@ -45,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="移除头像"
-            android:textAppearance="@style/BottomSheetItemTitle"
-            android:textSize="20sp"/>
+            android:textAppearance="@style/BottomSheetItemTitle"/>
     </LinearLayout>
 </LinearLayout>

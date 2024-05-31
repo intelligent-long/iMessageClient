@@ -10,5 +10,5 @@
     <color name="chat_message_receive_text">#171717</color>
     <color name="chat_message_send_text">#171717</color>
     <color name="chat_message_send_background">#87ED7B</color>
-    <color name="red_highlight">#FF263C</color>
+    <color name="action_red">#FF2637</color>
 </resources>

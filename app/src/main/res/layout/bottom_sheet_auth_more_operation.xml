@@ -27,8 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="设置服务器"
-            android:textAppearance="@style/BottomSheetItemTitle"
-            android:textSize="20sp" />
+            android:textAppearance="@style/BottomSheetItemTitle" />
     </LinearLayout>
 
     <LinearLayout
@@ -45,8 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_offline_detail"
-            android:textAppearance="@style/BottomSheetItemTitle"
-            android:textSize="20sp"/>
+            android:textAppearance="@style/BottomSheetItemTitle"/>
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +61,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="软件更新"
-            android:textAppearance="@style/BottomSheetItemTitle"
-            android:textSize="20sp"/>
+            android:textAppearance="@style/BottomSheetItemTitle"/>
     </LinearLayout>
 </LinearLayout>

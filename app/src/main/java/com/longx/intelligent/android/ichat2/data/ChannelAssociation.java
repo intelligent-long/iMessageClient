@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by LONG on 2024/5/8 at 2:06 AM.
@@ -66,5 +67,18 @@ public class ChannelAssociation {
 
     public Channel getChannel() {
         return channel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChannelAssociation that = (ChannelAssociation) o;
+        return isRequester == that.isRequester && isActive == that.isActive && Objects.equals(ichatId, that.ichatId) && Objects.equals(channelIchatId, that.channelIchatId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ichatId, channelIchatId, isRequester, isActive);
     }
 }

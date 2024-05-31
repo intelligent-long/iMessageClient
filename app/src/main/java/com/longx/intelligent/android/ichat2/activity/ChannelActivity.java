@@ -156,7 +156,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.more){
-                new ChannelMoreOperationBottomSheet(this).show();
+                new ChannelMoreOperationBottomSheet(this, channel).show();
             }
             return true;
         });

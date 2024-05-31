@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -31,7 +32,7 @@ public interface ChannelApi {
     @POST("channel/add/accept")
     CompletableCall<OperationStatus> acceptAddChannel(@Body AcceptAddChannelPostBody postBody);
 
-    @GET("channel/add/activities/unviewed_count")
+    @GET("channel/add/activities/not_viewed_count")
     CompletableCall<OperationData> fetchChannelAdditionNotViewCount();
 
     @GET("channel/add/activities")
@@ -42,4 +43,7 @@ public interface ChannelApi {
 
     @GET("channel/associations")
     CompletableCall<OperationData> fetchAllAssociations();
+
+    @POST("channel/association/delete")
+    CompletableCall<OperationStatus> deleteAssociatedChannel(@Body DeleteChannelAssociationPostBody postBody);
 }

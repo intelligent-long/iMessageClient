@@ -3,11 +3,14 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChannelApi;
 import com.xcheng.retrofit.CompletableCall;
+
+import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2024/4/28 at 1:10 AM.
@@ -67,6 +70,12 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> fetchAllAssociations(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchAllAssociations();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> deleteAssociatedChannel(LifecycleOwner lifecycleOwner, DeleteChannelAssociationPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().deleteAssociatedChannel(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

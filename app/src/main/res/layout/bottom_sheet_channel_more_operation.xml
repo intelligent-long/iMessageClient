@@ -14,7 +14,24 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:id="@+id/remove_channel"
+        android:id="@+id/note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备注"
+            android:textAppearance="@style/BottomSheetItemTitle" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/delete_channel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -27,8 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="删除频道"
-            android:textColor="@color/red_highlight"
             android:textAppearance="@style/BottomSheetItemTitle"
-            android:textSize="20sp" />
+            android:textColor="@color/action_red" />
     </LinearLayout>
 </LinearLayout>

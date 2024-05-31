@@ -16,15 +16,20 @@ import android.view.ViewGroup;
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.adapter.OpenedChatsRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
+import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.FragmentMessagesBinding;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpdateYier {
     private FragmentMessagesBinding binding;
@@ -150,6 +155,14 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
     public void onOpenedChatsUpdate() {
         if(adapter != null) {
             List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
+            List<OpenedChat> toHideOpenedChats = new ArrayList<>();
+            allShowOpenedChats.forEach(openedChat -> {
+                String channelIchatId = openedChat.getChannelIchatId();
+                if(ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId) == null){
+                    toHideOpenedChats.add(openedChat);
+                }
+            });
+            allShowOpenedChats.removeAll(toHideOpenedChats);
             adapter.changeAllItemsAndShow(allShowOpenedChats);
             if (allShowOpenedChats.size() == 0) {
                 toNoContent();
