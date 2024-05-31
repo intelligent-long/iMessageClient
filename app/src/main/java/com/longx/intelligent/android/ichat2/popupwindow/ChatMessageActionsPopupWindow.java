@@ -47,7 +47,7 @@ public class ChatMessageActionsPopupWindow {
         binding.clickViewTime.setOnClickListener(v -> {
             popupWindow.dismiss();
             String timeText = TimeUtil.formatRelativeTime(chatMessage.getTime());
-            new MessageDialog(activity, timeText).show();
+            new MessageDialog(activity, "时间", timeText).show();
         });
         binding.clickViewCopy.setOnClickListener(v -> {
             popupWindow.dismiss();

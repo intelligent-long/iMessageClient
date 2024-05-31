@@ -13,25 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
-import com.longx.intelligent.android.ichat2.activity.MainActivity;
-import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemOpenedChatBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import q.rorbin.badgeview.Badge;
 
@@ -41,6 +38,7 @@ import q.rorbin.badgeview.Badge;
 public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<OpenedChatsRecyclerAdapter.ViewHolder, OpenedChatsRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList = new ArrayList<>();
+    private OpenedChatsUpdateYier openedChatsUpdateYier;
 
     public OpenedChatsRecyclerAdapter(Activity activity) {
         this.activity = activity;
@@ -121,6 +119,12 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
             intent.putExtra(ExtraKeys.CHANNEL, channel);
             activity.startActivity(intent);
         });
+        holder.binding.clickViewHide.setOnClickListener(v -> {
+            OpenedChatDatabaseManager.getInstance().updateShow(channel.getIchatId(), false);
+            itemDataList.remove(position);
+            notifyItemRemoved(position);
+            if(openedChatsUpdateYier != null) openedChatsUpdateYier.onOpenedChatsUpdate();
+        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -143,5 +147,9 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
     public void remove(int position){
         itemDataList.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void setOpenedChatsUpdateYier(OpenedChatsUpdateYier openedChatsUpdateYier) {
+        this.openedChatsUpdateYier = openedChatsUpdateYier;
     }
 }

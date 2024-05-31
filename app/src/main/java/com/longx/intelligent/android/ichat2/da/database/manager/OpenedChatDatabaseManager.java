@@ -4,14 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import com.longx.intelligent.android.ichat2.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.ichat2.da.database.helper.OpenedChatDatabaseHelper;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +92,19 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
             }else {
                 return 0;
             }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public boolean updateShow(String channelIchatId, boolean show){
+        openDatabaseIfClosed();
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(OpenedChatDatabaseHelper.Columns.SHOW, show);
+            int rowNum = getDatabase().update(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, contentValues,
+                    OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID + "=?", new String[]{channelIchatId});
+            return rowNum > 0;
         }finally {
             releaseDatabaseIfUnused();
         }

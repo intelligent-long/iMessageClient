@@ -74,6 +74,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         channel = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.CHANNEL));
         chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
+        openedChatDatabaseManager.updateShow(channel.getIchatId(), true);
         GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
         showContent();
         setupYiers();

@@ -1,68 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.aitsuki.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/click_view"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:clickable="true"
-    android:focusable="true"
-    android:background="?attr/selectableItemBackground"
-    android:paddingHorizontal="19dp"
-    android:paddingVertical="10dp">
+    app:autoClose="true"
+    app:designer="@string/classic_designer"
+    app:preview="right">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/avatar"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_centerVertical="true"
-        app:shapeAppearanceOverlay="@style/CircleImageAppearance" />
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="#FF0000">
+
+        <LinearLayout
+            android:id="@+id/click_view_hide"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/remove_24px"
+                android:tint="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/avatar"
-        android:layout_toStartOf="@id/time_and_badge"
-        android:layout_marginStart="21dp">
+        android:layout_height="match_parent"
+        android:id="@+id/click_view"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:paddingHorizontal="19dp"
+        android:paddingVertical="10dp">
 
-        <TextView
-            android:id="@+id/name"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerVertical="true"
+            app:shapeAppearanceOverlay="@style/CircleImageAppearance" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/avatar"
+            android:layout_toStartOf="@id/time_and_badge"
+            android:layout_marginStart="21dp">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"/>
+
+            <TextView
+                android:id="@+id/newest_chat_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:layout_marginTop="3dp"
+                android:layout_below="@id/name"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/time_and_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="21sp"/>
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp">
 
-        <TextView
-            android:id="@+id/newest_chat_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:layout_marginTop="3dp"
-            android:layout_below="@id/name"/>
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="?attr/colorOutline"
+                android:layout_marginTop="7dp"/>
+
+            <LinearLayout
+                android:id="@+id/badge_host"
+                android:layout_width="30dp"
+                android:layout_height="23dp"
+                android:layout_alignEnd="@id/time"
+                android:layout_below="@id/time"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal" />
+        </RelativeLayout>
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/time_and_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp">
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOutline"
-            android:layout_marginTop="7dp"/>
-
-        <LinearLayout
-            android:id="@+id/badge_host"
-            android:layout_width="30dp"
-            android:layout_height="23dp"
-            android:layout_alignEnd="@id/time"
-            android:layout_below="@id/time"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal" />
-    </RelativeLayout>
-</RelativeLayout>
+</com.aitsuki.swipe.SwipeLayout>

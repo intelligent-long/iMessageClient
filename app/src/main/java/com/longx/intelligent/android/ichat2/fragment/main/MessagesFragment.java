@@ -120,6 +120,7 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
 
     private void setupRecyclerView() {
         adapter = new OpenedChatsRecyclerAdapter(requireActivity());
+        adapter.setOpenedChatsUpdateYier(this);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
     }
