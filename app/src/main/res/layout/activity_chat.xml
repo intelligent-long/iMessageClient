@@ -68,7 +68,7 @@
                     android:background="@drawable/ripple_round_selectable_background"
                     android:padding="11dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/keyboard_outline_24px"
+                    android:src="@drawable/short_text_24px"
                     android:tint="@color/ichat"/>
             </FrameLayout>
 
