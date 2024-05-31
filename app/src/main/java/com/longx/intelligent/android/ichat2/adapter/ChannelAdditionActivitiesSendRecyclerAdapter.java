@@ -56,7 +56,7 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
             Date o2RequestTime = o2.getChannelAdditionInfo().getRequestTime();
             Date o2RespondTime = o2.getChannelAdditionInfo().getRespondTime();
             Date o2Time = o2RespondTime == null ? o2RequestTime : o2RespondTime;
-            return o1Time.compareTo(o2Time);
+            return -o1Time.compareTo(o2Time);
         });
         this.itemDataList = itemDataList;
     }

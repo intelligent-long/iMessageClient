@@ -30,7 +30,7 @@ public class ChannelAdditionActivity extends BaseActivity {
     private ChannelAddition channelAddition;
     private boolean isRequester;
     private Channel channel;
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-HH-mm dd:MM:ss", Locale.CHINA);
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
