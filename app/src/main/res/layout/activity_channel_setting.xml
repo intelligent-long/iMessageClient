@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            style="?attr/collapsingToolbarLayoutLargeStyle"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
+            app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
+            app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
+            app:title="@string/title_channel_setting">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextAppearance.Material3.TitleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:text="备注"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextAppearance.Material3.TitleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:text="标签"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextAppearance.Material3.TitleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:text="权限"/>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete_channel"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="21dp"
+            app:icon="@drawable/person_remove_fill_24px"
+            app:iconTint="@color/action_red"
+            app:iconSize="24dp"
+            android:text="删除频道"
+            android:textSize="21sp"
+            android:paddingStart="20dp"
+            android:paddingEnd="44dp"
+            android:textColor="@color/action_red"
+            android:backgroundTint="?attr/colorSurfaceContainer" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

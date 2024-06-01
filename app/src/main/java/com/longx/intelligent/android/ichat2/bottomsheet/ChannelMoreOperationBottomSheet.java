@@ -36,11 +36,11 @@ public class ChannelMoreOperationBottomSheet extends AbstractBottomSheet{
     protected void onCreate() {
         binding = BottomSheetChannelMoreOperationBinding.inflate(getActivity().getLayoutInflater());
         setContentView(binding.getRoot());
-        setupListeners();
+        setupYiers();
     }
 
-    private void setupListeners() {
-        binding.noteAndTag.setOnClickListener(v -> {
+    private void setupYiers() {
+        binding.note.setOnClickListener(v -> {
             dismiss();
             //TODO
         });

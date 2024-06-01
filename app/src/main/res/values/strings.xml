@@ -32,6 +32,7 @@
     <string name="title_open_source_licenses">开放源代码许可</string>
     <string name="title_search_channel">搜索频道</string>
     <string name="title_request_add_channel">请求添加频道</string>
+    <string name="title_channel_setting">频道设置</string>
     <string name="navigation_drawer_open">打开抽屉</string>
     <string name="navigation_drawer_close">关闭抽屉</string>
     <string name="do_not_set">不设置</string>

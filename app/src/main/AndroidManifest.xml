@@ -16,7 +16,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
     <application
@@ -34,6 +35,10 @@
         android:theme="@style/Theme.IChat2Client"
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
+        <activity
+            android:name=".activity.ChannelSettingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChatImageActivity"
             android:exported="false"

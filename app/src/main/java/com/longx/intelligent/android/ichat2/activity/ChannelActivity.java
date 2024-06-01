@@ -190,7 +190,9 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.more){
-                new ChannelMoreOperationBottomSheet(this, channel).show();
+                Intent intent = new Intent(this, ChannelSettingActivity.class);
+                intent.putExtra(ExtraKeys.CHANNEL, channel);
+                startActivity(intent);
             }
             return true;
         });
@@ -215,5 +217,9 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                 getUserInfoAndShow();
             }
         }
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 }
