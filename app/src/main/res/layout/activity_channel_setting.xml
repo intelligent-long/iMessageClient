@@ -36,6 +36,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
+            android:id="@+id/click_view_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="15dp"
@@ -54,6 +55,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/click_view_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="15dp"
@@ -101,8 +103,8 @@
             app:iconTint="@color/action_red"
             app:iconSize="24dp"
             android:text="删除频道"
-            android:textSize="21sp"
-            android:paddingStart="20dp"
+            android:textSize="20sp"
+            android:paddingStart="21dp"
             android:paddingEnd="44dp"
             android:textColor="@color/action_red"
             android:backgroundTint="?attr/colorSurfaceContainer" />

@@ -53,6 +53,12 @@ public class ChannelSettingActivity extends BaseActivity {
                     })
                     .show();
         });
+        binding.clickViewNote.setOnClickListener(v -> {
+
+        });
+        binding.clickViewTag.setOnClickListener(v -> {
+
+        });
     }
 
     private void deleteChannel() {
