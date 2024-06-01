@@ -122,13 +122,10 @@ public class ChannelAdditionActivity extends BaseActivity {
     }
 
     private void setupYiers() {
-        setLongClickCopyYiers();
-        binding.avatar.setOnClickListener(v -> {
-            if(channel != null && channel.getAvatar() != null && channel.getAvatar().getHash() != null) {
-                Intent intent = new Intent(this, AvatarActivity.class);
+        binding.clickViewChannel.setOnClickListener(v -> {
+            if(channel != null) {
+                Intent intent = new Intent(this, ChannelActivity.class);
                 intent.putExtra(ExtraKeys.ICHAT_ID, channel.getIchatId());
-                intent.putExtra(ExtraKeys.AVATAR_HASH, channel.getAvatar().getHash());
-                intent.putExtra(ExtraKeys.AVATAR_EXTENSION, channel.getAvatar().getExtension());
                 startActivity(intent);
             }
         });
@@ -140,7 +137,7 @@ public class ChannelAdditionActivity extends BaseActivity {
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                                 super.ok(data, row, call);
-                                data.commonHandleResult(ChannelAdditionActivity.this, new int[]{-101, -102}, () -> {
+                                data.commonHandleResult(ChannelAdditionActivity.this, new int[]{-101, -102, -103}, () -> {
                                     new MessageDialog(ChannelAdditionActivity.this, "添加频道", "频道已添加").show();
                                 });
                             }
@@ -148,13 +145,6 @@ public class ChannelAdditionActivity extends BaseActivity {
                     })
                     .show();
         });
-    }
-
-    private void setLongClickCopyYiers() {
-        binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.username.getText().toString()));
-        binding.ichatIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
-        binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.email.getText().toString()));
-        binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.region.getText().toString()));
     }
 
 }

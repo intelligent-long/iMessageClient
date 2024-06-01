@@ -20,7 +20,21 @@
             app:menu="@menu/toolbar_activity_channel"/>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
     <LinearLayout
+        android:id="@+id/content_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="15dp"

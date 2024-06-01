@@ -17,18 +17,25 @@ import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseM
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChannelBinding binding;
     private Channel channel;
     private Self self;
     private boolean isSelf;
+    private boolean networkFetch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +56,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void setupUi() {
-        if(isSelf) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+        if(isSelf || networkFetch) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
     }
 
     private void getUserInfoAndShow() {
@@ -66,7 +73,34 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             if(channel != null){
                 showContent();
             }else {
-                // TODO: Fetch from server
+                networkFetch = true;
+                ChannelApiCaller.findChannelByIchatId(this, ichatId, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
+
+                    @Override
+                    public void start(Call<OperationData> call) {
+                        super.start(call);
+                        binding.contentView.setVisibility(View.GONE);
+                        binding.loadingView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                        super.ok(data, row, call);
+                        data.commonHandleResult(ChannelActivity.this, new int[]{-101}, () -> {
+                            channel = data.getData(Channel.class);
+                            if(channel != null){
+                                showContent();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void complete(Call<OperationData> call) {
+                        super.complete(call);
+                        binding.contentView.setVisibility(View.VISIBLE);
+                        binding.loadingView.setVisibility(View.GONE);
+                    }
+                });
             }
         }
     }

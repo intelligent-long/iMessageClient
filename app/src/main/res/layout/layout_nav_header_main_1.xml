@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center|bottom"
         android:orientation="vertical"
-        android:paddingTop="55dp">
+        android:paddingVertical="55dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar"
