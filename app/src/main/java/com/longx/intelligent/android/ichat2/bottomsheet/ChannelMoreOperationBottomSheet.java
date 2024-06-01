@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.longx.intelligent.android.ichat2.activity.ChatActivity;
+import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
@@ -38,7 +40,7 @@ public class ChannelMoreOperationBottomSheet extends AbstractBottomSheet{
     }
 
     private void setupListeners() {
-        binding.note.setOnClickListener(v -> {
+        binding.noteAndTag.setOnClickListener(v -> {
             dismiss();
             //TODO
         });
@@ -60,6 +62,11 @@ public class ChannelMoreOperationBottomSheet extends AbstractBottomSheet{
             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                 super.ok(data, row, call);
                 data.commonHandleResult(getActivity(), new int[]{}, () -> {
+                    ActivityOperator.getActivitiesOf(ChatActivity.class).forEach(chatActivity -> {
+                        if(chatActivity.getChannel().getIchatId().equals(channel.getIchatId())){
+                            chatActivity.finish();
+                        }
+                    });
                     getActivity().finish();
                 });
             }

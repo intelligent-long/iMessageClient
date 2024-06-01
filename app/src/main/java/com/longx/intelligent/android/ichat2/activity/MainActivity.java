@@ -32,6 +32,7 @@ import com.longx.intelligent.android.ichat2.activity.settings.RootSettingsActivi
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
@@ -397,7 +398,10 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
                 List<OpenedChat> showOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
                 showOpenedChats.forEach(showOpenedChat -> {
-                    if(showOpenedChat.getNotViewedCount() > 0) hideNavigationMessageBadge.set(false);
+                    if(ChannelDatabaseManager.getInstance().findOneChannel(showOpenedChat.getChannelIchatId()) != null) {
+                        if (showOpenedChat.getNotViewedCount() > 0)
+                            hideNavigationMessageBadge.set(false);
+                    }
                 });
                 if(hideNavigationMessageBadge.get()){
                     hideNavigationMessageBadge();
