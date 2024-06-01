@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.ichat2.behavior;
 
-import android.app.Activity;
 import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +24,6 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OfflineDetailShowYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
