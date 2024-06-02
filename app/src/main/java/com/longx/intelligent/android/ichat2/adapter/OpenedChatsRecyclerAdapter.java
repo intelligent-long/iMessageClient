@@ -86,7 +86,7 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
             }
         }
-        if(channel != null) holder.binding.name.setText(channel.getUsername());
+        if(channel != null) holder.binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
         switch (newestChatMessage.getType()){
             case ChatMessage.TYPE_TEXT:
                 String newestChatMessageText = newestChatMessage.getText();

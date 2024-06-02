@@ -88,7 +88,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
                 holder.binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        holder.binding.username.setText(itemData.channel.getUsername());
+        holder.binding.name.setText(itemData.channel.getNote() == null ? itemData.channel.getUsername() : itemData.channel.getNote());
         holder.binding.clickItem.setOnClickListener(v -> {
             getOnItemClickYier().onItemClick(position, itemData);
         });
