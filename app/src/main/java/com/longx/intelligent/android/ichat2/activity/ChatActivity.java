@@ -87,7 +87,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     }
 
     private void showContent(){
-        binding.toolbar.setTitle(channel.getUsername());
+        binding.toolbar.setTitle(channel.getNote() == null ? channel.getUsername() : channel.getNote());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
         synchronized (this) {

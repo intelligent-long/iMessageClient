@@ -126,7 +126,7 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
         }else {
             channel = itemData.channelAddition.getRequesterChannel();
         }
-        holder.binding.username.setText(channel.getUsername());
+        holder.binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
         holder.binding.message.setText(itemData.channelAddition.getMessage());
         if(channel.getAvatar() != null) {
             String avatarHash = channel.getAvatar().getHash();

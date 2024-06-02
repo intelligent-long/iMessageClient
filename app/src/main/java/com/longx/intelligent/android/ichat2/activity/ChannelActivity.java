@@ -140,6 +140,8 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(note != null){
             binding.name.setText(note);
             binding.username.setText(username);
+            binding.layoutUsername.setVisibility(View.VISIBLE);
+            binding.emailDivider.setVisibility(View.VISIBLE);
         }else {
             binding.name.setText(username);
             binding.layoutUsername.setVisibility(View.GONE);

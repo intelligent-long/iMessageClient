@@ -17,6 +17,9 @@ public class OkHttpClientCreator {
 
     public static void create(){
         client = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .cookieJar(CookieJar.get())
                 .addNetworkInterceptor(logInterceptor)
                 .build();

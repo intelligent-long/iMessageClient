@@ -114,9 +114,8 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
         boolean isCurrentUserRequester = currentUserInfo.getIchatId().equals(itemData.channelAddition.getRequesterChannel().getIchatId());
         if(isCurrentUserRequester){
             Channel channel = itemData.channelAddition.getResponderChannel();
-            String username = channel.getUsername();
             String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
-            holder.binding.username.setText(username);
+            holder.binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
             holder.binding.message.setText(itemData.channelAddition.getMessage());
             if(avatarHash == null){
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);

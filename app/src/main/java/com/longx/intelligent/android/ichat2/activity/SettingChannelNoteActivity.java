@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeUsernameActivity;
@@ -33,6 +34,7 @@ public class SettingChannelNoteActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
         binding.noteInput.setText(channel.getNote());
+        if (channel.getNote() == null) binding.deleteButton.setVisibility(View.GONE);
         setupYiers();
     }
 
@@ -45,13 +47,25 @@ public class SettingChannelNoteActivity extends BaseActivity {
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
                     data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101, -102}, () -> {
+                        binding.noteInput.setText(inputtedNote);
+                        binding.deleteButton.setVisibility(View.VISIBLE);
                         new MessageDialog(SettingChannelNoteActivity.this, "设置成功").show();
                     });
                 }
             });
         });
         binding.deleteButton.setOnClickListener(v -> {
-
+            ChannelApiCaller.deleteNoteOfAssociatedChannel(this, channel.getIchatId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                @Override
+                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                    super.ok(data, row, call);
+                    data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101}, () -> {
+                        binding.noteInput.setText(null);
+                        binding.deleteButton.setVisibility(View.GONE);
+                        new MessageDialog(SettingChannelNoteActivity.this, "已删除").show();
+                    });
+                }
+            });
         });
     }
 }

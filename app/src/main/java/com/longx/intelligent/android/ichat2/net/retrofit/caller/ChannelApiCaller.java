@@ -86,4 +86,10 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationStatus> deleteNoteOfAssociatedChannel(LifecycleOwner lifecycleOwner, String channelIchatId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().deleteNoteOfAssociatedChannel(channelIchatId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

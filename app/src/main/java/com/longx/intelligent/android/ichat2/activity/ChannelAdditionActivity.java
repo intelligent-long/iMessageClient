@@ -54,7 +54,16 @@ public class ChannelAdditionActivity extends BaseActivity {
         } else {
             GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, channel.getAvatar().getHash()), binding.avatar);
         }
-        binding.username.setText(channel.getUsername());
+        if(channel.getNote() != null){
+            binding.name.setText(channel.getNote());
+            binding.username.setText(channel.getUsername());
+            binding.layoutUsername.setVisibility(View.VISIBLE);
+            binding.emailDivider.setVisibility(View.VISIBLE);
+        }else {
+            binding.name.setText(channel.getUsername());
+            binding.layoutUsername.setVisibility(View.GONE);
+            binding.emailDivider.setVisibility(View.GONE);
+        }
         if(channel.getSex() == null || (channel.getSex() != 0 && channel.getSex() != 1)){
             binding.sexIcon.setVisibility(View.GONE);
         }else {
