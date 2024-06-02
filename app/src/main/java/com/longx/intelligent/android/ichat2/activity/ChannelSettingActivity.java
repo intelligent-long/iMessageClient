@@ -50,7 +50,7 @@ public class ChannelSettingActivity extends BaseActivity {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                new ConfirmDialog(ChannelSettingActivity.this, R.drawable.priority_high_24px_red, "是否继续？")
+                                new ConfirmDialog(ChannelSettingActivity.this, "是否继续？")
                                         .setNegativeButton(null)
                                         .setPositiveButton((dialog1, which1) -> {
                                             deleteChannel();
