@@ -1,8 +1,10 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -35,6 +37,12 @@ public class ChannelSettingActivity extends BaseActivity {
     }
 
     private void setupYiers() {
+        binding.clickViewVoiceMessage.setOnClickListener(v -> {
+            binding.switchVoiceMessage.setChecked(!binding.switchVoiceMessage.isChecked());
+        });
+        binding.clickViewRemind.setOnClickListener(v -> {
+            binding.switchRemind.setChecked(!binding.switchRemind.isChecked());
+        });
         binding.deleteChannel.setOnClickListener(v -> {
             new ConfirmDialog(this, "是否继续？")
                     .setNegativeButton(null)
@@ -42,7 +50,7 @@ public class ChannelSettingActivity extends BaseActivity {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                new ConfirmDialog(ChannelSettingActivity.this, "是否继续？")
+                                new ConfirmDialog(ChannelSettingActivity.this, R.drawable.priority_high_24px_red, "是否继续？")
                                         .setNegativeButton(null)
                                         .setPositiveButton((dialog1, which1) -> {
                                             deleteChannel();
@@ -54,7 +62,9 @@ public class ChannelSettingActivity extends BaseActivity {
                     .show();
         });
         binding.clickViewNote.setOnClickListener(v -> {
-
+            Intent intent = new Intent(this, SettingChannelNoteActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, channel);
+            startActivity(intent);
         });
         binding.clickViewTag.setOnClickListener(v -> {
 

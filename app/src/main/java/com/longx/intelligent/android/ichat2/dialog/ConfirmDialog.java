@@ -20,6 +20,7 @@ import java.util.UUID;
  * Created by LONG on 2024/1/16 at 11:43 PM.
  */
 public class ConfirmDialog extends AbstractDialog{
+    private final Integer iconId;
     private final String message;
     private final String uuid = UUID.randomUUID().toString();
     private ButtonInfo positiveButtonInfo;
@@ -27,15 +28,24 @@ public class ConfirmDialog extends AbstractDialog{
     private ButtonInfo neutralButtonInfo;
 
     public ConfirmDialog(AppCompatActivity activity, String message) {
+        this(activity, null, message);
+    }
+
+    public ConfirmDialog(AppCompatActivity activity, Integer iconId, String message) {
         super(activity, R.style.ConfirmMaterialAlertDialog);
+        this.iconId = iconId;
         this.message = message;
     }
 
     @Override
     protected AlertDialog create(MaterialAlertDialogBuilder builder) {
         builder
-                .setIcon(R.drawable.question_mark_24px_primary_tint)
                 .setTitle(uuid);
+        if(iconId == null){
+            builder.setIcon(R.drawable.question_mark_24px_primary_tint);
+        }else {
+            builder.setIcon(iconId);
+        }
         if(positiveButtonInfo != null){
             builder.setPositiveButton(positiveButtonInfo.getText() == null ? "确定" : positiveButtonInfo.getText(), positiveButtonInfo.getYier());
         }

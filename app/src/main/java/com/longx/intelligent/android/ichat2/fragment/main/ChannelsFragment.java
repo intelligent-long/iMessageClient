@@ -136,6 +136,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 self.getIchatIdUser(),
                 self.getEmail(),
                 self.getUsername(),
+                null,
                 self.getAvatar(),
                 self.getSex(),
                 self.getFirstRegion(),

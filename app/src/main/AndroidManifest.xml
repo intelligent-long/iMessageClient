@@ -36,6 +36,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.SettingChannelNoteActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.ChannelSettingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

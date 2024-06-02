@@ -13,6 +13,7 @@ public class Channel extends UserInfo implements Parcelable {
     private final String ichatIdUser;
     private final String email;
     private final String username;
+    private final String note;
     private final Avatar avatar;
     private final Integer sex;
     private final Region firstRegion;
@@ -21,14 +22,15 @@ public class Channel extends UserInfo implements Parcelable {
     private final boolean associated;
 
     public Channel() {
-        this(null, null, null, null, null, null, null, null, null, false);
+        this(null, null, null, null, null, null, null, null, null, null, false);
     }
 
-    public Channel(String ichatId, String ichatIdUser, String email, String username, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean associated) {
+    public Channel(String ichatId, String ichatIdUser, String email, String username, String note, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean associated) {
         this.ichatId = ichatId;
         this.ichatIdUser = ichatIdUser;
         this.email = email;
         this.username = username;
+        this.note = note;
         this.avatar = avatar;
         this.sex = sex;
         this.firstRegion = firstRegion;
@@ -43,6 +45,10 @@ public class Channel extends UserInfo implements Parcelable {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getNote() {
+        return note;
     }
 
     public String getIchatIdUser() {
@@ -99,6 +105,7 @@ public class Channel extends UserInfo implements Parcelable {
         ichatIdUser = in.readString();
         email = in.readString();
         username = in.readString();
+        note = in.readString();
         avatar = in.readParcelable(getClass().getClassLoader());
         sex = (Integer) in.readValue(getClass().getClassLoader());
         firstRegion = in.readParcelable(getClass().getClassLoader());
@@ -113,6 +120,7 @@ public class Channel extends UserInfo implements Parcelable {
         dest.writeString(ichatIdUser);
         dest.writeString(email);
         dest.writeString(username);
+        dest.writeString(note);
         dest.writeParcelable(avatar, flags);
         dest.writeValue(sex);
         dest.writeParcelable(firstRegion, flags);

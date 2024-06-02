@@ -30,6 +30,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String ICHAT_ID_USER = "ichat_id_user";
         public static final String EMAIL = "email";
         public static final String USERNAME = "username";
+        public static final String NOTE = "note";
         public static final String AVATAR_HASH = "avatar_hash";
         public static final String AVATAR_ICHAT_ID = "avatar_ichat_id";
         public static final String AVATAR_EXTENSION = "avatar_extension";
@@ -68,6 +69,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelsColumns.ICHAT_ID_USER + " VARCHAR,"
                 + TableChannelsColumns.EMAIL + " VARCHAR,"
                 + TableChannelsColumns.USERNAME + " VARCHAR,"
+                + TableChannelsColumns.NOTE + " VARCHAR,"
                 + TableChannelsColumns.AVATAR_HASH + " VARCHAR,"
                 + TableChannelsColumns.AVATAR_ICHAT_ID + " VARCHAR,"
                 + TableChannelsColumns.AVATAR_EXTENSION + " VARCHAR,"

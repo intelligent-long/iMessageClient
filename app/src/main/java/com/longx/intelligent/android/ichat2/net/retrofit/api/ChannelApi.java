@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.api;
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
@@ -46,4 +47,7 @@ public interface ChannelApi {
 
     @POST("channel/association/delete")
     CompletableCall<OperationStatus> deleteAssociatedChannel(@Body DeleteChannelAssociationPostBody postBody);
+
+    @POST("channel/association/note")
+    CompletableCall<OperationStatus> setNoteToAssociatedChannel(@Body SetNoteToAssociatedChannelPostBody postBody);
 }
