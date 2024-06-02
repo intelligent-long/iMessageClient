@@ -138,7 +138,7 @@
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/email_divider"
                 android:layout_width="match_parent"
-                android:layout_height="3.5dp"
+                android:layout_height="4dp"
                 style="@style/WindowBackgroundColorDividerColor"/>
 
             <LinearLayout
@@ -174,7 +174,7 @@
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/region_divider"
                 android:layout_width="match_parent"
-                android:layout_height="3.5dp"
+                android:layout_height="4dp"
                 style="@style/WindowBackgroundColorDividerColor"/>
 
             <LinearLayout
