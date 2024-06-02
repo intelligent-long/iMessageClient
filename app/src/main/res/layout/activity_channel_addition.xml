@@ -141,7 +141,7 @@
                     <LinearLayout
                         android:id="@+id/layout_username"
                         android:paddingHorizontal="20dp"
-                        android:paddingVertical="15dp"
+                        android:paddingVertical="14dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -162,7 +162,7 @@
                                 style="Theme.AppTheme.MaterialPreference.Summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
+                                android:layout_marginTop="1.5dp"
                                 android:fontFamily="@font/ping_fang_sc_medium"
                                 android:text="名称"/>
                         </LinearLayout>
@@ -171,13 +171,13 @@
                     <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/email_divider"
                         android:layout_width="match_parent"
-                        android:layout_height="4dp"
+                        android:layout_height="3.5dp"
                         style="@style/WindowBackgroundColorDividerColor"/>
 
                     <LinearLayout
                         android:id="@+id/layout_email"
                         android:paddingHorizontal="20dp"
-                        android:paddingVertical="15dp"
+                        android:paddingVertical="14dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -198,7 +198,7 @@
                                 style="Theme.AppTheme.MaterialPreference.Summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
+                                android:layout_marginTop="1.5dp"
                                 android:fontFamily="@font/ping_fang_sc_medium"
                                 android:text="邮箱"/>
                         </LinearLayout>
@@ -207,13 +207,13 @@
                     <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/region_divider"
                         android:layout_width="match_parent"
-                        android:layout_height="4dp"
+                        android:layout_height="3.5dp"
                         style="@style/WindowBackgroundColorDividerColor"/>
 
                     <LinearLayout
                         android:id="@+id/layout_region"
                         android:paddingHorizontal="20dp"
-                        android:paddingVertical="15dp"
+                        android:paddingVertical="14dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -234,7 +234,7 @@
                                 style="Theme.AppTheme.MaterialPreference.Summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
+                                android:layout_marginTop="1.5dp"
                                 android:fontFamily="@font/ping_fang_sc_medium"
                                 android:text="地区"/>
                         </LinearLayout>
@@ -251,7 +251,7 @@
                     <LinearLayout
                         android:id="@+id/layout_request_time"
                         android:paddingHorizontal="20dp"
-                        android:paddingVertical="15dp"
+                        android:paddingVertical="14dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -272,7 +272,7 @@
                                 style="Theme.AppTheme.MaterialPreference.Summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
+                                android:layout_marginTop="1.5dp"
                                 android:fontFamily="@font/ping_fang_sc_medium"
                                 android:text="请求时间"/>
                         </LinearLayout>
@@ -281,13 +281,13 @@
                     <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/respond_time_divider"
                         android:layout_width="match_parent"
-                        android:layout_height="4dp"
+                        android:layout_height="3.5dp"
                         style="@style/WindowBackgroundColorDividerColor"/>
 
                     <LinearLayout
                         android:id="@+id/layout_respond_time"
                         android:paddingHorizontal="20dp"
-                        android:paddingVertical="15dp"
+                        android:paddingVertical="14dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -308,7 +308,7 @@
                                 style="Theme.AppTheme.MaterialPreference.Summary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
+                                android:layout_marginTop="1.5dp"
                                 android:fontFamily="@font/ping_fang_sc_medium"
                                 android:text="回应时间"/>
                         </LinearLayout>
