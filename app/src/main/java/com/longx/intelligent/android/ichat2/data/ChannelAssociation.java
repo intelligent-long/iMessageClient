@@ -12,28 +12,28 @@ public class ChannelAssociation {
     private String associationId;
     private String ichatId;
     private String channelIchatId;
-    private boolean isRequester;
+    private boolean requester;
     private Date requestTime;
     private Date acceptTime;
-    private boolean isActive;
+    private boolean active;
     @JsonProperty("channel")
     private Channel channel;
 
     public ChannelAssociation() {
     }
 
-    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean isActive) {
+    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean requester, Date requestTime, Date acceptTime, boolean active) {
         this.associationId = associationId;
         this.ichatId = ichatId;
         this.channelIchatId = channelIchatId;
-        this.isRequester = isRequester;
+        this.requester = requester;
         this.requestTime = requestTime;
         this.acceptTime = acceptTime;
-        this.isActive = isActive;
+        this.active = active;
     }
 
-    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean isActive, Channel channel) {
-        this(associationId, ichatId, channelIchatId, isRequester, requestTime, acceptTime, isActive);
+    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean active, Channel channel) {
+        this(associationId, ichatId, channelIchatId, isRequester, requestTime, acceptTime, active);
         this.channel = channel;
     }
 
@@ -50,7 +50,7 @@ public class ChannelAssociation {
     }
 
     public boolean isRequester() {
-        return isRequester;
+        return requester;
     }
 
     public Date getRequestTime() {
@@ -62,7 +62,7 @@ public class ChannelAssociation {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public Channel getChannel() {
@@ -74,11 +74,11 @@ public class ChannelAssociation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChannelAssociation that = (ChannelAssociation) o;
-        return isRequester == that.isRequester && isActive == that.isActive && Objects.equals(ichatId, that.ichatId) && Objects.equals(channelIchatId, that.channelIchatId);
+        return requester == that.requester && active == that.active && Objects.equals(ichatId, that.ichatId) && Objects.equals(channelIchatId, that.channelIchatId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ichatId, channelIchatId, isRequester, isActive);
+        return Objects.hash(ichatId, channelIchatId, requester, active);
     }
 }

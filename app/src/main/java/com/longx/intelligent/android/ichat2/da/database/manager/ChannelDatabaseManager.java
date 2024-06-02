@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.longx.intelligent.android.ichat2.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -12,6 +13,7 @@ import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,7 +57,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.IS_ACTIVE, channelAssociation.isActive());
                 long id = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS, null,
                         values, SQLiteDatabase.CONFLICT_IGNORE);
-                if(id == -1){
+                if (id == -1) {
                     result.set(false);
                 }
                 ContentValues values1 = new ContentValues();
@@ -82,7 +84,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED, channel.isAssociated());
                 long id1 = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null,
                         values1, SQLiteDatabase.CONFLICT_IGNORE);
-                if(id1 == -1){
+                if (id1 == -1) {
                     result.set(false);
                 }
             });
@@ -97,8 +99,8 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         String sql = "SELECT *, " + " ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.ICHAT_ID + " AS associationTableIchatId, "
                 + " c." + ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID + " AS channelTableIchatId "
                 + " FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS + " ca "
-                + " INNER JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS + " c ON " + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID
-                + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID;
+                + " INNER JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS + " c ON " +
+                ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID;
         try(Cursor cursor = getDatabase().rawQuery(sql, null)) {
             List<ChannelAssociation> result = new ArrayList<>();
             while (cursor.moveToNext()){
@@ -145,8 +147,8 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         String sql = "SELECT *, " + " ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.ICHAT_ID + " AS associationTableIchatId, "
                 + " c." + ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID + " AS channelTableIchatId "
                 + " FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS + " ca "
-                + " INNER JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS + " c ON " + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID
-                + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID
+                + " INNER JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS + " c ON "
+                + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID
                 + " WHERE ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = " + ichatId;
         try(Cursor cursor = getDatabase().rawQuery(sql, null)) {
             cursor.moveToNext();
@@ -175,7 +177,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
             Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
             return new ChannelAssociation(associationId, associationTableIchatId, channelIchatId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
-                    new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableNote, channelTableUsername, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+                    new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
                             channelTableSex,
                             channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                             channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
@@ -207,7 +209,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             Integer channelTableThirdRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE);
             String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
             Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
-            return new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableNote, channelTableUsername, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+            return new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
                     channelTableSex,
                     channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                     channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),

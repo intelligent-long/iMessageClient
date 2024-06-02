@@ -16,6 +16,8 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -30,6 +32,7 @@ public class SettingChannelNoteActivity extends BaseActivity {
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
+        binding.noteInput.setText(channel.getNote());
         setupYiers();
     }
 
@@ -41,11 +44,14 @@ public class SettingChannelNoteActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101}, () -> {
+                    data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101, -102}, () -> {
                         new MessageDialog(SettingChannelNoteActivity.this, "设置成功").show();
                     });
                 }
             });
+        });
+        binding.deleteButton.setOnClickListener(v -> {
+
         });
     }
 }

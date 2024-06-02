@@ -60,8 +60,6 @@ public class GlobalYiersHolder {
             triggerNewContentBadgeDisplayEvent(context, (NewContentBadgeDisplayYier) yier, (NewContentBadgeDisplayYier.ID) objects[0]);
         }else if(yier instanceof ChannelAdditionActivitiesUpdateYier && clazz.isAssignableFrom(ChannelAdditionActivitiesUpdateYier.class)){
             triggerChannelAdditionActivitiesUpdateEvent((ChannelAdditionActivitiesUpdateYier) yier);
-        }else if(yier instanceof ChannelsUpdateYier && clazz.isAssignableFrom(ChannelsUpdateYier.class)){
-            triggerChannelsUpdateEvent((ChannelsUpdateYier) yier);
         }else if(yier instanceof OpenedChatsUpdateYier && clazz.isAssignableFrom(OpenedChatsUpdateYier.class)){
             triggerOpenedChatUpdateEvent((OpenedChatsUpdateYier) yier);
         }
@@ -97,10 +95,6 @@ public class GlobalYiersHolder {
 
     private static void triggerChannelAdditionActivitiesUpdateEvent(ChannelAdditionActivitiesUpdateYier yier){
         yier.onChannelAdditionActivitiesUpdate();
-    }
-
-    private static void triggerChannelsUpdateEvent(ChannelsUpdateYier yier) {
-        yier.onChannelsUpdate();
     }
 
     private static void triggerOpenedChatUpdateEvent(OpenedChatsUpdateYier yier){

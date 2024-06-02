@@ -2,17 +2,13 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-
-import androidx.appcompat.widget.Toolbar;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.bottomsheet.ChannelMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -22,6 +18,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
@@ -30,8 +27,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
+public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityChannelBinding binding;
+    private String ichatId;
     private Channel channel;
     private Self self;
     private boolean isSelf;
@@ -60,7 +58,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void getUserInfoAndShow() {
-        String ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
+        ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
         self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         isSelf = (ichatId == null && channel == null)
@@ -69,39 +67,43 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(isSelf || channel != null){
             showContent();
         }else {
-            channel = ChannelDatabaseManager.getInstance().findOneChannel(ichatId);
-            if(channel != null){
-                showContent();
-            }else {
-                networkFetch = true;
-                ChannelApiCaller.findChannelByIchatId(this, ichatId, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
+            showOrFetchAndShow(ichatId);
+        }
+    }
 
-                    @Override
-                    public void start(Call<OperationData> call) {
-                        super.start(call);
-                        binding.contentView.setVisibility(View.GONE);
-                        binding.loadingView.setVisibility(View.VISIBLE);
-                    }
+    private void showOrFetchAndShow(String ichatId) {
+        channel = ChannelDatabaseManager.getInstance().findOneChannel(ichatId);
+        if(channel != null){
+            showContent();
+        }else {
+            networkFetch = true;
+            ChannelApiCaller.findChannelByIchatId(this, ichatId, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
 
-                    @Override
-                    public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                        super.ok(data, row, call);
-                        data.commonHandleResult(ChannelActivity.this, new int[]{-101}, () -> {
-                            channel = data.getData(Channel.class);
-                            if(channel != null){
-                                showContent();
-                            }
-                        });
-                    }
+                @Override
+                public void start(Call<OperationData> call) {
+                    super.start(call);
+                    binding.contentView.setVisibility(View.GONE);
+                    binding.loadingView.setVisibility(View.VISIBLE);
+                }
 
-                    @Override
-                    public void complete(Call<OperationData> call) {
-                        super.complete(call);
-                        binding.contentView.setVisibility(View.VISIBLE);
-                        binding.loadingView.setVisibility(View.GONE);
-                    }
-                });
-            }
+                @Override
+                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                    super.ok(data, row, call);
+                    data.commonHandleResult(ChannelActivity.this, new int[]{-101}, () -> {
+                        channel = data.getData(Channel.class);
+                        if(channel != null){
+                            showContent();
+                        }
+                    });
+                }
+
+                @Override
+                public void complete(Call<OperationData> call) {
+                    super.complete(call);
+                    binding.contentView.setVisibility(View.VISIBLE);
+                    binding.loadingView.setVisibility(View.GONE);
+                }
+            });
         }
     }
 
@@ -116,7 +118,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void showSelfContent() {
         binding.addChannelButton.setVisibility(View.GONE);
         binding.sendMessageButton.setVisibility(View.GONE);
-        showContent(self.getAvatar() == null ? null : self.getAvatar().getHash(), self.getUsername(), self.getSex(), self.getIchatId(), self.getIchatIdUser(), self.getEmail(), self.buildRegionDesc());
+        showContent(self.getAvatar() == null ? null : self.getAvatar().getHash(), self.getUsername(), null, self.getSex(), self.getIchatId(), self.getIchatIdUser(), self.getEmail(), self.buildRegionDesc());
     }
 
     private void showChannelContent() {
@@ -126,16 +128,23 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }else {
             binding.sendMessageButton.setVisibility(View.GONE);
         }
-        showContent(channel.getAvatar() == null ? null : channel.getAvatar().getHash(), channel.getUsername(), channel.getSex(), channel.getIchatId(), channel.getIchatIdUser(), channel.getEmail(), channel.buildRegionDesc());
+        showContent(channel.getAvatar() == null ? null : channel.getAvatar().getHash(), channel.getUsername(), channel.getNote(), channel.getSex(), channel.getIchatId(), channel.getIchatIdUser(), channel.getEmail(), channel.buildRegionDesc());
     }
 
-    private void showContent(String avatarHash, String username, Integer sex, String ichatId, String ichatIdUser, String email, String regionDesc){
+    private void showContent(String avatarHash, String username, String note, Integer sex, String ichatId, String ichatIdUser, String email, String regionDesc){
         if (avatarHash == null) {
             GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, binding.avatar);
         } else {
             GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, avatarHash), binding.avatar);
         }
-        binding.username.setText(username);
+        if(note != null){
+            binding.name.setText(note);
+            binding.username.setText(username);
+        }else {
+            binding.name.setText(username);
+            binding.layoutUsername.setVisibility(View.GONE);
+            binding.emailDivider.setVisibility(View.GONE);
+        }
         if(sex == null || (sex != 0 && sex != 1)){
             binding.sexIcon.setVisibility(View.GONE);
         }else {
@@ -199,6 +208,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void setLongClickCopyYiers() {
+        binding.name.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.name.getText().toString()));
         binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.username.getText().toString()));
         binding.ichatIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
         binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.email.getText().toString()));
@@ -216,6 +226,9 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             if (id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)) {
                 getUserInfoAndShow();
             }
+        }
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNELS)){
+            showOrFetchAndShow(ichatId == null ? channel.getIchatId() : ichatId);
         }
     }
 
