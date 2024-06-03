@@ -51,6 +51,6 @@ public interface ChannelApi {
     @POST("channel/association/note")
     CompletableCall<OperationStatus> setNoteToAssociatedChannel(@Body SetNoteToAssociatedChannelPostBody postBody);
 
-    @POST("channel/association/{channelIchatId}/note/delete")
+    @POST("channel/association/note/delete/{channelIchatId}")
     CompletableCall<OperationStatus> deleteNoteOfAssociatedChannel(@Path("channelIchatId") String channelIchatId);
 }

@@ -240,7 +240,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 @Override
                 public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                     super.ok(data, row, call);
-                    data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
+                    data.commonHandleResult(ChatActivity.this, new int[]{-101}, () -> {
                         binding.messageInput.setText(null);
                         ChatMessage chatMessage = data.getData(ChatMessage.class);
                         chatMessage.setViewed(true);
@@ -362,7 +362,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
+                data.commonHandleResult(ChatActivity.this, new int[]{-101}, () -> {
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
                     ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
