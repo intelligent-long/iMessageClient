@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.dialog;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,6 +29,7 @@ public class CopyTextDialog extends AbstractDialog{
     @Override
     protected View createView(LayoutInflater layoutInflater) {
         DialogCopyTextBinding binding = DialogCopyTextBinding.inflate(getActivity().getLayoutInflater());
+        binding.editText.setInputType(InputType.TYPE_NULL);
         binding.editText.setText(text);
         return binding.getRoot();
     }

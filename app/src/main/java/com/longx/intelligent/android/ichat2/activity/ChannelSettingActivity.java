@@ -63,7 +63,7 @@ public class ChannelSettingActivity extends BaseActivity {
         });
         binding.clickViewNote.setOnClickListener(v -> {
             Intent intent = new Intent(this, SettingChannelNoteActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL, channel);
+            intent.putExtra(ExtraKeys.ICHAT_ID, channel.getIchatId());
             startActivity(intent);
         });
         binding.clickViewTag.setOnClickListener(v -> {

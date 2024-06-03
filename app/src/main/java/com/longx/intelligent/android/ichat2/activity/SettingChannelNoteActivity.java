@@ -8,6 +8,7 @@ import android.view.View;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeUsernameActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -24,6 +25,7 @@ import retrofit2.Response;
 
 public class SettingChannelNoteActivity extends BaseActivity {
     private ActivitySettingChannelNoteBinding binding;
+    private String channelIchatId;
     private Channel channel;
 
     @Override
@@ -32,7 +34,8 @@ public class SettingChannelNoteActivity extends BaseActivity {
         binding = ActivitySettingChannelNoteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
+        channelIchatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
+        channel = ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId);
         binding.noteInput.setText(channel.getNote());
         if (channel.getNote() == null) binding.deleteButton.setVisibility(View.GONE);
         setupYiers();
