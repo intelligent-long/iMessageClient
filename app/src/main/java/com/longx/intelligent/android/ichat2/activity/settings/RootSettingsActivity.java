@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.preference.Preference;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.color.DynamicColors;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
@@ -136,6 +137,9 @@ public class RootSettingsActivity extends BaseActivity {
             updateVersionSummary();
             updateServerSettingSummary();
             updateEmailSummary();
+            if (!DynamicColors.isDynamicColorAvailable()) {
+                preferenceUseDynamicColor.setVisible(false);
+            }
         }
 
         @Override
