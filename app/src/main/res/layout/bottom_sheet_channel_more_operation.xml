@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tint="?attr/colorSurfaceContainerHighest"
-        app:srcCompat="@drawable/shape_bottom_sheet_drag_handle_view"
-        android:layout_marginBottom="-4dp" />
+        app:srcCompat="@drawable/shape_bottom_sheet_drag_handle_view" />
 
     <LinearLayout
         android:id="@+id/note"
