@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.AddTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
@@ -48,9 +49,15 @@ public interface ChannelApi {
     @POST("channel/association/delete")
     CompletableCall<OperationStatus> deleteAssociatedChannel(@Body DeleteChannelAssociationPostBody postBody);
 
-    @POST("channel/association/note")
+    @POST("channel/association/note/set")
     CompletableCall<OperationStatus> setNoteToAssociatedChannel(@Body SetNoteToAssociatedChannelPostBody postBody);
 
     @POST("channel/association/note/delete/{channelIchatId}")
     CompletableCall<OperationStatus> deleteNoteOfAssociatedChannel(@Path("channelIchatId") String channelIchatId);
+
+    @POST("channel/association/tag/add")
+    CompletableCall<OperationStatus> addTag(@Body AddTagPostBody postBody);
+
+    @GET("channel/association/tags")
+    CompletableCall<OperationData> fetchAllTags();
 }

@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.AddTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
@@ -89,6 +90,18 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> deleteNoteOfAssociatedChannel(LifecycleOwner lifecycleOwner, String channelIchatId, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().deleteNoteOfAssociatedChannel(channelIchatId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> addTag(LifecycleOwner lifecycleOwner, AddTagPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().addTag(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> fetchAllTags(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllTags();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

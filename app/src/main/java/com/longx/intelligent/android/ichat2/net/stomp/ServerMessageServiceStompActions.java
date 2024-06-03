@@ -99,4 +99,8 @@ public class ServerMessageServiceStompActions {
         });
     }
 
+    public static void updateChannelTags(Context context){
+
+    }
+
 }

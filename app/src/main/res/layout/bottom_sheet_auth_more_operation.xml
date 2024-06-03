@@ -11,7 +11,10 @@
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/drag_handle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:tint="?attr/colorSurfaceContainerHighest"
+        app:srcCompat="@drawable/shape_bottom_sheet_drag_handle_view"
+        android:layout_marginBottom="-4dp"/>
 
     <LinearLayout
         android:id="@+id/server_setting"

@@ -21,6 +21,7 @@ import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesAc
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
+import com.longx.intelligent.android.ichat2.activity.TagActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -176,6 +177,9 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         });
         headerViewBinding.layoutNewChannel.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), ChannelAdditionActivitiesActivity.class));
+        });
+        headerViewBinding.layoutTag.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), TagActivity.class));
         });
     }
 
