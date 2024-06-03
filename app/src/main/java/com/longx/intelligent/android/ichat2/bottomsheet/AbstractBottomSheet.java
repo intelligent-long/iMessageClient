@@ -18,8 +18,15 @@ public abstract class AbstractBottomSheet {
     public AbstractBottomSheet(AppCompatActivity activity) {
         this.activity = activity;
         bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetDialog);
+    }
+
+    public void create() {
         onCreate();
-        bottomSheetDialog.setContentView(contentView);
+        if (contentView != null) {
+            bottomSheetDialog.setContentView(contentView);
+        } else {
+            throw new IllegalStateException("Content view must be set in onCreate()");
+        }
     }
 
     protected abstract void onCreate();

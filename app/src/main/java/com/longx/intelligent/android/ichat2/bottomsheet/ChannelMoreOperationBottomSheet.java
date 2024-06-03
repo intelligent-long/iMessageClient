@@ -30,6 +30,7 @@ public class ChannelMoreOperationBottomSheet extends AbstractBottomSheet{
     public ChannelMoreOperationBottomSheet(AppCompatActivity activity, Channel channel) {
         super(activity);
         this.channel = channel;
+        create();
     }
 
     @Override

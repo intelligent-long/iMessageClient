@@ -240,8 +240,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 values.put(ChannelDatabaseHelper.TableTagColumns.ID, channelTag.getId());
                 values.put(ChannelDatabaseHelper.TableTagColumns.ICHAT_ID, channelTag.getIchatId());
                 values.put(ChannelDatabaseHelper.TableTagColumns.NAME, channelTag.getName());
+                values.put(ChannelDatabaseHelper.TableTagColumns.ORDER, channelTag.getOrder());
                 long rowId = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, null,
-                        values, SQLiteDatabase.CONFLICT_IGNORE);
+                        values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (rowId == -1) {
                     result.set(false);
                 }
@@ -260,7 +261,8 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 String id = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.ID);
                 String ichatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.ICHAT_ID);
                 String name = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.NAME);
-                result.add(new ChannelTag(id, ichatId, name));
+                Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableTagColumns.RAW_ORDER);
+                result.add(new ChannelTag(id, ichatId, name, order == null ? 0 : order));
             }
             return result;
         }finally {

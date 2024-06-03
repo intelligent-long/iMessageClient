@@ -3,7 +3,8 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
-import com.longx.intelligent.android.ichat2.data.request.AddTagPostBody;
+import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
+import com.longx.intelligent.android.ichat2.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
@@ -11,8 +12,6 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChannelApi;
 import com.xcheng.retrofit.CompletableCall;
-
-import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2024/4/28 at 1:10 AM.
@@ -94,7 +93,7 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationStatus> addTag(LifecycleOwner lifecycleOwner, AddTagPostBody postBody, BaseYier<OperationStatus> yier){
+    public static CompletableCall<OperationStatus> addTag(LifecycleOwner lifecycleOwner, AddChannelTagPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().addTag(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
@@ -102,6 +101,12 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> fetchAllTags(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchAllTags();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> changeTagName(LifecycleOwner lifecycleOwner, ChangeChannelTagNamePostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().changeTagName(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

@@ -50,6 +50,8 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String ID = "id";
         public static final String ICHAT_ID = "ichat_id";
         public static final String NAME = "name";
+        public static final String ORDER = "`order`";
+        public static final String RAW_ORDER = "order";
     }
 
     public ChannelDatabaseHelper(Context context, String ichatId) {
@@ -98,6 +100,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableTagColumns.ID + " VARCHAR,"
                 + TableTagColumns.ICHAT_ID + " VARCHAR,"
                 + TableTagColumns.NAME + " VARCHAR,"
+                + TableTagColumns.ORDER + " INTEGER,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableTagColumns.ID
                 +")"

@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,6 +96,7 @@ public abstract class RetrofitApiCaller {
         private Context context;
         private boolean showErrorInfo = true;
         private boolean beCanceled;
+        private boolean showWrongMessageOnlyWithToast;
 
         public BaseCommonYier() {
         }
@@ -108,11 +110,21 @@ public abstract class RetrofitApiCaller {
             this.showErrorInfo = showErrorInfo;
         }
 
+        public BaseCommonYier<T> showWrongMessageOnlyWithToast(boolean showWrongMessageOnlyWithToast) {
+            this.showWrongMessageOnlyWithToast = showWrongMessageOnlyWithToast;
+            return this;
+        }
+
         @Override
         public void notOk(int code, String message, Response<T> row, Call<T> call) {
             if(showErrorInfo) {
                 if (context != null) {
-                    MessageDisplayer.autoShow(context, "HTTP 状态码异常  >  " + code, MessageDisplayer.Duration.LONG);
+                    String showMessage = "HTTP 状态码异常  >  " + code;
+                    if(showWrongMessageOnlyWithToast){
+                        MessageDisplayer.showToast(context, showMessage, Toast.LENGTH_LONG);
+                    }else {
+                        MessageDisplayer.autoShow(context, showMessage, MessageDisplayer.Duration.LONG);
+                    }
                 }
             }
         }
@@ -123,7 +135,12 @@ public abstract class RetrofitApiCaller {
             ErrorLogger.log(getClass(), t);
             if(showErrorInfo) {
                 if (context != null) {
-                    MessageDisplayer.autoShow(context, "无法连接到服务器 > " + t.getClass().getName(), MessageDisplayer.Duration.LONG);
+                    String showMessage = "无法连接到服务器 > " + t.getClass().getName();
+                    if(showWrongMessageOnlyWithToast){
+                        MessageDisplayer.showToast(context, showMessage, Toast.LENGTH_LONG);
+                    }else {
+                        MessageDisplayer.autoShow(context, showMessage, MessageDisplayer.Duration.LONG);
+                    }
                 }
             }
         }

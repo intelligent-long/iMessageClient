@@ -35,6 +35,7 @@ public class EditAvatarBottomSheet extends AbstractBottomSheet {
         super(activity);
         this.onClickSetAvatarYier = onClickSetAvatarYier;
         this.onClickRemoveAvatarYier = onClickRemoveAvatarYier;
+        create();
     }
 
     @Override

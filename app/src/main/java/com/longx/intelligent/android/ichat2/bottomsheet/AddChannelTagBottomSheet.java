@@ -2,7 +2,8 @@ package com.longx.intelligent.android.ichat2.bottomsheet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.longx.intelligent.android.ichat2.data.request.AddTagPostBody;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddChannelTagBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -20,6 +21,7 @@ public class AddChannelTagBottomSheet extends AbstractBottomSheet{
 
     public AddChannelTagBottomSheet(AppCompatActivity activity) {
         super(activity);
+        create();
     }
 
     @Override
@@ -32,16 +34,17 @@ public class AddChannelTagBottomSheet extends AbstractBottomSheet{
     private void setupYiers() {
         binding.addButton.setOnClickListener(v -> {
             String inputtedTagName = UiUtil.getEditTextString(binding.addTagInput);
-            AddTagPostBody postBody = new AddTagPostBody(inputtedTagName);
+            AddChannelTagPostBody postBody = new AddChannelTagPostBody(inputtedTagName);
             ChannelApiCaller.addTag(getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
                     data.commonHandleResult(getActivity(), new int[]{}, () -> {
+                        MessageDisplayer.autoShow(getActivity(), "已添加", MessageDisplayer.Duration.SHORT);
                         dismiss();
                     });
                 }
-            });
+            }.showWrongMessageOnlyWithToast(true));
         });
     }
 }

@@ -7,14 +7,16 @@ public class ChannelTag {
     private String id;
     private String ichatId;
     private String name;
+    private int order;
 
     public ChannelTag() {
     }
 
-    public ChannelTag(String id, String ichatId, String name) {
+    public ChannelTag(String id, String ichatId, String name, int order) {
         this.id = id;
         this.ichatId = ichatId;
         this.name = name;
+        this.order = order;
     }
 
     public String getId() {
@@ -27,5 +29,13 @@ public class ChannelTag {
 
     public String getName() {
         return name;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

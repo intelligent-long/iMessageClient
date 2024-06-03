@@ -16,6 +16,7 @@ public class AuthMoreOperationBottomSheet extends AbstractBottomSheet{
 
     public AuthMoreOperationBottomSheet(AppCompatActivity activity) {
         super(activity);
+        create();
     }
 
     @Override
