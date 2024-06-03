@@ -9,6 +9,7 @@ import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDataba
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
+import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.Self;
@@ -17,7 +18,6 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
@@ -42,6 +42,7 @@ public class ContentUpdater {
         String ID_CHANNEL_ADDITIONS_UNVIEWED_COUNT = "channel_additions_unviewed_count";
         String ID_CHANNELS = "channels";
         String ID_CHAT_MESSAGES = "chat_messages";
+        String ID_CHANNEL_TAGS = "channel_tags";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -136,9 +137,11 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                ChannelAdditionNotViewedCount notViewedCount = data.getData(ChannelAdditionNotViewedCount.class);
-                SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewedCount);
-                resultsYier.onResults(notViewedCount);
+                data.commonHandleSuccessResult(() -> {
+                    ChannelAdditionNotViewedCount notViewedCount = data.getData(ChannelAdditionNotViewedCount.class);
+                    SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewedCount);
+                    resultsYier.onResults(notViewedCount);
+                });
             }
         });
     }
@@ -148,11 +151,13 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                ChannelDatabaseManager.getInstance().clear();
-                List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
+                data.commonHandleSuccessResult(() -> {
+                    ChannelDatabaseManager.getInstance().clear();
+                    List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
+                    });
+                    ChannelDatabaseManager.getInstance().insertAssociationsOrIgnore(channelAssociations);
+                    resultsYier.onResults();
                 });
-                ChannelDatabaseManager.getInstance().insertOrIgnore(channelAssociations);
-                resultsYier.onResults();
             }
         });
     }
@@ -162,34 +167,51 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                List<ChatMessage> chatMessages = data.getData(new TypeReference<List<ChatMessage>>() {
-                });
-                chatMessages.sort(Comparator.comparing(ChatMessage::getTime));
-                Map<String, List<ChatMessage>> chatMessageMap = new HashMap<>();
-                AtomicInteger doneCount = new AtomicInteger();
-                chatMessages.forEach(chatMessage -> {
-                    doneCount.getAndIncrement();
-                    String other = chatMessage.getOther(context);
-                    ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
-                    if(chatMessageDatabaseManager.existsByUuid(chatMessage.getUuid())) return;
-                    chatMessage.setViewed(false);
-                    ChatMessage.mainDoOnNewChatMessage(chatMessage, context, results -> {
-                        String key = chatMessage.getOther(context);
-                        List<ChatMessage> chatMessageList;
-                        if(chatMessageMap.get(key) == null){
-                            chatMessageList = new ArrayList<>();
-                            chatMessageMap.put(key, chatMessageList);
-                        }else {
-                            chatMessageList = chatMessageMap.get(key);
-                        }
-                        chatMessageList.add(chatMessage);
-                        if(doneCount.get() == chatMessages.size()){
-                            chatMessageMap.forEach((s, list) -> {
-                                OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, list.size(), true));
-                            });
-                            resultsYier.onResults(chatMessages);
-                        }
+                data.commonHandleSuccessResult(() -> {
+                    List<ChatMessage> chatMessages = data.getData(new TypeReference<List<ChatMessage>>() {
                     });
+                    chatMessages.sort(Comparator.comparing(ChatMessage::getTime));
+                    Map<String, List<ChatMessage>> chatMessageMap = new HashMap<>();
+                    AtomicInteger doneCount = new AtomicInteger();
+                    chatMessages.forEach(chatMessage -> {
+                        doneCount.getAndIncrement();
+                        String other = chatMessage.getOther(context);
+                        ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
+                        if (chatMessageDatabaseManager.existsByUuid(chatMessage.getUuid())) return;
+                        chatMessage.setViewed(false);
+                        ChatMessage.mainDoOnNewChatMessage(chatMessage, context, results -> {
+                            String key = chatMessage.getOther(context);
+                            List<ChatMessage> chatMessageList;
+                            if (chatMessageMap.get(key) == null) {
+                                chatMessageList = new ArrayList<>();
+                                chatMessageMap.put(key, chatMessageList);
+                            } else {
+                                chatMessageList = chatMessageMap.get(key);
+                            }
+                            chatMessageList.add(chatMessage);
+                            if (doneCount.get() == chatMessages.size()) {
+                                chatMessageMap.forEach((s, list) -> {
+                                    OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, list.size(), true));
+                                });
+                                resultsYier.onResults(chatMessages);
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    }
+
+    public static void updateChannelTags(Context context, ResultsYier resultsYier){
+        ChannelApiCaller.fetchAllTags(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNEL_TAGS, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                data.commonHandleSuccessResult(() -> {
+                    List<ChannelTag> channelTags = data.getData(new TypeReference<List<ChannelTag>>() {
+                    });
+                    ChannelDatabaseManager.getInstance().insertTagsOrIgnore(channelTags);
+                    resultsYier.onResults();
                 });
             }
         });

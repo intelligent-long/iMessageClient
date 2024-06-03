@@ -2,16 +2,26 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.adapter.ChannelTagsRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddChannelTagBottomSheet;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTagBinding;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
-public class TagActivity extends BaseActivity {
+import java.util.List;
+
+public class TagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityTagBinding binding;
 
     @Override
@@ -22,10 +32,28 @@ public class TagActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         showContent();
         setUpYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void showContent() {
-
+        List<ChannelTag> allChannelTags = ChannelDatabaseManager.getInstance().findAllChannelTags();
+        if(allChannelTags.size() == 0){
+            binding.noContentLayout.setVisibility(View.VISIBLE);
+            binding.recyclerView.setVisibility(View.GONE);
+        }else {
+            binding.noContentLayout.setVisibility(View.GONE);
+            binding.recyclerView.setVisibility(View.VISIBLE);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            binding.recyclerView.setLayoutManager(layoutManager);
+            ChannelTagsRecyclerAdapter adapter = new ChannelTagsRecyclerAdapter(this, allChannelTags);
+            binding.recyclerView.setAdapter(adapter);
+        }
     }
 
     private void setUpYiers() {
@@ -35,5 +63,17 @@ public class TagActivity extends BaseActivity {
             }
             return true;
         });
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
+            showContent();
+        }
     }
 }

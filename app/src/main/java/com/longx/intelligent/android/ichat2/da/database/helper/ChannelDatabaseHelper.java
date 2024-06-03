@@ -13,6 +13,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final int DATABASE_VERSION = 1;
         public static final String TABLE_NAME_CHANNEL_ASSOCIATIONS = "channel_associations";
         public static final String TABLE_NAME_CHANNELS = "channels";
+        public static final String TABLE_NAME_TAGS = "tags";
     }
 
     public static class TableChannelAssociationsColumns {
@@ -43,6 +44,12 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String THIRD_REGION_ADCODE = "third_region_adcode";
         public static final String THIRD_REGION_NAME = "third_region_name";
         public static final String ASSOCIATED = "associated";
+    }
+
+    public static class TableTagColumns {
+        public static final String ID = "id";
+        public static final String ICHAT_ID = "ichat_id";
+        public static final String NAME = "name";
     }
 
     public ChannelDatabaseHelper(Context context, String ichatId) {
@@ -87,6 +94,15 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 +")"
                 + ");";
         db.execSQL(create_sql_2);
+        String create_sql_3 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_TAGS + "("
+                + TableTagColumns.ID + " VARCHAR,"
+                + TableTagColumns.ICHAT_ID + " VARCHAR,"
+                + TableTagColumns.NAME + " VARCHAR,"
+                + " CONSTRAINT con_unique1 UNIQUE("
+                + TableTagColumns.ID
+                +")"
+                + ");";
+        db.execSQL(create_sql_3);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
 

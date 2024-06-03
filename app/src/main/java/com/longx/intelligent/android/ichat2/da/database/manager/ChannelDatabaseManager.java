@@ -4,16 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.longx.intelligent.android.ichat2.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Avatar;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +41,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         return InstanceHolder.instance;
     }
 
-    public boolean insertOrIgnore(List<ChannelAssociation> channelAssociations){
+    public boolean insertAssociationsOrIgnore(List<ChannelAssociation> channelAssociations){
         AtomicBoolean result = new AtomicBoolean(true);
         openDatabaseIfClosed();
         try {
@@ -227,6 +226,43 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         try {
             getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS, "1=1", null);
             getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, "1=1", null);
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public boolean insertTagsOrIgnore(List<ChannelTag> channelTags){
+        AtomicBoolean result = new AtomicBoolean(true);
+        openDatabaseIfClosed();
+        try {
+            channelTags.forEach(channelTag -> {
+                ContentValues values = new ContentValues();
+                values.put(ChannelDatabaseHelper.TableTagColumns.ID, channelTag.getId());
+                values.put(ChannelDatabaseHelper.TableTagColumns.ICHAT_ID, channelTag.getIchatId());
+                values.put(ChannelDatabaseHelper.TableTagColumns.NAME, channelTag.getName());
+                long rowId = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, null,
+                        values, SQLiteDatabase.CONFLICT_IGNORE);
+                if (rowId == -1) {
+                    result.set(false);
+                }
+            });
+            return result.get();
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public List<ChannelTag> findAllChannelTags(){
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().query(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, null, "1=1", null, null, null, null)){
+            List<ChannelTag> result = new ArrayList<>();
+            while (cursor.moveToNext()){
+                String id = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.ID);
+                String ichatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.ICHAT_ID);
+                String name = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.NAME);
+                result.add(new ChannelTag(id, ichatId, name));
+            }
+            return result;
         }finally {
             releaseDatabaseIfUnused();
         }

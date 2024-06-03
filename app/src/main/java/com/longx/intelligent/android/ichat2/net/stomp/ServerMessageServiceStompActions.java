@@ -100,7 +100,8 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateChannelTags(Context context){
-
+        ContentUpdater.updateChannelTags(context, results -> {
+        });
     }
 
 }
