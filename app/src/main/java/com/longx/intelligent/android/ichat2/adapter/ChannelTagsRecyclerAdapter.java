@@ -80,7 +80,7 @@ public class ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Cha
         });
         holder.binding.content.setOnClickListener(v -> {
             Intent intent = new Intent(activity, TagChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL_TAG, channelTag);
+            intent.putExtra(ExtraKeys.CHANNEL_TAG_ID, channelTag.getId());
             activity.startActivity(intent);
         });
     }

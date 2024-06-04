@@ -280,9 +280,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
 
     public List<ChannelTag> findAllChannelTags(){
         openDatabaseIfClosed();
-        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t "
-                + "LEFT JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + " tc "
-                + "ON t." + ChannelDatabaseHelper.TableTagsColumns.ID + " = tc." + ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, null)){
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t"
+                + " LEFT JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + " tc"
+                + " ON t." + ChannelDatabaseHelper.TableTagsColumns.ID + " = tc." + ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, null)){
             List<ChannelTag> result = new ArrayList<>();
             String currentTagId = null;
             ChannelTag channelTag = null;
@@ -316,6 +316,51 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 result.add(channelTag);
             }
             return result;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+
+    public ChannelTag findOneChannelTags(String tagId){
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t"
+                + " LEFT JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + " tc"
+                + " ON t." + ChannelDatabaseHelper.TableTagsColumns.ID + " = tc." + ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID
+                + " WHERE t." + ChannelDatabaseHelper.TableTagsColumns.ID + " = \"" + tagId + "\"", null)){
+            List<ChannelTag> result = new ArrayList<>();
+            String currentTagId = null;
+            ChannelTag channelTag = null;
+            List<String> channelIds = null;
+            while (cursor.moveToNext()){
+                String tagIdFound = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ID);
+                String ichatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ICHAT_ID);
+                String name = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.NAME);
+                Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableTagsColumns.RAW_ORDER);
+                String channelIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagChannelsColumns.ICHAT_ID);
+                if (currentTagId == null) {
+                    currentTagId = tagIdFound;
+                    channelIds = new ArrayList<>();
+                    if(channelIchatId != null) channelIds.add(channelIchatId);
+                    channelTag = new ChannelTag(tagIdFound, ichatId, name, order == null ? -1 : order, null);
+                } else {
+                    if (currentTagId.equals(tagIdFound)) {
+                        if(channelIchatId != null) channelIds.add(channelIchatId);
+                    } else {
+                        channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                        result.add(channelTag);
+                        channelIds = new ArrayList<>();
+                        currentTagId = tagIdFound;
+                        if(channelIchatId != null) channelIds.add(channelIchatId);
+                        channelTag = new ChannelTag(tagIdFound, ichatId, name, order == null ? -1 : order, null);
+                    }
+                }
+            }
+            if(channelTag != null) {
+                channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                result.add(channelTag);
+            }
+            return result.get(0);
         }finally {
             releaseDatabaseIfUnused();
         }

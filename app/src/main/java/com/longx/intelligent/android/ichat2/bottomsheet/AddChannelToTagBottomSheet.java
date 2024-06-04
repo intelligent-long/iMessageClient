@@ -10,6 +10,7 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
+import com.longx.intelligent.android.ichat2.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddChannelTagBinding;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddChannelToTagBinding;
@@ -59,7 +60,20 @@ public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
 
     private void setupYiers() {
         binding.addButton.setOnClickListener(v -> {
-
+            List<Channel> checkedChannels = adapter.getCheckedChannels();
+            List<String> checkedChannelIchatIds = new ArrayList<>();
+            checkedChannels.forEach(channel -> checkedChannelIchatIds.add(channel.getIchatId()));
+            AddChannelsToTagPostBody postBody = new AddChannelsToTagPostBody(channelTag.getId(), checkedChannelIchatIds);
+            ChannelApiCaller.addChannelsToTag(getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
+                @Override
+                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                    super.ok(data, row, call);
+                    data.commonHandleResult(getActivity(), new int[]{}, () -> {
+                        MessageDisplayer.autoShow(getActivity(), "已添加", MessageDisplayer.Duration.SHORT);
+                        dismiss();
+                    });
+                }
+            });
         });
     }
 }

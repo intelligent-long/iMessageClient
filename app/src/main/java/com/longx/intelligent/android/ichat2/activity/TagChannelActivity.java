@@ -10,17 +10,27 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.adapter.TagChannelsRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddChannelToTagBottomSheet;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTagChannelBinding;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
-public class TagChannelActivity extends BaseActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TagChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityTagChannelBinding binding;
     private ChannelTag channelTag;
+    private TagChannelsRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +38,21 @@ public class TagChannelActivity extends BaseActivity {
         binding = ActivityTagChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        channelTag = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_TAG);
+        findChannelTag();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    private void findChannelTag() {
+        String channelTagId = getIntent().getStringExtra(ExtraKeys.CHANNEL_TAG_ID);
+        channelTag = ChannelDatabaseManager.getInstance().findOneChannelTags(channelTagId);
     }
 
     private void showContent() {
@@ -39,6 +61,15 @@ public class TagChannelActivity extends BaseActivity {
             toNoContent();
         }else {
             toContent();
+            binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            List<String> channelIchatIds = channelTag.getChannelIchatIdList();
+            List<Channel> channels = new ArrayList<>();
+            channelIchatIds.forEach(channelIchatId -> {
+                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId);
+                channels.add(channel);
+            });
+            adapter = new TagChannelsRecyclerAdapter(this, channels);
+            binding.recyclerView.setAdapter(adapter);
         }
     }
 
@@ -65,5 +96,18 @@ public class TagChannelActivity extends BaseActivity {
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         binding.noContentLayout.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
+            findChannelTag();
+            showContent();
+        }
     }
 }
