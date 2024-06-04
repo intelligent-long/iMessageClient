@@ -7,6 +7,7 @@ import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
+import com.longx.intelligent.android.ichat2.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SortTagsPostBody;
@@ -14,6 +15,8 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChannelApi;
 import com.xcheng.retrofit.CompletableCall;
+
+import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2024/4/28 at 1:10 AM.
@@ -121,6 +124,18 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> addChannelsToTag(LifecycleOwner lifecycleOwner, AddChannelsToTagPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().addChannelsToTag(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> removeChannelsOfTag(LifecycleOwner lifecycleOwner, RemoveChannelsOfTagPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().removeChannelsOfTag(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> deleteChannelTag(LifecycleOwner lifecycleOwner, String tagId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().deleteChannelTag(tagId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

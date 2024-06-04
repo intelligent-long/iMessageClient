@@ -2,6 +2,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="collapsing_toolbar_layout_expanded_title_margin_start_smaller">21dp</dimen>
     <dimen name="collapsing_toolbar_layout_expanded_title_margin_start">23dp</dimen>
     <dimen name="collapsing_toolbar_layout_expanded_title_margin_start_larger">28dp</dimen>
     <dimen name="collapsing_toolbar_layout_expanded_title_margin_bottom">34dp</dimen>

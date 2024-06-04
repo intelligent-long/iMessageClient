@@ -1,20 +1,29 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.ChannelTag;
+import com.longx.intelligent.android.ichat2.data.request.RemoveChannelsOfTagPostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -22,15 +31,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 /**
  * Created by LONG on 2024/4/25 at 5:35 PM.
  */
 public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<TagChannelsRecyclerAdapter.ViewHolder, TagChannelsRecyclerAdapter.ItemData> {
-    private final Activity activity;
+    private final AppCompatActivity activity;
+    private final ChannelTag channelTag;
     private final List<ItemData> itemDataList;
 
-    public TagChannelsRecyclerAdapter(Activity activity, List<Channel> channels) {
+    public TagChannelsRecyclerAdapter(AppCompatActivity activity, ChannelTag channelTag, List<Channel> channels) {
         this.activity = activity;
+        this.channelTag = channelTag;
         this.itemDataList = new ArrayList<>();
         channels.forEach(channel -> {
             this.itemDataList.add(new ItemData(channel));
@@ -111,6 +125,25 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
             intent.putExtra(ExtraKeys.ICHAT_ID, itemData.channel.getIchatId());
             intent.putExtra(ExtraKeys.CHANNEL, itemData.channel);
             activity.startActivity(intent);
+        });
+        holder.binding.clickViewRemove.setOnClickListener(v -> {
+            new ConfirmDialog(activity, "是否继续？")
+                    .setNegativeButton(null)
+                    .setPositiveButton((dialog, which) -> {
+                        List<String> channelIchatIdList = new ArrayList<>();
+                        channelIchatIdList.add(itemData.channel.getIchatId());
+                        RemoveChannelsOfTagPostBody postBody = new RemoveChannelsOfTagPostBody(channelTag.getId(), channelIchatIdList);
+                        ChannelApiCaller.removeChannelsOfTag(activity, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                                super.ok(data, row, call);
+                                data.commonHandleResult(activity, new int[]{}, () -> {
+                                    MessageDisplayer.autoShow(activity, "已移除", MessageDisplayer.Duration.SHORT);
+                                });
+                            }
+                        });
+                    })
+                    .show();
         });
     }
 }

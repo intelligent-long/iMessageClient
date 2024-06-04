@@ -71,7 +71,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
                 Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId);
                 channels.add(channel);
             });
-            adapter = new TagChannelsRecyclerAdapter(this, channels);
+            adapter = new TagChannelsRecyclerAdapter(this, channelTag, channels);
             binding.recyclerView.setAdapter(adapter);
         }
         List<ChannelAssociation> allAssociations = ChannelDatabaseManager.getInstance().findAllAssociations();
@@ -82,7 +82,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
                 canAddChannels.add(channel);
             }
         });
-        UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.add_channel), !canAddChannels.isEmpty());
+        binding.toolbar.getMenu().findItem(R.id.add_channel).setVisible(!canAddChannels.isEmpty());
     }
 
     private void setupYiers() {

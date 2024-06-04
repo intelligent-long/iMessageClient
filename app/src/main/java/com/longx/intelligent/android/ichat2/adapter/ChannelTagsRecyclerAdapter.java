@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.TagChannelActivity;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.RenameChannelTagBottomSheet;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelTagBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -23,16 +29,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 /**
  * Created by LONG on 2024/6/3 at 8:47 PM.
  */
-public class ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelTagsRecyclerAdapter.ViewHolder, List<ChannelTag>> {
-    private final Activity activity;
+public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelTagsRecyclerAdapter.ViewHolder, List<ChannelTag>> {
+    private final AppCompatActivity activity;
     private List<ChannelTag> pastChannelTags;
     private List<ChannelTag> channelTags;
     private boolean dragSortState;
 
-    public ChannelTagsRecyclerAdapter(Activity activity, List<ChannelTag> channelTags) {
+    public ChannelTagsRecyclerAdapter(AppCompatActivity activity, List<ChannelTag> channelTags) {
         this.activity = activity;
         this.channelTags = channelTags;
         channelTags.sort(Comparator.comparingInt(ChannelTag::getOrder));
@@ -72,16 +81,29 @@ public class ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Cha
 
     private void setUpYiers(ViewHolder holder, int position) {
         ChannelTag channelTag = channelTags.get(position);
-        holder.binding.clickViewRename.setOnClickListener(v -> {
-            new RenameChannelTagBottomSheet((AppCompatActivity) activity, channelTag).show();
-        });
-        holder.binding.clickViewDelete.setOnClickListener(v -> {
-
-        });
         holder.binding.content.setOnClickListener(v -> {
             Intent intent = new Intent(activity, TagChannelActivity.class);
             intent.putExtra(ExtraKeys.CHANNEL_TAG_ID, channelTag.getId());
             activity.startActivity(intent);
+        });
+        holder.binding.clickViewRename.setOnClickListener(v -> {
+            new RenameChannelTagBottomSheet(activity, channelTag).show();
+        });
+        holder.binding.clickViewDelete.setOnClickListener(v -> {
+            new ConfirmDialog(activity, "是否继续？")
+                    .setNegativeButton(null)
+                    .setPositiveButton((dialog, which) -> {
+                        ChannelApiCaller.deleteChannelTag(activity, channelTag.getId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                                super.ok(data, row, call);
+                                data.commonHandleResult(activity, new int[]{}, () -> {
+                                    MessageDisplayer.autoShow(activity, "已删除", MessageDisplayer.Duration.SHORT);
+                                });
+                            }
+                        });
+                    })
+                    .show();
         });
     }
 

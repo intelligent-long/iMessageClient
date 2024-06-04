@@ -84,7 +84,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
 
     private void setUpYiers() {
         dragSortRecycler = new DragSortRecycler();
-        dragSortRecycler.setViewHandleId(R.id.content);
+        dragSortRecycler.setViewHandleId(R.id.drag_handle);
         dragSortRecycler.setFloatingBgColor(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         dragSortRecycler.setFloatingAlpha(1F);
         dragSortRecycler.setOnItemMovedListener((from, to) -> {

@@ -5,6 +5,7 @@ import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
+import com.longx.intelligent.android.ichat2.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SortTagsPostBody;
@@ -72,4 +73,10 @@ public interface ChannelApi {
 
     @POST("channel/association/tag/channel/add")
     CompletableCall<OperationStatus> addChannelsToTag(@Body AddChannelsToTagPostBody postBody);
+
+    @POST("channel/association/tag/channel/remove")
+    CompletableCall<OperationStatus> removeChannelsOfTag(@Body RemoveChannelsOfTagPostBody postBody);
+
+    @POST("channel/association/tag/delete/{tagId}")
+    CompletableCall<OperationStatus> deleteChannelTag(@Path("tagId") String tagId);
 }
