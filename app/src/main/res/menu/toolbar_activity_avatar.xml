@@ -6,6 +6,6 @@
         android:id="@+id/save_avatar"
         android:title="保存"
         android:icon="@drawable/save_fill_24px"
-        app:iconTint="?android:attr/colorControlNormal"
+        app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always"/>
 </menu>

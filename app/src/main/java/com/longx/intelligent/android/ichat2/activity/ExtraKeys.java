@@ -21,4 +21,5 @@ public class ExtraKeys {
     public static final String FILE_NAMES = "file_names";
     public static final String CHAT_MESSAGES = "chat_messages";
     public static final String ICHAT_IDS = "ichat_ids";
+    public static final String CHANNEL_TAG = "channel_tag";
 }

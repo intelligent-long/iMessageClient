@@ -4,10 +4,12 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
+import com.longx.intelligent.android.ichat2.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChannelApi;
@@ -107,6 +109,18 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> changeTagName(LifecycleOwner lifecycleOwner, ChangeChannelTagNamePostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().changeTagName(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> sortChannelTags(LifecycleOwner lifecycleOwner, SortTagsPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().sortChannelTags(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> addChannelsToTag(LifecycleOwner lifecycleOwner, AddChannelsToTagPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().addChannelsToTag(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

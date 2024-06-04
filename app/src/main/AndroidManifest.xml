@@ -36,6 +36,9 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.TagChannelActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.TagActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

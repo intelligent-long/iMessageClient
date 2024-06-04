@@ -14,6 +14,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TABLE_NAME_CHANNEL_ASSOCIATIONS = "channel_associations";
         public static final String TABLE_NAME_CHANNELS = "channels";
         public static final String TABLE_NAME_TAGS = "tags";
+        public static final String TABLE_NAME_TAG_CHANNELS = "tag_channels";
     }
 
     public static class TableChannelAssociationsColumns {
@@ -46,12 +47,18 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String ASSOCIATED = "associated";
     }
 
-    public static class TableTagColumns {
+    public static class TableTagsColumns {
         public static final String ID = "id";
         public static final String ICHAT_ID = "ichat_id";
         public static final String NAME = "name";
         public static final String ORDER = "`order`";
         public static final String RAW_ORDER = "order";
+    }
+
+    public static class TableTagChannelsColumns {
+        public static final String TAG_ID = "tag_id";
+        public static final String ICHAT_ID = "ichat_id";
+
     }
 
     public ChannelDatabaseHelper(Context context, String ichatId) {
@@ -97,15 +104,20 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + ");";
         db.execSQL(create_sql_2);
         String create_sql_3 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_TAGS + "("
-                + TableTagColumns.ID + " VARCHAR,"
-                + TableTagColumns.ICHAT_ID + " VARCHAR,"
-                + TableTagColumns.NAME + " VARCHAR,"
-                + TableTagColumns.ORDER + " INTEGER,"
+                + TableTagsColumns.ID + " VARCHAR,"
+                + TableTagsColumns.ICHAT_ID + " VARCHAR,"
+                + TableTagsColumns.NAME + " VARCHAR,"
+                + TableTagsColumns.ORDER + " INTEGER,"
                 + " CONSTRAINT con_unique1 UNIQUE("
-                + TableTagColumns.ID
+                + TableTagsColumns.ID
                 +")"
                 + ");";
         db.execSQL(create_sql_3);
+        String create_sql_4 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_TAG_CHANNELS + "("
+                + TableTagChannelsColumns.TAG_ID + " VARCHAR,"
+                + TableTagChannelsColumns.ICHAT_ID + " VARCHAR"
+                + ");";
+        db.execSQL(create_sql_4);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
 

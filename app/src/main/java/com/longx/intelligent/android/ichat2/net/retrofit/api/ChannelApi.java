@@ -2,10 +2,12 @@ package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
 import com.longx.intelligent.android.ichat2.data.request.AcceptAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
+import com.longx.intelligent.android.ichat2.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
@@ -64,4 +66,10 @@ public interface ChannelApi {
 
     @POST("channel/association/tag/name/change")
     CompletableCall<OperationStatus> changeTagName(@Body ChangeChannelTagNamePostBody postBody);
+
+    @POST("channel/association/tag/sort")
+    CompletableCall<OperationStatus> sortChannelTags(@Body SortTagsPostBody postBody);
+
+    @POST("channel/association/tag/channel/add")
+    CompletableCall<OperationStatus> addChannelsToTag(@Body AddChannelsToTagPostBody postBody);
 }

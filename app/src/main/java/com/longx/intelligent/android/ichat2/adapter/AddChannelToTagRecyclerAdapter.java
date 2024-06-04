@@ -10,24 +10,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.data.Channel;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemAddChannelToTagBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by LONG on 2024/4/25 at 5:35 PM.
+ * Created by LONG on 2024/6/4 at 5:36 PM.
  */
-public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelsRecyclerAdapter.ViewHolder, ChannelsRecyclerAdapter.ItemData> {
+public class AddChannelToTagRecyclerAdapter extends WrappableRecyclerViewAdapter<AddChannelToTagRecyclerAdapter.ViewHolder, AddChannelToTagRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
 
-    public ChannelsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
+    public AddChannelToTagRecyclerAdapter(Activity activity, List<Channel> channelList) {
         this.activity = activity;
-        this.itemDataList = itemDataList;
+        this.itemDataList = new ArrayList<>();
+        channelList.forEach(channel -> {
+            this.itemDataList.add(new ItemData(channel));
+        });
         itemDataList.sort(Comparator.comparing(o -> o.indexChar));
     }
 
@@ -53,8 +57,8 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemChannelBinding binding;
-        public ViewHolder(RecyclerItemChannelBinding binding) {
+        private RecyclerItemAddChannelToTagBinding binding;
+        public ViewHolder(RecyclerItemAddChannelToTagBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -62,14 +66,19 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
 
     @NonNull
     @Override
-    public ChannelsRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemChannelBinding binding = RecyclerItemChannelBinding.inflate(activity.getLayoutInflater());
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerItemAddChannelToTagBinding binding = RecyclerItemAddChannelToTagBinding.inflate(activity.getLayoutInflater(), parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChannelsRecyclerAdapter.ViewHolder holder, int position) {
-        ItemData itemData = itemDataList.get(position);
+    public int getItemCount() {
+        return itemDataList.size();
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        AddChannelToTagRecyclerAdapter.ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.channel.getAvatar() == null ? null : itemData.channel.getAvatar().getHash();
         if (avatarHash == null) {
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
@@ -81,7 +90,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
         if(position == 0){
             holder.binding.indexBar.setVisibility(View.VISIBLE);
         } else {
-            ItemData previousItemData = itemDataList.get(previousPosition);
+            AddChannelToTagRecyclerAdapter.ItemData previousItemData = itemDataList.get(previousPosition);
             if (previousItemData.indexChar.equals(itemData.indexChar)) {
                 holder.binding.indexBar.setVisibility(View.GONE);
             } else {
@@ -89,13 +98,13 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
             }
         }
         holder.binding.name.setText(itemData.channel.getNote() == null ? itemData.channel.getUsername() : itemData.channel.getNote());
-        holder.binding.clickView.setOnClickListener(v -> {
-            getOnItemClickYier().onItemClick(position, itemData);
-        });
+        setupYiers(holder, position);
     }
 
-    @Override
-    public int getItemCount() {
-        return itemDataList.size();
+    private void setupYiers(ViewHolder holder, int position) {
+        AddChannelToTagRecyclerAdapter.ItemData itemData = itemDataList.get(position);
+        holder.binding.clickView.setOnClickListener(v -> {
+
+        });
     }
 }

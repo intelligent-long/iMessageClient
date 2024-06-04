@@ -152,7 +152,7 @@ public class ContentUpdater {
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
                 data.commonHandleSuccessResult(() -> {
-                    ChannelDatabaseManager.getInstance().clear();
+                    ChannelDatabaseManager.getInstance().clearChannels();
                     List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
                     });
                     ChannelDatabaseManager.getInstance().insertAssociationsOrIgnore(channelAssociations);
@@ -210,6 +210,7 @@ public class ContentUpdater {
                 data.commonHandleSuccessResult(() -> {
                     List<ChannelTag> channelTags = data.getData(new TypeReference<List<ChannelTag>>() {
                     });
+                    ChannelDatabaseManager.getInstance().clearChannelTags();
                     ChannelDatabaseManager.getInstance().insertTagsOrIgnore(channelTags);
                     resultsYier.onResults();
                 });

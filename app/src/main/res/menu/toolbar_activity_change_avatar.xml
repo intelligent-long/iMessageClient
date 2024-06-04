@@ -6,7 +6,7 @@
         android:id="@+id/rotate"
         android:title="旋转"
         android:icon="@drawable/rotate_right_24px"
-        app:iconTint="?android:attr/colorControlNormal"
+        app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always"/>
 
     <item

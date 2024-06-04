@@ -20,15 +20,14 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
-            app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_tag">
+            app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:menu="@menu/toolbar_activity_tag"/>
+                app:menu="@menu/toolbar_activity_tag_channel"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

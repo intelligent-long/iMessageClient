@@ -28,45 +28,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="更改标签名称"
+            android:text="添加频道"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
             android:textSize="30sp"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/done_button"
+            android:id="@+id/add_button"
             android:layout_width="107dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_margin="20dp"
             android:gravity="center"
-            android:text="完成"
+            android:text="添加"
             app:cornerRadius="13dp"
             app:icon="@drawable/check_24px"
             app:iconGravity="textStart" />
     </RelativeLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tag_name_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.longx.intelligent.android.lib.recyclerview.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
-        android:paddingBottom="20dp"
-        app:boxCornerRadiusBottomEnd="100dp"
-        app:boxCornerRadiusBottomStart="100dp"
-        app:boxCornerRadiusTopEnd="100dp"
-        app:boxCornerRadiusTopStart="100dp"
-        app:boxStrokeColor="@color/selector_text_input_layout_stroke">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tag_name_input"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:padding="0dp"
-            android:hint="标签"
-            android:inputType="text"
-            android:maxLines="1"
-            android:selectAllOnFocus="true" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

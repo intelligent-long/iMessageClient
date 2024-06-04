@@ -221,7 +221,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public void clear(){
+    public void clearChannels(){
         openDatabaseIfClosed();
         try {
             getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS, "1=1", null);
@@ -231,38 +231,89 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
+    public void clearChannelTags(){
+        openDatabaseIfClosed();
+        try {
+            getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, "1=1", null);
+            getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS, "1=1", null);
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
     public boolean insertTagsOrIgnore(List<ChannelTag> channelTags){
         AtomicBoolean result = new AtomicBoolean(true);
         openDatabaseIfClosed();
+        getDatabase().beginTransaction();
         try {
-            channelTags.forEach(channelTag -> {
+            OUTER: for (ChannelTag channelTag : channelTags) {
                 ContentValues values = new ContentValues();
-                values.put(ChannelDatabaseHelper.TableTagColumns.ID, channelTag.getId());
-                values.put(ChannelDatabaseHelper.TableTagColumns.ICHAT_ID, channelTag.getIchatId());
-                values.put(ChannelDatabaseHelper.TableTagColumns.NAME, channelTag.getName());
-                values.put(ChannelDatabaseHelper.TableTagColumns.ORDER, channelTag.getOrder());
+                values.put(ChannelDatabaseHelper.TableTagsColumns.ID, channelTag.getId());
+                values.put(ChannelDatabaseHelper.TableTagsColumns.ICHAT_ID, channelTag.getIchatId());
+                values.put(ChannelDatabaseHelper.TableTagsColumns.NAME, channelTag.getName());
+                values.put(ChannelDatabaseHelper.TableTagsColumns.ORDER, channelTag.getOrder());
                 long rowId = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, null,
                         values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (rowId == -1) {
                     result.set(false);
+                    break;
                 }
-            });
+                for (String channelIchatId : channelTag.getChannelIchatIdList()) {
+                    ContentValues values1 = new ContentValues();
+                    values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, channelTag.getId());
+                    values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.ICHAT_ID, channelIchatId);
+                    long rowId1 = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS, null,
+                            values1, SQLiteDatabase.CONFLICT_REPLACE);
+                    if (rowId1 == -1) {
+                        result.set(false);
+                        break OUTER;
+                    }
+                };
+            };
+            if(result.get()) getDatabase().setTransactionSuccessful();
             return result.get();
         }finally {
+            getDatabase().endTransaction();
             releaseDatabaseIfUnused();
         }
     }
 
     public List<ChannelTag> findAllChannelTags(){
         openDatabaseIfClosed();
-        try(Cursor cursor = getDatabase().query(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, null, "1=1", null, null, null, null)){
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t "
+                + "LEFT JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + " tc "
+                + "ON t." + ChannelDatabaseHelper.TableTagsColumns.ID + " = tc." + ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, null)){
             List<ChannelTag> result = new ArrayList<>();
+            String currentTagId = null;
+            ChannelTag channelTag = null;
+            List<String> channelIds = null;
             while (cursor.moveToNext()){
-                String id = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.ID);
-                String ichatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.ICHAT_ID);
-                String name = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagColumns.NAME);
-                Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableTagColumns.RAW_ORDER);
-                result.add(new ChannelTag(id, ichatId, name, order == null ? 0 : order));
+                String tagId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ID);
+                String ichatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ICHAT_ID);
+                String name = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.NAME);
+                Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableTagsColumns.RAW_ORDER);
+                String channelIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagChannelsColumns.ICHAT_ID);
+                if (currentTagId == null) {
+                    currentTagId = tagId;
+                    channelIds = new ArrayList<>();
+                    if(channelIchatId != null) channelIds.add(channelIchatId);
+                    channelTag = new ChannelTag(tagId, ichatId, name, order == null ? -1 : order, null);
+                } else {
+                    if (currentTagId.equals(tagId)) {
+                        if(channelIchatId != null) channelIds.add(channelIchatId);
+                    } else {
+                        channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                        result.add(channelTag);
+                        channelIds = new ArrayList<>();
+                        currentTagId = tagId;
+                        if(channelIchatId != null) channelIds.add(channelIchatId);
+                        channelTag = new ChannelTag(tagId, ichatId, name, order == null ? -1 : order, null);
+                    }
+                }
+            }
+            if(channelTag != null) {
+                channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                result.add(channelTag);
             }
             return result;
         }finally {

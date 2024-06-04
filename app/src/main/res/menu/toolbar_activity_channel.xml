@@ -6,6 +6,6 @@
         android:id="@+id/more"
         android:title="更多"
         android:icon="@drawable/more_horiz_24px"
-        app:iconTint="?android:attr/colorControlNormal"
+        app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always"/>
 </menu>
