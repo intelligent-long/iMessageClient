@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemTagChannelBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -74,8 +75,8 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemChannelBinding binding;
-        public ViewHolder(RecyclerItemChannelBinding binding) {
+        private RecyclerItemTagChannelBinding binding;
+        public ViewHolder(RecyclerItemTagChannelBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -84,7 +85,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
     @NonNull
     @Override
     public TagChannelsRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemChannelBinding binding = RecyclerItemChannelBinding.inflate(activity.getLayoutInflater());
+        RecyclerItemTagChannelBinding binding = RecyclerItemTagChannelBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
