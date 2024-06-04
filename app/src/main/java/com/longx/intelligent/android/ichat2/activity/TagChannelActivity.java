@@ -20,8 +20,10 @@ import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddChannelToTagBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTagChannelBinding;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
     private ActivityTagChannelBinding binding;
     private ChannelTag channelTag;
     private TagChannelsRecyclerAdapter adapter;
+    private List<Channel> canAddChannels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +74,21 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
             adapter = new TagChannelsRecyclerAdapter(this, channels);
             binding.recyclerView.setAdapter(adapter);
         }
+        List<ChannelAssociation> allAssociations = ChannelDatabaseManager.getInstance().findAllAssociations();
+        canAddChannels = new ArrayList<>();
+        allAssociations.forEach(association -> {
+            Channel channel = association.getChannel();
+            if(!channelTag.getChannelIchatIdList().contains(channel.getIchatId())) {
+                canAddChannels.add(channel);
+            }
+        });
+        UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.add_channel), !canAddChannels.isEmpty());
     }
 
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.add_channel){
-                new AddChannelToTagBottomSheet(this, channelTag).show();
+                new AddChannelToTagBottomSheet(this, channelTag.getId(), canAddChannels).show();
             }
             return true;
         });
@@ -108,6 +120,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
             findChannelTag();
             showContent();
+            setupYiers();
         }
     }
 }

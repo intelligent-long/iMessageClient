@@ -29,12 +29,14 @@ import retrofit2.Response;
  */
 public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
     private BottomSheetAddChannelToTagBinding binding;
-    private final ChannelTag channelTag;
+    private final String tagId;
+    private final List<Channel> canAddChannels;
     private AddChannelToTagRecyclerAdapter adapter;
 
-    public AddChannelToTagBottomSheet(AppCompatActivity activity, ChannelTag channelTag) {
+    public AddChannelToTagBottomSheet(AppCompatActivity activity, String tagId, List<Channel> canAddChannels) {
         super(activity);
-        this.channelTag = channelTag;
+        this.tagId = tagId;
+        this.canAddChannels = canAddChannels;
         create();
     }
 
@@ -47,12 +49,7 @@ public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
     }
 
     private void showContent() {
-        List<ChannelAssociation> allAssociations = ChannelDatabaseManager.getInstance().findAllAssociations();
-        List<Channel> channels = new ArrayList<>();
-        allAssociations.forEach(association -> {
-            channels.add(association.getChannel());
-        });
-        adapter = new AddChannelToTagRecyclerAdapter(getActivity(), channels);
+        adapter = new AddChannelToTagRecyclerAdapter(getActivity(), canAddChannels);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
@@ -63,7 +60,7 @@ public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
             List<Channel> checkedChannels = adapter.getCheckedChannels();
             List<String> checkedChannelIchatIds = new ArrayList<>();
             checkedChannels.forEach(channel -> checkedChannelIchatIds.add(channel.getIchatId()));
-            AddChannelsToTagPostBody postBody = new AddChannelsToTagPostBody(channelTag.getId(), checkedChannelIchatIds);
+            AddChannelsToTagPostBody postBody = new AddChannelsToTagPostBody(tagId, checkedChannelIchatIds);
             ChannelApiCaller.addChannelsToTag(getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
@@ -73,7 +70,7 @@ public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
                         dismiss();
                     });
                 }
-            });
+            }.showWrongMessageOnlyWithToast(true));
         });
     }
 }
