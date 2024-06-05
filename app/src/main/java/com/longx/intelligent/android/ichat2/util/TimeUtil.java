@@ -35,6 +35,15 @@ public class TimeUtil {
     private static final String TIME_FORMAT_PATTERN_MONTH = "M 月 d 日 EEEE a h:mm";
     private static final String TIME_FORMAT_PATTERN_YEAR = "y 年 M 月 d 日 EEEE a h:mm";
 
+    private static final String TIME_FORMAT_PATTERN_TODAY_DETAILED = "a h:mm:ss";
+    private static final String TIME_FORMAT_PATTERN_YESTERDAY_DETAILED = "昨天 a h:mm:ss";
+    private static final String TIME_FORMAT_PATTERN_BEFORE_YESTERDAY_DETAILED = "前天 a h:mm:ss";
+    private static final String TIME_FORMAT_PATTERN_TOMORROW_DETAILED = "明天 a h:mm:ss";
+    private static final String TIME_FORMAT_PATTERN_AFTER_TOMORROW_DETAILED = "后天 a h:mm:ss";
+    private static final String TIME_FORMAT_PATTERN_WEEK_DETAILED = "EEEE a h:mm:ss";
+    private static final String TIME_FORMAT_PATTERN_MONTH_DETAILED = "M 月 d 日 EEEE a h:mm:ss";
+    private static final String TIME_FORMAT_PATTERN_YEAR_DETAILED = "y 年 M 月 d 日 EEEE a h:mm:ss";
+
     public static boolean isToday(Date date){
         return DateUtils.isToday(date.getTime());
     }
@@ -103,6 +112,28 @@ public class TimeUtil {
             simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_MONTH, Locale.CHINA);
         }else {
             simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_YEAR, Locale.CHINA);
+        }
+        return simpleDateFormat.format(date);
+    }
+
+    public static String formatDetailedRelativeTime(Date date){
+        SimpleDateFormat simpleDateFormat;
+        if(isToday(date)){
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_TODAY_DETAILED, Locale.CHINA);
+        }else if(isYesterday(date)){
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_YESTERDAY_DETAILED, Locale.CHINA);
+        }else if(isTheDayBeforeYesterday(date)){
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_BEFORE_YESTERDAY_DETAILED, Locale.CHINA);
+        }else if(isTomorrow(date)){
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_TOMORROW_DETAILED, Locale.CHINA);
+        }else if(isTheDayAfterTomorrow(date)){
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_AFTER_TOMORROW_DETAILED, Locale.CHINA);
+        }else if(isThisWeek(date)){
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_WEEK_DETAILED, Locale.CHINA);
+        }else if(isThisYear(date)){
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_MONTH_DETAILED, Locale.CHINA);
+        }else {
+            simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN_YEAR_DETAILED, Locale.CHINA);
         }
         return simpleDateFormat.format(date);
     }

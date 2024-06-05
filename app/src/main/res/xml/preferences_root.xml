@@ -47,6 +47,10 @@
             app:title="动态颜色" />
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_ui"
+            app:title="UI" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
             app:key="@string/preference_key_other_app_settings"
             app:title="其他" />
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>

@@ -67,7 +67,9 @@ public class ChannelSettingActivity extends BaseActivity {
             startActivity(intent);
         });
         binding.clickViewTag.setOnClickListener(v -> {
-
+            Intent intent = new Intent(this, SettingChannelTagActivity.class);
+            intent.putExtra(ExtraKeys.ICHAT_ID, channel.getIchatId());
+            startActivity(intent);
         });
     }
 

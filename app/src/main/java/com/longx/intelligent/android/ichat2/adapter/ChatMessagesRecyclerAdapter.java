@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,16 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         if(itemData.chatMessage.isSelfSender(activity)){
             holder.binding.layoutReceive.setVisibility(View.GONE);
             holder.binding.layoutSend.setVisibility(View.VISIBLE);
+            //气泡颜色
+            int chatBubbleColor = SharedPreferencesAccessor.DefaultPref.getChatBubbleColor(activity);
+            switch (chatBubbleColor){
+                case 0:
+                    holder.binding.textSend.setBackgroundTintList(ColorStateList.valueOf(activity.getColor(R.color.chat_message_send_background_green)));
+                    break;
+                case 1:
+                    holder.binding.textSend.setBackgroundTintList(ColorStateList.valueOf(activity.getColor(R.color.chat_message_send_background_blue)));
+                    break;
+            }
             //头像
             holder.binding.avatarSend.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, ChannelActivity.class);

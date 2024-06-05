@@ -48,6 +48,10 @@ public class SharedPreferencesAccessor {
             return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_night_mode), "-1"));
         }
 
+        public static int getChatBubbleColor(Context context){
+            return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_chat_bubble_color), "-1"));
+        }
+
         public static void enableRequestIgnoreBatteryOptimize(Context context){
             saveRequestIgnoreBatteryOptimize(context, true);
         }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
+        app:key="@string/preference_key_chat_bubble_color"
+        app:title="聊天气泡颜色"
+        app:entries="@array/chat_bubble_color_entries"
+        app:entryValues="@array/chat_bubble_color_values"
+        app:defaultValue="0" />
+</PreferenceScreen>

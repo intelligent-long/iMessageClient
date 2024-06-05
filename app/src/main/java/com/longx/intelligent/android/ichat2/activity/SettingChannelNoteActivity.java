@@ -25,7 +25,6 @@ import retrofit2.Response;
 
 public class SettingChannelNoteActivity extends BaseActivity {
     private ActivitySettingChannelNoteBinding binding;
-    private String channelIchatId;
     private Channel channel;
 
     @Override
@@ -34,7 +33,7 @@ public class SettingChannelNoteActivity extends BaseActivity {
         binding = ActivitySettingChannelNoteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        channelIchatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
+        String channelIchatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
         channel = ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId);
         binding.noteInput.setText(channel.getNote());
         if (channel.getNote() == null) binding.deleteButton.setVisibility(View.GONE);

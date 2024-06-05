@@ -18,6 +18,7 @@
     <string name="login_way_verify_code">验证码登录</string>
     <string name="title_settings_root">设置</string>
     <string name="title_settings_other_app">应用其他</string>
+    <string name="title_settings_ui">UI</string>
     <string name="title_settings_edit_user">编辑用户</string>
     <string name="title_settings_version">版本</string>
     <string name="title_settings_permission">权限</string>
@@ -34,6 +35,7 @@
     <string name="title_request_add_channel">请求添加频道</string>
     <string name="title_channel_setting">频道设置</string>
     <string name="title_setting_note">设置备注</string>
+    <string name="title_setting_tag">设置标签</string>
     <string name="navigation_drawer_open">打开抽屉</string>
     <string name="navigation_drawer_close">关闭抽屉</string>
     <string name="do_not_set">不设置</string>
@@ -51,6 +53,8 @@
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>
+    <string name="fab_text_add_tag">添加标签</string>
+    <string name="fab_text_tag">标签</string>
 
     <string name="notification_title_server_message_service_foreground">iChat 前台服务通知</string>
     <string name="notification_message_server_message_service_foreground">iChat 使用前台服务与服务器通信\n这条通知应该被关闭</string>
@@ -71,6 +75,7 @@
     <string name="preference_key_app_settings">app_settings</string>
     <string name="preference_key_permission">permission</string>
     <string name="preference_key_restart">restart</string>
+    <string name="preference_key_ui">UI</string>
     <string name="preference_key_change_avatar">change_avatar</string>
     <string name="preference_key_change_ichat_id_user">ichat_id</string>
     <string name="preference_key_change_username">change_username</string>
@@ -86,4 +91,5 @@
     <string name="preference_key_read_media_images_and_videos">read_media_images_and_videos</string>
     <string name="preference_key_notification">notification</string>
     <string name="preference_key_manage_storage">manage_storage</string>
+    <string name="preference_key_chat_bubble_color">chat_bubble_color</string>
 </resources>

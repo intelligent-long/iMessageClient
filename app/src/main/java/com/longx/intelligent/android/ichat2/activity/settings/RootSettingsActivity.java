@@ -96,6 +96,7 @@ public class RootSettingsActivity extends BaseActivity {
         private Material3Preference preferenceOtherAppSettings;
         private Material3Preference preferenceShare;
         private Material3Preference preferenceVersion;
+        private Material3Preference preferenceUi;
         private int initNightMode;
 
         public SettingsFragment() {
@@ -129,6 +130,7 @@ public class RootSettingsActivity extends BaseActivity {
             preferenceOtherAppSettings = findPreference(getString(R.string.preference_key_other_app_settings));
             preferenceShare = findPreference(getString(R.string.preference_key_share));
             preferenceVersion = findPreference(getString(R.string.preference_key_version));
+            preferenceUi = findPreference(getString(R.string.preference_key_ui));
         }
 
         @Override
@@ -153,6 +155,7 @@ public class RootSettingsActivity extends BaseActivity {
             preferenceServerSetting.setOnPreferenceClickListener(this);
             preferenceOtherAppSettings.setOnPreferenceClickListener(this);
             preferenceVersion.setOnPreferenceClickListener(this);
+            preferenceUi.setOnPreferenceClickListener(this);
         }
 
         private void updateNightModeSummary(String newValue){
@@ -222,6 +225,8 @@ public class RootSettingsActivity extends BaseActivity {
                 startActivity(new Intent(getContext(), OtherAppSettingsSettingsActivity.class));
             }else if(preference.equals(preferenceVersion)){
                 startActivity(new Intent(getContext(), VersionSettingsActivity.class));
+            }else if(preference.equals(preferenceUi)){
+                startActivity(new Intent(getContext(), UiSettingsActivity.class));
             }
             return true;
         }

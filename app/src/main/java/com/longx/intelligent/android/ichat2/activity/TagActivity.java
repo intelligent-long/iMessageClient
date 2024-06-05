@@ -35,6 +35,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
     private ActivityTagBinding binding;
     private ChannelTagsRecyclerAdapter adapter;
     private DragSortRecycler dragSortRecycler;
+    private boolean scrollToEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,11 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
             binding.recyclerView.setLayoutManager(layoutManager);
             adapter = new ChannelTagsRecyclerAdapter(this, allChannelTags);
             binding.recyclerView.setAdapter(adapter);
+            if(scrollToEnd) {
+                binding.appBar.setExpanded(false, true);
+                binding.recyclerView.scrollToEnd(true);
+                scrollToEnd = false;
+            }
         }
     }
 
@@ -92,7 +98,9 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.add_tag){
-                new AddChannelTagBottomSheet(this).show();
+                new AddChannelTagBottomSheet(this, results -> {
+                    scrollToEnd = true;
+                }).show();
             }else if(item.getItemId() == R.id.sort){
                 switchDragSortState();
             }else if(item.getItemId() == R.id.cancel_sort){

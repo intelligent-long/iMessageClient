@@ -46,7 +46,7 @@ public class ChatMessageActionsPopupWindow {
     private void setupYiers() {
         binding.clickViewTime.setOnClickListener(v -> {
             popupWindow.dismiss();
-            String timeText = TimeUtil.formatRelativeTime(chatMessage.getTime());
+            String timeText = TimeUtil.formatDetailedRelativeTime(chatMessage.getTime());
             new CustomViewMessageDialog(activity, timeText).show();
         });
         binding.clickViewCopy.setOnClickListener(v -> {

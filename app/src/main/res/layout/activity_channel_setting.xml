@@ -190,10 +190,9 @@
             app:icon="@drawable/person_remove_fill_24px"
             app:iconTint="@color/action_red"
             app:iconSize="24dp"
+            app:iconGravity="textStart"
             android:text="删除频道"
             android:textSize="20sp"
-            android:paddingStart="21dp"
-            android:paddingEnd="44dp"
             android:textColor="@color/action_red"
             android:backgroundTint="?attr/colorSurfaceContainer" />
     </LinearLayout>
