@@ -38,6 +38,8 @@ public class SettingTagChannelTagsRecyclerAdapter extends WrappableRecyclerViewA
     private final AppCompatActivity activity;
     private final Channel channel;
     private final List<ChannelTag> channelTags;
+    private final List<ChannelTag> toAddChannelTags = new ArrayList<>();
+    private final List<ChannelTag> toRemoveChannelTags = new ArrayList<>();
 
     public SettingTagChannelTagsRecyclerAdapter(AppCompatActivity activity, List<ChannelTag> channelTags, Channel channel) {
         this.activity = activity;
@@ -76,13 +78,35 @@ public class SettingTagChannelTagsRecyclerAdapter extends WrappableRecyclerViewA
 
     private void setUpYiers(ViewHolder holder, int position) {
         ChannelTag channelTag = channelTags.get(position);
+        boolean isAdded = channelTag.getChannelIchatIdList().contains(channel.getIchatId());
         holder.binding.content.setOnClickListener(v -> {
-            boolean checked = holder.binding.checkBox.isChecked();
-            holder.binding.checkBox.setChecked(!checked);
+            holder.binding.checkBox.setChecked(!holder.binding.checkBox.isChecked());
+            boolean nowChecked = holder.binding.checkBox.isChecked();
+            if (isAdded) {
+                if (nowChecked) {
+                    toRemoveChannelTags.remove(channelTag);
+                } else {
+                    toRemoveChannelTags.add(channelTag);
+                }
+            }else {
+                if(nowChecked){
+                    toAddChannelTags.add(channelTag);
+                }else {
+                    toAddChannelTags.remove(channelTag);
+                }
+            }
         });
     }
 
     public List<ChannelTag> getChannelTags() {
         return channelTags;
+    }
+
+    public List<ChannelTag> getToAddChannelTags() {
+        return toAddChannelTags;
+    }
+
+    public List<ChannelTag> getToRemoveChannelTags() {
+        return toRemoveChannelTags;
     }
 }

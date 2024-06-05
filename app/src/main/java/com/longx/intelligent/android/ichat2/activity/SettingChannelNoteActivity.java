@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,6 +14,7 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySettingChannelNoteBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -57,17 +59,22 @@ public class SettingChannelNoteActivity extends BaseActivity {
             });
         });
         binding.deleteButton.setOnClickListener(v -> {
-            ChannelApiCaller.deleteNoteOfAssociatedChannel(this, channel.getIchatId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
-                @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
-                    data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101}, () -> {
-                        binding.noteInput.setText(null);
-                        binding.deleteButton.setVisibility(View.GONE);
-                        new MessageDialog(SettingChannelNoteActivity.this, "已删除").show();
-                    });
-                }
-            });
+            new ConfirmDialog(this, "是否继续？")
+                    .setNegativeButton(null)
+                    .setPositiveButton((dialog, which) -> {
+                        ChannelApiCaller.deleteNoteOfAssociatedChannel(this, channel.getIchatId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                                super.ok(data, row, call);
+                                data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101}, () -> {
+                                    binding.noteInput.setText(null);
+                                    binding.deleteButton.setVisibility(View.GONE);
+                                    new MessageDialog(SettingChannelNoteActivity.this, "已删除").show();
+                                });
+                            }
+                        });
+                    })
+                    .show();
         });
     }
 }

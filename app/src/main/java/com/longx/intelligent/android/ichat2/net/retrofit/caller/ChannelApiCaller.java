@@ -9,6 +9,7 @@ import com.longx.intelligent.android.ichat2.data.request.ChangeChannelTagNamePos
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
+import com.longx.intelligent.android.ichat2.data.request.SetChannelTagsPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SetNoteToAssociatedChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -136,6 +137,12 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> deleteChannelTag(LifecycleOwner lifecycleOwner, String tagId, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().deleteChannelTag(tagId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> setChannelTags(LifecycleOwner lifecycleOwner, SetChannelTagsPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().setChannelTags(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
