@@ -8,7 +8,9 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,6 +30,7 @@ import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatImageBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
+import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
@@ -99,7 +102,19 @@ public class ChatImagePagerAdapter extends RecyclerView.Adapter<ChatImagePagerAd
         setupPhotoView(holder.binding, position);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupPhotoView(RecyclerItemChatImageBinding binding, int position) {
+        SwipeDownGestureYier swipeDownGestureYier = new SwipeDownGestureYier(activity) {
+            @Override
+            public void onSwipeDown() {
+                activity.finish();
+            }
+        };
+        GestureDetector gestureDetector = new GestureDetector(activity, swipeDownGestureYier);
+        binding.photoView.setOnTouchListener((View v, MotionEvent event) -> {
+            gestureDetector.onTouchEvent(event);
+            return false;
+        });
         binding.photoView.setOnClickListener(v -> {
             if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.photoView);
         });
@@ -107,6 +122,7 @@ public class ChatImagePagerAdapter extends RecyclerView.Adapter<ChatImagePagerAd
             @Override
             public void onScaleChanged(float newScale, int origin) {
                 if(onRecyclerItemActionYier != null) onRecyclerItemActionYier.onRecyclerItemAction(position, newScale != binding.photoView.getMinScale());
+                swipeDownGestureYier.setEnabled(newScale == binding.photoView.getMinScale());
             }
 
             @Override
