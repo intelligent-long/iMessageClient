@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
@@ -20,7 +22,9 @@ import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTagBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.ui.DisableExpandAppBarBehavior;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.DragSortRecycler;
 
@@ -93,6 +97,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         dragSortRecycler.setViewHandleId(R.id.drag_handle);
         dragSortRecycler.setFloatingBgColor(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         dragSortRecycler.setFloatingAlpha(1F);
+        dragSortRecycler.setAutoScrollSpeed(0.3F);
         dragSortRecycler.setOnItemMovedListener((from, to) -> {
             adapter.moveAndShow(from, to);
         });
@@ -120,6 +125,13 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         MenuItem add = binding.toolbar.getMenu().findItem(R.id.add_tag);
         boolean dragSortState = adapter.isDragSortState();
         boolean now = !dragSortState;
+        UiUtil.setAppBarCanDrag(binding.appBar, !now);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appBar.getLayoutParams();
+        DisableExpandAppBarBehavior behavior = (DisableExpandAppBarBehavior) params.getBehavior();
+        if (behavior != null) {
+            behavior.setScrollEnabled(!now);
+        }
+        binding.appBar.setExpanded(!now);
         adapter.switchDragSortState(now);
         sort.setVisible(!now);
         cancelSort.setVisible(now);
