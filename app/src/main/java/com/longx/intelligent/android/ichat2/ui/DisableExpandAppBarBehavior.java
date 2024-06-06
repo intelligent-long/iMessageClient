@@ -3,6 +3,8 @@ package com.longx.intelligent.android.ichat2.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -17,8 +19,14 @@ public class DisableExpandAppBarBehavior extends AppBarLayout.Behavior {
         super(context, attrs);
     }
 
-    public void setScrollEnabled(boolean isScrollEnabled) {
-        this.isScrollEnabled = isScrollEnabled;
+    public void setExpandEnabled(boolean isExpandEnabled) {
+        setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                return isExpandEnabled;
+            }
+        });
+        this.isScrollEnabled = isExpandEnabled;
     }
 
     @Override

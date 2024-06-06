@@ -195,14 +195,4 @@ public class UiUtil {
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
         }
     }
-
-    public static void setAppBarCanDrag(AppBarLayout appBarLayout, boolean canDrag){
-        CoordinatorLayout.LayoutParams appBarLayoutParams = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
-        ((AppBarLayout.Behavior)appBarLayoutParams.getBehavior()).setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-            @Override
-            public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                return canDrag;
-            }
-        });
-    }
 }
