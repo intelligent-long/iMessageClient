@@ -180,6 +180,12 @@ public class SharedPreferencesAccessor {
             private static final String SECOND_REGION_NAME = "second_region_name";
             private static final String THIRD_REGION_ADCODE = "third_region_adcode";
             private static final String THIRD_REGION_NAME = "third_region_name";
+            private static final String EMAIL_VISIBLE = "email_visible";
+            private static final String SEX_VISIBLE = "sex_visible";
+            private static final String REGION_VISIBLE = "region_visible";
+            private static final String APP_EMAIL_VISIBLE = "app_email_visible";
+            private static final String APP_SEX_VISIBLE = "app_sex_visible";
+            private static final String APP_REGION_VISIBLE = "app_region_visible";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(NAME_USER_INFO, Context.MODE_PRIVATE);
@@ -205,6 +211,12 @@ public class SharedPreferencesAccessor {
                     .putString(Key.SECOND_REGION_NAME, self.getSecondRegion() == null ? null : self.getSecondRegion().getName())
                     .putInt(Key.THIRD_REGION_ADCODE, self.getThirdRegion() == null ? -1 : self.getThirdRegion().getAdcode())
                     .putString(Key.THIRD_REGION_NAME, self.getThirdRegion() == null ? null : self.getThirdRegion().getName())
+                    .putBoolean(Key.EMAIL_VISIBLE, self.getUserProfileVisibility().isEmailVisible())
+                    .putBoolean(Key.APP_EMAIL_VISIBLE, self.getUserProfileVisibility().isEmailVisible())
+                    .putBoolean(Key.SEX_VISIBLE, self.getUserProfileVisibility().isSexVisible())
+                    .putBoolean(Key.APP_SEX_VISIBLE, self.getUserProfileVisibility().isSexVisible())
+                    .putBoolean(Key.REGION_VISIBLE, self.getUserProfileVisibility().isRegionVisible())
+                    .putBoolean(Key.APP_REGION_VISIBLE, self.getUserProfileVisibility().isRegionVisible())
                     .commit();
         }
 
@@ -234,12 +246,36 @@ public class SharedPreferencesAccessor {
             String secondRegionName = sharedPreferences.getString(Key.SECOND_REGION_NAME, null);
             int thirdRegionAdcode = sharedPreferences.getInt(Key.THIRD_REGION_ADCODE, -1);
             String thirdRegionName = sharedPreferences.getString(Key.THIRD_REGION_NAME, null);
+            boolean emailVisible = sharedPreferences.getBoolean(Key.EMAIL_VISIBLE, true);
+            boolean sexVisible = sharedPreferences.getBoolean(Key.SEX_VISIBLE, true);
+            boolean regionVisible = sharedPreferences.getBoolean(Key.REGION_VISIBLE, true);
             return new Self(ichatId, ichatIdUser, email, registerTime, username,
                     new Avatar(avatarHash, avatarIchatId, avatarExtension, avatarTime),
                     sex == -1 ? null : sex,
                     (firstRegionAdcode == -1 && firstRegionName == null) ? null : new UserInfo.Region(firstRegionAdcode, firstRegionName),
                     (secondRegionAdcode == -1 && secondRegionName == null) ? null : new UserInfo.Region(secondRegionAdcode, secondRegionName),
-                    (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new UserInfo.Region(thirdRegionAdcode, thirdRegionName));
+                    (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new UserInfo.Region(thirdRegionAdcode, thirdRegionName),
+                    new UserInfo.UserProfileVisibility(emailVisible, sexVisible, regionVisible));
+        }
+
+        public static void saveAppUserProfileVisibility(Context context, UserInfo.UserProfileVisibility userProfileVisibility){
+            getSharedPreferences(context)
+                    .edit()
+                    .putBoolean(Key.APP_EMAIL_VISIBLE, userProfileVisibility.isEmailVisible())
+                    .putBoolean(Key.APP_SEX_VISIBLE, userProfileVisibility.isSexVisible())
+                    .putBoolean(Key.APP_REGION_VISIBLE, userProfileVisibility.isRegionVisible())
+                    .apply();
+        }
+
+        public static UserInfo.UserProfileVisibility getAppUserProfileVisibility(Context context){
+            SharedPreferences sharedPreferences = getSharedPreferences(context);
+            if(!(sharedPreferences.contains(Key.APP_EMAIL_VISIBLE) && sharedPreferences.contains(Key.APP_SEX_VISIBLE) && sharedPreferences.contains(Key.APP_REGION_VISIBLE))){
+                return null;
+            }
+            boolean appEmailVisible = sharedPreferences.getBoolean(Key.APP_EMAIL_VISIBLE, true);
+            boolean appSexVisible = sharedPreferences.getBoolean(Key.APP_SEX_VISIBLE, true);
+            boolean appRegionVisible = sharedPreferences.getBoolean(Key.APP_REGION_VISIBLE, true);
+            return new UserInfo.UserProfileVisibility(appEmailVisible, appSexVisible, appRegionVisible);
         }
 
         @SuppressLint("ApplySharedPref")
@@ -340,7 +376,7 @@ public class SharedPreferencesAccessor {
                 Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
                 if(paginatedJsonSet.size() > MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
                 int index = paginatedJsonSet.size();
-                ApiJson.IndexedApiJson indexedApiJson = new ApiJson.IndexedApiJson(index, json);
+                IndexedApiJson indexedApiJson = new IndexedApiJson(index, json);
                 String paginatedJson = JsonUtil.toJson(indexedApiJson);
                 HashSet<String> paginatedJsonSetCopy = new HashSet<>(paginatedJsonSet);
                 paginatedJsonSetCopy.add(paginatedJson);
@@ -360,9 +396,9 @@ public class SharedPreferencesAccessor {
             public static List<ChannelAddition> getAllRecords(Context context){
                 List<ChannelAddition> result = new ArrayList<>();
                 Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
-                List<ApiJson.IndexedApiJson> indexedApiJsonList = new ArrayList<>();
+                List<IndexedApiJson> indexedApiJsonList = new ArrayList<>();
                 jsonSet.forEach(paginatedJson -> {
-                    ApiJson.IndexedApiJson indexedApiJson = JsonUtil.toObject(paginatedJson, ApiJson.IndexedApiJson.class);
+                    IndexedApiJson indexedApiJson = JsonUtil.toObject(paginatedJson, IndexedApiJson.class);
                     indexedApiJsonList.add(indexedApiJson);
                 });
                 indexedApiJsonList.sort(Comparator.comparingInt(o -> o.index));
@@ -442,13 +478,13 @@ public class SharedPreferencesAccessor {
 
         public static boolean isOfflineDetailNeedFetch(Context context){
             return getSharedPreferences(context)
-                    .getBoolean(AuthPref.Key.OFFLINE_DETAIL_NEED_FETCH, false);
+                    .getBoolean(Key.OFFLINE_DETAIL_NEED_FETCH, false);
         }
 
         public static void saveOfflineDetailNeedFetch(Context context, boolean need){
             getSharedPreferences(context)
                     .edit()
-                    .putBoolean(AuthPref.Key.OFFLINE_DETAIL_NEED_FETCH, need)
+                    .putBoolean(Key.OFFLINE_DETAIL_NEED_FETCH, need)
                     .apply();
         }
 

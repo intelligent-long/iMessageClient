@@ -22,12 +22,13 @@ public class Self extends UserInfo{
     private final Region firstRegion;
     private final Region secondRegion;
     private final Region thirdRegion;
+    private final UserProfileVisibility userProfileVisibility;
 
     public Self() {
-        this(null, null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public Self(String ichatId, String ichatIdUser, String email, Date registerTime, String username, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion) {
+    public Self(String ichatId, String ichatIdUser, String email, Date registerTime, String username, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, UserProfileVisibility userProfileVisibility) {
         this.ichatId = ichatId;
         this.ichatIdUser = ichatIdUser;
         this.email = email;
@@ -38,6 +39,7 @@ public class Self extends UserInfo{
         this.firstRegion = firstRegion;
         this.secondRegion = secondRegion;
         this.thirdRegion = thirdRegion;
+        this.userProfileVisibility = userProfileVisibility;
     }
 
     public String getIchatId() {
@@ -78,5 +80,9 @@ public class Self extends UserInfo{
 
     public Region getThirdRegion() {
         return thirdRegion;
+    }
+
+    public UserProfileVisibility getUserProfileVisibility() {
+        return userProfileVisibility;
     }
 }

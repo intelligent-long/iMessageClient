@@ -65,6 +65,33 @@ public abstract class UserInfo {
         }
     }
 
+    public static class UserProfileVisibility{
+        private boolean emailVisible;
+        private boolean sexVisible;
+        private boolean regionVisible;
+
+        public UserProfileVisibility() {
+        }
+
+        public UserProfileVisibility(boolean emailVisible, boolean sexVisible, boolean regionVisible) {
+            this.emailVisible = emailVisible;
+            this.sexVisible = sexVisible;
+            this.regionVisible = regionVisible;
+        }
+
+        public boolean isEmailVisible() {
+            return emailVisible;
+        }
+
+        public boolean isSexVisible() {
+            return sexVisible;
+        }
+
+        public boolean isRegionVisible() {
+            return regionVisible;
+        }
+    }
+
     public static String sexValueToString(Context context, Integer sex){
         String[] sexNames = {context.getString(R.string.do_not_set), context.getString(R.string.sex_nv), context.getString(R.string.sex_nan)};
         if(sex == null){

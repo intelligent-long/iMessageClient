@@ -10,12 +10,21 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.UserInfo;
+import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserProfileVisibilityBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
     private ActivityEditUserProfileVisibilityBinding binding;
@@ -65,7 +74,16 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
 
         @Override
         protected void showInfo() {
-            Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+            UserInfo.UserProfileVisibility appUserProfileVisibility = SharedPreferencesAccessor.UserInfoPref.getAppUserProfileVisibility(requireContext());
+            if(appUserProfileVisibility == null){
+                preferenceChangeEmailVisibility.setEnabled(false);
+                preferenceChangeSexVisibility.setEnabled(false);
+                preferenceChangeRegionVisibility.setEnabled(false);
+            }else {
+                preferenceChangeEmailVisibility.setChecked(appUserProfileVisibility.isEmailVisible());
+                preferenceChangeSexVisibility.setChecked(appUserProfileVisibility.isSexVisible());
+                preferenceChangeRegionVisibility.setChecked(appUserProfileVisibility.isRegionVisible());
+            }
         }
 
         @Override
@@ -77,6 +95,18 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
 
         @Override
         public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+            boolean emailChecked = preferenceChangeEmailVisibility.isChecked();
+            boolean sexChecked = preferenceChangeSexVisibility.isChecked();
+            boolean regionChecked = preferenceChangeRegionVisibility.isChecked();
+            if(preference.equals(preferenceChangeEmailVisibility)){
+                emailChecked = (boolean) newValue;
+            }else if(preference.equals(preferenceChangeSexVisibility)){
+                sexChecked = (boolean) newValue;
+            }else if(preference.equals(preferenceChangeRegionVisibility)){
+                regionChecked = (boolean) newValue;
+            }
+            SharedPreferencesAccessor.UserInfoPref.saveAppUserProfileVisibility(requireContext(),
+                    new UserInfo.UserProfileVisibility(emailChecked, sexChecked, regionChecked));
             return true;
         }
 
@@ -90,6 +120,17 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
             if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 showInfo();
             }
+        }
+
+        @Override
+        public void onDetach() {
+            super.onDetach();
+            updateServerData();
+        }
+
+        private void updateServerData() {
+            ChangeUserProfileVisibilityPostBody postBody = new ChangeUserProfileVisibilityPostBody(preferenceChangeEmailVisibility.isChecked(), preferenceChangeSexVisibility.isChecked(), preferenceChangeRegionVisibility.isChecked());
+            PrivacyApiCaller.changeUserProfileVisibility(null, postBody, new RetrofitApiCaller.BaseCommonYier<>(requireContext().getApplicationContext()));
         }
     }
 }

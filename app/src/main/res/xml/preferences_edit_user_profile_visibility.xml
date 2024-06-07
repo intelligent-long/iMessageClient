@@ -4,13 +4,13 @@
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
         app:key="@string/preference_key_change_email_visibility"
-        app:title="展示邮箱" />
+        app:title="邮箱" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
         app:key="@string/preference_key_change_sex_visibility"
-        app:title="展示性别" />
+        app:title="性别" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
         app:key="@string/preference_key_change_region_visibility"
-        app:title="展示地区" />
+        app:title="地区" />
 </PreferenceScreen>
