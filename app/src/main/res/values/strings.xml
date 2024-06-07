@@ -20,7 +20,7 @@
     <string name="title_settings_other_app">应用其他</string>
     <string name="title_settings_ui">UI</string>
     <string name="title_settings_edit_user">编辑用户</string>
-    <string name="title_settings_edit_user_profile_visibility">用户资料可见性</string>
+    <string name="title_settings_edit_user_profile_visibility">用户资料展示</string>
     <string name="title_settings_ways_to_find_me">查找我的方式</string>
     <string name="title_settings_version">版本</string>
     <string name="title_settings_permission">权限</string>

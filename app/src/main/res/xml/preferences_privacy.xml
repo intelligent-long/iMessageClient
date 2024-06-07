@@ -21,7 +21,7 @@
             app:title="广播频道权限" />
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
-            app:title="不看他（她）的广播" />
+            app:title="不看广播频道" />
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
 
 </PreferenceScreen>
