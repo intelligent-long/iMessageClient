@@ -12,7 +12,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.databinding.ActivityPermissionBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityPermissionSettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
@@ -26,13 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionSettingsActivity extends BaseActivity {
-    private ActivityPermissionBinding binding;
+    private ActivityPermissionSettingsBinding binding;
     private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPermissionBinding.inflate(getLayoutInflater());
+        binding = ActivityPermissionSettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupPreferenceFragment(savedInstanceState);

@@ -13,7 +13,7 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
-import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserProfileVisibilityBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserProfileVisibilitySettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -27,12 +27,12 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
-    private ActivityEditUserProfileVisibilityBinding binding;
+    private ActivityEditUserProfileVisibilitySettingsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityEditUserProfileVisibilityBinding.inflate(getLayoutInflater());
+        binding = ActivityEditUserProfileVisibilitySettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupPreferenceFragment(savedInstanceState);
