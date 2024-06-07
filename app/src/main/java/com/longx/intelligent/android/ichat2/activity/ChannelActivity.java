@@ -53,13 +53,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
-    private void setupUi() {
-        if(isSelf || networkFetch) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
-    }
-
     private void getUserInfoAndShow() {
         ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
+        networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
         self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
         isSelf = (ichatId == null && channel == null)
                 || (ichatId != null && ichatId.equals(self.getIchatId())
@@ -69,6 +66,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }else {
             showOrFetchAndShow(ichatId);
         }
+    }
+
+    private void setupUi() {
+        if(isSelf || networkFetch) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
     }
 
     private void showOrFetchAndShow(String ichatId) {
@@ -160,8 +161,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         binding.ichatIdUser.setText(ichatIdUser);
         if(email == null){
             binding.layoutEmail.setVisibility(View.GONE);
+            binding.emailDivider.setVisibility(View.GONE);
         }else {
             binding.layoutEmail.setVisibility(View.VISIBLE);
+            binding.emailDivider.setVisibility(View.VISIBLE);
             binding.email.setText(email);
         }
         if(regionDesc == null){

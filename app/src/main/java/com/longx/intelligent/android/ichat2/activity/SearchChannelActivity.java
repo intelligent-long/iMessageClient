@@ -86,6 +86,7 @@ public class SearchChannelActivity extends BaseActivity {
                                 Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);
                                 intent.putExtra(ExtraKeys.CHANNEL, channel);
+                                intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
                                 startActivity(intent);
                             });
                         }
@@ -99,6 +100,7 @@ public class SearchChannelActivity extends BaseActivity {
                                 Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);
                                 intent.putExtra(ExtraKeys.CHANNEL, channel);
+                                intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
                                 startActivity(intent);
                             });
                         }
