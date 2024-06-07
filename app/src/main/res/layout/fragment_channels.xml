@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin_end"
-        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:layout_marginBottom="@dimen/fab_margin_bottom_with_bottom_bar"
         app:icon="@drawable/person_add_outline_24px"
         android:text="@string/fab_text_add_channel"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -50,6 +50,7 @@ public class EditUserSettingsActivity extends BaseActivity{
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupPreferenceFragment(savedInstanceState);
+        setupYiers();
     }
 
     private void setupPreferenceFragment(Bundle savedInstanceState) {
@@ -59,6 +60,12 @@ public class EditUserSettingsActivity extends BaseActivity{
                     .replace(binding.settings.getId(), new SettingsFragment())
                     .commit();
         }
+    }
+
+    private void setupYiers() {
+        binding.fab.setOnClickListener(v -> {
+            startActivity(new Intent(this, EditUserProfileVisibilitySettingsActivity.class));
+        });
     }
 
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, ContentUpdater.OnServerContentUpdateYier {
