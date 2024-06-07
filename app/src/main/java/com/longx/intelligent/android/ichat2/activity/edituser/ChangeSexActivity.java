@@ -52,7 +52,7 @@ public class ChangeSexActivity extends BaseActivity {
     }
 
     private void onCreateSetupChangeSexAutoCompleteTextView() {
-        Integer sex = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this).getSex();
+        Integer sex = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getSex();
         String currentSexName = Self.sexValueToString(this, sex);
         binding.sexAutoCompleteTextView.setText(currentSexName);
     }

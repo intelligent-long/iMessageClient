@@ -9,22 +9,16 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
-import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserProfileVisibilitySettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
     private ActivityEditUserProfileVisibilitySettingsBinding binding;
@@ -74,7 +68,7 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
 
         @Override
         protected void showInfo() {
-            UserInfo.UserProfileVisibility appUserProfileVisibility = SharedPreferencesAccessor.UserInfoPref.getAppUserProfileVisibility(requireContext());
+            UserInfo.UserProfileVisibility appUserProfileVisibility = SharedPreferencesAccessor.UserProfilePref.getAppUserProfileVisibility(requireContext());
             if(appUserProfileVisibility == null){
                 preferenceChangeEmailVisibility.setEnabled(false);
                 preferenceChangeSexVisibility.setEnabled(false);
@@ -105,7 +99,7 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
             }else if(preference.equals(preferenceChangeRegionVisibility)){
                 regionChecked = (boolean) newValue;
             }
-            SharedPreferencesAccessor.UserInfoPref.saveAppUserProfileVisibility(requireContext(),
+            SharedPreferencesAccessor.UserProfilePref.saveAppUserProfileVisibility(requireContext(),
                     new UserInfo.UserProfileVisibility(emailChecked, sexChecked, regionChecked));
             return true;
         }

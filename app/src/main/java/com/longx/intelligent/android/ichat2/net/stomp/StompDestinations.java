@@ -9,7 +9,7 @@ public class StompDestinations {
     public static final String PREFIX_APP = "/app";
     public static final String PREFIX_USER = "/user";
 
-    public static final String USER_INFO_UPDATE = "/user" +  PREFIX_QUEUE + "/user_info_update";
+    public static final String USER_PROFILE_UPDATE = "/user" +  PREFIX_QUEUE + "/user_profile_update";
     public static final String CHANNEL_ADDITIONS_UPDATE = "/user" +  PREFIX_QUEUE + "/channel_additions_update";
     public static final String CHANNEL_ADDITIONS_NOT_VIEW_COUNT_UPDATE = "/user" + PREFIX_QUEUE + "/channel_additions_not_view_count_update";
     public static final String CHANNELS_UPDATE = "/user" + PREFIX_QUEUE + "/channels_update";

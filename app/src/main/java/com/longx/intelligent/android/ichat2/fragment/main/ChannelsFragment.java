@@ -125,7 +125,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
         ArrayList<ChannelsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+        Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
         Channel selfChannel = new Channel(
                 self.getIchatId(),
                 self.getIchatIdUser(),

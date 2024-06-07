@@ -18,7 +18,6 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
@@ -57,7 +56,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
         networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
-        self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
+        self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         isSelf = (ichatId == null && channel == null)
                 || (ichatId != null && ichatId.equals(self.getIchatId())
                 || (channel != null && channel.getIchatId().equals(self.getIchatId())));

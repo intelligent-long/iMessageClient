@@ -81,8 +81,8 @@ public class ServerMessageServiceStomp {
     }
 
     private static synchronized void subscribe(Context context) {
-        stomp.subscribe(StompDestinations.USER_INFO_UPDATE, null, message -> {
-            ServerMessageServiceStompActions.updateCurrentUserInfo(context);
+        stomp.subscribe(StompDestinations.USER_PROFILE_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateCurrentUserProfile(context);
         });
         stomp.subscribe(StompDestinations.CHANNEL_ADDITIONS_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateChannelAdditionActivities(context);

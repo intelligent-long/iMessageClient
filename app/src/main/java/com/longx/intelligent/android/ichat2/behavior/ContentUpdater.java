@@ -111,13 +111,13 @@ public class ContentUpdater {
                 }));
     }
 
-    public static void updateCurrentUserInfo(Context context){
-        updateCurrentUserInfo(context, null);
+    public static void updateCurrentUserProfile(Context context){
+        updateCurrentUserProfile(context, null);
     }
 
-    public static void updateCurrentUserInfo(Context context, Self self) {
+    public static void updateCurrentUserProfile(Context context, Self self) {
         if(self != null){
-            SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, self);
+            SharedPreferencesAccessor.UserProfilePref.saveCurrentUserProfile(context, self);
         }else {
             UserApiCaller.whoAmI(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO, context) {
                 @Override
@@ -125,7 +125,7 @@ public class ContentUpdater {
                     super.ok(data, row, call);
                     data.commonHandleSuccessResult(() -> {
                         Self self = data.getData(Self.class);
-                        SharedPreferencesAccessor.UserInfoPref.saveCurrentUserInfo(context, self);
+                        SharedPreferencesAccessor.UserProfilePref.saveCurrentUserProfile(context, self);
                     });
                 }
             });

@@ -242,7 +242,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
             boolean loginState = SharedPreferencesAccessor.NetPref.getLoginState(this);
             String resetPasswordEmail;
             if(loginState){
-                resetPasswordEmail = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this).getEmail();
+                resetPasswordEmail = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getEmail();
             }else {
                 resetPasswordEmail = UiUtil.getEditTextString(binding.resetPasswordEmailInput);
             }

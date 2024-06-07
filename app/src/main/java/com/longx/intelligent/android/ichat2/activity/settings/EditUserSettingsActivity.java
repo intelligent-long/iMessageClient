@@ -112,7 +112,7 @@ public class EditUserSettingsActivity extends BaseActivity{
 
         @Override
         protected void showInfo() {
-            Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+            Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
             String doNotSet = getString(R.string.do_not_set);
             String ichatIdUser = self.getIchatIdUser();
             String username = self.getUsername();

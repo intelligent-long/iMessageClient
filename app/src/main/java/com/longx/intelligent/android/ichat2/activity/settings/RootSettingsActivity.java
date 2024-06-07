@@ -2,8 +2,6 @@ package com.longx.intelligent.android.ichat2.activity.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +27,6 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.ServerSettingDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
@@ -187,7 +184,7 @@ public class RootSettingsActivity extends BaseActivity {
         }
 
         private void updateEmailSummary(){
-            Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+            Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
             preferenceEmail.setSummary(self.getEmail());
         }
 

@@ -32,7 +32,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
     }
 
     public static void init(Context context){
-        String ichatId = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId();
+        String ichatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId();
         ChannelDatabaseHelper helper = new ChannelDatabaseHelper(context, ichatId);
         InstanceHolder.instance = new ChannelDatabaseManager(helper);
     }

@@ -15,7 +15,6 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelAdditionSendBinding;
-import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
 
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ public class ChannelAdditionSendFragment extends Fragment implements ChannelAddi
 
     private void setupRecyclerView(List<ChannelAddition> channelAdditions) {
         List<ChannelAddition> sendChannelAdditions = new ArrayList<>();
-        Self currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(requireContext());
+        Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
         channelAdditions.forEach(channelAdditionInfo -> {
             if ((channelAdditionInfo.getRespondTime() != null || channelAdditionInfo.isExpired())
                     && channelAdditionInfo.getRequesterChannel().getIchatId().equals(currentUserInfo.getIchatId()))

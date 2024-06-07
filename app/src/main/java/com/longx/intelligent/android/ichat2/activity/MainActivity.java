@@ -13,8 +13,6 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -178,7 +176,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     private void showNavHeaderInfo() {
         View headerView1 = binding.navigationDrawer1.getHeaderView(0);
-        Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
+        Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         ShapeableImageView avatarImageView = headerView1.findViewById(R.id.avatar);
         if (self.getAvatar() == null || self.getAvatar().getHash() == null) {
             GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, avatarImageView);
@@ -289,7 +287,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         View headerView = binding.navigationDrawer1.getHeaderView(0);
         ShapeableImageView avatarImageView = headerView.findViewById(R.id.avatar);
         avatarImageView.setOnClickListener(v -> {
-            Self self = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
+            Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
             if(self.getAvatar() != null && self.getAvatar().getHash() != null) {
                 Intent intent = new Intent(this, AvatarActivity.class);
                 intent.putExtra(ExtraKeys.ICHAT_ID, self.getIchatId());

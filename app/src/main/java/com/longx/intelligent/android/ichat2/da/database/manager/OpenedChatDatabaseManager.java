@@ -27,7 +27,7 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
     }
 
     public static void init(Context context){
-        String ichatId = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId();
+        String ichatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId();
         OpenedChatDatabaseHelper helper = new OpenedChatDatabaseHelper(context, ichatId);
         OpenedChatDatabaseManager.InstanceHolder.instance = new OpenedChatDatabaseManager(helper);
     }

@@ -31,7 +31,7 @@ public class RequestAddChannelActivity extends BaseActivity {
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
-        currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(this);
+        currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         showContent();
         setupYiers();
     }

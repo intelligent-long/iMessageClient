@@ -13,12 +13,10 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -32,7 +30,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
     }
 
     private synchronized static void initInstance(Context context, String channelIchatId) {
-        ChatMessageDatabaseHelper chatMessageDatabaseHelper = new ChatMessageDatabaseHelper(context, channelIchatId, SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId());
+        ChatMessageDatabaseHelper chatMessageDatabaseHelper = new ChatMessageDatabaseHelper(context, channelIchatId, SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId());
         ChatMessageDatabaseManager messageDatabaseManager = new ChatMessageDatabaseManager(chatMessageDatabaseHelper);
         messageDatabaseManager.openDatabaseIfClosed();
         try {

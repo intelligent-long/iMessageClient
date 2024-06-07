@@ -161,8 +161,8 @@ public class SharedPreferencesAccessor {
         }
     }
 
-    public static class UserInfoPref {
-        private static final String NAME_USER_INFO = "user_info";
+    public static class UserProfilePref {
+        private static final String NAME_USER_PROFILE = "user_profile";
         private static class Key{
             private static final String ICHAT_ID = "ichat_id";
             private static final String ICHAT_ID_USER = "ichat_id_user";
@@ -188,11 +188,11 @@ public class SharedPreferencesAccessor {
             private static final String APP_REGION_VISIBLE = "app_region_visible";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
-            return context.getSharedPreferences(NAME_USER_INFO, Context.MODE_PRIVATE);
+            return context.getSharedPreferences(NAME_USER_PROFILE, Context.MODE_PRIVATE);
         }
 
         @SuppressLint("ApplySharedPref")
-        public static void saveCurrentUserInfo(Context context, Self self){
+        public static void saveCurrentUserProfile(Context context, Self self){
             getSharedPreferences(context)
                     .edit()
                     .putString(Key.ICHAT_ID, self.getIchatId())
@@ -220,7 +220,7 @@ public class SharedPreferencesAccessor {
                     .commit();
         }
 
-        public static Self getCurrentUserInfo(Context context){
+        public static Self getCurrentUserProfile(Context context){
             SharedPreferences sharedPreferences = getSharedPreferences(context);
             String ichatId = sharedPreferences.getString(Key.ICHAT_ID, null);
             String ichatIdUser = sharedPreferences.getString(Key.ICHAT_ID_USER, null);

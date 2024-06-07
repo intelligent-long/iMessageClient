@@ -2,12 +2,10 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -30,7 +28,6 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -38,7 +35,6 @@ import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -131,7 +127,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
                 activity.startActivity(intent);
             });
-            Self currentUserInfo = SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(activity);
+            Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
             String avatarHash = currentUserInfo.getAvatar() == null ? null : currentUserInfo.getAvatar().getHash();
             if (avatarHash == null) {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarSend);

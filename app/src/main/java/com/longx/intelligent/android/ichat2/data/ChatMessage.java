@@ -1,7 +1,6 @@
 package com.longx.intelligent.android.ichat2.data;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Size;
@@ -15,14 +14,10 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
-import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import okhttp3.ResponseBody;
@@ -147,7 +142,7 @@ public class ChatMessage implements Parcelable {
     }
 
     public boolean isSelfSender(Context context){
-        return SharedPreferencesAccessor.UserInfoPref.getCurrentUserInfo(context).getIchatId().equals(from);
+        return SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId().equals(from);
     }
 
     public String getOther(Context context){

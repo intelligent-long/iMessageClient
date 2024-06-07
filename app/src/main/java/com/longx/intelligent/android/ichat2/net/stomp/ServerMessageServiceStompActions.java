@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class ServerMessageServiceStompActions {
 
-    public static void updateCurrentUserInfo(Context context){
-        ContentUpdater.updateCurrentUserInfo(context);
+    public static void updateCurrentUserProfile(Context context){
+        ContentUpdater.updateCurrentUserProfile(context);
     }
 
     public static void updateChannelAdditionActivities(Context context){

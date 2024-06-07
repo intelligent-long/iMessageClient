@@ -147,8 +147,8 @@ public class GlobalBehaviors {
     }
 
     public static void reloadWhenAccountSwitched(Context context, Self self){
-        SharedPreferencesAccessor.UserInfoPref.clear(context);
-        ContentUpdater.updateCurrentUserInfo(context, self);
+        SharedPreferencesAccessor.UserProfilePref.clear(context);
+        ContentUpdater.updateCurrentUserProfile(context, self);
         DatabaseInitiator.initAll(context);
     }
 
