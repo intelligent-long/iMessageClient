@@ -20,6 +20,7 @@
     <string name="title_settings_other_app">应用其他</string>
     <string name="title_settings_ui">UI</string>
     <string name="title_settings_edit_user">编辑用户</string>
+    <string name="title_settings_edit_user_profile_visibility">用户资料展示</string>
     <string name="title_settings_version">版本</string>
     <string name="title_settings_permission">权限</string>
     <string name="title_change_ichat_id_user">更改 iChat ID</string>
@@ -36,6 +37,7 @@
     <string name="title_channel_setting">频道设置</string>
     <string name="title_setting_note">设置备注</string>
     <string name="title_setting_tag">设置标签</string>
+    <string name="title_settings_privacy">隐私</string>
     <string name="navigation_drawer_open">打开抽屉</string>
     <string name="navigation_drawer_close">关闭抽屉</string>
     <string name="do_not_set">不设置</string>
@@ -92,4 +94,8 @@
     <string name="preference_key_notification">notification</string>
     <string name="preference_key_manage_storage">manage_storage</string>
     <string name="preference_key_chat_bubble_color">chat_bubble_color</string>
+    <string name="preference_key_change_email_visibility">change_email_visibility</string>
+    <string name="preference_key_change_sex_visibility">change_sex_visibility</string>
+    <string name="preference_key_change_region_visibility">change_region_visibility</string>
+    <string name="preference_key_user_profile_visibility">user_profile_visibility</string>
 </resources>

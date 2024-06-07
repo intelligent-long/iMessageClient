@@ -156,6 +156,7 @@ public class RootSettingsActivity extends BaseActivity {
             preferenceOtherAppSettings.setOnPreferenceClickListener(this);
             preferenceVersion.setOnPreferenceClickListener(this);
             preferenceUi.setOnPreferenceClickListener(this);
+            preferencePrivacy.setOnPreferenceClickListener(this);
         }
 
         private void updateNightModeSummary(String newValue){
@@ -227,6 +228,8 @@ public class RootSettingsActivity extends BaseActivity {
                 startActivity(new Intent(getContext(), VersionSettingsActivity.class));
             }else if(preference.equals(preferenceUi)){
                 startActivity(new Intent(getContext(), UiSettingsActivity.class));
+            }else if(preference.equals(preferencePrivacy)){
+                startActivity(new Intent(requireContext(), PrivacySettingsActivity.class));
             }
             return true;
         }

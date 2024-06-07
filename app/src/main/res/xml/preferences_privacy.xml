@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="账号">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_user_profile_visibility"
+            app:title="@string/title_settings_edit_user_profile_visibility" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:title="查找我的方式" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+
+</PreferenceScreen>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
+        app:key="@string/preference_key_change_email_visibility"
+        app:title="展示邮箱" />
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
+        app:key="@string/preference_key_change_sex_visibility"
+        app:title="展示性别" />
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
+        app:key="@string/preference_key_change_region_visibility"
+        app:title="展示地区" />
+</PreferenceScreen>

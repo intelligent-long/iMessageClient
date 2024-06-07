@@ -25,7 +25,7 @@ import com.longx.intelligent.android.ichat2.preference.PermissionPreference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermissionActivity extends BaseActivity {
+public class PermissionSettingsActivity extends BaseActivity {
     private ActivityPermissionBinding binding;
     private SettingsFragment settingsFragment;
 

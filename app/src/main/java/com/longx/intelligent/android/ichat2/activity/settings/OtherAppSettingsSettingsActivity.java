@@ -80,7 +80,7 @@ public class OtherAppSettingsSettingsActivity extends BaseActivity {
             if(preference.equals(preferenceAppSettings)){
                 AppUtil.startSystemAppSettingActivity(getContext());
             }else if(preference.equals(preferencePermission)){
-                startActivity(new Intent(getActivity(), PermissionActivity.class));
+                startActivity(new Intent(getActivity(), PermissionSettingsActivity.class));
             }else if(preference.equals(preferenceRestart)){
                 new ConfirmDialog((AppCompatActivity) getActivity(), "如果应用出现异常，重新启动可能可以解决问题。\n是否确定要继续？\n注意：此操作有极低概率导致数据异常。")
                         .setPositiveButton((dialog, which) -> {
