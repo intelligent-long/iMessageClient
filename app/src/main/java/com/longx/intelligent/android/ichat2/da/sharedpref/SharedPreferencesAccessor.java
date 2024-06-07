@@ -186,6 +186,10 @@ public class SharedPreferencesAccessor {
             private static final String APP_EMAIL_VISIBLE = "app_email_visible";
             private static final String APP_SEX_VISIBLE = "app_sex_visible";
             private static final String APP_REGION_VISIBLE = "app_region_visible";
+            private static final String FIND_ME_BY_ICHAT_ID = "find_me_by_ichat_id";
+            private static final String FIND_ME_BY_EMAIL = "find_me_by_email";
+            private static final String APP_FIND_ME_BY_ICHAT_ID = "app_find_me_by_ichat_id";
+            private static final String APP_FIND_ME_BY_EMAIL = "app_find_me_by_email";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(NAME_USER_PROFILE, Context.MODE_PRIVATE);
@@ -217,6 +221,10 @@ public class SharedPreferencesAccessor {
                     .putBoolean(Key.APP_SEX_VISIBLE, self.getUserProfileVisibility().isSexVisible())
                     .putBoolean(Key.REGION_VISIBLE, self.getUserProfileVisibility().isRegionVisible())
                     .putBoolean(Key.APP_REGION_VISIBLE, self.getUserProfileVisibility().isRegionVisible())
+                    .putBoolean(Key.FIND_ME_BY_ICHAT_ID, self.getWaysToFindMe().isByIchatIdUser())
+                    .putBoolean(Key.APP_FIND_ME_BY_ICHAT_ID, self.getWaysToFindMe().isByIchatIdUser())
+                    .putBoolean(Key.FIND_ME_BY_EMAIL, self.getWaysToFindMe().isByEmail())
+                    .putBoolean(Key.APP_FIND_ME_BY_EMAIL, self.getWaysToFindMe().isByEmail())
                     .commit();
         }
 
@@ -249,13 +257,16 @@ public class SharedPreferencesAccessor {
             boolean emailVisible = sharedPreferences.getBoolean(Key.EMAIL_VISIBLE, true);
             boolean sexVisible = sharedPreferences.getBoolean(Key.SEX_VISIBLE, true);
             boolean regionVisible = sharedPreferences.getBoolean(Key.REGION_VISIBLE, true);
+            boolean findMeByIchatId = sharedPreferences.getBoolean(Key.FIND_ME_BY_ICHAT_ID, true);
+            boolean findMeByEmail = sharedPreferences.getBoolean(Key.FIND_ME_BY_EMAIL, true);
             return new Self(ichatId, ichatIdUser, email, registerTime, username,
                     new Avatar(avatarHash, avatarIchatId, avatarExtension, avatarTime),
                     sex == -1 ? null : sex,
                     (firstRegionAdcode == -1 && firstRegionName == null) ? null : new UserInfo.Region(firstRegionAdcode, firstRegionName),
                     (secondRegionAdcode == -1 && secondRegionName == null) ? null : new UserInfo.Region(secondRegionAdcode, secondRegionName),
                     (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new UserInfo.Region(thirdRegionAdcode, thirdRegionName),
-                    new UserInfo.UserProfileVisibility(emailVisible, sexVisible, regionVisible));
+                    new UserInfo.UserProfileVisibility(emailVisible, sexVisible, regionVisible),
+                    new UserInfo.WaysToFindMe(findMeByIchatId, findMeByEmail));
         }
 
         public static void saveAppUserProfileVisibility(Context context, UserInfo.UserProfileVisibility userProfileVisibility){
@@ -276,6 +287,24 @@ public class SharedPreferencesAccessor {
             boolean appSexVisible = sharedPreferences.getBoolean(Key.APP_SEX_VISIBLE, true);
             boolean appRegionVisible = sharedPreferences.getBoolean(Key.APP_REGION_VISIBLE, true);
             return new UserInfo.UserProfileVisibility(appEmailVisible, appSexVisible, appRegionVisible);
+        }
+
+        public static void saveAppWaysToFindMe(Context context, UserInfo.WaysToFindMe waysToFindMe){
+            getSharedPreferences(context)
+                    .edit()
+                    .putBoolean(Key.APP_FIND_ME_BY_ICHAT_ID, waysToFindMe.isByIchatIdUser())
+                    .putBoolean(Key.APP_FIND_ME_BY_EMAIL, waysToFindMe.isByEmail())
+                    .apply();
+        }
+
+        public static UserInfo.WaysToFindMe getAppWaysToFindMe(Context context){
+            SharedPreferences sharedPreferences = getSharedPreferences(context);
+            if(!(sharedPreferences.contains(Key.APP_FIND_ME_BY_ICHAT_ID) && sharedPreferences.contains(Key.APP_FIND_ME_BY_EMAIL))){
+                return null;
+            }
+            boolean appFindMeByIchatId = sharedPreferences.getBoolean(Key.APP_FIND_ME_BY_ICHAT_ID, true);
+            boolean appFindMeByEmail = sharedPreferences.getBoolean(Key.APP_FIND_ME_BY_EMAIL, true);
+            return new UserInfo.WaysToFindMe(appFindMeByIchatId, appFindMeByEmail);
         }
 
         @SuppressLint("ApplySharedPref")

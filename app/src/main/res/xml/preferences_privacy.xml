@@ -14,4 +14,14 @@
             app:title="@string/title_settings_edit_user_profile_visibility" />
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
 
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="广播">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:title="广播频道权限" />
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:title="不看他（她）的广播" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+
 </PreferenceScreen>

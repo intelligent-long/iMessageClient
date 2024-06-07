@@ -2,12 +2,7 @@ package com.longx.intelligent.android.ichat2.activity.settings;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -15,7 +10,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
-import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
+import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostBody;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditWaysToFindMeBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
@@ -71,7 +66,14 @@ public class EditWaysToFindMeActivity extends BaseActivity {
 
         @Override
         protected void showInfo() {
-
+            UserInfo.WaysToFindMe appWaysToFindMe = SharedPreferencesAccessor.UserProfilePref.getAppWaysToFindMe(requireContext());
+            if(appWaysToFindMe == null){
+                preferenceChangeCanFindMeByIchatId.setEnabled(false);
+                preferenceChangeCanFindMeByEmail.setEnabled(false);
+            }else {
+                preferenceChangeCanFindMeByIchatId.setChecked(appWaysToFindMe.isByIchatIdUser());
+                preferenceChangeCanFindMeByEmail.setChecked(appWaysToFindMe.isByEmail());
+            }
         }
 
         @Override
@@ -82,6 +84,15 @@ public class EditWaysToFindMeActivity extends BaseActivity {
 
         @Override
         public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+            boolean findMeByIchatId = preferenceChangeCanFindMeByIchatId.isChecked();
+            boolean findMeByEmail = preferenceChangeCanFindMeByEmail.isChecked();
+            if(preference.equals(preferenceChangeCanFindMeByIchatId)){
+                findMeByIchatId = (boolean) newValue;
+            }else if(preference.equals(preferenceChangeCanFindMeByEmail)){
+                findMeByEmail = (boolean) newValue;
+            }
+            SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(requireContext(),
+                    new UserInfo.WaysToFindMe(findMeByIchatId, findMeByEmail));
             return true;
         }
 
@@ -104,6 +115,10 @@ public class EditWaysToFindMeActivity extends BaseActivity {
         }
 
         private void updateServerData() {
+            if(!preferenceChangeCanFindMeByIchatId.isEnabled()) return;
+            if(!preferenceChangeCanFindMeByEmail.isEnabled()) return;
+            ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(preferenceChangeCanFindMeByIchatId.isChecked(), preferenceChangeCanFindMeByEmail.isChecked());
+            PrivacyApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<>(requireContext().getApplicationContext()));
         }
     }
 }

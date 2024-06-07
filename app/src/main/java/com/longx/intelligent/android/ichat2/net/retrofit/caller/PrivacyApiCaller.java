@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
+import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.PrivacyApi;
@@ -19,6 +20,12 @@ public class PrivacyApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> changeUserProfileVisibility(LifecycleOwner lifecycleOwner, ChangeUserProfileVisibilityPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().changeUserProfileVisibility(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> changeWaysToFindMe(LifecycleOwner lifecycleOwner, ChangeWaysToFindMePostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().changeWaysToFindMe(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

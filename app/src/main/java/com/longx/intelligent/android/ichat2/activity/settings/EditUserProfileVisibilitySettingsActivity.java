@@ -123,6 +123,9 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
         }
 
         private void updateServerData() {
+            if(!preferenceChangeEmailVisibility.isEnabled()) return;
+            if(!preferenceChangeSexVisibility.isEnabled()) return;
+            if(!preferenceChangeRegionVisibility.isEnabled()) return;
             ChangeUserProfileVisibilityPostBody postBody = new ChangeUserProfileVisibilityPostBody(preferenceChangeEmailVisibility.isChecked(), preferenceChangeSexVisibility.isChecked(), preferenceChangeRegionVisibility.isChecked());
             PrivacyApiCaller.changeUserProfileVisibility(null, postBody, new RetrofitApiCaller.BaseCommonYier<>(requireContext().getApplicationContext()));
         }

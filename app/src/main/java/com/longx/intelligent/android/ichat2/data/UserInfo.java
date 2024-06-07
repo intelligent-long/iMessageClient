@@ -92,6 +92,27 @@ public abstract class UserInfo {
         }
     }
 
+    public static class WaysToFindMe{
+        private boolean byIchatIdUser;
+        private boolean byEmail;
+
+        public WaysToFindMe() {
+        }
+
+        public WaysToFindMe(boolean byIchatIdUser, boolean byEmail) {
+            this.byIchatIdUser = byIchatIdUser;
+            this.byEmail = byEmail;
+        }
+
+        public boolean isByIchatIdUser() {
+            return byIchatIdUser;
+        }
+
+        public boolean isByEmail() {
+            return byEmail;
+        }
+    }
+
     public static String sexValueToString(Context context, Integer sex){
         String[] sexNames = {context.getString(R.string.do_not_set), context.getString(R.string.sex_nv), context.getString(R.string.sex_nan)};
         if(sex == null){
