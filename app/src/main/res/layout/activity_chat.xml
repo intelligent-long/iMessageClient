@@ -270,7 +270,7 @@
                 <ImageView
                     android:layout_width="38dp"
                     android:layout_height="38dp"
-                    android:src="@drawable/videocam_fill_24px"
+                    android:src="@drawable/video_call_fill_24px"
                     app:tint="?attr/colorControlNormal"/>
 
                 <TextView
@@ -281,6 +281,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/more_panel_take_photo"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_columnWeight="1"
@@ -303,7 +304,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
-                    android:text="拍摄"/>
+                    android:text="拍摄照片"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/more_panel_take_video"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/videocam_fill_24px"
+                    app:tint="?attr/colorControlNormal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="拍摄视频"/>
             </LinearLayout>
 
             <LinearLayout
@@ -312,7 +340,7 @@
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
                 android:layout_row="1"
-                android:layout_column="1"
+                android:layout_column="2"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackground"
@@ -338,7 +366,7 @@
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
                 android:layout_row="1"
-                android:layout_column="2"
+                android:layout_column="3"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackground"

@@ -8,6 +8,7 @@ import com.longx.intelligent.android.ichat2.data.ChatMessage;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by LONG on 2024/3/28 at 6:05 PM.
@@ -54,6 +55,12 @@ public class DataPaths {
             SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
             String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + chatMessage.getImageExtension();
             return getPublicFilePath() + File.separator + "聊天图片" + File.separator + fileName;
+        }
+
+        public static String getCapturedChatPhotoFilePath(){
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(new Date());
+            return getPublicFilePath() + File.separator + "拍摄" + File.separator + "照片" + File.separator + fileName;
         }
     }
 }

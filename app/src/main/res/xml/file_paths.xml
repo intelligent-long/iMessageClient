@@ -3,4 +3,7 @@
     <external-path
         name="dcim"
         path="DCIM/"/>
+    <external-path
+        name="external_files"
+        path="." />
 </paths>

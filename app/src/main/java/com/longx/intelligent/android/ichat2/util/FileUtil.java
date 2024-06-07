@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 public class FileUtil {
 
-    public static boolean transfer(InputStream is, OutputStream os){
+    public static void transfer(InputStream is, OutputStream os) throws IOException {
         try (InputStream inputStream = new BufferedInputStream(is);
              OutputStream outputStream = new BufferedOutputStream(os)) {
             byte[] buffer = new byte[10240];
@@ -23,10 +23,6 @@ public class FileUtil {
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
             }
-            return true;
-        } catch (IOException e) {
-            Log.e(FileUtil.class.getName(), "", e);
-            return false;
         }
     }
 
@@ -65,7 +61,7 @@ public class FileUtil {
     }
 
     public static String getFileExtension(File file) {
-        return getFileExtension(file.getAbsolutePath());
+        return getFileExtension(file.getName());
     }
 
     public static String getFileExtension(String fileName) {
@@ -77,6 +73,22 @@ public class FileUtil {
             return fileName.substring(lastDotIndex).toLowerCase();
         } else {
             return "";
+        }
+    }
+
+    public static String getFileBaseName(File file){
+        return getFileBaseName(file.getName());
+    }
+
+    public static String getFileBaseName(String fileName){
+        if (fileName == null || fileName.isEmpty()) {
+            return "";
+        }
+        int lastDotIndex = fileName.lastIndexOf(".");
+        if (lastDotIndex != -1) {
+            return fileName.substring(0, lastDotIndex);
+        } else {
+            return fileName;
         }
     }
 

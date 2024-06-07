@@ -3,6 +3,12 @@ package com.longx.intelligent.android.ichat2.da;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 
+import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
+import org.apache.tika.mime.MimeTypesFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,13 +16,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Created by LONG on 2024/1/21 at 9:23 PM.
  */
 public class FileAccessHelper {
-    public static String save(InputStream contentStream, String path) {
+    public static File createFile(String path) throws IOException {
         File file = new File(path);
         int number = 1;
         while (file.exists()){
@@ -26,33 +33,23 @@ public class FileAccessHelper {
             number ++;
         }
         Objects.requireNonNull(file.getParentFile()).mkdirs();
-        try {
-            FileOutputStream outputStream = new FileOutputStream(file);
-            boolean transfer = FileUtil.transfer(contentStream, outputStream);
-            if(transfer) return file.getAbsolutePath();
-        }catch (IOException e){
-            ErrorLogger.log(FileAccessHelper.class, e);
-            return null;
-        }
-        return null;
+        file.createNewFile();
+        return file;
     }
 
-    public static String save(byte[] bytes, String path) {
-        File file = new File(path);
-        int number = 1;
-        while (file.exists()){
-            String pathWithoutExtension = path.substring(0, path.indexOf('.'));
-            String extension = path.substring(path.indexOf('.'));
-            file = new File(pathWithoutExtension + " (" + number + ")" + extension);
-            number ++;
+    public static String save(InputStream contentStream, String path) throws IOException {
+        File file = createFile(path);
+        try (FileOutputStream outputStream = new FileOutputStream(file)){
+            FileUtil.transfer(contentStream, outputStream);
+            return file.getAbsolutePath();
         }
-        Objects.requireNonNull(file.getParentFile()).mkdirs();
+    }
+
+    public static String save(byte[] bytes, String path) throws IOException {
+        File file = createFile(path);
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(bytes);
             return file.getAbsolutePath();
-        } catch (IOException e) {
-            ErrorLogger.log(FileAccessHelper.class, e);
-            return null;
         }
     }
 
@@ -82,5 +79,48 @@ public class FileAccessHelper {
             ErrorLogger.log(FileAccessHelper.class, e);
             return null;
         }
+    }
+
+    public static String detectFileExtension(byte[] bytes) {
+        Tika tika = new Tika();
+        String mimeType;
+        mimeType = tika.detect(bytes);
+        MimeTypes defaultMimeTypes = MimeTypes.getDefaultMimeTypes();
+        MimeType mimeTypeObj;
+        try {
+            mimeTypeObj = defaultMimeTypes.forName(mimeType);
+        } catch (MimeTypeException e) {
+            ErrorLogger.log(e);
+            return "";
+        }
+        String extension = mimeTypeObj.getExtension();
+        if (extension.startsWith(".")) {
+            extension = extension.substring(1);
+        }
+        return extension;
+    }
+
+    public static String detectFileExtension(File file) {
+        Tika tika = new Tika();
+        String mimeType;
+        try {
+            mimeType = tika.detect(file);
+        } catch (IOException e) {
+            ErrorLogger.log(e);
+            return "";
+        }
+        MimeTypes defaultMimeTypes = MimeTypes.getDefaultMimeTypes();
+        MimeType mimeTypeObj;
+        try {
+            mimeTypeObj = defaultMimeTypes.forName(mimeType);
+        } catch (MimeTypeException e) {
+            ErrorLogger.log(e);
+            return "";
+        }
+        String extension = mimeTypeObj.getExtension();
+        if (extension.startsWith(".")) {
+            extension = extension.substring(1);
+        }
+        return extension;
     }
 }

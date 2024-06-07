@@ -17,9 +17,11 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatImageBinding
 import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
@@ -68,11 +70,12 @@ public class ChatImageActivity extends BaseActivity implements RecyclerItemYiers
                 new Thread(() -> {
                     OperationDialog operationDialog = new OperationDialog(this);
                     operationDialog.show();
-                    String saved = PublicFileAccessor.ChatImage.save(imageFilePaths.get(currentItem), chatMessages.get(currentItem));
-                    operationDialog.dismiss();
-                    if(saved != null){
+                    try {
+                        PublicFileAccessor.ChatImage.save(imageFilePaths.get(currentItem), chatMessages.get(currentItem));
+                        operationDialog.dismiss();
                         MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
-                    }else {
+                    }catch (IOException e){
+                        ErrorLogger.log(e);
                         MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
                     }
                 }).start();

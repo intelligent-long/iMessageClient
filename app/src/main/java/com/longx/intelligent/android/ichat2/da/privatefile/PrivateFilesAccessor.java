@@ -6,6 +6,7 @@ import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -13,7 +14,7 @@ import java.io.InputStream;
  */
 public class PrivateFilesAccessor {
     public static class ChatImage{
-        public static String save(Context context, ChatMessage chatMessage) {
+        public static String save(Context context, ChatMessage chatMessage) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String imageFilePath = DataPaths.PrivateFile.getChatImageFilePath(context, other, chatMessage.getUuid());
             byte[] imageBytes = chatMessage.getImageBytes();

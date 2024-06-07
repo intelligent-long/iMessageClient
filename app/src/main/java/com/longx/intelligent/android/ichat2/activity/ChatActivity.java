@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -63,6 +64,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private boolean showMorePanelOnKeyboardClosed;
     private Runnable showMessagePopupOnKeyboardClosed;
     private boolean sendingState;
+    private ActivityResultLauncher<Intent> sendImageMessageResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
         showContent();
         setupYiers();
+        initResultLauncher();
     }
 
     @Override
@@ -158,6 +161,20 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         }
         adapter.addAllToStartAndShow(chatMessages);
         previousPn ++;
+    }
+
+    private void initResultLauncher() {
+        sendImageMessageResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = Objects.requireNonNull(result.getData());
+                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
+                        List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
+                        onSendImageMessages(uriList);
+                    }
+                }
+        );
     }
 
     private void setupYiers() {
@@ -295,19 +312,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.messageInput.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus) hideMorePanel();
         });
-        ActivityResultLauncher<Intent> startForResult = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Intent data = Objects.requireNonNull(result.getData());
-                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
-                        List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
-                        onSendImageMessages(uriList);
-                    }
-                }
-        );
         binding.morePanelImage.setOnClickListener(v -> {
-            startForResult.launch(new Intent(this, SendImageMessagesActivity.class));
+            sendImageMessageResultLauncher.launch(new Intent(this, SendImageMessagesActivity.class));
+        });
+        binding.morePanelTakePhoto.setOnClickListener(v -> {
+            sendImageMessageResultLauncher.launch(new Intent(this, TakeAndSendPhotoActivity.class));
         });
     }
 
@@ -339,6 +348,33 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendIndicator.setVisibility(View.GONE);
     }
 
+    private void showMorePanel(){
+        binding.morePanel.postDelayed(() -> binding.recyclerView.scrollToEnd(true), 21);
+        binding.morePanel.setVisibility(View.VISIBLE);
+        binding.moreButton.setVisibility(View.GONE);
+        binding.hideMoreButton.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.bar.getLayoutParams();
+        params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        binding.bar.setLayoutParams(params);
+    }
+
+    private void hideMorePanel(){
+        binding.morePanel.setVisibility(View.GONE);
+        binding.moreButton.setVisibility(View.VISIBLE);
+        binding.hideMoreButton.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.bar.getLayoutParams();
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        binding.bar.setLayoutParams(params);
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void setShowMessagePopupOnKeyboardClosed(Runnable showMessagePopupOnKeyboardClosed) {
+        this.showMessagePopupOnKeyboardClosed = showMessagePopupOnKeyboardClosed;
+    }
+
     private void onSendImageMessages(List<Uri> uriList){
         AtomicInteger index = new AtomicInteger();
         sendImageMessages(uriList, index);
@@ -348,7 +384,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
         byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
-        String extension = DocumentFile.fromSingleUri(this, uri).getType().replace("image/", "");
+        String extension = FileAccessHelper.detectFileExtension(imageBytes);
         SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), extension);
         ChatApiCaller.sendImageChatMessage(this, imageBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
@@ -390,32 +426,5 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 }
             }
         });
-    }
-
-    private void showMorePanel(){
-        binding.morePanel.postDelayed(() -> binding.recyclerView.scrollToEnd(true), 21);
-        binding.morePanel.setVisibility(View.VISIBLE);
-        binding.moreButton.setVisibility(View.GONE);
-        binding.hideMoreButton.setVisibility(View.VISIBLE);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.bar.getLayoutParams();
-        params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        binding.bar.setLayoutParams(params);
-    }
-
-    private void hideMorePanel(){
-        binding.morePanel.setVisibility(View.GONE);
-        binding.moreButton.setVisibility(View.VISIBLE);
-        binding.hideMoreButton.setVisibility(View.GONE);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.bar.getLayoutParams();
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        binding.bar.setLayoutParams(params);
-    }
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public void setShowMessagePopupOnKeyboardClosed(Runnable showMessagePopupOnKeyboardClosed) {
-        this.showMessagePopupOnKeyboardClosed = showMessagePopupOnKeyboardClosed;
     }
 }
