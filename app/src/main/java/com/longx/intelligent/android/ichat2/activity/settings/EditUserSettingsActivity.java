@@ -25,6 +25,7 @@ import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.EditAvatarBottomSheet;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserSettingsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -32,6 +33,7 @@ import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFrag
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.preference.ChangeAvatarPreference;
+import com.longx.intelligent.android.ichat2.preference.ProfileItemPreference;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
@@ -70,11 +72,11 @@ public class EditUserSettingsActivity extends BaseActivity{
 
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, ContentUpdater.OnServerContentUpdateYier {
         private ChangeAvatarPreference preferenceChangeAvatar;
-        private Material3Preference preferenceChangeIchatIdUser;
-        private Material3Preference preferenceChangeUsername;
-        private Material3Preference preferenceChangeEmail;
-        private Material3Preference preferenceChangeSex;
-        private Material3Preference preferenceChangeRegion;
+        private ProfileItemPreference preferenceChangeIchatIdUser;
+        private ProfileItemPreference preferenceChangeUsername;
+        private ProfileItemPreference preferenceChangeEmail;
+        private ProfileItemPreference preferenceChangeSex;
+        private ProfileItemPreference preferenceChangeRegion;
 
         private final ActivityResultLauncher<Intent> imageChosenActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -126,6 +128,10 @@ public class EditUserSettingsActivity extends BaseActivity{
             String regionDesc = self.buildRegionDesc();
             preferenceChangeRegion.setTitle(regionDesc == null ? doNotSet : regionDesc);
             preferenceChangeAvatar.setAvatar(self.getAvatar() == null ? null : self.getAvatar().getHash());
+            UserInfo.UserProfileVisibility userProfileVisibility = self.getUserProfileVisibility();
+            preferenceChangeEmail.setProfileVisibility(userProfileVisibility.isEmailVisible());
+            preferenceChangeSex.setProfileVisibility(userProfileVisibility.isSexVisible());
+            preferenceChangeRegion.setProfileVisibility(userProfileVisibility.isRegionVisible());
         }
 
         @Override

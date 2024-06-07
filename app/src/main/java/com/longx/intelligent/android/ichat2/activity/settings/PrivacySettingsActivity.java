@@ -47,6 +47,7 @@ public class PrivacySettingsActivity extends BaseActivity {
 
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
         private Material3Preference preferenceUserProfileVisibility;
+        private Material3Preference preferenceWaysToFindMe;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
@@ -62,6 +63,7 @@ public class PrivacySettingsActivity extends BaseActivity {
         @Override
         protected void bindPreferences() {
             preferenceUserProfileVisibility = findPreference(getString(R.string.preference_key_user_profile_visibility));
+            preferenceWaysToFindMe = findPreference(getString(R.string.preference_key_ways_to_find_me));
         }
 
         @Override
@@ -71,11 +73,16 @@ public class PrivacySettingsActivity extends BaseActivity {
         @Override
         protected void setupYiers() {
             preferenceUserProfileVisibility.setOnPreferenceClickListener(this);
+            preferenceWaysToFindMe.setOnPreferenceClickListener(this);
         }
 
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
-            startActivity(new Intent(requireContext(), EditUserProfileVisibilitySettingsActivity.class));
+            if(preference.equals(preferenceUserProfileVisibility)){
+                startActivity(new Intent(requireContext(), EditUserProfileVisibilitySettingsActivity.class));
+            }else if(preference.equals(preferenceWaysToFindMe)){
+                startActivity(new Intent(requireContext(), EditWaysToFindMeActivity.class));
+            }
             return true;
         }
     }

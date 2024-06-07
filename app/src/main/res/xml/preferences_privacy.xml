@@ -6,11 +6,12 @@
         app:title="账号">
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
-            app:key="@string/preference_key_user_profile_visibility"
-            app:title="@string/title_settings_edit_user_profile_visibility" />
+            app:key="@string/preference_key_ways_to_find_me"
+            app:title="@string/title_settings_ways_to_find_me" />
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
-            app:title="查找我的方式" />
+            app:key="@string/preference_key_user_profile_visibility"
+            app:title="@string/title_settings_edit_user_profile_visibility" />
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
 
 </PreferenceScreen>
