@@ -170,7 +170,11 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             binding.regionDivider.setVisibility(View.GONE);
         }else {
             binding.layoutRegion.setVisibility(View.VISIBLE);
-            binding.regionDivider.setVisibility(View.VISIBLE);
+            if(note == null && email == null){
+                binding.regionDivider.setVisibility(View.GONE);
+            }else {
+                binding.regionDivider.setVisibility(View.VISIBLE);
+            }
             binding.region.setText(regionDesc);
         }
     }

@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditWaysToFindMeBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
@@ -19,6 +21,9 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EditWaysToFindMeActivity extends BaseActivity {
     private ActivityEditWaysToFindMeBinding binding;
@@ -115,10 +120,41 @@ public class EditWaysToFindMeActivity extends BaseActivity {
         }
 
         private void updateServerData() {
+            Context applicationContext = requireContext().getApplicationContext();
             if(!preferenceChangeCanFindMeByIchatId.isEnabled()) return;
             if(!preferenceChangeCanFindMeByEmail.isEnabled()) return;
-            ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(preferenceChangeCanFindMeByIchatId.isChecked(), preferenceChangeCanFindMeByEmail.isChecked());
-            PrivacyApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<>(requireContext().getApplicationContext()));
+            boolean findMeByIchatIdChecked = preferenceChangeCanFindMeByIchatId.isChecked();
+            boolean findMeByEmailChecked = preferenceChangeCanFindMeByEmail.isChecked();
+            UserInfo.WaysToFindMe serverWaysToFindMe = SharedPreferencesAccessor.UserProfilePref.getServerWaysToFindMe(applicationContext);
+            ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(findMeByIchatIdChecked, findMeByEmailChecked);
+            PrivacyApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
+                @Override
+                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                    super.ok(data, row, call);
+                    SharedPreferencesAccessor.UserProfilePref.saveServerWaysToFindMe(applicationContext,
+                            new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
+                    SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
+                            new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
+                }
+
+                @Override
+                public void notOk(int code, String message, Response<OperationStatus> row, Call<OperationStatus> call) {
+                    super.notOk(code, message, row, call);
+                    if (serverWaysToFindMe != null) {
+                        SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
+                                new UserInfo.WaysToFindMe(serverWaysToFindMe.isByIchatIdUser(), serverWaysToFindMe.isByEmail()));
+                    }
+                }
+
+                @Override
+                public void failure(Throwable t, Call<OperationStatus> call) {
+                    super.failure(t, call);
+                    if (serverWaysToFindMe != null) {
+                        SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
+                                new UserInfo.WaysToFindMe(serverWaysToFindMe.isByIchatIdUser(), serverWaysToFindMe.isByEmail()));
+                    }
+                }
+            });
         }
     }
 }

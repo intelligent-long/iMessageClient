@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserProfileVisibilitySettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
@@ -19,6 +21,9 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
     private ActivityEditUserProfileVisibilitySettingsBinding binding;
@@ -123,11 +128,39 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
         }
 
         private void updateServerData() {
+            Context applicationContext = requireContext().getApplicationContext();
             if(!preferenceChangeEmailVisibility.isEnabled()) return;
             if(!preferenceChangeSexVisibility.isEnabled()) return;
             if(!preferenceChangeRegionVisibility.isEnabled()) return;
-            ChangeUserProfileVisibilityPostBody postBody = new ChangeUserProfileVisibilityPostBody(preferenceChangeEmailVisibility.isChecked(), preferenceChangeSexVisibility.isChecked(), preferenceChangeRegionVisibility.isChecked());
-            PrivacyApiCaller.changeUserProfileVisibility(null, postBody, new RetrofitApiCaller.BaseCommonYier<>(requireContext().getApplicationContext()));
+            UserInfo.UserProfileVisibility serverUserProfileVisibility = SharedPreferencesAccessor.UserProfilePref.getServerUserProfileVisibility(applicationContext);
+            boolean emailVisibilityChecked = preferenceChangeEmailVisibility.isChecked();
+            boolean sexVisibilityChecked = preferenceChangeSexVisibility.isChecked();
+            boolean regionVisibilityChecked = preferenceChangeRegionVisibility.isChecked();
+            ChangeUserProfileVisibilityPostBody postBody = new ChangeUserProfileVisibilityPostBody(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked);
+            PrivacyApiCaller.changeUserProfileVisibility(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
+                @Override
+                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                    super.ok(data, row, call);
+                    SharedPreferencesAccessor.UserProfilePref.saveServerUserProfileVisibility(applicationContext,
+                            new UserInfo.UserProfileVisibility(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked));
+                    SharedPreferencesAccessor.UserProfilePref.saveAppUserProfileVisibility(applicationContext,
+                            new UserInfo.UserProfileVisibility(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked));
+                }
+
+                @Override
+                public void notOk(int code, String message, Response<OperationStatus> row, Call<OperationStatus> call) {
+                    super.notOk(code, message, row, call);
+                    SharedPreferencesAccessor.UserProfilePref.saveAppUserProfileVisibility(applicationContext,
+                            new UserInfo.UserProfileVisibility(serverUserProfileVisibility.isEmailVisible(), serverUserProfileVisibility.isSexVisible(), serverUserProfileVisibility.isRegionVisible()));
+                }
+
+                @Override
+                public void failure(Throwable t, Call<OperationStatus> call) {
+                    super.failure(t, call);
+                    SharedPreferencesAccessor.UserProfilePref.saveAppUserProfileVisibility(applicationContext,
+                            new UserInfo.UserProfileVisibility(serverUserProfileVisibility.isEmailVisible(), serverUserProfileVisibility.isSexVisible(), serverUserProfileVisibility.isRegionVisible()));
+                }
+            });
         }
     }
 }

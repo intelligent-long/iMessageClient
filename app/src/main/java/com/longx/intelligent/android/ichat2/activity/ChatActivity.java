@@ -419,6 +419,18 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             }
 
             @Override
+            public void notOk(int code, String message, Response<OperationData> row, Call<OperationData> call) {
+                super.notOk(code, message, row, call);
+                toNormalState();
+            }
+
+            @Override
+            public void failure(Throwable t, Call<OperationData> call) {
+                super.failure(t, call);
+                toNormalState();
+            }
+
+            @Override
             public void complete(Call<OperationData> call) {
                 super.complete(call);
                 if(index.get() == uriList.size()){
