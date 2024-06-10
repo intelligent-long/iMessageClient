@@ -13,13 +13,11 @@ import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendImageMessagesBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -99,7 +97,7 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
             if (onRecyclerItemClickYier != null)
                 onRecyclerItemClickYier.onRecyclerItemClick(position, v);
         });
-        if(checkedPositions.contains((Integer) (position + 1))){
+        if(checkedPositions.contains(position + 1)){
             holder.binding.checkButton.setVisibility(View.GONE);
             holder.binding.cancelCheckButton.setVisibility(View.VISIBLE);
             holder.binding.darkCover.setVisibility(View.VISIBLE);
@@ -113,8 +111,8 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
             holder.binding.index.setText(null);
         }
         holder.binding.checkButton.setOnClickListener(v -> {
-            if(checkedImageUris.size() == Constants.SEND_CHAT_IMAGE_MAX_CHECK_COUNT){
-                MessageDisplayer.autoShow(activity, "最多选择 " + Constants.SEND_CHAT_IMAGE_MAX_CHECK_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
+            if(checkedImageUris.size() == Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
+                MessageDisplayer.autoShow(activity, "最多选择 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
                 return;
             }
             checkedImageUris.add(uri);

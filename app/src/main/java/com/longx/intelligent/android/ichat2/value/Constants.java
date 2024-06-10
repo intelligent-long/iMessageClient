@@ -16,6 +16,7 @@ public class Constants {
     public static final String TIME_FORMAT_PATTERN_M_D = "M 月 d 日";
     public static final int CHAT_IMAGE_VIEW_MAX_WIDTH_DP = 200;
     public static final int CHAT_IMAGE_VIEW_MAX_HEIGHT_DP = 200;
-    public static final int SEND_CHAT_IMAGE_MAX_CHECK_COUNT = 30;
+    public static final int MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT = 30;
+    public static final int MAX_ONCE_SEND_CHAT_MESSAGE_FILE_COUNT = 10;
 
 }

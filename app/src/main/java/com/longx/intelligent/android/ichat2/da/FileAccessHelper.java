@@ -1,5 +1,11 @@
 package com.longx.intelligent.android.ichat2.da;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
+
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 
@@ -122,5 +128,30 @@ public class FileAccessHelper {
             extension = extension.substring(1);
         }
         return extension;
+    }
+
+    @SuppressLint("Range")
+    public static String getFileNameFromUri(Context context, Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
+    public static String getFileExtensionFromUri(Context context, Uri uri){
+        String fileName = getFileNameFromUri(context, uri);
+        return FileUtil.getFileExtension(fileName);
     }
 }

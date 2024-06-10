@@ -10,18 +10,19 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
+import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -30,9 +31,11 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.MediaUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
@@ -309,6 +312,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             intent = Intent.createChooser(intent, "选择文件");
             sendFileMessageResultLauncher.launch(intent);
         });
@@ -377,7 +381,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         Intent data = Objects.requireNonNull(result.getData());
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
                         List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
-                        onSendImageMessages(uriList);
+                        if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
+                            MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张照片", MessageDisplayer.Duration.LONG);
+                        }else {
+                            onSendImageMessages(uriList);
+                        }
                     }
                 }
         );
@@ -387,8 +395,22 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     if(result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         if(data != null){
-                            Uri uri = data.getData();
-                            onSendFileMessage();
+                            List<Uri> uriList = new ArrayList<>();
+                            if (data.getClipData() != null) {
+                                int count = data.getClipData().getItemCount();
+                                for (int i = 0; i < count; i++) {
+                                    Uri fileUri = data.getClipData().getItemAt(i).getUri();
+                                    uriList.add(fileUri);
+                                }
+                            } else if (data.getData() != null) {
+                                Uri fileUri = data.getData();
+                                uriList.add(fileUri);
+                            }
+                            if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_FILE_COUNT){
+                                MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_FILE_COUNT + " 个文件", MessageDisplayer.Duration.LONG);
+                            }else {
+                                onSendFileMessages(uriList);
+                            }
                         }
                     }
                 }
@@ -404,7 +426,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
         byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
-        String extension = FileAccessHelper.detectFileExtension(imageBytes);
+        String extension = FileAccessHelper.getFileExtensionFromUri(this, uri);
         SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), extension);
         ChatApiCaller.sendImageChatMessage(this, imageBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
@@ -418,7 +440,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                data.commonHandleResult(ChatActivity.this, new int[]{-101}, () -> {
+                data.commonHandleResult(ChatActivity.this, new int[]{-101, -102}, () -> {
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
                     ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
@@ -460,7 +482,68 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         });
     }
 
-    private void onSendFileMessage() {
+    private void onSendFileMessages(List<Uri> uriList) {
+        AtomicInteger index = new AtomicInteger();
+        sendFileMessages(uriList, index);
+    }
 
+    private void sendFileMessages(List<Uri> uriList, AtomicInteger index){
+        if(index.get() == uriList.size()) return;
+        Uri uri = uriList.get(index.get());
+        byte[] fileBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
+        String extension = FileAccessHelper.getFileExtensionFromUri(this, uri);
+        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getIchatId(), extension);
+        ChatApiCaller.sendFileChatMessage(this, fileBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+            @Override
+            public void start(Call<OperationData> call) {
+                super.start(call);
+                if(index.get() == 0) {
+                    toSendingState();
+                }
+            }
+
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                data.commonHandleResult(ChatActivity.this, new int[]{-101, -102}, () -> {
+                    ChatMessage chatMessage = data.getData(ChatMessage.class);
+                    chatMessage.setViewed(true);
+                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
+                        adapter.addItemToEndAndShow(chatMessage);
+                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                        });
+                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                            });
+                        });
+                    });
+                });
+                index.incrementAndGet();
+                sendFileMessages(uriList, index);
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<OperationData> row, Call<OperationData> call) {
+                super.notOk(code, message, row, call);
+                toNormalState();
+            }
+
+            @Override
+            public void failure(Throwable t, Call<OperationData> call) {
+                super.failure(t, call);
+                toNormalState();
+            }
+
+            @Override
+            public void complete(Call<OperationData> call) {
+                super.complete(call);
+                if(index.get() == uriList.size()){
+                    toNormalState();
+                }
+            }
+        });
     }
 }
