@@ -335,6 +335,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/more_panel_send_file"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_columnWeight="1"

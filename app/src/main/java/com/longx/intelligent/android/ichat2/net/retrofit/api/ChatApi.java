@@ -22,6 +22,15 @@ import retrofit2.http.Streaming;
  * Created by LONG on 2024/5/15 at 4:07 AM.
  */
 public interface ChatApi {
+    @GET("chat/message/new/all")
+    CompletableCall<OperationData> fetchAllNewChatMessages();
+
+    @POST("chat/message/new/view/{messageUuid}")
+    CompletableCall<OperationData> viewNewMessage(@Path("messageUuid") String messageUuid);
+
+    @POST("chat/message/new/view/all/{other}")
+    CompletableCall<OperationStatus> viewAllNewMessage(@Path("other") String other);
+
     @POST("chat/message/text/send")
     CompletableCall<OperationData> sendTextChatMessage(@Body SendTextChatMessagePostBody postBody);
 
@@ -29,16 +38,15 @@ public interface ChatApi {
     @POST("chat/message/image/send")
     CompletableCall<OperationData> sendImageChatMessage(@Part MultipartBody.Part image, @Part("metadata") RequestBody metadata);
 
-    @GET("chat/message/new/all")
-    CompletableCall<OperationData> fetchAllNewChatMessages();
-
     @Streaming
     @GET("chat/message/image/new/{imageId}")
     CompletableCall<ResponseBody> fetchChatMessageImage(@Path("imageId") String imageId);
 
-    @POST("chat/message/new/view/{messageUuid}")
-    CompletableCall<OperationData> viewNewMessage(@Path("messageUuid") String messageUuid);
+    @Multipart
+    @POST("chat/message/file/send")
+    CompletableCall<OperationData> sendFileChatMessage(@Part MultipartBody.Part file, @Part("metadata") RequestBody metadata);
 
-    @POST("chat/message/new/view/all/{other}")
-    CompletableCall<OperationStatus> viewAllNewMessage(@Path("other") String other);
+    @Streaming
+    @GET("chat/message/file/new/{fileId}")
+    CompletableCall<ResponseBody> fetchChatMessageFile(@Path("fileId") String fileId);
 }

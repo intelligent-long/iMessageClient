@@ -53,7 +53,7 @@ public class DataPaths {
 
         public static String getChatImageFilePath(ChatMessage chatMessage){
             SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + chatMessage.getImageExtension();
+            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + chatMessage.getExtension();
             return getPublicFilePath() + File.separator + "聊天图片" + File.separator + fileName;
         }
 

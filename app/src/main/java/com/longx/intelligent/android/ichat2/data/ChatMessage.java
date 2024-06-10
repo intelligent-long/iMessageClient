@@ -81,8 +81,9 @@ public class ChatMessage implements Parcelable {
     private String to;
     private Date time;
     private String text;
+    private String extension;
     private String imageId;
-    private String imageExtension;
+    private String fileId;
 
     @JsonIgnore
     private Boolean showTime;
@@ -94,19 +95,22 @@ public class ChatMessage implements Parcelable {
     private Size imageSize;
     @JsonIgnore
     private byte[] imageBytes;
+    @JsonIgnore
+    private String fileFilePath;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String imageId, String imageExtension) {
+    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String extension, String imageId, String fileId) {
         this.type = type;
         this.uuid = uuid;
         this.from = from;
         this.to = to;
-        this.text = text;
         this.time = time;
+        this.text = text;
+        this.extension = extension;
         this.imageId = imageId;
-        this.imageExtension = imageExtension;
+        this.fileId = fileId;
     }
 
     public int getType() {
@@ -125,20 +129,24 @@ public class ChatMessage implements Parcelable {
         return to;
     }
 
+    public Date getTime() {
+        return time;
+    }
+
     public String getText() {
         return text;
     }
 
-    public Date getTime() {
-        return time;
+    public String getExtension() {
+        return extension;
     }
 
     public String getImageId() {
         return imageId;
     }
 
-    public String getImageExtension() {
-        return imageExtension;
+    public String getFileId() {
+        return fileId;
     }
 
     public boolean isSelfSender(Context context){
@@ -178,6 +186,14 @@ public class ChatMessage implements Parcelable {
         this.imageFilePath = imageFilePath;
     }
 
+    public String getFileFilePath() {
+        return fileFilePath;
+    }
+
+    public void setFileFilePath(String fileFilePath) {
+        this.fileFilePath = fileFilePath;
+    }
+
     public Size getImageSize() {
         return imageSize;
     }
@@ -214,8 +230,9 @@ public class ChatMessage implements Parcelable {
         to = in.readString();
         time = new Date(in.readLong());
         text = in.readString();
+        extension = in.readString();
         imageId = in.readString();
-        imageExtension = in.readString();
+        fileId = in.readString();
         byte tmpShowTime = in.readByte();
         showTime = tmpShowTime == 0 ? null : tmpShowTime == 1;
         byte tmpViewed = in.readByte();
@@ -256,8 +273,9 @@ public class ChatMessage implements Parcelable {
         dest.writeString(to);
         dest.writeLong(time.getTime());
         dest.writeString(text);
+        dest.writeString(extension);
         dest.writeString(imageId);
-        dest.writeString(imageExtension);
+        dest.writeString(fileId);
         dest.writeByte((byte) (showTime == null ? 0 : showTime ? 1 : 2));
         dest.writeByte((byte) (viewed == null ? 0 : viewed ? 1 : 2));
         dest.writeString(imageFilePath);

@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
 import androidx.lifecycle.LifecycleOwner;
 
+import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -24,6 +25,24 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return getApiImplementation(ChatApi.class);
     }
 
+    public static CompletableCall<OperationData> fetchAllNewChatMessages(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllNewChatMessages();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> viewNewMessage(LifecycleOwner lifecycleOwner, String messageUuid, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().viewNewMessage(messageUuid);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> viewAllNewMessage(LifecycleOwner lifecycleOwner, String other, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().viewAllNewMessage(other);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
     public static CompletableCall<OperationData> sendTextChatMessage(LifecycleOwner lifecycleOwner, SendTextChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().sendTextChatMessage(postBody);
         call.enqueue(lifecycleOwner, yier);
@@ -39,26 +58,23 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchAllNewChatMessages(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchAllNewChatMessages();
-        call.enqueue(lifecycleOwner, yier);
-        return call;
-    }
-
     public static CompletableCall<ResponseBody> fetchChatMessageImage(LifecycleOwner lifecycleOwner, String imageId, BaseYier<ResponseBody> yier){
         CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageImage(imageId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> viewNewMessage(LifecycleOwner lifecycleOwner, String messageUuid, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().viewNewMessage(messageUuid);
+    public static CompletableCall<OperationData> sendFileChatMessage(LifecycleOwner lifecycleOwner, byte[] fileBytes, SendFileChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
+        RequestBody fileRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), fileBytes);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", postBody.getFileExtension(), fileRequestBody);
+        RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+        CompletableCall<OperationData> call = getApiImplementation().sendFileChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationStatus> viewAllNewMessage(LifecycleOwner lifecycleOwner, String other, BaseYier<OperationStatus> yier){
-        CompletableCall<OperationStatus> call = getApiImplementation().viewAllNewMessage(other);
+    public static CompletableCall<ResponseBody> fetchChatMessageFile(LifecycleOwner lifecycleOwner, String fileId, BaseYier<ResponseBody> yier){
+        CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageFile(fileId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

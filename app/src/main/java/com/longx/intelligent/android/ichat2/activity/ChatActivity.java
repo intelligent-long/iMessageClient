@@ -65,6 +65,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private Runnable showMessagePopupOnKeyboardClosed;
     private boolean sendingState;
     private ActivityResultLauncher<Intent> sendImageMessageResultLauncher;
+    private ActivityResultLauncher<Intent> sendFileMessageResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,20 +162,6 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         }
         adapter.addAllToStartAndShow(chatMessages);
         previousPn ++;
-    }
-
-    private void initResultLauncher() {
-        sendImageMessageResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Intent data = Objects.requireNonNull(result.getData());
-                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
-                        List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
-                        onSendImageMessages(uriList);
-                    }
-                }
-        );
     }
 
     private void setupYiers() {
@@ -318,6 +305,13 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.morePanelTakePhoto.setOnClickListener(v -> {
             sendImageMessageResultLauncher.launch(new Intent(this, TakeAndSendPhotoActivity.class));
         });
+        binding.morePanelSendFile.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent = Intent.createChooser(intent, "选择文件");
+            sendFileMessageResultLauncher.launch(intent);
+        });
     }
 
     private void toSendingState(){
@@ -373,6 +367,32 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
     public void setShowMessagePopupOnKeyboardClosed(Runnable showMessagePopupOnKeyboardClosed) {
         this.showMessagePopupOnKeyboardClosed = showMessagePopupOnKeyboardClosed;
+    }
+
+    private void initResultLauncher() {
+        sendImageMessageResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = Objects.requireNonNull(result.getData());
+                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
+                        List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
+                        onSendImageMessages(uriList);
+                    }
+                }
+        );
+        sendFileMessageResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if(data != null){
+                            Uri uri = data.getData();
+                            onSendFileMessage();
+                        }
+                    }
+                }
+        );
     }
 
     private void onSendImageMessages(List<Uri> uriList){
@@ -438,5 +458,9 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 }
             }
         });
+    }
+
+    private void onSendFileMessage() {
+
     }
 }
