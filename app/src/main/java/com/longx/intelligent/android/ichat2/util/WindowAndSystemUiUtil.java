@@ -32,11 +32,11 @@ public class WindowAndSystemUiUtil {
 
     public static int getNavigationBarHeight(Context context) {
         Point point = getNavigationBarSize(context);
-        int statusBarHeight = getStatusBarHeight(context);
+//        int statusBarHeight = getStatusBarHeight(context);
         int height = point.y;
-        if (isNotchDisplay(statusBarHeight)) {
-            height = height - statusBarHeight;
-        }
+//        if (isNotchDisplay(statusBarHeight)) {
+//            height = height - statusBarHeight;
+//        }
         return height;
     }
 
