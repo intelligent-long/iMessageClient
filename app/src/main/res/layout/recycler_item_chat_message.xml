@@ -177,9 +177,11 @@
                 android:id="@+id/layout_file_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:minHeight="@dimen/chat_message_min_size">
 
                 <LinearLayout
@@ -187,9 +189,19 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/chat_bubble"
                     android:backgroundTint="?attr/colorSurfaceContainerLowest"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
                     tools:ignore="UselessParent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/file_icon_send"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="-5dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/draft_fill_24px"
+                        app:tint="?attr/colorSurfaceContainerLow"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
@@ -209,22 +221,14 @@
                             android:id="@+id/file_size_send"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             android:textColor="?attr/colorOutline"
                             android:textSize="13sp"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/file_icon_send"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="-5dp"
-                        android:src="@drawable/draft_fill_24px"
-                        app:tint="?attr/colorSurfaceContainerLow"
-                        android:layout_marginStart="10dp"/>
                 </LinearLayout>
             </LinearLayout>
+
         </FrameLayout>
 
         <com.google.android.material.imageview.ShapeableImageView
