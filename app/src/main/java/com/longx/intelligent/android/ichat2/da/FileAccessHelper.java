@@ -2,10 +2,17 @@ package com.longx.intelligent.android.ichat2.da;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
+import com.davemorrissey.labs.subscaleview.BuildConfig;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 
@@ -153,5 +160,43 @@ public class FileAccessHelper {
     public static String getFileExtensionFromUri(Context context, Uri uri){
         String fileName = getFileNameFromUri(context, uri);
         return FileUtil.getFileExtension(fileName);
+    }
+
+    public static String getMimeType(String filePath) {
+        String extension = MimeTypeMap.getFileExtensionFromUrl(filePath);
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
+    }
+
+    public static void openFile(Context context, Uri fileUri, String mimeType) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(fileUri, mimeType);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        } else {
+            MessageDisplayer.autoShow(context, "没有找到能够打开该文件的应用", MessageDisplayer.Duration.LONG);
+        }
+    }
+
+    public static void openFileWithFileProvider(Context context, String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            Uri fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+            String mimeType = getMimeType(filePath);
+            openFile(context, fileUri, mimeType);
+        } else {
+            MessageDisplayer.autoShow(context, "文件不存在", MessageDisplayer.Duration.LONG);
+        }
+    }
+
+    public static void openFile(Context context, String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            Uri fileUri = Uri.fromFile(file);
+            String mimeType = getMimeType(filePath);
+            openFile(context, fileUri, mimeType);
+        } else {
+            MessageDisplayer.autoShow(context, "文件不存在", MessageDisplayer.Duration.LONG);
+        }
     }
 }
