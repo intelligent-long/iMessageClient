@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 /**
@@ -90,6 +91,22 @@ public class FileUtil {
         } else {
             return fileName;
         }
+    }
+
+    public static long getFileSize(String filePath) {
+        File file = new File(filePath);
+        if (file.exists() && file.isFile()) {
+            return file.length();
+        } else {
+            return -1;
+        }
+    }
+
+    public static String formatFileSize(long size) {
+        if (size <= 0) return "0 B";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
 }

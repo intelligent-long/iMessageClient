@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 

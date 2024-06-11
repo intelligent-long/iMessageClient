@@ -70,6 +70,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME, chatMessage.getFileName());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_WIDTH, chatMessage.getImageSize() == null ? null : chatMessage.getImageSize().getWidth());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_HEIGHT, chatMessage.getImageSize() == null ? null : chatMessage.getImageSize().getHeight());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_FILE_PATH, chatMessage.getFileFilePath());
             long id = getDatabase().insertWithOnConflict(((ChatMessageDatabaseHelper)getHelper()).getTableName(), null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             return id != -1;
         }finally {

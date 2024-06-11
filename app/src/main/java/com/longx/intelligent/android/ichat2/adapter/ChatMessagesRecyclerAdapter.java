@@ -29,6 +29,7 @@ import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupW
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -161,7 +162,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextSend.setVisibility(View.GONE);
                     holder.binding.imageSend.setVisibility(View.GONE);
                     holder.binding.layoutFileSend.setVisibility(View.VISIBLE);
-                    holder.binding.fileName.setText(itemData.chatMessage.getFileName());
+                    holder.binding.fileNameSend.setText(itemData.chatMessage.getFileName());
+                    holder.binding.fileSizeSend.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
                 }
             }
@@ -186,12 +188,14 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 case ChatMessage.TYPE_TEXT:{
                     holder.binding.layoutTextReceive.setVisibility(View.VISIBLE);
                     holder.binding.imageReceive.setVisibility(View.GONE);
+                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.textReceive.setText(itemData.chatMessage.getText());
                     break;
                 }
                 case ChatMessage.TYPE_IMAGE:{
                     holder.binding.layoutTextReceive.setVisibility(View.GONE);
                     holder.binding.imageReceive.setVisibility(View.VISIBLE);
+                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.imageReceive, itemData);
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
@@ -202,7 +206,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     break;
                 }
                 case ChatMessage.TYPE_FILE:{
-
+                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                    holder.binding.imageReceive.setVisibility(View.GONE);
+                    holder.binding.layoutFileReceive.setVisibility(View.VISIBLE);
+                    holder.binding.fileNameReceive.setText(itemData.chatMessage.getFileName());
+                    holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
                 }
             }
@@ -263,6 +271,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.layoutTextSend.setOnLongClickListener(onMessageSendLongClickYier);
         holder.binding.imageReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
         holder.binding.imageSend.setOnLongClickListener(onMessageSendLongClickYier);
+        holder.binding.layoutFileReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
+        holder.binding.layoutFileSend.setOnLongClickListener(onMessageSendLongClickYier);
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
         });
@@ -286,6 +296,9 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         };
         holder.binding.imageSend.setOnClickListener(onImageClickYier);
         holder.binding.imageReceive.setOnClickListener(onImageClickYier);
+        holder.binding.layoutFileSend.setOnClickListener(v -> {
+
+        });
     }
 
     @Override

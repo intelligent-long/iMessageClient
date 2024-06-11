@@ -45,6 +45,13 @@ public class DataPaths {
                     java.io.File.separator + ichatId +
                     java.io.File.separator + imageFileName;
         }
+
+        public static String getChatFileFilePath(Context context, String ichatId, String fileName){
+            return PrivateFile.getPrivateFileFolderPath(context) +
+                    java.io.File.separator + "chat_file" +
+                    java.io.File.separator + ichatId +
+                    java.io.File.separator + fileName;
+        }
     }
 
     public static class PublicFile{
