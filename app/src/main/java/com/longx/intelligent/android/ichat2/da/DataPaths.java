@@ -5,6 +5,7 @@ import android.os.Environment;
 
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -53,7 +54,7 @@ public class DataPaths {
 
         public static String getChatImageFilePath(ChatMessage chatMessage){
             SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + chatMessage.getExtension();
+            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + FileUtil.getFileExtension(chatMessage.getFileName());
             return getPublicFilePath() + File.separator + "聊天图片" + File.separator + fileName;
         }
 

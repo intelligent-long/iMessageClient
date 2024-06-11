@@ -28,6 +28,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -139,12 +140,14 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 case ChatMessage.TYPE_TEXT:{
                     holder.binding.layoutTextSend.setVisibility(View.VISIBLE);
                     holder.binding.imageSend.setVisibility(View.GONE);
+                    holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.textSend.setText(itemData.chatMessage.getText());
                     break;
                 }
                 case ChatMessage.TYPE_IMAGE:{
                     holder.binding.layoutTextSend.setVisibility(View.GONE);
                     holder.binding.imageSend.setVisibility(View.VISIBLE);
+                    holder.binding.layoutFileSend.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.imageSend, itemData);
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
@@ -152,6 +155,13 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .apply(requestOptions)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.imageSend);
+                    break;
+                }
+                case ChatMessage.TYPE_FILE:{
+                    holder.binding.layoutTextSend.setVisibility(View.GONE);
+                    holder.binding.imageSend.setVisibility(View.GONE);
+                    holder.binding.layoutFileSend.setVisibility(View.VISIBLE);
+                    holder.binding.fileName.setText(itemData.chatMessage.getFileName());
                     break;
                 }
             }
@@ -189,6 +199,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .apply(requestOptions)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.imageReceive);
+                    break;
+                }
+                case ChatMessage.TYPE_FILE:{
+
                     break;
                 }
             }

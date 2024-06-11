@@ -5,21 +5,21 @@ package com.longx.intelligent.android.ichat2.data.request;
  */
 public class SendImageChatMessagePostBody {
     private String toIchatId;
-    private String imageExtension;
+    private String imageFileName;
 
     public SendImageChatMessagePostBody() {
     }
 
-    public SendImageChatMessagePostBody(String toIchatId, String imageExtension) {
+    public SendImageChatMessagePostBody(String toIchatId, String imageFileName) {
         this.toIchatId = toIchatId;
-        this.imageExtension = imageExtension;
+        this.imageFileName = imageFileName;
     }
 
     public String getToIchatId() {
         return toIchatId;
     }
 
-    public String getImageExtension() {
-        return imageExtension;
+    public String getImageFileName() {
+        return imageFileName;
     }
 }

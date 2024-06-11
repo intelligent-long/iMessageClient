@@ -70,7 +70,7 @@ public class FileUtil {
         }
         int lastDotIndex = fileName.lastIndexOf(".");
         if (lastDotIndex != -1) {
-            return fileName.substring(lastDotIndex).toLowerCase();
+            return fileName.substring(lastDotIndex + 1).toLowerCase();
         } else {
             return "";
         }

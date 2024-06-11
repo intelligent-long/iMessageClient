@@ -15,7 +15,6 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.http.Part;
 
 /**
  * Created by LONG on 2024/5/15 at 4:09 AM.
@@ -51,7 +50,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, byte[] imageBytes, SendImageChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
         RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageBytes);
-        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", "." + postBody.getImageExtension(), imageRequestBody);
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", postBody.getImageFileName(), imageRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
         CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(imagePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
@@ -66,7 +65,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> sendFileChatMessage(LifecycleOwner lifecycleOwner, byte[] fileBytes, SendFileChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
         RequestBody fileRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), fileBytes);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", postBody.getFileExtension(), fileRequestBody);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", postBody.getFileName(), fileRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
         CompletableCall<OperationData> call = getApiImplementation().sendFileChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);

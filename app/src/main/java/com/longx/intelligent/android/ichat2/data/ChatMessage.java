@@ -81,7 +81,7 @@ public class ChatMessage implements Parcelable {
     private String to;
     private Date time;
     private String text;
-    private String extension;
+    private String fileName;
     private String imageId;
     private String fileId;
 
@@ -101,14 +101,14 @@ public class ChatMessage implements Parcelable {
     public ChatMessage() {
     }
 
-    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String extension, String imageId, String fileId) {
+    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String fileName, String imageId, String fileId) {
         this.type = type;
         this.uuid = uuid;
         this.from = from;
         this.to = to;
         this.time = time;
         this.text = text;
-        this.extension = extension;
+        this.fileName = fileName;
         this.imageId = imageId;
         this.fileId = fileId;
     }
@@ -137,8 +137,8 @@ public class ChatMessage implements Parcelable {
         return text;
     }
 
-    public String getExtension() {
-        return extension;
+    public String getFileName() {
+        return fileName;
     }
 
     public String getImageId() {
@@ -230,7 +230,7 @@ public class ChatMessage implements Parcelable {
         to = in.readString();
         time = new Date(in.readLong());
         text = in.readString();
-        extension = in.readString();
+        fileName = in.readString();
         imageId = in.readString();
         fileId = in.readString();
         byte tmpShowTime = in.readByte();
@@ -273,7 +273,7 @@ public class ChatMessage implements Parcelable {
         dest.writeString(to);
         dest.writeLong(time.getTime());
         dest.writeString(text);
-        dest.writeString(extension);
+        dest.writeString(fileName);
         dest.writeString(imageId);
         dest.writeString(fileId);
         dest.writeByte((byte) (showTime == null ? 0 : showTime ? 1 : 2));

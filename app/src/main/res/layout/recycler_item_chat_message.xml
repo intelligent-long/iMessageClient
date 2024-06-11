@@ -118,6 +118,36 @@
                 android:minHeight="@dimen/chat_message_min_size"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:id="@+id/layout_file_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/chat_message_min_size">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bubble"
+                    android:backgroundTint="?attr/colorSurfaceContainerLow"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/draft_fill_24px"/>
+
+                    <TextView
+                        android:id="@+id/file_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </LinearLayout>
         </FrameLayout>
 
         <com.google.android.material.imageview.ShapeableImageView

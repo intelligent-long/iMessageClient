@@ -426,8 +426,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
         byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
-        String extension = FileAccessHelper.getFileExtensionFromUri(this, uri);
-        SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), extension);
+        String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
+        SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), fileName);
         ChatApiCaller.sendImageChatMessage(this, imageBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
             public void start(Call<OperationData> call) {
@@ -491,8 +491,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
         byte[] fileBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
-        String extension = FileAccessHelper.getFileExtensionFromUri(this, uri);
-        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getIchatId(), extension);
+        String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
+        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getIchatId(), fileName);
         ChatApiCaller.sendFileChatMessage(this, fileBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
             @Override
             public void start(Call<OperationData> call) {

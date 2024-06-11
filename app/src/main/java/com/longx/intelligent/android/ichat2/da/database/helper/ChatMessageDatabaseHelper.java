@@ -25,7 +25,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String SHOW_TIME = "show_time";
         public static final String VIEWED = "viewed";
         public static final String TEXT = "text";
-        public static final String EXTENSION = "extension";
+        public static final String FILE_NAME = "file_name";
         public static final String IMAGE_FILE_PATH = "image_file_path";
         public static final String IMAGE_WIDTH = "image_width";
         public static final String IMAGE_HEIGHT = "image_height";
@@ -49,7 +49,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.SHOW_TIME + " BOOLEAN,"
                 + TableChannelChatMessagesColumns.VIEWED + " BOOLEAN,"
                 + TableChannelChatMessagesColumns.IMAGE_FILE_PATH + " VARCHAR,"
-                + TableChannelChatMessagesColumns.EXTENSION + " VARCHAR,"
+                + TableChannelChatMessagesColumns.FILE_NAME + " VARCHAR,"
                 + TableChannelChatMessagesColumns.IMAGE_WIDTH + " INTEGER,"
                 + TableChannelChatMessagesColumns.IMAGE_HEIGHT + " INTEGER,"
                 + TableChannelChatMessagesColumns.FILE_FILE_PATH + " VARCHAR,"
