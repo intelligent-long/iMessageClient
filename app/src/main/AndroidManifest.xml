@@ -37,6 +37,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.ChatFileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.settings.EditWaysToFindMeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

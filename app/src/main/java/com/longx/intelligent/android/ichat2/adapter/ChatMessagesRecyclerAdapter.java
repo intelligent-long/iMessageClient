@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
+import com.longx.intelligent.android.ichat2.activity.ChatFileActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatImageActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
@@ -276,7 +277,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
         });
-        View.OnClickListener onImageClickYier = v -> {
+        View.OnClickListener onImageMessageClickYier = v -> {
             Intent intent = new Intent(activity, ChatImageActivity.class);
             ArrayList<String> imageFilePaths = new ArrayList<>();
             ArrayList<ChatMessage> chatMessages = new ArrayList<>();
@@ -294,11 +295,15 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             intent.putParcelableArrayListExtra(ExtraKeys.CHAT_MESSAGES, chatMessages);
             activity.startActivity(intent);
         };
-        holder.binding.imageSend.setOnClickListener(onImageClickYier);
-        holder.binding.imageReceive.setOnClickListener(onImageClickYier);
-        holder.binding.layoutFileSend.setOnClickListener(v -> {
-
-        });
+        holder.binding.imageSend.setOnClickListener(onImageMessageClickYier);
+        holder.binding.imageReceive.setOnClickListener(onImageMessageClickYier);
+        View.OnClickListener onFileMessageClickYier = v -> {
+            Intent intent = new Intent(activity, ChatFileActivity.class);
+            intent.putExtra(ExtraKeys.CHAT_MESSAGE, currentItemData.chatMessage);
+            activity.startActivity(intent);
+        };
+        holder.binding.layoutFileSend.setOnClickListener(onFileMessageClickYier);
+        holder.binding.layoutFileReceive.setOnClickListener(onFileMessageClickYier);
     }
 
     @Override
