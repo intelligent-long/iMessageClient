@@ -38,6 +38,10 @@ public class ChatMessageActionsPopupWindow {
                 binding.clickViewCopy.setVisibility(View.GONE);
                 break;
             }
+            case ChatMessage.TYPE_FILE:{
+                binding.clickViewCopy.setVisibility(View.GONE);
+                break;
+            }
         }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
         setupYiers();

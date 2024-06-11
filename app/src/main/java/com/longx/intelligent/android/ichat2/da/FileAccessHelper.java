@@ -7,11 +7,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import com.davemorrissey.labs.subscaleview.BuildConfig;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
@@ -20,7 +18,6 @@ import org.apache.tika.Tika;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
-import org.apache.tika.mime.MimeTypesFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -178,21 +174,10 @@ public class FileAccessHelper {
         }
     }
 
-    public static void openFileWithFileProvider(Context context, String filePath) {
-        File file = new File(filePath);
-        if (file.exists()) {
-            Uri fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
-            String mimeType = getMimeType(filePath);
-            openFile(context, fileUri, mimeType);
-        } else {
-            MessageDisplayer.autoShow(context, "文件不存在", MessageDisplayer.Duration.LONG);
-        }
-    }
-
     public static void openFile(Context context, String filePath) {
         File file = new File(filePath);
         if (file.exists()) {
-            Uri fileUri = Uri.fromFile(file);
+            Uri fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
             String mimeType = getMimeType(filePath);
             openFile(context, fileUri, mimeType);
         } else {
