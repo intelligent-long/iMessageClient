@@ -167,6 +167,7 @@ public class FileAccessHelper {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(fileUri, mimeType);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent = Intent.createChooser(intent, "选择打开此文件的应用");
         if (intent.resolveActivity(context.getPackageManager()) != null) {
             context.startActivity(intent);
         } else {
