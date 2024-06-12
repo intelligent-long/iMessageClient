@@ -38,8 +38,7 @@ public class ChatMessage implements Parcelable {
                     super.ok(data, row, call);
                     try {
                         byte[] bytes = data.bytes();
-                        chatMessage.setImageBytes(bytes);
-                        String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage);
+                        String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage, bytes);
                         chatMessage.setImageFilePath(imageFilePath);
                         Size imageSize = MediaHelper.getImageSize(bytes);
                         chatMessage.setImageSize(imageSize);
@@ -57,8 +56,7 @@ public class ChatMessage implements Parcelable {
                     super.ok(data, row, call);
                     try {
                         byte[] bytes = data.bytes();
-                        chatMessage.setFileBytes(bytes);
-                        String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, chatMessage);
+                        String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, chatMessage, bytes);
                         chatMessage.setFileFilePath(chatFileFilePath);
                         commonDoOfMainDoOnNewChatMessage(chatMessage, context);
                         resultsYier.onResults();
@@ -112,11 +110,7 @@ public class ChatMessage implements Parcelable {
     @JsonIgnore
     private Size imageSize;
     @JsonIgnore
-    private byte[] imageBytes;
-    @JsonIgnore
     private String fileFilePath;
-    @JsonIgnore
-    private byte[] fileBytes;
 
     public ChatMessage() {
     }
@@ -222,22 +216,6 @@ public class ChatMessage implements Parcelable {
         this.imageSize = imageSize;
     }
 
-    public byte[] getImageBytes() {
-        return imageBytes;
-    }
-
-    public void setImageBytes(byte[] imageBytes) {
-        this.imageBytes = imageBytes;
-    }
-
-    public byte[] getFileBytes() {
-        return fileBytes;
-    }
-
-    public void setFileBytes(byte[] fileBytes) {
-        this.fileBytes = fileBytes;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -268,22 +246,8 @@ public class ChatMessage implements Parcelable {
         if(type == TYPE_IMAGE) {
             imageFilePath = in.readString();
             imageSize = in.readSize();
-            int imageBytesLength = in.readInt();
-            if (imageBytesLength >= 0) {
-                imageBytes = new byte[imageBytesLength];
-                in.readByteArray(imageBytes);
-            } else {
-                imageBytes = null;
-            }
         }else if(type == TYPE_FILE){
             fileFilePath = in.readString();
-            int fileBytesLength = in.readInt();
-            if (fileBytesLength >= 0) {
-                fileBytes = new byte[fileBytesLength];
-                in.readByteArray(fileBytes);
-            } else {
-                fileBytes = null;
-            }
         }
     }
 
@@ -320,20 +284,8 @@ public class ChatMessage implements Parcelable {
         if(type == TYPE_IMAGE) {
             dest.writeString(imageFilePath);
             dest.writeSize(imageSize);
-            if (imageBytes != null) {
-                dest.writeInt(imageBytes.length);
-                dest.writeByteArray(imageBytes);
-            } else {
-                dest.writeInt(-1);
-            }
         }else if(type == TYPE_FILE) {
             dest.writeString(fileFilePath);
-            if (fileBytes != null) {
-                dest.writeInt(fileBytes.length);
-                dest.writeByteArray(fileBytes);
-            } else {
-                dest.writeInt(-1);
-            }
         }
     }
 }

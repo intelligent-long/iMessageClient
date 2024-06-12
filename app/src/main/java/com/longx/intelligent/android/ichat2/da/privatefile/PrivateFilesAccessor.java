@@ -14,19 +14,17 @@ import java.io.InputStream;
  */
 public class PrivateFilesAccessor {
     public static class ChatImage{
-        public static String save(Context context, ChatMessage chatMessage) throws IOException {
+        public static String save(Context context, ChatMessage chatMessage, byte[] imageBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String imageFilePath = DataPaths.PrivateFile.getChatImageFilePath(context, other, chatMessage.getUuid());
-            byte[] imageBytes = chatMessage.getImageBytes();
             return FileAccessHelper.save(imageBytes, imageFilePath);
         }
     }
 
     public static class ChatFile{
-        public static String save(Context context, ChatMessage chatMessage) throws IOException {
+        public static String save(Context context, ChatMessage chatMessage, byte[] fileBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String chatFileFilePath = DataPaths.PrivateFile.getChatFileFilePath(context, other, chatMessage.getFileName());
-            byte[] fileBytes = chatMessage.getFileBytes();
             return FileAccessHelper.save(fileBytes, chatFileFilePath);
         }
     }
