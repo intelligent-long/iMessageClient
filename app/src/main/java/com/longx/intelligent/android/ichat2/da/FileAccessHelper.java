@@ -36,8 +36,8 @@ public class FileAccessHelper {
         File file = new File(path);
         int number = 1;
         while (file.exists()){
-            String pathWithoutExtension = path.substring(0, path.indexOf('.'));
-            String extension = path.substring(path.indexOf('.'));
+            String pathWithoutExtension = path.substring(0, path.lastIndexOf('.'));
+            String extension = path.substring(path.lastIndexOf('.'));
             file = new File(pathWithoutExtension + " (" + number + ")" + extension);
             number ++;
         }
