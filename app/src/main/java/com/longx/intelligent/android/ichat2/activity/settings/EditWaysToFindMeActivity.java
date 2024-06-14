@@ -126,6 +126,9 @@ public class EditWaysToFindMeActivity extends BaseActivity {
             boolean findMeByIchatIdChecked = preferenceChangeCanFindMeByIchatId.isChecked();
             boolean findMeByEmailChecked = preferenceChangeCanFindMeByEmail.isChecked();
             UserInfo.WaysToFindMe serverWaysToFindMe = SharedPreferencesAccessor.UserProfilePref.getServerWaysToFindMe(applicationContext);
+            if(serverWaysToFindMe != null && serverWaysToFindMe.isByIchatIdUser() == findMeByIchatIdChecked && serverWaysToFindMe.isByEmail() == findMeByEmailChecked){
+                return;
+            }
             ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(findMeByIchatIdChecked, findMeByEmailChecked);
             PrivacyApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
                 @Override

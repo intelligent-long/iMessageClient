@@ -136,6 +136,9 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
             boolean emailVisibilityChecked = preferenceChangeEmailVisibility.isChecked();
             boolean sexVisibilityChecked = preferenceChangeSexVisibility.isChecked();
             boolean regionVisibilityChecked = preferenceChangeRegionVisibility.isChecked();
+            if(serverUserProfileVisibility != null && serverUserProfileVisibility.isEmailVisible() == emailVisibilityChecked && serverUserProfileVisibility.isSexVisible() == sexVisibilityChecked && serverUserProfileVisibility.isRegionVisible() == regionVisibilityChecked){
+                return;
+            }
             ChangeUserProfileVisibilityPostBody postBody = new ChangeUserProfileVisibilityPostBody(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked);
             PrivacyApiCaller.changeUserProfileVisibility(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
                 @Override
