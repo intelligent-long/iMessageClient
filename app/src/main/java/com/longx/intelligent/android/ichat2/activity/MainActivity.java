@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -364,7 +365,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     public synchronized void showNavigationMessageBadge(){
         if(messageNavBadge == null) {
-            View view = ((BottomNavigationMenuView) binding.bottomNavigation.getChildAt(0)).getChildAt(0);
+            @SuppressLint("RestrictedApi") View view = ((BottomNavigationMenuView) binding.bottomNavigation.getChildAt(0)).getChildAt(0);
             messageNavBadge = BadgeDisplayer.initIndicatorBadge(this, view, Gravity.START | Gravity.BOTTOM, 73, 56, true);
         }
     }
@@ -378,7 +379,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     public synchronized void showNavigationChannelBadge(){
         if(channelNavBadge == null) {
-            View view = ((BottomNavigationMenuView) binding.bottomNavigation.getChildAt(0)).getChildAt(1);
+            @SuppressLint("RestrictedApi") View view = ((BottomNavigationMenuView) binding.bottomNavigation.getChildAt(0)).getChildAt(1);
             channelNavBadge = BadgeDisplayer.initIndicatorBadge(this, view, Gravity.START | Gravity.BOTTOM, 73, 56, true);
         }
     }
