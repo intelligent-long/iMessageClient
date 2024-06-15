@@ -16,7 +16,9 @@ import com.longx.intelligent.android.ichat2.net.retrofit.api.ChatApi;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
+import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.xcheng.retrofit.CompletableCall;
+import com.xcheng.retrofit.ProgressRequestBody;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +78,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
     }
 
     public static CompletableCall<OperationData> sendFileChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri fileUri,
-                                                                     SendFileChatMessagePostBody postBody, BaseCommonYier<OperationData> yier) {
+                                                                     SendFileChatMessagePostBody postBody, BaseCommonYier<OperationData> yier,
+                                                                     ProgressYier progressYier) {
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
         try {
@@ -88,14 +91,17 @@ public class ChatApiCaller extends RetrofitApiCaller{
             ErrorLogger.log(e);
             return null;
         }
-
         String fileName = FileAccessHelper.getFileNameFromUri(context, fileUri);
         String mimeType = contentResolver.getType(fileUri);
-
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
                 return MediaType.parse(mimeType);
+            }
+
+            @Override
+            public long contentLength() throws IOException {
+                return FileUtil.getFileSize(context, fileUri);
             }
 
             @Override
@@ -104,7 +110,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
                     if (inputStream == null) {
                         throw new IOException("Unable to open input stream from URI");
                     }
-                    byte[] buffer = new byte[8192];
+                    byte[] buffer = new byte[10240];
                     int bytesRead;
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
                         sink.write(buffer, 0, bytesRead);
@@ -112,10 +118,14 @@ public class ChatApiCaller extends RetrofitApiCaller{
                 }
             }
         };
-
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", fileName, requestBody);
+        ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
+            @Override
+            protected void onUpload(long progress, long contentLength, boolean done) {
+                progressYier.onProgressUpdate(progress, contentLength);
+            }
+        };
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", fileName, progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-
         CompletableCall<OperationData> call = getApiImplementation().sendFileChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;

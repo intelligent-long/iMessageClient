@@ -42,6 +42,7 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
+import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -331,6 +332,24 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.moreButton.setVisibility(View.GONE);
         binding.sendButton.setVisibility(View.GONE);
         binding.sendIndicator.setVisibility(View.VISIBLE);
+        binding.sendItemCountIndicator.setVisibility(View.GONE);
+        binding.sendProgressIndicator.setVisibility(View.GONE);
+    }
+
+    private void toSendingProgressState(){
+        sendingState = true;
+        hideMorePanel();
+        binding.voiceButton.setVisibility(View.GONE);
+        binding.textButton.setVisibility(View.GONE);
+        binding.messageInput.setVisibility(View.GONE);
+        binding.messageInput.setText(null);
+        binding.holdToTalkButton.setVisibility(View.GONE);
+        binding.layoutSendButtonAndIndicator.setVisibility(View.VISIBLE);
+        binding.moreButton.setVisibility(View.GONE);
+        binding.sendButton.setVisibility(View.GONE);
+        binding.sendIndicator.setVisibility(View.GONE);
+        binding.sendItemCountIndicator.setVisibility(View.VISIBLE);
+        binding.sendProgressIndicator.setVisibility(View.VISIBLE);
     }
 
     private void toNormalState(){
@@ -345,6 +364,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.moreButton.setVisibility(View.VISIBLE);
         binding.sendButton.setVisibility(View.GONE);
         binding.sendIndicator.setVisibility(View.GONE);
+        binding.sendItemCountIndicator.setVisibility(View.GONE);
+        binding.sendProgressIndicator.setVisibility(View.GONE);
     }
 
     private void showMorePanel(){
@@ -359,7 +380,15 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
     private void hideMorePanel(){
         binding.morePanel.setVisibility(View.GONE);
-        binding.moreButton.setVisibility(View.VISIBLE);
+        if(UiUtil.getEditTextString(binding.messageInput) != null && !UiUtil.getEditTextString(binding.messageInput).isEmpty()){
+            binding.layoutSendButtonAndIndicator.setVisibility(View.VISIBLE);
+            binding.moreButton.setVisibility(View.GONE);
+            binding.sendButton.setVisibility(View.VISIBLE);
+        }else {
+            binding.layoutSendButtonAndIndicator.setVisibility(View.GONE);
+            binding.moreButton.setVisibility(View.VISIBLE);
+            binding.sendButton.setVisibility(View.GONE);
+        }
         binding.hideMoreButton.setVisibility(View.GONE);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.bar.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -500,12 +529,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         Uri uri = uriList.get(index.get());
         String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
         SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getIchatId(), fileName);
-        ChatApiCaller.sendFileChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+        ChatApiCaller.sendFileChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
-                if(index.get() == 0) {
-                    toSendingState();
+                if (index.get() == 0) {
+                    toSendingProgressState();
                 }
             }
 
@@ -547,10 +576,16 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             @Override
             public void complete(Call<OperationData> call) {
                 super.complete(call);
-                if(index.get() == uriList.size()){
+                if (index.get() == uriList.size()) {
                     toNormalState();
                 }
             }
+        }, (current, total) -> {
+            runOnUiThread(() -> {
+                binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + uriList.size());
+                int progress = (int)((current / (double) total) * 100);
+                binding.sendProgressIndicator.setProgress(progress, true);
+            });
         });
     }
 }

@@ -116,7 +116,8 @@
                 android:layout_marginEnd="15dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true">
-                <FrameLayout
+
+                <LinearLayout
                     android:id="@+id/layout_send_button_and_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,7 +141,24 @@
                         android:visibility="gone"
                         app:indicatorSize="35dp"
                         app:trackThickness="3.8dp" />
-                </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/send_item_count_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="15dp"
+                        android:textSize="21sp"
+                        android:visibility="gone"/>
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/send_progress_indicator"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:visibility="gone"
+                        app:indicatorSize="35dp"
+                        app:trackThickness="3.8dp"/>
+                </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/more_button"
