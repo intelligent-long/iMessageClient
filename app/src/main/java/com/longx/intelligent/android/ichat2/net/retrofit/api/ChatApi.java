@@ -36,17 +36,21 @@ public interface ChatApi {
 
     @Multipart
     @POST("chat/message/image/send")
+    @Headers("LogLevel:HEADERS")
     CompletableCall<OperationData> sendImageChatMessage(@Part MultipartBody.Part image, @Part("metadata") RequestBody metadata);
 
     @Streaming
     @GET("chat/message/image/new/{imageId}")
+    @Headers("LogLevel:HEADERS")
     CompletableCall<ResponseBody> fetchChatMessageImage(@Path("imageId") String imageId);
 
     @Multipart
     @POST("chat/message/file/send")
+    @Headers("LogLevel:HEADERS")
     CompletableCall<OperationData> sendFileChatMessage(@Part MultipartBody.Part file, @Part("metadata") RequestBody metadata);
 
     @Streaming
     @GET("chat/message/file/new/{fileId}")
+    @Headers("LogLevel:HEADERS")
     CompletableCall<ResponseBody> fetchChatMessageFile(@Path("fileId") String fileId);
 }

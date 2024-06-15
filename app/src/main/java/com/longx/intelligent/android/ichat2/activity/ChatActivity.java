@@ -498,10 +498,9 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private void sendFileMessages(List<Uri> uriList, AtomicInteger index){
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
-        byte[] fileBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
         String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
         SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getIchatId(), fileName);
-        ChatApiCaller.sendFileChatMessage(this, fileBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+        ChatApiCaller.sendFileChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);

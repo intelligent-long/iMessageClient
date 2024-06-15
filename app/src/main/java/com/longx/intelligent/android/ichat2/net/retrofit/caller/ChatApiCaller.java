@@ -1,20 +1,32 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.lifecycle.LifecycleOwner;
 
+import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChatApi;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.xcheng.retrofit.CompletableCall;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okio.BufferedSink;
+import okio.Okio;
 
 /**
  * Created by LONG on 2024/5/15 at 4:09 AM.
@@ -63,10 +75,47 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> sendFileChatMessage(LifecycleOwner lifecycleOwner, byte[] fileBytes, SendFileChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
-        RequestBody fileRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), fileBytes);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", postBody.getFileName(), fileRequestBody);
+    public static CompletableCall<OperationData> sendFileChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri fileUri,
+                                                                     SendFileChatMessagePostBody postBody, BaseCommonYier<OperationData> yier) {
+        ContentResolver contentResolver = context.getContentResolver();
+        InputStream inputStream;
+        try {
+            inputStream = contentResolver.openInputStream(fileUri);
+            if (inputStream == null) {
+                throw new IOException("Unable to open input stream from URI");
+            }
+        } catch (IOException e) {
+            ErrorLogger.log(e);
+            return null;
+        }
+
+        String fileName = FileAccessHelper.getFileNameFromUri(context, fileUri);
+        String mimeType = contentResolver.getType(fileUri);
+
+        RequestBody requestBody = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse(mimeType);
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                try (InputStream inputStream = contentResolver.openInputStream(fileUri)) {
+                    if (inputStream == null) {
+                        throw new IOException("Unable to open input stream from URI");
+                    }
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        sink.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        };
+
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", fileName, requestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+
         CompletableCall<OperationData> call = getApiImplementation().sendFileChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;

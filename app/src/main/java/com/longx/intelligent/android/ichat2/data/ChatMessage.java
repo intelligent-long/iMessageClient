@@ -1,6 +1,8 @@
 package com.longx.intelligent.android.ichat2.data;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Size;
@@ -20,6 +22,8 @@ import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -29,6 +33,8 @@ import retrofit2.Response;
  * Created by LONG on 2024/5/13 at 12:08 AM.
  */
 public class ChatMessage implements Parcelable {
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(9);
+    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public static void mainDoOnNewChatMessage(ChatMessage chatMessage, Context context, ResultsYier resultsYier){
         if(chatMessage.getType() == ChatMessage.TYPE_IMAGE) {
@@ -36,17 +42,21 @@ public class ChatMessage implements Parcelable {
                 @Override
                 public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
                     super.ok(data, row, call);
-                    try {
-                        byte[] bytes = data.bytes();
-                        String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage, bytes);
-                        chatMessage.setImageFilePath(imageFilePath);
-                        Size imageSize = MediaHelper.getImageSize(bytes);
-                        chatMessage.setImageSize(imageSize);
-                        commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                        resultsYier.onResults();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    executorService.execute(() -> {
+                        try {
+                            byte[] bytes = data.bytes();
+                            String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage, bytes);
+                            chatMessage.setImageFilePath(imageFilePath);
+                            Size imageSize = MediaHelper.getImageSize(bytes);
+                            chatMessage.setImageSize(imageSize);
+                            commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                            mainHandler.post(resultsYier::onResults);
+                        } catch (IOException e) {
+                            mainHandler.post(() -> {
+                                throw new RuntimeException(e);
+                            });
+                        }
+                    });
                 }
             });
         }else if(chatMessage.getType() == ChatMessage.TYPE_FILE){
@@ -54,15 +64,19 @@ public class ChatMessage implements Parcelable {
                 @Override
                 public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
                     super.ok(data, row, call);
-                    try {
-                        byte[] bytes = data.bytes();
-                        String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, chatMessage, bytes);
-                        chatMessage.setFileFilePath(chatFileFilePath);
-                        commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                        resultsYier.onResults();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    executorService.execute(() -> {
+                        try {
+                            byte[] bytes = data.bytes();
+                            String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, chatMessage, bytes);
+                            chatMessage.setFileFilePath(chatFileFilePath);
+                            commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                            mainHandler.post(resultsYier::onResults);
+                        } catch (IOException e) {
+                            mainHandler.post(() -> {
+                                throw new RuntimeException(e);
+                            });
+                        }
+                    });
                 }
             });
         }else {
