@@ -37,7 +37,7 @@
         android:id="@+id/content_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="15dp"
+        android:layout_marginTop="15dp"
         android:layout_marginHorizontal="21dp"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -99,6 +99,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/infos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

@@ -177,6 +177,9 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             }
             binding.region.setText(regionDesc);
         }
+        if(binding.layoutEmail.getVisibility() == View.GONE && binding.layoutUsername.getVisibility() == View.GONE && binding.layoutRegion.getVisibility() == View.GONE){
+            binding.infos.setVisibility(View.GONE);
+        }
     }
 
     private void setupYiers() {
