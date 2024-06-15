@@ -94,7 +94,7 @@
                         android:layout_height="40dp"
                         android:layout_marginStart="-5dp"
                         android:src="@drawable/draft_fill_24px"
-                        app:tint="?attr/colorSurfaceContainerLow"
+                        app:tint="?attr/colorOnSurfaceInverse"
                         android:layout_marginEnd="10dp"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,7 +109,8 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/file_size_receive"
-                            android:textSize="17sp"/>
+                            android:textSize="17sp"
+                            android:textColor="@color/chat_message_send_text"/>
 
                         <TextView
                             android:id="@+id/file_size_receive"
@@ -202,7 +203,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="-5dp"
                         android:src="@drawable/draft_fill_24px"
-                        app:tint="?attr/colorSurfaceContainerLow"/>
+                        app:tint="?attr/colorOnSurfaceInverse"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
@@ -216,7 +217,8 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/file_size_send"
-                            android:textSize="17sp"/>
+                            android:textSize="17sp"
+                            android:textColor="@color/chat_message_send_text"/>
 
                         <TextView
                             android:id="@+id/file_size_send"

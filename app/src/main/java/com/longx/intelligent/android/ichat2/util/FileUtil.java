@@ -1,5 +1,9 @@
 package com.longx.intelligent.android.ichat2.util;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -107,6 +111,47 @@ public class FileUtil {
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static long getFileSize(Context context, Uri uri) {
+        String scheme = uri.getScheme();
+        long fileSize = 0;
+
+        if (scheme == null) {
+            return fileSize;
+        }
+
+        if (scheme.equals("file")) {
+            // Handle file scheme
+            File file = new File(uri.getPath());
+            fileSize = file.length();
+        } else if (scheme.equals("content")) {
+            // Handle content scheme
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                try {
+                    int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                    if (sizeIndex != -1 && cursor.moveToFirst()) {
+                        fileSize = cursor.getLong(sizeIndex);
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+
+            if (fileSize == 0) {
+                // Fallback for some content providers that do not provide the size
+                try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
+                    if (inputStream != null) {
+                        fileSize = inputStream.available();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return fileSize;
     }
 
 }

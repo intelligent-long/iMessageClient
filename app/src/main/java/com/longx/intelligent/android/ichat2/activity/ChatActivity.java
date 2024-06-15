@@ -32,6 +32,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.MediaUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -405,6 +406,13 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                             } else if (data.getData() != null) {
                                 Uri fileUri = data.getData();
                                 uriList.add(fileUri);
+                            }
+                            for (Uri uri : uriList) {
+                                long fileSize = FileUtil.getFileSize(this, uri);
+                                if(fileSize > Constants.MAX_SEND_CHAT_MESSAGE_FILE_SIZE){
+                                    MessageDisplayer.autoShow(this, "发送文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_SEND_CHAT_MESSAGE_FILE_SIZE), MessageDisplayer.Duration.LONG);
+                                    return;
+                                }
                             }
                             if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_FILE_COUNT){
                                 MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_FILE_COUNT + " 个文件", MessageDisplayer.Duration.LONG);

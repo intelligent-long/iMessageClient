@@ -18,5 +18,6 @@ public class Constants {
     public static final int CHAT_IMAGE_VIEW_MAX_HEIGHT_DP = 200;
     public static final int MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT = 30;
     public static final int MAX_ONCE_SEND_CHAT_MESSAGE_FILE_COUNT = 10;
+    public static final int MAX_SEND_CHAT_MESSAGE_FILE_SIZE = 512 * 1024 * 1024;
 
 }
