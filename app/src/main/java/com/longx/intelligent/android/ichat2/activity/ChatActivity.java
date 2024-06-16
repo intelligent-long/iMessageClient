@@ -462,15 +462,15 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private void sendImageMessages(List<Uri> uriList, AtomicInteger index){
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
-        byte[] imageBytes = MediaUtil.readUriToBytes(uri, getApplicationContext());
         String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
         SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), fileName);
-        ChatApiCaller.sendImageChatMessage(this, imageBytes, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+        ChatApiCaller.sendImageChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
+                binding.sendProgressIndicator.setProgress(0, false);
                 if(index.get() == 0) {
-                    toSendingState();
+                    toSendingProgressState();
                 }
             }
 
@@ -516,6 +516,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     toNormalState();
                 }
             }
+        }, (current, total) -> {
+            runOnUiThread(() -> {
+                binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + uriList.size());
+                int progress = (int)((current / (double) total) * 100);
+                binding.sendProgressIndicator.setProgress(progress, true);
+            });
         });
     }
 
@@ -533,6 +539,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
+                binding.sendProgressIndicator.setProgress(0, false);
                 if (index.get() == 0) {
                     toSendingProgressState();
                 }

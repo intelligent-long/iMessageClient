@@ -62,11 +62,55 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, byte[] imageBytes, SendImageChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
-        RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageBytes);
-        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", postBody.getImageFileName(), imageRequestBody);
+    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri imageUri, SendImageChatMessagePostBody postBody,
+                                                                      BaseCommonYier<OperationData> yier, ProgressYier progressYier){
+        ContentResolver contentResolver = context.getContentResolver();
+        InputStream inputStream;
+        try {
+            inputStream = contentResolver.openInputStream(imageUri);
+            if (inputStream == null) {
+                throw new IOException("Unable to open input stream from URI");
+            }
+        } catch (IOException e) {
+            ErrorLogger.log(e);
+            return null;
+        }
+        String fileName = FileAccessHelper.getFileNameFromUri(context, imageUri);
+        String mimeType = contentResolver.getType(imageUri);
+        RequestBody requestBody = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse(mimeType);
+            }
+
+            @Override
+            public long contentLength() throws IOException {
+                return FileUtil.getFileSize(context, imageUri);
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                try (InputStream inputStream = contentResolver.openInputStream(imageUri)) {
+                    if (inputStream == null) {
+                        throw new IOException("Unable to open input stream from URI");
+                    }
+                    byte[] buffer = new byte[10240];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        sink.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        };
+        ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
+            @Override
+            protected void onUpload(long progress, long contentLength, boolean done) {
+                progressYier.onProgressUpdate(progress, contentLength);
+            }
+        };
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", postBody.getImageFileName(), progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-        CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(imagePart, metadataRequestBody);
+        CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
