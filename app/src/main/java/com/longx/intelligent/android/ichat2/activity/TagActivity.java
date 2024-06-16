@@ -23,6 +23,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.DisableExpandAppBarBehavior;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.DragSortRecycler;
 
@@ -122,19 +123,19 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         MenuItem doneSort = binding.toolbar.getMenu().findItem(R.id.done_sort);
         MenuItem add = binding.toolbar.getMenu().findItem(R.id.add_tag);
         boolean dragSortState = adapter.isDragSortState();
-        boolean now = !dragSortState;
+        boolean nowDragSortState = !dragSortState;
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appBar.getLayoutParams();
         DisableExpandAppBarBehavior behavior = (DisableExpandAppBarBehavior) params.getBehavior();
         if (behavior != null) {
-            behavior.setExpandEnabled(!now);
+            behavior.setExpandEnabled(!nowDragSortState);
         }
-        binding.appBar.setExpanded(!now);
-        adapter.switchDragSortState(now);
-        sort.setVisible(!now);
-        cancelSort.setVisible(now);
-        doneSort.setVisible(now);
-        add.setVisible(!now);
-        if(now){
+        binding.appBar.setExpanded(!nowDragSortState);
+        adapter.switchDragSortState(nowDragSortState);
+        sort.setVisible(!nowDragSortState);
+        cancelSort.setVisible(nowDragSortState);
+        doneSort.setVisible(nowDragSortState);
+        add.setVisible(!nowDragSortState);
+        if(nowDragSortState){
             binding.recyclerView.addItemDecoration(dragSortRecycler);
             binding.recyclerView.addOnItemTouchListener(dragSortRecycler);
             binding.recyclerView.addOnScrollListener(dragSortRecycler.getScrollListener());
@@ -172,7 +173,15 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
     @Override
     public void onUpdateComplete(String id, List<String> updatingIds) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
+            boolean switched = false;
+            if(adapter.isDragSortState()){
+                switchDragSortState();
+                switched = true;
+            }
             showContent();
+            if(switched){
+                switchDragSortState();
+            }
         }
     }
 }
