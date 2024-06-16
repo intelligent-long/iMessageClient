@@ -152,17 +152,19 @@ public class EditUserSettingsActivity extends BaseActivity{
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     imageChosenActivityResultLauncher.launch(intent);
                 }, v -> {
-                    new ConfirmDialog((AppCompatActivity) getActivity(), "是否继续？").setPositiveButton((dialog, which) -> {
-                        UserApiCaller.removeAvatar(getActivity(), new RetrofitApiCaller.CommonYier<OperationStatus>((AppCompatActivity) getActivity()){
-                            @Override
-                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                                super.ok(data, row, call);
-                                data.commonHandleResult(getActivity(), new int[]{}, () -> {
-                                    MessageDisplayer.autoShow(getActivity(), "头像已移除", MessageDisplayer.Duration.SHORT);
+                    new ConfirmDialog((AppCompatActivity) getActivity(), "是否继续？")
+                            .setNegativeButton(null)
+                            .setPositiveButton((dialog, which) -> {
+                                UserApiCaller.removeAvatar(getActivity(), new RetrofitApiCaller.CommonYier<OperationStatus>((AppCompatActivity) getActivity()) {
+                                    @Override
+                                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                                        super.ok(data, row, call);
+                                        data.commonHandleResult(getActivity(), new int[]{}, () -> {
+                                            MessageDisplayer.autoShow(getActivity(), "头像已移除", MessageDisplayer.Duration.SHORT);
+                                        });
+                                    }
                                 });
-                            }
-                        });
-                    }).show();
+                            }).show();
                 }).show();
             }else if(preference.equals(preferenceChangeIchatIdUser)){
                 startActivity(new Intent(getContext(), ChangeIchatIdUserActivity.class));
