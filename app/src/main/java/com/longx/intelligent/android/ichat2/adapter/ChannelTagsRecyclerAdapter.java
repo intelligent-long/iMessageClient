@@ -123,6 +123,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             pastChannelTags = new ArrayList<>(channelTags);
         }
         if (from < to) {
+            if(to == channelTags.size()) to --;
             for (int i = from; i < to; i++) {
                 Collections.swap(channelTags, i, i + 1);
             }
