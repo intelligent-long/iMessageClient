@@ -108,6 +108,7 @@ public class SettingChannelTagActivity extends BaseActivity implements ContentUp
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
                     data.commonHandleResult(getActivity(), new int[]{-101}, () -> {
+                        binding.layoutNewTags.setVisibility(View.GONE);
                         MessageDisplayer.autoShow(getActivity(), "设置成功", MessageDisplayer.Duration.SHORT);
                     });
                 }

@@ -20,8 +20,8 @@ public abstract class SwipeDownGestureYier extends GestureDetector.SimpleOnGestu
 
     public SwipeDownGestureYier(Context context) {
         this.context = context;
-        SWIPE_THRESHOLD = UiUtil.dpToPx(context, 150);
-        SWIPE_VELOCITY_THRESHOLD = UiUtil.dpToPx(context, 50);
+        SWIPE_THRESHOLD = UiUtil.dpToPx(context, 100);
+        SWIPE_VELOCITY_THRESHOLD = UiUtil.dpToPx(context, 30);
     }
 
     @Override
