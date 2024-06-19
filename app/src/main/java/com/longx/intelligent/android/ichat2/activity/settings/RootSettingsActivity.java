@@ -205,8 +205,9 @@ public class RootSettingsActivity extends BaseActivity {
                 startActivity(new Intent(getActivity(), EditUserSettingsActivity.class));
             }else if(preference.equals(preferenceLogout)) {
                 new ConfirmDialog((AppCompatActivity) SettingsFragment.this.getActivity(), "是否继续？")
+                        .setNegativeButton(null)
                         .setPositiveButton((dialogInterface, i) -> {
-                            GlobalBehaviors.doLogout((AppCompatActivity) SettingsFragment.this.getActivity(), null, null);
+                            GlobalBehaviors.doLogout(SettingsFragment.this.getActivity(), null, null);
                         })
                         .show();
             }else if(preference.equals(preferenceEmail)){

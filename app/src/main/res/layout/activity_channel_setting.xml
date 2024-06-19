@@ -191,7 +191,7 @@
             app:iconTint="@color/action_red"
             app:iconSize="24dp"
             app:iconGravity="textStart"
-            app:iconPadding="9dp"
+            app:iconPadding="8dp"
             android:text="删除频道"
             android:textSize="20sp"
             android:textColor="@color/action_red"

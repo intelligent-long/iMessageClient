@@ -19,6 +19,7 @@ import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTagBinding;
+import com.longx.intelligent.android.ichat2.databinding.LayoutFabRecyclerSpaceFooterBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.DisableExpandAppBarBehavior;
@@ -26,6 +27,7 @@ import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.DragSortRecycler;
+import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +94,17 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
     }
 
     private void setUpYiers() {
+        binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50) {
+            @Override
+            public void onScrollUp() {
+                if(binding.fab.isExtended()) binding.fab.shrink();
+            }
+
+            @Override
+            public void onScrollDown() {
+                if(!binding.fab.isExtended()) binding.fab.extend();
+            }
+        });
         dragSortRecycler = new DragSortRecycler();
         dragSortRecycler.setViewHandleId(R.id.drag_handle);
         dragSortRecycler.setFloatingBgColor(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
@@ -100,12 +113,13 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         dragSortRecycler.setOnItemMovedListener((from, to) -> {
             adapter.moveAndShow(from, to);
         });
+        binding.fab.setOnClickListener(v -> {
+            new AddChannelTagBottomSheet(this, results -> {
+                scrollToEnd = true;
+            }).show();
+        });
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.add_tag){
-                new AddChannelTagBottomSheet(this, results -> {
-                    scrollToEnd = true;
-                }).show();
-            }else if(item.getItemId() == R.id.sort){
+            if(item.getItemId() == R.id.sort){
                 switchDragSortState();
             }else if(item.getItemId() == R.id.cancel_sort){
                 switchDragSortState();
@@ -121,7 +135,6 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         MenuItem sort = binding.toolbar.getMenu().findItem(R.id.sort);
         MenuItem cancelSort = binding.toolbar.getMenu().findItem(R.id.cancel_sort);
         MenuItem doneSort = binding.toolbar.getMenu().findItem(R.id.done_sort);
-        MenuItem add = binding.toolbar.getMenu().findItem(R.id.add_tag);
         boolean dragSortState = adapter.isDragSortState();
         boolean nowDragSortState = !dragSortState;
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appBar.getLayoutParams();
@@ -134,7 +147,6 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         sort.setVisible(!nowDragSortState);
         cancelSort.setVisible(nowDragSortState);
         doneSort.setVisible(nowDragSortState);
-        add.setVisible(!nowDragSortState);
         if(nowDragSortState){
             binding.recyclerView.addItemDecoration(dragSortRecycler);
             binding.recyclerView.addOnItemTouchListener(dragSortRecycler);

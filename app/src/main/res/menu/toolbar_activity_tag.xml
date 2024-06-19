@@ -22,11 +22,4 @@
         android:icon="@drawable/swap_vert_24px"
         app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/add_tag"
-        android:title="添加标签"
-        android:icon="@drawable/add_24px"
-        app:iconTint="?attr/colorControlNormal"
-        app:showAsAction="always"/>
 </menu>
