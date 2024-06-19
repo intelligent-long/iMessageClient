@@ -147,17 +147,16 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         sort.setVisible(!nowDragSortState);
         cancelSort.setVisible(nowDragSortState);
         doneSort.setVisible(nowDragSortState);
-        LayoutFabRecyclerSpaceFooterBinding layoutFabRecyclerSpaceFooterBinding = LayoutFabRecyclerSpaceFooterBinding.inflate(getLayoutInflater());
         if(nowDragSortState){
             binding.recyclerView.addItemDecoration(dragSortRecycler);
             binding.recyclerView.addOnItemTouchListener(dragSortRecycler);
             binding.recyclerView.addOnScrollListener(dragSortRecycler.getScrollListener());
-            binding.recyclerView.setFooterView(layoutFabRecyclerSpaceFooterBinding.getRoot());
+            binding.fab.hide();
         }else {
             binding.recyclerView.removeItemDecoration(dragSortRecycler);
             binding.recyclerView.removeOnItemTouchListener(dragSortRecycler);
             binding.recyclerView.removeOnScrollListener(dragSortRecycler.getScrollListener());
-            binding.recyclerView.removeFooterView();
+            binding.fab.show();
         }
     }
 
