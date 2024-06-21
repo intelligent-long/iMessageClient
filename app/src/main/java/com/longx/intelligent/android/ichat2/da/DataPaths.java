@@ -24,6 +24,10 @@ public class DataPaths {
             return context.getCacheDir().getAbsolutePath() +
                     java.io.File.separator + getServerFolder(context);
         }
+
+        public static String getVideoThumbnail(Context context, String fileName){
+            return getCacheFolderPath(context) + "/video_thumbnail/" + fileName;
+        }
     }
 
     public static class PrivateFile {

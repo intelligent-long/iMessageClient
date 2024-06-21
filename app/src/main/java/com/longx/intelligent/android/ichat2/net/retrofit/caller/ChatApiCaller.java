@@ -10,6 +10,7 @@ import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendVideoChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChatApi;
@@ -62,7 +63,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri imageUri, SendImageChatMessagePostBody postBody,
+    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri imageUri,
+                                                                      SendImageChatMessagePostBody postBody,
                                                                       BaseCommonYier<OperationData> yier, ProgressYier progressYier){
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
@@ -108,7 +110,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
                 progressYier.onProgressUpdate(progress, contentLength);
             }
         };
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", postBody.getImageFileName(), progressRequestBody);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", fileName, progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
         CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
@@ -122,8 +124,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
     }
 
     public static CompletableCall<OperationData> sendFileChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri fileUri,
-                                                                     SendFileChatMessagePostBody postBody, BaseCommonYier<OperationData> yier,
-                                                                     ProgressYier progressYier) {
+                                                                     SendFileChatMessagePostBody postBody,
+                                                                     BaseCommonYier<OperationData> yier, ProgressYier progressYier) {
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
         try {
@@ -177,6 +179,66 @@ public class ChatApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<ResponseBody> fetchChatMessageFile(LifecycleOwner lifecycleOwner, String fileId, BaseYier<ResponseBody> yier){
         CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageFile(fileId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> sendVideoChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri videoUri,
+                                                                     SendVideoChatMessagePostBody postBody,
+                                                                     BaseCommonYier<OperationData> yier, ProgressYier progressYier){
+        ContentResolver contentResolver = context.getContentResolver();
+        InputStream inputStream;
+        try {
+            inputStream = contentResolver.openInputStream(videoUri);
+            if (inputStream == null) {
+                throw new IOException("Unable to open input stream from URI");
+            }
+        } catch (IOException e) {
+            ErrorLogger.log(e);
+            return null;
+        }
+        String fileName = FileAccessHelper.getFileNameFromUri(context, videoUri);
+        String mimeType = contentResolver.getType(videoUri);
+        RequestBody requestBody = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse(mimeType);
+            }
+
+            @Override
+            public long contentLength() throws IOException {
+                return FileUtil.getFileSize(context, videoUri);
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                try (InputStream inputStream = contentResolver.openInputStream(videoUri)) {
+                    if (inputStream == null) {
+                        throw new IOException("Unable to open input stream from URI");
+                    }
+                    byte[] buffer = new byte[10240];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        sink.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        };
+        ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
+            @Override
+            protected void onUpload(long progress, long contentLength, boolean done) {
+                progressYier.onProgressUpdate(progress, contentLength);
+            }
+        };
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("video", fileName, progressRequestBody);
+        RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+        CompletableCall<OperationData> call = getApiImplementation().sendVideoChatMessage(filePart, metadataRequestBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<ResponseBody> fetchChatMessageVideo(LifecycleOwner lifecycleOwner, String videoId, BaseYier<ResponseBody> yier){
+        CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageVideo(videoId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

@@ -1,21 +1,16 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.annotation.NonNull;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.SendMediaMessagesRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.databinding.ActivitySendImageMessagesBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivitySendVideoMessagesBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryFooterBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBinding;
 import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
@@ -29,36 +24,34 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.value.Variables;
-import com.longx.intelligent.android.ichat2.yier.AutoCompleteTextViewAutoSelectOnItemClickYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendImageMessagesActivity extends BaseActivity{
-    private ActivitySendImageMessagesBinding binding;
+public class SendVideoMessagesActivity extends BaseActivity {
+    private ActivitySendVideoMessagesBinding binding;
     private LayoutGalleryHeaderBinding headerBinding;
     private LayoutGalleryFooterBinding footerBinding;
-    private SendMediaMessagesRecyclerAdapter adapter;
-    private GridLayoutManager gridLayoutManager;
     private SpaceGridDecorationSetter spaceGridDecorationSetter;
-    private int headerSpaceOriginalHeight;
     private LocationNameSwitcher locationNameSwitcher;
-    private List<DirectoryInfo> allImageDirectories;
     private String currentDirectoryPath;
     private boolean uiInited;
+    private SendMediaMessagesRecyclerAdapter adapter;
+    private GridLayoutManager gridLayoutManager;
+    private int headerSpaceOriginalHeight;
+    private List<DirectoryInfo> allVideoDirectories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySendImageMessagesBinding.inflate(getLayoutInflater());
+        binding = ActivitySendVideoMessagesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
         changeWindowAndSystemUi();
         init();
         showContent();
-        setupYiers();
     }
 
     private void changeWindowAndSystemUi() {
@@ -85,10 +78,10 @@ public class SendImageMessagesActivity extends BaseActivity{
     }
 
     private void initAutoCompleteTextView() {
-        allImageDirectories = MediaStoreHelper.getAllImageDirectories(this);
+        allVideoDirectories = MediaStoreHelper.getAllVideoDirectories(this);
         List<String> directoryNames = new ArrayList<>();
-        directoryNames.add("所有图片");
-        allImageDirectories.forEach(imageDirectory -> {
+        directoryNames.add("所有视频");
+        allVideoDirectories.forEach(imageDirectory -> {
             directoryNames.add(new File(imageDirectory.getPath()).getName());
         });
 
@@ -102,49 +95,6 @@ public class SendImageMessagesActivity extends BaseActivity{
         }
     }
 
-    private void setupYiers() {
-        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView r, int dx, int dy) {
-                super.onScrolled(r, dx, dy);
-                updateInfos();
-            }
-        });
-        adapter.setOnRecyclerItemClickYier((position, view) -> {
-            ArrayList<MediaInfo> imageInfoList = new ArrayList<>();
-            for (SendMediaMessagesRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
-                imageInfoList.add(itemData.getMediaInfo());
-            }
-            Intent intent = new Intent(this, PreviewToSendImageActivity.class);
-            intent.putExtra(ExtraKeys.URI, imageInfoList.get(position).getUri());
-            startActivity(intent);
-        });
-        binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.send){
-                Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-            return true;
-        });
-        binding.directoryAutoCompleteTextView.setOnItemClickListener(new AutoCompleteTextViewAutoSelectOnItemClickYier(binding.directoryAutoCompleteTextView){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                super.onItemClick(parent, view, position, id);
-                if(position == 0) {
-                    currentDirectoryPath = null;
-                }else {
-                    DirectoryInfo directoryInfo = allImageDirectories.get(position - 1);
-                    currentDirectoryPath = directoryInfo.getPath();
-                }
-                showContent();
-                setupYiers();
-                binding.recyclerView.scrollToEnd(false);
-            }
-        });
-    }
-
     private void showContent() {
         adapter = new SendMediaMessagesRecyclerAdapter(this, getData());
         showMedias();
@@ -155,9 +105,9 @@ public class SendImageMessagesActivity extends BaseActivity{
     private List<SendMediaMessagesRecyclerAdapter.ItemData> getData(){
         List<MediaInfo> images;
         if(currentDirectoryPath == null) {
-            images = MediaStoreHelper.geAllImages(this);
+            images = MediaStoreHelper.getAllVideos(this);
         }else {
-            images = MediaStoreHelper.getAllDirectoryImages(this, currentDirectoryPath);
+            images = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath);
         }
         List<SendMediaMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         images.forEach(image -> {
@@ -200,8 +150,8 @@ public class SendImageMessagesActivity extends BaseActivity{
     }
 
     private void showTotalSize(){
-        int imagesCount = MediaStoreHelper.getImagesCount(this, currentDirectoryPath, false);
-        footerBinding.total.setText(imagesCount + "张照片");
+        int imagesCount = MediaStoreHelper.getVideoCount(this, currentDirectoryPath, false);
+        footerBinding.total.setText(imagesCount + "个视频");
     }
 
     private void updateInfos() {

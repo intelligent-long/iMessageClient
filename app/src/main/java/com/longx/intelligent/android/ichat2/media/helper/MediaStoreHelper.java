@@ -512,4 +512,39 @@ public class MediaStoreHelper {
         return 0;
     }
 
+    public static int getVideoCount(Context context) {
+        return getVideoCount(context, null, true);
+    }
+
+    public static int getVideoCount(Context context, String directoryPath, boolean includeSubdirectories) {
+        String[] projection = {MediaStore.Video.Media._ID};
+        String selection = null;
+        String[] selectionArgs = null;
+
+        if (directoryPath != null) {
+            if (includeSubdirectories) {
+                // 包含子文件夹
+                selection = MediaStore.Video.Media.DATA + " LIKE ?";
+                selectionArgs = new String[]{directoryPath + "%"};
+            } else {
+                // 不包含子文件夹
+                selection = MediaStore.Video.Media.DATA + " LIKE ? AND " + MediaStore.Video.Media.DATA + " NOT LIKE ?";
+                selectionArgs = new String[]{directoryPath + "/%", directoryPath + "/%/%"};
+            }
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri queryUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+
+        try (Cursor cursor = contentResolver.query(queryUri, projection, selection, selectionArgs, null)) {
+            if (cursor != null) {
+                return cursor.getCount();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
 }

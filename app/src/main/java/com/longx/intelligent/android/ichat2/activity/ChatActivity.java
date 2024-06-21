@@ -71,6 +71,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private boolean sendingState;
     private ActivityResultLauncher<Intent> sendImageMessageResultLauncher;
     private ActivityResultLauncher<Intent> sendFileMessageResultLauncher;
+    private ActivityResultLauncher<Intent> sendVideoMessageResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -318,6 +319,9 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             intent = Intent.createChooser(intent, "选择文件");
             sendFileMessageResultLauncher.launch(intent);
         });
+        binding.morePanelVideo.setOnClickListener(v -> {
+            sendVideoMessageResultLauncher.launch(new Intent(this, SendVideoMessagesActivity.class));
+        });
     }
 
     private void toSendingState(){
@@ -448,6 +452,17 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                             }else {
                                 onSendFileMessages(uriList);
                             }
+                        }
+                    }
+                }
+        );
+        sendVideoMessageResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+
                         }
                     }
                 }

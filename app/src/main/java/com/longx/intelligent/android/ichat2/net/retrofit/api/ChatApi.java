@@ -53,4 +53,14 @@ public interface ChatApi {
     @GET("chat/message/file/new/{fileId}")
     @Headers("LogLevel:HEADERS")
     CompletableCall<ResponseBody> fetchChatMessageFile(@Path("fileId") String fileId);
+
+    @Multipart
+    @POST("chat/message/video/send")
+    @Headers("LogLevel:HEADERS")
+    CompletableCall<OperationData> sendVideoChatMessage(@Part MultipartBody.Part video, @Part("metadata") RequestBody metadata);
+
+    @Streaming
+    @GET("chat/message/video/new/{videoId}")
+    @Headers("LogLevel:HEADERS")
+    CompletableCall<ResponseBody> fetchChatMessageVideo(@Path("videoId") String videoId);
 }

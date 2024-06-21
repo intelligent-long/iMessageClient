@@ -10,13 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendImageMessagesBinding;
+import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendMediaMessagesBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -24,14 +26,14 @@ import java.util.List;
 /**
  * Created by LONG on 2024/5/25 at 5:53 PM.
  */
-public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<SendImageMessagesRecyclerAdapter.ViewHolder, SendImageMessagesRecyclerAdapter.ItemData> {
+public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<SendMediaMessagesRecyclerAdapter.ViewHolder, SendMediaMessagesRecyclerAdapter.ItemData> {
     private final AppCompatActivity activity;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
-    private final List<SendImageMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+    private final List<SendMediaMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
     private final List<Integer> checkedPositions = new ArrayList<>();
-    private final List<Uri> checkedImageUris = new ArrayList<>();
+    private final List<Uri> checkedUris = new ArrayList<>();
 
-    public SendImageMessagesRecyclerAdapter(AppCompatActivity activity, List<SendImageMessagesRecyclerAdapter.ItemData> itemDataList) {
+    public SendMediaMessagesRecyclerAdapter(AppCompatActivity activity, List<SendMediaMessagesRecyclerAdapter.ItemData> itemDataList) {
         this.activity = activity;
         sortDataList(itemDataList);
         this.itemDataList.addAll(itemDataList);
@@ -49,9 +51,9 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemSendImageMessagesBinding binding;
+        private RecyclerItemSendMediaMessagesBinding binding;
 
-        public ViewHolder(RecyclerItemSendImageMessagesBinding binding){
+        public ViewHolder(RecyclerItemSendMediaMessagesBinding binding){
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -68,7 +70,7 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemSendImageMessagesBinding binding = RecyclerItemSendImageMessagesBinding.inflate(activity.getLayoutInflater());
+        RecyclerItemSendMediaMessagesBinding binding = RecyclerItemSendMediaMessagesBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
@@ -102,7 +104,7 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
             holder.binding.cancelCheckButton.setVisibility(View.VISIBLE);
             holder.binding.darkCover.setVisibility(View.VISIBLE);
             holder.binding.index.setVisibility(View.VISIBLE);
-            holder.binding.index.setText(String.valueOf(checkedImageUris.indexOf(uri) + 1));
+            holder.binding.index.setText(String.valueOf(checkedUris.indexOf(uri) + 1));
         }else {
             holder.binding.checkButton.setVisibility(View.VISIBLE);
             holder.binding.cancelCheckButton.setVisibility(View.GONE);
@@ -111,21 +113,21 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
             holder.binding.index.setText(null);
         }
         holder.binding.checkButton.setOnClickListener(v -> {
-            if(checkedImageUris.size() == Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
+            if(checkedUris.size() == Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
                 MessageDisplayer.autoShow(activity, "最多选择 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
                 return;
             }
-            checkedImageUris.add(uri);
-            checkedPositions.add((Integer) (position + 1));
+            checkedUris.add(uri);
+            checkedPositions.add(position + 1);
             notifyItemChanged(position + 1);
         });
         holder.binding.cancelCheckButton.setOnClickListener(v -> {
-            int index = checkedImageUris.indexOf(uri);
-            checkedImageUris.remove(uri);
+            int index = checkedUris.indexOf(uri);
+            checkedUris.remove(uri);
             checkedPositions.remove((Integer) (position + 1));
             notifyItemChanged(position + 1);
-            checkedImageUris.forEach(uri1 -> {
-                int index1 = checkedImageUris.indexOf(uri1);
+            checkedUris.forEach(uri1 -> {
+                int index1 = checkedUris.indexOf(uri1);
                 if(index1 >= index) notifyItemChanged(checkedPositions.get(index1));
             });
         });
@@ -134,17 +136,40 @@ public class SendImageMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
                 showPreviewImage(itemData.mediaInfo.getUri(), holder);
                 break;
             }
+            case VIDEO:{
+                showVideoThumbnail(itemData.mediaInfo.getPath(), holder);
+                break;
+            }
         }
     }
 
-    private void showPreviewImage(Uri imageFileUri, SendImageMessagesRecyclerAdapter.ViewHolder holder) {
+    private void showPreviewImage(Uri imageFileUri, SendMediaMessagesRecyclerAdapter.ViewHolder holder) {
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(imageFileUri)
                 .into(holder.binding.imageView);
     }
 
-    public List<Uri> getCheckedImageUris() {
-        return checkedImageUris;
+    private void showPreviewImage(File imageFile, SendMediaMessagesRecyclerAdapter.ViewHolder holder) {
+        GlideApp
+                .with(activity.getApplicationContext())
+                .load(imageFile)
+                .into(holder.binding.imageView);
+    }
+
+    private void showVideoThumbnail(String videoPath, @NonNull ViewHolder holder) {
+        File videoThumbnail = CacheFilesAccessor.VideoThumbnail.getVideoThumbnailFile(activity, videoPath);
+        if(videoThumbnail.exists()){
+            showPreviewImage(videoThumbnail, holder);
+        }else {
+            new Thread(() -> {
+                File videoThumbnail1 = CacheFilesAccessor.VideoThumbnail.getOrCacheAndGetVideoThumbnail(activity, videoPath);
+                activity.runOnUiThread(() -> showPreviewImage(videoThumbnail1, holder));
+            }).start();
+        }
+    }
+
+    public List<Uri> getCheckedUris() {
+        return checkedUris;
     }
 }

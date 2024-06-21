@@ -45,7 +45,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin_end"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
-        android:contentDescription="资料展示"
+        android:contentDescription="资料可见性"
         app:icon="@drawable/visibility_fill_24px"
-        android:text="资料展示"/>
+        android:text="资料可见性"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
