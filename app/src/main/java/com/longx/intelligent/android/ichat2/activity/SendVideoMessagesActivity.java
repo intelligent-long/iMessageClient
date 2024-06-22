@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
@@ -52,6 +53,7 @@ public class SendVideoMessagesActivity extends BaseActivity {
         changeWindowAndSystemUi();
         init();
         showContent();
+        setupYiers();
     }
 
     private void changeWindowAndSystemUi() {
@@ -81,8 +83,8 @@ public class SendVideoMessagesActivity extends BaseActivity {
         allVideoDirectories = MediaStoreHelper.getAllVideoDirectories(this);
         List<String> directoryNames = new ArrayList<>();
         directoryNames.add("所有视频");
-        allVideoDirectories.forEach(imageDirectory -> {
-            directoryNames.add(new File(imageDirectory.getPath()).getName());
+        allVideoDirectories.forEach(videoDirectory -> {
+            directoryNames.add(new File(videoDirectory.getPath()).getName());
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -95,6 +97,18 @@ public class SendVideoMessagesActivity extends BaseActivity {
         }
     }
 
+    private void setupYiers() {
+        adapter.setOnRecyclerItemClickYier((position, view) -> {
+            ArrayList<MediaInfo> videoInfoList = new ArrayList<>();
+            for (SendMediaMessagesRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
+                videoInfoList.add(itemData.getMediaInfo());
+            }
+            Intent intent = new Intent(this, PreviewToSendVideoActivity.class);
+            intent.putExtra(ExtraKeys.URI, videoInfoList.get(position).getUri());
+            startActivity(intent);
+        });
+    }
+
     private void showContent() {
         adapter = new SendMediaMessagesRecyclerAdapter(this, getData());
         showMedias();
@@ -103,15 +117,15 @@ public class SendVideoMessagesActivity extends BaseActivity {
     }
 
     private List<SendMediaMessagesRecyclerAdapter.ItemData> getData(){
-        List<MediaInfo> images;
+        List<MediaInfo> videos;
         if(currentDirectoryPath == null) {
-            images = MediaStoreHelper.getAllVideos(this);
+            videos = MediaStoreHelper.getAllVideos(this);
         }else {
-            images = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath);
+            videos = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath);
         }
         List<SendMediaMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        images.forEach(image -> {
-            itemDataList.add(new SendMediaMessagesRecyclerAdapter.ItemData(image));
+        videos.forEach(video -> {
+            itemDataList.add(new SendMediaMessagesRecyclerAdapter.ItemData(video));
         });
         return itemDataList;
     }
@@ -150,8 +164,8 @@ public class SendVideoMessagesActivity extends BaseActivity {
     }
 
     private void showTotalSize(){
-        int imagesCount = MediaStoreHelper.getVideoCount(this, currentDirectoryPath, false);
-        footerBinding.total.setText(imagesCount + "个视频");
+        int videosCount = MediaStoreHelper.getVideoCount(this, currentDirectoryPath, false);
+        footerBinding.total.setText(videosCount + "个视频");
     }
 
     private void updateInfos() {

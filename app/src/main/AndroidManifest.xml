@@ -37,6 +37,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.PreviewToSendVideoActivity"
+            android:exported="false"
+            android:theme="@style/DarkStatusBarActivity" />
+        <activity
             android:name=".activity.SendVideoMessagesActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -90,12 +94,10 @@
         <activity
             android:name=".activity.ChatImageActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
             android:name=".activity.PreviewToSendImageActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
             android:name=".activity.SendImageMessagesActivity"

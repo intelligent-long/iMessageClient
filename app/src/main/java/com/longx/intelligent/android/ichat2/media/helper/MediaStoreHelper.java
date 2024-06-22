@@ -546,5 +546,17 @@ public class MediaStoreHelper {
         return 0;
     }
 
+    public static String getRealPathFromURI(Context context, Uri contentUri) {
+        String[] proj = { MediaStore.Video.Media.DATA };
+        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+        cursor.moveToFirst();
+        String path = cursor.getString(column_index);
+        cursor.close();
+        return path;
+    }
 
 }
