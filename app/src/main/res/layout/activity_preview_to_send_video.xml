@@ -17,29 +17,47 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/transparent">
+            
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.google.android.material.button.MaterialButton
-                android:visibility="gone"
-                android:id="@+id/play_button"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                app:icon="@drawable/play_circle_outline_24px"
-                app:iconTint="@color/white"
-                app:iconSize="30dp"
-                android:layout_marginEnd="10dp"/>
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/buttons"/>
+                
+                <FrameLayout
+                    android:id="@+id/buttons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true">
+    
+                    <com.google.android.material.button.MaterialButton
+                        android:visibility="gone"
+                        android:id="@+id/play_button"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/play_circle_outline_24px"
+                        app:iconTint="@color/white"
+                        app:iconSize="30dp"
+                        android:layout_marginEnd="10dp"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/pause_button"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                app:icon="@drawable/pause_circle_outline_24px"
-                app:iconTint="@color/white"
-                app:iconSize="30dp"
-                android:layout_marginEnd="10dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pause_button"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/pause_circle_outline_24px"
+                        app:iconTint="@color/white"
+                        app:iconSize="30dp"
+                        android:layout_marginEnd="10dp"/>
+                </FrameLayout>
+            </RelativeLayout>
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
