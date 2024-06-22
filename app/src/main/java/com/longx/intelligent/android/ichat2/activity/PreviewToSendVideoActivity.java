@@ -30,7 +30,7 @@ public class PreviewToSendVideoActivity extends BaseActivity {
     private boolean isMediaPrepared;
     private boolean pureVideo;
     private Timer timer;
-    private static final int SEEKBAR_MAX = 100;
+    private static final int SEEKBAR_MAX = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
