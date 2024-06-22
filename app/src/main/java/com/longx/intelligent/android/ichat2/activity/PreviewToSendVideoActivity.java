@@ -10,7 +10,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendVideoBinding;
 import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
 import org.videolan.libvlc.LibVLC;
@@ -88,7 +88,7 @@ public class PreviewToSendVideoActivity extends BaseActivity {
                     binding.pauseButton.setVisibility(View.GONE);
                     binding.playButton.setVisibility(View.VISIBLE);
                     stopProgressUpdate();
-                    runOnUiThread(() -> {binding.seekbar.setProgress(binding.seekbar.getMax());});
+                    updateSeekbarPositionAndTimePlayToEnd();
                     break;
             }
         });
@@ -139,12 +139,12 @@ public class PreviewToSendVideoActivity extends BaseActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                updateSeekbarPosition();
+                updateSeekbarPositionAndTimePlay();
             }
         }, 0, 1000);
     }
 
-    private void updateSeekbarPosition() {
+    private void updateSeekbarPositionAndTimePlay() {
         runOnUiThread(() -> {
             if (mediaPlayer != null) {
                 binding.seekbar.setMax(SEEKBAR_MAX);
@@ -152,6 +152,17 @@ public class PreviewToSendVideoActivity extends BaseActivity {
                 long duration = mediaPlayer.getLength();
                 int position = (int) ((currentPosition / (double) duration) * SEEKBAR_MAX);
                 binding.seekbar.setProgress(position);
+                binding.timePlay.setText(TimeUtil.formatTime(currentPosition) + " / " + TimeUtil.formatTime(duration));
+            }
+        });
+    }
+
+    private void updateSeekbarPositionAndTimePlayToEnd(){
+        runOnUiThread(() -> {
+            if (mediaPlayer != null) {
+                binding.seekbar.setProgress(binding.seekbar.getMax());
+                long duration = mediaPlayer.getLength();
+                binding.timePlay.setText(TimeUtil.formatTime(duration) + " / " + TimeUtil.formatTime(duration));
             }
         });
     }
@@ -162,7 +173,7 @@ public class PreviewToSendVideoActivity extends BaseActivity {
             timer = null;
         }
         try {
-            updateSeekbarPosition();
+            updateSeekbarPositionAndTimePlay();
         }catch (Exception ignore){}
     }
 
