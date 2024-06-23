@@ -79,6 +79,28 @@ public class ChatMessage implements Parcelable {
                     });
                 }
             });
+        }else if(chatMessage.getType() == ChatMessage.TYPE_VIDEO) {
+            ChatApiCaller.fetchChatMessageVideo(null, chatMessage.videoId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
+                @Override
+                public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
+                    super.ok(data, row, call);
+                    executorService.execute(() -> {
+                        try {
+                            byte[] bytes = data.bytes();
+                            String chatVideoFilePath = PrivateFilesAccessor.ChatVideo.save(context, chatMessage, bytes);
+                            chatMessage.setVideoFilePath(chatVideoFilePath);
+                            Size videoSize = MediaHelper.getVideoSize(chatVideoFilePath);
+                            chatMessage.setVideoSize(videoSize);
+                            commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                            mainHandler.post(resultsYier::onResults);
+                        } catch (IOException e) {
+                            mainHandler.post(() -> {
+                                throw new RuntimeException(e);
+                            });
+                        }
+                    });
+                }
+            });
         }else {
             commonDoOfMainDoOnNewChatMessage(chatMessage, context);
             resultsYier.onResults();
@@ -114,6 +136,7 @@ public class ChatMessage implements Parcelable {
     private String fileName;
     private String imageId;
     private String fileId;
+    private String videoId;
 
     @JsonIgnore
     private Boolean showTime;
@@ -125,11 +148,16 @@ public class ChatMessage implements Parcelable {
     private Size imageSize;
     @JsonIgnore
     private String fileFilePath;
+    @JsonIgnore
+    private String videoFilePath;
+    @JsonIgnore
+    private Size videoSize;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String fileName, String imageId, String fileId) {
+    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String fileName,
+                       String imageId, String fileId, String videoId) {
         this.type = type;
         this.uuid = uuid;
         this.from = from;
@@ -139,6 +167,7 @@ public class ChatMessage implements Parcelable {
         this.fileName = fileName;
         this.imageId = imageId;
         this.fileId = fileId;
+        this.videoId = videoId;
     }
 
     public int getType() {
@@ -175,6 +204,10 @@ public class ChatMessage implements Parcelable {
 
     public String getFileId() {
         return fileId;
+    }
+
+    public String getVideoId() {
+        return videoId;
     }
 
     public boolean isSelfSender(Context context){
@@ -230,6 +263,22 @@ public class ChatMessage implements Parcelable {
         this.imageSize = imageSize;
     }
 
+    public Size getVideoSize() {
+        return videoSize;
+    }
+
+    public void setVideoSize(Size videoSize) {
+        this.videoSize = videoSize;
+    }
+
+    public String getVideoFilePath() {
+        return videoFilePath;
+    }
+
+    public void setVideoFilePath(String videoFilePath) {
+        this.videoFilePath = videoFilePath;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -253,6 +302,7 @@ public class ChatMessage implements Parcelable {
         fileName = in.readString();
         imageId = in.readString();
         fileId = in.readString();
+        videoId = in.readString();
         byte tmpShowTime = in.readByte();
         showTime = tmpShowTime == 0 ? null : tmpShowTime == 1;
         byte tmpViewed = in.readByte();
@@ -262,6 +312,8 @@ public class ChatMessage implements Parcelable {
             imageSize = in.readSize();
         }else if(type == TYPE_FILE){
             fileFilePath = in.readString();
+        }else if(type == TYPE_VIDEO){
+            videoFilePath = in.readString();
         }
     }
 
@@ -293,6 +345,7 @@ public class ChatMessage implements Parcelable {
         dest.writeString(fileName);
         dest.writeString(imageId);
         dest.writeString(fileId);
+        dest.writeString(videoId);
         dest.writeByte((byte) (showTime == null ? 0 : showTime ? 1 : 2));
         dest.writeByte((byte) (viewed == null ? 0 : viewed ? 1 : 2));
         if(type == TYPE_IMAGE) {
@@ -300,6 +353,31 @@ public class ChatMessage implements Parcelable {
             dest.writeSize(imageSize);
         }else if(type == TYPE_FILE) {
             dest.writeString(fileFilePath);
+        }else if(type == TYPE_VIDEO){
+            dest.writeString(videoFilePath);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "type=" + type +
+                ", uuid='" + uuid + '\'' +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", time=" + time +
+                ", text='" + text + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", imageId='" + imageId + '\'' +
+                ", fileId='" + fileId + '\'' +
+                ", videoId='" + videoId + '\'' +
+                ", showTime=" + showTime +
+                ", viewed=" + viewed +
+                ", imageFilePath='" + imageFilePath + '\'' +
+                ", imageSize=" + imageSize +
+                ", fileFilePath='" + fileFilePath + '\'' +
+                ", videoFilePath='" + videoFilePath + '\'' +
+                ", videoSize=" + videoSize +
+                '}';
     }
 }

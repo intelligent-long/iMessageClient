@@ -52,7 +52,7 @@ public class CacheFilesAccessor {
             return new File(path);
         }
 
-        public static File getOrCacheAndGetVideoThumbnail(Context context, String videoPath) {
+        public static File cacheAndGetVideoThumbnail(Context context, String videoPath) {
             Bitmap thumbnailBitmap = MediaHelper.getVideoThumbnail(videoPath);
             if (thumbnailBitmap != null) {
                 try {

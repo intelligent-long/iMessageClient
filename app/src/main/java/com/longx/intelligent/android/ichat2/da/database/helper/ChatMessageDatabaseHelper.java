@@ -30,6 +30,9 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String IMAGE_WIDTH = "image_width";
         public static final String IMAGE_HEIGHT = "image_height";
         public static final String FILE_FILE_PATH = "file_file_path";
+        public static final String VIDEO_FILE_PATH = "video_file_path";
+        public static final String VIDEO_WIDTH = "video_width";
+        public static final String VIDEO_HEIGHT = "video_height";
     }
 
     public ChatMessageDatabaseHelper(Context context, String channelIchatId, String ichatId) {
@@ -53,6 +56,9 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.IMAGE_WIDTH + " INTEGER,"
                 + TableChannelChatMessagesColumns.IMAGE_HEIGHT + " INTEGER,"
                 + TableChannelChatMessagesColumns.FILE_FILE_PATH + " VARCHAR,"
+                + TableChannelChatMessagesColumns.VIDEO_FILE_PATH + " VARCHAR,"
+                + TableChannelChatMessagesColumns.VIDEO_WIDTH + " INTEGER,"
+                + TableChannelChatMessagesColumns.VIDEO_HEIGHT + " INTEGER,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableChannelChatMessagesColumns.TYPE + ","
                 + TableChannelChatMessagesColumns.UUID + ","

@@ -72,16 +72,24 @@ public class MediaHelper {
 
     public static Size getImageSize(byte[] image) {
         Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+        return getImageSize(bitmap, image);
+    }
+
+    public static Size getImageSize(Bitmap bitmap, byte[] image) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        ByteArrayInputStream bais = new ByteArrayInputStream(image);
-        int orientation = getImageOrientation(bais);
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return new Size(height, width);
-            default:
-                return new Size(width, height);
+        if(image == null){
+            return new Size(width, height);
+        }else {
+            ByteArrayInputStream bais = new ByteArrayInputStream(image);
+            int orientation = getImageOrientation(bais);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return new Size(height, width);
+                default:
+                    return new Size(width, height);
+            }
         }
     }
 
@@ -93,5 +101,58 @@ public class MediaHelper {
             e.printStackTrace();
             return ExifInterface.ORIENTATION_NORMAL;
         }
+    }
+
+    public static Size getVideoSize(String videoPath) {
+        int videoWidth = 0;
+        int videoHeight = 0;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(videoPath);
+            videoWidth = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            videoHeight = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        } catch (IllegalArgumentException e) {
+            ErrorLogger.log(MediaHelper.class, e);
+        } finally {
+            try {
+                retriever.release();
+            } catch (IOException e) {
+                ErrorLogger.log(MediaHelper.class, e);
+            }
+        }
+        if(videoWidth == 0 || videoHeight == 0) {
+            Bitmap videoThumbnail = getVideoThumbnail(videoPath);
+            if(videoThumbnail != null) {
+                return getImageSize(videoThumbnail, null);
+            }
+        }
+        return new Size(videoWidth, videoHeight);
+    }
+
+    public static Size getVideoSize(Context context, Uri videoUri) {
+        int videoWidth = 0;
+        int videoHeight = 0;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(context, videoUri);
+            videoWidth = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            videoHeight = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+            return new Size(videoWidth, videoHeight);
+        } catch (IllegalArgumentException e) {
+            ErrorLogger.log(MediaHelper.class, e);
+        } finally {
+            try {
+                retriever.release();
+            } catch (IOException e) {
+                ErrorLogger.log(MediaHelper.class, e);
+            }
+        }
+        if(videoWidth == 0 || videoHeight == 0) {
+            Bitmap videoThumbnail = getVideoThumbnail(context, videoUri);
+            if(videoThumbnail != null) {
+                return getImageSize(videoThumbnail, null);
+            }
+        }
+        return new Size(videoWidth, videoHeight);
     }
 }

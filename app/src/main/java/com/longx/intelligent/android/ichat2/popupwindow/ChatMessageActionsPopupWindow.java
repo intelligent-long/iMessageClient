@@ -34,11 +34,9 @@ public class ChatMessageActionsPopupWindow {
         this.chatMessage = chatMessage;
         binding = PopupWindowChatMessageActionsBinding.inflate(activity.getLayoutInflater());
         switch (chatMessage.getType()){
-            case ChatMessage.TYPE_IMAGE:{
-                binding.clickViewCopy.setVisibility(View.GONE);
-                break;
-            }
-            case ChatMessage.TYPE_FILE:{
+            case ChatMessage.TYPE_IMAGE:
+            case ChatMessage.TYPE_FILE:
+            case ChatMessage.TYPE_VIDEO: {
                 binding.clickViewCopy.setVisibility(View.GONE);
                 break;
             }

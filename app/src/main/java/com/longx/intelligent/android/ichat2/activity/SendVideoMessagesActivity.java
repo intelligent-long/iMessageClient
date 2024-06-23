@@ -1,9 +1,13 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +29,7 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.value.Variables;
+import com.longx.intelligent.android.ichat2.yier.AutoCompleteTextViewAutoSelectOnItemClickYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.io.File;
@@ -98,6 +103,13 @@ public class SendVideoMessagesActivity extends BaseActivity {
     }
 
     private void setupYiers() {
+        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView r, int dx, int dy) {
+                super.onScrolled(r, dx, dy);
+                updateInfos();
+            }
+        });
         adapter.setOnRecyclerItemClickYier((position, view) -> {
             ArrayList<MediaInfo> videoInfoList = new ArrayList<>();
             for (SendMediaMessagesRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
@@ -106,6 +118,30 @@ public class SendVideoMessagesActivity extends BaseActivity {
             Intent intent = new Intent(this, PreviewToSendVideoActivity.class);
             intent.putExtra(ExtraKeys.URI, videoInfoList.get(position).getUri());
             startActivity(intent);
+        });
+        binding.directoryAutoCompleteTextView.setOnItemClickListener(new AutoCompleteTextViewAutoSelectOnItemClickYier(binding.directoryAutoCompleteTextView){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                super.onItemClick(parent, view, position, id);
+                if(position == 0) {
+                    currentDirectoryPath = null;
+                }else {
+                    DirectoryInfo directoryInfo = allVideoDirectories.get(position - 1);
+                    currentDirectoryPath = directoryInfo.getPath();
+                }
+                showContent();
+                setupYiers();
+                binding.recyclerView.scrollToEnd(false);
+            }
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.send){
+                Intent intent = new Intent();
+                intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+            return true;
         });
     }
 

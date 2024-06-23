@@ -14,7 +14,6 @@ import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendMediaMessagesBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -167,7 +166,7 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
             }
         }else {
             new Thread(() -> {
-                File videoThumbnail1 = CacheFilesAccessor.VideoThumbnail.getOrCacheAndGetVideoThumbnail(activity, videoPath);
+                File videoThumbnail1 = CacheFilesAccessor.VideoThumbnail.cacheAndGetVideoThumbnail(activity, videoPath);
                 activity.runOnUiThread(() -> {
                     if (holderPosition == itemDataList.indexOf(itemData)) {
                         showPreviewImage(videoThumbnail1, holder);

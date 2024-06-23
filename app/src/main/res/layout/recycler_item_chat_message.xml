@@ -123,6 +123,23 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_video_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:gravity="center_vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/video_thumbnail_receive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:minHeight="@dimen/chat_message_min_size" />
+            </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
 
@@ -232,6 +249,29 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <FrameLayout
+                android:id="@+id/layout_video_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/video_thumbnail_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:minHeight="@dimen/chat_message_min_size" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/play_circle_outline_24px"
+                    app:tint="@color/white"
+                    android:background="@drawable/shape_visible_shadow_background"/>
+            </FrameLayout>
         </FrameLayout>
 
         <com.google.android.material.imageview.ShapeableImageView

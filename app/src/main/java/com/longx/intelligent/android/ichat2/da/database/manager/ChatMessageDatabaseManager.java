@@ -12,6 +12,7 @@ import com.longx.intelligent.android.ichat2.da.database.helper.ChatMessageDataba
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,6 +72,9 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_WIDTH, chatMessage.getImageSize() == null ? null : chatMessage.getImageSize().getWidth());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_HEIGHT, chatMessage.getImageSize() == null ? null : chatMessage.getImageSize().getHeight());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_FILE_PATH, chatMessage.getFileFilePath());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH, chatMessage.getVideoFilePath());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getWidth());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getHeight());
             long id = getDatabase().insertWithOnConflict(((ChatMessageDatabaseHelper)getHelper()).getTableName(), null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             return id != -1;
         }finally {
@@ -99,12 +103,17 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 Integer imageWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_WIDTH);
                 Integer imageHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_HEIGHT);
                 String fileFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_FILE_PATH);
-                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, null, null);
+                String videoFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH);
+                Integer videoWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH);
+                Integer videoHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT);
+                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, null, null, null);
                 chatMessage.setShowTime(Boolean.TRUE.equals(showTime));
                 chatMessage.setViewed(viewed);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
                 chatMessage.setFileFilePath(fileFilePath);
+                chatMessage.setVideoFilePath(videoFilePath);
+                chatMessage.setVideoSize(new Size(videoWidth == null ? 0 : videoWidth, videoHeight == null ? 0 : videoHeight));
                 result.add(chatMessage);
             }
         } finally {
@@ -195,12 +204,17 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 Integer imageWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_WIDTH);
                 Integer imageHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_HEIGHT);
                 String fileFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_FILE_PATH);
-                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, fileName, null, null);
+                String videoFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH);
+                Integer videoWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH);
+                Integer videoHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT);
+                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, fileName, null, null, null);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
                 chatMessage.setShowTime(Boolean.TRUE.equals(showTime));
                 chatMessage.setViewed(viewed);
                 chatMessage.setFileFilePath(fileFilePath);
+                chatMessage.setVideoFilePath(videoFilePath);
+                chatMessage.setVideoSize(new Size(videoWidth == null ? 0 : videoWidth, videoHeight == null ? 0 : videoHeight));
                 return chatMessage;
             }
         }finally {

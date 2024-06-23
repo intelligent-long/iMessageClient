@@ -25,6 +25,7 @@ import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendVideoChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
@@ -462,7 +463,20 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     if(result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null) {
-
+                            Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
+                            List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
+                            for (Uri uri : uriList) {
+                                long fileSize = FileUtil.getFileSize(this, uri);
+                                if(fileSize > Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE){
+                                    MessageDisplayer.autoShow(this, "发送文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE), MessageDisplayer.Duration.LONG);
+                                    return;
+                                }
+                            }
+                            if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT){
+                                MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT + " 个文件", MessageDisplayer.Duration.LONG);
+                            }else {
+                                onSendVideoMessages(uriList);
+                            }
                         }
                     }
                 }
@@ -609,5 +623,78 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 binding.sendProgressIndicator.setProgress(progress, true);
             });
         });
+    }
+
+    private void onSendVideoMessages(List<Uri> uriList){
+        AtomicInteger index = new AtomicInteger();
+        sendVideoMessages(uriList, index);
+    }
+
+    private void sendVideoMessages(List<Uri> uriList, AtomicInteger index){
+        if(index.get() == uriList.size()) return;
+        Uri uri = uriList.get(index.get());
+        String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
+        SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(channel.getIchatId(), fileName);
+        ChatApiCaller.sendVideoChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+            @Override
+            public void start(Call<OperationData> call) {
+                super.start(call);
+                binding.sendProgressIndicator.setProgress(0, false);
+                if (index.get() == 0) {
+                    toSendingProgressState();
+                }
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<OperationData> row, Call<OperationData> call) {
+                super.notOk(code, message, row, call);
+                toNormalState();
+            }
+
+            @Override
+            public void failure(Throwable t, Call<OperationData> call) {
+                super.failure(t, call);
+                toNormalState();
+            }
+
+            @Override
+            public void complete(Call<OperationData> call) {
+                super.complete(call);
+                if (index.get() == uriList.size()) {
+                    toNormalState();
+                }
+            }
+
+            @Override
+            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
+                super.ok(data, row, call);
+                data.commonHandleResult(ChatActivity.this, new int[]{-101, -102}, () -> {
+                    ChatMessage chatMessage = data.getData(ChatMessage.class);
+                    chatMessage.setViewed(true);
+                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
+                        adapter.addItemToEndAndShow(chatMessage);
+                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                        });
+                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                            });
+                        });
+                    });
+                });
+                index.incrementAndGet();
+                sendVideoMessages(uriList, index);
+            }
+
+        }, (current, total) -> {
+            runOnUiThread(() -> {
+                binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + uriList.size());
+                int progress = (int)((current / (double) total) * 100);
+                binding.sendProgressIndicator.setProgress(progress, true);
+            });
+        });
+
     }
 }

@@ -28,4 +28,12 @@ public class PrivateFilesAccessor {
             return FileAccessHelper.save(fileBytes, chatFileFilePath);
         }
     }
+
+    public static class ChatVideo{
+        public static String save(Context context, ChatMessage chatMessage, byte[] videoBytes) throws IOException {
+            String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
+            String chatVideoFilePath = DataPaths.PrivateFile.getChatVideoFilePath(context, other, chatMessage.getFileName());
+            return FileAccessHelper.save(videoBytes, chatVideoFilePath);
+        }
+    }
 }

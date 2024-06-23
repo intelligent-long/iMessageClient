@@ -17,6 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@color/white"
             android:background="@color/transparent"
             app:menu="@menu/toolbar_activity_chat_image"/>
     </com.google.android.material.appbar.AppBarLayout>

@@ -2,8 +2,10 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,9 +18,10 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatFileActivity;
-import com.longx.intelligent.android.ichat2.activity.ChatImageActivity;
+import com.longx.intelligent.android.ichat2.activity.ChatMediaActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -150,7 +153,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextSend.setVisibility(View.GONE);
                     holder.binding.imageSend.setVisibility(View.VISIBLE);
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
-                    setupImageViewSize(holder.binding.imageSend, itemData);
+                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                    setupImageViewSize(holder.binding.imageSend, itemData.chatMessage.getImageSize());
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
                             .load(new File(imageFilePath))
@@ -163,8 +167,18 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextSend.setVisibility(View.GONE);
                     holder.binding.imageSend.setVisibility(View.GONE);
                     holder.binding.layoutFileSend.setVisibility(View.VISIBLE);
+                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
                     holder.binding.fileNameSend.setText(itemData.chatMessage.getFileName());
                     holder.binding.fileSizeSend.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
+                    break;
+                }
+                case ChatMessage.TYPE_VIDEO:{
+                    holder.binding.layoutTextSend.setVisibility(View.GONE);
+                    holder.binding.imageSend.setVisibility(View.GONE);
+                    holder.binding.layoutFileSend.setVisibility(View.GONE);
+                    holder.binding.layoutVideoSend.setVisibility(View.VISIBLE);
+                    setupImageViewSize(holder.binding.videoThumbnailSend, itemData.chatMessage.getVideoSize());
+                    showVideoThumbnail(itemData.chatMessage.getVideoFilePath(), holder, holder.binding.videoThumbnailSend, itemData);
                     break;
                 }
             }
@@ -197,7 +211,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextReceive.setVisibility(View.GONE);
                     holder.binding.imageReceive.setVisibility(View.VISIBLE);
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
-                    setupImageViewSize(holder.binding.imageReceive, itemData);
+                    setupImageViewSize(holder.binding.imageReceive, itemData.chatMessage.getImageSize());
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
                             .load(new File(imageFilePath))
@@ -214,13 +228,17 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
                 }
+                case ChatMessage.TYPE_VIDEO:{
+
+                    break;
+                }
             }
         }
     }
 
-    private void setupImageViewSize(@NonNull View imageView, ItemData itemData) {
-        int imageWidth = itemData.chatMessage.getImageSize().getWidth();
-        int imageHeight = itemData.chatMessage.getImageSize().getHeight();
+    private void setupImageViewSize(@NonNull View imageView, Size size) {
+        int imageWidth = size.getWidth();
+        int imageHeight = size.getHeight();
         int viewWidth;
         int viewHeight;
         if(imageWidth / (double) imageHeight > Constants.CHAT_IMAGE_VIEW_MAX_WIDTH_DP / (double)Constants.CHAT_IMAGE_VIEW_MAX_HEIGHT_DP){
@@ -274,29 +292,28 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.imageSend.setOnLongClickListener(onMessageSendLongClickYier);
         holder.binding.layoutFileReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
         holder.binding.layoutFileSend.setOnLongClickListener(onMessageSendLongClickYier);
+        holder.binding.layoutVideoReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
+        holder.binding.layoutVideoSend.setOnLongClickListener(onMessageSendLongClickYier);
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
         });
-        View.OnClickListener onImageMessageClickYier = v -> {
-            Intent intent = new Intent(activity, ChatImageActivity.class);
-            ArrayList<String> imageFilePaths = new ArrayList<>();
+        View.OnClickListener onMediaMessageClickYier = v -> {
+            Intent intent = new Intent(activity, ChatMediaActivity.class);
             ArrayList<ChatMessage> chatMessages = new ArrayList<>();
             itemDataList.forEach(itemData -> {
                 ChatMessage chatMessage = itemData.chatMessage;
-                if(chatMessage.getType() == ChatMessage.TYPE_IMAGE) {
-                    imageFilePaths.add(chatMessage.getImageFilePath());
+                if(chatMessage.getType() == ChatMessage.TYPE_IMAGE || chatMessage.getType() == ChatMessage.TYPE_VIDEO) {
                     chatMessages.add(chatMessage);
                     if (currentItemData.chatMessage.equals(chatMessage)) {
-                        intent.putExtra(ExtraKeys.POSITION, imageFilePaths.size() - 1);
+                        intent.putExtra(ExtraKeys.POSITION, chatMessages.size() - 1);
                     }
                 }
             });
-            intent.putStringArrayListExtra(ExtraKeys.FILE_PATHS, imageFilePaths);
             intent.putParcelableArrayListExtra(ExtraKeys.CHAT_MESSAGES, chatMessages);
             activity.startActivity(intent);
         };
-        holder.binding.imageSend.setOnClickListener(onImageMessageClickYier);
-        holder.binding.imageReceive.setOnClickListener(onImageMessageClickYier);
+        holder.binding.imageSend.setOnClickListener(onMediaMessageClickYier);
+        holder.binding.imageReceive.setOnClickListener(onMediaMessageClickYier);
         View.OnClickListener onFileMessageClickYier = v -> {
             Intent intent = new Intent(activity, ChatFileActivity.class);
             intent.putExtra(ExtraKeys.CHAT_MESSAGE, currentItemData.chatMessage);
@@ -304,6 +321,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         };
         holder.binding.layoutFileSend.setOnClickListener(onFileMessageClickYier);
         holder.binding.layoutFileReceive.setOnClickListener(onFileMessageClickYier);
+        holder.binding.layoutVideoSend.setOnClickListener(onMediaMessageClickYier);
+        holder.binding.layoutVideoReceive.setOnClickListener(onMediaMessageClickYier);
     }
 
     @Override
@@ -337,6 +356,33 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         int size = itemDataList.size();
         itemDataList.clear();
         notifyItemRangeRemoved(0, size);
+    }
+
+    private void showVideoThumbnail(String videoPath, ViewHolder viewHolder, @NonNull ImageView imageView, ItemData itemData) {
+        int holderPosition = viewHolder.getAbsoluteAdapterPosition();
+        File videoThumbnail = CacheFilesAccessor.VideoThumbnail.getVideoThumbnailFile(activity, videoPath);
+        if(videoThumbnail.exists()){
+            if (holderPosition == itemDataList.indexOf(itemData)) {
+                GlideApp.with(activity.getApplicationContext())
+                        .load(videoThumbnail)
+                        .apply(requestOptions)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(imageView);
+            }
+        }else {
+            new Thread(() -> {
+                File videoThumbnail1 = CacheFilesAccessor.VideoThumbnail.cacheAndGetVideoThumbnail(activity, videoPath);
+                activity.runOnUiThread(() -> {
+                    if (holderPosition == itemDataList.indexOf(itemData)) {
+                        GlideApp.with(activity.getApplicationContext())
+                                .load(videoThumbnail1)
+                                .apply(requestOptions)
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(imageView);
+                    }
+                });
+            }).start();
+        }
     }
 
 }
