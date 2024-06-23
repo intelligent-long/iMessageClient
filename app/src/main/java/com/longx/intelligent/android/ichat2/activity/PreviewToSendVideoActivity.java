@@ -94,7 +94,8 @@ public class PreviewToSendVideoActivity extends BaseActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser && player != null) {
-                    player.seekTo(progress);
+                    long duration = player.getDuration();
+                    player.seekTo((long) ((progress / (double) SEEKBAR_MAX) * duration));
                 }
             }
 
