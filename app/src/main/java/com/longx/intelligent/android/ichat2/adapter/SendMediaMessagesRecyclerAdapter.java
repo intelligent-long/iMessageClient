@@ -14,6 +14,7 @@ import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendMediaMessagesBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -137,7 +138,7 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
                 break;
             }
             case VIDEO:{
-                showVideoThumbnail(itemData.mediaInfo.getPath(), holder);
+                showVideoThumbnail(itemData.mediaInfo.getPath(), holder, itemData);
                 break;
             }
         }
@@ -157,14 +158,21 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
                 .into(holder.binding.imageView);
     }
 
-    private void showVideoThumbnail(String videoPath, @NonNull ViewHolder holder) {
+    private void showVideoThumbnail(String videoPath, @NonNull ViewHolder holder, ItemData itemData) {
+        int holderPosition = holder.getAbsoluteAdapterPosition() - 1;
         File videoThumbnail = CacheFilesAccessor.VideoThumbnail.getVideoThumbnailFile(activity, videoPath);
         if(videoThumbnail.exists()){
-            showPreviewImage(videoThumbnail, holder);
+            if (holderPosition == itemDataList.indexOf(itemData)) {
+                showPreviewImage(videoThumbnail, holder);
+            }
         }else {
             new Thread(() -> {
                 File videoThumbnail1 = CacheFilesAccessor.VideoThumbnail.getOrCacheAndGetVideoThumbnail(activity, videoPath);
-                activity.runOnUiThread(() -> showPreviewImage(videoThumbnail1, holder));
+                activity.runOnUiThread(() -> {
+                    if (holderPosition == itemDataList.indexOf(itemData)) {
+                        showPreviewImage(videoThumbnail1, holder);
+                    }
+                });
             }).start();
         }
     }
