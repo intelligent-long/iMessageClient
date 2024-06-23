@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/transparent">
-            
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -38,14 +38,14 @@
                     android:layout_toStartOf="@id/buttons"
                     android:thumbTint="@color/white"
                     android:progressTint="@color/white"/>
-                
+
                 <FrameLayout
                     android:id="@+id/buttons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true">
-    
+
                     <com.google.android.material.button.MaterialButton
                         android:visibility="gone"
                         android:id="@+id/play_button"
@@ -71,9 +71,10 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.longx.intelligent.android.ichat2.ui.vlc.AspectRatioVLCVideoLayout
-        android:id="@+id/video_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+    <com.google.android.exoplayer2.ui.StyledPlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:use_controller="false"/>
 </RelativeLayout>
