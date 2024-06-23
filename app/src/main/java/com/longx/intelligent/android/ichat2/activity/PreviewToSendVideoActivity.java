@@ -27,6 +27,7 @@ public class PreviewToSendVideoActivity extends BaseActivity {
     private Handler handler;
     private Runnable updateProgressAction;
     private static final int SEEKBAR_MAX = 10000;
+    private boolean pureVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,9 @@ public class PreviewToSendVideoActivity extends BaseActivity {
             player.play();
         });
         binding.pauseButton.setOnClickListener(v -> player.pause());
+        binding.playerView.setOnClickListener(v -> {
+            setPurePhoto(!pureVideo);
+        });
     }
 
     private void initializeSeekBar() {
@@ -136,6 +140,18 @@ public class PreviewToSendVideoActivity extends BaseActivity {
             stopProgressUpdates();
             player.release();
             player = null;
+        }
+    }
+
+    private void setPurePhoto(boolean purePhoto) {
+        if(purePhoto){
+            binding.appBarLayout.setVisibility(View.GONE);
+            WindowAndSystemUiUtil.setSystemUIShown(this, false);
+            this.pureVideo = true;
+        }else {
+            binding.appBarLayout.setVisibility(View.VISIBLE);
+            WindowAndSystemUiUtil.setSystemUIShown(this, true);
+            this.pureVideo = false;
         }
     }
 }
