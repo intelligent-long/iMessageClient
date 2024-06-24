@@ -71,6 +71,9 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                     this.position = position;
                     binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
                 }
+                if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO){
+                    adapter.startPlayer();
+                }
             }
 
             @Override
@@ -155,5 +158,25 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
 
     public boolean isPureContent() {
         return pureContent;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO){
+            adapter.startPlayer();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        adapter.pausePlayer();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        adapter.releasePlayer();
     }
 }

@@ -265,10 +265,10 @@
                     android:minHeight="@dimen/chat_message_min_size" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/play_circle_outline_24px"
+                    android:src="@drawable/play_circle_outline_lighter_24px"
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
             </FrameLayout>

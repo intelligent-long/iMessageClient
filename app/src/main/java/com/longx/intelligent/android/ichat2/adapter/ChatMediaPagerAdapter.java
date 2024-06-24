@@ -53,7 +53,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         this.chatMessages = chatMessages;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private RecyclerItemChatMediaBinding binding;
 
         public ViewHolder(RecyclerItemChatMediaBinding binding) {
@@ -155,14 +155,13 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     }
 
     private void initializePlayer(RecyclerItemChatMediaBinding binding, int position) {
+        releasePlayer();
         player = new ExoPlayer.Builder(activity).build();
         binding.playerView.setPlayer(player);
         binding.playerView.setVisibility(View.GONE);
         binding.playControl.bringToFront();
         MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(new File(chatMessages.get(position).getVideoFilePath())));
         player.setMediaItem(mediaItem);
-        player.prepare();
-        player.play();
 
         player.addListener(new Player.Listener() {
             @Override
@@ -250,11 +249,35 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         }
     }
 
+    public void startPlayer() {
+        if (player != null) {
+            player.prepare();
+            player.play();
+        }
+    }
+
+    public void pausePlayer() {
+        if (player != null) {
+            player.pause();
+        }
+    }
+
+    public void releasePlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
+        }
+    }
+
     public void setOnRecyclerItemActionYier(RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier) {
         this.onRecyclerItemActionYier = onRecyclerItemActionYier;
     }
 
     public void setOnRecyclerItemClickYier(RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier) {
         this.onRecyclerItemClickYier = onRecyclerItemClickYier;
+    }
+
+    public List<ChatMessage> getChatMessages() {
+        return chatMessages;
     }
 }
