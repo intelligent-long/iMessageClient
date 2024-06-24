@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -39,8 +40,9 @@ import java.util.List;
  * Created by LONG on 2024/5/28 at 9:24 PM.
  */
 public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAdapter.ViewHolder> {
-    private ChatMediaActivity activity;
-    private List<ChatMessage> chatMessages;
+    private final ChatMediaActivity activity;
+    private final ViewPager2 viewPager;
+    private final List<ChatMessage> chatMessages;
     private RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
     private ExoPlayer player;
@@ -48,8 +50,9 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     private static final int SEEKBAR_MAX = 10000;
     private Runnable updateProgressAction;
 
-    public ChatMediaPagerAdapter(ChatMediaActivity activity, List<ChatMessage> chatMessages) {
+    public ChatMediaPagerAdapter(ChatMediaActivity activity, ViewPager2 viewPager, List<ChatMessage> chatMessages) {
         this.activity = activity;
+        this.viewPager = viewPager;
         this.chatMessages = chatMessages;
     }
 
@@ -108,10 +111,6 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
                 break;
             }
             case ChatMessage.TYPE_VIDEO:{
-                holder.binding.playControl.setVisibility(View.VISIBLE);
-                holder.binding.playerView.setVisibility(View.VISIBLE);
-                initializePlayer(holder.binding, position);
-                initializeSeekBar(holder.binding, position);
                 break;
             }
         }
@@ -155,10 +154,10 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     }
 
     private void initializePlayer(RecyclerItemChatMediaBinding binding, int position) {
-        releasePlayer();
         player = new ExoPlayer.Builder(activity).build();
         binding.playerView.setPlayer(player);
         binding.playerView.setVisibility(View.GONE);
+        binding.playControl.setVisibility(View.VISIBLE);
         binding.playControl.bringToFront();
         MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(new File(chatMessages.get(position).getVideoFilePath())));
         player.setMediaItem(mediaItem);
@@ -279,5 +278,21 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
 
     public List<ChatMessage> getChatMessages() {
         return chatMessages;
+    }
+
+    private RecyclerView.ViewHolder getViewHolderAtPosition(int position) {
+        RecyclerView recyclerView = (RecyclerView) viewPager.getChildAt(0);
+        return recyclerView.findViewHolderForAdapterPosition(position);
+    }
+
+    public void checkAndPlayAtPosition(int position){
+        pausePlayer();
+        releasePlayer();
+        if(chatMessages.get(position).getType() == ChatMessage.TYPE_VIDEO){
+            ChatMediaPagerAdapter.ViewHolder viewHolder = (ViewHolder) getViewHolderAtPosition(position);
+            initializePlayer(viewHolder.binding, position);
+            initializeSeekBar(viewHolder.binding, position);
+            startPlayer();
+        }
     }
 }

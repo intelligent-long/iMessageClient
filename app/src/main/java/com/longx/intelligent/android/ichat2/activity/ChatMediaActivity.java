@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -38,8 +39,8 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
         setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
         getIntentData();
         binding.appBar.bringToFront();
-        showContent();
         setupYiers();
+        showContent();
     }
 
     private void getIntentData() {
@@ -49,7 +50,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     }
 
     private void showContent() {
-        adapter = new ChatMediaPagerAdapter(this, chatMessages);
+        adapter = new ChatMediaPagerAdapter(this, binding.viewPager, chatMessages);
         adapter.setOnRecyclerItemActionYier(this);
         adapter.setOnRecyclerItemClickYier(this);
         binding.viewPager.setAdapter(adapter);
@@ -71,9 +72,6 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                     this.position = position;
                     binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
                 }
-                if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO){
-                    adapter.startPlayer();
-                }
             }
 
             @Override
@@ -82,6 +80,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 if(positionOffset == 0){
                     binding.viewPager.post(() -> adapter.notifyItemChanged(right ? this.position + 1 : this.position - 1));
                 }
+                adapter.checkAndPlayAtPosition(position);
             }
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
@@ -171,12 +170,16 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     @Override
     protected void onPause() {
         super.onPause();
-        adapter.pausePlayer();
+        if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
+            adapter.pausePlayer();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        adapter.releasePlayer();
+        if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
+            adapter.releasePlayer();
+        }
     }
 }
