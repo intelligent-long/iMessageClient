@@ -63,6 +63,8 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             int position = -1;
             boolean right;
+            float previousPositionOffset;
+            boolean previousPositionOffsetGreaterThanNow;
 
             @Override
             public void onPageSelected(int position) {
@@ -77,10 +79,21 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if(positionOffset == 0){
-                    binding.viewPager.post(() -> adapter.notifyItemChanged(right ? this.position + 1 : this.position - 1));
+                boolean thisPreviousPositionOffsetGreaterThanNow = previousPositionOffset > positionOffset;
+                previousPositionOffset = positionOffset;
+                if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
+                    int previousPosition = right ? this.position + 1 : this.position - 1;
+                    if(previousPosition != -1) {
+                        if (adapter.getChatMessages().get(previousPosition).getType() == ChatMessage.TYPE_IMAGE) {
+                            binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
+                        }
+                        adapter.pausePlayer(previousPosition);
+                    }
+                    if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
+                        adapter.startPlayer(position);
+                    }
                 }
-                adapter.checkAndPlayAtPosition(position);
+                previousPositionOffsetGreaterThanNow = thisPreviousPositionOffsetGreaterThanNow;
             }
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
@@ -163,7 +176,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     protected void onResume() {
         super.onResume();
         if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO){
-            adapter.startPlayer();
+            adapter.startPlayer(position);
         }
     }
 
@@ -171,7 +184,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     protected void onPause() {
         super.onPause();
         if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
-            adapter.pausePlayer();
+            adapter.pausePlayer(position);
         }
     }
 
@@ -179,7 +192,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     protected void onDestroy() {
         super.onDestroy();
         if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
-            adapter.releasePlayer();
+            adapter.releaseAllPlayerExcept(-1);
         }
     }
 }
