@@ -5,6 +5,7 @@ import android.content.Context;
 import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +20,10 @@ public class PrivateFilesAccessor {
             String imageFilePath = DataPaths.PrivateFile.getChatImageFilePath(context, other, chatMessage.getUuid());
             return FileAccessHelper.save(imageBytes, imageFilePath);
         }
+
+        public static boolean delete(Context context, String imageFilePath){
+            return FileUtil.deleteFile(imageFilePath);
+        }
     }
 
     public static class ChatFile{
@@ -27,6 +32,10 @@ public class PrivateFilesAccessor {
             String chatFileFilePath = DataPaths.PrivateFile.getChatFileFilePath(context, other, chatMessage.getFileName());
             return FileAccessHelper.save(fileBytes, chatFileFilePath);
         }
+
+        public static boolean delete(Context context, String fileFilePath){
+            return FileUtil.deleteFile(fileFilePath);
+        }
     }
 
     public static class ChatVideo{
@@ -34,6 +43,10 @@ public class PrivateFilesAccessor {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String chatVideoFilePath = DataPaths.PrivateFile.getChatVideoFilePath(context, other, chatMessage.getFileName());
             return FileAccessHelper.save(videoBytes, chatVideoFilePath);
+        }
+
+        public static boolean delete(Context context, String videoFilePath){
+            return FileUtil.deleteFile(videoFilePath);
         }
     }
 }

@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -152,6 +155,16 @@ public class FileUtil {
         }
 
         return fileSize;
+    }
+
+    public static boolean deleteFile(String filePath) {
+        Path path = Paths.get(filePath);
+        try {
+            return Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

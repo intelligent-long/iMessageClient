@@ -7,6 +7,7 @@ import android.widget.PopupWindow;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.PopupWindowChatMessageActionsBinding;
@@ -79,6 +80,20 @@ public class ChatMessageActionsPopupWindow {
                             }
                         }
                         databaseManager.delete(chatMessage.getUuid());
+                        switch (chatMessage.getType()){
+                            case ChatMessage.TYPE_IMAGE:{
+                                PrivateFilesAccessor.ChatImage.delete(activity, chatMessage.getImageFilePath());
+                                break;
+                            }
+                            case ChatMessage.TYPE_FILE:{
+                                PrivateFilesAccessor.ChatFile.delete(activity, chatMessage.getFileFilePath());
+                                break;
+                            }
+                            case ChatMessage.TYPE_VIDEO:{
+                                PrivateFilesAccessor.ChatVideo.delete(activity, chatMessage.getVideoFilePath());
+                                break;
+                            }
+                        }
                         onDeletedYier.onDeleted(updateNextMessageToShowTime);
                     })
                     .show();
