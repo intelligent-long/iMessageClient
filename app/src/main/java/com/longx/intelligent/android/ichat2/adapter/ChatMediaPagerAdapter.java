@@ -1,7 +1,6 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -34,6 +33,7 @@ import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,19 +43,33 @@ import java.util.Map;
  */
 public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAdapter.ViewHolder> {
     private final ChatMediaActivity activity;
-    private final ViewPager2 viewPager;
-    private final List<ChatMessage> chatMessages;
+    private final List<ItemData> itemDatas;
     private RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
-    private final Map<Integer, ExoPlayer> playerMap = new HashMap<>();
     private Handler handler;
     private static final int SEEKBAR_MAX = 10000;
-    private final Map<Integer, Runnable> updateProgressActionMap = new HashMap<>();
 
-    public ChatMediaPagerAdapter(ChatMediaActivity activity, ViewPager2 viewPager, List<ChatMessage> chatMessages) {
+    public ChatMediaPagerAdapter(ChatMediaActivity activity, List<ChatMessage> chatMessages) {
         this.activity = activity;
-        this.viewPager = viewPager;
-        this.chatMessages = chatMessages;
+        List<ItemData> itemDataList = new ArrayList<>();
+        chatMessages.forEach(chatMessage -> {
+            itemDataList.add(new ItemData(chatMessage));
+        });
+        this.itemDatas = itemDataList;
+    }
+
+    public static class ItemData{
+        private final ChatMessage chatMessage;
+        private ExoPlayer player;
+        private Runnable updateProgressAction;
+
+        public ItemData(ChatMessage chatMessage) {
+            this.chatMessage = chatMessage;
+        }
+
+        public ChatMessage getChatMessage() {
+            return chatMessage;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -76,13 +90,13 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
 
     @Override
     public int getItemCount() {
-        return chatMessages.size();
+        return itemDatas.size();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetView(holder);
-        ChatMessage chatMessage = chatMessages.get(position);
+        ChatMessage chatMessage = itemDatas.get(position).chatMessage;
         switch (chatMessage.getType()){
             case ChatMessage.TYPE_IMAGE:{
                 holder.binding.photoView.setVisibility(View.VISIBLE);
@@ -159,12 +173,12 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
 
     private void initializePlayer(RecyclerItemChatMediaBinding binding, int position) {
         ExoPlayer player = new ExoPlayer.Builder(activity).build();
-        playerMap.put(position, player);
+        itemDatas.get(position).player = player;
         binding.playerView.setPlayer(player);
         binding.playerView.setVisibility(View.GONE);
         binding.playControl.setVisibility(View.VISIBLE);
         binding.playControl.bringToFront();
-        MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(new File(chatMessages.get(position).getVideoFilePath())));
+        MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(new File(itemDatas.get(position).chatMessage.getVideoFilePath())));
         player.setMediaItem(mediaItem);
 
         player.addListener(new Player.Listener() {
@@ -212,7 +226,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         binding.seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ExoPlayer player = playerMap.get(position);
+                ExoPlayer player = itemDatas.get(position).player;
                 if (fromUser && player != null) {
                     long duration = player.getDuration();
                     player.seekTo((long) ((progress / (double) SEEKBAR_MAX) * duration));
@@ -231,20 +245,19 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         });
 
         handler = new Handler();
-        Runnable updateProgressAction = () -> updateProgress(binding, position);
-        updateProgressActionMap.put(position, updateProgressAction);
+        itemDatas.get(position).updateProgressAction = () -> updateProgress(binding, position);
     }
 
     private void startProgressUpdates(int position) {
-        handler.post(updateProgressActionMap.get(position));
+        handler.post(itemDatas.get(position).updateProgressAction);
     }
 
     private void stopProgressUpdates(int position) {
-        handler.removeCallbacks(updateProgressActionMap.get(position));
+        handler.removeCallbacks(itemDatas.get(position).updateProgressAction);
     }
 
     private void updateProgress(RecyclerItemChatMediaBinding binding, int position) {
-        ExoPlayer player = playerMap.get(position);
+        ExoPlayer player = itemDatas.get(position).player;
         if (player != null && player.isPlaying()) {
             binding.seekbar.setMax(SEEKBAR_MAX);
             long currentPosition = player.getCurrentPosition();
@@ -252,13 +265,12 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
             int progress = (int) ((currentPosition / (double) duration) * SEEKBAR_MAX);
             binding.seekbar.setProgress(progress);
             binding.timePlay.setText(TimeUtil.formatTime(currentPosition) + " / " + TimeUtil.formatTime(duration));
-            handler.postDelayed(updateProgressActionMap.get(position), 1);
+            handler.postDelayed(itemDatas.get(position).updateProgressAction, 1);
         }
     }
 
     public void startPlayer(int position) {
-        ErrorLogger.log("startPlayer: " + position);
-        ExoPlayer player = playerMap.get(position);
+        ExoPlayer player = itemDatas.get(position).player;
         if (player != null) {
             if (player.getPlaybackState() == Player.STATE_ENDED) {
                 player.seekTo(0);
@@ -269,24 +281,28 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     }
 
     public void pausePlayer(int position) {
-        ExoPlayer player = playerMap.get(position);
+        ExoPlayer player = itemDatas.get(position).player;
         if (player != null) {
             player.pause();
         }
     }
 
     public void releasePlayer(int position) {
-        ExoPlayer player = playerMap.get(position);
+        ExoPlayer player = itemDatas.get(position).player;
         if (player != null) {
             player.release();
         }
     }
+
     public void releaseAllPlayerExcept(int position){
-        playerMap.entrySet().forEach(entry -> {
-            if(entry.getKey() != position){
-                entry.getValue().release();
+        for (int i = 0; i < itemDatas.size(); i++) {
+            if(i != position){
+                ExoPlayer player = itemDatas.get(i).player;
+                if(player != null){
+                    player.release();
+                }
             }
-        });
+        }
     }
 
     public void setOnRecyclerItemActionYier(RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier) {
@@ -297,7 +313,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         this.onRecyclerItemClickYier = onRecyclerItemClickYier;
     }
 
-    public List<ChatMessage> getChatMessages() {
-        return chatMessages;
+    public List<ItemData> getItemDatas() {
+        return itemDatas;
     }
 }

@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -50,7 +49,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     }
 
     private void showContent() {
-        adapter = new ChatMediaPagerAdapter(this, binding.viewPager, chatMessages);
+        adapter = new ChatMediaPagerAdapter(this, chatMessages);
         adapter.setOnRecyclerItemActionYier(this);
         adapter.setOnRecyclerItemClickYier(this);
         binding.viewPager.setAdapter(adapter);
@@ -84,12 +83,12 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
                     int previousPosition = right ? this.position + 1 : this.position - 1;
                     if(previousPosition != -1) {
-                        if (adapter.getChatMessages().get(previousPosition).getType() == ChatMessage.TYPE_IMAGE) {
+                        if (adapter.getItemDatas().get(previousPosition).getChatMessage().getType() == ChatMessage.TYPE_IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
                         }
                         adapter.pausePlayer(previousPosition);
                     }
-                    if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
+                    if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
                         adapter.startPlayer(position);
                     }
                 }
@@ -175,7 +174,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     @Override
     protected void onResume() {
         super.onResume();
-        if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO){
+        if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO){
             adapter.startPlayer(position);
         }
     }
@@ -183,7 +182,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     @Override
     protected void onPause() {
         super.onPause();
-        if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
+        if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
             adapter.pausePlayer(position);
         }
     }
@@ -191,7 +190,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(adapter.getChatMessages().get(position).getType() == ChatMessage.TYPE_VIDEO) {
+        if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
             adapter.releaseAllPlayerExcept(-1);
         }
     }
