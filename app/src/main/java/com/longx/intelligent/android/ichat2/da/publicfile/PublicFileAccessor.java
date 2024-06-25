@@ -17,9 +17,16 @@ import java.io.IOException;
 public class PublicFileAccessor {
 
     public static class ChatImage{
-        public static String save(String filePath, ChatMessage chatMessage) throws IOException {
+        public static String save(ChatMessage chatMessage) throws IOException {
             String savePath = DataPaths.PublicFile.getChatImageFilePath(chatMessage);
-            return FileAccessHelper.save(FileAccessHelper.streamOf(filePath), savePath);
+            return FileAccessHelper.save(FileAccessHelper.streamOf(chatMessage.getImageFilePath()), savePath);
+        }
+    }
+
+    public static class ChatVideo{
+        public static String save(ChatMessage chatMessage) throws IOException {
+            String savePath = DataPaths.PublicFile.getChatVideoFilePath(chatMessage);
+            return FileAccessHelper.save(FileAccessHelper.streamOf(chatMessage.getVideoFilePath()), savePath);
         }
     }
 

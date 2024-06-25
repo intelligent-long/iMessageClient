@@ -93,32 +93,40 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 previousPositionOffsetGreaterThanNow = thisPreviousPositionOffsetGreaterThanNow;
             }
         });
-        binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.save){
-                int currentItem = binding.viewPager.getCurrentItem();
-                ChatMessage chatMessage = chatMessages.get(currentItem);
-                switch (chatMessage.getType()){
-                    case ChatMessage.TYPE_IMAGE:{
-                        new Thread(() -> {
-                            OperationDialog operationDialog = new OperationDialog(this);
-                            operationDialog.show();
-                            try {
-                                PublicFileAccessor.ChatImage.save(chatMessage.getImageFilePath(), chatMessage);
-                                operationDialog.dismiss();
-                                MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
-                            }catch (IOException e){
-                                ErrorLogger.log(e);
-                                MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
-                            }
-                        }).start();
-                        break;
-                    }
-                    case ChatMessage.TYPE_VIDEO:{
-
-                    }
+        binding.saveButton.setOnClickListener(v -> {
+            int currentItem = binding.viewPager.getCurrentItem();
+            ChatMessage chatMessage = chatMessages.get(currentItem);
+            switch (chatMessage.getType()){
+                case ChatMessage.TYPE_IMAGE:{
+                    new Thread(() -> {
+                        OperationDialog operationDialog = new OperationDialog(this);
+                        operationDialog.show();
+                        try {
+                            PublicFileAccessor.ChatImage.save(chatMessage);
+                            operationDialog.dismiss();
+                            MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
+                        }catch (IOException e){
+                            ErrorLogger.log(e);
+                            MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
+                        }
+                    }).start();
+                    break;
+                }
+                case ChatMessage.TYPE_VIDEO:{
+                    new Thread(() -> {
+                        OperationDialog operationDialog = new OperationDialog(this);
+                        operationDialog.show();
+                        try {
+                            PublicFileAccessor.ChatVideo.save(chatMessage);
+                            operationDialog.dismiss();
+                            MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
+                        }catch (IOException e){
+                            ErrorLogger.log(e);
+                            MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
+                        }
+                    }).start();
                 }
             }
-            return true;
         });
     }
 
