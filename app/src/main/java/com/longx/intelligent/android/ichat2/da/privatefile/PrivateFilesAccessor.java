@@ -21,7 +21,11 @@ public class PrivateFilesAccessor {
             return FileAccessHelper.save(imageBytes, imageFilePath);
         }
 
-        public static boolean delete(Context context, String imageFilePath){
+        public static boolean delete(ChatMessage chatMessage){
+            return delete(chatMessage.getImageFilePath());
+        }
+
+        public static boolean delete(String imageFilePath){
             return FileUtil.deleteFile(imageFilePath);
         }
     }
@@ -33,7 +37,11 @@ public class PrivateFilesAccessor {
             return FileAccessHelper.save(fileBytes, chatFileFilePath);
         }
 
-        public static boolean delete(Context context, String fileFilePath){
+        public static boolean delete(ChatMessage chatMessage){
+            return delete(chatMessage.getFileFilePath());
+        }
+
+        public static boolean delete(String fileFilePath){
             return FileUtil.deleteFile(fileFilePath);
         }
     }
@@ -45,7 +53,11 @@ public class PrivateFilesAccessor {
             return FileAccessHelper.save(videoBytes, chatVideoFilePath);
         }
 
-        public static boolean delete(Context context, String videoFilePath){
+        public static boolean delete(ChatMessage chatMessage){
+            return delete(chatMessage.getVideoFilePath());
+        }
+
+        public static boolean delete(String videoFilePath){
             return FileUtil.deleteFile(videoFilePath);
         }
     }

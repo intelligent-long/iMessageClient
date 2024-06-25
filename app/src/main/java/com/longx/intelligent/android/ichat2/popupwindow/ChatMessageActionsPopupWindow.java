@@ -82,15 +82,15 @@ public class ChatMessageActionsPopupWindow {
                         databaseManager.delete(chatMessage.getUuid());
                         switch (chatMessage.getType()){
                             case ChatMessage.TYPE_IMAGE:{
-                                PrivateFilesAccessor.ChatImage.delete(activity, chatMessage.getImageFilePath());
+                                PrivateFilesAccessor.ChatImage.delete(chatMessage);
                                 break;
                             }
                             case ChatMessage.TYPE_FILE:{
-                                PrivateFilesAccessor.ChatFile.delete(activity, chatMessage.getFileFilePath());
+                                PrivateFilesAccessor.ChatFile.delete(chatMessage);
                                 break;
                             }
                             case ChatMessage.TYPE_VIDEO:{
-                                PrivateFilesAccessor.ChatVideo.delete(activity, chatMessage.getVideoFilePath());
+                                PrivateFilesAccessor.ChatVideo.delete(chatMessage);
                                 break;
                             }
                         }
