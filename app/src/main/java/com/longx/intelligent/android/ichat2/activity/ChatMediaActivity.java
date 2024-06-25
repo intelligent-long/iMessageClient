@@ -83,7 +83,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
                     int previousPosition = right ? this.position + 1 : this.position - 1;
                     if(previousPosition != -1) {
-                        if (adapter.getItemDatas().get(previousPosition).getChatMessage().getType() == ChatMessage.TYPE_IMAGE) {
+                        if (positionOffset == 0 && adapter.getItemDatas().get(previousPosition).getChatMessage().getType() == ChatMessage.TYPE_IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
                         }
                         adapter.pausePlayer(previousPosition);
