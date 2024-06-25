@@ -135,6 +135,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
                 holder.binding.playControl.bringToFront();
                 initializePlayer(holder.binding, position);
                 initializeSeekBar(holder.binding, position);
+                setupPlayerView(holder.binding, position);
                 break;
             }
         }
@@ -174,6 +175,29 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
             public void onCenterChanged(PointF newCenter, int origin) {
 
             }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupPlayerView(RecyclerItemChatMediaBinding binding, int position){
+        binding.playerView.setOnClickListener(v -> {
+            if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.playerView);
+            if(activity.isPureContent()){
+                binding.playControl.setVisibility(View.GONE);
+            }else {
+                binding.playControl.setVisibility(View.VISIBLE);
+            }
+        });
+        SwipeDownGestureYier swipeDownGestureYier = new SwipeDownGestureYier(activity) {
+            @Override
+            public void onSwipeDown() {
+                activity.finish();
+            }
+        };
+        GestureDetector gestureDetector = new GestureDetector(activity, swipeDownGestureYier);
+        binding.playerView.setOnTouchListener((View v, MotionEvent event) -> {
+            gestureDetector.onTouchEvent(event);
+            return false;
         });
     }
 
@@ -218,14 +242,6 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
             player.play();
         });
         binding.pauseButton.setOnClickListener(v -> player.pause());
-        binding.playerView.setOnClickListener(v -> {
-            if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.playerView);
-            if(activity.isPureContent()){
-                binding.playControl.setVisibility(View.GONE);
-            }else {
-                binding.playControl.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     private void initializeSeekBar(RecyclerItemChatMediaBinding binding, int position) {

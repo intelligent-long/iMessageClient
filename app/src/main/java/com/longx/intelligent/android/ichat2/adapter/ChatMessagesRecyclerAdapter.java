@@ -204,6 +204,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextReceive.setVisibility(View.VISIBLE);
                     holder.binding.imageReceive.setVisibility(View.GONE);
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     holder.binding.textReceive.setText(itemData.chatMessage.getText());
                     break;
                 }
@@ -211,6 +212,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextReceive.setVisibility(View.GONE);
                     holder.binding.imageReceive.setVisibility(View.VISIBLE);
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.imageReceive, itemData.chatMessage.getImageSize());
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
@@ -224,12 +226,18 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextReceive.setVisibility(View.GONE);
                     holder.binding.imageReceive.setVisibility(View.GONE);
                     holder.binding.layoutFileReceive.setVisibility(View.VISIBLE);
+                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     holder.binding.fileNameReceive.setText(itemData.chatMessage.getFileName());
                     holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
                 }
                 case ChatMessage.TYPE_VIDEO:{
-
+                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                    holder.binding.imageReceive.setVisibility(View.GONE);
+                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVideoReceive.setVisibility(View.VISIBLE);
+                    setupImageViewSize(holder.binding.videoThumbnailReceive, itemData.chatMessage.getVideoSize());
+                    showVideoThumbnail(itemData.chatMessage.getVideoFilePath(), holder, holder.binding.videoThumbnailReceive, itemData);
                     break;
                 }
             }
