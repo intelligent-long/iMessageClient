@@ -60,7 +60,6 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
 
     private void setupYiers() {
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            int position = -1;
             boolean right;
             float previousPositionOffset;
             boolean previousPositionOffsetGreaterThanNow;
@@ -68,9 +67,9 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if(this.position != position){
-                    right = this.position > position;
-                    this.position = position;
+                if(ChatMediaActivity.this.position != position){
+                    right = ChatMediaActivity.this.position > position;
+                    ChatMediaActivity.this.position = position;
                     binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
                 }
             }
@@ -81,16 +80,14 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 boolean thisPreviousPositionOffsetGreaterThanNow = previousPositionOffset > positionOffset;
                 previousPositionOffset = positionOffset;
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
-                    int previousPosition = right ? this.position + 1 : this.position - 1;
+                    int previousPosition = right ? ChatMediaActivity.this.position + 1 : ChatMediaActivity.this.position - 1;
                     if(previousPosition != -1) {
                         if (positionOffset == 0 && adapter.getItemDatas().get(previousPosition).getChatMessage().getType() == ChatMessage.TYPE_IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
                         }
                         adapter.pausePlayer(previousPosition);
                     }
-                    if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
-                        adapter.startPlayer(position);
-                    }
+                    adapter.startPlayer(position);
                 }
                 previousPositionOffsetGreaterThanNow = thisPreviousPositionOffsetGreaterThanNow;
             }
@@ -174,24 +171,18 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     @Override
     protected void onResume() {
         super.onResume();
-        if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO){
-            adapter.startPlayer(position);
-        }
+        adapter.startPlayer(position);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
-            adapter.pausePlayer(position);
-        }
+        adapter.pausePlayer(position);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
-            adapter.releaseAllPlayerExcept(-1);
-        }
+        adapter.releaseAllPlayer();
     }
 }

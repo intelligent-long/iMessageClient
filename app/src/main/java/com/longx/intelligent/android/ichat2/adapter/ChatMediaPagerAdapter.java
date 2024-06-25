@@ -294,14 +294,9 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         }
     }
 
-    public void releaseAllPlayerExcept(int position){
+    public void releaseAllPlayer(){
         for (int i = 0; i < itemDatas.size(); i++) {
-            if(i != position){
-                ExoPlayer player = itemDatas.get(i).player;
-                if(player != null){
-                    player.release();
-                }
-            }
+            releasePlayer(i);
         }
     }
 
