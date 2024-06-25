@@ -30,6 +30,7 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMediaBin
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
 import java.io.File;
@@ -99,6 +100,8 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         ChatMessage chatMessage = itemDatas.get(position).chatMessage;
         switch (chatMessage.getType()){
             case ChatMessage.TYPE_IMAGE:{
+                changeTopCoverHeight(holder, false);
+                holder.binding.topShadowCover.bringToFront();
                 holder.binding.photoView.setVisibility(View.VISIBLE);
                 String imagePath = chatMessage.getImageFilePath();
                 holder.binding.photoView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener(){
@@ -127,6 +130,9 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
                 break;
             }
             case ChatMessage.TYPE_VIDEO:{
+                changeTopCoverHeight(holder, true);
+                holder.binding.topShadowCover.bringToFront();
+                holder.binding.playControl.bringToFront();
                 initializePlayer(holder.binding, position);
                 initializeSeekBar(holder.binding, position);
                 break;
@@ -310,5 +316,15 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
 
     public List<ItemData> getItemDatas() {
         return itemDatas;
+    }
+
+    public void changeTopCoverHeight(ViewHolder holder, boolean big){
+        int height;
+        if(big){
+            height = UiUtil.dpToPx(activity, 150);
+        }else {
+            height = UiUtil.dpToPx(activity, 110);
+        }
+        UiUtil.setViewHeight(holder.binding.topShadowCover, height);
     }
 }

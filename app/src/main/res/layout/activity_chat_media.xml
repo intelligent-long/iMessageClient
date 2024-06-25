@@ -10,7 +10,7 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:background="@drawable/shape_photo_top_bar_background"
+        android:background="@color/transparent"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.MaterialToolbar

@@ -15,6 +15,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatMediaBinding
 import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
