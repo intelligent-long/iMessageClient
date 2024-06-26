@@ -146,6 +146,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutTextSend.setVisibility(View.VISIBLE);
                     holder.binding.imageSend.setVisibility(View.GONE);
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
+                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
                     holder.binding.textSend.setText(itemData.chatMessage.getText());
                     break;
                 }

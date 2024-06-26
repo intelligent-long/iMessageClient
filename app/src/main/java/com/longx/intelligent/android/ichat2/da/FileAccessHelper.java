@@ -187,7 +187,7 @@ public class FileAccessHelper {
     }
 
     public static File detectAndRenameFile(File photoFile){
-        String fileExtension = FileAccessHelper.detectFileExtension(photoFile);
+        String fileExtension = detectFileExtension(photoFile);
         File parentFile = photoFile.getParentFile();
         String fileName;
         if(parentFile != null) {
