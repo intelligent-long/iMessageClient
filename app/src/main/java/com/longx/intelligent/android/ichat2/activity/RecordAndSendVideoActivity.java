@@ -225,4 +225,34 @@ public class RecordAndSendVideoActivity extends BaseActivity {
             handler.postDelayed(updateProgressAction, 1);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(player != null) {
+            if (player.getPlaybackState() == Player.STATE_ENDED) {
+                player.seekTo(0);
+            }
+            player.prepare();
+            player.play();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(player != null) {
+            player.pause();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (player != null) {
+            stopProgressUpdates();
+            player.release();
+            player = null;
+        }
+    }
 }

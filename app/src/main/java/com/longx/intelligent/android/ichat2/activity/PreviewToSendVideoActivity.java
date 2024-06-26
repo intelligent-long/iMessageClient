@@ -131,6 +131,22 @@ public class PreviewToSendVideoActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (player.getPlaybackState() == Player.STATE_ENDED) {
+            player.seekTo(0);
+        }
+        player.prepare();
+        player.play();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        player.pause();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (player != null) {
