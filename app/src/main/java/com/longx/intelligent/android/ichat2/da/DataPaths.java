@@ -87,5 +87,11 @@ public class DataPaths {
             String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + FileUtil.getFileExtension(chatMessage.getFileName());
             return getPublicFilePath() + File.separator + "聊天视频" + File.separator + fileName;
         }
+
+        public static String getCapturedChatVideoFilePath(){
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(new Date());
+            return getPublicFilePath() + File.separator + "拍摄" + File.separator + "视频" + File.separator + fileName;
+        }
     }
 }

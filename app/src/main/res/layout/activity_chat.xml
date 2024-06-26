@@ -327,7 +327,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/more_panel_take_video"
+                android:id="@+id/more_panel_record_video"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_columnWeight="1"

@@ -102,7 +102,7 @@ public class WindowAndSystemUiUtil {
         return Math.round(px);
     }
 
-    public static boolean checkAndExtendContentUnderSystemBars(Activity activity, View[] toSetStatusInsetsViews, View[] toSetNavigationInsetsViews, int notTranslucentNavigationBarColor){
+    public static boolean extendContentUnderSystemBars(Activity activity, View[] toSetStatusInsetsViews, View[] toSetNavigationInsetsViews, int notTranslucentNavigationBarColor){
         boolean translucentNavigation = true;
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
             translucentNavigation = false;

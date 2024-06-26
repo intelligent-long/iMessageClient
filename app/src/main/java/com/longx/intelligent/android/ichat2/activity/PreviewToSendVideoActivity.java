@@ -6,17 +6,13 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.SeekBar;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.Tracks;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendVideoBinding;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
@@ -34,7 +30,7 @@ public class PreviewToSendVideoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPreviewToSendVideoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        WindowAndSystemUiUtil.checkAndExtendContentUnderSystemBars(this, null, null,
+        WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
         uri = getIntent().getParcelableExtra(ExtraKeys.URI);

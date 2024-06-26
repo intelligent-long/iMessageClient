@@ -185,4 +185,23 @@ public class FileAccessHelper {
             MessageDisplayer.autoShow(context, "文件不存在", MessageDisplayer.Duration.LONG);
         }
     }
+
+    public static File detectAndRenameFile(File photoFile){
+        String fileExtension = FileAccessHelper.detectFileExtension(photoFile);
+        File parentFile = photoFile.getParentFile();
+        String fileName;
+        if(parentFile != null) {
+            fileName = parentFile.getAbsolutePath() + File.separator
+                    + FileUtil.getFileBaseName(photoFile) + "." + fileExtension;
+        }else {
+            fileName = FileUtil.getFileBaseName(photoFile) + "." + fileExtension;
+        }
+        File renamedFile = new File(fileName);
+        boolean success = photoFile.renameTo(renamedFile);
+        if(success) {
+            return renamedFile;
+        }else {
+            return null;
+        }
+    }
 }

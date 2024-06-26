@@ -48,7 +48,6 @@ import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -301,7 +300,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     private void setupUi() {
-        boolean translucentNavigation = WindowAndSystemUiUtil.checkAndExtendContentUnderSystemBars(this,
+        boolean translucentNavigation = WindowAndSystemUiUtil.extendContentUnderSystemBars(this,
                 null, new View[]{binding.navigationDrawer1},
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         if(translucentNavigation) {

@@ -1,11 +1,8 @@
 package com.longx.intelligent.android.ichat2.da.publicfile;
 
-import android.content.Context;
-
 import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 
 import java.io.File;
@@ -36,23 +33,9 @@ public class PublicFileAccessor {
             return FileAccessHelper.createFile(filePath);
         }
 
-        public static File detectAndRenamePhotoFile(File photoFile){
-            String fileExtension = FileAccessHelper.detectFileExtension(photoFile);
-            File parentFile = photoFile.getParentFile();
-            String fileName;
-            if(parentFile != null) {
-                fileName = parentFile.getAbsolutePath() + File.separator
-                        + FileUtil.getFileBaseName(photoFile) + "." + fileExtension;
-            }else {
-                fileName = FileUtil.getFileBaseName(photoFile) + "." + fileExtension;
-            }
-            File renamedFile = new File(fileName);
-            boolean success = photoFile.renameTo(renamedFile);
-            if(success) {
-                return renamedFile;
-            }else {
-                return null;
-            }
+        public static File createVideoFile() throws IOException {
+            String filePath = DataPaths.PublicFile.getCapturedChatVideoFilePath();
+            return FileAccessHelper.createFile(filePath);
         }
     }
 }

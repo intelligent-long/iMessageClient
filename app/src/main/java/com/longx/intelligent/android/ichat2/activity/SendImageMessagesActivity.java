@@ -62,7 +62,7 @@ public class SendImageMessagesActivity extends BaseActivity{
     }
 
     private void changeWindowAndSystemUi() {
-        WindowAndSystemUiUtil.checkAndExtendContentUnderSystemBars(this, null, null,
+        WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
     }
 

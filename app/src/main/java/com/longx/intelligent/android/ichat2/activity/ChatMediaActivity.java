@@ -15,7 +15,6 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatMediaBinding
 import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
-import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
@@ -34,7 +33,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
         super.onCreate(savedInstanceState);
         binding = ActivityChatMediaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        WindowAndSystemUiUtil.checkAndExtendContentUnderSystemBars(this, null, null,
+        WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
         getIntentData();

@@ -17,6 +17,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTakeAndSendPhotoBinding;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -38,7 +39,7 @@ public class TakeAndSendPhotoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityTakeAndSendPhotoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        WindowAndSystemUiUtil.checkAndExtendContentUnderSystemBars(this, null, null,
+        WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
         binding.appBar.bringToFront();
@@ -46,7 +47,7 @@ public class TakeAndSendPhotoActivity extends BaseActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        photoFile = PublicFileAccessor.CapturedMedia.detectAndRenamePhotoFile(photoFile);
+                        photoFile = FileAccessHelper.detectAndRenameFile(photoFile);
                         if(photoFile == null){
                             MessageDisplayer.autoShow(this, "创建文件失败", MessageDisplayer.Duration.LONG);
                         }else {
@@ -71,7 +72,7 @@ public class TakeAndSendPhotoActivity extends BaseActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 takePictureLauncher.launch(takePictureIntent);
             } catch (IOException e) {
-                ErrorLogger.log(e);
+                ErrorLogger.log(getClass(), e);
                 MessageDisplayer.autoShow(this, "创建文件失败", MessageDisplayer.Duration.LONG);
             }
         }
