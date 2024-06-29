@@ -19,12 +19,10 @@ import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTagBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutFabRecyclerSpaceFooterBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.DisableExpandAppBarBehavior;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.DragSortRecycler;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -41,6 +39,8 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
     private ChannelTagsRecyclerAdapter adapter;
     private DragSortRecycler dragSortRecycler;
     private boolean scrollToEnd;
+    private boolean isAppBarExpanded = true;
+    private boolean isAppBarExpandedBeforeToSort = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +129,13 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
             }
             return true;
         });
+        binding.appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                isAppBarExpanded = false;
+            } else if (verticalOffset == 0) {
+                isAppBarExpanded = true;
+            }
+        });
     }
 
     private void switchDragSortState(){
@@ -142,7 +149,14 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         if (behavior != null) {
             behavior.setExpandEnabled(!nowDragSortState);
         }
-        binding.appBar.setExpanded(!nowDragSortState);
+        if(nowDragSortState){
+            isAppBarExpandedBeforeToSort = isAppBarExpanded;
+            binding.appBar.setExpanded(false);
+        }else {
+            if(isAppBarExpandedBeforeToSort){
+                binding.appBar.setExpanded(true);
+            }
+        }
         adapter.switchDragSortState(nowDragSortState);
         sort.setVisible(!nowDragSortState);
         cancelSort.setVisible(nowDragSortState);
