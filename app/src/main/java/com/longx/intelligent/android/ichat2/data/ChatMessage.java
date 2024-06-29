@@ -37,73 +37,85 @@ public class ChatMessage implements Parcelable {
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public static void mainDoOnNewChatMessage(ChatMessage chatMessage, Context context, ResultsYier resultsYier){
-        if(chatMessage.getType() == ChatMessage.TYPE_IMAGE) {
-            ChatApiCaller.fetchChatMessageImage(null, chatMessage.imageId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
-                @Override
-                public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                    super.ok(data, row, call);
-                    executorService.execute(() -> {
-                        try {
-                            byte[] bytes = data.bytes();
-                            String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage, bytes);
-                            chatMessage.setImageFilePath(imageFilePath);
-                            Size imageSize = MediaHelper.getImageSize(bytes);
-                            chatMessage.setImageSize(imageSize);
-                            commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                            mainHandler.post(resultsYier::onResults);
-                        } catch (IOException e) {
-                            mainHandler.post(() -> {
-                                throw new RuntimeException(e);
-                            });
-                        }
-                    });
-                }
-            });
-        }else if(chatMessage.getType() == ChatMessage.TYPE_FILE){
-            ChatApiCaller.fetchChatMessageFile(null, chatMessage.fileId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
-                @Override
-                public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                    super.ok(data, row, call);
-                    executorService.execute(() -> {
-                        try {
-                            byte[] bytes = data.bytes();
-                            String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, chatMessage, bytes);
-                            chatMessage.setFileFilePath(chatFileFilePath);
-                            commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                            mainHandler.post(resultsYier::onResults);
-                        } catch (IOException e) {
-                            mainHandler.post(() -> {
-                                throw new RuntimeException(e);
-                            });
-                        }
-                    });
-                }
-            });
-        }else if(chatMessage.getType() == ChatMessage.TYPE_VIDEO) {
-            ChatApiCaller.fetchChatMessageVideo(null, chatMessage.videoId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
-                @Override
-                public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                    super.ok(data, row, call);
-                    executorService.execute(() -> {
-                        try {
-                            byte[] bytes = data.bytes();
-                            String chatVideoFilePath = PrivateFilesAccessor.ChatVideo.save(context, chatMessage, bytes);
-                            chatMessage.setVideoFilePath(chatVideoFilePath);
-                            Size videoSize = MediaHelper.getVideoSize(chatVideoFilePath);
-                            chatMessage.setVideoSize(videoSize);
-                            commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                            mainHandler.post(resultsYier::onResults);
-                        } catch (IOException e) {
-                            mainHandler.post(() -> {
-                                throw new RuntimeException(e);
-                            });
-                        }
-                    });
-                }
-            });
-        }else {
-            commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-            resultsYier.onResults();
+        switch (chatMessage.getType()){
+            case TYPE_IMAGE:{
+                ChatApiCaller.fetchChatMessageImage(null, chatMessage.imageId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                    @Override
+                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
+                        super.ok(data, row, call);
+                        executorService.execute(() -> {
+                            try {
+                                byte[] bytes = data.bytes();
+                                String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage, bytes);
+                                chatMessage.setImageFilePath(imageFilePath);
+                                Size imageSize = MediaHelper.getImageSize(bytes);
+                                chatMessage.setImageSize(imageSize);
+                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                                mainHandler.post(resultsYier::onResults);
+                            } catch (IOException e) {
+                                mainHandler.post(() -> {
+                                    throw new RuntimeException(e);
+                                });
+                            }
+                        });
+                    }
+                });
+                break;
+            }
+            case TYPE_FILE:{
+                ChatApiCaller.fetchChatMessageFile(null, chatMessage.fileId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
+                    @Override
+                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
+                        super.ok(data, row, call);
+                        executorService.execute(() -> {
+                            try {
+                                byte[] bytes = data.bytes();
+                                String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, chatMessage, bytes);
+                                chatMessage.setFileFilePath(chatFileFilePath);
+                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                                mainHandler.post(resultsYier::onResults);
+                            } catch (IOException e) {
+                                mainHandler.post(() -> {
+                                    throw new RuntimeException(e);
+                                });
+                            }
+                        });
+                    }
+                });
+                break;
+            }
+            case TYPE_VIDEO:{
+                ChatApiCaller.fetchChatMessageVideo(null, chatMessage.videoId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                    @Override
+                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
+                        super.ok(data, row, call);
+                        executorService.execute(() -> {
+                            try {
+                                byte[] bytes = data.bytes();
+                                String chatVideoFilePath = PrivateFilesAccessor.ChatVideo.save(context, chatMessage, bytes);
+                                chatMessage.setVideoFilePath(chatVideoFilePath);
+                                Size videoSize = MediaHelper.getVideoSize(chatVideoFilePath);
+                                chatMessage.setVideoSize(videoSize);
+                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                                mainHandler.post(resultsYier::onResults);
+                            } catch (IOException e) {
+                                mainHandler.post(() -> {
+                                    throw new RuntimeException(e);
+                                });
+                            }
+                        });
+                    }
+                });
+                break;
+            }
+            case TYPE_VOICE:{
+
+            }
+            default:{
+                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                resultsYier.onResults();
+                break;
+            }
         }
     }
 
@@ -137,6 +149,7 @@ public class ChatMessage implements Parcelable {
     private String imageId;
     private String fileId;
     private String videoId;
+    private String voiceId;
 
     @JsonIgnore
     private Boolean showTime;
@@ -152,12 +165,14 @@ public class ChatMessage implements Parcelable {
     private String videoFilePath;
     @JsonIgnore
     private Size videoSize;
+    @JsonIgnore
+    private String voiceFilePath;
 
     public ChatMessage() {
     }
 
     public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String fileName,
-                       String imageId, String fileId, String videoId) {
+                       String imageId, String fileId, String videoId, String voiceId) {
         this.type = type;
         this.uuid = uuid;
         this.from = from;
@@ -168,6 +183,7 @@ public class ChatMessage implements Parcelable {
         this.imageId = imageId;
         this.fileId = fileId;
         this.videoId = videoId;
+        this.voiceId = voiceId;
     }
 
     public int getType() {
@@ -208,6 +224,10 @@ public class ChatMessage implements Parcelable {
 
     public String getVideoId() {
         return videoId;
+    }
+
+    public String getVoiceId() {
+        return voiceId;
     }
 
     public boolean isSelfSender(Context context){
@@ -279,6 +299,14 @@ public class ChatMessage implements Parcelable {
         this.videoFilePath = videoFilePath;
     }
 
+    public String getVoiceFilePath() {
+        return voiceFilePath;
+    }
+
+    public void setVoiceFilePath(String voiceFilePath) {
+        this.voiceFilePath = voiceFilePath;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -303,6 +331,7 @@ public class ChatMessage implements Parcelable {
         imageId = in.readString();
         fileId = in.readString();
         videoId = in.readString();
+        voiceId = in.readString();
         byte tmpShowTime = in.readByte();
         showTime = tmpShowTime == 0 ? null : tmpShowTime == 1;
         byte tmpViewed = in.readByte();
@@ -346,6 +375,7 @@ public class ChatMessage implements Parcelable {
         dest.writeString(imageId);
         dest.writeString(fileId);
         dest.writeString(videoId);
+        dest.writeString(voiceId);
         dest.writeByte((byte) (showTime == null ? 0 : showTime ? 1 : 2));
         dest.writeByte((byte) (viewed == null ? 0 : viewed ? 1 : 2));
         if(type == TYPE_IMAGE) {
@@ -371,6 +401,7 @@ public class ChatMessage implements Parcelable {
                 ", imageId='" + imageId + '\'' +
                 ", fileId='" + fileId + '\'' +
                 ", videoId='" + videoId + '\'' +
+                ", voiceId='" + voiceId + '\'' +
                 ", showTime=" + showTime +
                 ", viewed=" + viewed +
                 ", imageFilePath='" + imageFilePath + '\'' +
@@ -378,6 +409,7 @@ public class ChatMessage implements Parcelable {
                 ", fileFilePath='" + fileFilePath + '\'' +
                 ", videoFilePath='" + videoFilePath + '\'' +
                 ", videoSize=" + videoSize +
+                ", voiceFilePath='" + voiceFilePath + '\'' +
                 '}';
     }
 }

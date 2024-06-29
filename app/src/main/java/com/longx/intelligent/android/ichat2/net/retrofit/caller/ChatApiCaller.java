@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePost
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendVideoChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendVoiceChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.ChatApi;
@@ -239,6 +240,59 @@ public class ChatApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<ResponseBody> fetchChatMessageVideo(LifecycleOwner lifecycleOwner, String videoId, BaseYier<ResponseBody> yier){
         CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageVideo(videoId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> sendVoiceChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri voiceUri,
+                                                                      SendVoiceChatMessagePostBody postBody,
+                                                                      BaseCommonYier<OperationData> yier, ProgressYier progressYier){
+        ContentResolver contentResolver = context.getContentResolver();
+        InputStream inputStream;
+        try {
+            inputStream = contentResolver.openInputStream(voiceUri);
+            if (inputStream == null) {
+                throw new IOException("Unable to open input stream from URI");
+            }
+        } catch (IOException e) {
+            ErrorLogger.log(e);
+            return null;
+        }
+        String mimeType = contentResolver.getType(voiceUri);
+        RequestBody requestBody = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse(mimeType);
+            }
+
+            @Override
+            public long contentLength() throws IOException {
+                return FileUtil.getFileSize(context, voiceUri);
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                try (InputStream inputStream = contentResolver.openInputStream(voiceUri)) {
+                    if (inputStream == null) {
+                        throw new IOException("Unable to open input stream from URI");
+                    }
+                    byte[] buffer = new byte[10240];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        sink.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        };
+        ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
+            @Override
+            protected void onUpload(long progress, long contentLength, boolean done) {
+                progressYier.onProgressUpdate(progress, contentLength);
+            }
+        };
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("video", null, progressRequestBody);
+        RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+        CompletableCall<OperationData> call = getApiImplementation().sendVoiceChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

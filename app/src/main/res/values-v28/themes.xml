@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ThemeOverlay.LighterZShadow11" parent="">
+        <item name="android:outlineAmbientShadowColor">#1C000000</item>
+        <item name="android:outlineSpotShadowColor">#1C000000</item>
+    </style>
+</resources>

@@ -63,4 +63,9 @@ public interface ChatApi {
     @GET("chat/message/video/new/{videoId}")
     @Headers("LogLevel:HEADERS")
     CompletableCall<ResponseBody> fetchChatMessageVideo(@Path("videoId") String videoId);
+
+    @Multipart
+    @POST("chat/message/voice/send")
+    @Headers("LogLevel:HEADERS")
+    CompletableCall<OperationData> sendVoiceChatMessage(@Part MultipartBody.Part voice, @Part("metadata") RequestBody metadata);
 }

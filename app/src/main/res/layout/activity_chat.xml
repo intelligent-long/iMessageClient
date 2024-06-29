@@ -31,6 +31,24 @@
             android:layout_above="@id/bar"
             android:layout_alignParentTop="true"/>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/cancel_send_talk_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/bar"
+            android:layout_centerHorizontal="true"
+            android:clickable="false"
+            app:fabCustomSize="77dp"
+            app:maxImageSize="32dp"
+            app:elevation="11dp"
+            android:theme="@style/ThemeOverlay.LighterZShadow11"
+            app:srcCompat="@drawable/close_24px"
+            android:backgroundTint="?attr/colorSurfaceContainer"
+            app:tint="?attr/colorControlNormal"
+            android:layout_marginVertical="30dp"
+            style="@style/RoundFloatingActionButton"
+            android:visibility="invisible" />
+
         <RelativeLayout
             android:id="@+id/bar"
             android:layout_width="match_parent"

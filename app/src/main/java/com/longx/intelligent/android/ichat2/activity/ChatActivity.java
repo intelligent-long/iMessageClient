@@ -1,9 +1,17 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Parcelable;
+import android.view.HapticFeedbackConstants;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,6 +20,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
@@ -70,9 +80,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private boolean showMorePanelOnKeyboardClosed;
     private Runnable showMessagePopupOnKeyboardClosed;
     private boolean sendingState;
+    private boolean cancelSendVoice;
     private ActivityResultLauncher<Intent> sendImageMessageResultLauncher;
     private ActivityResultLauncher<Intent> sendFileMessageResultLauncher;
     private ActivityResultLauncher<Intent> sendVideoMessageResultLauncher;
+    private boolean isFabScaledUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +98,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
         openedChatDatabaseManager.updateShow(channel.getIchatId(), true);
         GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
+        initUi();
         showContent();
         setupYiers();
         initResultLauncher();
@@ -95,6 +108,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     protected void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, ChatMessageUpdateYier.class, this);
+    }
+
+    private void initUi(){
+        changeHoldToTalkToNormal();
+        changeCancelSendTalkFabToNormal();
     }
 
     private void showContent(){
@@ -171,6 +189,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         previousPn ++;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupYiers() {
         for (int i = 0; i < binding.toolbar.getChildCount(); i++) {
             View view = binding.toolbar.getChildAt(i);
@@ -326,6 +345,48 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.morePanelRecordVideo.setOnClickListener(v -> {
             sendVideoMessageResultLauncher.launch(new Intent(this, RecordAndSendVideoActivity.class));
         });
+        binding.holdToTalkButton.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    cancelSendVoice = false;
+                    changeHoldToTalkToHold();
+                    onStartTalk();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    changeHoldToTalkToNormal();
+                    if(cancelSendVoice){
+                        onCancelSendVoice();
+                    }else {
+                        sendVoice();
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float x = event.getRawX();
+                    float y = event.getRawY();
+                    int[] fabXY = {0, 0};
+                    binding.cancelSendTalkFab.getLocationOnScreen(fabXY);
+                    float fabX = fabXY[0];
+                    float fabY = fabXY[1];
+                    int fabWidth = binding.cancelSendTalkFab.getWidth();
+                    int fabHeight = binding.cancelSendTalkFab.getHeight();
+                    boolean isInsideFab = x > fabX && x < (fabX + fabWidth) && y > fabY && y < (fabY + fabHeight);
+                    if (isInsideFab) {
+                        if(!cancelSendVoice) cancelSendVoice = true;
+                        if (!isFabScaledUp) {
+                            isFabScaledUp = true;
+                            binding.cancelSendTalkFab.post(this::changeCancelSendTalkFabToCancel);
+                        }
+                    }else {
+                        if(cancelSendVoice) cancelSendVoice = false;
+                        if (isFabScaledUp) {
+                            isFabScaledUp = false;
+                            binding.cancelSendTalkFab.post(this::changeCancelSendTalkFabToNormal);
+                        }
+                    }
+                    break;
+            }
+            return false;
+        });
     }
 
     private void toSendingState(){
@@ -374,6 +435,30 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendIndicator.setVisibility(View.GONE);
         binding.sendItemCountIndicator.setVisibility(View.GONE);
         binding.sendProgressIndicator.setVisibility(View.GONE);
+    }
+
+    private void changeHoldToTalkToHold(){
+        binding.holdToTalkButton.setBackgroundTintList(ColorStateList.valueOf(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainerHighest)));
+        binding.holdToTalkButton.setText("松开 发送");
+        binding.holdToTalkButton.setTextColor(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 230));
+        binding.holdToTalkButton.setIconTint(ColorStateList.valueOf(getColor(R.color.ichat)));
+    }
+
+    private void changeHoldToTalkToNormal(){
+        binding.holdToTalkButton.setBackgroundTintList(ColorStateList.valueOf(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer)));
+        binding.holdToTalkButton.setText("按住 说话");
+        binding.holdToTalkButton.setTextColor(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 230));
+        binding.holdToTalkButton.setIconTint(ColorStateList.valueOf(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 230)));
+    }
+
+    private void changeCancelSendTalkFabToCancel() {
+        binding.cancelSendTalkFab.setSupportImageTintList(ColorStateList.valueOf(getColor(R.color.action_red)));
+        binding.cancelSendTalkFab.animate().scaleX(1.2f).scaleY(1.2f).setDuration(30).withEndAction(() -> isFabScaledUp = true).start();
+    }
+
+    private void changeCancelSendTalkFabToNormal() {
+        binding.cancelSendTalkFab.setSupportImageTintList(ColorStateList.valueOf(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 200)));
+        binding.cancelSendTalkFab.animate().scaleX(1f).scaleY(1f).setDuration(30).withEndAction(() -> isFabScaledUp = false).start();
     }
 
     private void showMorePanel(){
@@ -698,6 +783,43 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 binding.sendProgressIndicator.setProgress(progress, true);
             });
         });
+    }
 
+    private void onStartTalk() {
+        onRecordPrepared();
+        onRecordStarted();
+    }
+
+    private void onCancelSendVoice() {
+        onRecordStopped();
+    }
+
+    private void sendVoice() {
+        onRecordStopped();
+    }
+
+    public void onRecordPrepared() {
+        binding.holdToTalkButton.performHapticFeedback(
+                HapticFeedbackConstants.CONTEXT_CLICK,
+                HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+        );
+    }
+
+    public synchronized void onRecordStarted() {
+        binding.cancelSendTalkFab.show(new FloatingActionButton.OnVisibilityChangedListener() {
+            @Override
+            public void onShown(FloatingActionButton fab) {
+
+            }
+        });
+    }
+
+    public synchronized void onRecordStopped() {
+        binding.cancelSendTalkFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+            @Override
+            public void onHidden(FloatingActionButton fab) {
+                changeCancelSendTalkFabToNormal();
+            }
+        });
     }
 }
