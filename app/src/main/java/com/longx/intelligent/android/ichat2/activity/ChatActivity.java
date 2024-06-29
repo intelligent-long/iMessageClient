@@ -370,14 +370,15 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         float fabY = fabXY[1];
                         int fabWidth = binding.cancelSendTalkFab.getWidth();
                         int fabHeight = binding.cancelSendTalkFab.getHeight();
-                        boolean isInsideFab = x > fabX && x < (fabX + fabWidth) && y > fabY && y < (fabY + fabHeight);
+                        boolean isInsideFab = x > fabX + 5 && x < (fabX + fabWidth - 5) && y > fabY + 5 && y < (fabY + fabHeight - 5);
+                        boolean isOutsideFab = (x < fabX - 21 || x > (fabX + fabWidth + 21)) || (y < fabY - 21 || y > (fabY + fabHeight + 21));
                         if (isInsideFab) {
                             if (!cancelSendVoice) cancelSendVoice = true;
                             if (!isFabScaledUp) {
                                 isFabScaledUp = true;
                                 binding.cancelSendTalkFab.post(this::changeCancelSendTalkFabToCancel);
                             }
-                        } else {
+                        } else if(isOutsideFab) {
                             if (cancelSendVoice) cancelSendVoice = false;
                             if (isFabScaledUp) {
                                 isFabScaledUp = false;
@@ -455,12 +456,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
     private void changeCancelSendTalkFabToCancel() {
         binding.cancelSendTalkFab.setSupportImageTintList(ColorStateList.valueOf(getColor(R.color.action_red)));
-        binding.cancelSendTalkFab.animate().scaleX(1.2f).scaleY(1.2f).setDuration(30).withEndAction(() -> isFabScaledUp = true).start();
+        binding.cancelSendTalkFab.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction(() -> isFabScaledUp = true).start();
     }
 
     private void changeCancelSendTalkFabToNormal() {
         binding.cancelSendTalkFab.setSupportImageTintList(ColorStateList.valueOf(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 200)));
-        binding.cancelSendTalkFab.animate().scaleX(1f).scaleY(1f).setDuration(30).withEndAction(() -> isFabScaledUp = false).start();
+        binding.cancelSendTalkFab.animate().scaleX(1f).scaleY(1f).setDuration(100).withEndAction(() -> isFabScaledUp = false).start();
     }
 
     private void showMorePanel(){
