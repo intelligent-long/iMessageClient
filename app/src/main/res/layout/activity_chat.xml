@@ -38,6 +38,7 @@
             android:layout_above="@id/bar"
             android:layout_centerHorizontal="true"
             android:clickable="false"
+            android:contentDescription="取消发送语音"
             app:fabCustomSize="77dp"
             app:maxImageSize="32dp"
             app:elevation="11dp"

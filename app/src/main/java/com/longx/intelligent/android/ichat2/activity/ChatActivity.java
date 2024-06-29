@@ -361,26 +361,28 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    float x = event.getRawX();
-                    float y = event.getRawY();
-                    int[] fabXY = {0, 0};
-                    binding.cancelSendTalkFab.getLocationOnScreen(fabXY);
-                    float fabX = fabXY[0];
-                    float fabY = fabXY[1];
-                    int fabWidth = binding.cancelSendTalkFab.getWidth();
-                    int fabHeight = binding.cancelSendTalkFab.getHeight();
-                    boolean isInsideFab = x > fabX && x < (fabX + fabWidth) && y > fabY && y < (fabY + fabHeight);
-                    if (isInsideFab) {
-                        if(!cancelSendVoice) cancelSendVoice = true;
-                        if (!isFabScaledUp) {
-                            isFabScaledUp = true;
-                            binding.cancelSendTalkFab.post(this::changeCancelSendTalkFabToCancel);
-                        }
-                    }else {
-                        if(cancelSendVoice) cancelSendVoice = false;
-                        if (isFabScaledUp) {
-                            isFabScaledUp = false;
-                            binding.cancelSendTalkFab.post(this::changeCancelSendTalkFabToNormal);
+                    synchronized (this) {
+                        float x = event.getRawX();
+                        float y = event.getRawY();
+                        int[] fabXY = {0, 0};
+                        binding.cancelSendTalkFab.getLocationOnScreen(fabXY);
+                        float fabX = fabXY[0];
+                        float fabY = fabXY[1];
+                        int fabWidth = binding.cancelSendTalkFab.getWidth();
+                        int fabHeight = binding.cancelSendTalkFab.getHeight();
+                        boolean isInsideFab = x > fabX && x < (fabX + fabWidth) && y > fabY && y < (fabY + fabHeight);
+                        if (isInsideFab) {
+                            if (!cancelSendVoice) cancelSendVoice = true;
+                            if (!isFabScaledUp) {
+                                isFabScaledUp = true;
+                                binding.cancelSendTalkFab.post(this::changeCancelSendTalkFabToCancel);
+                            }
+                        } else {
+                            if (cancelSendVoice) cancelSendVoice = false;
+                            if (isFabScaledUp) {
+                                isFabScaledUp = false;
+                                binding.cancelSendTalkFab.post(this::changeCancelSendTalkFabToNormal);
+                            }
                         }
                     }
                     break;
