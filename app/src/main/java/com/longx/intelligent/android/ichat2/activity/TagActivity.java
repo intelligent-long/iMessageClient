@@ -153,7 +153,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
             isAppBarExpandedBeforeToSort = isAppBarExpanded;
             binding.appBar.setExpanded(false);
         }else {
-            if(isAppBarExpandedBeforeToSort){
+            if(isAppBarExpandedBeforeToSort && isRecyclerViewAtTop()){
                 binding.appBar.setExpanded(true);
             }
         }
@@ -172,6 +172,15 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
             binding.recyclerView.removeOnScrollListener(dragSortRecycler.getScrollListener());
             binding.fab.show();
         }
+    }
+
+    private boolean isRecyclerViewAtTop() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            int firstVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+            return firstVisibleItemPosition == 0;
+        }
+        return false;
     }
 
     private void doSortTags() {
