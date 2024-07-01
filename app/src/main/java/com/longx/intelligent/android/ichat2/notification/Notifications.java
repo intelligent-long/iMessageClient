@@ -75,6 +75,7 @@ public class Notifications {
             String finalText = text;
             pendingNotificationMap.get(NotificationId.CHAT_MESSAGE).add(() -> {
                     Channel channel1 = ChannelDatabaseManager.getInstance().findOneChannel(chatMessage.getOther(context));
+                    if(channel1 == null) return;
                     Intent intent = new Intent(context, ChatActivity.class);
                     intent.putExtra(ExtraKeys.CHANNEL, channel1);
                     new Notification.Builder(context,

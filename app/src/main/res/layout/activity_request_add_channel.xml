@@ -84,6 +84,7 @@
                 app:counterTextColor="?attr/colorControlNormal">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/note_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="19sp"
@@ -118,14 +119,14 @@
                         android:layout_centerVertical="true"
                         android:layout_toStartOf="@id/arrow_tag"
                         android:text="标签"
-                        android:textSize="21sp" />
+                        android:textSize="20.5sp" />
 
                     <ImageView
                         android:id="@+id/arrow_tag"
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/arrow_forward_ios_24px"
+                        android:src="@drawable/arrow_forward_24px"
                         android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
             </LinearLayout>

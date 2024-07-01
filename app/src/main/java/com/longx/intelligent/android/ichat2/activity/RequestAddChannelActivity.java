@@ -46,7 +46,8 @@ public class RequestAddChannelActivity extends BaseActivity {
                     .setNegativeButton(null)
                     .setPositiveButton((dialog, which) -> {
                         String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
-                        RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channel.getIchatIdUser(), inputtedMessage);
+                        String inputtedNote = UiUtil.getEditTextString(binding.noteInput);
+                        RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channel.getIchatIdUser(), inputtedMessage, inputtedNote, null);
                         ChannelApiCaller.requestAddChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
