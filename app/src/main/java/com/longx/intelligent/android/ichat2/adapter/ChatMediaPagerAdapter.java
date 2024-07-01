@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -112,6 +113,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
                         holder.binding.loadFailedView.setVisibility(View.VISIBLE);
                         Glide.with(activity.getApplicationContext())
                                 .load(new File(imagePath))
+                                .transition(DrawableTransitionOptions.withCrossFade())
                                 .into(new CustomTarget<Drawable>() {
                                     @Override
                                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
