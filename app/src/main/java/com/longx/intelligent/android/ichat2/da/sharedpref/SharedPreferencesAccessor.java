@@ -509,30 +509,6 @@ public class SharedPreferencesAccessor {
         }
     }
 
-    public static class ChatMessageTimeShowing{
-        private static final String NAME = "chat_message_time_showing";
-
-        private static SharedPreferences getSharedPreferences(Context context) {
-            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
-        }
-
-        public static void saveLastShowingTime(Context context, String channelIchatId, Date time){
-            getSharedPreferences(context)
-                    .edit()
-                    .putLong(channelIchatId, time == null ? -1 : time.getTime())
-                    .apply();
-        }
-
-        public static Date getLastShowingTime(Context context, String channelIchatId){
-            return new Date(getSharedPreferences(context).getLong(channelIchatId, -1));
-        }
-
-        public static boolean isShowTime(Context context, String channelIchatId, Date time){
-            long lastShowingTime = getSharedPreferences(context).getLong(channelIchatId, -1);
-            return lastShowingTime == -1 || TimeUtil.isDateAfter(lastShowingTime, time.getTime(), Constants.CHAT_MESSAGE_SHOW_TIME_INTERVAL);
-        }
-    }
-
     public static class AuthPref{
         private static final String NAME = "auth";
         private static class Key{

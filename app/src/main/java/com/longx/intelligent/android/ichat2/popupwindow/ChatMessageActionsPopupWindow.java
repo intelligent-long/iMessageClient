@@ -63,22 +63,6 @@ public class ChatMessageActionsPopupWindow {
                         popupWindow.dismiss();
                         String other = chatMessage.getOther(activity);
                         ChatMessageDatabaseManager databaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, other);
-                        boolean updateNextMessageToShowTime = false;
-                        if(chatMessage.isShowTime()) {
-                            ChatMessage nextChatMessage = databaseManager.findNextChatMessage(chatMessage.getTime());
-                            if (nextChatMessage != null && !nextChatMessage.isShowTime()) {
-                                databaseManager.updateShowTime(nextChatMessage.getUuid(), true);
-                                updateNextMessageToShowTime = true;
-                            }
-                            Date lastShowingTime = SharedPreferencesAccessor.ChatMessageTimeShowing.getLastShowingTime(activity, other);
-                            if(lastShowingTime.equals(chatMessage.getTime())){
-                                if(nextChatMessage == null){
-                                    SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(activity, other, null);
-                                }else {
-                                    SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(activity, other, nextChatMessage.getTime());
-                                }
-                            }
-                        }
                         databaseManager.delete(chatMessage.getUuid());
                         switch (chatMessage.getType()){
                             case ChatMessage.TYPE_IMAGE:{
@@ -94,7 +78,7 @@ public class ChatMessageActionsPopupWindow {
                                 break;
                             }
                         }
-                        onDeletedYier.onDeleted(updateNextMessageToShowTime);
+                        onDeletedYier.onDeleted();
                     })
                     .show();
         });
@@ -120,6 +104,6 @@ public class ChatMessageActionsPopupWindow {
     }
 
     public interface OnDeletedYier{
-        void onDeleted(boolean updateNextToShowTime);
+        void onDeleted();
     }
 }

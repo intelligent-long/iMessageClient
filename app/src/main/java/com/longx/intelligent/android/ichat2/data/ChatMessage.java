@@ -120,17 +120,9 @@ public class ChatMessage implements Parcelable {
     }
 
     private static synchronized void commonDoOfMainDoOnNewChatMessage(ChatMessage chatMessage, Context context) {
-        ChatMessage.determineShowTime(chatMessage, context);
         String other = chatMessage.getOther(context);
         ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
-        boolean success = chatMessageDatabaseManager.insertOrIgnore(chatMessage);
-        if (success && chatMessage.isShowTime()) {
-            SharedPreferencesAccessor.ChatMessageTimeShowing.saveLastShowingTime(context, other, chatMessage.getTime());
-        }
-    }
-
-    private static void determineShowTime(ChatMessage chatMessage, Context context) {
-        chatMessage.showTime = SharedPreferencesAccessor.ChatMessageTimeShowing.isShowTime(context, chatMessage.getOther(context), chatMessage.getTime());
+        chatMessageDatabaseManager.insertOrIgnore(chatMessage);
     }
 
     public static final int TYPE_TEXT = 0;
@@ -242,8 +234,7 @@ public class ChatMessage implements Parcelable {
         }
     }
 
-    public boolean isShowTime() {
-        if(showTime == null) throw new RuntimeException();
+    public Boolean isShowTime() {
         return showTime;
     }
 

@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +20,6 @@ import com.longx.intelligent.android.ichat2.activity.ChatFileActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatMediaActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -32,7 +30,6 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -43,6 +40,7 @@ import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapt
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,7 +50,7 @@ import java.util.Objects;
 public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<ChatMessagesRecyclerAdapter.ViewHolder, ChatMessagesRecyclerAdapter.ItemData> {
     private final ChatActivity activity;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
-    private final List<ChatMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+    private final List<ItemData> itemDataList = new ArrayList<>();
     private final RequestOptions requestOptions;
 
     public ChatMessagesRecyclerAdapter(ChatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView) {
@@ -106,7 +104,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         //Yier
         setupYiers(holder, position);
         //时间
-        if(itemData.chatMessage.isShowTime()) {
+        if(Boolean.TRUE.equals(itemData.chatMessage.isShowTime())) {
             holder.binding.time.setVisibility(View.VISIBLE);
             String timeText = TimeUtil.formatRelativeTime(itemData.chatMessage.getTime());
             holder.binding.time.setText(timeText);
@@ -279,14 +277,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         scrollDisabler = new RecyclerViewScrollDisabler();
         recyclerView.addOnItemTouchListener(scrollDisabler);
         ChatMessageActionsPopupWindow popupWindow = new ChatMessageActionsPopupWindow(activity, currentItemData.chatMessage);
-        popupWindow.setOnDeletedYier(updateNextToShowTime -> {
-            if(updateNextToShowTime){
-                itemDataList.get(position + 1).chatMessage.setShowTime(true);
-                notifyItemChanged(position + 1);
-            }
+        popupWindow.setOnDeletedYier(() -> {
             itemDataList.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, itemDataList.size() - position);
+            determineAndUpdateShowTime();
         });
         View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
             UiUtil.hideKeyboard(activity);
@@ -351,8 +346,30 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         return itemDataList.size();
     }
 
-    private static void sort(List<ItemData> itemDataList) {
-        itemDataList.sort(Comparator.comparing(o -> o.chatMessage.getTime()));
+    private void sort(List<ItemData> itemDatas) {
+        itemDatas.sort(Comparator.comparing(o -> o.chatMessage.getTime()));
+    }
+
+    private void determineAndUpdateShowTime(){
+        Date previousShowTime = null;
+        for (int i = 0; i < itemDataList.size(); i++) {
+            ItemData itemData = itemDataList.get(i);
+            boolean showTime = Boolean.TRUE.equals(itemData.chatMessage.isShowTime());
+            if(previousShowTime == null){
+                previousShowTime = itemData.chatMessage.getTime();
+                itemData.chatMessage.setShowTime(true);
+                if(!showTime) notifyItemChanged(i);
+            }else {
+                if(TimeUtil.isDateAfter(previousShowTime, itemData.chatMessage.getTime(), Constants.CHAT_MESSAGE_SHOW_TIME_INTERVAL)){
+                    previousShowTime = itemData.chatMessage.getTime();
+                    itemData.chatMessage.setShowTime(true);
+                    if(!showTime) notifyItemChanged(i);
+                }else {
+                    itemData.chatMessage.setShowTime(false);
+                    if(showTime) notifyItemChanged(i);
+                }
+            }
+        }
     }
 
     public synchronized void addItemToEndAndShow(ChatMessage chatMessage){
@@ -360,6 +377,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         ItemData itemData = new ItemData(chatMessage);
         itemDataList.add(itemData);
         notifyItemInserted(getItemCount() - 1);
+        determineAndUpdateShowTime();
         recyclerView.scrollToEnd(true);
     }
 
@@ -371,6 +389,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         sort(itemDatas);
         itemDataList.addAll(0, itemDatas);
         notifyItemRangeInserted(0, itemDatas.size());
+        determineAndUpdateShowTime();
     }
 
     public void clearAndShow(){

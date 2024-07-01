@@ -22,7 +22,6 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String TO = "`to`";
         public static final String REAL_TO = "to";
         public static final String TIME = "time";
-        public static final String SHOW_TIME = "show_time";
         public static final String VIEWED = "viewed";
         public static final String TEXT = "text";
         public static final String FILE_NAME = "file_name";
@@ -50,7 +49,6 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.TO + " VARCHAR,"
                 + TableChannelChatMessagesColumns.TEXT + " VARCHAR,"
                 + TableChannelChatMessagesColumns.TIME + " DATETIME,"
-                + TableChannelChatMessagesColumns.SHOW_TIME + " BOOLEAN,"
                 + TableChannelChatMessagesColumns.VIEWED + " BOOLEAN,"
                 + TableChannelChatMessagesColumns.IMAGE_FILE_PATH + " VARCHAR,"
                 + TableChannelChatMessagesColumns.FILE_NAME + " VARCHAR,"

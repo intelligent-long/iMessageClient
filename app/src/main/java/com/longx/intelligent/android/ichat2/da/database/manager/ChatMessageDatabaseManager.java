@@ -65,7 +65,6 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TO, chatMessage.getTo());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT, chatMessage.getText());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME, chatMessage.getTime().getTime());
-            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME, chatMessage.isShowTime());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED, chatMessage.isViewed());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH, chatMessage.getImageFilePath());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME, chatMessage.getFileName());
@@ -97,7 +96,6 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String to = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.REAL_TO);
                 String text = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
                 Date time = DatabaseUtil.getTime(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME);
-                Boolean showTime = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME);
                 Boolean viewed = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED);
                 String imageFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH);
                 String fileName = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME);
@@ -109,7 +107,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 Integer videoHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT);
                 String voiceFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH);
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, null, null, null, null);
-                chatMessage.setShowTime(Boolean.TRUE.equals(showTime));
+                chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
@@ -200,7 +198,6 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String to = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.REAL_TO);
                 String text = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
                 Date timeFound = DatabaseUtil.getTime(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME);
-                Boolean showTime = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME);
                 Boolean viewed = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED);
                 String fileName = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME);
                 String imageFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH);
@@ -214,7 +211,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, fileName, null, null, null, null);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
-                chatMessage.setShowTime(Boolean.TRUE.equals(showTime));
+                chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
                 chatMessage.setFileFilePath(fileFilePath);
                 chatMessage.setVideoFilePath(videoFilePath);
@@ -226,18 +223,5 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
         return null;
-    }
-
-    public boolean updateShowTime(String uuid, boolean showTime){
-        openDatabaseIfClosed();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.SHOW_TIME, showTime);
-        try {
-            int updatedNum = getDatabase().update(((ChatMessageDatabaseHelper) getHelper()).getTableName(),
-                    contentValues, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + "=?", new String[]{uuid});
-            return updatedNum > 0;
-        }finally {
-            releaseDatabaseIfUnused();
-        }
     }
 }
