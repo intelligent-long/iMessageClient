@@ -77,6 +77,10 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         ChatMessage newestChatMessage = itemData.openedChat.getNewestChatMessage();
+        if(newestChatMessage == null){
+            itemDataList.remove(position);
+            return;
+        }
         Channel channel = itemData.openedChat.getChannel();
         if(channel != null) {
             String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
@@ -85,8 +89,8 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
             }
+            holder.binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
         }
-        if(channel != null) holder.binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
         switch (newestChatMessage.getType()){
             case ChatMessage.TYPE_TEXT:
                 String newestChatMessageText = newestChatMessage.getText();

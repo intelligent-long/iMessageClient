@@ -164,7 +164,7 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
             });
             allShowOpenedChats.removeAll(toHideOpenedChats);
             adapter.changeAllItemsAndShow(allShowOpenedChats);
-            if (allShowOpenedChats.size() == 0) {
+            if (allShowOpenedChats.size() == 0 || adapter.getItemCount() == 0) {
                 toNoContent();
             } else {
                 toContent();

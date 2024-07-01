@@ -38,6 +38,7 @@ public class RequestAddChannelActivity extends BaseActivity {
 
     private void showContent() {
         binding.messageInput.setText(Variables.getRequestAddChannelDefaultMessage(currentUserInfo.getUsername()));
+        binding.noteInput.setText(channel.getNote());
     }
 
     private void setupYiers() {
