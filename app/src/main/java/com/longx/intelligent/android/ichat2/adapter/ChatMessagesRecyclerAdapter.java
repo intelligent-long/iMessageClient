@@ -34,7 +34,9 @@ import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
+import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
@@ -282,6 +284,9 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, itemDataList.size() - position);
             determineAndUpdateShowTime();
+            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+            });
         });
         View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
             UiUtil.hideKeyboard(activity);
