@@ -3,12 +3,8 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.RenderEffect;
-import android.graphics.Shader;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -21,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
@@ -42,9 +37,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
-import com.longx.intelligent.android.ichat2.util.MediaUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -53,7 +46,6 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
-import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -148,7 +140,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             thisChannelNewMessages.sort(Comparator.comparing(ChatMessage::getTime));
             synchronized (this) {
                 thisChannelNewMessages.forEach(thisChannelNewMessage -> {
-                    if (adapter != null) adapter.addItemToEndAndShow(thisChannelNewMessage);
+                    if (adapter != null) adapter.addItemAndShow(thisChannelNewMessage);
                 });
             }
         }
@@ -275,7 +267,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         ChatMessage chatMessage = data.getData(ChatMessage.class);
                         chatMessage.setViewed(true);
                         ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
-                            adapter.addItemToEndAndShow(chatMessage);
+                            adapter.addItemAndShow(chatMessage);
                             OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                             GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                                 openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -601,7 +593,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
                     ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
-                        adapter.addItemToEndAndShow(chatMessage);
+                        adapter.addItemAndShow(chatMessage);
                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -672,7 +664,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
                     ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
-                        adapter.addItemToEndAndShow(chatMessage);
+                        adapter.addItemAndShow(chatMessage);
                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -763,7 +755,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
                     ChatMessage.mainDoOnNewChatMessage(chatMessage, ChatActivity.this, results -> {
-                        adapter.addItemToEndAndShow(chatMessage);
+                        adapter.addItemAndShow(chatMessage);
                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);

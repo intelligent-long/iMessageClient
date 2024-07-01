@@ -372,7 +372,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }
     }
 
-    public synchronized void addItemToEndAndShow(ChatMessage chatMessage){
+    public synchronized void addItemAndShow(ChatMessage chatMessage){
         if(itemDataList.contains(new ItemData(chatMessage))) return;
         ItemData itemData = new ItemData(chatMessage);
         for (int index = itemDataList.size() - 1; index >= 0; index--) {
