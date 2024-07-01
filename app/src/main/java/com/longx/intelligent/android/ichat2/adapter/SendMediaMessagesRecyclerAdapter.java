@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendMediaMessagesBinding;
@@ -137,7 +138,7 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
                 break;
             }
             case VIDEO:{
-                showVideoThumbnail(itemData.mediaInfo.getPath(), holder, itemData);
+                showVideoThumbnail(itemData.mediaInfo.getPath(), holder);
                 break;
             }
         }
@@ -147,33 +148,17 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(imageFileUri)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
     }
 
-    private void showPreviewImage(File imageFile, SendMediaMessagesRecyclerAdapter.ViewHolder holder) {
+    private void showVideoThumbnail(String videoPath, @NonNull ViewHolder holder) {
         GlideApp
                 .with(activity.getApplicationContext())
-                .load(imageFile)
+                .load(videoPath)
+                .frame(1000000)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
-    }
-
-    private void showVideoThumbnail(String videoPath, @NonNull ViewHolder holder, ItemData itemData) {
-        int holderPosition = holder.getAbsoluteAdapterPosition() - 1;
-        File videoThumbnail = CacheFilesAccessor.VideoThumbnail.getVideoThumbnailFile(activity, videoPath);
-        if(videoThumbnail.exists()){
-            if (holderPosition == itemDataList.indexOf(itemData)) {
-                showPreviewImage(videoThumbnail, holder);
-            }
-        }else {
-            new Thread(() -> {
-                File videoThumbnail1 = CacheFilesAccessor.VideoThumbnail.cacheAndGetVideoThumbnail(activity, videoPath);
-                activity.runOnUiThread(() -> {
-                    if (holderPosition == itemDataList.indexOf(itemData)) {
-                        showPreviewImage(videoThumbnail1, holder);
-                    }
-                });
-            }).start();
-        }
     }
 
     public List<Uri> getCheckedUris() {

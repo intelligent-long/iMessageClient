@@ -179,7 +179,13 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.VISIBLE);
                     setupImageViewSize(holder.binding.videoThumbnailSend, itemData.chatMessage.getVideoSize());
-                    showVideoThumbnail(itemData.chatMessage.getVideoFilePath(), holder, holder.binding.videoThumbnailSend, itemData);
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(itemData.chatMessage.getVideoFilePath())
+                            .frame(1000000)
+                            .apply(requestOptions)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.binding.videoThumbnailSend);
                     break;
                 }
             }
@@ -238,7 +244,13 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.VISIBLE);
                     setupImageViewSize(holder.binding.videoThumbnailReceive, itemData.chatMessage.getVideoSize());
-                    showVideoThumbnail(itemData.chatMessage.getVideoFilePath(), holder, holder.binding.videoThumbnailReceive, itemData);
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(itemData.chatMessage.getVideoFilePath())
+                            .frame(1000000)
+                            .apply(requestOptions)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .into(holder.binding.videoThumbnailReceive);
                     break;
                 }
             }
@@ -365,33 +377,6 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         int size = itemDataList.size();
         itemDataList.clear();
         notifyItemRangeRemoved(0, size);
-    }
-
-    private void showVideoThumbnail(String videoPath, ViewHolder viewHolder, @NonNull ImageView imageView, ItemData itemData) {
-        int holderPosition = viewHolder.getAbsoluteAdapterPosition();
-        File videoThumbnail = CacheFilesAccessor.VideoThumbnail.getVideoThumbnailFile(activity, videoPath);
-        if(videoThumbnail.exists()){
-            if (holderPosition == itemDataList.indexOf(itemData)) {
-                GlideApp.with(activity.getApplicationContext())
-                        .load(videoThumbnail)
-                        .apply(requestOptions)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .into(imageView);
-            }
-        }else {
-            new Thread(() -> {
-                File videoThumbnail1 = CacheFilesAccessor.VideoThumbnail.cacheAndGetVideoThumbnail(activity, videoPath);
-                activity.runOnUiThread(() -> {
-                    if (holderPosition == itemDataList.indexOf(itemData)) {
-                        GlideApp.with(activity.getApplicationContext())
-                                .load(videoThumbnail1)
-                                .apply(requestOptions)
-                                .transition(DrawableTransitionOptions.withCrossFade())
-                                .into(imageView);
-                    }
-                });
-            }).start();
-        }
     }
 
 }
