@@ -51,6 +51,10 @@ public class Channel extends UserInfo implements Parcelable {
         return note;
     }
 
+    public String getName(){
+        return note == null ? username : note;
+    }
+
     public String getIchatIdUser() {
         return ichatIdUser;
     }

@@ -36,7 +36,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
         private Channel channel;
 
         public ItemData(Channel channel) {
-            indexChar = PinyinUtil.getPinyin(channel.getUsername()).toUpperCase().charAt(0);
+            indexChar = PinyinUtil.getPinyin(channel.getName()).toUpperCase().charAt(0);
             if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
                 indexChar = '#';
             }
@@ -88,7 +88,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
                 holder.binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        holder.binding.name.setText(itemData.channel.getNote() == null ? itemData.channel.getUsername() : itemData.channel.getNote());
+        holder.binding.name.setText(itemData.channel.getName());
         holder.binding.clickView.setOnClickListener(v -> {
             getOnItemClickYier().onItemClick(position, itemData);
         });
