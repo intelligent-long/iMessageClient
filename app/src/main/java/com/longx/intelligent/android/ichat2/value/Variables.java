@@ -9,9 +9,9 @@ import java.util.Locale;
  * Created by LONG on 2024/5/3 at 8:15 PM.
  */
 public class Variables {
-    private static final String MESSAGE = "你好，我是{NAME}。";
-    public static String getMessage(String name){
-        return MESSAGE.replace("{NAME}", name);
+    private static final String REQUEST_ADD_CHANNEL_DEFAULT_MESSAGE = "我是{NAME}。";
+    public static String getRequestAddChannelDefaultMessage(String name){
+        return REQUEST_ADD_CHANNEL_DEFAULT_MESSAGE.replace("{NAME}", name);
     }
 
     public static String getTimeRangeStr(long firstCompletelyVisibleItemTime, long lastCompletelyVisibleItemTime){
