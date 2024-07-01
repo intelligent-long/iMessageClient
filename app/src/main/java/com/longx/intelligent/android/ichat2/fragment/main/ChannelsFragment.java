@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
-import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesActivity;
+import com.longx.intelligent.android.ichat2.activity.ChannelAdditionsActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
@@ -176,7 +176,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
             startActivity(new Intent(requireContext(), SearchChannelActivity.class));
         });
         headerViewBinding.layoutNewChannel.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), ChannelAdditionActivitiesActivity.class));
+            startActivity(new Intent(requireContext(), ChannelAdditionsActivity.class));
         });
         headerViewBinding.layoutTag.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), TagActivity.class));

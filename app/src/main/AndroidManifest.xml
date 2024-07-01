@@ -126,7 +126,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ChannelAdditionActivitiesActivity"
+            android:name=".activity.ChannelAdditionsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

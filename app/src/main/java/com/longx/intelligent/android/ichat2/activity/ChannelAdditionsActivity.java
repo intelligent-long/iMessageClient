@@ -11,7 +11,7 @@ import com.longx.intelligent.android.ichat2.adapter.ChannelAdditionActivitiesPag
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
-import com.longx.intelligent.android.ichat2.databinding.ActivityChannelAdditionActivitiesBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityChannelAdditionsBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesFetchYier;
@@ -23,8 +23,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChannelAdditionActivitiesActivity extends BaseActivity implements ChannelAdditionActivitiesFetchYier, ChannelAdditionActivitiesUpdateYier {
-    private ActivityChannelAdditionActivitiesBinding binding;
+public class ChannelAdditionsActivity extends BaseActivity implements ChannelAdditionActivitiesFetchYier, ChannelAdditionActivitiesUpdateYier {
+    private ActivityChannelAdditionsBinding binding;
     private int initTabIndex;
     private static String[] PAGER_TITLES;
     private ChannelAdditionActivitiesPagerAdapter pagerAdapter;
@@ -36,7 +36,7 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
                 getString(R.string.channel_addition_activity_receive)};
         super.onCreate(savedInstanceState);
         initTabIndex = getIntent().getIntExtra(ExtraKeys.INIT_TAB_INDEX, 0);
-        binding = ActivityChannelAdditionActivitiesBinding.inflate(getLayoutInflater());
+        binding = ActivityChannelAdditionsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupUi();
@@ -100,13 +100,13 @@ public class ChannelAdditionActivitiesActivity extends BaseActivity implements C
             @Override
             public void notOk(int code, String message, Response<OperationData> row, Call<OperationData> call) {
                 super.notOk(code, message, row, call);
-                ChannelAdditionActivitiesActivity.this.onFailure("HTTP 状态码异常 > " + code);
+                ChannelAdditionsActivity.this.onFailure("HTTP 状态码异常 > " + code);
             }
 
             @Override
             public void failure(Throwable t, Call<OperationData> call) {
                 super.failure(t, call);
-                ChannelAdditionActivitiesActivity.this.onFailure("出错了 > " + t.getClass().getName());
+                ChannelAdditionsActivity.this.onFailure("出错了 > " + t.getClass().getName());
             }
         });
     }

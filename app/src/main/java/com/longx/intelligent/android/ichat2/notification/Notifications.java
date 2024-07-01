@@ -4,18 +4,15 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.core.app.NotificationCompat;
-
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.AuthActivity;
-import com.longx.intelligent.android.ichat2.activity.ChannelAdditionActivitiesActivity;
+import com.longx.intelligent.android.ichat2.activity.ChannelAdditionsActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OfflineDetail;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,7 +107,7 @@ public class Notifications {
     }
 
     public static void notifyChannelAdditionActivity(Context context, int notificationRequest, int notificationRespond){
-        Intent intent = new Intent(context, ChannelAdditionActivitiesActivity.class);
+        Intent intent = new Intent(context, ChannelAdditionsActivity.class);
         String text;
         if(notificationRequest != 0 && notificationRespond != 0) {
             text = notificationRequest + " 个新的频道添加请求, " + notificationRespond  + " 个新的频道添加回应";
