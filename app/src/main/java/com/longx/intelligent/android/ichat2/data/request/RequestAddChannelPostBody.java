@@ -1,25 +1,26 @@
 package com.longx.intelligent.android.ichat2.data.request;
 
+import java.util.List;
+
 /**
  * Created by LONG on 2024/5/1 at 11:38 PM.
  */
 public class RequestAddChannelPostBody {
     private String ichatIdUser;
-
     private String message;
-
     private String note;
-
-    private String tagId;
+    private List<String> newTagNames;
+    private List<String> toAddTagIds;
 
     public RequestAddChannelPostBody() {
     }
 
-    public RequestAddChannelPostBody(String ichatIdUser, String message, String note, String tagId) {
+    public RequestAddChannelPostBody(String ichatIdUser, String message, String note, List<String> newTagNames, List<String> toAddTagIds) {
         this.ichatIdUser = ichatIdUser;
         this.message = message;
         this.note = note;
-        this.tagId = tagId;
+        this.newTagNames = newTagNames;
+        this.toAddTagIds = toAddTagIds;
     }
 
     public String getIchatIdUser() {
@@ -34,7 +35,11 @@ public class RequestAddChannelPostBody {
         return note;
     }
 
-    public String getTagId() {
-        return tagId;
+    public List<String> getNewTagNames() {
+        return newTagNames;
+    }
+
+    public List<String> getToAddTagIds() {
+        return toAddTagIds;
     }
 }

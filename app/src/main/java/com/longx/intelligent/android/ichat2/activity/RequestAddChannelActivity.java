@@ -3,8 +3,6 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.text.Editable;
-import android.text.TextWatcher;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -21,13 +19,13 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Variables;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -79,7 +77,9 @@ public class RequestAddChannelActivity extends BaseActivity {
                         String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
                         String inputtedNote = UiUtil.getEditTextString(binding.noteInput);
                         if(inputtedNote.isEmpty()) inputtedNote = null;
-                        RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channel.getIchatIdUser(), inputtedMessage, inputtedNote, null);
+                        List<String> presetChannelTagIds = new ArrayList<>();
+                        presetChannelTags.forEach(presetChannelTag -> presetChannelTagIds.add(presetChannelTag.getId()));
+                        RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channel.getIchatIdUser(), inputtedMessage, inputtedNote, newChannelTagNames, presetChannelTagIds);
                         ChannelApiCaller.requestAddChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
@@ -99,20 +99,35 @@ public class RequestAddChannelActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.CHANNEL_TAG_NAMES, newChannelTagNames);
             resultLauncher.launch(intent);
         });
-        showOrHideHint(binding.noteInput.getText());
+        showOrHideNoteHint(binding.noteInput.getText());
+        showOrHideMessageHint(binding.messageInput.getText());
         binding.noteInput.addTextChangedListener(new TextChangedYier() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                showOrHideHint(s);
+                showOrHideNoteHint(s);
+            }
+        });
+        binding.messageInput.addTextChangedListener(new TextChangedYier() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                showOrHideMessageHint(s);
             }
         });
     }
 
-    private void showOrHideHint(CharSequence s) {
+    private void showOrHideNoteHint(CharSequence s) {
         if (s.length() > 0) {
             binding.noteInput.setHint("");
         } else {
             binding.noteInput.setHint("备注");
+        }
+    }
+
+    private void showOrHideMessageHint(CharSequence s) {
+        if (s.length() > 0) {
+            binding.messageInput.setHint("");
+        } else {
+            binding.messageInput.setHint("消息");
         }
     }
 }
