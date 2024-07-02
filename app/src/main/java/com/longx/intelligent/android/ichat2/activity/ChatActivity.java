@@ -37,6 +37,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -246,6 +247,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     showMessagePopupOnKeyboardClosed.run();
                     showMessagePopupOnKeyboardClosed = null;
                 }
+                binding.messageInput.clearFocus();
             }
         });
         binding.sendButton.setOnClickListener(v -> {
