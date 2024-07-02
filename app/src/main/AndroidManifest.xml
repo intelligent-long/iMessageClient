@@ -37,6 +37,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.PresettingChannelTagActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.RecordAndSendVideoActivity"
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />

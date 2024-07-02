@@ -91,7 +91,7 @@
                     android:maxLength="50"
                     android:paddingHorizontal="22dp"
                     android:paddingVertical="19dp"
-                    android:gravity="top"
+                    android:gravity="center_vertical"
                     android:background="@drawable/shape_card_background_low_radius_26" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,6 +104,7 @@
                 android:background="@drawable/shape_card_background_radius_26">
 
                 <RelativeLayout
+                    android:id="@+id/click_view_presetting_tag"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingHorizontal="21dp"

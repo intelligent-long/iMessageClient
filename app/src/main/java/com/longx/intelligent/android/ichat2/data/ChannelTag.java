@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by LONG on 2024/6/3 at 5:34 PM.
@@ -88,5 +89,18 @@ public class ChannelTag implements Parcelable {
         dest.writeString(name);
         dest.writeInt(order);
         dest.writeStringList(channelIchatIdList);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChannelTag that = (ChannelTag) o;
+        return order == that.order && Objects.equals(id, that.id) && Objects.equals(ichatId, that.ichatId) && Objects.equals(name, that.name) && Objects.equals(channelIchatIdList, that.channelIchatIdList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, ichatId, name, order, channelIchatIdList);
     }
 }

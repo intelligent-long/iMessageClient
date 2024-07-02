@@ -40,9 +40,17 @@ public class Utils {
         clipboard.setPrimaryClip(clip);
     }
 
-    public static <T> List<T> parseParcelableArray(Parcelable[] parcelableArray){
-        List<T> uriList = new ArrayList<>();
+    public static <T> ArrayList<T> parseParcelableArray(Parcelable[] parcelableArray){
+        ArrayList<T> uriList = new ArrayList<>();
         for (Parcelable parcelableUri : parcelableArray) {
+            uriList.add((T) parcelableUri);
+        }
+        return uriList;
+    }
+
+    public static <T> ArrayList<T> parseParcelableArray(List<Parcelable> parcelableArrayList){
+        ArrayList<T> uriList = new ArrayList<>();
+        for (Parcelable parcelableUri : parcelableArrayList) {
             uriList.add((T) parcelableUri);
         }
         return uriList;

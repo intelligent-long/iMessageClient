@@ -1,10 +1,18 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.Editable;
+import android.text.TextWatcher;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -13,8 +21,14 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Variables;
+import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -23,6 +37,9 @@ public class RequestAddChannelActivity extends BaseActivity {
     private ActivityRequestAddChannelBinding binding;
     private Channel channel;
     private Self currentUserInfo;
+    private ActivityResultLauncher<Intent> resultLauncher;
+    private ArrayList<ChannelTag> presetChannelTags = new ArrayList<>();
+    private ArrayList<String> newChannelTagNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +51,24 @@ public class RequestAddChannelActivity extends BaseActivity {
         currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         showContent();
         setupYiers();
+        registerForActivityResult();
     }
 
     private void showContent() {
         binding.messageInput.setText(Variables.getRequestAddChannelDefaultMessage(currentUserInfo.getUsername()));
         binding.noteInput.setText(channel.getNote());
+    }
+
+    private void registerForActivityResult(){
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = Objects.requireNonNull(result.getData());
+                        ArrayList<Parcelable> parcelableArrayListExtra = data.getParcelableArrayListExtra(ExtraKeys.CHANNEL_TAGS);
+                        presetChannelTags = Utils.parseParcelableArray(parcelableArrayListExtra);
+                        newChannelTagNames = data.getStringArrayListExtra(ExtraKeys.CHANNEL_TAG_NAMES);
+                    }
+                });
     }
 
     private void setupYiers() {
@@ -62,5 +92,27 @@ public class RequestAddChannelActivity extends BaseActivity {
                     })
                     .show();
         });
+        binding.clickViewPresettingTag.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PresettingChannelTagActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, channel);
+            intent.putExtra(ExtraKeys.CHANNEL_TAGS, presetChannelTags);
+            intent.putExtra(ExtraKeys.CHANNEL_TAG_NAMES, newChannelTagNames);
+            resultLauncher.launch(intent);
+        });
+        showOrHideHint(binding.noteInput.getText());
+        binding.noteInput.addTextChangedListener(new TextChangedYier() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                showOrHideHint(s);
+            }
+        });
+    }
+
+    private void showOrHideHint(CharSequence s) {
+        if (s.length() > 0) {
+            binding.noteInput.setHint("");
+        } else {
+            binding.noteInput.setHint("备注");
+        }
     }
 }

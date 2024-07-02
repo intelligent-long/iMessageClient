@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/tag"
+        android:title="标签"
+        android:icon="@drawable/tag_24px"
+        android:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/add_tag"
+        android:title="添加标签"
+        android:icon="@drawable/add_24px"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always"/>
+</menu>

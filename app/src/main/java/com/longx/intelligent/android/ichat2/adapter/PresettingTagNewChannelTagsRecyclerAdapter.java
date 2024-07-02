@@ -18,13 +18,14 @@ import java.util.List;
 /**
  * Created by LONG on 2024/6/3 at 8:47 PM.
  */
-public class SettingTagNewChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<SettingTagNewChannelTagsRecyclerAdapter.ViewHolder, List<ChannelTag>> {
+public class PresettingTagNewChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<PresettingTagNewChannelTagsRecyclerAdapter.ViewHolder, List<ChannelTag>> {
     private final AppCompatActivity activity;
-    private final ArrayList<String> newTagNames = new ArrayList<>();
+    private final ArrayList<String> newTagNames;
     private RecyclerItemYiers.OnRecyclerItemClickYier onDeleteClickYier;
 
-    public SettingTagNewChannelTagsRecyclerAdapter(AppCompatActivity activity) {
+    public PresettingTagNewChannelTagsRecyclerAdapter(AppCompatActivity activity, ArrayList<String> newChannelTagNames) {
         this.activity = activity;
+        this.newTagNames = newChannelTagNames;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
