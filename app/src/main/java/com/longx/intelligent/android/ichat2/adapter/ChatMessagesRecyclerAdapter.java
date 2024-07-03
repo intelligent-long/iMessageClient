@@ -30,6 +30,8 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.AudioUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -147,6 +149,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageSend.setVisibility(View.GONE);
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                     holder.binding.textSend.setText(itemData.chatMessage.getText());
                     break;
                 }
@@ -155,6 +158,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageSend.setVisibility(View.VISIBLE);
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.imageSend, itemData.chatMessage.getImageSize());
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
@@ -169,6 +173,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageSend.setVisibility(View.GONE);
                     holder.binding.layoutFileSend.setVisibility(View.VISIBLE);
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                     holder.binding.fileNameSend.setText(itemData.chatMessage.getFileName());
                     holder.binding.fileSizeSend.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
@@ -178,6 +183,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageSend.setVisibility(View.GONE);
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.VISIBLE);
+                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.videoThumbnailSend, itemData.chatMessage.getVideoSize());
                     GlideApp
                             .with(activity.getApplicationContext())
@@ -187,6 +193,16 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailSend);
                     break;
+                }
+                case ChatMessage.TYPE_VOICE:{
+                    holder.binding.layoutTextSend.setVisibility(View.GONE);
+                    holder.binding.imageSend.setVisibility(View.GONE);
+                    holder.binding.layoutFileSend.setVisibility(View.GONE);
+                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceSend.setVisibility(View.VISIBLE);
+                    long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
+                    int sec = (int) Math.round(duration / 1000.0);
+                    holder.binding.voiceTimeSend.setText(sec + "''");
                 }
             }
         }else {
@@ -212,6 +228,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageReceive.setVisibility(View.GONE);
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                     holder.binding.textReceive.setText(itemData.chatMessage.getText());
                     break;
                 }
@@ -220,6 +237,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageReceive.setVisibility(View.VISIBLE);
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.imageReceive, itemData.chatMessage.getImageSize());
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
@@ -234,6 +252,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageReceive.setVisibility(View.GONE);
                     holder.binding.layoutFileReceive.setVisibility(View.VISIBLE);
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                     holder.binding.fileNameReceive.setText(itemData.chatMessage.getFileName());
                     holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
@@ -243,6 +262,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.imageReceive.setVisibility(View.GONE);
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.VISIBLE);
+                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.videoThumbnailReceive, itemData.chatMessage.getVideoSize());
                     GlideApp
                             .with(activity.getApplicationContext())
@@ -252,6 +272,16 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailReceive);
                     break;
+                }
+                case ChatMessage.TYPE_VOICE:{
+                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                    holder.binding.imageReceive.setVisibility(View.GONE);
+                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceReceive.setVisibility(View.VISIBLE);
+                    long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
+                    int sec = (int) Math.round(duration / 1000.0);
+                    holder.binding.voiceTimeReceive.setText(sec + "''");
                 }
             }
         }
@@ -315,6 +345,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.layoutFileSend.setOnLongClickListener(onMessageSendLongClickYier);
         holder.binding.layoutVideoReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
         holder.binding.layoutVideoSend.setOnLongClickListener(onMessageSendLongClickYier);
+        holder.binding.layoutVoiceSend.setOnLongClickListener(onMessageSendLongClickYier);
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
         });
@@ -335,6 +366,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         };
         holder.binding.imageSend.setOnClickListener(onMediaMessageClickYier);
         holder.binding.imageReceive.setOnClickListener(onMediaMessageClickYier);
+        holder.binding.layoutVideoSend.setOnClickListener(onMediaMessageClickYier);
+        holder.binding.layoutVideoReceive.setOnClickListener(onMediaMessageClickYier);
         View.OnClickListener onFileMessageClickYier = v -> {
             Intent intent = new Intent(activity, ChatFileActivity.class);
             intent.putExtra(ExtraKeys.CHAT_MESSAGE, currentItemData.chatMessage);
@@ -342,8 +375,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         };
         holder.binding.layoutFileSend.setOnClickListener(onFileMessageClickYier);
         holder.binding.layoutFileReceive.setOnClickListener(onFileMessageClickYier);
-        holder.binding.layoutVideoSend.setOnClickListener(onMediaMessageClickYier);
-        holder.binding.layoutVideoReceive.setOnClickListener(onMediaMessageClickYier);
+        View.OnClickListener onVoiceMessageClickYier = v -> {
+
+        };
+        holder.binding.layoutVoiceSend.setOnClickListener(onVoiceMessageClickYier);
     }
 
     @Override

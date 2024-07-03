@@ -147,6 +147,47 @@
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
             </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_voice_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:minHeight="@dimen/chat_message_min_size">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bubble"
+                    android:backgroundTint="@color/chat_message_send_background_green"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    tools:ignore="UselessParent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/graphic_eq_24px"
+                        app:tint="?attr/colorControlNormal"/>
+
+                    <TextView
+                        android:id="@+id/voice_time_receive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="center_vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="18sp"
+                        android:textColor="@color/chat_message_send_text"/>
+                </LinearLayout>
+            </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
 
@@ -279,6 +320,47 @@
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
             </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_voice_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:minHeight="@dimen/chat_message_min_size">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bubble"
+                    android:backgroundTint="@color/chat_message_send_background_green"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:id="@+id/voice_time_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        android:layout_gravity="center_vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textSize="18sp"
+                        android:textColor="@color/chat_message_send_text"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/graphic_eq_24px"
+                        app:tint="?attr/colorControlNormal"/>
+                </LinearLayout>
+            </LinearLayout>
         </FrameLayout>
 
         <com.google.android.material.imageview.ShapeableImageView

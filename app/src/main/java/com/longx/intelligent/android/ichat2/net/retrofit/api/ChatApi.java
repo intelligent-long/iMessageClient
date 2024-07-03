@@ -68,4 +68,9 @@ public interface ChatApi {
     @POST("chat/message/voice/send")
     @Headers("LogLevel:HEADERS")
     CompletableCall<OperationData> sendVoiceChatMessage(@Part MultipartBody.Part voice, @Part("metadata") RequestBody metadata);
+
+    @Streaming
+    @GET("chat/message/voice/new/{voiceId}")
+    @Headers("LogLevel:HEADERS")
+    CompletableCall<ResponseBody> fetchChatMessageVoice(@Path("voiceId") String voiceId);
 }

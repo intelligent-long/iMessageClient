@@ -297,4 +297,10 @@ public class ChatApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<ResponseBody> fetchChatMessageVoice(LifecycleOwner lifecycleOwner, String voiceId, BaseYier<ResponseBody> yier){
+        CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageVoice(voiceId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

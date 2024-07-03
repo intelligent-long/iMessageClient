@@ -61,4 +61,20 @@ public class PrivateFilesAccessor {
             return FileUtil.deleteFile(videoFilePath);
         }
     }
+
+    public static class ChatVoice{
+        public static String save(Context context, ChatMessage chatMessage, byte[] voiceBytes) throws IOException {
+            String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
+            String chatVoiceFilePath = DataPaths.PrivateFile.getChatVoiceFilePath(context, other, chatMessage.getUuid());
+            return FileAccessHelper.save(voiceBytes, chatVoiceFilePath);
+        }
+
+        public static boolean delete(ChatMessage chatMessage){
+            return delete(chatMessage.getVoiceFilePath());
+        }
+
+        public static boolean delete(String voiceFilePath){
+            return FileUtil.deleteFile(voiceFilePath);
+        }
+    }
 }

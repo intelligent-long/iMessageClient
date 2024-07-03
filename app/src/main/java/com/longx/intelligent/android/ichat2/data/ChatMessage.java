@@ -109,7 +109,26 @@ public class ChatMessage implements Parcelable {
                 break;
             }
             case TYPE_VOICE:{
-
+                ChatApiCaller.fetchChatMessageVoice(null, chatMessage.voiceId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                    @Override
+                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
+                        super.ok(data, row, call);
+                        executorService.execute(() -> {
+                            try {
+                                byte[] bytes = data.bytes();
+                                String chatVoiceFilePath = PrivateFilesAccessor.ChatVoice.save(context, chatMessage, bytes);
+                                chatMessage.setVoiceFilePath(chatVoiceFilePath);
+                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
+                                mainHandler.post(resultsYier::onResults);
+                            } catch (IOException e) {
+                                mainHandler.post(() -> {
+                                    throw new RuntimeException(e);
+                                });
+                            }
+                        });
+                    }
+                });
+                break;
             }
             default:{
                 commonDoOfMainDoOnNewChatMessage(chatMessage, context);

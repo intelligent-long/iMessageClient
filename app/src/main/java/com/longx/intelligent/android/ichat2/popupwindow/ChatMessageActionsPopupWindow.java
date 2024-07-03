@@ -37,7 +37,8 @@ public class ChatMessageActionsPopupWindow {
         switch (chatMessage.getType()){
             case ChatMessage.TYPE_IMAGE:
             case ChatMessage.TYPE_FILE:
-            case ChatMessage.TYPE_VIDEO: {
+            case ChatMessage.TYPE_VIDEO:
+            case ChatMessage.TYPE_VOICE: {
                 binding.clickViewCopy.setVisibility(View.GONE);
                 break;
             }
@@ -75,6 +76,10 @@ public class ChatMessageActionsPopupWindow {
                             }
                             case ChatMessage.TYPE_VIDEO:{
                                 PrivateFilesAccessor.ChatVideo.delete(chatMessage);
+                                break;
+                            }
+                            case ChatMessage.TYPE_VOICE:{
+                                PrivateFilesAccessor.ChatVoice.delete(chatMessage);
                                 break;
                             }
                         }

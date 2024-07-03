@@ -35,11 +35,18 @@ public class FileAccessHelper {
     public static File createFile(String path) throws IOException {
         File file = new File(path);
         int number = 1;
+        String fileName = file.getName();
+        int lastIndexOf = fileName.lastIndexOf('.');
+        String dirPath = file.getParentFile().getAbsolutePath();
         while (file.exists()){
-            String pathWithoutExtension = path.substring(0, path.lastIndexOf('.'));
-            String extension = path.substring(path.lastIndexOf('.'));
-            file = new File(pathWithoutExtension + " (" + number + ")" + extension);
-            number ++;
+            if(lastIndexOf != -1) {
+                String fileNameWithoutExtension = fileName.substring(0, lastIndexOf);
+                String extension = fileName.substring(lastIndexOf);
+                file = new File(dirPath + File.separator + fileNameWithoutExtension + " (" + number + ")" + extension);
+            }else {
+                file = new File(dirPath + File.separator + fileName + " (" + number + ")");
+            }
+            number++;
         }
         Objects.requireNonNull(file.getParentFile()).mkdirs();
         file.createNewFile();

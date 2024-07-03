@@ -37,7 +37,7 @@ public class ServerMessageServiceStompActions {
         ContentUpdater.updateChannelAdditionNotViewCount(context, results -> {
             ChannelAdditionNotViewedCount notViewedCount = (ChannelAdditionNotViewedCount) results[0];
             if(notViewedCount != null) {
-                if (ActivityOperator.getActivityList().size() == 0) {
+                if (ActivityOperator.getActivityList().isEmpty()) {
                     Notifications.notifyChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
                 } else {
                     HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);
@@ -72,7 +72,7 @@ public class ServerMessageServiceStompActions {
         ContentUpdater.updateChatMessages(context, results -> {
             List<ChatMessage> chatMessages = (List<ChatMessage>) results[0];
             chatMessages.forEach(chatMessage -> {
-                if (ActivityOperator.getActivityList().size() == 0) {
+                if (ActivityOperator.getActivityList().isEmpty()) {
                     Notifications.notifyChatMessage(context, chatMessage);
                 } else {
                     HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);

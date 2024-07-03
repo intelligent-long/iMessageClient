@@ -66,6 +66,13 @@ public class DataPaths {
                     File.separator + ichatId +
                     File.separator + fileName;
         }
+
+        public static String getChatVoiceFilePath(Context context, String ichatId, String fileName){
+            return PrivateFile.getPrivateFileFolderPath(context) +
+                    File.separator + "chat_voice" +
+                    File.separator + ichatId +
+                    File.separator + fileName;
+        }
     }
 
     public static class PublicFile{
