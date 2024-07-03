@@ -345,6 +345,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.layoutFileSend.setOnLongClickListener(onMessageSendLongClickYier);
         holder.binding.layoutVideoReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
         holder.binding.layoutVideoSend.setOnLongClickListener(onMessageSendLongClickYier);
+        holder.binding.layoutVoiceReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
         holder.binding.layoutVoiceSend.setOnLongClickListener(onMessageSendLongClickYier);
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
@@ -379,6 +380,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
 
         };
         holder.binding.layoutVoiceSend.setOnClickListener(onVoiceMessageClickYier);
+        holder.binding.layoutVoiceReceive.setOnClickListener(onVoiceMessageClickYier);
     }
 
     @Override
