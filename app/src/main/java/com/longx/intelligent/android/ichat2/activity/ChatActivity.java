@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +21,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.behavior.AudioRecorder;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.behavior.VoiceChatMessageBehaviours;
+import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
@@ -36,6 +40,10 @@ import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
+import com.longx.intelligent.android.ichat2.util.AudioUtil;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
@@ -50,6 +58,7 @@ import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -78,6 +87,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private ActivityResultLauncher<Intent> sendFileMessageResultLauncher;
     private ActivityResultLauncher<Intent> sendVideoMessageResultLauncher;
     private boolean isFabScaledUp;
+    private VoiceChatMessageBehaviours voiceChatMessageBehaviours;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +101,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
         openedChatDatabaseManager.updateShow(channel.getIchatId(), true);
         GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
-        initUi();
+        init();
         showContent();
         setupYiers();
         initResultLauncher();
@@ -103,9 +113,10 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         GlobalYiersHolder.removeYier(this, ChatMessageUpdateYier.class, this);
     }
 
-    private void initUi(){
+    private void init(){
         changeHoldToTalkToNormal();
         changeCancelSendTalkFabToNormal();
+        voiceChatMessageBehaviours = new VoiceChatMessageBehaviours(this);
     }
 
     private void showContent(){
@@ -344,14 +355,14 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 case MotionEvent.ACTION_DOWN:
                     cancelSendVoice = false;
                     changeHoldToTalkToHold();
-                    onStartTalk();
+                    voiceChatMessageBehaviours.onStartTalk();
                     break;
                 case MotionEvent.ACTION_UP:
                     changeHoldToTalkToNormal();
                     if(cancelSendVoice){
-                        onCancelSendVoice();
+                        voiceChatMessageBehaviours.cancelSendVoice();
                     }else {
-                        sendVoice();
+                        voiceChatMessageBehaviours.sendVoice();
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -386,7 +397,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         });
     }
 
-    private void toSendingState(){
+    public void toSendingState(){
         sendingState = true;
         hideMorePanel();
         binding.voiceButton.setVisibility(View.GONE);
@@ -402,7 +413,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendProgressIndicator.setVisibility(View.GONE);
     }
 
-    private void toSendingProgressState(){
+    public void toSendingProgressState(){
         sendingState = true;
         hideMorePanel();
         binding.voiceButton.setVisibility(View.GONE);
@@ -418,7 +429,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendProgressIndicator.setVisibility(View.VISIBLE);
     }
 
-    private void toNormalState(){
+    public void toNormalState(){
         sendingState = false;
         hideMorePanel();
         binding.voiceButton.setVisibility(View.VISIBLE);
@@ -434,14 +445,14 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendProgressIndicator.setVisibility(View.GONE);
     }
 
-    private void changeHoldToTalkToHold(){
+    public void changeHoldToTalkToHold(){
         binding.holdToTalkButton.setBackgroundTintList(ColorStateList.valueOf(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainerHighest)));
         binding.holdToTalkButton.setText("松开 发送");
         binding.holdToTalkButton.setTextColor(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 230));
         binding.holdToTalkButton.setIconTint(ColorStateList.valueOf(getColor(R.color.ichat)));
     }
 
-    private void changeHoldToTalkToNormal(){
+    public void changeHoldToTalkToNormal(){
         binding.holdToTalkButton.setBackgroundTintList(ColorStateList.valueOf(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer)));
         binding.holdToTalkButton.setText("按住 说话");
         binding.holdToTalkButton.setTextColor(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 230));
@@ -453,7 +464,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.cancelSendTalkFab.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction(() -> isFabScaledUp = true).start();
     }
 
-    private void changeCancelSendTalkFabToNormal() {
+    public void changeCancelSendTalkFabToNormal() {
         binding.cancelSendTalkFab.setSupportImageTintList(ColorStateList.valueOf(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 200)));
         binding.cancelSendTalkFab.animate().scaleX(1f).scaleY(1f).setDuration(100).withEndAction(() -> isFabScaledUp = false).start();
     }
@@ -487,6 +498,14 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
     public Channel getChannel() {
         return channel;
+    }
+
+    public ActivityChatBinding getBinding(){
+        return binding;
+    }
+
+    public ChatMessagesRecyclerAdapter getAdapter() {
+        return adapter;
     }
 
     public void setShowMessagePopupOnKeyboardClosed(Runnable showMessagePopupOnKeyboardClosed) {
@@ -779,44 +798,6 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 int progress = (int)((current / (double) total) * 100);
                 binding.sendProgressIndicator.setProgress(progress, true);
             });
-        });
-    }
-
-    private void onStartTalk() {
-        onRecordPrepared();
-        onRecordStarted();
-    }
-
-    private void onCancelSendVoice() {
-        onRecordStopped();
-    }
-
-    private void sendVoice() {
-        onRecordStopped();
-    }
-
-    public void onRecordPrepared() {
-        binding.holdToTalkButton.performHapticFeedback(
-                HapticFeedbackConstants.CONTEXT_CLICK,
-                HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
-        );
-    }
-
-    public synchronized void onRecordStarted() {
-        binding.cancelSendTalkFab.show(new FloatingActionButton.OnVisibilityChangedListener() {
-            @Override
-            public void onShown(FloatingActionButton fab) {
-
-            }
-        });
-    }
-
-    public synchronized void onRecordStopped() {
-        binding.cancelSendTalkFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-            @Override
-            public void onHidden(FloatingActionButton fab) {
-                changeCancelSendTalkFabToNormal();
-            }
         });
     }
 }

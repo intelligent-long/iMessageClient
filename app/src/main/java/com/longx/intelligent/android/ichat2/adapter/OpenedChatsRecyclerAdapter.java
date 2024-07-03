@@ -110,7 +110,9 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
             case ChatMessage.TYPE_VIDEO:
                 holder.binding.newestChatMessage.setText("[视频]");
                 break;
-
+            case ChatMessage.TYPE_VOICE:
+                holder.binding.newestChatMessage.setText("[语音]");
+                break;
         }
         holder.binding.time.setText(TimeUtil.formatSimpleRelativeTime(newestChatMessage.getTime()));
         displayBadges(holder, itemData);

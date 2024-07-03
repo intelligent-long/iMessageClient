@@ -19,14 +19,17 @@ public class DataPaths {
         return SharedPreferencesAccessor.ServerSettingPref.getServerSetting(context).getDataFolder();
     }
 
-    public static class Cache{
+    public static class Cache {
         public static String getCacheFolderPath(Context context) {
             return context.getCacheDir().getAbsolutePath() +
                     java.io.File.separator + getServerFolder(context);
         }
 
-        public static String getVideoThumbnail(Context context, String fileName){
-            return getCacheFolderPath(context) + "/video_thumbnail/" + fileName;
+        public static String getChatVoiceTempFilePath(Context context, String channelId) {
+            return getCacheFolderPath(context) +
+                    File.separator + channelId +
+                    File.separator + "voice_temp" +
+                    File.separator + "voice_temp.aac";
         }
     }
 

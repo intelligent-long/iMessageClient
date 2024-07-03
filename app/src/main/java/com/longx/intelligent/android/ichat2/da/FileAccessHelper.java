@@ -158,6 +158,11 @@ public class FileAccessHelper {
         return FileUtil.getFileExtension(fileName);
     }
 
+    public static String getMimeType(Context context, Uri uri) {
+        String extension = getFileExtensionFromUri(context, uri);
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
+    }
+
     public static String getMimeType(String filePath) {
         String extension = MimeTypeMap.getFileExtensionFromUrl(filePath);
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());

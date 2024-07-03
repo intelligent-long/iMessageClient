@@ -79,7 +79,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
             return null;
         }
         String fileName = FileAccessHelper.getFileNameFromUri(context, imageUri);
-        String mimeType = contentResolver.getType(imageUri);
+        String mimeType = FileAccessHelper.getMimeType(context, imageUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
@@ -139,7 +139,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
             return null;
         }
         String fileName = FileAccessHelper.getFileNameFromUri(context, fileUri);
-        String mimeType = contentResolver.getType(fileUri);
+        String mimeType = FileAccessHelper.getMimeType(context, fileUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
@@ -199,7 +199,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
             return null;
         }
         String fileName = FileAccessHelper.getFileNameFromUri(context, videoUri);
-        String mimeType = contentResolver.getType(videoUri);
+        String mimeType = FileAccessHelper.getMimeType(context, videoUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
@@ -258,7 +258,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
             ErrorLogger.log(e);
             return null;
         }
-        String mimeType = contentResolver.getType(voiceUri);
+        String fileName = FileAccessHelper.getFileNameFromUri(context, voiceUri);
+        String mimeType = FileAccessHelper.getMimeType(context, voiceUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
@@ -290,7 +291,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
                 progressYier.onProgressUpdate(progress, contentLength);
             }
         };
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("video", null, progressRequestBody);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("voice", fileName, progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
         CompletableCall<OperationData> call = getApiImplementation().sendVoiceChatMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);

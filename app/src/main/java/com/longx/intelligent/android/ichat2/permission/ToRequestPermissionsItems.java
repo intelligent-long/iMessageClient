@@ -21,12 +21,7 @@ public class ToRequestPermissionsItems {
     public static ToRequestPermissions readMediaImagesAndVideos = new ToRequestPermissions(102,
             new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO});
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public static ToRequestPermissions accessMediaLocation = new ToRequestPermissions(103,
-            new String[]{Manifest.permission.ACCESS_MEDIA_LOCATION});
-
-    @RequiresApi(api = Build.VERSION_CODES.R)
-    public static ToRequestPermissions manageExternalStorage = new ToRequestPermissions(104,
-            new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE});
+    public static ToRequestPermissions recordAudio = new ToRequestPermissions(103,
+            new String[]{Manifest.permission.RECORD_AUDIO});
 
 }
