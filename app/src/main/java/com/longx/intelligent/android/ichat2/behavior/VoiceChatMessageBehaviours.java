@@ -166,19 +166,19 @@ public class VoiceChatMessageBehaviours {
             @Override
             public void notOk(int code, String message, Response<OperationData> row, Call<OperationData> call) {
                 super.notOk(code, message, row, call);
-                chatActivity.toNormalState();
+                chatActivity.toVoiceState();
             }
 
             @Override
             public void failure(Throwable t, Call<OperationData> call) {
                 super.failure(t, call);
-                chatActivity.toNormalState();
+                chatActivity.toVoiceState();
             }
 
             @Override
             public void complete(Call<OperationData> call) {
                 super.complete(call);
-                chatActivity.toNormalState();
+                chatActivity.toVoiceState();
             }
 
         }, (current, total) -> {

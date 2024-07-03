@@ -445,6 +445,22 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendProgressIndicator.setVisibility(View.GONE);
     }
 
+    public void toVoiceState(){
+        sendingState = false;
+        hideMorePanel();
+        binding.voiceButton.setVisibility(View.GONE);
+        binding.textButton.setVisibility(View.VISIBLE);
+        binding.messageInput.setVisibility(View.GONE);
+        binding.messageInput.setText(null);
+        binding.holdToTalkButton.setVisibility(View.VISIBLE);
+        binding.layoutSendButtonAndIndicator.setVisibility(View.GONE);
+        binding.moreButton.setVisibility(View.VISIBLE);
+        binding.sendButton.setVisibility(View.GONE);
+        binding.sendIndicator.setVisibility(View.GONE);
+        binding.sendItemCountIndicator.setVisibility(View.GONE);
+        binding.sendProgressIndicator.setVisibility(View.GONE);
+    }
+
     public void changeHoldToTalkToHold(){
         binding.holdToTalkButton.setBackgroundTintList(ColorStateList.valueOf(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainerHighest)));
         binding.holdToTalkButton.setText("松开 发送");
