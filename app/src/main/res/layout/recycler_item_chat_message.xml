@@ -110,7 +110,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/file_size_receive"
                             android:textSize="17sp"
-                            android:textColor="@color/chat_message_send_text"/>
+                            android:textColor="@color/chat_message_receive_text"/>
 
                         <TextView
                             android:id="@+id/file_size_receive"
@@ -162,7 +162,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/chat_bubble"
-                    android:backgroundTint="?attr/colorSurfaceContainer"
+                    android:backgroundTint="?attr/colorSurfaceContainerLow"
                     android:orientation="horizontal"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
@@ -185,7 +185,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         android:textSize="18sp"
-                        android:textColor="@color/chat_message_send_text"/>
+                        android:textColor="@color/chat_message_receive_text"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
@@ -193,6 +193,7 @@
 
     <RelativeLayout
         android:id="@+id/layout_send"
+        android:theme="@style/Theme.Material3.Light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/time"
@@ -332,6 +333,7 @@
                 android:minHeight="@dimen/chat_message_min_size">
 
                 <LinearLayout
+                    android:id="@+id/voice_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/chat_bubble"

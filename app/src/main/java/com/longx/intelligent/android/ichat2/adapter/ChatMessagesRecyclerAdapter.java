@@ -124,9 +124,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             switch (chatBubbleColor){
                 case 0:
                     holder.binding.textSend.setBackgroundTintList(ColorStateList.valueOf(activity.getColor(R.color.chat_message_send_background_green)));
+                    holder.binding.voiceSend.setBackgroundTintList(ColorStateList.valueOf(activity.getColor(R.color.chat_message_send_background_green)));
                     break;
                 case 1:
                     holder.binding.textSend.setBackgroundTintList(ColorStateList.valueOf(activity.getColor(R.color.chat_message_send_background_blue)));
+                    holder.binding.voiceSend.setBackgroundTintList(ColorStateList.valueOf(activity.getColor(R.color.chat_message_send_background_blue)));
                     break;
             }
             //头像
