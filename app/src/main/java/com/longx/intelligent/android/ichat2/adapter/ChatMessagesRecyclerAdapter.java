@@ -68,6 +68,13 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 .transform(new RoundedCorners(UiUtil.dpToPx(activity, 7)))
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
         chatVoicePlayer = new ChatVoicePlayer(activity);
+        ChatVoicePlayer.State chatVoicePlayerState = SharedPreferencesAccessor.ChatPref.getChatVoicePlayerState(activity);
+        if(chatVoicePlayerState.getId() != null && chatVoicePlayerState.getUri() != null) {
+            chatVoicePlayer.init(chatVoicePlayerState.getUri(), chatVoicePlayerState.getId());
+        }
+        if(chatVoicePlayerState.getPosition() != -1) {
+            chatVoicePlayer.seekTo(chatVoicePlayerState.getPosition());
+        }
         chatVoicePlayer.setOnPlayStateChangeYier(new ChatVoicePlayer.OnPlayStateChangeYier() {
             @Override
             public void onStart(String id) {
@@ -559,6 +566,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     public void onActivityDestroy(){
+        SharedPreferencesAccessor.ChatPref.saveChatVoicePlayerState(activity, chatVoicePlayer.getState());
         chatVoicePlayer.release();
     }
 

@@ -20,6 +20,7 @@ public class ChatVoicePlayer {
     private final SensorEventListener proximitySensorYier;
     private OnPlayStateChangeYier onPlayStateChangeYier;
     private String id;
+    private Uri uri;
 
     public interface OnPlayStateChangeYier {
         void onStart(String id);
@@ -56,17 +57,10 @@ public class ChatVoicePlayer {
         this.onPlayStateChangeYier = listener;
     }
 
-    public void init(int resId, String id) {
-        release();
-        this.id = id;
-        mediaPlayer = MediaPlayer.create(context, resId);
-        setAudioAttributes(AudioManager.STREAM_MUSIC);
-        setupYiers();
-    }
-
     public void init(Uri uri, String id) {
         release();
         this.id = id;
+        this.uri = uri;
         mediaPlayer = MediaPlayer.create(context, uri);
         setAudioAttributes(AudioManager.STREAM_MUSIC);
         setupYiers();
@@ -113,6 +107,10 @@ public class ChatVoicePlayer {
             id = null;
         }
         unregisterProximitySensor();
+    }
+
+    public void seekTo(int position){
+        if(mediaPlayer != null) mediaPlayer.seekTo(position);
     }
 
     public boolean isPlaying() {
@@ -181,5 +179,33 @@ public class ChatVoicePlayer {
 
     public String getId() {
         return id;
+    }
+
+    public State getState(){
+        return new State(id, uri, getPlaybackPosition());
+    }
+
+    public static class State{
+        private final String id;
+        private final Uri uri;
+        private final int position;
+
+        public State(String id, Uri uri, int position) {
+            this.id = id;
+            this.uri = uri;
+            this.position = position;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public Uri getUri() {
+            return uri;
+        }
+
+        public int getPosition() {
+            return position;
+        }
     }
 }

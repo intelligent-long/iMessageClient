@@ -3,10 +3,12 @@ package com.longx.intelligent.android.ichat2.da.sharedpref;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import androidx.preference.PreferenceManager;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.behavior.ChatVoicePlayer;
 import com.longx.intelligent.android.ichat2.data.Avatar;
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
@@ -544,6 +546,35 @@ public class SharedPreferencesAccessor {
             return new Date(timeLong);
         }
 
+    }
+
+    public static class ChatPref{
+        private static final String NAME = "chat";
+        private static class Key {
+            private static final String CHAT_VOICE_PLAYER_URI_STRING = "chat_voice_player_uri_string";
+            private static final String CHAT_VOICE_PLAYER_ID = "chat_voice_player_id";
+            private static final String CHAT_VOICE_PLAYER_POSITION = "chat_voice_player_position";
+        }
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        }
+
+        public static void saveChatVoicePlayerState(Context context, ChatVoicePlayer.State state){
+            getSharedPreferences(context)
+                    .edit()
+                    .putString(Key.CHAT_VOICE_PLAYER_ID, state.getId())
+                    .putString(Key.CHAT_VOICE_PLAYER_URI_STRING, state.getUri().toString())
+                    .putInt(Key.CHAT_VOICE_PLAYER_POSITION, state.getPosition())
+                    .apply();
+        }
+
+        public static ChatVoicePlayer.State getChatVoicePlayerState(Context context){
+            SharedPreferences sharedPreferences = getSharedPreferences(context);
+            String id = sharedPreferences.getString(Key.CHAT_VOICE_PLAYER_ID, null);
+            String uriString = sharedPreferences.getString(Key.CHAT_VOICE_PLAYER_URI_STRING, null);
+            int position = sharedPreferences.getInt(Key.CHAT_VOICE_PLAYER_POSITION, -1);
+            return new ChatVoicePlayer.State(id, uriString == null ? null : Uri.parse(uriString), position);
+        }
     }
 
 }
