@@ -253,19 +253,31 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     int sec = (int) Math.round(duration / 1000.0);
                     holder.binding.voiceTimeSend.setText(sec + "''");
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
-                        if (chatVoicePlayer.isPlaying()) {
+                        if(chatVoicePlayer.isPaused()){
+                            holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
+                            holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
+                            holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
+                            holder.binding.continueVoicePlaybackSend.setVisibility(View.VISIBLE);
+                            holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
+                        }else if (chatVoicePlayer.isPlaying()) {
                             holder.binding.voiceSendIcon.setVisibility(View.GONE);
                             holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.VISIBLE);
                             holder.binding.voiceSendPlayingSwitchingImages.startAnimating();
+                            holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
+                            holder.binding.pauseVoicePlaybackSend.setVisibility(View.VISIBLE);
                         } else {
                             holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
                             holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
                             holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
+                            holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
+                            holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
                         }
                     }else {
                         holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
                         holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
                         holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
+                        holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
+                        holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
                     }
                     break;
                 }
@@ -348,19 +360,31 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     int sec = (int) Math.round(duration / 1000.0);
                     holder.binding.voiceTimeReceive.setText(sec + "''");
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
-                        if (chatVoicePlayer.isPlaying()) {
+                        if(chatVoicePlayer.isPaused()){
+                            holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
+                            holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
+                            holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
+                            holder.binding.continueVoicePlaybackReceive.setVisibility(View.VISIBLE);
+                            holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
+                        }else if (chatVoicePlayer.isPlaying()) {
                             holder.binding.voiceReceiveIcon.setVisibility(View.GONE);
                             holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.VISIBLE);
                             holder.binding.voiceReceivePlayingSwitchingImages.startAnimating();
+                            holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
+                            holder.binding.pauseVoicePlaybackReceive.setVisibility(View.VISIBLE);
                         } else {
                             holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
                             holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
                             holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
+                            holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
+                            holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
                         }
                     }else {
                         holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
                         holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
                         holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
+                        holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
+                        holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
                     }
                     break;
                 }
@@ -463,6 +487,12 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         };
         holder.binding.layoutVoiceSend.setOnClickListener(onVoiceMessageClickYier);
         holder.binding.layoutVoiceReceive.setOnClickListener(onVoiceMessageClickYier);
+        View.OnClickListener onVoicePause = v -> chatVoicePlayer.pause();
+        View.OnClickListener onVoiceContinue = v -> chatVoicePlayer.play();
+        holder.binding.pauseVoicePlaybackSend.setOnClickListener(onVoicePause);
+        holder.binding.continueVoicePlaybackSend.setOnClickListener(onVoiceContinue);
+        holder.binding.pauseVoicePlaybackReceive.setOnClickListener(onVoicePause);
+        holder.binding.continueVoicePlaybackReceive.setOnClickListener(onVoiceContinue);
     }
 
     @Override

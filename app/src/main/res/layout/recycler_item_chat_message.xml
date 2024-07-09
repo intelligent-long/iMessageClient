@@ -165,8 +165,7 @@
                     android:backgroundTint="?attr/colorSurfaceContainerLow"
                     android:orientation="horizontal"
                     android:paddingHorizontal="15dp"
-                    android:paddingVertical="10dp"
-                    tools:ignore="UselessParent">
+                    android:paddingVertical="10dp">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/voice_receive_icon"
@@ -198,6 +197,30 @@
                         android:textSize="18sp"
                         android:textColor="@color/chat_message_receive_text"/>
                 </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/continue_voice_playback_receive"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:src="@drawable/play_circle_outline_24px"
+                    app:tint="@color/ichat"
+                    android:layout_marginStart="12dp"
+                    android:padding="9.5dp"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/chat_voice_playback_control_background"
+                    android:visibility="gone"/>
+
+                <ImageButton
+                    android:id="@+id/pause_voice_playback_receive"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:src="@drawable/pause_circle_outline_24px"
+                    app:tint="@color/ichat"
+                    android:layout_marginStart="12dp"
+                    android:padding="9.5dp"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/chat_voice_playback_control_background"
+                    android:visibility="gone"/>
             </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
@@ -343,6 +366,30 @@
                 android:orientation="horizontal"
                 android:minHeight="@dimen/chat_message_min_size">
 
+                <ImageButton
+                    android:id="@+id/continue_voice_playback_send"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:src="@drawable/play_circle_outline_24px"
+                    app:tint="@color/ichat"
+                    android:layout_marginEnd="12dp"
+                    android:padding="9.5dp"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/chat_voice_playback_control_background"
+                    android:visibility="gone"/>
+
+                <ImageButton
+                    android:id="@+id/pause_voice_playback_send"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:src="@drawable/pause_circle_outline_24px"
+                    app:tint="@color/ichat"
+                    android:layout_marginEnd="12dp"
+                    android:padding="9.5dp"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/chat_voice_playback_control_background"
+                    android:visibility="gone"/>
+
                 <LinearLayout
                     android:id="@+id/voice_send"
                     android:layout_width="wrap_content"
@@ -351,8 +398,7 @@
                     android:backgroundTint="@color/chat_message_send_background_green"
                     android:orientation="horizontal"
                     android:paddingHorizontal="15dp"
-                    android:paddingVertical="10dp"
-                    tools:ignore="UselessParent">
+                    android:paddingVertical="10dp">
 
                     <TextView
                         android:id="@+id/voice_time_send"

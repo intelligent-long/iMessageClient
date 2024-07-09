@@ -119,6 +119,10 @@ public class ChatVoicePlayer {
         return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
+    public boolean isPaused(){
+        return mediaPlayer != null && !mediaPlayer.isPlaying() && getPlaybackPosition() != -1 && getPlaybackPosition() != getDuration();
+    }
+
     public int getPlaybackPosition(){
         return mediaPlayer == null ? -1 : mediaPlayer.getCurrentPosition();
     }
