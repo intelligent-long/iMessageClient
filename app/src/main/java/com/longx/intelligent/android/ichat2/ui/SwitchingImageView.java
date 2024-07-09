@@ -1,10 +1,20 @@
 package com.longx.intelligent.android.ichat2.ui;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+
 import com.longx.intelligent.android.ichat2.R;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,6 +25,8 @@ public class SwitchingImageView extends AppCompatImageView {
     private int interval = 1000;
     private Timer timer;
     private TimerTask timerTask;
+    private int transitionDuration = 500;
+    private boolean isTransitionEnabled = true;
 
     public SwitchingImageView(Context context) {
         super(context);
@@ -35,6 +47,8 @@ public class SwitchingImageView extends AppCompatImageView {
         if (attrs != null) {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SwitchingImageView);
             interval = a.getInt(R.styleable.SwitchingImageView_interval, interval);
+            transitionDuration = a.getInt(R.styleable.SwitchingImageView_transition_duration, transitionDuration);
+            isTransitionEnabled = a.getBoolean(R.styleable.SwitchingImageView_transition_enabled, isTransitionEnabled);
             int imageArrayResId = a.getResourceId(R.styleable.SwitchingImageView_images, 0);
             if (imageArrayResId != 0) {
                 setImageResources(getResources().obtainTypedArray(imageArrayResId));
@@ -68,8 +82,27 @@ public class SwitchingImageView extends AppCompatImageView {
             public void run() {
                 post(() -> {
                     if (imageResources != null && imageResources.length > 0) {
-                        setImageResource(imageResources[currentIndex]);
-                        currentIndex = (currentIndex + 1) % imageResources.length;
+                        int nextIndex = (currentIndex + 1) % imageResources.length;
+                        if (isTransitionEnabled) {
+                            ObjectAnimator fadeOut = ObjectAnimator.ofFloat(SwitchingImageView.this, "alpha", 1f, 0f);
+                            fadeOut.setDuration(transitionDuration / 2);
+                            fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
+                            fadeOut.start();
+
+                            fadeOut.addListener(new android.animation.AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(android.animation.Animator animation) {
+                                    setImageResource(imageResources[nextIndex]);
+                                    ObjectAnimator fadeIn = ObjectAnimator.ofFloat(SwitchingImageView.this, "alpha", 0f, 1f);
+                                    fadeIn.setDuration(transitionDuration / 2);
+                                    fadeIn.setInterpolator(new LinearOutSlowInInterpolator());
+                                    fadeIn.start();
+                                }
+                            });
+                        } else {
+                            setImageResource(imageResources[nextIndex]);
+                        }
+                        currentIndex = nextIndex;
                     }
                 });
             }
@@ -93,5 +126,13 @@ public class SwitchingImageView extends AppCompatImageView {
         if (timer != null) {
             startAnimating();
         }
+    }
+
+    public void setTransitionDuration(int transitionDuration) {
+        this.transitionDuration = transitionDuration;
+    }
+
+    public void setTransitionEnabled(boolean isTransitionEnabled) {
+        this.isTransitionEnabled = isTransitionEnabled;
     }
 }

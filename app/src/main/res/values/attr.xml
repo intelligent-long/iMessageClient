@@ -3,5 +3,7 @@
     <declare-styleable name="SwitchingImageView">
         <attr name="interval" format="integer" />
         <attr name="images" format="reference" />
+        <attr name="transition_duration" format="integer"/>
+        <attr name="transition_enabled" format="boolean"/>
     </declare-styleable>
 </resources>

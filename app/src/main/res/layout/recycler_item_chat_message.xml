@@ -182,8 +182,10 @@
                         android:layout_height="23dp"
                         android:layout_gravity="center_vertical"
                         app:tint="@color/ichat"
-                        app:interval="700"
-                        app:images="@array/chat_voice_playing_switching_images"/>
+                        app:images="@array/chat_voice_playing_switching_images"
+                        app:interval="1000"
+                        app:transition_duration="500"
+                        app:transition_enabled="true"/>
 
                     <TextView
                         android:id="@+id/voice_time_receive"
@@ -428,8 +430,10 @@
                         android:layout_marginStart="8dp"
                         android:layout_gravity="center_vertical"
                         app:tint="@color/ichat"
-                        app:interval="700"
-                        app:images="@array/chat_voice_playing_switching_images"/>
+                        app:images="@array/chat_voice_playing_switching_images"
+                        app:interval="1000"
+                        app:transition_duration="500"
+                        app:transition_enabled="true"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
