@@ -111,6 +111,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     protected void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, ChatMessageUpdateYier.class, this);
+        if(adapter != null) adapter.onActivityDestroy();
     }
 
     private void init(){

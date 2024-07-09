@@ -169,11 +169,22 @@
                     tools:ignore="UselessParent">
 
                     <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/voice_receive_icon"
                         android:layout_width="23dp"
                         android:layout_height="23dp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/graphic_eq_24px"
                         app:tint="?attr/colorControlNormal"/>
+
+                    <com.longx.intelligent.android.ichat2.ui.SwitchingImageView
+                        android:id="@+id/voice_receive_playing_switching_images"
+                        android:visibility="gone"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/ichat"
+                        app:interval="700"
+                        app:images="@array/chat_voice_playing_switching_images"/>
 
                     <TextView
                         android:id="@+id/voice_time_receive"
@@ -355,12 +366,24 @@
                         android:textColor="@color/chat_message_send_text"/>
 
                     <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/voice_send_icon"
                         android:layout_width="23dp"
                         android:layout_height="23dp"
                         android:layout_marginStart="8dp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/graphic_eq_24px"
                         app:tint="?attr/colorControlNormal"/>
+
+                    <com.longx.intelligent.android.ichat2.ui.SwitchingImageView
+                        android:id="@+id/voice_send_playing_switching_images"
+                        android:visibility="gone"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/ichat"
+                        app:interval="700"
+                        app:images="@array/chat_voice_playing_switching_images"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SwitchingImageView">
+        <attr name="interval" format="integer" />
+        <attr name="images" format="reference" />
+    </declare-styleable>
+</resources>

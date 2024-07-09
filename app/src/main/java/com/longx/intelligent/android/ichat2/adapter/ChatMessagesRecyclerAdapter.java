@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,9 @@ import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatFileActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatMediaActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.behavior.ChatVoicePlayer;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -56,6 +59,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ItemData> itemDataList = new ArrayList<>();
     private final RequestOptions requestOptions;
+    private final ChatVoicePlayer chatVoicePlayer;
 
     public ChatMessagesRecyclerAdapter(ChatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView) {
         this.activity = activity;
@@ -63,6 +67,49 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         requestOptions = new RequestOptions()
                 .transform(new RoundedCorners(UiUtil.dpToPx(activity, 7)))
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
+        chatVoicePlayer = new ChatVoicePlayer(activity);
+        chatVoicePlayer.setOnPlayStateChangeYier(new ChatVoicePlayer.OnPlayStateChangeYier() {
+            @Override
+            public void onStart(String id) {
+                for (int i = 0; i < itemDataList.size(); i++) {
+                    if(itemDataList.get(i).chatMessage.getUuid().equals(id)){
+                        notifyItemChanged(i);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onPause(String id) {
+                for (int i = 0; i < itemDataList.size(); i++) {
+                    if(itemDataList.get(i).chatMessage.getUuid().equals(id)){
+                        notifyItemChanged(i);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onStop(String id) {
+                for (int i = 0; i < itemDataList.size(); i++) {
+                    if(itemDataList.get(i).chatMessage.getUuid().equals(id)){
+                        notifyItemChanged(i);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String id, int what, int extra) {
+                for (int i = 0; i < itemDataList.size(); i++) {
+                    if(itemDataList.get(i).chatMessage.getUuid().equals(id)){
+                        MessageDisplayer.autoShow(activity, "语音播放出错", MessageDisplayer.Duration.LONG);
+                        notifyItemChanged(i);
+                        break;
+                    }
+                }
+            }
+        });
     }
     private RecyclerViewScrollDisabler scrollDisabler;
 
@@ -205,6 +252,22 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
                     int sec = (int) Math.round(duration / 1000.0);
                     holder.binding.voiceTimeSend.setText(sec + "''");
+                    if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
+                        if (chatVoicePlayer.isPlaying()) {
+                            holder.binding.voiceSendIcon.setVisibility(View.GONE);
+                            holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.VISIBLE);
+                            holder.binding.voiceSendPlayingSwitchingImages.startAnimating();
+                        } else {
+                            holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
+                            holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
+                            holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
+                        }
+                    }else {
+                        holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
+                        holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
+                        holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
+                    }
+                    break;
                 }
             }
         }else {
@@ -284,6 +347,22 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
                     int sec = (int) Math.round(duration / 1000.0);
                     holder.binding.voiceTimeReceive.setText(sec + "''");
+                    if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
+                        if (chatVoicePlayer.isPlaying()) {
+                            holder.binding.voiceReceiveIcon.setVisibility(View.GONE);
+                            holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.VISIBLE);
+                            holder.binding.voiceReceivePlayingSwitchingImages.startAnimating();
+                        } else {
+                            holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
+                            holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
+                            holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
+                        }
+                    }else {
+                        holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
+                        holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
+                        holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
+                    }
+                    break;
                 }
             }
         }
@@ -379,7 +458,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.layoutFileSend.setOnClickListener(onFileMessageClickYier);
         holder.binding.layoutFileReceive.setOnClickListener(onFileMessageClickYier);
         View.OnClickListener onVoiceMessageClickYier = v -> {
-
+            chatVoicePlayer.init(Uri.fromFile(new File(currentItemData.chatMessage.getVoiceFilePath())), currentItemData.chatMessage.getUuid());
+            chatVoicePlayer.play();
         };
         holder.binding.layoutVoiceSend.setOnClickListener(onVoiceMessageClickYier);
         holder.binding.layoutVoiceReceive.setOnClickListener(onVoiceMessageClickYier);
@@ -446,6 +526,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         int size = itemDataList.size();
         itemDataList.clear();
         notifyItemRangeRemoved(0, size);
+    }
+
+    public void onActivityDestroy(){
+        chatVoicePlayer.release();
     }
 
 }
