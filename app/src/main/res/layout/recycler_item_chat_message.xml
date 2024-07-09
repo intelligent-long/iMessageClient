@@ -56,7 +56,7 @@
                     android:backgroundTint="?attr/colorSurfaceContainerLow"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
-                    android:textColor="@color/chat_message_receive_text"
+                    android:textColor="@color/chat_message_common_text"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -110,7 +110,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/file_size_receive"
                             android:textSize="17sp"
-                            android:textColor="@color/chat_message_receive_text"/>
+                            android:textColor="@color/chat_message_common_text"/>
 
                         <TextView
                             android:id="@+id/file_size_receive"
@@ -195,14 +195,14 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         android:textSize="18sp"
-                        android:textColor="@color/chat_message_receive_text"/>
+                        android:textColor="@color/chat_message_common_text"/>
                 </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/continue_voice_playback_receive"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
-                    android:src="@drawable/play_circle_outline_24px"
+                    android:src="@drawable/play_arrow_fill_24px"
                     app:tint="@color/ichat"
                     android:layout_marginStart="12dp"
                     android:padding="9.5dp"
@@ -214,7 +214,7 @@
                     android:id="@+id/pause_voice_playback_receive"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
-                    android:src="@drawable/pause_circle_outline_24px"
+                    android:src="@drawable/pause_fill_24px"
                     app:tint="@color/ichat"
                     android:layout_marginStart="12dp"
                     android:padding="9.5dp"
@@ -227,7 +227,6 @@
 
     <RelativeLayout
         android:id="@+id/layout_send"
-        android:theme="@style/Theme.Material3.Light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/time"
@@ -318,7 +317,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/file_size_send"
                             android:textSize="17sp"
-                            android:textColor="@color/chat_message_send_text"/>
+                            android:textColor="@color/chat_message_common_text"/>
 
                         <TextView
                             android:id="@+id/file_size_send"
@@ -370,7 +369,7 @@
                     android:id="@+id/continue_voice_playback_send"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
-                    android:src="@drawable/play_circle_outline_24px"
+                    android:src="@drawable/play_arrow_fill_24px"
                     app:tint="@color/ichat"
                     android:layout_marginEnd="12dp"
                     android:padding="9.5dp"
@@ -382,7 +381,7 @@
                     android:id="@+id/pause_voice_playback_send"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
-                    android:src="@drawable/pause_circle_outline_24px"
+                    android:src="@drawable/pause_fill_24px"
                     app:tint="@color/ichat"
                     android:layout_marginEnd="12dp"
                     android:padding="9.5dp"
@@ -394,6 +393,7 @@
                     android:id="@+id/voice_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:theme="@style/Theme.Material3.Light"
                     android:background="@drawable/chat_bubble"
                     android:backgroundTint="@color/chat_message_send_background_green"
                     android:orientation="horizontal"
