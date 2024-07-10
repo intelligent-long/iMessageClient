@@ -11,6 +11,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+
 public class ChatVoicePlayer {
     private MediaPlayer mediaPlayer;
     private final Context context;
@@ -97,8 +99,11 @@ public class ChatVoicePlayer {
         }
     }
 
-    public void release() {
+    public State release() {
+        State state = null;
         if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            state = getState();
             mediaPlayer.release();
             if (onPlayStateChangeYier != null) {
                 onPlayStateChangeYier.onStop(id);
@@ -107,6 +112,7 @@ public class ChatVoicePlayer {
             id = null;
         }
         unregisterProximitySensor();
+        return state;
     }
 
     public void seekTo(int position){
@@ -162,6 +168,7 @@ public class ChatVoicePlayer {
 
     private void setupYiers() {
         mediaPlayer.setOnCompletionListener(mp -> {
+            mediaPlayer.seekTo(getDuration());
             if (onPlayStateChangeYier != null) {
                 onPlayStateChangeYier.onStop(id);
             }

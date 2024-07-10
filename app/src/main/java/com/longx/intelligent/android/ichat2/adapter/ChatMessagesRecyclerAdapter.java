@@ -571,8 +571,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     public void onActivityDestroy(){
-        SharedPreferencesAccessor.ChatPref.saveChatVoicePlayerState(activity, chatVoicePlayer.getState());
-        chatVoicePlayer.release();
+        ChatVoicePlayer.State state = chatVoicePlayer.release();
+        SharedPreferencesAccessor.ChatPref.saveChatVoicePlayerState(activity, state);
     }
 
 }
