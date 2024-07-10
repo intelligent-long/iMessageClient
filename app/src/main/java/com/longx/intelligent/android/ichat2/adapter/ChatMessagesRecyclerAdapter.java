@@ -393,6 +393,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
                         holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
                     }
+                    if (itemData.chatMessage.isVoiceListened() == null || itemData.chatMessage.isVoiceListened()) {
+                        holder.binding.voiceNotListenedBadge.setVisibility(View.GONE);
+                    } else {
+                        holder.binding.voiceNotListenedBadge.setVisibility(View.VISIBLE);
+                    }
                     break;
                 }
             }

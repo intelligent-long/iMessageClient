@@ -33,6 +33,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String VIDEO_WIDTH = "video_width";
         public static final String VIDEO_HEIGHT = "video_height";
         public static final String VOICE_FILE_PATH = "voice_file_path";
+        public static final String VOICE_LISTENED = "voice_listened";
     }
 
     public ChatMessageDatabaseHelper(Context context, String channelIchatId, String ichatId) {
@@ -59,6 +60,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.VIDEO_WIDTH + " INTEGER,"
                 + TableChannelChatMessagesColumns.VIDEO_HEIGHT + " INTEGER,"
                 + TableChannelChatMessagesColumns.VOICE_FILE_PATH + " VARCHAR,"
+                + TableChannelChatMessagesColumns.VOICE_LISTENED + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableChannelChatMessagesColumns.TYPE + ","
                 + TableChannelChatMessagesColumns.UUID + ","

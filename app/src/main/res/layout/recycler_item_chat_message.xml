@@ -223,6 +223,13 @@
                     android:scaleType="fitCenter"
                     android:background="@drawable/chat_voice_playback_control_background"
                     android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/voice_not_listened_badge"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/shape_red_badge"/>
             </LinearLayout>
         </FrameLayout>
     </RelativeLayout>

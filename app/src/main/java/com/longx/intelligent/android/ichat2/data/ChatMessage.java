@@ -16,7 +16,6 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.IOException;
@@ -109,6 +108,7 @@ public class ChatMessage implements Parcelable {
                 break;
             }
             case TYPE_VOICE:{
+                chatMessage.setVoiceListened(false);
                 ChatApiCaller.fetchChatMessageVoice(null, chatMessage.voiceId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
@@ -178,6 +178,8 @@ public class ChatMessage implements Parcelable {
     private Size videoSize;
     @JsonIgnore
     private String voiceFilePath;
+    @JsonIgnore
+    private Boolean voiceListened;
 
     public ChatMessage() {
     }
@@ -317,6 +319,14 @@ public class ChatMessage implements Parcelable {
         this.voiceFilePath = voiceFilePath;
     }
 
+    public Boolean isVoiceListened() {
+        return voiceListened;
+    }
+
+    public void setVoiceListened(Boolean voiceListened) {
+        this.voiceListened = voiceListened;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -353,6 +363,9 @@ public class ChatMessage implements Parcelable {
             fileFilePath = in.readString();
         }else if(type == TYPE_VIDEO){
             videoFilePath = in.readString();
+        }else if(type == TYPE_VOICE){
+            byte tmpVoiceListened = in.readByte();
+            voiceListened = tmpVoiceListened == 0 ? null : tmpVoiceListened == 1;
         }
     }
 
@@ -395,6 +408,8 @@ public class ChatMessage implements Parcelable {
             dest.writeString(fileFilePath);
         }else if(type == TYPE_VIDEO){
             dest.writeString(videoFilePath);
+        }else if(type == TYPE_VOICE){
+            dest.writeByte((byte) (voiceListened == null ? 0 : voiceListened ? 1 : 2));
         }
     }
 
@@ -420,6 +435,7 @@ public class ChatMessage implements Parcelable {
                 ", videoFilePath='" + videoFilePath + '\'' +
                 ", videoSize=" + videoSize +
                 ", voiceFilePath='" + voiceFilePath + '\'' +
+                ", voiceListened=" + voiceListened +
                 '}';
     }
 }

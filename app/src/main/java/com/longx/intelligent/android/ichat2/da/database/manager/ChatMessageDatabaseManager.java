@@ -12,7 +12,6 @@ import com.longx.intelligent.android.ichat2.da.database.helper.ChatMessageDataba
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +74,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getWidth());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getHeight());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH, chatMessage.getVoiceFilePath());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED, chatMessage.isVoiceListened());
             long id = getDatabase().insertWithOnConflict(((ChatMessageDatabaseHelper)getHelper()).getTableName(), null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             return id != -1;
         }finally {
@@ -106,6 +106,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 Integer videoWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH);
                 Integer videoHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT);
                 String voiceFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH);
+                Boolean voiceListened = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED);
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, null, null, null, null);
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
@@ -115,6 +116,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 chatMessage.setVideoFilePath(videoFilePath);
                 chatMessage.setVideoSize(new Size(videoWidth == null ? 0 : videoWidth, videoHeight == null ? 0 : videoHeight));
                 chatMessage.setVoiceFilePath(voiceFilePath);
+                chatMessage.setVoiceListened(voiceListened);
                 result.add(chatMessage);
             }
         } finally {
@@ -208,6 +210,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 Integer videoWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH);
                 Integer videoHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT);
                 String voiceFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH);
+                Boolean voiceListened = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED);
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, fileName, null, null, null, null);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
@@ -217,6 +220,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 chatMessage.setVideoFilePath(videoFilePath);
                 chatMessage.setVideoSize(new Size(videoWidth == null ? 0 : videoWidth, videoHeight == null ? 0 : videoHeight));
                 chatMessage.setVoiceFilePath(voiceFilePath);
+                chatMessage.setVoiceListened(voiceListened);
                 return chatMessage;
             }
         }finally {

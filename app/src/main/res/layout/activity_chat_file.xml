@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="11dp"
-                app:backgroundTint="?attr/colorSurfaceContainer"
+                app:backgroundTint="?attr/colorPrimaryInverse"
                 android:text="保存"/>
         </LinearLayout>
     </LinearLayout>
