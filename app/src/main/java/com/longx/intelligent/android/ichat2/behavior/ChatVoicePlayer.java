@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.behavior;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -149,14 +150,6 @@ public class ChatVoicePlayer {
         Log.d(getClass().getName(), "Switched to speaker");
     }
 
-    private void registerProximitySensor() {
-        sensorManager.registerListener(proximitySensorYier, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    private void unregisterProximitySensor() {
-        sensorManager.unregisterListener(proximitySensorYier);
-    }
-
     private void setAudioAttributes(int streamType) {
         if (mediaPlayer != null) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -164,6 +157,14 @@ public class ChatVoicePlayer {
                     .build();
             mediaPlayer.setAudioAttributes(audioAttributes);
         }
+    }
+
+    private void registerProximitySensor() {
+        sensorManager.registerListener(proximitySensorYier, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void unregisterProximitySensor() {
+        sensorManager.unregisterListener(proximitySensorYier);
     }
 
     private void setupYiers() {
