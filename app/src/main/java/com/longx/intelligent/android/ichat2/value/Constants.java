@@ -21,5 +21,6 @@ public class Constants {
     public static final int MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT = 10;
     public static final int MAX_SEND_CHAT_MESSAGE_FILE_SIZE = 512 * 1024 * 1024;
     public static final int MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE = 512 * 1024 * 1024;
+    public static final int MAX_CHAT_VOICE_TIME_SEC = 120;
 
 }

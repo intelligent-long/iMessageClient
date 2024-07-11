@@ -21,15 +21,15 @@ public class MessageDisplayer {
         Toast.makeText(context, message, duration).show();
     }
 
-    public static void showSnackbar(Activity activity, String message, int duration){
-        showSnackbar(activity.getWindow().getDecorView(), message, duration, true);
+    public static Snackbar showSnackbar(Activity activity, String message, int duration){
+        return showSnackbar(activity.getWindow().getDecorView(), message, duration, true);
     }
 
-    public static void showSnackbar(View view, String message, int duration){
-        showSnackbar(view, message, duration, false);
+    public static Snackbar showSnackbar(View view, String message, int duration){
+        return showSnackbar(view, message, duration, false);
     }
 
-    public static void showSnackbar(View view, String message, int duration, boolean setBottomMargin){
+    public static Snackbar showSnackbar(View view, String message, int duration, boolean setBottomMargin){
         try {
             Snackbar snackbar = Snackbar.make(view, message, duration);
             TextView snackbarTextView = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
@@ -38,8 +38,10 @@ public class MessageDisplayer {
                 UiUtil.setSnackbarBottomMargin(snackbar, 210);
             }
             snackbar.show();
+            return snackbar;
         }catch (Exception e){
             Log.e(Application.class.getName(), "showSnackBar() 出错", e);
+            return null;
         }
     }
 

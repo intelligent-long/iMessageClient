@@ -263,8 +263,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
                     holder.binding.layoutVoiceSend.setVisibility(View.VISIBLE);
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
-                    int sec = (int) Math.round(duration / 1000.0);
-                    holder.binding.voiceTimeSend.setText(sec + "''");
+                    holder.binding.voiceTimeSend.setText(TimeUtil.formatMillisecondsToMinSec(duration));
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
                         if(chatVoicePlayer.isPaused()){
                             holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
@@ -370,8 +369,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     holder.binding.layoutVoiceReceive.setVisibility(View.VISIBLE);
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
-                    int sec = (int) Math.round(duration / 1000.0);
-                    holder.binding.voiceTimeReceive.setText(sec + "''");
+                    holder.binding.voiceTimeReceive.setText(TimeUtil.formatMillisecondsToMinSec(duration));
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
                         if(chatVoicePlayer.isPaused()){
                             holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);

@@ -215,4 +215,15 @@ public class TimeUtil {
         return sb.toString();
     }
 
+    @SuppressLint("DefaultLocale")
+    public static String formatMillisecondsToMinSec(long milliseconds) {
+        long totalSeconds = Math.round(milliseconds / 1000.0);
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        if (minutes > 0) {
+            return String.format("%d' %02d''", minutes, seconds);
+        } else {
+            return String.format("%d''", seconds);
+        }
+    }
 }

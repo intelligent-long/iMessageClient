@@ -1,10 +1,12 @@
 package com.longx.intelligent.android.ichat2.behavior;
 
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
@@ -12,17 +14,16 @@ import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.request.SendVoiceChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
-import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.util.AudioUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
-import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ public class VoiceChatMessageBehaviours {
     private final ChatActivity chatActivity;
     private boolean sendVoiceStopped;
     private final AudioRecorder audioRecorder;
+    private CountDownTimer reachMaxVoiceTimeTimer;
+    private Snackbar reachMaxVoiceTimeNoticeSnackbar;
 
     public VoiceChatMessageBehaviours(ChatActivity chatActivity) {
         this.chatActivity = chatActivity;
@@ -65,11 +68,25 @@ public class VoiceChatMessageBehaviours {
                     @Override
                     public void onRecordStarted() {
                         chatActivity.getBinding().cancelSendTalkFab.show(new FloatingActionButton.OnVisibilityChangedListener() {
-                            @Override
-                            public void onShown(FloatingActionButton fab) {
-
-                            }
                         });
+                        reachMaxVoiceTimeTimer = new CountDownTimer(Constants.MAX_CHAT_VOICE_TIME_SEC * 1000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                long secUntilStopAndSend = millisUntilFinished / 1000 + 1;
+                                if(secUntilStopAndSend <= 10) {
+                                    if(secUntilStopAndSend == 0){
+                                        reachMaxVoiceTimeNoticeSnackbar.dismiss();
+                                    }
+                                    reachMaxVoiceTimeNoticeSnackbar = MessageDisplayer.showSnackbar(chatActivity, secUntilStopAndSend + " 秒后将发送", Snackbar.LENGTH_LONG);
+                                }
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                sendVoice();
+                            }
+                        };
+                        reachMaxVoiceTimeTimer.start();
                     }
 
                     @Override
