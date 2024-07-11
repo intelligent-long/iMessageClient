@@ -27,7 +27,7 @@ public class ChatVoicePlayer {
     public interface OnPlayStateChangeYier {
         void onStart(String id);
         void onPause(String id);
-        void onStop(String id);
+        void onStop(String id, boolean complete);
         void onError(String id, int what, int extra);
     }
 
@@ -94,7 +94,7 @@ public class ChatVoicePlayer {
             mediaPlayer.reset();
             unregisterProximitySensor();
             if (onPlayStateChangeYier != null) {
-                onPlayStateChangeYier.onStop(id);
+                onPlayStateChangeYier.onStop(id, false);
             }
         }
     }
@@ -106,7 +106,7 @@ public class ChatVoicePlayer {
             state = getState();
             mediaPlayer.release();
             if (onPlayStateChangeYier != null) {
-                onPlayStateChangeYier.onStop(id);
+                onPlayStateChangeYier.onStop(id, false);
             }
             mediaPlayer = null;
             id = null;
@@ -170,7 +170,7 @@ public class ChatVoicePlayer {
         mediaPlayer.setOnCompletionListener(mp -> {
             mediaPlayer.seekTo(getDuration());
             if (onPlayStateChangeYier != null) {
-                onPlayStateChangeYier.onStop(id);
+                onPlayStateChangeYier.onStop(id, true);
             }
             unregisterProximitySensor();
         });

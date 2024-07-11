@@ -228,4 +228,32 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         }
         return null;
     }
+
+    public boolean update(ChatMessage chatMessage){
+        openDatabaseIfClosed();
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TYPE, chatMessage.getType());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID, chatMessage.getUuid());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FROM, chatMessage.getFrom());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TO, chatMessage.getTo());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT, chatMessage.getText());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME, chatMessage.getTime().getTime());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED, chatMessage.isViewed());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH, chatMessage.getImageFilePath());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME, chatMessage.getFileName());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_WIDTH, chatMessage.getImageSize() == null ? null : chatMessage.getImageSize().getWidth());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_HEIGHT, chatMessage.getImageSize() == null ? null : chatMessage.getImageSize().getHeight());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_FILE_PATH, chatMessage.getFileFilePath());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH, chatMessage.getVideoFilePath());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getWidth());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getHeight());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH, chatMessage.getVoiceFilePath());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED, chatMessage.isVoiceListened());
+            long rowCount = getDatabase().update(((ChatMessageDatabaseHelper)getHelper()).getTableName(), contentValues, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + "=\"" + chatMessage.getUuid() + "\"", null);
+            return rowCount > 0;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
 }

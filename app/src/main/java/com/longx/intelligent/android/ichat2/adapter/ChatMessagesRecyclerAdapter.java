@@ -24,6 +24,7 @@ import com.longx.intelligent.android.ichat2.behavior.ChatVoicePlayer;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
@@ -97,9 +98,14 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             }
 
             @Override
-            public void onStop(String id) {
+            public void onStop(String id, boolean complete) {
                 for (int i = 0; i < itemDataList.size(); i++) {
-                    if(itemDataList.get(i).chatMessage.getUuid().equals(id)){
+                    ChatMessage thisChatMessage = itemDataList.get(i).chatMessage;
+                    if(thisChatMessage.getUuid().equals(id)){
+                        if(complete){
+                            thisChatMessage.setVoiceListened(true);
+                            ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, activity.getChannel().getIchatId()).update(thisChatMessage);
+                        }
                         notifyItemChanged(i);
                         break;
                     }
