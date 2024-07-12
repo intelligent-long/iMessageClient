@@ -6,7 +6,7 @@ import android.net.Uri;
 
 import androidx.lifecycle.LifecycleOwner;
 
-import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
+import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
@@ -30,7 +30,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
-import okio.Okio;
 
 /**
  * Created by LONG on 2024/5/15 at 4:09 AM.
@@ -78,8 +77,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
             ErrorLogger.log(e);
             return null;
         }
-        String fileName = FileAccessHelper.getFileNameFromUri(context, imageUri);
-        String mimeType = FileAccessHelper.getMimeType(context, imageUri);
+        String fileName = FileHelper.getFileNameFromUri(context, imageUri);
+        String mimeType = FileHelper.getMimeType(context, imageUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
@@ -138,8 +137,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
             ErrorLogger.log(e);
             return null;
         }
-        String fileName = FileAccessHelper.getFileNameFromUri(context, fileUri);
-        String mimeType = FileAccessHelper.getMimeType(context, fileUri);
+        String fileName = FileHelper.getFileNameFromUri(context, fileUri);
+        String mimeType = FileHelper.getMimeType(context, fileUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
@@ -198,8 +197,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
             ErrorLogger.log(e);
             return null;
         }
-        String fileName = FileAccessHelper.getFileNameFromUri(context, videoUri);
-        String mimeType = FileAccessHelper.getMimeType(context, videoUri);
+        String fileName = FileHelper.getFileNameFromUri(context, videoUri);
+        String mimeType = FileHelper.getMimeType(context, videoUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {
@@ -258,8 +257,8 @@ public class ChatApiCaller extends RetrofitApiCaller{
             ErrorLogger.log(e);
             return null;
         }
-        String fileName = FileAccessHelper.getFileNameFromUri(context, voiceUri);
-        String mimeType = FileAccessHelper.getMimeType(context, voiceUri);
+        String fileName = FileHelper.getFileNameFromUri(context, voiceUri);
+        String mimeType = FileHelper.getMimeType(context, voiceUri);
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {

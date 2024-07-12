@@ -11,7 +11,7 @@ import androidx.documentfile.provider.DocumentFile;
 
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
+import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatFileBinding;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
@@ -44,9 +44,9 @@ public class ChatFileActivity extends BaseActivity {
                             Uri folderUri = data.getData();
                             getContentResolver().takePersistableUriPermission(folderUri,
                                     Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            InputStream is = FileAccessHelper.streamOf(chatMessage.getFileFilePath());
+                            InputStream is = FileHelper.streamOf(chatMessage.getFileFilePath());
                             String fileName = chatMessage.getFileName();
-                            String mimeType = FileAccessHelper.getMimeType(chatMessage.getFileFilePath());
+                            String mimeType = FileHelper.getMimeType(chatMessage.getFileFilePath());
                             saveFileInFolder(folderUri, fileName, is, mimeType);
                         }
                     }
@@ -61,7 +61,7 @@ public class ChatFileActivity extends BaseActivity {
 
     private void setupYiers() {
         binding.open.setOnClickListener(v -> {
-            FileAccessHelper.openFile(this, chatMessage.getFileFilePath());
+            FileHelper.openFile(this, chatMessage.getFileFilePath());
         });
         binding.save.setOnClickListener(v -> {
             selectFolder();

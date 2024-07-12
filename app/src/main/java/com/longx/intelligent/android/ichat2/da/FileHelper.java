@@ -31,7 +31,7 @@ import java.util.Objects;
 /**
  * Created by LONG on 2024/1/21 at 9:23 PM.
  */
-public class FileAccessHelper {
+public class FileHelper {
     public static File createFile(String path) throws IOException {
         File file = new File(path);
         int number = 1;
@@ -73,7 +73,7 @@ public class FileAccessHelper {
         try {
             return new FileInputStream(path);
         } catch (FileNotFoundException e) {
-            ErrorLogger.log(FileAccessHelper.class, e);
+            ErrorLogger.log(FileHelper.class, e);
             return null;
         }
     }
@@ -92,7 +92,7 @@ public class FileAccessHelper {
             }
             return outputStream.toByteArray();
         } catch (IOException e) {
-            ErrorLogger.log(FileAccessHelper.class, e);
+            ErrorLogger.log(FileHelper.class, e);
             return null;
         }
     }

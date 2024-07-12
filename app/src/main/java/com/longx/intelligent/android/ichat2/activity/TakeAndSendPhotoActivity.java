@@ -17,7 +17,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
+import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTakeAndSendPhotoBinding;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -47,7 +47,7 @@ public class TakeAndSendPhotoActivity extends BaseActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        photoFile = FileAccessHelper.detectAndRenameFile(photoFile);
+                        photoFile = FileHelper.detectAndRenameFile(photoFile);
                         if(photoFile == null){
                             MessageDisplayer.autoShow(this, "创建文件失败", MessageDisplayer.Duration.LONG);
                         }else {

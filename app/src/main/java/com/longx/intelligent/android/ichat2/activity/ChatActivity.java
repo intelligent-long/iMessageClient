@@ -6,8 +6,6 @@ import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
-import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -17,15 +15,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.behavior.AudioRecorder;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.VoiceChatMessageBehaviours;
-import com.longx.intelligent.android.ichat2.da.DataPaths;
-import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
+import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -40,12 +35,7 @@ import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
-import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
-import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
-import com.longx.intelligent.android.ichat2.util.AudioUtil;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -58,7 +48,6 @@ import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -612,7 +601,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private void sendImageMessages(List<Uri> uriList, AtomicInteger index){
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
-        String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
+        String fileName = FileHelper.getFileNameFromUri(this, uri);
         SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), fileName);
         ChatApiCaller.sendImageChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
@@ -683,7 +672,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private void sendFileMessages(List<Uri> uriList, AtomicInteger index){
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
-        String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
+        String fileName = FileHelper.getFileNameFromUri(this, uri);
         SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getIchatId(), fileName);
         ChatApiCaller.sendFileChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
@@ -754,7 +743,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private void sendVideoMessages(List<Uri> uriList, AtomicInteger index){
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
-        String fileName = FileAccessHelper.getFileNameFromUri(this, uri);
+        String fileName = FileHelper.getFileNameFromUri(this, uri);
         SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(channel.getIchatId(), fileName);
         ChatApiCaller.sendVideoChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
             @Override

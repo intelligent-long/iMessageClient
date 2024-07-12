@@ -3,12 +3,11 @@ package com.longx.intelligent.android.ichat2.da.privatefile;
 import android.content.Context;
 
 import com.longx.intelligent.android.ichat2.da.DataPaths;
-import com.longx.intelligent.android.ichat2.da.FileAccessHelper;
+import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by LONG on 2024/1/21 at 8:19 PM.
@@ -18,7 +17,7 @@ public class PrivateFilesAccessor {
         public static String save(Context context, ChatMessage chatMessage, byte[] imageBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String imageFilePath = DataPaths.PrivateFile.getChatImageFilePath(context, other, chatMessage.getUuid());
-            return FileAccessHelper.save(imageBytes, imageFilePath);
+            return FileHelper.save(imageBytes, imageFilePath);
         }
 
         public static boolean delete(ChatMessage chatMessage){
@@ -34,7 +33,7 @@ public class PrivateFilesAccessor {
         public static String save(Context context, ChatMessage chatMessage, byte[] fileBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String chatFileFilePath = DataPaths.PrivateFile.getChatFileFilePath(context, other, chatMessage.getFileName());
-            return FileAccessHelper.save(fileBytes, chatFileFilePath);
+            return FileHelper.save(fileBytes, chatFileFilePath);
         }
 
         public static boolean delete(ChatMessage chatMessage){
@@ -50,7 +49,7 @@ public class PrivateFilesAccessor {
         public static String save(Context context, ChatMessage chatMessage, byte[] videoBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String chatVideoFilePath = DataPaths.PrivateFile.getChatVideoFilePath(context, other, chatMessage.getFileName());
-            return FileAccessHelper.save(videoBytes, chatVideoFilePath);
+            return FileHelper.save(videoBytes, chatVideoFilePath);
         }
 
         public static boolean delete(ChatMessage chatMessage){
@@ -66,7 +65,7 @@ public class PrivateFilesAccessor {
         public static String save(Context context, ChatMessage chatMessage, byte[] voiceBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
             String chatVoiceFilePath = DataPaths.PrivateFile.getChatVoiceFilePath(context, other, chatMessage.getUuid());
-            return FileAccessHelper.save(voiceBytes, chatVoiceFilePath);
+            return FileHelper.save(voiceBytes, chatVoiceFilePath);
         }
 
         public static boolean delete(ChatMessage chatMessage){
