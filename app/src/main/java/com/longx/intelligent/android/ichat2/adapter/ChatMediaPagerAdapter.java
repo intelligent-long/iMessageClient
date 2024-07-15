@@ -50,6 +50,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
     private Handler handler;
     private static final int SEEKBAR_MAX = 10000;
+    private final Map<Integer, ViewHolder> viewHolderMap = new HashMap<>();
 
     public ChatMediaPagerAdapter(ChatMediaActivity activity, List<ChatMessage> chatMessages) {
         this.activity = activity;
@@ -81,6 +82,10 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
             super(binding.getRoot());
             this.binding = binding;
         }
+
+        public RecyclerItemChatMediaBinding getBinding() {
+            return binding;
+        }
     }
 
     @NonNull
@@ -98,6 +103,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetView(holder);
+        viewHolderMap.put(position, holder);
         ChatMessage chatMessage = itemDatas.get(position).chatMessage;
         switch (chatMessage.getType()){
             case ChatMessage.TYPE_IMAGE:{
@@ -143,6 +149,16 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         }
     }
 
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+        viewHolderMap.values().remove(holder);
+    }
+
+    public Map<Integer, ViewHolder> getViewHolders() {
+        return viewHolderMap;
+    }
+
     private void resetView(ViewHolder holder) {
         holder.binding.photoView.setVisibility(View.GONE);
         holder.binding.loadFailedView.setVisibility(View.GONE);
@@ -165,12 +181,22 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         });
         binding.photoView.setOnClickListener(v -> {
             if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.photoView);
+//            if(activity.isPureContent()){
+//                binding.topShadowCover.setVisibility(View.GONE);
+//            }else {
+//                binding.topShadowCover.setVisibility(View.VISIBLE);
+//            }
         });
         binding.photoView.setOnStateChangedListener(new SubsamplingScaleImageView.OnStateChangedListener() {
             @Override
             public void onScaleChanged(float newScale, int origin) {
                 if(onRecyclerItemActionYier != null) onRecyclerItemActionYier.onRecyclerItemAction(position, newScale != binding.photoView.getMinScale());
                 swipeDownGestureYier.setEnabled(newScale == binding.photoView.getMinScale());
+//                if(activity.isPureContent()){
+//                    binding.topShadowCover.setVisibility(View.GONE);
+//                }else {
+//                    binding.topShadowCover.setVisibility(View.VISIBLE);
+//                }
             }
 
             @Override
@@ -184,11 +210,13 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     private void setupPlayerView(RecyclerItemChatMediaBinding binding, int position){
         binding.playerView.setOnClickListener(v -> {
             if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.playerView);
-            if(activity.isPureContent()){
-                binding.playControl.setVisibility(View.GONE);
-            }else {
-                binding.playControl.setVisibility(View.VISIBLE);
-            }
+//            if(activity.isPureContent()){
+//                binding.playControl.setVisibility(View.GONE);
+//                binding.topShadowCover.setVisibility(View.GONE);
+//            }else {
+//                binding.playControl.setVisibility(View.VISIBLE);
+//                binding.topShadowCover.setVisibility(View.VISIBLE);
+//            }
         });
         SwipeDownGestureYier swipeDownGestureYier = new SwipeDownGestureYier(activity) {
             @Override

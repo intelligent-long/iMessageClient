@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
     private ActivityChatMediaBinding binding;
@@ -151,6 +152,22 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     }
 
     private void setPureContent(boolean pureContent) {
+        Map<Integer, ChatMediaPagerAdapter.ViewHolder> viewHolders = adapter.getViewHolders();
+        viewHolders.entrySet().forEach(integerViewHolderEntry -> {
+            Integer position = integerViewHolderEntry.getKey();
+            ChatMediaPagerAdapter.ViewHolder viewHolder = integerViewHolderEntry.getValue();
+            if(pureContent) {
+                viewHolder.getBinding().topShadowCover.setVisibility(View.GONE);
+                if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
+                    viewHolder.getBinding().playControl.setVisibility(View.GONE);
+                }
+            }else {
+                viewHolder.getBinding().topShadowCover.setVisibility(View.VISIBLE);
+                if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
+                    viewHolder.getBinding().playControl.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         if(pureContent){
             binding.appBar.setVisibility(View.GONE);
             WindowAndSystemUiUtil.setSystemUIShown(this, false);
