@@ -146,12 +146,12 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
         openedChats.forEach(openedChat -> {
             ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, openedChat.getChannelIchatId());
             List<ChatMessage> limit = chatMessageDatabaseManager.findLimit(0, 1, true);
-            if(limit.size() == 1){
+            if (limit.size() == 1) {
                 openedChat.setNewestChatMessage(limit.get(0));
+                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(openedChat.getChannelIchatId());
+                openedChat.setChannel(channel);
+                itemDataList.add(new ItemData(openedChat));
             }
-            Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(openedChat.getChannelIchatId());
-            openedChat.setChannel(channel);
-            itemDataList.add(new ItemData(openedChat));
         });
         itemDataList.sort((o1, o2) -> -o1.openedChat.getNewestChatMessage().getTime().compareTo(o2.openedChat.getNewestChatMessage().getTime()));
         notifyDataSetChanged();

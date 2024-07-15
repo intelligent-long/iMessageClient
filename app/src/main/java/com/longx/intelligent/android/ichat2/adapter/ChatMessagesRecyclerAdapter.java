@@ -545,16 +545,22 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     public synchronized void addItemAndShow(ChatMessage chatMessage){
         if(itemDataList.contains(new ItemData(chatMessage))) return;
         ItemData itemData = new ItemData(chatMessage);
-        for (int index = itemDataList.size() - 1; index >= 0; index--) {
-            ItemData data = itemDataList.get(index);
-            if(data.chatMessage.getTime().getTime() < itemData.chatMessage.getTime().getTime()){
-                itemDataList.add(index + 1, itemData);
-                notifyItemInserted(index + 1);
-                break;
+        if(itemDataList.isEmpty()){
+            itemDataList.add(itemData);
+            notifyItemInserted(0);
+        }else {
+            for (int index = itemDataList.size() - 1; index >= 0; index--) {
+                ItemData data = itemDataList.get(index);
+                if (data.chatMessage.getTime().getTime() < itemData.chatMessage.getTime().getTime()) {
+                    itemDataList.add(index + 1, itemData);
+                    notifyItemInserted(index + 1);
+                    break;
+                }
             }
         }
         determineAndUpdateShowTime();
         recyclerView.scrollToEnd(true);
+        ErrorLogger.log(itemDataList.size());
     }
 
     public synchronized void addAllToStartAndShow(List<ChatMessage> chatMessages){
@@ -576,7 +582,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
 
     public void onActivityDestroy(){
         ChatVoicePlayer.State state = chatVoicePlayer.release();
-        SharedPreferencesAccessor.ChatPref.saveChatVoicePlayerState(activity, state);
+        if(state != null) SharedPreferencesAccessor.ChatPref.saveChatVoicePlayerState(activity, state);
     }
 
 }
