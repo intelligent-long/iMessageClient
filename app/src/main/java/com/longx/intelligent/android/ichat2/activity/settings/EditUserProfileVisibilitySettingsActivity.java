@@ -15,7 +15,7 @@ import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibi
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditUserProfileVisibilitySettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
-import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
@@ -140,7 +140,7 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
                 return;
             }
             ChangeUserProfileVisibilityPostBody postBody = new ChangeUserProfileVisibilityPostBody(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked);
-            PrivacyApiCaller.changeUserProfileVisibility(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
+            PermissionApiCaller.changeUserProfileVisibility(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);

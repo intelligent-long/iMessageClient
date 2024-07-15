@@ -11,11 +11,11 @@ import retrofit2.http.POST;
 /**
  * Created by LONG on 2024/6/7 at 6:00 PM.
  */
-public interface PrivacyApi {
+public interface PermissionApi {
 
-    @POST("privacy/user/profile_visibility/change")
+    @POST("permission/user/profile_visibility/change")
     CompletableCall<OperationStatus> changeUserProfileVisibility(@Body ChangeUserProfileVisibilityPostBody postBody);
 
-    @POST("privacy/user/ways_to_find_me/change")
+    @POST("permission/user/ways_to_find_me/change")
     CompletableCall<OperationStatus> changeWaysToFindMe(@Body ChangeWaysToFindMePostBody postBody);
 }

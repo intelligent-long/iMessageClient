@@ -15,7 +15,7 @@ import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostB
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditWaysToFindMeBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
-import com.longx.intelligent.android.ichat2.net.retrofit.caller.PrivacyApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
@@ -130,7 +130,7 @@ public class EditWaysToFindMeActivity extends BaseActivity {
                 return;
             }
             ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(findMeByIchatIdChecked, findMeByEmailChecked);
-            PrivacyApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
+            PermissionApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
