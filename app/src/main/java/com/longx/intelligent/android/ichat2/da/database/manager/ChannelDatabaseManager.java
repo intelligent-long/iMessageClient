@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.data.Avatar;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
+import com.longx.intelligent.android.ichat2.data.ChatMessageAllow;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
 
@@ -54,6 +55,10 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.REQUEST_TIME, channelAssociation.getRequestTime().getTime());
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ACCEPT_TIME, channelAssociation.getAcceptTime().getTime());
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.IS_ACTIVE, channelAssociation.isActive());
+                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_THEM, channelAssociation.getChatMessageAllowToThem().isAllowVoice());
+                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_THEM, channelAssociation.getChatMessageAllowToThem().isAllowNotice());
+                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_ME, channelAssociation.getChatMessageAllowToMe().isAllowVoice());
+                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_ME, channelAssociation.getChatMessageAllowToMe().isAllowNotice());
                 long id = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS, null,
                         values, SQLiteDatabase.CONFLICT_IGNORE);
                 if (id == -1) {
@@ -111,6 +116,10 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 Date requestTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.REQUEST_TIME);
                 Date acceptTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ACCEPT_TIME);
                 Boolean isActive = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.IS_ACTIVE);
+                Boolean allowVoiceChatMessageToThem = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_THEM);
+                Boolean allowNoticeChatMessageToThem = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_THEM);
+                Boolean allowVoiceChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_ME);
+                Boolean allowNoticeChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_ME);
                 String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);
                 String channelTableEmail = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.EMAIL);
                 String channelTableUsername = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.USERNAME);
@@ -133,7 +142,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                                 channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                                 channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
                                 channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
-                                Boolean.TRUE.equals(channelTableAssociated))));
+                                Boolean.TRUE.equals(channelTableAssociated)),
+                        new ChatMessageAllow(allowVoiceChatMessageToThem == null || allowVoiceChatMessageToThem, allowNoticeChatMessageToThem == null || allowNoticeChatMessageToThem),
+                        new ChatMessageAllow(allowVoiceChatMessageToMe == null || allowVoiceChatMessageToMe, allowNoticeChatMessageToMe == null || allowNoticeChatMessageToMe)));
             }
             return result;
         }finally {
@@ -148,7 +159,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 + " FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS + " ca "
                 + " INNER JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS + " c ON "
                 + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID
-                + " WHERE ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = " + ichatId;
+                + " WHERE ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = \"" + ichatId + "\"";
         try(Cursor cursor = getDatabase().rawQuery(sql, null)) {
             cursor.moveToNext();
             String associationId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ASSOCIATION_ID);
@@ -159,6 +170,10 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             Date requestTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.REQUEST_TIME);
             Date acceptTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ACCEPT_TIME);
             Boolean isActive = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.IS_ACTIVE);
+            Boolean allowVoiceChatMessageToThem = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_THEM);
+            Boolean allowNoticeChatMessageToThem = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_THEM);
+            Boolean allowVoiceChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_ME);
+            Boolean allowNoticeChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_ME);
             String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);
             String channelTableEmail = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.EMAIL);
             String channelTableUsername = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.USERNAME);
@@ -181,7 +196,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                             channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                             channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
                             channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
-                            Boolean.TRUE.equals(channelTableAssociated)));
+                            Boolean.TRUE.equals(channelTableAssociated)),
+                    new ChatMessageAllow(allowVoiceChatMessageToThem == null || allowVoiceChatMessageToThem, allowNoticeChatMessageToThem == null || allowNoticeChatMessageToThem),
+                    new ChatMessageAllow(allowVoiceChatMessageToMe == null || allowVoiceChatMessageToMe, allowNoticeChatMessageToMe == null || allowNoticeChatMessageToMe));
         }finally {
             releaseDatabaseIfUnused();
         }

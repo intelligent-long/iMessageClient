@@ -18,11 +18,13 @@ public class ChannelAssociation {
     private boolean active;
     @JsonProperty("channel")
     private Channel channel;
+    private ChatMessageAllow chatMessageAllowToThem;
+    private ChatMessageAllow chatMessageAllowToMe;
 
     public ChannelAssociation() {
     }
 
-    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean requester, Date requestTime, Date acceptTime, boolean active) {
+    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean requester, Date requestTime, Date acceptTime, boolean active, ChatMessageAllow chatMessageAllowToThem, ChatMessageAllow chatMessageAllowToMe) {
         this.associationId = associationId;
         this.ichatId = ichatId;
         this.channelIchatId = channelIchatId;
@@ -30,10 +32,12 @@ public class ChannelAssociation {
         this.requestTime = requestTime;
         this.acceptTime = acceptTime;
         this.active = active;
+        this.chatMessageAllowToThem = chatMessageAllowToThem;
+        this.chatMessageAllowToMe = chatMessageAllowToMe;
     }
 
-    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean active, Channel channel) {
-        this(associationId, ichatId, channelIchatId, isRequester, requestTime, acceptTime, active);
+    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean active, Channel channel, ChatMessageAllow chatMessageAllowToThem, ChatMessageAllow chatMessageAllowToMe) {
+        this(associationId, ichatId, channelIchatId, isRequester, requestTime, acceptTime, active, chatMessageAllowToThem, chatMessageAllowToMe);
         this.channel = channel;
     }
 
@@ -67,6 +71,14 @@ public class ChannelAssociation {
 
     public Channel getChannel() {
         return channel;
+    }
+
+    public ChatMessageAllow getChatMessageAllowToThem() {
+        return chatMessageAllowToThem;
+    }
+
+    public ChatMessageAllow getChatMessageAllowToMe() {
+        return chatMessageAllowToMe;
     }
 
     @Override

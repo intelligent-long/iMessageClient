@@ -25,6 +25,10 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String REQUEST_TIME = "request_time";
         public static final String ACCEPT_TIME = "accept_time";
         public static final String IS_ACTIVE = "is_active";
+        public static final String ALLOW_VOICE_CHAT_MESSAGE_TO_THEM = "allow_voice_chat_message_to_them";
+        public static final String ALLOW_NOTICE_CHAT_MESSAGE_TO_THEM = "allow_notice_chat_message_to_them";
+        public static final String ALLOW_VOICE_CHAT_MESSAGE_TO_ME = "allow_voice_chat_message_to_me";
+        public static final String ALLOW_NOTICE_CHAT_MESSAGE_TO_ME = "allow_notice_chat_message_to_me";
     }
 
     public static class TableChannelsColumns {
@@ -75,6 +79,10 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelAssociationsColumns.REQUEST_TIME + " DATETIME,"
                 + TableChannelAssociationsColumns.ACCEPT_TIME + " DATETIME,"
                 + TableChannelAssociationsColumns.IS_ACTIVE + " BOOLEAN,"
+                + TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_THEM + " BOOLEAN,"
+                + TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_THEM + " BOOLEAN,"
+                + TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_ME + " BOOLEAN,"
+                + TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_ME + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableChannelAssociationsColumns.ASSOCIATION_ID
                 +")"

@@ -21,10 +21,12 @@ import com.longx.intelligent.android.ichat2.adapter.ChatMessagesRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behavior.VoiceChatMessageBehaviours;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.data.ChatMessageAllow;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
@@ -36,6 +38,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -77,6 +80,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private ActivityResultLauncher<Intent> sendVideoMessageResultLauncher;
     private boolean isFabScaledUp;
     private VoiceChatMessageBehaviours voiceChatMessageBehaviours;
+    private ChannelDatabaseManager channelDatabaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +93,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
         openedChatDatabaseManager.updateShow(channel.getIchatId(), true);
+        channelDatabaseManager = ChannelDatabaseManager.getInstance();
         GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
         init();
         showContent();
@@ -122,6 +127,10 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(openedChatDatabaseManager.findNotViewedCount(channel.getIchatId()) > 0) {
             viewAllNewChatMessages();
         }
+        ChatMessageAllow chatMessageAllow = channelDatabaseManager.findOneAssociations(channel.getIchatId()).getChatMessageAllowToThem();
+        if(!chatMessageAllow.isAllowVoice()){
+            binding.voiceButton.setEnabled(false);
+        }
     }
 
     private void showChatMessages() {
@@ -137,7 +146,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 thisChannelNewMessages.add(newChatMessage);
             }
         });
-        if(thisChannelNewMessages.size() > 0) {
+        if(!thisChannelNewMessages.isEmpty()) {
             viewAllNewChatMessages();
             thisChannelNewMessages.sort(Comparator.comparing(ChatMessage::getTime));
             synchronized (this) {
@@ -175,7 +184,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         int currentChatMessageCount = chatMessageDatabaseManager.count();
         startIndex += (currentChatMessageCount - initialChatMessageCount);
         List<ChatMessage> chatMessages = chatMessageDatabaseManager.findLimit(startIndex, PS, true);
-        if (chatMessages.size() == 0) {
+        if (chatMessages.isEmpty()) {
             reachStart = true;
             return;
         }
@@ -253,7 +262,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         });
         binding.sendButton.setOnClickListener(v -> {
             String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
-            if(inputtedMessage == null || inputtedMessage.equals("")) return;
+            if(inputtedMessage == null || inputtedMessage.isEmpty()) return;
             SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(channel.getIchatId(), inputtedMessage);
             ChatApiCaller.sendTextChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
                 @Override
@@ -487,7 +496,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
     private void hideMorePanel(){
         binding.morePanel.setVisibility(View.GONE);
-        if(UiUtil.getEditTextString(binding.messageInput) != null && !UiUtil.getEditTextString(binding.messageInput).isEmpty()){
+        String messageInputString = UiUtil.getEditTextString(binding.messageInput);
+        if(messageInputString != null && !messageInputString.isEmpty()){
             binding.layoutSendButtonAndIndicator.setVisibility(View.VISIBLE);
             binding.moreButton.setVisibility(View.GONE);
             binding.sendButton.setVisibility(View.VISIBLE);

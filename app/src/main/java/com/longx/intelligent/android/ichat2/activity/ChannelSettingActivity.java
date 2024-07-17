@@ -40,8 +40,8 @@ public class ChannelSettingActivity extends BaseActivity {
         binding.clickViewVoiceMessage.setOnClickListener(v -> {
             binding.switchVoiceMessage.setChecked(!binding.switchVoiceMessage.isChecked());
         });
-        binding.clickViewNote1.setOnClickListener(v -> {
-            binding.switchNote.setChecked(!binding.switchNote.isChecked());
+        binding.clickViewNotice.setOnClickListener(v -> {
+            binding.switchNotice.setChecked(!binding.switchNotice.isChecked());
         });
         binding.deleteChannel.setOnClickListener(v -> {
             new ConfirmDialog(this, "是否继续？")

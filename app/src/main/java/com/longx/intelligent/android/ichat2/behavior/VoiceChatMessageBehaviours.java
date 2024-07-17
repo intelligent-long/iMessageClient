@@ -163,7 +163,7 @@ public class VoiceChatMessageBehaviours {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                data.commonHandleResult(chatActivity, new int[]{-101, -102, -103}, () -> {
+                data.commonHandleResult(chatActivity, new int[]{-101, -102, -103, -199}, () -> {
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
                     ChatMessage.mainDoOnNewChatMessage(chatMessage, chatActivity, results -> {
