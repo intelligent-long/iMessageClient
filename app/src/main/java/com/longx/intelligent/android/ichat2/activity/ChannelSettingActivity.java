@@ -7,13 +7,18 @@ import android.os.Bundle;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.ChatMessageAllow;
+import com.longx.intelligent.android.ichat2.data.request.ChangeAllowChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.DeleteChannelAssociationPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelSettingBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,15 +38,54 @@ public class ChannelSettingActivity extends BaseActivity {
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
+        showContent();
         setupYiers();
+    }
+
+    private void showContent() {
+        ChatMessageAllow chatMessageAllowToMe = ChannelDatabaseManager.getInstance().findOneAssociations(channel.getIchatId()).getChatMessageAllowToMe();
+        binding.switchVoiceMessage.setChecked(chatMessageAllowToMe.isAllowVoice());
+        binding.switchNotice.setChecked(chatMessageAllowToMe.isAllowNotice());
     }
 
     private void setupYiers() {
         binding.clickViewVoiceMessage.setOnClickListener(v -> {
-            binding.switchVoiceMessage.setChecked(!binding.switchVoiceMessage.isChecked());
+            UiUtil.setViewGroupEnabled(binding.clickViewVoiceMessage, false, true);
+            boolean changeTo = !binding.switchVoiceMessage.isChecked();
+            boolean switchNoticeChecked = binding.switchNotice.isChecked();
+            PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getIchatId(), new ChatMessageAllow(changeTo, switchNoticeChecked)),
+                    new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
+                        @Override
+                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                            super.ok(data, row, call);
+                            binding.switchVoiceMessage.setChecked(changeTo);
+                        }
+
+                        @Override
+                        public synchronized void complete(Call<OperationStatus> call) {
+                            super.complete(call);
+                            UiUtil.setViewGroupEnabled(binding.clickViewVoiceMessage, true, true);
+                        }
+                    });
         });
         binding.clickViewNotice.setOnClickListener(v -> {
-            binding.switchNotice.setChecked(!binding.switchNotice.isChecked());
+            UiUtil.setViewGroupEnabled(binding.clickViewNotice, false, true);
+            boolean switchVoiceMessageChecked = binding.switchVoiceMessage.isChecked();
+            boolean changeTo = !binding.switchNotice.isChecked();
+            PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getIchatId(), new ChatMessageAllow(switchVoiceMessageChecked, changeTo)),
+                    new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
+                        @Override
+                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                            super.ok(data, row, call);
+                            binding.switchNotice.setChecked(changeTo);
+                        }
+
+                        @Override
+                        public synchronized void complete(Call<OperationStatus> call) {
+                            super.complete(call);
+                            UiUtil.setViewGroupEnabled(binding.clickViewNotice, true, true);
+                        }
+                    });
         });
         binding.deleteChannel.setOnClickListener(v -> {
             new ConfirmDialog(this, "是否继续？")

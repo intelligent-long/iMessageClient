@@ -104,21 +104,31 @@ public class UiUtil {
         }
     }
 
-    public static void setViewGroupEnabled(ViewGroup viewGroup, boolean enable){
+    public static void setViewGroupEnabled(ViewGroup viewGroup, boolean enable, boolean changeAlpha){
+        viewGroup.setEnabled(enable);
+        if(changeAlpha) {
+            if (enable) {
+                viewGroup.setAlpha(1F);
+            } else {
+                viewGroup.setAlpha(0.26F);
+            }
+        }
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
-            setViewEnabled(child, enable);
+            setViewEnabled(child, enable, false);
             if (child instanceof ViewGroup) {
-                setViewGroupEnabled((ViewGroup) child, enable);
+                setViewGroupEnabled((ViewGroup) child, enable, false);
             }
         }
     }
 
-    public static void setViewEnabled(View view, boolean enable) {
-        if (enable) {
-            view.setAlpha(1F);
-        } else {
-            view.setAlpha(0.26F);
+    public static void setViewEnabled(View view, boolean enable, boolean changeAlpha) {
+        if(changeAlpha) {
+            if (enable) {
+                view.setAlpha(1F);
+            } else {
+                view.setAlpha(0.26F);
+            }
         }
         view.setEnabled(enable);
     }

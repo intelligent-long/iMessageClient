@@ -129,7 +129,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         }
         ChatMessageAllow chatMessageAllow = channelDatabaseManager.findOneAssociations(channel.getIchatId()).getChatMessageAllowToThem();
         if(!chatMessageAllow.isAllowVoice()){
-            UiUtil.setViewEnabled(binding.voiceButton, false);
+            UiUtil.setViewEnabled(binding.voiceButton, false, true);
         }
     }
 
