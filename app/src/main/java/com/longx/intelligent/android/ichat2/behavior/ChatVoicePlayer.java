@@ -6,17 +6,21 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.HapticFeedbackConstants;
 
+import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 public class ChatVoicePlayer {
     private MediaPlayer mediaPlayer;
-    private final Context context;
+    private final ChatActivity chatActivity;
     private final AudioManager audioManager;
     private final SensorManager sensorManager;
     private final Sensor proximitySensor;
@@ -24,6 +28,7 @@ public class ChatVoicePlayer {
     private OnPlayStateChangeYier onPlayStateChangeYier;
     private String id;
     private Uri uri;
+    private boolean earpieceNow;
 
     public interface OnPlayStateChangeYier {
         void onStart(String id);
@@ -32,10 +37,10 @@ public class ChatVoicePlayer {
         void onError(String id, int what, int extra);
     }
 
-    public ChatVoicePlayer(Context context) {
-        this.context = context;
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    public ChatVoicePlayer(ChatActivity chatActivity) {
+        this.chatActivity = chatActivity;
+        audioManager = (AudioManager) chatActivity.getSystemService(Context.AUDIO_SERVICE);
+        sensorManager = (SensorManager) chatActivity.getSystemService(Context.SENSOR_SERVICE);
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         proximitySensorYier = new SensorEventListener() {
@@ -43,8 +48,10 @@ public class ChatVoicePlayer {
             public void onSensorChanged(SensorEvent event) {
                 if (proximitySensor != null) {
                     if (event.values[0] < proximitySensor.getMaximumRange()) {
+                        earpieceNow = true;
                         switchToEarpiece();
                     } else {
+                        earpieceNow = false;
                         switchToSpeaker();
                     }
                 }
@@ -64,7 +71,7 @@ public class ChatVoicePlayer {
         release();
         this.id = id;
         this.uri = uri;
-        mediaPlayer = MediaPlayer.create(context, uri);
+        mediaPlayer = MediaPlayer.create(chatActivity, uri);
         setAudioAttributes(AudioManager.STREAM_MUSIC);
         setupYiers();
     }
@@ -172,6 +179,21 @@ public class ChatVoicePlayer {
             mediaPlayer.seekTo(getDuration());
             if (onPlayStateChangeYier != null) {
                 onPlayStateChangeYier.onStop(id, true);
+                if(earpieceNow) {
+                    chatActivity.getBinding().holdToTalkButton.performHapticFeedback(
+                            HapticFeedbackConstants.CONTEXT_CLICK,
+                            HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+                    );
+                    try {
+                        Thread.sleep(210);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    chatActivity.getBinding().holdToTalkButton.performHapticFeedback(
+                            HapticFeedbackConstants.CONTEXT_CLICK,
+                            HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+                    );
+                }
             }
             unregisterProximitySensor();
         });
