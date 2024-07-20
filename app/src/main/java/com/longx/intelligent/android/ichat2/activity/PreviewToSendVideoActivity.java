@@ -1,8 +1,11 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -12,6 +15,7 @@ import com.google.android.exoplayer2.Player;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendVideoBinding;
+import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -40,6 +44,7 @@ public class PreviewToSendVideoActivity extends BaseActivity {
         initializeSeekBar();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initializePlayer() {
         player = new ExoPlayer.Builder(this).build();
         binding.playerView.setPlayer(player);
@@ -82,6 +87,18 @@ public class PreviewToSendVideoActivity extends BaseActivity {
         binding.pauseButton.setOnClickListener(v -> player.pause());
         binding.playerView.setOnClickListener(v -> {
             setPurePhoto(!pureVideo);
+        });
+
+        SwipeDownGestureYier swipeDownGestureYier = new SwipeDownGestureYier(this) {
+            @Override
+            public void onSwipeDown() {
+                finish();
+            }
+        };
+        GestureDetector gestureDetector = new GestureDetector(this, swipeDownGestureYier);
+        binding.playerView.setOnTouchListener((View v, MotionEvent event) -> {
+            gestureDetector.onTouchEvent(event);
+            return false;
         });
     }
 

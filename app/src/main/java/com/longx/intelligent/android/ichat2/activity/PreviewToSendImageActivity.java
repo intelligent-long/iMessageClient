@@ -1,8 +1,11 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -10,6 +13,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendImageBinding;
+import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
@@ -36,14 +40,27 @@ public class PreviewToSendImageActivity extends BaseActivity {
         showPhoto();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupPhotoView() {
         binding.photo.setOnClickListener(v -> {
             setPurePhoto(!purePhoto);
+        });
+        SwipeDownGestureYier swipeDownGestureYier = new SwipeDownGestureYier(this) {
+            @Override
+            public void onSwipeDown() {
+                finish();
+            }
+        };
+        GestureDetector gestureDetector = new GestureDetector(this, swipeDownGestureYier);
+        binding.photo.setOnTouchListener((View v, MotionEvent event) -> {
+            gestureDetector.onTouchEvent(event);
+            return false;
         });
         binding.photo.setOnStateChangedListener(new SubsamplingScaleImageView.OnStateChangedListener() {
             @Override
             public void onScaleChanged(float newScale, int origin) {
                 setPurePhoto(true);
+                swipeDownGestureYier.setEnabled(newScale == binding.photo.getMinScale());
             }
 
             @Override
