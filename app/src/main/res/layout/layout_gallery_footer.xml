@@ -10,7 +10,7 @@
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:textSize="16sp"
-            android:fontFamily="@font/ping_fang_sc_medium"/>
+            android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
 
         <View
             android:id="@+id/navigation_space"

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:textColor="?attr/colorOutline"
         android:textSize="16sp"
-        android:fontFamily="@font/ping_fang_sc_medium"/>
+        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
 
     <TextView
         android:id="@+id/ip"
@@ -21,7 +21,7 @@
         android:layout_marginTop="1dp"
         android:textColor="?attr/colorOutline"
         android:textSize="16sp"
-        android:fontFamily="@font/ping_fang_sc_medium"/>
+        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
 
     <TextView
         android:id="@+id/desc"

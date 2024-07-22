@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="?attr/colorOutline"
-        android:fontFamily="@font/ping_fang_sc_medium"
+        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
         android:layout_marginHorizontal="30dp"
         android:layout_marginVertical="10dp"/>
 

@@ -74,7 +74,7 @@
     </style>
 
     <style name="ChatActivityTitleText">
-        <item name="fontFamily">@font/ping_fang_sc_medium</item>
+        <item name="fontFamily">@font/long_android_font_ncjk_gs_sc_medium</item>
         <item name="android:textSize">21.6sp</item>
     </style>
 
