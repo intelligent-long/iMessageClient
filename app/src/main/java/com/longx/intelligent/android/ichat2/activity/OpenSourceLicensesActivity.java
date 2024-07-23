@@ -27,18 +27,18 @@ public class OpenSourceLicensesActivity extends BaseActivity {
     }
 
     private void showLicensesMessage() {
-        binding.licensesMessage.setBackgroundColor(ContextCompat.getColor(this,android.R.color.transparent));
+        binding.licensesMessage.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         binding.licensesMessage.setVerticalScrollBarEnabled(false);
         String html = buildHtml();
         html = changeUiMode(html);
-        binding.licensesMessage.loadData(html, "text/html; charset=utf-8", "utf-8");
+        binding.licensesMessage.loadDataWithBaseURL("file:///android_res/font/", html, "text/html", "utf-8", null);
     }
 
     private String changeUiMode(String html) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
             if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-                html = html.replace( "<textColor>", "color: " + ColorUtil.colorToRGB(ColorUtil.getAttrColor(this, android.R.attr.textColorPrimary)) + ";");
+                html = html.replace("<textColor>", "color: " + ColorUtil.colorToRGB(ColorUtil.getAttrColor(this, android.R.attr.textColorPrimary)) + ";");
                 binding.licensesMessage.getSettings().setForceDark(WebSettings.FORCE_DARK_ON);
             } else {
                 html = html.replace("<textColor>", "");

@@ -98,11 +98,11 @@
 
     <style name="BottomNavTextAppearanceActive" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">@font/long_android_font_ncjk_gs_sc_medium</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12.5sp</item>
     </style>
 
     <style name="BottomNavTextAppearanceInactive" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">@font/long_android_font_ncjk_gs_sc_regular</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12.5sp</item>
     </style>
 </resources>

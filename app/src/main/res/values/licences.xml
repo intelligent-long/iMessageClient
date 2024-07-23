@@ -2,20 +2,29 @@
 <resources tools:ignore="TypographyOther" xmlns:tools="http://schemas.android.com/tools">
     <string name="html_text_prefix">
         <![CDATA[
-        <html><head><style>html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 110%;
-        word-wrap: break-word;
-        word-break: break-word;
-        overflow-wrap: break-word;
-        white-space: normal;
-        <textColor>
+        <html>
+        <head>
+        <style>
+        @font-face {
+            font-family: "CustomFont";
+            src: url("file:///android_res/font/long_android_font_ncjk_gs_sc_regular.ttf") format("truetype");
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 110%;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            font-family: "CustomFont";
+            <textColor>
         }
         </style>
-        </head><body>
+        </head>
+        <body>
         This software uses the following open source libraries:<br>
         ]]>
     </string>
