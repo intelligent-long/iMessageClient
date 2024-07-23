@@ -42,7 +42,7 @@
                 android:singleLine="true"
                 android:textColor="?attr/colorOnErrorContainer"
                 android:textSize="16sp"
-                android:fontFamily="@font/long_android_font_ncjk_gs_sc_regular"/>
+                android:textFontWeight="@integer/font_weight_regular"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

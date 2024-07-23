@@ -14,7 +14,7 @@
         android:gravity="center_vertical"
         android:paddingStart="19dp"
         android:textColor="?attr/colorControlNormal"
-        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
+        android:textFontWeight="@integer/font_weight_medium"
         android:background="@color/transparent"
         tools:ignore="RtlSymmetry" />
 

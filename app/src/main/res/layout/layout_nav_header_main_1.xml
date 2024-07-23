@@ -48,7 +48,7 @@
                     android:text="名称"
                     android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
-                    android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+                    android:textFontWeight="@integer/font_weight_medium"/>
 
                 <TextView
                     android:id="@+id/username"
@@ -61,7 +61,7 @@
                     android:singleLine="true"
                     android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
-                    android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+                    android:textFontWeight="@integer/font_weight_medium"/>
             </RelativeLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -83,7 +83,7 @@
                     android:text="iChat ID"
                     android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
-                    android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+                    android:textFontWeight="@integer/font_weight_medium"/>
 
                 <TextView
                     android:id="@+id/ichat_id_user"
@@ -96,7 +96,7 @@
                     android:singleLine="true"
                     android:textAppearance="@style/MainNavInfo"
                     android:textSize="16sp"
-                    android:fontFamily="@font/long_android_font_ncjk_gs_sc_regular"/>
+                    android:textFontWeight="@integer/font_weight_regular"/>
             </RelativeLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -118,7 +118,7 @@
                     android:text="邮箱"
                     android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
-                    android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+                    android:textFontWeight="@integer/font_weight_medium"/>
 
                 <TextView
                     android:id="@+id/email"
@@ -131,7 +131,7 @@
                     android:singleLine="true"
                     android:textAppearance="@style/MainNavInfo"
                     android:textSize="16sp"
-                    android:fontFamily="@font/long_android_font_ncjk_gs_sc_regular"/>
+                    android:textFontWeight="@integer/font_weight_regular"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -161,7 +161,7 @@
                         android:text="性别"
                         android:textColor="?attr/colorOnBackground"
                         android:textSize="16sp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+                        android:textFontWeight="@integer/font_weight_medium"/>
 
                     <ImageView
                         android:id="@+id/sex"
@@ -202,7 +202,7 @@
                         android:text="地区"
                         android:textColor="?attr/colorOnBackground"
                         android:textSize="16sp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+                        android:textFontWeight="@integer/font_weight_medium"/>
 
                     <TextView
                         android:id="@+id/region"
@@ -215,7 +215,7 @@
                         android:singleLine="true"
                         android:textAppearance="@style/MainNavInfo"
                         android:textSize="16sp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_regular"/>
+                        android:textFontWeight="@integer/font_weight_regular"/>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -247,7 +247,7 @@
                         android:text="离线时间"
                         android:textColor="?attr/colorOnBackground"
                         android:textSize="16sp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+                        android:textFontWeight="@integer/font_weight_medium"/>
 
                     <TextView
                         android:id="@+id/offline_time"
@@ -260,7 +260,7 @@
                         android:singleLine="true"
                         android:textAppearance="@style/MainNavInfo"
                         android:textSize="16sp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_regular"/>
+                        android:textFontWeight="@integer/font_weight_regular"/>
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>

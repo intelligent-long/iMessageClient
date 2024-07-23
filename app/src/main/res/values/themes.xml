@@ -5,6 +5,7 @@
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="fontFamily">@font/long_android_font_ncjk_gs_sc</item>
     </style>
 
     <style name="Theme.MainActivity" parent="Theme.IChat2Client">
@@ -74,7 +75,6 @@
     </style>
 
     <style name="ChatActivityTitleText">
-        <item name="fontFamily">@font/long_android_font_ncjk_gs_sc_medium</item>
         <item name="android:textSize">21.6sp</item>
     </style>
 
@@ -89,5 +89,20 @@
     <style name="ShapeAppearanceOverlay.Round" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="MainBottomNavigationView" parent="">
+        <item name="itemTextAppearanceActive">@style/BottomNavTextAppearanceActive</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavTextAppearanceInactive</item>
+    </style>
+
+    <style name="BottomNavTextAppearanceActive" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/long_android_font_ncjk_gs_sc_medium</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="BottomNavTextAppearanceInactive" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/long_android_font_ncjk_gs_sc_regular</item>
+        <item name="android:textSize">13sp</item>
     </style>
 </resources>

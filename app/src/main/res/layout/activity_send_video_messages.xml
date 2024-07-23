@@ -34,7 +34,7 @@
                     android:text="发送视频"
                     android:textSize="24sp"
                     android:textColor="@color/white"
-                    android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium" />
+                    android:textFontWeight="@integer/font_weight_medium" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/directory_layout"
@@ -71,7 +71,7 @@
             android:layout_marginHorizontal="16dp"
             android:textSize="24sp"
             android:textColor="@color/white"
-            android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+            android:textFontWeight="@integer/font_weight_medium"/>
 
         <TextView
             android:id="@+id/location"
@@ -81,7 +81,7 @@
             android:layout_marginHorizontal="16dp"
             android:textSize="17sp"
             android:textColor="@color/white"
-            android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"/>
+            android:textFontWeight="@integer/font_weight_medium"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.longx.intelligent.android.lib.recyclerview.RecyclerView

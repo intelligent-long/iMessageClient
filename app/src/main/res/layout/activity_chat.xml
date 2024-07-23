@@ -123,7 +123,7 @@
                 app:iconTint="?attr/colorControlNormal"
                 android:textColor="?attr/colorControlNormal"
                 android:textSize="16sp"
-                android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
+                android:textFontWeight="@integer/font_weight_medium"
                 app:rippleColor="@android:color/transparent"
                 app:cornerRadius="5dp" />
 

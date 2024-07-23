@@ -131,7 +131,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1.5dp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
+                        android:textFontWeight="@integer/font_weight_medium"
                         android:text="名称"/>
                 </LinearLayout>
             </LinearLayout>
@@ -167,7 +167,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1.5dp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
+                        android:textFontWeight="@integer/font_weight_medium"
                         android:text="邮箱"/>
                 </LinearLayout>
             </LinearLayout>
@@ -203,7 +203,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1.5dp"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
+                        android:textFontWeight="@integer/font_weight_medium"
                         android:text="地区"/>
                 </LinearLayout>
             </LinearLayout>

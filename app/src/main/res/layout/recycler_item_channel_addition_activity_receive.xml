@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="?attr/colorOutline"
-        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
+        android:textFontWeight="@integer/font_weight_medium"
         android:layout_marginHorizontal="30dp"
         android:layout_marginVertical="10dp"/>
 
