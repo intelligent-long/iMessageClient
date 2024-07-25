@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.dialog;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.util.TypedValue;
 import android.view.View;
@@ -27,11 +28,11 @@ public class ConfirmDialog extends AbstractDialog{
     private ButtonInfo negativeButtonInfo;
     private ButtonInfo neutralButtonInfo;
 
-    public ConfirmDialog(AppCompatActivity activity, String message) {
+    public ConfirmDialog(Activity activity, String message) {
         this(activity, null, message);
     }
 
-    public ConfirmDialog(AppCompatActivity activity, Integer iconId, String message) {
+    public ConfirmDialog(Activity activity, Integer iconId, String message) {
         super(activity, R.style.ConfirmMaterialAlertDialog);
         this.iconId = iconId;
         this.message = message;

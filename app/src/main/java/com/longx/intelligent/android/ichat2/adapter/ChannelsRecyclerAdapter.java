@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
+import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -89,8 +90,16 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
             }
         }
         holder.binding.name.setText(itemData.channel.getName());
+        setupYiers(holder, position);
+    }
+
+    private void setupYiers(@NonNull ViewHolder holder, int position) {
+        ItemData itemData = itemDataList.get(position);
         holder.binding.clickView.setOnClickListener(v -> {
             getOnItemClickYier().onItemClick(position, itemData);
+        });
+        holder.binding.indexBar.setOnClickListener(v -> {
+            new FastLocateDialog(activity, FastLocateDialog.LOCATE_CHANNEL).show();
         });
     }
 

@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.dialog;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -22,16 +23,16 @@ import java.util.Objects;
  * Created by LONG on 2024/1/8 at 9:20 PM.
  */
 public abstract class AbstractDialog {
-    private final AppCompatActivity activity;
+    private final Activity activity;
     private final MaterialAlertDialogBuilder dialogBuilder;
     private AlertDialog dialog;
     private final ContextThemeWrapper dialogContext;
 
-    public AbstractDialog(AppCompatActivity activity) {
+    public AbstractDialog(Activity activity) {
         this(activity, false);
     }
 
-    public AbstractDialog(AppCompatActivity activity, boolean centered){
+    public AbstractDialog(Activity activity, boolean centered){
         this.activity = activity;
         if(centered) {
             this.dialogBuilder = new MaterialAlertDialogBuilder(activity, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered);
@@ -43,7 +44,7 @@ public abstract class AbstractDialog {
         this.dialogContext = new ContextThemeWrapper(getActivity(), outValue.resourceId);
     }
 
-    public AbstractDialog(AppCompatActivity activity, int style){
+    public AbstractDialog(Activity activity, int style){
         this.activity = activity;
         this.dialogBuilder = new MaterialAlertDialogBuilder(activity, style);
         this.dialogContext = new ContextThemeWrapper(getActivity(), style);
@@ -106,7 +107,7 @@ public abstract class AbstractDialog {
         });
     }
 
-    public AppCompatActivity getActivity() {
+    public Activity getActivity() {
         return activity;
     }
 
