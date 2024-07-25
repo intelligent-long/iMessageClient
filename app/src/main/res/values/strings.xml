@@ -55,6 +55,7 @@
     <string name="channel_addition_activity_send">发出</string>
     <string name="channel_addition_activity_receive">收到</string>
     <string name="no_content">无内容</string>
+    <string name="user_guide_info">请在所有限制后台运行的应用中，移除对本应用的限制。</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>
@@ -90,6 +91,7 @@
     <string name="preference_key_version_name">version_name</string>
     <string name="preference_key_version_code">version_code</string>
     <string name="preference_key_open_source_licenses">open_source_licenses</string>
+    <string name="preference_key_user_guide">user_guide</string>
     <string name="preference_key_author">author</string>
     <string name="preference_key_battery_restriction">battery_restriction</string>
     <string name="preference_key_storage">storage</string>

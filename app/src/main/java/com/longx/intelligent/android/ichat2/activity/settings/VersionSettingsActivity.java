@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 
 import android.content.Intent;
@@ -10,6 +11,8 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.OpenSourceLicensesActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityVersionSettingsBinding;
+import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
+import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -41,6 +44,7 @@ public class VersionSettingsActivity extends BaseActivity {
         private Material3Preference preferenceVersionName;
         private Material3Preference preferenceVersionCode;
         private Material3Preference preferenceOpenSourceLicenses;
+        private Material3Preference preferenceUserGuide;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
@@ -54,6 +58,7 @@ public class VersionSettingsActivity extends BaseActivity {
             preferenceVersionName = findPreference(getString(R.string.preference_key_version_name));
             preferenceVersionCode = findPreference(getString(R.string.preference_key_version_code));
             preferenceOpenSourceLicenses = findPreference(getString(R.string.preference_key_open_source_licenses));
+            preferenceUserGuide = findPreference(getString(R.string.preference_key_user_guide));
         }
 
         @Override
@@ -66,6 +71,7 @@ public class VersionSettingsActivity extends BaseActivity {
         @Override
         protected void setupYiers() {
             preferenceOpenSourceLicenses.setOnPreferenceClickListener(this);
+            preferenceUserGuide.setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -77,6 +83,8 @@ public class VersionSettingsActivity extends BaseActivity {
         public boolean onPreferenceClick(@NonNull Preference preference) {
             if(preference.equals(preferenceOpenSourceLicenses)){
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
+            }else if(preference.equals(preferenceUserGuide)){
+                new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).show();
             }
             return true;
         }

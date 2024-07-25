@@ -14,8 +14,10 @@ import com.longx.intelligent.android.ichat2.databinding.DialogFastLocateBinding;
  * Created by LONG on 2024/7/25 at 下午12:28.
  */
 public class FastLocateDialog extends AbstractDialog{
-    public static char[] LOCATE_CHANNEL = {'.', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#'};
+    public static char[] LOCATE_CHANNEL = {
+            '.', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#'
+    };
 
     private final char[] locateChars;
 
