@@ -109,7 +109,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
             getOnItemClickYier().onItemClick(position, itemData);
         });
         holder.binding.indexBar.setOnClickListener(v -> {
-            FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_CHANNEL);
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_CHANNEL, getExistTexts());
             fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
                 int locatePosition = -1;
                 if(textSelect.equals(".")){
@@ -136,5 +136,13 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
     @Override
     public int getItemCount() {
         return itemDataList.size();
+    }
+
+    private String[] getExistTexts(){
+        String[] result = new String[getItemCount()];
+        for (int i = 0; i < itemDataList.size(); i++) {
+            result[i] = String.valueOf(itemDataList.get(i).indexChar);
+        }
+        return result;
     }
 }

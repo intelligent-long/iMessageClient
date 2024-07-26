@@ -153,7 +153,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
                     .show();
         });
         holder.binding.indexBar.setOnClickListener(v -> {
-            FastLocateDialog fastLocateDialog = new FastLocateDialog(tagChannelActivity, FastLocateDialog.LOCATE_TAG_CHANNEL);
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(tagChannelActivity, FastLocateDialog.LOCATE_TAG_CHANNEL, getExistTexts());
             fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
                 int locatePosition = -1;
                 for (int i = 0; i < itemDataList.size(); i++) {
@@ -171,5 +171,13 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
             });
             fastLocateDialog.show();
         });
+    }
+
+    private String[] getExistTexts(){
+        String[] result = new String[getItemCount()];
+        for (int i = 0; i < itemDataList.size(); i++) {
+            result[i] = String.valueOf(itemDataList.get(i).indexChar);
+        }
+        return result;
     }
 }

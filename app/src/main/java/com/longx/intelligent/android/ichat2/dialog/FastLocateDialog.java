@@ -35,11 +35,13 @@ public class FastLocateDialog extends AbstractDialog{
     private LocateYier locateYier;
     private static final int COLUMN_COUNT = 5;
     private final String[] locateTexts;
+    private final String[] existTexts;
     private FastLocateChannelRecyclerAdapter adapter;
 
-    public FastLocateDialog(Activity activity, String[] locateTexts) {
+    public FastLocateDialog(Activity activity, String[] locateTexts, String[] existTexts) {
         super(activity);
         this.locateTexts = locateTexts;
+        this.existTexts = existTexts;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class FastLocateDialog extends AbstractDialog{
 
     private void showContent(DialogFastLocateBinding binding) {
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), COLUMN_COUNT));
-        adapter = new FastLocateChannelRecyclerAdapter(getActivity(), locateTexts);
+        adapter = new FastLocateChannelRecyclerAdapter(getActivity(), locateTexts, existTexts);
         setupYiers();
         binding.recyclerView.setAdapter(adapter);
     }
