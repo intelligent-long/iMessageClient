@@ -143,7 +143,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         channelAssociations.forEach(channelAssociation -> {
             itemDataList.add(new ChannelsRecyclerAdapter.ItemData(channelAssociation.getChannel()));
         });
-        ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), itemDataList);
+        ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), this, itemDataList);
         channelsRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelsRecyclerAdapter);
         headerViewBinding = LayoutChannelRecyclerViewHeaderBinding.inflate(inflater);
@@ -205,5 +205,9 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 newChannelBadge.setBadgeNumber(newContentCount);
             }
         }
+    }
+
+    public FragmentChannelsBinding getBinding() {
+        return binding;
     }
 }

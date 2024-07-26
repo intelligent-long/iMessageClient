@@ -12,7 +12,9 @@ import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
+import com.longx.intelligent.android.ichat2.fragment.main.ChannelsFragment;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -24,12 +26,20 @@ import java.util.List;
  */
 public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelsRecyclerAdapter.ViewHolder, ChannelsRecyclerAdapter.ItemData> {
     private final Activity activity;
+    private ChannelsFragment channelsFragment;
+    private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ItemData> itemDataList;
 
-    public ChannelsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
+    public ChannelsRecyclerAdapter(Activity activity, ChannelsFragment channelsFragment, List<ItemData> itemDataList) {
         this.activity = activity;
+        this.channelsFragment = channelsFragment;
+        this.recyclerView = channelsFragment.getBinding().recyclerView;
         this.itemDataList = itemDataList;
-        itemDataList.sort(Comparator.comparing(o -> o.indexChar));
+        itemDataList.sort((o1, o2) -> {
+            if (o1.indexChar == '#') return 1;
+            if (o2.indexChar == '#') return -1;
+            return Character.compare(o1.indexChar, o2.indexChar);
+        });
     }
 
     public static class ItemData{
@@ -63,13 +73,13 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
 
     @NonNull
     @Override
-    public ChannelsRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerItemChannelBinding binding = RecyclerItemChannelBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChannelsRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.channel.getAvatar() == null ? null : itemData.channel.getAvatar().getHash();
         if (avatarHash == null) {
@@ -99,7 +109,27 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
             getOnItemClickYier().onItemClick(position, itemData);
         });
         holder.binding.indexBar.setOnClickListener(v -> {
-            new FastLocateDialog(activity, FastLocateDialog.LOCATE_CHANNEL).show();
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_CHANNEL);
+            fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
+                int locatePosition = -1;
+                if(textSelect.equals(".")){
+                    locatePosition = 0;
+                }else {
+                    for (int i = 0; i < itemDataList.size(); i++) {
+                        ItemData data = itemDataList.get(i);
+                        if (String.valueOf(data.indexChar).equals(textSelect)) {
+                            locatePosition = i + 1;
+                            break;
+                        }
+                    }
+                }
+                if(locatePosition != -1) {
+                    channelsFragment.getBinding().appbar.setExpanded(false);
+                    recyclerView.smoothScrollToPosition(locatePosition);
+                }
+                fastLocateDialog.dismiss();
+            });
+            fastLocateDialog.show();
         });
     }
 

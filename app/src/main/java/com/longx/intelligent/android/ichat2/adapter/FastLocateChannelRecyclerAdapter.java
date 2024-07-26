@@ -33,6 +33,11 @@ public class FastLocateChannelRecyclerAdapter extends WrappableRecyclerViewAdapt
         this.texts = texts;
     }
 
+    @Override
+    public int getItemCount() {
+        return texts.length;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,10 +48,14 @@ public class FastLocateChannelRecyclerAdapter extends WrappableRecyclerViewAdapt
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.binding.textView.setText(texts[position]);
+        setupYiers(holder, position);
     }
 
-    @Override
-    public int getItemCount() {
-        return texts.length;
+    private void setupYiers(ViewHolder holder, int position) {
+        holder.binding.textView.setOnClickListener(v -> {
+            OnItemClickYier<String> onItemClickYier = getOnItemClickYier();
+            if(onItemClickYier != null) onItemClickYier.onItemClick(position, texts[position]);
+        });
     }
+
 }

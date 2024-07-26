@@ -14,6 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.ichat2.adapter.FastLocateChannelRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.DialogFastLocateBinding;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
+import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,10 @@ public class FastLocateDialog extends AbstractDialog{
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"
     };
 
+    private LocateYier locateYier;
     private static final int COLUMN_COUNT = 5;
     private final String[] locateTexts;
+    private FastLocateChannelRecyclerAdapter adapter;
 
     public FastLocateDialog(Activity activity, String[] locateTexts) {
         super(activity);
@@ -49,7 +52,22 @@ public class FastLocateDialog extends AbstractDialog{
 
     private void showContent(DialogFastLocateBinding binding) {
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), COLUMN_COUNT));
-        FastLocateChannelRecyclerAdapter adapter = new FastLocateChannelRecyclerAdapter(getActivity(), locateTexts);
+        adapter = new FastLocateChannelRecyclerAdapter(getActivity(), locateTexts);
+        setupYiers();
         binding.recyclerView.setAdapter(adapter);
+    }
+
+    private void setupYiers() {
+        adapter.setOnItemClickYier((position, data) -> {
+            if(locateYier != null) locateYier.onLocate(position, data);
+        });
+    }
+
+    public void setLocateYier(LocateYier locateYier) {
+        this.locateYier = locateYier;
+    }
+
+    public interface LocateYier{
+        void onLocate(int position, String text);
     }
 }
