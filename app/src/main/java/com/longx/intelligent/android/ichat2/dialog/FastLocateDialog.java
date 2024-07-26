@@ -27,6 +27,10 @@ public class FastLocateDialog extends AbstractDialog{
             ".", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"
     };
+    public static String[] LOCATE_TAG_CHANNEL = {
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"
+    };
 
     private LocateYier locateYier;
     private static final int COLUMN_COUNT = 5;

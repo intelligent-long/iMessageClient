@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<ChannelsRecyclerAdapter.ViewHolder, ChannelsRecyclerAdapter.ItemData> {
     private final Activity activity;
-    private ChannelsFragment channelsFragment;
+    private final ChannelsFragment channelsFragment;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ItemData> itemDataList;
 

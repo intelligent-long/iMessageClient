@@ -123,4 +123,8 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
             setupYiers();
         }
     }
+
+    public ActivityTagChannelBinding getBinding() {
+        return binding;
+    }
 }
