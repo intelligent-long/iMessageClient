@@ -6,6 +6,11 @@
         <item name="android:outlineSpotShadowColor">#1C000000</item>
     </style>
 
+    <style name="ThemeOverlay.LighterZShadow50" parent="">
+        <item name="android:outlineAmbientShadowColor">#80000000</item>
+        <item name="android:outlineSpotShadowColor">#80000000</item>
+    </style>
+
     <style name="ChatActivityTitleText">
         <item name="android:textFontWeight">@integer/font_weight_medium</item>
         <item name="android:textSize">21.6sp</item>

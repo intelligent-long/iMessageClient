@@ -38,7 +38,6 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -88,7 +87,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setAutoCancelInput(false);
-        setupDefaultBackNavigation(binding.toolbar, ColorUtil.getColor(this, R.color.ichat));
+        setupBackNavigation(binding.toolbar, ColorUtil.getColor(this, R.color.ichat));
         channel = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.CHANNEL));
         chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();

@@ -17,7 +17,6 @@ import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,11 +74,23 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
     }
 
     protected void setupDefaultBackNavigation(MaterialToolbar materialToolbar){
-        setupDefaultBackNavigation(materialToolbar, ColorUtil.getAttrColor(this, android.R.attr.colorControlNormal));
+        setupBackNavigation(R.drawable.arrow_back_24px, materialToolbar);
     }
 
-    protected void setupDefaultBackNavigation(MaterialToolbar materialToolbar, int color) {
-        materialToolbar.setNavigationIcon(R.drawable.arrow_back_24px);
+    protected void setupCloseBackNavigation(MaterialToolbar materialToolbar){
+        setupBackNavigation(R.drawable.close_24px, materialToolbar);
+    }
+
+    protected void setupBackNavigation(int resId, MaterialToolbar materialToolbar) {
+        setupBackNavigation(resId, materialToolbar, ColorUtil.getAttrColor(this, android.R.attr.colorControlNormal));
+    }
+
+    protected void setupBackNavigation(MaterialToolbar materialToolbar, int color) {
+        setupBackNavigation(R.drawable.arrow_back_24px, materialToolbar, color);
+    }
+
+    protected void setupBackNavigation(int resId, MaterialToolbar materialToolbar, int color) {
+        materialToolbar.setNavigationIcon(resId);
         materialToolbar.setNavigationIconTint(color);
         materialToolbar.setNavigationContentDescription(R.string.navigation_back);
         materialToolbar.setNavigationOnClickListener(view -> {

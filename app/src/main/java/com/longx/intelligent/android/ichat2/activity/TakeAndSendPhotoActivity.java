@@ -41,7 +41,7 @@ public class TakeAndSendPhotoActivity extends BaseActivity {
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
-        setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
+        setupBackNavigation(binding.toolbar, getColor(R.color.white));
         binding.appBar.bringToFront();
         takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),

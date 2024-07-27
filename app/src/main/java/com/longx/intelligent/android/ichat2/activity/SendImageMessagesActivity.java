@@ -54,7 +54,7 @@ public class SendImageMessagesActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         binding = ActivitySendImageMessagesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
+        setupBackNavigation(binding.toolbar, getColor(R.color.white));
         changeWindowAndSystemUi();
         init();
         showContent();

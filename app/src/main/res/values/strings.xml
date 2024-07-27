@@ -34,6 +34,8 @@
     <string name="title_offline_detail">离线信息</string>
     <string name="title_open_source_licenses">开放源代码许可</string>
     <string name="title_search_channel">搜索频道</string>
+    <string name="title_edit_broadcast">编辑广播</string>
+    <string name="title_send_broadcast">发送广播</string>
     <string name="title_request_add_channel">请求添加频道</string>
     <string name="title_channel_setting">频道设置</string>
     <string name="title_setting_note">设置备注</string>
@@ -61,6 +63,7 @@
     <string name="fab_text_start_chat">开始聊天</string>
     <string name="fab_text_add_tag">添加标签</string>
     <string name="fab_text_tag">标签</string>
+    <string name="fab_text_send_broadcast">发送广播</string>
 
     <string name="notification_title_server_message_service_foreground">iChat 前台服务通知</string>
     <string name="notification_message_server_message_service_foreground">iChat 使用前台服务与服务器通信\n这条通知应该被关闭</string>

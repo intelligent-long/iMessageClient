@@ -54,7 +54,7 @@ public class SendVideoMessagesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySendVideoMessagesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
+        setupBackNavigation(binding.toolbar, getColor(R.color.white));
         changeWindowAndSystemUi();
         init();
         showContent();

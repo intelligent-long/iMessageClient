@@ -36,7 +36,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
-        setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
+        setupBackNavigation(binding.toolbar, getColor(R.color.white));
         getIntentData();
         binding.appBar.bringToFront();
         setupYiers();

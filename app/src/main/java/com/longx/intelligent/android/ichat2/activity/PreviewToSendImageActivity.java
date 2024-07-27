@@ -29,7 +29,7 @@ public class PreviewToSendImageActivity extends BaseActivity {
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
-        setupDefaultBackNavigation(binding.toolbar, getColor(R.color.white));
+        setupBackNavigation(binding.toolbar, getColor(R.color.white));
         uri = getIntent().getParcelableExtra(ExtraKeys.URI);
         binding.appBarLayout.bringToFront();
         showContent();

@@ -161,7 +161,6 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
 
     private void setupYiers() {
         binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50){
-
             @Override
             public void onScrollUp() {
                 if(binding.addChannelFab.isExtended()) binding.addChannelFab.shrink();
