@@ -79,7 +79,7 @@
                     android:theme="@style/ThemeOverlay.LighterZShadow11">
 
                     <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/broadcast_input"
+                        android:id="@+id/text_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="广播正文"
