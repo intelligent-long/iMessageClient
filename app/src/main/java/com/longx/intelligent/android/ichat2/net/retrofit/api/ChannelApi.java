@@ -42,13 +42,13 @@ public interface ChannelApi {
     @GET("channel/add/activities/not_viewed_count")
     CompletableCall<OperationData> fetchChannelAdditionNotViewCount();
 
-    @GET("channel/add/activities")
+    @GET("channel/add/activity/all")
     CompletableCall<OperationData> fetchAllAdditionActivities();
 
     @POST("channel/add/activity/{uuid}/view")
     CompletableCall<OperationStatus> viewOneAdditionActivity(@Path("uuid") String uuid);
 
-    @GET("channel/associations")
+    @GET("channel/association/all")
     CompletableCall<OperationData> fetchAllAssociations();
 
     @POST("channel/association/delete")
@@ -63,7 +63,7 @@ public interface ChannelApi {
     @POST("channel/association/tag/add")
     CompletableCall<OperationStatus> addTag(@Body AddChannelTagPostBody postBody);
 
-    @GET("channel/association/tags")
+    @GET("channel/association/tag/all")
     CompletableCall<OperationData> fetchAllTags();
 
     @POST("channel/association/tag/name/change")

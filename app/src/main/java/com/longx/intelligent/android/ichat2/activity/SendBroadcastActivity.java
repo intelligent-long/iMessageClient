@@ -38,7 +38,7 @@ public class SendBroadcastActivity extends BaseActivity {
         binding.sendBroadcastButton.setOnClickListener(v -> {
             String broadcastText = UiUtil.getEditTextString(binding.textInput);
             if(broadcastText == null || broadcastText.isEmpty()) {
-                MessageDisplayer.autoShow(this, "空广播", MessageDisplayer.Duration.SHORT);
+                MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
                 return;
             };
             SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText);

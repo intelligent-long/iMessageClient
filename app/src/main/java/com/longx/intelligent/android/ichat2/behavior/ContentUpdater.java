@@ -44,6 +44,7 @@ public class ContentUpdater {
         String ID_CHANNELS = "channels";
         String ID_CHAT_MESSAGES = "chat_messages";
         String ID_CHANNEL_TAGS = "channel_tags";
+        String ID_BROADCASTS = "broadcasts";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -217,6 +218,10 @@ public class ContentUpdater {
                 });
             }
         });
+    }
+
+    public static void updateBroadcasts(Context context, ResultsYier resultsYier){
+
     }
 
 }
