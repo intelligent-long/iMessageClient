@@ -12,12 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
-import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.adapter.ChannelsRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
@@ -52,7 +53,8 @@ public class BroadcastsFragment extends BaseMainFragment {
         footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
-        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcast();
+        loadHistoryBroadcastsData();
+        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts();
         return binding.getRoot();
     }
 
@@ -88,12 +90,18 @@ public class BroadcastsFragment extends BaseMainFragment {
         binding.sendBroadcastFab.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
         });
+        binding.toStartFab.setOnClickListener(v -> {
+            binding.appbar.setExpanded(true);
+            binding.recyclerView.scrollToEnd(true);
+        });
     }
 
     private void setupFab() {
         float fabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(requireContext()) + WindowAndSystemUiUtil.getActionBarSize(requireContext()) + requireContext().getResources().getDimension(R.dimen.fab_margin_bottom);
+        float smallFabMarginTop = fabMarginTop + UiUtil.dpToPx(requireContext(), 70);
         float fabMarginEnd = requireContext().getResources().getDimension(R.dimen.fab_margin_end);
         UiUtil.setViewMargin(binding.sendBroadcastFab, 0, (int) fabMarginTop, (int) fabMarginEnd, 0);
+        UiUtil.setViewMargin(binding.toStartFab, 0, (int) smallFabMarginTop, (int) fabMarginEnd, 0);
     }
 
     private void setupRecyclerView(){
@@ -104,18 +112,62 @@ public class BroadcastsFragment extends BaseMainFragment {
         binding.recyclerView.setAdapter(adapter);
         UiUtil.setViewHeight(footerBinding.getRoot(), UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
         binding.recyclerView.setFooterView(footerBinding.getRoot());
+        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (layoutManager.findLastVisibleItemPosition() >= adapter.getItemCount() - 5) {
+                    binding.toStartFab.hide();
+                } else {
+                    binding.toStartFab.show();
+                }
+            }
+        });
     }
 
-    private void fetchAndRefreshBroadcast(){
-        BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), 1, 50, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
+    private void loadHistoryBroadcastsData() {
+        List<Broadcast> broadcasts = SharedPreferencesAccessor.ApiJson.Broadcasts.getAllRecords(requireContext());
+        List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+        broadcasts.forEach(broadcast -> {
+            itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+        });
+        adapter.addItemsAndShow(itemDataList);
+        binding.recyclerView.scrollToEnd(false);
+    }
+
+    private void saveHistoryBroadcastsData(List<Broadcast> broadcasts, boolean clearHistory){
+        if(clearHistory){
+            SharedPreferencesAccessor.ApiJson.Broadcasts.clearRecords(requireContext());
+        }
+        SharedPreferencesAccessor.ApiJson.Broadcasts.addRecords(requireContext(), broadcasts);
+    }
+
+    private void fetchAndRefreshBroadcasts(){
+        BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), 1, 50, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+            private Snackbar snackbar;
+
+            @Override
+            public void start(Call<PaginatedOperationData<Broadcast>> call) {
+                super.start(call);
+                snackbar = MessageDisplayer.showSnackbar(requireActivity(), "更新广播...", Snackbar.LENGTH_INDEFINITE);
+            }
+
+            @Override
+            public void complete(Call<PaginatedOperationData<Broadcast>> call) {
+                super.complete(call);
+                snackbar.dismiss();
+            }
+
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
                 List<Broadcast> broadcastList = data.getData();
+                saveHistoryBroadcastsData(broadcastList, true);
                 List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
                 broadcastList.forEach(broadcast -> {
                     itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                 });
+                adapter.clearAndShow();
                 adapter.addItemsAndShow(itemDataList);
                 binding.recyclerView.scrollToEnd(false);
                 if(mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);

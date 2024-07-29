@@ -74,7 +74,6 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         if(currentUserProfile.getIchatId().equals(itemData.broadcast.getIchatId())){
             name = currentUserProfile.getUsername();
             avatarHash = currentUserProfile.getAvatar() == null ? null : currentUserProfile.getAvatar().getHash();
-
         }else {
             Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId());
             if(channel != null) {
@@ -102,6 +101,12 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
 
     private void sortItemDataList(List<ItemData> itemDataList){
         itemDataList.sort(Comparator.comparing(o -> o.broadcast.getTime()));
+    }
+
+    public void clearAndShow(){
+        int size = itemDataList.size();
+        itemDataList.clear();
+        notifyItemRangeRemoved(0, size);
     }
 
     public void addItemsAndShow(List<ItemData> items){

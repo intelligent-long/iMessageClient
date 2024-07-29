@@ -10,6 +10,7 @@ import androidx.preference.PreferenceManager;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.behavior.ChatVoicePlayer;
 import com.longx.intelligent.android.ichat2.data.Avatar;
+import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.OfflineDetail;
@@ -432,6 +433,7 @@ public class SharedPreferencesAccessor {
         private static class Key{
             private static final String CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
             private static final String OFFLINE_DETAILS = "offline_details";
+            private static final String BROADCASTS = "broadcasts";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -507,6 +509,40 @@ public class SharedPreferencesAccessor {
                 });
                 offlineDetails.sort(Comparator.comparing(OfflineDetail::getTime));
                 return offlineDetails;
+            }
+        }
+
+        public static class Broadcasts{
+            public static void addRecords(Context context, List<Broadcast> broadcasts){
+                List<String> jsonsToAdd = new ArrayList<>();
+                broadcasts.forEach(broadcast -> {
+                    jsonsToAdd.add(JsonUtil.toJson(broadcast));
+                });
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
+                HashSet<String> jsonSetCopy = new HashSet<>(jsonSet);
+                jsonSetCopy.addAll(jsonsToAdd);
+                getSharedPreferences(context)
+                        .edit()
+                        .putStringSet(Key.BROADCASTS, jsonSetCopy)
+                        .apply();
+            }
+
+            public static void clearRecords(Context context){
+                getSharedPreferences(context)
+                        .edit()
+                        .remove(Key.BROADCASTS)
+                        .apply();
+            }
+
+            public static List<Broadcast> getAllRecords(Context context){
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
+                List<Broadcast> broadcasts = new ArrayList<>();
+                jsonSet.forEach(s -> {
+                    Broadcast broadcast = JsonUtil.toObject(s, Broadcast.class);
+                    broadcasts.add(broadcast);
+                });
+                broadcasts.sort(Comparator.comparing(Broadcast::getTime));
+                return broadcasts;
             }
         }
     }
