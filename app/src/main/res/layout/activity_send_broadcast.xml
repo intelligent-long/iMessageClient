@@ -255,7 +255,7 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="5dp"
                     android:textColor="?attr/colorOutline"
-                    android:text="0/500"/>
+                    android:text="0/1000"/>
             </RelativeLayout>
         </ScrollView>
 

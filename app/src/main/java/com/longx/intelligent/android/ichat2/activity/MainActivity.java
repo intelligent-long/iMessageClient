@@ -71,6 +71,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private Badge messageNavBadge;
     private Badge channelNavBadge;
 
+    private boolean needInitFetchBroadcast = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -416,5 +418,13 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 }
                 break;
         }
+    }
+
+    public void setNeedInitFetchBroadcast(boolean needInitFetchBroadcast) {
+        this.needInitFetchBroadcast = needInitFetchBroadcast;
+    }
+
+    public boolean isNeedInitFetchBroadcast() {
+        return needInitFetchBroadcast;
     }
 }

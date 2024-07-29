@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
@@ -20,6 +21,7 @@ import com.longx.intelligent.android.ichat2.adapter.ChannelsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
+import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerFooterBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -35,6 +37,8 @@ import retrofit2.Response;
 public class BroadcastsFragment extends BaseMainFragment {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
+    private LayoutBroadcastRecyclerFooterBinding footerBinding;
+    private MainActivity mainActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,9 +47,12 @@ public class BroadcastsFragment extends BaseMainFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mainActivity = getMainActivity();
         binding = FragmentBroadcastsBinding.inflate(inflater, container, false);
+        footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
+        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcast();
         return binding.getRoot();
     }
 
@@ -53,7 +60,6 @@ public class BroadcastsFragment extends BaseMainFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupToolbarNavIcon(binding.toolbar);
-        fetchAndRefreshBroadcast();
     }
 
     @Override
@@ -71,12 +77,12 @@ public class BroadcastsFragment extends BaseMainFragment {
         binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50){
             @Override
             public void onScrollUp() {
-                if(binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.shrink();
+                if(!binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.extend();
             }
 
             @Override
             public void onScrollDown() {
-                if(!binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.extend();
+                if(binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.shrink();
             }
         });
         binding.sendBroadcastFab.setOnClickListener(v -> {
@@ -96,6 +102,8 @@ public class BroadcastsFragment extends BaseMainFragment {
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(requireActivity(), itemDataList);
         binding.recyclerView.setAdapter(adapter);
+        UiUtil.setViewHeight(footerBinding.getRoot(), UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
+        binding.recyclerView.setFooterView(footerBinding.getRoot());
     }
 
     private void fetchAndRefreshBroadcast(){
@@ -109,6 +117,8 @@ public class BroadcastsFragment extends BaseMainFragment {
                     itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                 });
                 adapter.addItemsAndShow(itemDataList);
+                binding.recyclerView.scrollToEnd(false);
+                if(mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
             }
         });
     }

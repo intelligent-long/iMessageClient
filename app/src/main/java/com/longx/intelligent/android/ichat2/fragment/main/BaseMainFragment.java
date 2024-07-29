@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.fragment.helper.BaseFragment;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 
 /**
@@ -43,4 +44,13 @@ public abstract class BaseMainFragment extends BaseFragment implements ChangeUiY
     }
 
     public abstract Toolbar getToolbar();
+
+    public MainActivity getMainActivity(){
+        FragmentActivity activity = getActivity();
+        if(activity instanceof MainActivity) {
+            return (MainActivity) getActivity();
+        }else {
+            return null;
+        }
+    }
 }

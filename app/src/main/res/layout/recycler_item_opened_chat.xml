@@ -50,6 +50,7 @@
             app:shapeAppearanceOverlay="@style/CircleImageAppearance" />
 
         <RelativeLayout
+            android:id="@+id/name_and_newest_chat_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -76,7 +77,7 @@
             android:id="@+id/time_and_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_alignTop="@id/name_and_newest_chat_message"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp">
 
