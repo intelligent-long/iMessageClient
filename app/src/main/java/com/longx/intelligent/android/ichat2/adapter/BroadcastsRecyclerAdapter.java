@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.view.ViewGroup;
@@ -100,18 +101,20 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     }
 
     private void sortItemDataList(List<ItemData> itemDataList){
-        itemDataList.sort(Comparator.comparing(o -> o.broadcast.getTime()));
+        itemDataList.sort((o1, o2) -> - o1.broadcast.getTime().compareTo(o2.broadcast.getTime()));
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void clearAndShow(){
         int size = itemDataList.size();
         itemDataList.clear();
-        notifyItemRangeRemoved(0, size);
+        notifyDataSetChanged();
     }
 
     public void addItemsAndShow(List<ItemData> items){
         sortItemDataList(items);
-        itemDataList.addAll(0, items);
-        notifyItemRangeInserted(0, items.size());
+        int insertPosition = itemDataList.size();
+        itemDataList.addAll(insertPosition, items);
+        notifyItemRangeInserted(insertPosition, items.size());
     }
 }

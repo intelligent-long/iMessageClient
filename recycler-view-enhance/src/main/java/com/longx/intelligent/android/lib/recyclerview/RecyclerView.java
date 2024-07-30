@@ -216,6 +216,28 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         }catch (IllegalArgumentException ignore){};
     }
 
+    public void scrollToStart(boolean smooth){
+        Adapter<?> adapter = getWrapAdapter();
+        if(adapter == null){
+            throw new RuntimeException("You must set an adapter before!");
+        }
+        try {
+            if (smooth) {
+                LayoutManager layoutManager = getLayoutManager();
+                int lastVisibleItemPosition = -1;
+                if(layoutManager instanceof LinearLayoutManager) {
+                    lastVisibleItemPosition = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                }
+                if(lastVisibleItemPosition == -1 || lastVisibleItemPosition > 21) {
+                    scrollToPosition(21);
+                }
+                smoothScrollToPosition(0);
+            } else {
+                scrollToPosition(0);
+            }
+        }catch (IllegalArgumentException ignore){};
+    }
+
     public interface OnApproachEdgeYier{
         void onApproachStart();
         void onApproachEnd();

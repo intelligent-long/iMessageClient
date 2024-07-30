@@ -8,21 +8,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerFooterBinding;
+import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -38,7 +37,7 @@ import retrofit2.Response;
 public class BroadcastsFragment extends BaseMainFragment {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
-    private LayoutBroadcastRecyclerFooterBinding footerBinding;
+    private LayoutBroadcastRecyclerHeaderBinding headerBinding;
     private MainActivity mainActivity;
 
     @Override
@@ -50,7 +49,7 @@ public class BroadcastsFragment extends BaseMainFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainActivity = getMainActivity();
         binding = FragmentBroadcastsBinding.inflate(inflater, container, false);
-        footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(inflater, container, false);
+        headerBinding = LayoutBroadcastRecyclerHeaderBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
         loadHistoryBroadcastsData();
@@ -85,6 +84,7 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void onScrollDown() {
                 if(binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.shrink();
+                binding.appbar.setExpanded(false);
             }
         });
         binding.sendBroadcastFab.setOnClickListener(v -> {
@@ -92,7 +92,10 @@ public class BroadcastsFragment extends BaseMainFragment {
         });
         binding.toStartFab.setOnClickListener(v -> {
             binding.appbar.setExpanded(true);
-            binding.recyclerView.scrollToEnd(true);
+            binding.recyclerView.scrollToStart(true);
+        });
+        headerBinding.reload.setOnClickListener(v -> {
+            fetchAndRefreshBroadcasts();
         });
     }
 
@@ -105,21 +108,21 @@ public class BroadcastsFragment extends BaseMainFragment {
     }
 
     private void setupRecyclerView(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true);
         binding.recyclerView.setLayoutManager(layoutManager);
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(requireActivity(), itemDataList);
         binding.recyclerView.setAdapter(adapter);
-        UiUtil.setViewHeight(footerBinding.getRoot(), UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
-        binding.recyclerView.setFooterView(footerBinding.getRoot());
+        UiUtil.setViewHeight(headerBinding.reload, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
+        binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (layoutManager.findLastVisibleItemPosition() >= adapter.getItemCount() - 5) {
-                    binding.toStartFab.hide();
-                } else {
                     binding.toStartFab.show();
+                } else {
+                    binding.toStartFab.hide();
                 }
             }
         });
@@ -132,7 +135,6 @@ public class BroadcastsFragment extends BaseMainFragment {
             itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
         });
         adapter.addItemsAndShow(itemDataList);
-        binding.recyclerView.scrollToEnd(false);
     }
 
     private void saveHistoryBroadcastsData(List<Broadcast> broadcasts, boolean clearHistory){
@@ -144,18 +146,17 @@ public class BroadcastsFragment extends BaseMainFragment {
 
     private void fetchAndRefreshBroadcasts(){
         BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), 1, 50, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
-            private Snackbar snackbar;
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
                 super.start(call);
-                snackbar = MessageDisplayer.showSnackbar(requireActivity(), "更新广播...", Snackbar.LENGTH_INDEFINITE);
+                headerBinding.reloadIndicator.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void complete(Call<PaginatedOperationData<Broadcast>> call) {
                 super.complete(call);
-                snackbar.dismiss();
+                headerBinding.reloadIndicator.setVisibility(View.GONE);
             }
 
             @Override
@@ -169,7 +170,7 @@ public class BroadcastsFragment extends BaseMainFragment {
                 });
                 adapter.clearAndShow();
                 adapter.addItemsAndShow(itemDataList);
-                binding.recyclerView.scrollToEnd(false);
+                binding.recyclerView.scrollToStart(false);
                 if(mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
             }
         });

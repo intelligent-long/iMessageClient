@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.behavior;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -62,6 +63,31 @@ public class MessageDisplayer {
                 toastDuration = Toast.LENGTH_SHORT;
             }
             showToast(context, message, toastDuration);
+        }
+    }
+
+    public static Snackbar showSnackbar(Activity activity, View customView, int duration){
+        return showSnackbar(activity.getWindow().getDecorView(), customView, duration, true);
+    }
+
+    public static Snackbar showSnackbar(View view, View customView, int duration){
+        return showSnackbar(view, customView, duration, false);
+    }
+
+    public static Snackbar showSnackbar(View view, View customView, int duration, boolean setBottomMargin){
+        try {
+            Snackbar snackbar = Snackbar.make(view, "", duration);
+            @SuppressLint("RestrictedApi") Snackbar.SnackbarLayout snackbarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
+            snackbarLayout.removeAllViews();
+            snackbarLayout.addView(customView);
+            if(setBottomMargin){
+                UiUtil.setSnackbarBottomMargin(snackbar, 210);
+            }
+            snackbar.show();
+            return snackbar;
+        }catch (Exception e){
+            Log.e(Application.class.getName(), "showSnackBar() 出错", e);
+            return null;
         }
     }
 }
