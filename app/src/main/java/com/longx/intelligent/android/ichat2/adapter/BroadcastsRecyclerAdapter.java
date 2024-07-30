@@ -106,7 +106,6 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
 
     @SuppressLint("NotifyDataSetChanged")
     public void clearAndShow(){
-        int size = itemDataList.size();
         itemDataList.clear();
         notifyDataSetChanged();
     }
