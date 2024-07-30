@@ -39,14 +39,14 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     }
 
     public static class ItemData{
-        private Broadcast broadcast;
+        private final Broadcast broadcast;
         public ItemData(Broadcast broadcast) {
             this.broadcast = broadcast;
         }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemBroadcastBinding binding;
+        private final RecyclerItemBroadcastBinding binding;
         public ViewHolder(RecyclerItemBroadcastBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -110,9 +110,8 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     }
 
     public void addItemsAndShow(List<ItemData> items){
-        int insertBeginPosition = itemDataList.size();
         sortItemDataList(items);
-        itemDataList.addAll(items);
-        notifyItemRangeInserted(insertBeginPosition, items.size());
+        itemDataList.addAll(0, items);
+        notifyItemRangeInserted(0, items.size());
     }
 }
