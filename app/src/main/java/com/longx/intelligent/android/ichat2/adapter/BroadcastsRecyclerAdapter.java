@@ -114,6 +114,6 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         sortItemDataList(items);
         int insertPosition = itemDataList.size();
         itemDataList.addAll(insertPosition, items);
-        notifyItemRangeInserted(insertPosition, items.size());
+        notifyItemRangeInserted(insertPosition + 1, items.size());
     }
 }
