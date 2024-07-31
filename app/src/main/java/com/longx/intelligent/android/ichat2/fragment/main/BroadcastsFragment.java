@@ -14,11 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.ChannelAdditionsActivity;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
@@ -94,7 +96,7 @@ public class BroadcastsFragment extends BaseMainFragment {
             binding.appbar.setExpanded(true);
             binding.recyclerView.scrollToStart(true);
         });
-        headerBinding.reload.setOnClickListener(v -> {
+        headerBinding.load.setOnClickListener(v -> {
             fetchAndRefreshBroadcasts();
         });
     }
@@ -113,7 +115,7 @@ public class BroadcastsFragment extends BaseMainFragment {
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(requireActivity(), itemDataList);
         binding.recyclerView.setAdapter(adapter);
-        UiUtil.setViewHeight(headerBinding.reload, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
+        UiUtil.setViewHeight(headerBinding.load, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             @Override
@@ -150,13 +152,31 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
                 super.start(call);
-                headerBinding.reloadIndicator.setVisibility(View.VISIBLE);
+                headerBinding.loadFailedView.setVisibility(View.GONE);
+                headerBinding.loadFailedText.setText(null);
+                headerBinding.loadIndicator.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void complete(Call<PaginatedOperationData<Broadcast>> call) {
                 super.complete(call);
-                headerBinding.reloadIndicator.setVisibility(View.GONE);
+                headerBinding.loadIndicator.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
+                super.notOk(code, message, row, call);
+                headerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                headerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
+                binding.recyclerView.scrollToStart(false);
+            }
+
+            @Override
+            public void failure(Throwable t, Call<PaginatedOperationData<Broadcast>> call) {
+                super.failure(t, call);
+                headerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                headerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
+                binding.recyclerView.scrollToStart(false);
             }
 
             @Override
