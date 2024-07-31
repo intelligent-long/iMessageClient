@@ -8,30 +8,30 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.activity.ChannelAdditionsActivity;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
-import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -41,6 +41,9 @@ public class BroadcastsFragment extends BaseMainFragment {
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
     private MainActivity mainActivity;
+    private int pn;
+    private boolean stopFetchNextPage;
+    private CountDownLatch NEXT_PAGE_LATCH;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,21 @@ public class BroadcastsFragment extends BaseMainFragment {
     }
 
     private void setupYiers() {
+        binding.recyclerView.addOnApproachEdgeYier(new RecyclerView.OnApproachEdgeYier() {
+            @Override
+            public void onApproachStart() {
+
+            }
+
+            @Override
+            public void onApproachEnd() {
+                if(!stopFetchNextPage) {
+                    if(NEXT_PAGE_LATCH == null || NEXT_PAGE_LATCH.getCount() == 0) {
+                        nextPage();
+                    }
+                }
+            }
+        });
         binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50){
             @Override
             public void onScrollUp() {
@@ -147,7 +165,9 @@ public class BroadcastsFragment extends BaseMainFragment {
     }
 
     private void fetchAndRefreshBroadcasts(){
-        BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), 1, 50, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+        pn = 1;
+        stopFetchNextPage = false;
+        BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -182,6 +202,7 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
+                stopFetchNextPage = !row.body().hasMore();
                 List<Broadcast> broadcastList = data.getData();
                 saveHistoryBroadcastsData(broadcastList, true);
                 List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
@@ -192,6 +213,31 @@ public class BroadcastsFragment extends BaseMainFragment {
                 adapter.addItemsAndShow(itemDataList);
                 binding.recyclerView.scrollToStart(false);
                 if(mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
+            }
+        });
+    }
+
+    private synchronized void nextPage() {
+        NEXT_PAGE_LATCH = new CountDownLatch(1);
+        pn ++;
+        BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+            @Override
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, row, call);
+                stopFetchNextPage = !row.body().hasMore();
+                List<Broadcast> broadcastList = data.getData();
+                saveHistoryBroadcastsData(broadcastList, false);
+                List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+                broadcastList.forEach(broadcast -> {
+                    itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+                });
+                adapter.addItemsAndShow(itemDataList);
+            }
+
+            @Override
+            public void complete(Call<PaginatedOperationData<Broadcast>> call) {
+                super.complete(call);
+                NEXT_PAGE_LATCH.countDown();
             }
         });
     }
