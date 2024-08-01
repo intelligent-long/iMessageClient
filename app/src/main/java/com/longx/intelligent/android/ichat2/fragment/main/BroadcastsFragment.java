@@ -24,6 +24,7 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
+import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerFooterBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -45,6 +46,7 @@ public class BroadcastsFragment extends BaseMainFragment {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
+    private LayoutBroadcastRecyclerFooterBinding footerBinding;
     private MainActivity mainActivity;
     private int pn;
     private boolean stopFetchNextPage;
@@ -60,6 +62,7 @@ public class BroadcastsFragment extends BaseMainFragment {
         mainActivity = getMainActivity();
         binding = FragmentBroadcastsBinding.inflate(inflater, container, false);
         headerBinding = LayoutBroadcastRecyclerHeaderBinding.inflate(inflater, container, false);
+        footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
         loadHistoryBroadcastsData();
@@ -72,13 +75,19 @@ public class BroadcastsFragment extends BaseMainFragment {
         if (savedInstanceState != null) {
             int appBarVerticalOffset = savedInstanceState.getInt(InstanceStateKeys.BroadcastFragment.APP_BAR_LAYOUT_STATE, 0);
             binding.appbar.post(() -> binding.appbar.setExpanded(appBarVerticalOffset == 0, false));
-            boolean isFabExpanded = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.FAB_EXPANDED_STATE, true);
-            if (isFabExpanded) {
+            boolean isSendBroadcastFabExpanded = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.SEND_BROADCAST_FAB_EXPANDED_STATE, true);
+            if (isSendBroadcastFabExpanded) {
                 binding.sendBroadcastFab.extend();
             } else {
                 binding.sendBroadcastFab.shrink();
             }
-        }
+            boolean isToStartFabShown = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.TO_START_FAB_VISIBILITY_STATE, false);
+            if(isToStartFabShown){
+                binding.toStartFab.show();
+            }else {
+                binding.toStartFab.hide();
+            }
+        };
     }
 
     @Override
@@ -90,15 +99,14 @@ public class BroadcastsFragment extends BaseMainFragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appbar.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
         if (behavior != null) {
             int appBarVerticalOffset = behavior.getTopAndBottomOffset();
             outState.putInt(InstanceStateKeys.BroadcastFragment.APP_BAR_LAYOUT_STATE, appBarVerticalOffset);
         }
-
-        outState.putBoolean(InstanceStateKeys.BroadcastFragment.FAB_EXPANDED_STATE, binding.sendBroadcastFab.isExtended());
+        outState.putBoolean(InstanceStateKeys.BroadcastFragment.SEND_BROADCAST_FAB_EXPANDED_STATE, binding.sendBroadcastFab.isExtended());
+        outState.putBoolean(InstanceStateKeys.BroadcastFragment.TO_START_FAB_VISIBILITY_STATE, binding.toStartFab.isShown());
     }
 
     @Override
@@ -179,6 +187,7 @@ public class BroadcastsFragment extends BaseMainFragment {
         binding.recyclerView.setAdapter(adapter);
         UiUtil.setViewHeight(headerBinding.load, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
+        binding.recyclerView.setFooterView(footerBinding.getRoot());
     }
 
     private void loadHistoryBroadcastsData() {
@@ -200,7 +209,7 @@ public class BroadcastsFragment extends BaseMainFragment {
     private void fetchAndRefreshBroadcasts(){
         pn = 1;
         stopFetchNextPage = false;
-        BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -253,7 +262,41 @@ public class BroadcastsFragment extends BaseMainFragment {
     private synchronized void nextPage() {
         NEXT_PAGE_LATCH = new CountDownLatch(1);
         pn ++;
-        BroadcastApiCaller.fetchBroadcastsLimit(requireActivity(), pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+
+            @Override
+            public void start(Call<PaginatedOperationData<Broadcast>> call) {
+                super.start(call);
+                footerBinding.loadFailedView.setVisibility(View.GONE);
+                footerBinding.loadFailedText.setText(null);
+                footerBinding.loadIndicator.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void complete(Call<PaginatedOperationData<Broadcast>> call) {
+                super.complete(call);
+                footerBinding.loadIndicator.setVisibility(View.GONE);
+                NEXT_PAGE_LATCH.countDown();
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
+                super.notOk(code, message, row, call);
+                footerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                footerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
+                binding.recyclerView.scrollToEnd(false);
+                stopFetchNextPage = true;
+            }
+
+            @Override
+            public void failure(Throwable t, Call<PaginatedOperationData<Broadcast>> call) {
+                super.failure(t, call);
+                footerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                footerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
+                binding.recyclerView.scrollToEnd(false);
+                stopFetchNextPage = true;
+            }
+
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
@@ -265,24 +308,6 @@ public class BroadcastsFragment extends BaseMainFragment {
                     itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                 });
                 adapter.addItemsAndShow(itemDataList);
-            }
-
-            @Override
-            public void complete(Call<PaginatedOperationData<Broadcast>> call) {
-                super.complete(call);
-                NEXT_PAGE_LATCH.countDown();
-            }
-
-            @Override
-            public void notOk(int code, String message, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
-                super.notOk(code, message, row, call);
-                stopFetchNextPage = true;
-            }
-
-            @Override
-            public void failure(Throwable t, Call<PaginatedOperationData<Broadcast>> call) {
-                super.failure(t, call);
-                stopFetchNextPage = true;
             }
         });
     }

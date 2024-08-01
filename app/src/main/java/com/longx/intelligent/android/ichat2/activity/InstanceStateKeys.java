@@ -23,6 +23,7 @@ public class InstanceStateKeys {
 
     public static class BroadcastFragment{
         public static final String APP_BAR_LAYOUT_STATE = "app_bar_layout_state";
-        public static final String FAB_EXPANDED_STATE = "fab_expanded_state";
+        public static final String SEND_BROADCAST_FAB_EXPANDED_STATE = "send_broadcast_fab_expanded_state";
+        public static final String TO_START_FAB_VISIBILITY_STATE = "to_start_fab_visibility_state";
     }
 }
