@@ -316,9 +316,11 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
 
     private class ApproachEdgeYierTrigger extends OnScrollListener{
         private final OnApproachEdgeYier onApproachEdgeYier;
+        private final int approach;
 
-        public ApproachEdgeYierTrigger(OnApproachEdgeYier onApproachEdgeYier) {
+        public ApproachEdgeYierTrigger(OnApproachEdgeYier onApproachEdgeYier, int approach) {
             this.onApproachEdgeYier = onApproachEdgeYier;
+            this.approach = approach;
         }
 
         @Override
@@ -333,18 +335,18 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
             int visibleItemCount = linearLayoutManager.getChildCount();
             int totalItemCount = linearLayoutManager.getItemCount();
             int pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();
-            if (pastVisibleItems + visibleItemCount >= totalItemCount) {
+            if (pastVisibleItems + visibleItemCount >= totalItemCount - approach) {
                 onApproachEdgeYier.onApproachEnd();
             }
-            if (pastVisibleItems == 0) {
+            if (pastVisibleItems <= approach) {
                 onApproachEdgeYier.onApproachStart();
             }
         }
     }
 
-    public void addOnApproachEdgeYier(OnApproachEdgeYier onApproachEdgeYier){
+    public void addOnApproachEdgeYier(int approach, OnApproachEdgeYier onApproachEdgeYier){
         this.onApproachEdgeYiers.add(onApproachEdgeYier);
-        ApproachEdgeYierTrigger approachEdgeYierTrigger = new ApproachEdgeYierTrigger(onApproachEdgeYier);
+        ApproachEdgeYierTrigger approachEdgeYierTrigger = new ApproachEdgeYierTrigger(onApproachEdgeYier, approach);
         approachEdgeYierTriggers.add(approachEdgeYierTrigger);
         addOnScrollListener(approachEdgeYierTrigger);
     }

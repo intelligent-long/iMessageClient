@@ -207,7 +207,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 }
             }
         }
-        binding.recyclerView.addOnApproachEdgeYier(new RecyclerView.OnApproachEdgeYier() {
+        binding.recyclerView.addOnApproachEdgeYier(5, new RecyclerView.OnApproachEdgeYier() {
             @Override
             public void onApproachStart() {
                 previousPage();

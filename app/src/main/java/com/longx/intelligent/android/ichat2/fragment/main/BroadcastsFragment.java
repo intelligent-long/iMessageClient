@@ -121,7 +121,7 @@ public class BroadcastsFragment extends BaseMainFragment {
     }
 
     private void setupYiers() {
-        binding.recyclerView.addOnApproachEdgeYier(new RecyclerView.OnApproachEdgeYier() {
+        binding.recyclerView.addOnApproachEdgeYier(5, new RecyclerView.OnApproachEdgeYier() {
             @Override
             public void onApproachStart() {
 
