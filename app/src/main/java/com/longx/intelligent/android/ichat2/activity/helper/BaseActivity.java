@@ -79,6 +79,7 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
 
     protected void setupCloseBackNavigation(MaterialToolbar materialToolbar){
         setupBackNavigation(R.drawable.close_24px, materialToolbar);
+        materialToolbar.setNavigationContentDescription(R.string.navigation_close);
     }
 
     protected void setupBackNavigation(int resId, MaterialToolbar materialToolbar) {
