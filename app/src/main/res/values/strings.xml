@@ -103,6 +103,7 @@
     <string name="preference_key_notification">notification</string>
     <string name="preference_key_manage_storage">manage_storage</string>
     <string name="preference_key_chat_bubble_color">chat_bubble_color</string>
+    <string name="preference_key_bottom_navigation_view_label_visibility_mode">bottom_navigation_view_label_visibility_mode</string>
     <string name="preference_key_change_email_visibility">change_email_visibility</string>
     <string name="preference_key_change_sex_visibility">change_sex_visibility</string>
     <string name="preference_key_change_region_visibility">change_region_visibility</string>

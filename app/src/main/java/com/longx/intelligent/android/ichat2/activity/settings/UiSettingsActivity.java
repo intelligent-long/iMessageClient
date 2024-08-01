@@ -9,9 +9,9 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityUiSettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
+import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;
-import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
-import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
 
 public class UiSettingsActivity extends BaseActivity {
     private ActivityUiSettingsBinding binding;
@@ -35,6 +35,7 @@ public class UiSettingsActivity extends BaseActivity {
     }
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
         private Material3ListPreference preferenceChatBubbleColor;
+        private Material3ListPreference preferenceBottomNavigationViewLabelVisibilityMode;
 
         public SettingsFragment() {
             super();
@@ -49,11 +50,13 @@ public class UiSettingsActivity extends BaseActivity {
         @Override
         protected void bindPreferences() {
             preferenceChatBubbleColor = findPreference(getString(R.string.preference_key_chat_bubble_color));
+            preferenceBottomNavigationViewLabelVisibilityMode = findPreference(getString(R.string.preference_key_bottom_navigation_view_label_visibility_mode));
         }
 
         @Override
         protected void showInfo() {
             updateChatBubbleColorSummary(null);
+            updateBottomNavigationViewLabelVisibilityMode(null);
         }
 
         private void updateChatBubbleColorSummary(String newValue){
@@ -67,15 +70,30 @@ public class UiSettingsActivity extends BaseActivity {
             }
         }
 
+        private void updateBottomNavigationViewLabelVisibilityMode(String newValue){
+            if(newValue == null){
+                newValue = preferenceBottomNavigationViewLabelVisibilityMode.getValue();
+            }
+            int index = preferenceBottomNavigationViewLabelVisibilityMode.findIndexOfValue(newValue);
+            if(index != -1){
+                String entry = getResources().getStringArray(R.array.bottom_navigation_view_label_visibility_mode_entries)[index];
+                preferenceBottomNavigationViewLabelVisibilityMode.setSummary(entry);
+            }
+        }
+
+
         @Override
         protected void setupYiers() {
             preferenceChatBubbleColor.setOnPreferenceChangeListener(this);
+            preferenceBottomNavigationViewLabelVisibilityMode.setOnPreferenceChangeListener(this);
         }
 
         @Override
         public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
             if(preference.equals(preferenceChatBubbleColor)){
                 updateChatBubbleColorSummary((String) newValue);
+            }else if(preference.equals(preferenceBottomNavigationViewLabelVisibilityMode)){
+                updateBottomNavigationViewLabelVisibilityMode((String) newValue);
             }
             return true;
         }

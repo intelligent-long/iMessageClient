@@ -8,4 +8,11 @@
         app:entries="@array/chat_bubble_color_entries"
         app:entryValues="@array/chat_bubble_color_values"
         app:defaultValue="0" />
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
+        app:key="@string/preference_key_bottom_navigation_view_label_visibility_mode"
+        app:title="底栏标签显示"
+        app:entries="@array/bottom_navigation_view_label_visibility_mode_entries"
+        app:entryValues="@array/bottom_navigation_view_label_visibility_mode_values"
+        app:defaultValue="0" />
 </PreferenceScreen>

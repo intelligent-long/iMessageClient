@@ -34,7 +34,7 @@ public abstract class BaseMainFragment extends BaseFragment implements ChangeUiY
 
     @Override
     public void changeUi(String id, Object... objects) {
-        if(id.equals("hide_nav_icon")){
+        if(id.equals(ChangeUiYier.ID_HIDE_NAV_ICON)){
             Toolbar toolbar = getToolbar();
             if(toolbar != null) {
                 Drawable navIcon = (Drawable) objects[0];

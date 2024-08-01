@@ -560,7 +560,6 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }
         determineAndUpdateShowTime();
         recyclerView.scrollToEnd(true);
-        ErrorLogger.log(itemDataList.size());
     }
 
     public synchronized void addAllToStartAndShow(List<ChatMessage> chatMessages){

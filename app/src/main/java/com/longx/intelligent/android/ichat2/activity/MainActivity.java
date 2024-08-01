@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
@@ -273,7 +274,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         if (!navHostFragment.isAdded()) return;
         navHostFragment.getChildFragmentManager().getFragments().forEach(fragment -> {
             if (fragment instanceof ChangeUiYier) {
-                runOnUiThread(() -> ((ChangeUiYier) fragment).changeUi("hide_nav_icon", navIcon));
+                runOnUiThread(() -> ((ChangeUiYier) fragment).changeUi(ChangeUiYier.ID_HIDE_NAV_ICON, navIcon));
             }
         });
     }
@@ -308,6 +309,28 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         if(translucentNavigation) {
             UiUtil.setViewMargin(binding.onlineStateIndicator, -1, -1, -1, (int) (WindowAndSystemUiUtil.getNavigationBarHeight(this) / 2.0));
         }
+        setupBottomNavigationViewLabelVisibility();
+    }
+
+    private void setupBottomNavigationViewLabelVisibility() {
+        int bottomNavigationViewLabelVisibilityMode = SharedPreferencesAccessor.DefaultPref.getBottomNavigationViewLabelVisibilityMode(this);
+        switch (bottomNavigationViewLabelVisibilityMode){
+            case 0:
+                binding.bottomNavigation.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_LABELED);
+                break;
+            case 1:
+                binding.bottomNavigation.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_UNLABELED);
+                break;
+            case 2:
+                binding.bottomNavigation.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_SELECTED);
+                break;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setupBottomNavigationViewLabelVisibility();
     }
 
     @Override
