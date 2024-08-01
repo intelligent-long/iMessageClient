@@ -30,6 +30,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCall
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -65,7 +66,6 @@ public class BroadcastsFragment extends BaseMainFragment {
         footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
-        loadHistoryBroadcastsData();
         restoreState(savedInstanceState);
         if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts();
         return binding.getRoot();
@@ -87,7 +87,20 @@ public class BroadcastsFragment extends BaseMainFragment {
             }else {
                 binding.toStartFab.hide();
             }
-        };
+            pn = savedInstanceState.getInt(InstanceStateKeys.BroadcastFragment.CURRENT_PN);
+            stopFetchNextPage = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, false);
+            ArrayList<Parcelable> parcelableArrayList = savedInstanceState.getParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA);
+            if(parcelableArrayList != null) {
+                ArrayList<Broadcast> broadcasts = Utils.parseParcelableArray(parcelableArrayList);
+                List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+                broadcasts.forEach(broadcast -> {
+                    itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+                });
+                adapter.addItemsAndShow(itemDataList);
+            }
+        }else {
+            loadHistoryBroadcastsData();
+        }
     }
 
     @Override
@@ -107,6 +120,16 @@ public class BroadcastsFragment extends BaseMainFragment {
         }
         outState.putBoolean(InstanceStateKeys.BroadcastFragment.SEND_BROADCAST_FAB_EXPANDED_STATE, binding.sendBroadcastFab.isExtended());
         outState.putBoolean(InstanceStateKeys.BroadcastFragment.TO_START_FAB_VISIBILITY_STATE, binding.toStartFab.isShown());
+        outState.putInt(InstanceStateKeys.BroadcastFragment.CURRENT_PN, pn);
+        outState.putBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, stopFetchNextPage);
+        if(adapter != null){
+            List<BroadcastsRecyclerAdapter.ItemData> itemDataList = adapter.getItemDataList();
+            ArrayList<Broadcast> broadcasts = new ArrayList<>();
+            itemDataList.forEach(itemData -> {
+                broadcasts.add(itemData.getBroadcast());
+            });
+            outState.putParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA, broadcasts);
+        }
     }
 
     @Override

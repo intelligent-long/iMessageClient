@@ -44,6 +44,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         public ItemData(Broadcast broadcast) {
             this.broadcast = broadcast;
         }
+
+        public Broadcast getBroadcast() {
+            return broadcast;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -64,6 +68,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     @Override
     public int getItemCount() {
         return itemDataList.size();
+    }
+
+    public List<ItemData> getItemDataList() {
+        return itemDataList;
     }
 
     @Override
