@@ -238,6 +238,77 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         }catch (IllegalArgumentException ignore){};
     }
 
+    public boolean isAtStart() {
+        LayoutManager layoutManager = getLayoutManager();
+        if (layoutManager == null) return false;
+        if (layoutManager instanceof LinearLayoutManager) {
+            int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            if(hasHeader()){
+                return firstVisibleItemPosition == 1;
+            }else {
+                return firstVisibleItemPosition == 0;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAtEnd() {
+        LayoutManager layoutManager = getLayoutManager();
+        WrappableRecyclerViewAdapter adapter = getAdapter();
+        if (layoutManager == null || adapter == null) return false;
+        if (layoutManager instanceof LinearLayoutManager) {
+            int lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            int itemCount = adapter.getItemCount();
+            if(hasHeader() && hasFooter()){
+                return lastVisibleItemPosition - 1 == itemCount;
+            }else if(hasHeader()) {
+                return lastVisibleItemPosition == itemCount;
+            }else if(hasFooter()){
+                return lastVisibleItemPosition - 1 == itemCount - 1;
+            } else {
+                return lastVisibleItemPosition == itemCount - 1;
+            }
+        }
+        return false;
+    }
+
+    public boolean isApproachStart(int approach) {
+        if(approach > 15 || approach < 0) throw new IllegalArgumentException("approach is illegal");
+        LayoutManager layoutManager = getLayoutManager();
+        WrappableRecyclerViewAdapter adapter = getAdapter();
+        if (layoutManager == null || adapter == null) return false;
+        if (layoutManager instanceof LinearLayoutManager) {
+            int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            if(hasHeader()){
+                return firstVisibleItemPosition <= 1 + approach;
+            }else {
+                return firstVisibleItemPosition <= approach;
+            }
+        }
+        return false;
+    }
+
+    public boolean isApproachEnd(int approach) {
+        if(approach > 15 || approach < 0) throw new IllegalArgumentException("approach is illegal");
+        LayoutManager layoutManager = getLayoutManager();
+        WrappableRecyclerViewAdapter adapter = getAdapter();
+        if (layoutManager == null || adapter == null) return false;
+        if (layoutManager instanceof LinearLayoutManager) {
+            int lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            int itemCount = adapter.getItemCount();
+            if(hasHeader() && hasFooter()){
+                return lastVisibleItemPosition - 1 >= itemCount - approach;
+            }else if(hasHeader()) {
+                return lastVisibleItemPosition >= itemCount - approach;
+            }else if(hasFooter()){
+                return lastVisibleItemPosition - 1 >= itemCount - 1 - approach;
+            } else {
+                return lastVisibleItemPosition >= itemCount - 1 - approach;
+            }
+        }
+        return false;
+    }
+
     public interface OnApproachEdgeYier{
         void onApproachStart();
         void onApproachEnd();

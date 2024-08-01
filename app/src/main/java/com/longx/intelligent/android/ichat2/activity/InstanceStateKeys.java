@@ -20,4 +20,9 @@ public class InstanceStateKeys {
     public static class RootSettingsActivity{
         public static final String APP_BAR_LAYOUT_STATE = "app_bar_layout_state";
     }
+
+    public static class BroadcastFragment{
+        public static final String APP_BAR_LAYOUT_STATE = "app_bar_layout_state";
+        public static final String FAB_EXPANDED_STATE = "fab_expanded_state";
+    }
 }

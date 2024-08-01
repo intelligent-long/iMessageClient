@@ -6,13 +6,17 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
@@ -28,6 +32,7 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
+import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +63,42 @@ public class BroadcastsFragment extends BaseMainFragment {
         setupFab();
         setupRecyclerView();
         loadHistoryBroadcastsData();
+        restoreState(savedInstanceState);
         if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts();
         return binding.getRoot();
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            int appBarVerticalOffset = savedInstanceState.getInt(InstanceStateKeys.BroadcastFragment.APP_BAR_LAYOUT_STATE, 0);
+            binding.appbar.post(() -> binding.appbar.setExpanded(appBarVerticalOffset == 0, false));
+            boolean isFabExpanded = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.FAB_EXPANDED_STATE, true);
+            if (isFabExpanded) {
+                binding.sendBroadcastFab.extend();
+            } else {
+                binding.sendBroadcastFab.shrink();
+            }
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupToolbarNavIcon(binding.toolbar);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appbar.getLayoutParams();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+        if (behavior != null) {
+            int appBarVerticalOffset = behavior.getTopAndBottomOffset();
+            outState.putInt(InstanceStateKeys.BroadcastFragment.APP_BAR_LAYOUT_STATE, appBarVerticalOffset);
+        }
+
+        outState.putBoolean(InstanceStateKeys.BroadcastFragment.FAB_EXPANDED_STATE, binding.sendBroadcastFab.isExtended());
     }
 
     @Override
@@ -104,7 +137,18 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void onScrollDown() {
                 if(binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.shrink();
-                binding.appbar.setExpanded(false);
+                if(!binding.recyclerView.isApproachEnd(5)) binding.appbar.setExpanded(false);
+            }
+        });
+        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (binding.recyclerView.isApproachStart(5)) {
+                    binding.toStartFab.hide();
+                } else {
+                    binding.toStartFab.show();
+                }
             }
         });
         binding.sendBroadcastFab.setOnClickListener(v -> {
@@ -135,17 +179,6 @@ public class BroadcastsFragment extends BaseMainFragment {
         binding.recyclerView.setAdapter(adapter);
         UiUtil.setViewHeight(headerBinding.load, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
-        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (layoutManager.findLastVisibleItemPosition() >= adapter.getItemCount() - 5) {
-                    binding.toStartFab.show();
-                } else {
-                    binding.toStartFab.hide();
-                }
-            }
-        });
     }
 
     private void loadHistoryBroadcastsData() {
@@ -238,6 +271,18 @@ public class BroadcastsFragment extends BaseMainFragment {
             public void complete(Call<PaginatedOperationData<Broadcast>> call) {
                 super.complete(call);
                 NEXT_PAGE_LATCH.countDown();
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
+                super.notOk(code, message, row, call);
+                stopFetchNextPage = true;
+            }
+
+            @Override
+            public void failure(Throwable t, Call<PaginatedOperationData<Broadcast>> call) {
+                super.failure(t, call);
+                stopFetchNextPage = true;
             }
         });
     }
