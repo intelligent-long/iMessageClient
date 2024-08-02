@@ -29,7 +29,7 @@
     <string-array name="bottom_navigation_view_label_visibility_mode_entries">
         <item>"显示"</item>
         <item>"隐藏"</item>
-        <item>"当前项"</item>
+        <item>"显示当前项"</item>
     </string-array>
 
     <string-array name="bottom_navigation_view_label_visibility_mode_values">

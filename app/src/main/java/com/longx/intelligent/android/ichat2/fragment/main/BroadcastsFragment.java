@@ -35,6 +35,7 @@ import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
+import com.xcheng.retrofit.CompletableCall;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class BroadcastsFragment extends BaseMainFragment {
     private int pn;
     private boolean stopFetchNextPage;
     private CountDownLatch NEXT_PAGE_LATCH;
+    private Call<PaginatedOperationData<Broadcast>> nextPageCall;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -231,8 +233,11 @@ public class BroadcastsFragment extends BaseMainFragment {
 
     private void fetchAndRefreshBroadcasts(){
         pn = 1;
-        stopFetchNextPage = false;
-        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+        stopFetchNextPage = true;
+        if(nextPageCall != null) {
+            breakFetchNextPage(nextPageCall);
+        }
+        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -285,11 +290,13 @@ public class BroadcastsFragment extends BaseMainFragment {
     private synchronized void nextPage() {
         NEXT_PAGE_LATCH = new CountDownLatch(1);
         pn ++;
-        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(requireActivity()){
+        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
                 super.start(call);
+                nextPageCall = call;
+                if (breakFetchNextPage(call)) return;
                 footerBinding.loadFailedView.setVisibility(View.GONE);
                 footerBinding.loadFailedText.setText(null);
                 footerBinding.loadIndicator.setVisibility(View.VISIBLE);
@@ -298,6 +305,7 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void complete(Call<PaginatedOperationData<Broadcast>> call) {
                 super.complete(call);
+                if (breakFetchNextPage(call)) return;
                 footerBinding.loadIndicator.setVisibility(View.GONE);
                 NEXT_PAGE_LATCH.countDown();
             }
@@ -305,6 +313,7 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void notOk(int code, String message, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.notOk(code, message, row, call);
+                if (breakFetchNextPage(call)) return;
                 footerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 footerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
                 binding.recyclerView.scrollToEnd(false);
@@ -314,6 +323,7 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void failure(Throwable t, Call<PaginatedOperationData<Broadcast>> call) {
                 super.failure(t, call);
+                if (breakFetchNextPage(call)) return;
                 footerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 footerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
                 binding.recyclerView.scrollToEnd(false);
@@ -323,6 +333,7 @@ public class BroadcastsFragment extends BaseMainFragment {
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
+                if (breakFetchNextPage(call)) return;
                 stopFetchNextPage = !row.body().hasMore();
                 List<Broadcast> broadcastList = data.getData();
                 saveHistoryBroadcastsData(broadcastList, false);
@@ -333,5 +344,15 @@ public class BroadcastsFragment extends BaseMainFragment {
                 adapter.addItemsAndShow(itemDataList);
             }
         });
+    }
+
+    private boolean breakFetchNextPage(Call<PaginatedOperationData<Broadcast>> call) {
+        if(stopFetchNextPage) {
+            call.cancel();
+            footerBinding.loadIndicator.setVisibility(View.GONE);
+            if(NEXT_PAGE_LATCH != null && NEXT_PAGE_LATCH.getCount() == 1) NEXT_PAGE_LATCH.countDown();
+            return true;
+        }
+        return false;
     }
 }

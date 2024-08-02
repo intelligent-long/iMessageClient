@@ -48,7 +48,7 @@
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
             app:key="@string/preference_key_ui"
-            app:title="UI" />
+            app:title="@string/title_settings_ui" />
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
             app:key="@string/preference_key_other_app_settings"
