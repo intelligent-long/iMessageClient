@@ -25,8 +25,8 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(LifecycleOwner lifecycleOwner, int pn, int ps, BaseYier<PaginatedOperationData<Broadcast>> yier){
-        CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchBroadcastsLimit(pn, ps);
+    public static CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(LifecycleOwner lifecycleOwner, String lastBroadcastId, int ps, BaseYier<PaginatedOperationData<Broadcast>> yier){
+        CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchBroadcastsLimit(lastBroadcastId, ps);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

@@ -246,7 +246,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         if(nextPageCall != null) {
             breakFetchNextPage(nextPageCall);
         }
-        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
+        BroadcastApiCaller.fetchBroadcastsLimit(this, null, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -299,7 +299,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private synchronized void nextPage() {
         NEXT_PAGE_LATCH = new CountDownLatch(1);
         pn ++;
-        BroadcastApiCaller.fetchBroadcastsLimit(this, pn, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
+        String lastBroadcastId = adapter.getItemDataList().get(adapter.getItemCount() - 1).getBroadcast().getBroadcastId();
+        BroadcastApiCaller.fetchBroadcastsLimit(this, lastBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {

@@ -20,5 +20,5 @@ public interface BroadcastApi {
     CompletableCall<OperationStatus> sendBroadcast(@Body SendBroadcastPostBody postBody);
 
     @GET("broadcast/limit")
-    CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(@Query("pn") int pn, @Query("ps") int ps);
+    CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(@Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps);
 }
