@@ -18,6 +18,8 @@ import com.longx.intelligent.android.ichat2.databinding.ActivitySendBroadcastBin
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -46,6 +48,9 @@ public class SendBroadcastActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
+                    GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
+                        broadcastReloadYiers.forEach(BroadcastReloadYier::onBroadcastReload);
+                    });
                     MessageDisplayer.showToast(getContext(), "广播已发送", Toast.LENGTH_SHORT);
                     finish();
                 }
