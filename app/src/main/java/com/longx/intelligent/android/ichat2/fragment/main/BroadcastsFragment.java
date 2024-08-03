@@ -293,6 +293,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     });
                     adapter.clearAndShow();
                     adapter.addItemsAndShow(itemDataList);
+                    binding.appbar.setExpanded(true);
                     binding.recyclerView.scrollToStart(false);
                     if (mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
                 });
