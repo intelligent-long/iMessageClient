@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -144,10 +146,12 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    SharedPreferencesAccessor.UserProfilePref.saveServerUserProfileVisibility(applicationContext,
-                            new UserInfo.UserProfileVisibility(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked));
-                    SharedPreferencesAccessor.UserProfilePref.saveAppUserProfileVisibility(applicationContext,
-                            new UserInfo.UserProfileVisibility(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked));
+                    data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                        SharedPreferencesAccessor.UserProfilePref.saveServerUserProfileVisibility(applicationContext,
+                                new UserInfo.UserProfileVisibility(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked));
+                        SharedPreferencesAccessor.UserProfilePref.saveAppUserProfileVisibility(applicationContext,
+                                new UserInfo.UserProfileVisibility(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked));
+                    });
                 }
 
                 @Override

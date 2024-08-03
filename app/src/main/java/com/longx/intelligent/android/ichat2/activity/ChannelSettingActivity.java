@@ -58,7 +58,10 @@ public class ChannelSettingActivity extends BaseActivity {
                         @Override
                         public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                             super.ok(data, row, call);
-                            binding.switchVoiceMessage.setChecked(changeTo);
+                            data.commonHandleResult(ChannelSettingActivity
+                                    .this, new int[]{}, () -> {
+                                binding.switchVoiceMessage.setChecked(changeTo);
+                            });
                         }
 
                         @Override
@@ -77,7 +80,9 @@ public class ChannelSettingActivity extends BaseActivity {
                         @Override
                         public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                             super.ok(data, row, call);
-                            binding.switchNotice.setChecked(changeTo);
+                            data.commonHandleResult(ChannelSettingActivity.this, new int[]{}, () -> {
+                                binding.switchNotice.setChecked(changeTo);
+                            });
                         }
 
                         @Override

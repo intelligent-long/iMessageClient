@@ -44,15 +44,17 @@ public class SendBroadcastActivity extends BaseActivity {
                 return;
             };
             SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText);
-            BroadcastApiCaller.sendBroadcast(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+            BroadcastApiCaller.sendBroadcast(this, this,  postBody, null, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
-                        broadcastReloadYiers.forEach(BroadcastReloadYier::onBroadcastReload);
+                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{}, () -> {
+                        GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
+                            broadcastReloadYiers.forEach(BroadcastReloadYier::onBroadcastReload);
+                        });
+                        MessageDisplayer.showToast(getContext(), "广播已发送", Toast.LENGTH_SHORT);
+                        finish();
                     });
-                    MessageDisplayer.showToast(getContext(), "广播已发送", Toast.LENGTH_SHORT);
-                    finish();
                 }
             });
         });

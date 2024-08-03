@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.Application;
+import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -172,14 +173,16 @@ public class GlobalBehaviors {
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
-                if(ActivityOperator.getActivityList().size() == 0) {
-                    Notifications.notifyGoOfflineBecauseOfOtherOnline(context, offlineDetail);
-                }
-                SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(context, offlineDetail);
-                SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(context, false);
-                GlobalYiersHolder.getYiers(OfflineDetailShowYier.class).ifPresent(offlineDetailShowYiers -> {
-                    offlineDetailShowYiers.forEach(OfflineDetailShowYier::showOfflineDetail);
+                data.commonHandleResult(null, new int[]{}, () -> {
+                    OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
+                    if (ActivityOperator.getActivityList().isEmpty()) {
+                        Notifications.notifyGoOfflineBecauseOfOtherOnline(context, offlineDetail);
+                    }
+                    SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(context, offlineDetail);
+                    SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(context, false);
+                    GlobalYiersHolder.getYiers(OfflineDetailShowYier.class).ifPresent(offlineDetailShowYiers -> {
+                        offlineDetailShowYiers.forEach(OfflineDetailShowYier::showOfflineDetail);
+                    });
                 });
             }
         });

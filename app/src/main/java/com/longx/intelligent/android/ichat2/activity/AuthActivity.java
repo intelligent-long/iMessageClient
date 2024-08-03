@@ -352,10 +352,12 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
-                SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(AuthActivity.this, offlineDetail);
-                SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(AuthActivity.this, false);
-                showOfflineDetail();
+                data.commonHandleResult(AuthActivity.this, new int[]{}, () -> {
+                    OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
+                    SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(AuthActivity.this, offlineDetail);
+                    SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(AuthActivity.this, false);
+                    showOfflineDetail();
+                });
             }
         });
     }

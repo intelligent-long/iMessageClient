@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -134,10 +136,12 @@ public class EditWaysToFindMeActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    SharedPreferencesAccessor.UserProfilePref.saveServerWaysToFindMe(applicationContext,
-                            new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
-                    SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
-                            new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
+                    data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                        SharedPreferencesAccessor.UserProfilePref.saveServerWaysToFindMe(applicationContext,
+                                new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
+                        SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
+                                new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
+                    });
                 }
 
                 @Override

@@ -6,9 +6,16 @@ import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.xcheng.retrofit.CompletableCall;
 
+import java.util.List;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 /**
@@ -17,7 +24,9 @@ import retrofit2.http.Query;
 public interface BroadcastApi {
 
     @POST("broadcast/send")
-    CompletableCall<OperationStatus> sendBroadcast(@Body SendBroadcastPostBody postBody);
+    @Multipart
+    @Headers("LogLevel:HEADERS")
+    CompletableCall<OperationStatus> sendBroadcast(@Part("body") RequestBody postBody, @Part List<MultipartBody.Part> images);
 
     @GET("broadcast/limit")
     CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(@Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps);

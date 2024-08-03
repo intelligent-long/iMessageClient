@@ -92,9 +92,11 @@ public class ChannelAdditionsActivity extends BaseActivity implements ChannelAdd
             @Override
             public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
                 super.ok(data, row, call);
-                List<ChannelAddition> channelAdditions = data.getData(new TypeReference<List<ChannelAddition>>() {
+                data.commonHandleResult(ChannelAdditionsActivity.this, new int[]{}, () -> {
+                    List<ChannelAddition> channelAdditions = data.getData(new TypeReference<List<ChannelAddition>>() {
+                    });
+                    onFetched(channelAdditions);
                 });
-                onFetched(channelAdditions);
             }
 
             @Override

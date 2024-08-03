@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
@@ -281,17 +283,19 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
-                stopFetchNextPage = !row.body().hasMore();
-                List<Broadcast> broadcastList = data.getData();
-                saveHistoryBroadcastsData(broadcastList, true);
-                List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-                broadcastList.forEach(broadcast -> {
-                    itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+                data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                    stopFetchNextPage = !row.body().hasMore();
+                    List<Broadcast> broadcastList = data.getData();
+                    saveHistoryBroadcastsData(broadcastList, true);
+                    List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+                    broadcastList.forEach(broadcast -> {
+                        itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+                    });
+                    adapter.clearAndShow();
+                    adapter.addItemsAndShow(itemDataList);
+                    binding.recyclerView.scrollToStart(false);
+                    if (mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
                 });
-                adapter.clearAndShow();
-                adapter.addItemsAndShow(itemDataList);
-                binding.recyclerView.scrollToStart(false);
-                if(mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
             }
         });
     }
@@ -343,15 +347,17 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
-                if (breakFetchNextPage(call)) return;
-                stopFetchNextPage = !row.body().hasMore();
-                List<Broadcast> broadcastList = data.getData();
-                saveHistoryBroadcastsData(broadcastList, false);
-                List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-                broadcastList.forEach(broadcast -> {
-                    itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+                data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                    if (breakFetchNextPage(call)) return;
+                    stopFetchNextPage = !row.body().hasMore();
+                    List<Broadcast> broadcastList = data.getData();
+                    saveHistoryBroadcastsData(broadcastList, false);
+                    List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+                    broadcastList.forEach(broadcast -> {
+                        itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+                    });
+                    adapter.addItemsAndShow(itemDataList);
                 });
-                adapter.addItemsAndShow(itemDataList);
             }
         });
     }
