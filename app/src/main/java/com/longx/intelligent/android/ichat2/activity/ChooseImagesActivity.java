@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,7 +16,7 @@ import android.widget.ArrayAdapter;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.adapter.ChooseImagesRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.ChooseMediasRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChooseImagesBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryFooterBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBinding;
@@ -27,6 +28,7 @@ import com.longx.intelligent.android.ichat2.ui.LocationNameSwitcher;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.value.Variables;
@@ -36,12 +38,13 @@ import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecora
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ChooseImagesActivity extends BaseActivity{
     private ActivityChooseImagesBinding binding;
     private LayoutGalleryHeaderBinding headerBinding;
     private LayoutGalleryFooterBinding footerBinding;
-    private ChooseImagesRecyclerAdapter adapter;
+    private ChooseMediasRecyclerAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private SpaceGridDecorationSetter spaceGridDecorationSetter;
     private int headerSpaceOriginalHeight;
@@ -49,6 +52,7 @@ public class ChooseImagesActivity extends BaseActivity{
     private List<DirectoryInfo> allImageDirectories;
     private String currentDirectoryPath;
     private boolean uiInited;
+    private List<Uri> chosenUriList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,8 @@ public class ChooseImagesActivity extends BaseActivity{
         MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
         item.setIcon(actionIconResId);
         item.setTitle(menuTitle);
+        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(getIntent().getParcelableArrayExtra(ExtraKeys.URIS));
+        chosenUriList = Utils.parseParcelableArray(parcelableArrayExtra);
     }
 
     private void changeWindowAndSystemUi() {
@@ -124,7 +130,7 @@ public class ChooseImagesActivity extends BaseActivity{
         });
         adapter.setOnRecyclerItemClickYier((position, view) -> {
             ArrayList<MediaInfo> imageInfoList = new ArrayList<>();
-            for (ChooseImagesRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
+            for (ChooseMediasRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
                 imageInfoList.add(itemData.getMediaInfo());
             }
             Intent intent = new Intent(this, PreviewToSendImageActivity.class);
@@ -158,22 +164,22 @@ public class ChooseImagesActivity extends BaseActivity{
     }
 
     private void showContent() {
-        adapter = new ChooseImagesRecyclerAdapter(this, getData());
+        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenUriList);
         showMedias();
         binding.recyclerView.post(this::updateInfos);
         showTotalSize();
     }
 
-    private List<ChooseImagesRecyclerAdapter.ItemData> getData(){
+    private List<ChooseMediasRecyclerAdapter.ItemData> getData(){
         List<MediaInfo> images;
         if(currentDirectoryPath == null) {
             images = MediaStoreHelper.geAllImages(this);
         }else {
             images = MediaStoreHelper.getAllDirectoryImages(this, currentDirectoryPath);
         }
-        List<ChooseImagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+        List<ChooseMediasRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         images.forEach(image -> {
-            itemDataList.add(new ChooseImagesRecyclerAdapter.ItemData(image));
+            itemDataList.add(new ChooseMediasRecyclerAdapter.ItemData(image));
         });
         return itemDataList;
     }
@@ -217,8 +223,8 @@ public class ChooseImagesActivity extends BaseActivity{
     }
 
     private void updateInfos() {
-        ChooseImagesRecyclerAdapter chooseImagesRecyclerAdapter = (ChooseImagesRecyclerAdapter) binding.recyclerView.getAdapter();
-        if(chooseImagesRecyclerAdapter.getItemDataList().isEmpty()) return;
+        ChooseMediasRecyclerAdapter chooseMediasRecyclerAdapter = (ChooseMediasRecyclerAdapter) binding.recyclerView.getAdapter();
+        if(chooseMediasRecyclerAdapter.getItemDataList().isEmpty()) return;
         androidx.recyclerview.widget.RecyclerView.LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
         if(layoutManager instanceof LinearLayoutManager){
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
@@ -238,20 +244,20 @@ public class ChooseImagesActivity extends BaseActivity{
                 firstItemPosition --;
                 lastItemPosition --;
             }
-            ChooseImagesRecyclerAdapter.ItemData firstItem = chooseImagesRecyclerAdapter.getItemDataList().get(firstItemPosition);
-            ChooseImagesRecyclerAdapter.ItemData lastItem = chooseImagesRecyclerAdapter.getItemDataList().get(lastItemPosition);
+            ChooseMediasRecyclerAdapter.ItemData firstItem = chooseMediasRecyclerAdapter.getItemDataList().get(firstItemPosition);
+            ChooseMediasRecyclerAdapter.ItemData lastItem = chooseMediasRecyclerAdapter.getItemDataList().get(lastItemPosition);
             updateTimeRange(firstItem, lastItem);
             updateLocation(firstItem, lastItem);
         }
     }
 
-    private void updateTimeRange(ChooseImagesRecyclerAdapter.ItemData firstItem, ChooseImagesRecyclerAdapter.ItemData lastItem){
+    private void updateTimeRange(ChooseMediasRecyclerAdapter.ItemData firstItem, ChooseMediasRecyclerAdapter.ItemData lastItem){
         long firstCompletelyVisibleItemTime = firstItem.getMediaInfo().getAddedTime() * 1000;
         long lastCompletelyVisibleItemTime = lastItem.getMediaInfo().getAddedTime() * 1000;
         binding.time.setText(Variables.getTimeRangeStr(firstCompletelyVisibleItemTime, lastCompletelyVisibleItemTime));
     }
 
-    private void updateLocation(ChooseImagesRecyclerAdapter.ItemData firstItem, ChooseImagesRecyclerAdapter.ItemData lastItem){
+    private void updateLocation(ChooseMediasRecyclerAdapter.ItemData firstItem, ChooseMediasRecyclerAdapter.ItemData lastItem){
         try {
             ExifInterface exif = firstItem.getMediaInfo().readExif(this);
             if(exif != null) {

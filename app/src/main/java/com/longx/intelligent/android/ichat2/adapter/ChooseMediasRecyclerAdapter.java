@@ -10,36 +10,60 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChooseMediasBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by LONG on 2024/5/25 at 5:53 PM.
  */
-public class ChooseImagesRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseImagesRecyclerAdapter.ViewHolder, ChooseImagesRecyclerAdapter.ItemData> {
+public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseMediasRecyclerAdapter.ViewHolder, ChooseMediasRecyclerAdapter.ItemData> {
     private final AppCompatActivity activity;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
-    private final List<ChooseImagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+    private final List<ChooseMediasRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
     private final List<Integer> checkedPositions = new ArrayList<>();
     private final List<Uri> checkedUris = new ArrayList<>();
 
-    public ChooseImagesRecyclerAdapter(AppCompatActivity activity, List<ChooseImagesRecyclerAdapter.ItemData> itemDataList) {
+    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ChooseMediasRecyclerAdapter.ItemData> itemDataList, List<Uri> chosenUriList) {
         this.activity = activity;
         sortDataList(itemDataList);
         this.itemDataList.addAll(itemDataList);
+
+        if(chosenUriList != null) {
+            for (int i = 0; i < itemDataList.size(); i++) {
+                Uri uri = itemDataList.get(i).mediaInfo.getUri();
+                for (int j = 0; j < chosenUriList.size(); j++) {
+                    if (chosenUriList.get(j).equals(uri)) {
+                        checkedUris.add(uri);
+                        checkedPositions.add(i + 1);
+                        List<Uri> sortedCheckedUris = new ArrayList<>(checkedUris);
+                        sortedCheckedUris.sort(Comparator.comparingInt(chosenUriList::indexOf));
+                        List<Integer> sortedCheckedPositions = new ArrayList<>();
+                        for (Uri uri1 : sortedCheckedUris) {
+                            int originalIndex = checkedUris.indexOf(uri1);
+                            sortedCheckedPositions.add(checkedPositions.get(originalIndex));
+                        }
+                        checkedUris.clear();
+                        checkedUris.addAll(sortedCheckedUris);
+                        checkedPositions.clear();
+                        checkedPositions.addAll(sortedCheckedPositions);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public static class ItemData{
-        private MediaInfo mediaInfo;
+        private final MediaInfo mediaInfo;
         public ItemData(MediaInfo mediaInfo) {
             this.mediaInfo = mediaInfo;
         }
@@ -50,7 +74,7 @@ public class ChooseImagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemChooseMediasBinding binding;
+        private final RecyclerItemChooseMediasBinding binding;
 
         public ViewHolder(RecyclerItemChooseMediasBinding binding){
             super(binding.getRoot());
@@ -112,10 +136,6 @@ public class ChooseImagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             holder.binding.index.setText(null);
         }
         holder.binding.checkButton.setOnClickListener(v -> {
-            if(checkedUris.size() == Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
-                MessageDisplayer.autoShow(activity, "最多选择 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
-                return;
-            }
             checkedUris.add(uri);
             checkedPositions.add(position + 1);
             notifyItemChanged(position + 1);
@@ -124,10 +144,16 @@ public class ChooseImagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             int index = checkedUris.indexOf(uri);
             checkedUris.remove(uri);
             checkedPositions.remove((Integer) (position + 1));
+            ErrorLogger.log(index);
+            ErrorLogger.log(Arrays.toString(checkedUris.toArray(new Uri[0])));
+            ErrorLogger.log(Arrays.toString(checkedPositions.toArray(new Integer[0])));
             notifyItemChanged(position + 1);
             checkedUris.forEach(uri1 -> {
                 int index1 = checkedUris.indexOf(uri1);
-                if(index1 >= index) notifyItemChanged(checkedPositions.get(index1));
+                if(index1 >= index) {
+                    notifyItemChanged(checkedPositions.get(index1));
+                    ErrorLogger.log(index1);
+                }
             });
         });
         switch (itemData.mediaInfo.getMediaType()){
@@ -142,7 +168,7 @@ public class ChooseImagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }
     }
 
-    private void showPreviewImage(Uri imageFileUri, ChooseImagesRecyclerAdapter.ViewHolder holder) {
+    private void showPreviewImage(Uri imageFileUri, ChooseMediasRecyclerAdapter.ViewHolder holder) {
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(imageFileUri)

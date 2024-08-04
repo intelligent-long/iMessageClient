@@ -98,6 +98,7 @@ public class SendBroadcastActivity extends BaseActivity {
                 intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择图片");
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
+                intent.putExtra(ExtraKeys.URIS, imageUriList.toArray(new Uri[0]));
                 addImageResultLauncher.launch(intent);
             });
             bottomSheet.show();
