@@ -139,10 +139,11 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
     }
 
     private String[] getExistTexts(){
-        String[] result = new String[getItemCount()];
+        String[] result = new String[getItemCount() + 1];
         for (int i = 0; i < itemDataList.size(); i++) {
             result[i] = String.valueOf(itemDataList.get(i).indexChar);
         }
+        result[result.length - 1] = ".";
         return result;
     }
 }
