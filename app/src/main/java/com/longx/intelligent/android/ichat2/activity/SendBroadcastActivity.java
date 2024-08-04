@@ -106,6 +106,7 @@ public class SendBroadcastActivity extends BaseActivity {
     }
 
     private void onImagesChosen(List<Uri> uriList) {
+        imageUriList.clear();
         imageUriList.addAll(uriList);
         showImages();
     }
