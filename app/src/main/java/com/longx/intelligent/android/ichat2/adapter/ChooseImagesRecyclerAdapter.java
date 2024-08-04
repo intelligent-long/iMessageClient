@@ -11,15 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendMediaMessagesBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChooseMediasBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,14 +25,14 @@ import java.util.List;
 /**
  * Created by LONG on 2024/5/25 at 5:53 PM.
  */
-public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<SendMediaMessagesRecyclerAdapter.ViewHolder, SendMediaMessagesRecyclerAdapter.ItemData> {
+public class ChooseImagesRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseImagesRecyclerAdapter.ViewHolder, ChooseImagesRecyclerAdapter.ItemData> {
     private final AppCompatActivity activity;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
-    private final List<SendMediaMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+    private final List<ChooseImagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
     private final List<Integer> checkedPositions = new ArrayList<>();
     private final List<Uri> checkedUris = new ArrayList<>();
 
-    public SendMediaMessagesRecyclerAdapter(AppCompatActivity activity, List<SendMediaMessagesRecyclerAdapter.ItemData> itemDataList) {
+    public ChooseImagesRecyclerAdapter(AppCompatActivity activity, List<ChooseImagesRecyclerAdapter.ItemData> itemDataList) {
         this.activity = activity;
         sortDataList(itemDataList);
         this.itemDataList.addAll(itemDataList);
@@ -52,9 +50,9 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemSendMediaMessagesBinding binding;
+        private RecyclerItemChooseMediasBinding binding;
 
-        public ViewHolder(RecyclerItemSendMediaMessagesBinding binding){
+        public ViewHolder(RecyclerItemChooseMediasBinding binding){
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -71,7 +69,7 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemSendMediaMessagesBinding binding = RecyclerItemSendMediaMessagesBinding.inflate(activity.getLayoutInflater());
+        RecyclerItemChooseMediasBinding binding = RecyclerItemChooseMediasBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
@@ -144,7 +142,7 @@ public class SendMediaMessagesRecyclerAdapter extends WrappableRecyclerViewAdapt
         }
     }
 
-    private void showPreviewImage(Uri imageFileUri, SendMediaMessagesRecyclerAdapter.ViewHolder holder) {
+    private void showPreviewImage(Uri imageFileUri, ChooseImagesRecyclerAdapter.ViewHolder holder) {
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(imageFileUri)

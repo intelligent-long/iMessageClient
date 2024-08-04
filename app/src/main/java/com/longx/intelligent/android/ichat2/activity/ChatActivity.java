@@ -540,7 +540,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
                         List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
                         if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
-                            MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张照片", MessageDisplayer.Duration.LONG);
+                            MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
                         }else {
                             onSendImageMessages(uriList);
                         }

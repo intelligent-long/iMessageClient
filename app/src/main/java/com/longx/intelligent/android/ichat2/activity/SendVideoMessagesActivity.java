@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.adapter.SendMediaMessagesRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.ChooseImagesRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySendVideoMessagesBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryFooterBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBinding;
@@ -44,7 +44,7 @@ public class SendVideoMessagesActivity extends BaseActivity {
     private LocationNameSwitcher locationNameSwitcher;
     private String currentDirectoryPath;
     private boolean uiInited;
-    private SendMediaMessagesRecyclerAdapter adapter;
+    private ChooseImagesRecyclerAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private int headerSpaceOriginalHeight;
     private List<DirectoryInfo> allVideoDirectories;
@@ -112,7 +112,7 @@ public class SendVideoMessagesActivity extends BaseActivity {
         });
         adapter.setOnRecyclerItemClickYier((position, view) -> {
             ArrayList<MediaInfo> videoInfoList = new ArrayList<>();
-            for (SendMediaMessagesRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
+            for (ChooseImagesRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
                 videoInfoList.add(itemData.getMediaInfo());
             }
             Intent intent = new Intent(this, PreviewToSendVideoActivity.class);
@@ -146,22 +146,22 @@ public class SendVideoMessagesActivity extends BaseActivity {
     }
 
     private void showContent() {
-        adapter = new SendMediaMessagesRecyclerAdapter(this, getData());
+        adapter = new ChooseImagesRecyclerAdapter(this, getData());
         showMedias();
         binding.recyclerView.post(this::updateInfos);
         showTotalSize();
     }
 
-    private List<SendMediaMessagesRecyclerAdapter.ItemData> getData(){
+    private List<ChooseImagesRecyclerAdapter.ItemData> getData(){
         List<MediaInfo> videos;
         if(currentDirectoryPath == null) {
             videos = MediaStoreHelper.getAllVideos(this);
         }else {
             videos = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath);
         }
-        List<SendMediaMessagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+        List<ChooseImagesRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         videos.forEach(video -> {
-            itemDataList.add(new SendMediaMessagesRecyclerAdapter.ItemData(video));
+            itemDataList.add(new ChooseImagesRecyclerAdapter.ItemData(video));
         });
         return itemDataList;
     }
@@ -205,8 +205,8 @@ public class SendVideoMessagesActivity extends BaseActivity {
     }
 
     private void updateInfos() {
-        SendMediaMessagesRecyclerAdapter sendMediaMessagesRecyclerAdapter = (SendMediaMessagesRecyclerAdapter) binding.recyclerView.getAdapter();
-        if(sendMediaMessagesRecyclerAdapter.getItemDataList().isEmpty()) return;
+        ChooseImagesRecyclerAdapter chooseImagesRecyclerAdapter = (ChooseImagesRecyclerAdapter) binding.recyclerView.getAdapter();
+        if(chooseImagesRecyclerAdapter.getItemDataList().isEmpty()) return;
         androidx.recyclerview.widget.RecyclerView.LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
         if(layoutManager instanceof LinearLayoutManager){
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
@@ -226,20 +226,20 @@ public class SendVideoMessagesActivity extends BaseActivity {
                 firstItemPosition --;
                 lastItemPosition --;
             }
-            SendMediaMessagesRecyclerAdapter.ItemData firstItem = sendMediaMessagesRecyclerAdapter.getItemDataList().get(firstItemPosition);
-            SendMediaMessagesRecyclerAdapter.ItemData lastItem = sendMediaMessagesRecyclerAdapter.getItemDataList().get(lastItemPosition);
+            ChooseImagesRecyclerAdapter.ItemData firstItem = chooseImagesRecyclerAdapter.getItemDataList().get(firstItemPosition);
+            ChooseImagesRecyclerAdapter.ItemData lastItem = chooseImagesRecyclerAdapter.getItemDataList().get(lastItemPosition);
             updateTimeRange(firstItem, lastItem);
             updateLocation(firstItem, lastItem);
         }
     }
 
-    private void updateTimeRange(SendMediaMessagesRecyclerAdapter.ItemData firstItem, SendMediaMessagesRecyclerAdapter.ItemData lastItem){
+    private void updateTimeRange(ChooseImagesRecyclerAdapter.ItemData firstItem, ChooseImagesRecyclerAdapter.ItemData lastItem){
         long firstCompletelyVisibleItemTime = firstItem.getMediaInfo().getAddedTime() * 1000;
         long lastCompletelyVisibleItemTime = lastItem.getMediaInfo().getAddedTime() * 1000;
         binding.time.setText(Variables.getTimeRangeStr(firstCompletelyVisibleItemTime, lastCompletelyVisibleItemTime));
     }
 
-    private void updateLocation(SendMediaMessagesRecyclerAdapter.ItemData firstItem, SendMediaMessagesRecyclerAdapter.ItemData lastItem){
+    private void updateLocation(ChooseImagesRecyclerAdapter.ItemData firstItem, ChooseImagesRecyclerAdapter.ItemData lastItem){
         try {
             ExifInterface exif = firstItem.getMediaInfo().readExif(this);
             if(exif != null) {
