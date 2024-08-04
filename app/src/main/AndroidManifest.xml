@@ -115,7 +115,7 @@
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
-            android:name=".activity.SendImageMessagesActivity"
+            android:name=".activity.ChooseImagesActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/DarkStatusBarActivity" />

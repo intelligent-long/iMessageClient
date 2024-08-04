@@ -20,7 +20,7 @@
             android:layout_alignParentEnd="true"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/GalleryToolbar"
-            app:menu="@menu/toolbar_activity_send_image_messages">
+            app:menu="@menu/toolbar_activity_choose_images">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -31,7 +31,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="发送图片"
                     android:textSize="24sp"
                     android:textColor="@color/white"
                     android:textFontWeight="@integer/font_weight_medium" />

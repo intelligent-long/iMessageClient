@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,7 +16,7 @@ import android.widget.ArrayAdapter;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.SendMediaMessagesRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.databinding.ActivitySendImageMessagesBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityChooseImagesBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryFooterBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBinding;
 import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
@@ -36,8 +37,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendImageMessagesActivity extends BaseActivity{
-    private ActivitySendImageMessagesBinding binding;
+public class ChooseImagesActivity extends BaseActivity{
+    private ActivityChooseImagesBinding binding;
     private LayoutGalleryHeaderBinding headerBinding;
     private LayoutGalleryFooterBinding footerBinding;
     private SendMediaMessagesRecyclerAdapter adapter;
@@ -52,13 +53,24 @@ public class SendImageMessagesActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySendImageMessagesBinding.inflate(getLayoutInflater());
+        binding = ActivityChooseImagesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setupUiFromIntent();
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
         changeWindowAndSystemUi();
         init();
         showContent();
         setupYiers();
+    }
+
+    private void setupUiFromIntent() {
+        String toolbarTitle = getIntent().getStringExtra(ExtraKeys.TOOLBAR_TITLE);
+        int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
+        String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
+        binding.title.setText(toolbarTitle);
+        MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
+        item.setIcon(actionIconResId);
+        item.setTitle(menuTitle);
     }
 
     private void changeWindowAndSystemUi() {
@@ -120,7 +132,7 @@ public class SendImageMessagesActivity extends BaseActivity{
             startActivity(intent);
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.send){
+            if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
                 intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
                 setResult(RESULT_OK, intent);

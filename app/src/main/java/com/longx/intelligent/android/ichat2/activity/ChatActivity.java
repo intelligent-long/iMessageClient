@@ -329,7 +329,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             if(hasFocus) hideMorePanel();
         });
         binding.morePanelImage.setOnClickListener(v -> {
-            sendImageMessageResultLauncher.launch(new Intent(this, SendImageMessagesActivity.class));
+            Intent intent = new Intent(this, ChooseImagesActivity.class);
+            intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送图片");
+            intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
+            intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
+            sendImageMessageResultLauncher.launch(intent);
         });
         binding.morePanelTakePhoto.setOnClickListener(v -> {
             sendImageMessageResultLauncher.launch(new Intent(this, TakeAndSendPhotoActivity.class));

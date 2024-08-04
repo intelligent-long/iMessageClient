@@ -27,4 +27,7 @@ public class ExtraKeys {
     public static final String CHANNEL_TAGS = "channel_tags";
     public static final String CHANNEL_TAG_ID = "channel_tag_id";
     public static final String CHANNEL_TAG_NAMES = "channel_tag_names";
+    public static final String TOOLBAR_TITLE = "toolbar_title";
+    public static final String RES_ID = "res_id";
+    public static final String MENU_TITLE = "menu_title";
 }

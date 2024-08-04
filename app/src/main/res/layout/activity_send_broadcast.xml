@@ -260,12 +260,12 @@
         </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_image_fab"
+            android:id="@+id/add_image_or_video_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fab_margin_end"
             android:layout_marginBottom="@dimen/fab_margin_bottom_with_bottom_bar"
-            android:contentDescription="选择图片"
+            android:contentDescription="选择图片或视频"
             app:fabCustomSize="59dp"
             app:srcCompat="@drawable/add_photo_alternate_outline_24px"
             android:layout_above="@id/layout_broadcast_permission"
