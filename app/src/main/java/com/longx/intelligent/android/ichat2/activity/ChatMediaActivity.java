@@ -2,23 +2,28 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.adapter.ChatMediaPagerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.MediaPagerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatMediaBinding;
 import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
+import com.longx.intelligent.android.ichat2.media.MediaType;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +31,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     private ActivityChatMediaBinding binding;
     private List<ChatMessage> chatMessages;
     private int position;
-    private ChatMediaPagerAdapter adapter;
+    private MediaPagerAdapter adapter;
     private boolean pureContent;
 
     @Override
@@ -50,7 +55,19 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
 
     private void showContent() {
         binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
-        adapter = new ChatMediaPagerAdapter(this, chatMessages);
+        List<Media> mediaList = new ArrayList<>();
+        chatMessages.forEach(chatMessage -> {
+            if(chatMessage.getType() == ChatMessage.TYPE_IMAGE){
+                MediaType mediaType = MediaType.IMAGE;
+                Uri uri = Uri.fromFile(new File(chatMessage.getImageFilePath()));
+                mediaList.add(new Media(mediaType, uri));
+            }else if(chatMessage.getType() == ChatMessage.TYPE_VIDEO){
+                MediaType mediaType = MediaType.VIDEO;
+                Uri uri = Uri.fromFile(new File(chatMessage.getVideoFilePath()));
+                mediaList.add(new Media(mediaType, uri));
+            }
+        });
+        adapter = new MediaPagerAdapter(this, mediaList);
         adapter.setOnRecyclerItemActionYier(this);
         adapter.setOnRecyclerItemClickYier(this);
         binding.viewPager.setAdapter(adapter);
@@ -83,7 +100,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
                     int previousPosition = right ? ChatMediaActivity.this.position + 1 : ChatMediaActivity.this.position - 1;
                     if(previousPosition != -1) {
-                        if (positionOffset == 0 && adapter.getItemDatas().get(previousPosition).getChatMessage().getType() == ChatMessage.TYPE_IMAGE) {
+                        if (positionOffset == 0 && adapter.getItemDataList().get(previousPosition).getMedia().getMediaType() == MediaType.IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
                         }
                         adapter.pausePlayer(previousPosition);
@@ -152,18 +169,18 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     }
 
     private void setPureContent(boolean pureContent) {
-        Map<Integer, ChatMediaPagerAdapter.ViewHolder> viewHolders = adapter.getViewHolders();
+        Map<Integer, MediaPagerAdapter.ViewHolder> viewHolders = adapter.getViewHolders();
         viewHolders.entrySet().forEach(integerViewHolderEntry -> {
             Integer position = integerViewHolderEntry.getKey();
-            ChatMediaPagerAdapter.ViewHolder viewHolder = integerViewHolderEntry.getValue();
+            MediaPagerAdapter.ViewHolder viewHolder = integerViewHolderEntry.getValue();
             if(pureContent) {
                 viewHolder.getBinding().topShadowCover.setVisibility(View.GONE);
-                if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
+                if(adapter.getItemDataList().get(position).getMedia().getMediaType() == MediaType.VIDEO) {
                     viewHolder.getBinding().playControl.setVisibility(View.GONE);
                 }
             }else {
                 viewHolder.getBinding().topShadowCover.setVisibility(View.VISIBLE);
-                if(adapter.getItemDatas().get(position).getChatMessage().getType() == ChatMessage.TYPE_VIDEO) {
+                if(adapter.getItemDataList().get(position).getMedia().getMediaType() == MediaType.VIDEO) {
                     viewHolder.getBinding().playControl.setVisibility(View.VISIBLE);
                 }
             }

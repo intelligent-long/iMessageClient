@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,7 +15,6 @@ import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -28,8 +28,9 @@ import com.google.android.exoplayer2.Player;
 import com.longx.intelligent.android.ichat2.activity.ChatMediaActivity;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMediaBinding;
+import com.longx.intelligent.android.ichat2.media.MediaType;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
@@ -43,35 +44,35 @@ import java.util.Map;
 /**
  * Created by LONG on 2024/5/28 at 9:24 PM.
  */
-public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAdapter.ViewHolder> {
-    private final ChatMediaActivity activity;
-    private final List<ItemData> itemDatas;
+public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.ViewHolder> {
+    private final Activity activity;
+    private final List<ItemData> itemDataList;
     private RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
     private Handler handler;
     private static final int SEEKBAR_MAX = 10000;
     private final Map<Integer, ViewHolder> viewHolderMap = new HashMap<>();
 
-    public ChatMediaPagerAdapter(ChatMediaActivity activity, List<ChatMessage> chatMessages) {
+    public MediaPagerAdapter(Activity activity, List<Media> mediaList) {
         this.activity = activity;
         List<ItemData> itemDataList = new ArrayList<>();
-        chatMessages.forEach(chatMessage -> {
-            itemDataList.add(new ItemData(chatMessage));
+        mediaList.forEach(media -> {
+            itemDataList.add(new ItemData(media));
         });
-        this.itemDatas = itemDataList;
+        this.itemDataList = itemDataList;
     }
 
     public static class ItemData{
-        private final ChatMessage chatMessage;
+        private final Media media;
         private ExoPlayer player;
         private Runnable updateProgressAction;
 
-        public ItemData(ChatMessage chatMessage) {
-            this.chatMessage = chatMessage;
+        public ItemData(Media media) {
+            this.media = media;
         }
 
-        public ChatMessage getChatMessage() {
-            return chatMessage;
+        public Media getMedia() {
+            return media;
         }
     }
 
@@ -97,20 +98,20 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
 
     @Override
     public int getItemCount() {
-        return itemDatas.size();
+        return itemDataList.size();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetView(holder);
         viewHolderMap.put(position, holder);
-        ChatMessage chatMessage = itemDatas.get(position).chatMessage;
-        switch (chatMessage.getType()){
-            case ChatMessage.TYPE_IMAGE:{
+        Media media = itemDataList.get(position).media;
+        switch (media.getMediaType()){
+            case IMAGE:{
                 changeTopCoverHeight(holder, false);
                 holder.binding.topShadowCover.bringToFront();
                 holder.binding.photoView.setVisibility(View.VISIBLE);
-                String imagePath = chatMessage.getImageFilePath();
+                Uri imageUri = media.getUri();
                 holder.binding.photoView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener(){
                     @Override
                     public void onImageLoadError(Exception e) {
@@ -118,7 +119,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
                         holder.binding.photoView.setVisibility(View.GONE);
                         holder.binding.loadFailedView.setVisibility(View.VISIBLE);
                         Glide.with(activity.getApplicationContext())
-                                .load(new File(imagePath))
+                                .load(imageUri)
                                 .transition(DrawableTransitionOptions.withCrossFade())
                                 .into(new CustomTarget<Drawable>() {
                                     @Override
@@ -133,11 +134,11 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
                                 });
                     }
                 });
-                holder.binding.photoView.setImage(ImageSource.uri(Uri.fromFile(new File(imagePath))));
+                holder.binding.photoView.setImage(ImageSource.uri(imageUri));
                 setupPhotoView(holder.binding, position);
                 break;
             }
-            case ChatMessage.TYPE_VIDEO:{
+            case VIDEO:{
                 changeTopCoverHeight(holder, true);
                 holder.binding.topShadowCover.bringToFront();
                 holder.binding.playControl.bringToFront();
@@ -233,12 +234,12 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
 
     private void initializePlayer(RecyclerItemChatMediaBinding binding, int position) {
         ExoPlayer player = new ExoPlayer.Builder(activity).build();
-        itemDatas.get(position).player = player;
+        itemDataList.get(position).player = player;
         binding.playerView.setPlayer(player);
         binding.playerView.setVisibility(View.GONE);
         binding.playControl.setVisibility(View.VISIBLE);
         binding.playControl.bringToFront();
-        MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(new File(itemDatas.get(position).chatMessage.getVideoFilePath())));
+        MediaItem mediaItem = MediaItem.fromUri(itemDataList.get(position).media.getUri());
         player.setMediaItem(mediaItem);
 
         player.addListener(new Player.Listener() {
@@ -278,7 +279,7 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         binding.seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ExoPlayer player = itemDatas.get(position).player;
+                ExoPlayer player = itemDataList.get(position).player;
                 if (fromUser && player != null) {
                     long duration = player.getDuration();
                     player.seekTo((long) ((progress / (double) SEEKBAR_MAX) * duration));
@@ -297,19 +298,19 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         });
 
         handler = new Handler();
-        itemDatas.get(position).updateProgressAction = () -> updateProgress(binding, position);
+        itemDataList.get(position).updateProgressAction = () -> updateProgress(binding, position);
     }
 
     private void startProgressUpdates(int position) {
-        handler.post(itemDatas.get(position).updateProgressAction);
+        handler.post(itemDataList.get(position).updateProgressAction);
     }
 
     private void stopProgressUpdates(int position) {
-        handler.removeCallbacks(itemDatas.get(position).updateProgressAction);
+        handler.removeCallbacks(itemDataList.get(position).updateProgressAction);
     }
 
     private void updateProgress(RecyclerItemChatMediaBinding binding, int position) {
-        ExoPlayer player = itemDatas.get(position).player;
+        ExoPlayer player = itemDataList.get(position).player;
         if (player != null && player.isPlaying()) {
             binding.seekbar.setMax(SEEKBAR_MAX);
             long currentPosition = player.getCurrentPosition();
@@ -317,12 +318,12 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
             int progress = (int) ((currentPosition / (double) duration) * SEEKBAR_MAX);
             binding.seekbar.setProgress(progress);
             binding.timePlay.setText(TimeUtil.formatTime(currentPosition) + " / " + TimeUtil.formatTime(duration));
-            handler.postDelayed(itemDatas.get(position).updateProgressAction, 1);
+            handler.postDelayed(itemDataList.get(position).updateProgressAction, 1);
         }
     }
 
     public void startPlayer(int position) {
-        ExoPlayer player = itemDatas.get(position).player;
+        ExoPlayer player = itemDataList.get(position).player;
         if (player != null) {
             if (player.getPlaybackState() == Player.STATE_ENDED) {
                 player.seekTo(0);
@@ -333,21 +334,21 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
     }
 
     public void pausePlayer(int position) {
-        ExoPlayer player = itemDatas.get(position).player;
+        ExoPlayer player = itemDataList.get(position).player;
         if (player != null) {
             player.pause();
         }
     }
 
     public void releasePlayer(int position) {
-        ExoPlayer player = itemDatas.get(position).player;
+        ExoPlayer player = itemDataList.get(position).player;
         if (player != null) {
             player.release();
         }
     }
 
     public void releaseAllPlayer(){
-        for (int i = 0; i < itemDatas.size(); i++) {
+        for (int i = 0; i < itemDataList.size(); i++) {
             releasePlayer(i);
         }
     }
@@ -360,8 +361,8 @@ public class ChatMediaPagerAdapter extends RecyclerView.Adapter<ChatMediaPagerAd
         this.onRecyclerItemClickYier = onRecyclerItemClickYier;
     }
 
-    public List<ItemData> getItemDatas() {
-        return itemDatas;
+    public List<ItemData> getItemDataList() {
+        return itemDataList;
     }
 
     public void changeTopCoverHeight(ViewHolder holder, boolean big){
