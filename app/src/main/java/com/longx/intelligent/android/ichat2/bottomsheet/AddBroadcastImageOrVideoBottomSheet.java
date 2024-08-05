@@ -4,13 +4,14 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddBroadcastImageOrVideo2Binding;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddBroadcastImageOrVideoBinding;
 
 /**
  * Created by LONG on 2024/8/4 at 上午4:40.
  */
 public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
-    private BottomSheetAddBroadcastImageOrVideoBinding binding;
+    private BottomSheetAddBroadcastImageOrVideo2Binding binding;
     private View.OnClickListener onClickAddImageYier;
     private View.OnClickListener onClickAddVideoYier;
     private View.OnClickListener onClickTakePhotoYier;
@@ -23,7 +24,7 @@ public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
 
     @Override
     protected void onCreate() {
-        binding = BottomSheetAddBroadcastImageOrVideoBinding.inflate(getActivity().getLayoutInflater());
+        binding = BottomSheetAddBroadcastImageOrVideo2Binding.inflate(getActivity().getLayoutInflater());
         setContentView(binding.getRoot());
         setupListeners();
     }
