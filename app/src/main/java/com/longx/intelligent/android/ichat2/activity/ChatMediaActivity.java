@@ -206,10 +206,6 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
         setPureContent(!pureContent);
     }
 
-    public boolean isPureContent() {
-        return pureContent;
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
