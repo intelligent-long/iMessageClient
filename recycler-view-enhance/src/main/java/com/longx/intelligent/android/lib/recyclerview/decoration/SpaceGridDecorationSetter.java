@@ -10,6 +10,10 @@ import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 public class SpaceGridDecorationSetter {
     private RecyclerView.ItemDecoration itemDecoration;
 
+    public void setSpace(Context context, RecyclerView recyclerView, int columnCount, double spaceDp, boolean includeEdge, SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider){
+        setSpace(context, recyclerView, columnCount, spaceDp, includeEdge, spaceGridDecorationDimensionProvider, false);
+    }
+
     public void setSpace(Context context, RecyclerView recyclerView, int columnCount, double spaceDp, boolean includeEdge, SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider, boolean maxHeight){
         recyclerView.removeItemDecoration(itemDecoration);
         if(!maxHeight) {

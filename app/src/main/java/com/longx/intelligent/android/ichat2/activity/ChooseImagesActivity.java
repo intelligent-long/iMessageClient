@@ -53,6 +53,7 @@ public class ChooseImagesActivity extends BaseActivity{
     private String currentDirectoryPath;
     private boolean uiInited;
     private List<Uri> chosenUriList;
+    private int maxAllowSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +76,11 @@ public class ChooseImagesActivity extends BaseActivity{
         MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
         item.setIcon(actionIconResId);
         item.setTitle(menuTitle);
-        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(getIntent().getParcelableArrayExtra(ExtraKeys.URIS));
-        chosenUriList = Utils.parseParcelableArray(parcelableArrayExtra);
+        Parcelable[] parcelableArrayExtra = getIntent().getParcelableArrayExtra(ExtraKeys.URIS);
+        if(parcelableArrayExtra != null) {
+            chosenUriList = Utils.parseParcelableArray(parcelableArrayExtra);
+        }
+        maxAllowSize = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_SIZE, -1);
     }
 
     private void changeWindowAndSystemUi() {
@@ -164,7 +168,7 @@ public class ChooseImagesActivity extends BaseActivity{
     }
 
     private void showContent() {
-        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenUriList);
+        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenUriList, maxAllowSize);
         showMedias();
         binding.recyclerView.post(this::updateInfos);
         showTotalSize();
@@ -198,7 +202,7 @@ public class ChooseImagesActivity extends BaseActivity{
         binding.recyclerView.removeFooterView();
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
-        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, columnCount, Constants.GRID_SPACE_DP, false, null, false);
+        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, columnCount, Constants.GRID_SPACE_DP, false, null);
         postCalculateAndSetHeaderSpaceHeight();
     }
 

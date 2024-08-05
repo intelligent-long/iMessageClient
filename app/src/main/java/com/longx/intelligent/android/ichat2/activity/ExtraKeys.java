@@ -30,4 +30,5 @@ public class ExtraKeys {
     public static final String TOOLBAR_TITLE = "toolbar_title";
     public static final String RES_ID = "res_id";
     public static final String MENU_TITLE = "menu_title";
+    public static final String MAX_ALLOW_SIZE = "max_allow_size";
 }

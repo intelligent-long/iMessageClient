@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChooseMediasBinding;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
@@ -31,9 +32,15 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private final List<ChooseMediasRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
     private final List<Integer> checkedPositions = new ArrayList<>();
     private final List<Uri> checkedUris = new ArrayList<>();
+    private int maxAllowSize;
 
-    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ChooseMediasRecyclerAdapter.ItemData> itemDataList, List<Uri> chosenUriList) {
+    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ChooseMediasRecyclerAdapter.ItemData> itemDataList, List<Uri> chosenUriList){
+        this(activity, itemDataList, chosenUriList, -1);
+    }
+
+    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ChooseMediasRecyclerAdapter.ItemData> itemDataList, List<Uri> chosenUriList, int maxAllowSize) {
         this.activity = activity;
+        this.maxAllowSize = maxAllowSize;
         sortDataList(itemDataList);
         this.itemDataList.addAll(itemDataList);
 
@@ -136,6 +143,10 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             holder.binding.index.setText(null);
         }
         holder.binding.checkButton.setOnClickListener(v -> {
+            if(maxAllowSize != -1 && checkedUris.size() == maxAllowSize){
+                MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowSize + " 个项目", MessageDisplayer.Duration.LONG);
+                return;
+            }
             checkedUris.add(uri);
             checkedPositions.add(position + 1);
             notifyItemChanged(position + 1);
@@ -149,7 +160,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 int index1 = checkedUris.indexOf(uri1);
                 if(index1 >= index) {
                     notifyItemChanged(checkedPositions.get(index1));
-                    ErrorLogger.log(index1);
                 }
             });
         });

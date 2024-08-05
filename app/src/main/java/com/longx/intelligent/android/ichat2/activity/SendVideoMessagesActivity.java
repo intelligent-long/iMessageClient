@@ -180,7 +180,7 @@ public class SendVideoMessagesActivity extends BaseActivity {
         binding.recyclerView.removeFooterView();
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
-        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, columnCount, Constants.GRID_SPACE_DP, false, null, false);
+        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, columnCount, Constants.GRID_SPACE_DP, false, null);
         postCalculateAndSetHeaderSpaceHeight();
     }
 

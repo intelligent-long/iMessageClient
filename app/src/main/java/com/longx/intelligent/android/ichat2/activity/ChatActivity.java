@@ -333,6 +333,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送图片");
             intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
             intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
+            intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT);
             sendImageMessageResultLauncher.launch(intent);
         });
         binding.morePanelTakePhoto.setOnClickListener(v -> {

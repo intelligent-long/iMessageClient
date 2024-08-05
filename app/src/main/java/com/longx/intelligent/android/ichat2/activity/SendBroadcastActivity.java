@@ -103,6 +103,7 @@ public class SendBroadcastActivity extends BaseActivity {
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
                 intent.putExtra(ExtraKeys.URIS, imageUriList.toArray(new Uri[0]));
+                intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
                 addImageResultLauncher.launch(intent);
             });
             bottomSheet.show();
