@@ -10,10 +10,12 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.adapter.SendBroadcastMediasRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastImageOrVideoBottomSheet;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
@@ -28,6 +30,7 @@ import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,7 @@ public class SendBroadcastActivity extends BaseActivity {
     private ActivitySendBroadcastBinding binding;
     private ActivityResultLauncher<Intent> addImageResultLauncher;
     private final List<Uri> imageUriList = new ArrayList<>();
+    private static final int MEDIA_COLUMN_COUNT = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,23 +110,19 @@ public class SendBroadcastActivity extends BaseActivity {
     }
 
     private void onImagesChosen(List<Uri> uriList) {
-        imageUriList.clear();
-        imageUriList.addAll(uriList);
+        List<Uri> toAdds = new ArrayList<>();
+        uriList.forEach(uri -> {
+            if(!imageUriList.contains(uri)) toAdds.add(uri);
+        });
+        imageUriList.addAll(toAdds);
         showImages();
     }
 
     private void showImages(){
-        binding.layoutImages.setVisibility(View.VISIBLE);
-        for (int i = 0; i < imageUriList.size(); i++) {
-            Uri imageUri = imageUriList.get(i);
-            int resId = ResourceUtil.getResId("image_" + (i + 1), R.id.class);
-            AppCompatImageView imageView = findViewById(resId);
-            imageView.setVisibility(View.VISIBLE);
-            GlideApp
-                    .with(getApplicationContext())
-                    .load(imageUri)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(imageView);
-        }
+        binding.recyclerViewMedias.setVisibility(View.VISIBLE);
+        binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, MEDIA_COLUMN_COUNT));
+        new SpaceGridDecorationSetter().setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
+        SendBroadcastMediasRecyclerAdapter adapter = new SendBroadcastMediasRecyclerAdapter(this, imageUriList);
+        binding.recyclerViewMedias.setAdapter(adapter);
     }
 }

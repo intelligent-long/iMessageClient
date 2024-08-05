@@ -198,7 +198,7 @@ public class ChooseImagesActivity extends BaseActivity{
         binding.recyclerView.removeFooterView();
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
-        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, columnCount, Constants.GRID_SPACE_DP, false, null);
+        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, columnCount, Constants.GRID_SPACE_DP, false, null, false);
         postCalculateAndSetHeaderSpaceHeight();
     }
 

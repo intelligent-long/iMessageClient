@@ -55,7 +55,7 @@
         android:paddingBottom="10dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -66,14 +66,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <TextView
+                    android:id="@+id/text_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="16dp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:textColor="?attr/colorOutline"
+                    android:text="0/1000"/>
+
                 <LinearLayout
                     android:id="@+id/layout_broadcast_input"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_counter"
                     android:orientation="vertical"
                     android:background="@drawable/shape_card_background_low_radius_28"
                     android:paddingHorizontal="26dp"
                     android:paddingVertical="26dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="16dp"
                     android:elevation="5dp"
                     android:theme="@style/ThemeOverlay.LighterZShadow11">
@@ -86,178 +100,15 @@
                         android:textColorHint="?attr/colorOnSurface"
                         android:background="@color/transparent"/>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/layout_images"
+                    <com.longx.intelligent.android.lib.recyclerview.RecyclerView
+                        android:id="@+id/recycler_view_medias"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
-                        android:visibility="gone">
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_1"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingEnd="5dp"
-                            android:paddingBottom="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline_3"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_2"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingHorizontal="5dp"
-                            android:paddingBottom="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline_4"
-                            app:layout_constraintStart_toStartOf="@+id/guideline_3"
-                            app:layout_constraintTop_toTopOf="parent"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_3"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingStart="5dp"
-                            android:paddingBottom="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/guideline_4"
-                            app:layout_constraintTop_toTopOf="parent"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_4"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingVertical="5dp"
-                            android:paddingEnd="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline_3"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/image_1" />
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_5"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingVertical="5dp"
-                            android:paddingHorizontal="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline_4"
-                            app:layout_constraintStart_toStartOf="@+id/guideline_3"
-                            app:layout_constraintTop_toBottomOf="@+id/image_2"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_6"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingVertical="5dp"
-                            android:paddingStart="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/guideline_4"
-                            app:layout_constraintTop_toBottomOf="@+id/image_3"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_7"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingTop="5dp"
-                            android:paddingEnd="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline_3"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/image_4"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_8"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingHorizontal="5dp"
-                            android:paddingTop="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline_4"
-                            app:layout_constraintStart_toStartOf="@+id/guideline_3"
-                            app:layout_constraintTop_toBottomOf="@+id/image_5"/>
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/image_9"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_gravity="center"
-                            android:paddingTop="5dp"
-                            android:paddingStart="5dp"
-                            android:visibility="gone"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/guideline_4"
-                            app:layout_constraintTop_toBottomOf="@+id/image_6"/>
-
-                        <androidx.constraintlayout.widget.Guideline
-                            android:id="@+id/guideline_3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            app:layout_constraintGuide_percent=".33333333" />
-
-                        <androidx.constraintlayout.widget.Guideline
-                            android:id="@+id/guideline_4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            app:layout_constraintGuide_percent=".66666666" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:visibility="gone"/>
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/text_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/layout_broadcast_input"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="5dp"
-                    android:textColor="?attr/colorOutline"
-                    android:text="0/1000"/>
             </RelativeLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_image_or_video_fab"

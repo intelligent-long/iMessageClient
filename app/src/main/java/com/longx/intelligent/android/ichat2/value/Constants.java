@@ -24,5 +24,6 @@ public class Constants {
     public static final int MAX_CHAT_VOICE_TIME_SEC = 120;
     public static final int FETCH_BROADCAST_PAGE_SIZE = 5;
     public static final int MAX_BROADCAST_IMAGE_COUNT = 30;
+    public static final double GRID_SPACE_SEND_BROADCAST_DP = 5;
 
 }

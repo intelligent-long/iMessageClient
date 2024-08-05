@@ -144,9 +144,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             int index = checkedUris.indexOf(uri);
             checkedUris.remove(uri);
             checkedPositions.remove((Integer) (position + 1));
-            ErrorLogger.log(index);
-            ErrorLogger.log(Arrays.toString(checkedUris.toArray(new Uri[0])));
-            ErrorLogger.log(Arrays.toString(checkedPositions.toArray(new Integer[0])));
             notifyItemChanged(position + 1);
             checkedUris.forEach(uri1 -> {
                 int index1 = checkedUris.indexOf(uri1);
