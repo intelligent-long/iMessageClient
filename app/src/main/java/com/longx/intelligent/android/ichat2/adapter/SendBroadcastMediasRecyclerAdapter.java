@@ -1,17 +1,21 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.PreviewToSendBroadcastMediaActivity;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendBroadcastMediasBinding;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,9 +23,9 @@ import java.util.List;
  */
 public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<SendBroadcastMediasRecyclerAdapter.ViewHolder, Uri> {
     private final Activity activity;
-    private final List<Uri> uriList;
+    private final ArrayList<Uri> uriList;
 
-    public SendBroadcastMediasRecyclerAdapter(Activity activity, List<Uri> uriList) {
+    public SendBroadcastMediasRecyclerAdapter(Activity activity, ArrayList<Uri> uriList) {
         this.activity = activity;
         this.uriList = uriList;
     }
@@ -55,5 +59,15 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.image);
+        setupYiers(holder, position);
+    }
+
+    private void setupYiers(ViewHolder holder, int position) {
+        holder.binding.image.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, PreviewToSendBroadcastMediaActivity.class);
+            intent.putParcelableArrayListExtra(ExtraKeys.URIS, uriList);
+            intent.putExtra(ExtraKeys.POSITION, position);
+            activity.startActivity(intent);
+        });
     }
 }

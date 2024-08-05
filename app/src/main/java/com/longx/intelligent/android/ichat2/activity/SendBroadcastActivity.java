@@ -42,7 +42,7 @@ import retrofit2.Response;
 public class SendBroadcastActivity extends BaseActivity {
     private ActivitySendBroadcastBinding binding;
     private ActivityResultLauncher<Intent> addImageResultLauncher;
-    private final List<Uri> imageUriList = new ArrayList<>();
+    private final ArrayList<Uri> imageUriList = new ArrayList<>();
     private static final int MEDIA_COLUMN_COUNT = 3;
 
     @Override

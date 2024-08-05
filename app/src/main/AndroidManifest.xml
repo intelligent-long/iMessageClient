@@ -41,6 +41,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.PreviewToSendBroadcastMediaActivity"
+            android:exported="false"
+            android:theme="@style/DarkStatusBarActivity" />
+        <activity
             android:name=".activity.SendBroadcastActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

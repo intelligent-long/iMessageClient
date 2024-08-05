@@ -46,10 +46,10 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     private void getIntentData() {
         chatMessages = getIntent().getParcelableArrayListExtra(ExtraKeys.CHAT_MESSAGES);
         position = getIntent().getIntExtra(ExtraKeys.POSITION, 0);
-        binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
     }
 
     private void showContent() {
+        binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
         adapter = new ChatMediaPagerAdapter(this, chatMessages);
         adapter.setOnRecyclerItemActionYier(this);
         adapter.setOnRecyclerItemClickYier(this);
