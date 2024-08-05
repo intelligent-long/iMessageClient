@@ -23,6 +23,7 @@ import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -41,8 +42,10 @@ import retrofit2.Response;
 public class SendBroadcastActivity extends BaseActivity {
     private ActivitySendBroadcastBinding binding;
     private ActivityResultLauncher<Intent> addImageResultLauncher;
+    private ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<Media> mediaList = new ArrayList<>();
     private static final int MEDIA_COLUMN_COUNT = 3;
+    private SendBroadcastMediasRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,22 @@ public class SendBroadcastActivity extends BaseActivity {
                         }else {
                             onImagesChosen(uriList);
                         }
+                    }
+                }
+        );
+        returnFromPreviewToSendMediaResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    ErrorLogger.log(result.getResultCode());
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = Objects.requireNonNull(result.getData());
+                        ArrayList<Media> medias = Objects.requireNonNull(data.getParcelableArrayListExtra(ExtraKeys.MEDIAS));
+                        if(medias.isEmpty()){
+                            binding.recyclerViewMedias.setVisibility(View.GONE);
+                        }
+                        mediaList.clear();
+                        mediaList.addAll(medias);
+                        adapter.changeAllData(medias);
                     }
                 }
         );
@@ -141,7 +160,7 @@ public class SendBroadcastActivity extends BaseActivity {
             binding.recyclerViewMedias.setVisibility(View.VISIBLE);
             binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, MEDIA_COLUMN_COUNT));
             new SpaceGridDecorationSetter().setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
-            SendBroadcastMediasRecyclerAdapter adapter = new SendBroadcastMediasRecyclerAdapter(this, mediaList);
+            adapter = new SendBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaList);
             binding.recyclerViewMedias.setAdapter(adapter);
         }
     }

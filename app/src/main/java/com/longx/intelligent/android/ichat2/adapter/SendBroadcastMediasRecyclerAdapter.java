@@ -1,10 +1,12 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -17,17 +19,18 @@ import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by LONG on 2024/8/5 at 下午2:45.
  */
 public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<SendBroadcastMediasRecyclerAdapter.ViewHolder, Uri> {
     private final Activity activity;
+    private final ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<Media> mediaList;
 
-    public SendBroadcastMediasRecyclerAdapter(Activity activity, ArrayList<Media> mediaList) {
+    public SendBroadcastMediasRecyclerAdapter(Activity activity, ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher, ArrayList<Media> mediaList) {
         this.activity = activity;
+        this.returnFromPreviewToSendMediaResultLauncher = returnFromPreviewToSendMediaResultLauncher;
         this.mediaList = mediaList;
     }
 
@@ -68,7 +71,14 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
             Intent intent = new Intent(activity, PreviewToSendBroadcastMediaActivity.class);
             intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
             intent.putExtra(ExtraKeys.POSITION, position);
-            activity.startActivity(intent);
+            returnFromPreviewToSendMediaResultLauncher.launch(intent);
         });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void changeAllData(ArrayList<Media> mediaList){
+        this.mediaList.clear();
+        this.mediaList.addAll(mediaList);
+        notifyDataSetChanged();
     }
 }

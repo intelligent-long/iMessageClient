@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -22,12 +23,13 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class PreviewToSendBroadcastMediaActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
     private ActivityPreviewToSendBroadcastMediaBinding binding;
-    private List<Media> medias;
+    private ArrayList<Media> medias;
     private int position;
     private MediaPagerAdapter adapter;
     private boolean pureContent;
@@ -123,6 +125,9 @@ public class PreviewToSendBroadcastMediaActivity extends BaseActivity implements
             if(medias.isEmpty()) finish();
             binding.toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
             adapter.removeItem(currentItem);
+            Intent intent = new Intent();
+            intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, medias);
+            setResult(RESULT_OK, intent);
         });
     }
 
