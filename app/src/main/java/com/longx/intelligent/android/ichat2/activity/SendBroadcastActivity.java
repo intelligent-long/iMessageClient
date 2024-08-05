@@ -102,7 +102,15 @@ public class SendBroadcastActivity extends BaseActivity {
                 MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
                 return;
             };
-            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText);
+            ArrayList<Integer> broadcastMediaTypes = new ArrayList<>();
+            mediaList.forEach(media -> {
+                if(media.getMediaType() == MediaType.IMAGE) {
+                    broadcastMediaTypes.add(SendBroadcastPostBody.MEDIA_TYPE_IMAGE);
+                }else if(media.getMediaType() == MediaType.VIDEO) {
+                    broadcastMediaTypes.add(SendBroadcastPostBody.MEDIA_TYPE_VIDEO);
+                }
+            });
+            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes);
             List<Uri> mediaUris = new ArrayList<>();
             mediaList.forEach(media -> {
                 mediaUris.add(media.getUri());
@@ -111,7 +119,7 @@ public class SendBroadcastActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{}, () -> {
+                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101}, () -> {
                         GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
                             broadcastReloadYiers.forEach(BroadcastReloadYier::onBroadcastReload);
                         });
