@@ -114,15 +114,24 @@ public class SendBroadcastActivity extends BaseActivity {
         uriList.forEach(uri -> {
             if(!imageUriList.contains(uri)) toAdds.add(uri);
         });
+        List<Uri> toRemoves = new ArrayList<>();
+        imageUriList.forEach(uri -> {
+            if(!uriList.contains(uri)) toRemoves.add(uri);
+        });
         imageUriList.addAll(toAdds);
+        imageUriList.removeAll(toRemoves);
         showImages();
     }
 
     private void showImages(){
-        binding.recyclerViewMedias.setVisibility(View.VISIBLE);
-        binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, MEDIA_COLUMN_COUNT));
-        new SpaceGridDecorationSetter().setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
-        SendBroadcastMediasRecyclerAdapter adapter = new SendBroadcastMediasRecyclerAdapter(this, imageUriList);
-        binding.recyclerViewMedias.setAdapter(adapter);
+        if(imageUriList.isEmpty()){
+            binding.recyclerViewMedias.setVisibility(View.GONE);
+        }else {
+            binding.recyclerViewMedias.setVisibility(View.VISIBLE);
+            binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, MEDIA_COLUMN_COUNT));
+            new SpaceGridDecorationSetter().setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
+            SendBroadcastMediasRecyclerAdapter adapter = new SendBroadcastMediasRecyclerAdapter(this, imageUriList);
+            binding.recyclerViewMedias.setAdapter(adapter);
+        }
     }
 }
