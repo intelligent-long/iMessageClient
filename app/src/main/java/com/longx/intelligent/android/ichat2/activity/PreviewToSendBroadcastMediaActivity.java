@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendBro
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
@@ -105,7 +106,7 @@ public class PreviewToSendBroadcastMediaActivity extends BaseActivity implements
                 previousPositionOffset = positionOffset;
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
                     int previousPosition = right ? PreviewToSendBroadcastMediaActivity.this.position + 1 : PreviewToSendBroadcastMediaActivity.this.position - 1;
-                    if(previousPosition != -1) {
+                    if(previousPosition != -1 && !(previousPosition >= adapter.getItemCount())) {
                         if (positionOffset == 0 && adapter.getItemDataList().get(previousPosition).getMedia().getMediaType() == MediaType.IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
                         }
@@ -117,7 +118,11 @@ public class PreviewToSendBroadcastMediaActivity extends BaseActivity implements
             }
         });
         binding.removeButton.setOnClickListener(v -> {
-
+            int currentItem = binding.viewPager.getCurrentItem();
+            medias.remove(currentItem);
+            if(medias.isEmpty()) finish();
+            binding.toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
+            adapter.removeItem(currentItem);
         });
     }
 
@@ -162,18 +167,18 @@ public class PreviewToSendBroadcastMediaActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.startPlayer(position);
+        if(adapter.getItemCount() != 0) adapter.startPlayer(position);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        adapter.pausePlayer(position);
+        if(adapter.getItemCount() != 0) adapter.pausePlayer(position);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        adapter.releaseAllPlayer();
+        if(adapter.getItemCount() != 0) adapter.releaseAllPlayer();
     }
 }

@@ -43,6 +43,7 @@
         <activity
             android:name=".activity.PreviewToSendBroadcastMediaActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
             android:name=".activity.SendBroadcastActivity"

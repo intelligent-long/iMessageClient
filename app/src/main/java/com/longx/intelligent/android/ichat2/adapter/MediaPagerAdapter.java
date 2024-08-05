@@ -374,4 +374,9 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         }
         UiUtil.setViewHeight(holder.binding.topShadowCover, height);
     }
+
+    public void removeItem(int position){
+        itemDataList.remove(position);
+        notifyItemRemoved(position);
+    }
 }
