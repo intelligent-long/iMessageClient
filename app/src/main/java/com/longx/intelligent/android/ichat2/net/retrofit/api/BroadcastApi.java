@@ -26,7 +26,7 @@ public interface BroadcastApi {
     @POST("broadcast/send")
     @Multipart
     @Headers("LogLevel:HEADERS")
-    CompletableCall<OperationStatus> sendBroadcast(@Part("body") RequestBody postBody, @Part List<MultipartBody.Part> images);
+    CompletableCall<OperationStatus> sendBroadcast(@Part("body") RequestBody postBody, @Part List<MultipartBody.Part> medias);
 
     @GET("broadcast/limit")
     CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(@Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps);

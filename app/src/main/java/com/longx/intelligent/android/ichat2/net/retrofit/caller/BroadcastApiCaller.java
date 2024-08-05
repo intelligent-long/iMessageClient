@@ -37,14 +37,14 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
     }
 
     public static CompletableCall<OperationStatus> sendBroadcast(LifecycleOwner lifecycleOwner, Context context,
-                                                                 SendBroadcastPostBody postBody, List<Uri> imageUris,
+                                                                 SendBroadcastPostBody postBody, List<Uri> mediaUris,
                                                                  BaseYier<OperationStatus> yier){
         RequestBody bodyPart = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-        List<MultipartBody.Part> imagePart = new ArrayList<>();
+        List<MultipartBody.Part> mediaPart = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
-        if(imageUris != null) imageUris.forEach(imageUri -> {
-            String fileName = FileHelper.getFileNameFromUri(context, imageUri);
-            String mimeType = FileHelper.getMimeType(context, imageUri);
+        if(mediaUris != null) mediaUris.forEach(mediaUri -> {
+            String fileName = FileHelper.getFileNameFromUri(context, mediaUri);
+            String mimeType = FileHelper.getMimeType(context, mediaUri);
             RequestBody requestBody = new RequestBody() {
                 @Override
                 public MediaType contentType() {
@@ -53,12 +53,12 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
                 @Override
                 public long contentLength() throws IOException {
-                    return FileUtil.getFileSize(context, imageUri);
+                    return FileUtil.getFileSize(context, mediaUri);
                 }
 
                 @Override
                 public void writeTo(BufferedSink sink) throws IOException {
-                    try (InputStream inputStream = contentResolver.openInputStream(imageUri)) {
+                    try (InputStream inputStream = contentResolver.openInputStream(mediaUri)) {
                         if (inputStream == null) {
                             throw new IOException("Unable to open input stream from URI");
                         }
@@ -70,9 +70,9 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
                     }
                 }
             };
-            imagePart.add(MultipartBody.Part.createFormData("images", fileName, requestBody));
+            mediaPart.add(MultipartBody.Part.createFormData("medias", fileName, requestBody));
         });
-        CompletableCall<OperationStatus> call = getApiImplementation().sendBroadcast(bodyPart, imagePart);
+        CompletableCall<OperationStatus> call = getApiImplementation().sendBroadcast(bodyPart, mediaPart);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

@@ -76,7 +76,7 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void changeAllData(ArrayList<Media> mediaList){
+    public void changeAllDataAndShow(ArrayList<Media> mediaList){
         this.mediaList.clear();
         this.mediaList.addAll(mediaList);
         notifyDataSetChanged();

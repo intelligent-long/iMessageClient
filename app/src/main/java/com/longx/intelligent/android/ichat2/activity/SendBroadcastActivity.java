@@ -89,7 +89,7 @@ public class SendBroadcastActivity extends BaseActivity {
                         }
                         mediaList.clear();
                         mediaList.addAll(medias);
-                        adapter.changeAllData(medias);
+                        adapter.changeAllDataAndShow(medias);
                     }
                 }
         );
@@ -103,7 +103,11 @@ public class SendBroadcastActivity extends BaseActivity {
                 return;
             };
             SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText);
-            BroadcastApiCaller.sendBroadcast(this, this,  postBody, null, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+            List<Uri> mediaUris = new ArrayList<>();
+            mediaList.forEach(media -> {
+                mediaUris.add(media.getUri());
+            });
+            BroadcastApiCaller.sendBroadcast(this, this,  postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
