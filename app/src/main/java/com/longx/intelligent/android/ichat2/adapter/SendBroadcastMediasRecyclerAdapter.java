@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.PreviewToSendBroadcastMediaActivity;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendBroadcastMediasBinding;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -23,11 +24,11 @@ import java.util.List;
  */
 public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<SendBroadcastMediasRecyclerAdapter.ViewHolder, Uri> {
     private final Activity activity;
-    private final ArrayList<Uri> uriList;
+    private final ArrayList<Media> mediaList;
 
-    public SendBroadcastMediasRecyclerAdapter(Activity activity, ArrayList<Uri> uriList) {
+    public SendBroadcastMediasRecyclerAdapter(Activity activity, ArrayList<Media> mediaList) {
         this.activity = activity;
-        this.uriList = uriList;
+        this.mediaList = mediaList;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,12 +48,12 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
 
     @Override
     public int getItemCount() {
-        return uriList.size();
+        return mediaList.size();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Uri uri = uriList.get(position);
+        Uri uri = mediaList.get(position).getUri();
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(uri)
@@ -65,7 +66,7 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.image.setOnClickListener(v -> {
             Intent intent = new Intent(activity, PreviewToSendBroadcastMediaActivity.class);
-            intent.putParcelableArrayListExtra(ExtraKeys.URIS, uriList);
+            intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
             intent.putExtra(ExtraKeys.POSITION, position);
             activity.startActivity(intent);
         });

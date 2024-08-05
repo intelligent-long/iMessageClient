@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendBroadcastMediaBinding;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class PreviewToSendBroadcastMediaActivity extends BaseActivity {
     private ActivityPreviewToSendBroadcastMediaBinding binding;
-    private List<Uri> mediaUris;
+    private List<Media> medias;
     private int position;
 
     @Override
@@ -37,12 +38,12 @@ public class PreviewToSendBroadcastMediaActivity extends BaseActivity {
     }
 
     private void getIntentData() {
-        mediaUris = getIntent().getParcelableArrayListExtra(ExtraKeys.URIS);
+        medias = getIntent().getParcelableArrayListExtra(ExtraKeys.MEDIAS);
         position = getIntent().getIntExtra(ExtraKeys.POSITION, 0);
     }
 
     private void showContent() {
-        binding.toolbar.setTitle((position + 1) + " / " + mediaUris.size());
+        binding.toolbar.setTitle((position + 1) + " / " + medias.size());
 
     }
 

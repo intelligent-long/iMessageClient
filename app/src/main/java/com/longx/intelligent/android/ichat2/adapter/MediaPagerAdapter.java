@@ -77,7 +77,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private RecyclerItemChatMediaBinding binding;
+        private final RecyclerItemChatMediaBinding binding;
 
         public ViewHolder(RecyclerItemChatMediaBinding binding) {
             super(binding.getRoot());
