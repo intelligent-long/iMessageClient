@@ -188,7 +188,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (binding.recyclerView.isApproachStart(5)) {
+                if (binding.recyclerView.isApproachStart(15)) {
                     binding.toStartFab.hide();
                 } else {
                     binding.toStartFab.show();
@@ -262,6 +262,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             public void complete(Call<PaginatedOperationData<Broadcast>> call) {
                 super.complete(call);
                 headerBinding.loadIndicator.setVisibility(View.GONE);
+                binding.appbar.setExpanded(true);
+                binding.recyclerView.scrollToStart(false);
+                if (mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
             }
 
             @Override
@@ -293,9 +296,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     });
                     adapter.clearAndShow();
                     adapter.addItemsAndShow(itemDataList);
-                    binding.appbar.setExpanded(true);
-                    binding.recyclerView.scrollToStart(false);
-                    if (mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
                 });
             }
         });
