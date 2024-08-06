@@ -100,10 +100,7 @@ public class SendBroadcastActivity extends BaseActivity {
     private void setupYiers() {
         binding.sendBroadcastButton.setOnClickListener(v -> {
             String broadcastText = UiUtil.getEditTextString(binding.textInput);
-            if(broadcastText == null || broadcastText.isEmpty()) {
-                MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
-                return;
-            };
+            if(broadcastText != null && broadcastText.isEmpty()) broadcastText = null;
             ArrayList<Integer> broadcastMediaTypes = new ArrayList<>();
             mediaList.forEach(media -> {
                 if(media.getMediaType() == MediaType.IMAGE) {
@@ -122,6 +119,10 @@ public class SendBroadcastActivity extends BaseActivity {
             mediaList.forEach(media -> {
                 mediaUris.add(media.getUri());
             });
+            if(broadcastText == null && mediaUris.isEmpty()) {
+                MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
+                return;
+            };
             BroadcastApiCaller.sendBroadcast(this, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {

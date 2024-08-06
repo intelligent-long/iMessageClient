@@ -115,6 +115,11 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }else {
             holder.binding.text.setVisibility(View.GONE);
         }
+        for (int i = 0; i < 12; i++) {
+            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+            AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
+            imageView.setVisibility(View.GONE);
+        }
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
             holder.binding.medias.setVisibility(View.VISIBLE);
