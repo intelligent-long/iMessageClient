@@ -31,6 +31,7 @@ import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerH
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -42,6 +43,7 @@ import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapt
 import com.xcheng.retrofit.CompletableCall;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -111,6 +113,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 });
                 adapter.addItemsAndShow(itemDataList);
             }
+            String reloadTimeText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.RELOAD_TIME_TEXT);
+            headerBinding.reloadTime.setText(reloadTimeText);
         }else {
             loadHistoryBroadcastsData();
         }
@@ -143,6 +147,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             });
             outState.putParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA, broadcasts);
         }
+        outState.putString(InstanceStateKeys.BroadcastFragment.RELOAD_TIME_TEXT, headerBinding.reloadTime.getText().toString());
     }
 
     @Override
@@ -221,7 +226,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(requireActivity(), itemDataList);
         binding.recyclerView.setAdapter(adapter);
-        UiUtil.setViewHeight(headerBinding.load, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
+        UiUtil.setViewHeight(headerBinding.mainView, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
     }
@@ -296,6 +301,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     });
                     adapter.clearAndShow();
                     adapter.addItemsAndShow(itemDataList);
+                    headerBinding.reloadTime.setText("更新时间 " + TimeUtil.formatRelativeTime(new Date()));
                 });
             }
         });

@@ -28,5 +28,6 @@ public class InstanceStateKeys {
         public static final String CURRENT_PN = "current_pn";
         public static final String STOP_FETCH_NEXT_PAGE = "stop_fetch_next_page";
         public static final String HISTORY_BROADCASTS_DATA = "history_broadcasts_data";
+        public static final String RELOAD_TIME_TEXT = "reload_time_text";
     }
 }
