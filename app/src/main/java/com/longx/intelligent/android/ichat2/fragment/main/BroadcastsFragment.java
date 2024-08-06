@@ -226,7 +226,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(requireActivity(), itemDataList);
         binding.recyclerView.setAdapter(adapter);
-        UiUtil.setViewHeight(headerBinding.mainView, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
+        UiUtil.setViewHeight(headerBinding.load, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
     }
