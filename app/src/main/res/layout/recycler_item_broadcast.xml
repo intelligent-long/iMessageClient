@@ -344,17 +344,41 @@
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/media_12"
+                <FrameLayout
+                    android:id="@+id/media_12_layout"
+                    android:visibility="gone"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
-                    android:visibility="gone"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/media_12"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+
+                    <View
+                        android:id="@+id/dark_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#50000000"
+                        android:visibility="gone"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/more_icon"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:src="@drawable/more_horiz_24px"
+                        android:tint="@color/white"
+                        android:background="@drawable/shape_visible_shadow_background"
+                        android:layout_gravity="center"
+                        android:visibility="gone"/>
+                </FrameLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </GridLayout>
 

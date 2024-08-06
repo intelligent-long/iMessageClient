@@ -119,24 +119,32 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
             AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
             imageView.setVisibility(View.GONE);
+            holder.binding.media12Layout.setVisibility(View.GONE);
+            holder.binding.darkCover.setVisibility(View.GONE);
+            holder.binding.moreIcon.setVisibility(View.GONE);
         }
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
             holder.binding.medias.setVisibility(View.VISIBLE);
             broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
-            for (int i = 0; i < broadcastMedias.size(); i++) {
+            int forTimes = Math.min(12, broadcastMedias.size());
+            for (int i = 0; i < forTimes; i++) {
                 BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                 switch (broadcastMedia.getType()){
                     case BroadcastMedia.TYPE_IMAGE:{
                         int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
                         AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
-                        if(imageView == null) break;
                         imageView.setVisibility(View.VISIBLE);
                         GlideApp
                                 .with(activity.getApplicationContext())
                                 .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
                                 .centerCrop()
                                 .into(imageView);
+                        if(i == 11) holder.binding.media12Layout.setVisibility(View.VISIBLE);
+                        if(broadcastMedias.size() > 12) {
+                            holder.binding.darkCover.setVisibility(View.VISIBLE);
+                            holder.binding.moreIcon.setVisibility(View.VISIBLE);
+                        }
                         break;
                     }
                     case BroadcastMedia.TYPE_VIDEO:{
