@@ -15,16 +15,18 @@ public class BroadcastMedia implements Parcelable {
     private String broadcastId;
     private byte[] media;
     private int type;
+    private String extension;
     private int index;
 
     public BroadcastMedia() {
     }
 
-    public BroadcastMedia(String mediaId, String broadcastId, byte[] media, int type, int index) {
+    public BroadcastMedia(String mediaId, String broadcastId, byte[] media, int type, String extension, int index) {
         this.mediaId = mediaId;
         this.broadcastId = broadcastId;
         this.media = media;
         this.type = type;
+        this.extension = extension;
         this.index = index;
     }
 
@@ -56,6 +58,10 @@ public class BroadcastMedia implements Parcelable {
         return type;
     }
 
+    public String getExtension() {
+        return extension;
+    }
+
     public int getIndex() {
         return index;
     }
@@ -71,6 +77,7 @@ public class BroadcastMedia implements Parcelable {
         dest.writeString(broadcastId);
         dest.writeByteArray(media);
         dest.writeInt(type);
+        dest.writeString(extension);
         dest.writeInt(index);
     }
 
@@ -79,6 +86,7 @@ public class BroadcastMedia implements Parcelable {
         broadcastId = in.readString();
         in.readByteArray(media);
         type = in.readInt();
+        extension = in.readString();
         index = in.readInt();
     }
 }

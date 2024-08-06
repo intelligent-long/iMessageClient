@@ -3,9 +3,11 @@ package com.longx.intelligent.android.ichat2.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.request.target.Target;
@@ -14,12 +16,14 @@ import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemBroadcastBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideRequest;
+import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -105,7 +109,40 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     .into(holder.binding.avatar);
         }
         holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.broadcast.getTime()));
-        holder.binding.text.setText(itemData.broadcast.getText());
+        if(itemData.broadcast.getText() != null) {
+            holder.binding.text.setVisibility(View.VISIBLE);
+            holder.binding.text.setText(itemData.broadcast.getText());
+        }else {
+            holder.binding.text.setVisibility(View.GONE);
+        }
+        List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
+        if(broadcastMedias != null && !broadcastMedias.isEmpty()){
+            holder.binding.medias.setVisibility(View.VISIBLE);
+            broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
+            for (int i = 0; i < broadcastMedias.size(); i++) {
+                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                switch (broadcastMedia.getType()){
+                    case BroadcastMedia.TYPE_IMAGE:{
+                        int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                        AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
+                        if(imageView == null) break;
+                        imageView.setVisibility(View.VISIBLE);
+                        GlideApp
+                                .with(activity.getApplicationContext())
+                                .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
+                                .centerCrop()
+                                .into(imageView);
+                        break;
+                    }
+                    case BroadcastMedia.TYPE_VIDEO:{
+
+                        break;
+                    }
+                }
+            }
+        }else {
+            holder.binding.medias.setVisibility(View.GONE);
+        }
     }
 
     private void sortItemDataList(List<ItemData> itemDataList){

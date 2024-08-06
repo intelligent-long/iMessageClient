@@ -8,14 +8,18 @@ import java.util.List;
 public class SendBroadcastPostBody {
 
     private String text;
+
     private List<Integer> mediaTypes;
+
+    private List<String> mediaExtension;
 
     public SendBroadcastPostBody() {
     }
 
-    public SendBroadcastPostBody(String text, List<Integer> mediaTypes) {
+    public SendBroadcastPostBody(String text, List<Integer> mediaTypes, List<String> mediaExtension) {
         this.text = text;
         this.mediaTypes = mediaTypes;
+        this.mediaExtension = mediaExtension;
     }
 
     public String getText() {
@@ -24,5 +28,9 @@ public class SendBroadcastPostBody {
 
     public List<Integer> getMediaTypes() {
         return mediaTypes;
+    }
+
+    public List<String> getMediaExtension() {
+        return mediaExtension;
     }
 }

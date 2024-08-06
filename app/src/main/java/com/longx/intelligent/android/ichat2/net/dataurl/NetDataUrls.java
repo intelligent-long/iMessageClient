@@ -11,4 +11,8 @@ public class NetDataUrls {
     public static String getAvatarUrl(Context context, String avatarHash){
         return ServerProperties.getBaseUrl(context) + "user/info/avatar/" + avatarHash;
     }
+
+    public static String getBroadcastMediaDataUrl(Context context, String mediaId){
+        return ServerProperties.getBaseUrl(context) + "broadcast/media/data/" + mediaId;
+    }
 }

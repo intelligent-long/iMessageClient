@@ -16,6 +16,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.SendBroadcastMediasRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastImageOrVideoBottomSheet;
+import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -111,7 +112,12 @@ public class SendBroadcastActivity extends BaseActivity {
                     broadcastMediaTypes.add(BroadcastMedia.TYPE_VIDEO);
                 }
             });
-            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes);
+            ArrayList<String> broadcastMediaExtensions = new ArrayList<>();
+            mediaList.forEach(media -> {
+                String fileExtensionFromUri = FileHelper.getFileExtensionFromUri(this, media.getUri());
+                broadcastMediaExtensions.add(fileExtensionFromUri);
+            });
+            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions);
             List<Uri> mediaUris = new ArrayList<>();
             mediaList.forEach(media -> {
                 mediaUris.add(media.getUri());
