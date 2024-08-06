@@ -6,8 +6,6 @@ import java.util.List;
  * Created by LONG on 2024/7/28 at 2:05 AM.
  */
 public class SendBroadcastPostBody {
-    public static final int MEDIA_TYPE_IMAGE = 0;
-    public static final int MEDIA_TYPE_VIDEO = 1;
 
     private String text;
     private List<Integer> mediaTypes;

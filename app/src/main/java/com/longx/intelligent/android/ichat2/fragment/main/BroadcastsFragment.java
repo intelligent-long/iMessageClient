@@ -157,7 +157,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     }
 
     private void setupYiers() {
-        binding.recyclerView.addOnApproachEdgeYier(5, new RecyclerView.OnApproachEdgeYier() {
+        binding.recyclerView.addOnApproachEdgeYier(7, new RecyclerView.OnApproachEdgeYier() {
             @Override
             public void onApproachStart() {
 

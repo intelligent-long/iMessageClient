@@ -16,6 +16,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.SendBroadcastMediasRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastImageOrVideoBottomSheet;
+import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySendBroadcastBinding;
@@ -105,9 +106,9 @@ public class SendBroadcastActivity extends BaseActivity {
             ArrayList<Integer> broadcastMediaTypes = new ArrayList<>();
             mediaList.forEach(media -> {
                 if(media.getMediaType() == MediaType.IMAGE) {
-                    broadcastMediaTypes.add(SendBroadcastPostBody.MEDIA_TYPE_IMAGE);
+                    broadcastMediaTypes.add(BroadcastMedia.TYPE_IMAGE);
                 }else if(media.getMediaType() == MediaType.VIDEO) {
-                    broadcastMediaTypes.add(SendBroadcastPostBody.MEDIA_TYPE_VIDEO);
+                    broadcastMediaTypes.add(BroadcastMedia.TYPE_VIDEO);
                 }
             });
             SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes);
@@ -119,7 +120,7 @@ public class SendBroadcastActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101}, () -> {
+                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102}, () -> {
                         GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
                             broadcastReloadYiers.forEach(BroadcastReloadYier::onBroadcastReload);
                         });
