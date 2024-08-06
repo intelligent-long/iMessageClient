@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
@@ -30,7 +29,6 @@ import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerF
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -39,8 +37,6 @@ import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
-import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
-import com.xcheng.retrofit.CompletableCall;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +71,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         setupFab();
         setupRecyclerView();
         restoreState(savedInstanceState);
+        showOrHideBroadcastReloadedTime();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts();
         return binding.getRoot();
@@ -113,8 +110,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 });
                 adapter.addItemsAndShow(itemDataList);
             }
-            String reloadTimeText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.RELOAD_TIME_TEXT);
-            headerBinding.reloadTime.setText(reloadTimeText);
+            String errorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.ERROR_TEXT);
+            if(errorText != null){
+                headerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                headerBinding.loadFailedText.setText(errorText);
+            }
         }else {
             loadHistoryBroadcastsData();
         }
@@ -147,7 +147,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             });
             outState.putParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA, broadcasts);
         }
-        outState.putString(InstanceStateKeys.BroadcastFragment.RELOAD_TIME_TEXT, headerBinding.reloadTime.getText().toString());
+        if(headerBinding.loadFailedView.getVisibility() == View.VISIBLE){
+            outState.putString(InstanceStateKeys.BroadcastFragment.ERROR_TEXT, headerBinding.loadFailedText.getText().toString());
+        }else {
+            outState.putString(InstanceStateKeys.BroadcastFragment.ERROR_TEXT, null);
+        }
     }
 
     @Override
@@ -301,10 +305,21 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     });
                     adapter.clearAndShow();
                     adapter.addItemsAndShow(itemDataList);
-                    headerBinding.reloadTime.setText("更新时间 " + TimeUtil.formatRelativeTime(new Date()));
+                    SharedPreferencesAccessor.DefaultPref.saveBroadcastReloadedTime(requireContext(), new Date());
+                    showOrHideBroadcastReloadedTime();
                 });
             }
         });
+    }
+
+    private void showOrHideBroadcastReloadedTime() {
+        Date broadcastReloadedTime = SharedPreferencesAccessor.DefaultPref.getBroadcastReloadedTime(requireContext());
+        if(broadcastReloadedTime == null){
+            headerBinding.reloadTime.setVisibility(View.GONE);
+        }else {
+            headerBinding.reloadTime.setVisibility(View.VISIBLE);
+            headerBinding.reloadTime.setText("更新时间 " + TimeUtil.formatRelativeTime(broadcastReloadedTime));
+        }
     }
 
     private synchronized void nextPage() {

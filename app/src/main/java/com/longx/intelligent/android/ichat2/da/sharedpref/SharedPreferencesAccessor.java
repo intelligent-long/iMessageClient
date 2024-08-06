@@ -38,6 +38,7 @@ public class SharedPreferencesAccessor {
         private static class Key {
             private static final String IGNORE_REQUEST_IGNORE_BATTERY_OPTIMIZE = "ignore_request_ignore_battery_optimize";
             private static final String SEARCH_CHANNEL_BY = "search_channel_by";
+            private static final String BROADCASTS_RELOADED_TIME = "broadcasts_reloaded_time";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return PreferenceManager.getDefaultSharedPreferences(context);
@@ -89,6 +90,20 @@ public class SharedPreferencesAccessor {
         public static String getSearchChannelBy(Context context){
             return getSharedPreferences(context)
                     .getString(Key.SEARCH_CHANNEL_BY, null);
+        }
+
+        public static void saveBroadcastReloadedTime(Context context, Date time){
+            getSharedPreferences(context)
+                    .edit()
+                    .putLong(Key.BROADCASTS_RELOADED_TIME, time.getTime())
+                    .apply();
+        }
+
+        public static Date getBroadcastReloadedTime(Context context){
+            long time = getSharedPreferences(context)
+                    .getLong(Key.BROADCASTS_RELOADED_TIME, -1);
+            if(time == -1) return null;
+            return new Date(time);
         }
     }
 
