@@ -371,8 +371,8 @@
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/more_icon"
-                        android:layout_width="27dp"
-                        android:layout_height="27dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:src="@drawable/more_horiz_24px"
                         android:tint="@color/white"
                         android:background="@drawable/shape_visible_shadow_background"

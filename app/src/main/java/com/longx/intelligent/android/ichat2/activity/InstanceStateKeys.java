@@ -28,6 +28,7 @@ public class InstanceStateKeys {
         public static final String CURRENT_PN = "current_pn";
         public static final String STOP_FETCH_NEXT_PAGE = "stop_fetch_next_page";
         public static final String HISTORY_BROADCASTS_DATA = "history_broadcasts_data";
-        public static final String ERROR_TEXT = "error_text";
+        public static final String HEADER_ERROR_TEXT = "header_error_text";
+        public static final String FOOTER_ERROR_TEXT = "footer_error_text";
     }
 }

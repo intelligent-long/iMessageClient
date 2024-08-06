@@ -110,10 +110,15 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 });
                 adapter.addItemsAndShow(itemDataList);
             }
-            String errorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.ERROR_TEXT);
-            if(errorText != null){
+            String headerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.HEADER_ERROR_TEXT);
+            if(headerErrorText != null){
                 headerBinding.loadFailedView.setVisibility(View.VISIBLE);
-                headerBinding.loadFailedText.setText(errorText);
+                headerBinding.loadFailedText.setText(headerErrorText);
+            }
+            String footerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.FOOTER_ERROR_TEXT);
+            if(footerErrorText != null){
+                footerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                footerBinding.loadFailedText.setText(footerErrorText);
             }
         }else {
             loadHistoryBroadcastsData();
@@ -148,9 +153,14 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             outState.putParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA, broadcasts);
         }
         if(headerBinding.loadFailedView.getVisibility() == View.VISIBLE){
-            outState.putString(InstanceStateKeys.BroadcastFragment.ERROR_TEXT, headerBinding.loadFailedText.getText().toString());
+            outState.putString(InstanceStateKeys.BroadcastFragment.HEADER_ERROR_TEXT, headerBinding.loadFailedText.getText().toString());
         }else {
-            outState.putString(InstanceStateKeys.BroadcastFragment.ERROR_TEXT, null);
+            outState.putString(InstanceStateKeys.BroadcastFragment.HEADER_ERROR_TEXT, null);
+        }
+        if(footerBinding.loadFailedView.getVisibility() == View.VISIBLE){
+            outState.putString(InstanceStateKeys.BroadcastFragment.FOOTER_ERROR_TEXT, footerBinding.loadFailedText.getText().toString());
+        }else {
+            outState.putString(InstanceStateKeys.BroadcastFragment.FOOTER_ERROR_TEXT, null);
         }
     }
 
