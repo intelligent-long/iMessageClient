@@ -3,6 +3,8 @@ package com.longx.intelligent.android.ichat2.activity;
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -15,6 +17,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -39,6 +42,7 @@ import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.fragment.main.BroadcastsFragment;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
@@ -71,8 +75,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
     private Badge channelNavBadge;
-
     private boolean needInitFetchBroadcast = true;
+    private MenuItem lastBottomNavSelectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -299,6 +303,22 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 intent.putExtra(ExtraKeys.AVATAR_EXTENSION, self.getAvatar().getExtension());
                 startActivity(intent);
             }
+        });
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            NavController navController = navHostFragment.getNavController();
+            if (lastBottomNavSelectedItem != null && lastBottomNavSelectedItem.getItemId() == item.getItemId()
+                    && item.getItemId() == R.id.navigation_broadcast) {
+                if (navHostFragment != null) {
+                    FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
+                    Fragment fragment = fragmentManager.getFragments().get(0);
+                    if (fragment instanceof BroadcastsFragment) {
+                        ((BroadcastsFragment) fragment).toStart();
+                    }
+                    return true;
+                }
+            }
+            lastBottomNavSelectedItem = item;
+            return NavigationUI.onNavDestinationSelected(item, navController);
         });
     }
 

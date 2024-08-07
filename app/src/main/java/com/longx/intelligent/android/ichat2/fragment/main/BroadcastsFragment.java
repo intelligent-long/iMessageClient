@@ -218,12 +218,16 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
         });
         binding.toStartFab.setOnClickListener(v -> {
-            binding.appbar.setExpanded(true);
-            binding.recyclerView.scrollToStart(true);
+            toStart();
         });
         headerBinding.load.setOnClickListener(v -> {
             fetchAndRefreshBroadcasts();
         });
+    }
+
+    public void toStart() {
+        binding.appbar.setExpanded(true);
+        binding.recyclerView.scrollToStart(true);
     }
 
     private void setupFab() {
