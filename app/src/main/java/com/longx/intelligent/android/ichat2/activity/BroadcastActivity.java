@@ -2,17 +2,31 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
+import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
+import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ResourceUtil;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class BroadcastActivity extends BaseActivity {
     private ActivityBroadcastBinding binding;
@@ -29,7 +43,81 @@ public class BroadcastActivity extends BaseActivity {
     }
 
     private void showContent() {
+        String name = null;
+        String avatarHash = null;
+        Self currentUserProfile = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
+        if(currentUserProfile.getIchatId().equals(broadcast.getIchatId())){
+            name = currentUserProfile.getUsername();
+            avatarHash = currentUserProfile.getAvatar() == null ? null : currentUserProfile.getAvatar().getHash();
+        }else {
+            Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcast.getIchatId());
+            if(channel != null) {
+                name = channel.getName();
+                avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
+            }
+        }
+        binding.name.setText(name);
+        if (avatarHash == null) {
+            GlideApp
+                    .with(getApplicationContext())
+                    .asBitmap()
+                    .load(R.drawable.default_avatar)
+                    .into(binding.avatar);
+        } else {
+            GlideApp
+                    .with(getApplicationContext())
+                    .asBitmap()
+                    .load(NetDataUrls.getAvatarUrl(this, avatarHash))
+                    .into(binding.avatar);
+        }
+        binding.time.setText(TimeUtil.formatRelativeTime(broadcast.getTime()));
+        if(broadcast.getText() != null) {
+            binding.text.setVisibility(View.VISIBLE);
+            binding.text.setText(broadcast.getText());
+        }else {
+            binding.text.setVisibility(View.GONE);
+        }
+        for (int i = 0; i < 12; i++) {
+            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+            AppCompatImageView imageView = binding.medias.findViewById(resId);
+            imageView.setVisibility(View.GONE);
+            binding.media12Layout.setVisibility(View.GONE);
+            binding.darkCover.setVisibility(View.GONE);
+            binding.moreIcon.setVisibility(View.GONE);
+        }
+        List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
+        if(broadcastMedias != null && !broadcastMedias.isEmpty()){
+            binding.medias.setVisibility(View.VISIBLE);
+            broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
+            int forTimes = Math.min(12, broadcastMedias.size());
+            for (int i = 0; i < forTimes; i++) {
+                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                switch (broadcastMedia.getType()){
+                    case BroadcastMedia.TYPE_IMAGE:{
+                        int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                        AppCompatImageView imageView = binding.medias.findViewById(resId);
+                        imageView.setVisibility(View.VISIBLE);
+                        GlideApp
+                                .with(getApplicationContext())
+                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                .centerCrop()
+                                .into(imageView);
+                        if(i == 11) binding.media12Layout.setVisibility(View.VISIBLE);
+                        if(broadcastMedias.size() > 12) {
+                            binding.darkCover.setVisibility(View.VISIBLE);
+                            binding.moreIcon.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    }
+                    case BroadcastMedia.TYPE_VIDEO:{
 
+                        break;
+                    }
+                }
+            }
+        }else {
+            binding.medias.setVisibility(View.GONE);
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class Broadcast implements Parcelable {
     private String ichatId;
     private Date time;
     private String text;
-    private List<BroadcastMedia> broadcastMedias;
+    private List<BroadcastMedia> broadcastMedias = new ArrayList<>();
 
     public Broadcast() {
     }
@@ -71,9 +72,7 @@ public class Broadcast implements Parcelable {
         ichatId = in.readString();
         time = new Date(in.readLong());
         text = in.readString();
-        if(broadcastMedias != null) {
-            in.readList(broadcastMedias, getClass().getClassLoader());
-        }
+        in.readList(broadcastMedias, getClass().getClassLoader());
     }
 
     @Override
