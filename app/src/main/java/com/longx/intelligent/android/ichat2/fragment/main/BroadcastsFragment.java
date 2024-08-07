@@ -56,6 +56,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private boolean stopFetchNextPage;
     private CountDownLatch NEXT_PAGE_LATCH;
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
+    private boolean willToStart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -223,11 +224,27 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         headerBinding.load.setOnClickListener(v -> {
             fetchAndRefreshBroadcasts();
         });
+        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (willToStart) {
+                        toStart();
+                        willToStart = false;
+                    }
+                }
+            }
+        });
     }
 
     public void toStart() {
-        binding.appbar.setExpanded(true);
-        binding.recyclerView.scrollToStart(true);
+        if(binding.recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+            binding.appbar.setExpanded(true);
+            binding.recyclerView.scrollToStart(true);
+        }else {
+            willToStart = true;
+        }
     }
 
     private void setupFab() {
