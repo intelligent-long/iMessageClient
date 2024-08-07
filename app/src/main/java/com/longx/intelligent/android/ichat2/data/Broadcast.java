@@ -71,7 +71,9 @@ public class Broadcast implements Parcelable {
         ichatId = in.readString();
         time = new Date(in.readLong());
         text = in.readString();
-        in.readList(broadcastMedias, ClassLoader.getSystemClassLoader());
+        if(broadcastMedias != null) {
+            in.readList(broadcastMedias, getClass().getClassLoader());
+        }
     }
 
     @Override

@@ -305,7 +305,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
-                data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{-101, -102}, () -> {
                     stopFetchNextPage = !row.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     saveHistoryBroadcastsData(broadcastList, true);
@@ -379,7 +379,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
-                data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{-101, -102}, () -> {
                     if (breakFetchNextPage(call)) return;
                     stopFetchNextPage = !row.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();

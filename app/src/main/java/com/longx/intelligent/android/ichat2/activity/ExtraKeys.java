@@ -32,4 +32,5 @@ public class ExtraKeys {
     public static final String MENU_TITLE = "menu_title";
     public static final String MAX_ALLOW_SIZE = "max_allow_size";
     public static final String MEDIAS = "medias";
+    public static final String BROADCAST = "broadcast";
 }

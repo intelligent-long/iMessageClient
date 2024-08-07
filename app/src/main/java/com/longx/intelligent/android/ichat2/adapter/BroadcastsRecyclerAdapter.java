@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -156,6 +159,17 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }else {
             holder.binding.medias.setVisibility(View.GONE);
         }
+
+        setupYiers(holder, position);
+    }
+
+    private void setupYiers(ViewHolder holder, int position) {
+        ItemData itemData = itemDataList.get(position);
+        holder.binding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(activity, BroadcastActivity.class);
+            intent.putExtra(ExtraKeys.BROADCAST, itemData.broadcast);
+            activity.startActivity(intent);
+        });
     }
 
     private void sortItemDataList(List<ItemData> itemDataList){

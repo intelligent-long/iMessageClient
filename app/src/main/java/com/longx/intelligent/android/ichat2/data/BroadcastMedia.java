@@ -84,7 +84,7 @@ public class BroadcastMedia implements Parcelable {
     protected BroadcastMedia(Parcel in) {
         mediaId = in.readString();
         broadcastId = in.readString();
-        in.readByteArray(media);
+        media = in.createByteArray();
         type = in.readInt();
         extension = in.readString();
         index = in.readInt();
