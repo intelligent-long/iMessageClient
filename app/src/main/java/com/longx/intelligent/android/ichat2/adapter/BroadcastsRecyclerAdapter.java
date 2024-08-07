@@ -126,38 +126,83 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.darkCover.setVisibility(View.GONE);
             holder.binding.moreIcon.setVisibility(View.GONE);
         }
+        for (int i = 0; i < 4; i++) {
+            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+            AppCompatImageView imageView = holder.binding.medias2To4.findViewById(resId);
+            imageView.setVisibility(View.GONE);
+        }
+        holder.binding.media11.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
-            holder.binding.medias.setVisibility(View.VISIBLE);
             broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
-            int forTimes = Math.min(12, broadcastMedias.size());
-            for (int i = 0; i < forTimes; i++) {
-                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-                switch (broadcastMedia.getType()){
-                    case BroadcastMedia.TYPE_IMAGE:{
-                        int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-                        AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
-                        imageView.setVisibility(View.VISIBLE);
-                        GlideApp
-                                .with(activity.getApplicationContext())
-                                .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                                .centerCrop()
-                                .into(imageView);
-                        if(i == 11) holder.binding.media12Layout.setVisibility(View.VISIBLE);
-                        if(broadcastMedias.size() > 12) {
-                            holder.binding.darkCover.setVisibility(View.VISIBLE);
-                            holder.binding.moreIcon.setVisibility(View.VISIBLE);
+            if(broadcastMedias.size() > 4) {
+                holder.binding.medias.setVisibility(View.VISIBLE);
+                holder.binding.medias2To4.setVisibility(View.GONE);
+                holder.binding.media11.setVisibility(View.GONE);
+                int forTimes = Math.min(12, broadcastMedias.size());
+                for (int i = 0; i < forTimes; i++) {
+                    BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                    switch (broadcastMedia.getType()) {
+                        case BroadcastMedia.TYPE_IMAGE: {
+                            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
+                            imageView.setVisibility(View.VISIBLE);
+                            GlideApp
+                                    .with(activity.getApplicationContext())
+                                    .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
+                                    .centerCrop()
+                                    .into(imageView);
+                            if (i == 11) holder.binding.media12Layout.setVisibility(View.VISIBLE);
+                            if (broadcastMedias.size() > 12) {
+                                holder.binding.darkCover.setVisibility(View.VISIBLE);
+                                holder.binding.moreIcon.setVisibility(View.VISIBLE);
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case BroadcastMedia.TYPE_VIDEO:{
+                        case BroadcastMedia.TYPE_VIDEO: {
 
-                        break;
+                            break;
+                        }
                     }
                 }
+            }else if(broadcastMedias.size() > 1){
+                holder.binding.medias.setVisibility(View.GONE);
+                holder.binding.medias2To4.setVisibility(View.VISIBLE);
+                holder.binding.media11.setVisibility(View.GONE);
+                int forTimes = Math.min(4, broadcastMedias.size());
+                for (int i = 0; i < forTimes; i++) {
+                    BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                    switch (broadcastMedia.getType()) {
+                        case BroadcastMedia.TYPE_IMAGE: {
+                            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = holder.binding.medias2To4.findViewById(resId);
+                            imageView.setVisibility(View.VISIBLE);
+                            GlideApp
+                                    .with(activity.getApplicationContext())
+                                    .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
+                                    .centerCrop()
+                                    .into(imageView);
+                            break;
+                        }
+                        case BroadcastMedia.TYPE_VIDEO: {
+
+                            break;
+                        }
+                    }
+                }
+            }else {
+                holder.binding.medias.setVisibility(View.GONE);
+                holder.binding.medias2To4.setVisibility(View.GONE);
+                holder.binding.media11.setVisibility(View.VISIBLE);
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
+                        .into(holder.binding.media11);
             }
         }else {
             holder.binding.medias.setVisibility(View.GONE);
+            holder.binding.medias2To4.setVisibility(View.GONE);
+            holder.binding.media11.setVisibility(View.GONE);
         }
 
         setupYiers(holder, position);
