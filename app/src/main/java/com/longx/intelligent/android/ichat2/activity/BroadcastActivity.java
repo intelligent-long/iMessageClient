@@ -93,6 +93,7 @@ public class BroadcastActivity extends BaseActivity {
         binding.media11.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
+            binding.mediasFrame.setVisibility(View.VISIBLE);
             broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
             if(broadcastMedias.size() > 4) {
                 binding.medias.setVisibility(View.VISIBLE);
@@ -159,6 +160,7 @@ public class BroadcastActivity extends BaseActivity {
                         .into(binding.media11);
             }
         }else {
+            binding.mediasFrame.setVisibility(View.GONE);
             binding.medias.setVisibility(View.GONE);
             binding.medias2To4.setVisibility(View.GONE);
             binding.media11.setVisibility(View.GONE);

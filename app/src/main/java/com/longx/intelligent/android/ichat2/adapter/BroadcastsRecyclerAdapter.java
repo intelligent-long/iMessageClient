@@ -134,6 +134,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         holder.binding.media11.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
+            holder.binding.mediasFrame.setVisibility(View.VISIBLE);
             broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
             if(broadcastMedias.size() > 4) {
                 holder.binding.medias.setVisibility(View.VISIBLE);
@@ -200,6 +201,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                         .into(holder.binding.media11);
             }
         }else {
+            holder.binding.mediasFrame.setVisibility(View.GONE);
             holder.binding.medias.setVisibility(View.GONE);
             holder.binding.medias2To4.setVisibility(View.GONE);
             holder.binding.media11.setVisibility(View.GONE);

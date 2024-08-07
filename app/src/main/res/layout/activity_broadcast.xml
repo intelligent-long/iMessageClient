@@ -28,10 +28,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="30dp"
             android:paddingBottom="10dp"
-            android:paddingHorizontal="19dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:paddingHorizontal="19dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/avatar"
