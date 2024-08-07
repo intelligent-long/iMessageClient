@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -22,12 +23,16 @@ import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.Size;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemBroadcastBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideRequest;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.Comparator;
@@ -195,6 +200,34 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
                 holder.binding.media11.setVisibility(View.VISIBLE);
+                Size size = broadcastMedias.get(0).getSize();
+                if(size != null) {
+                    holder.binding.mediasFrame.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            int viewWidth = holder.binding.mediasFrame.getWidth();
+                            int imageViewMaxWidth = UiUtil.pxToDp(activity, viewWidth - UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MARGIN_END_DP));
+
+                            int imageWidth = size.getWidth();
+                            int imageHeight = size.getHeight();
+                            int viewHeight;
+                            if (imageWidth / (double) imageHeight > imageViewMaxWidth / (double) Constants.SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP) {
+                                viewWidth = UiUtil.dpToPx(activity, imageViewMaxWidth);
+                                viewHeight = (int) Math.round((viewWidth / (double) imageWidth) * imageHeight);
+                            } else {
+                                viewHeight = UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP);
+                                viewWidth = (int) Math.round((viewHeight / (double) imageHeight) * imageWidth);
+                            }
+
+                            ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
+                            layoutParams.width = viewWidth;
+                            layoutParams.height = viewHeight;
+                            holder.binding.media11.setLayoutParams(layoutParams);
+
+                            holder.binding.medias.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    });
+                }
                 GlideApp
                         .with(activity.getApplicationContext())
                         .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))

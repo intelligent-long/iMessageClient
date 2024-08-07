@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+
 /**
  * Created by LONG on 2024/8/6 at 7:08 PM.
  */
@@ -17,17 +19,19 @@ public class BroadcastMedia implements Parcelable {
     private int type;
     private String extension;
     private int index;
+    private Size size;
 
     public BroadcastMedia() {
     }
 
-    public BroadcastMedia(String mediaId, String broadcastId, byte[] media, int type, String extension, int index) {
+    public BroadcastMedia(String mediaId, String broadcastId, byte[] media, int type, String extension, int index, Size size) {
         this.mediaId = mediaId;
         this.broadcastId = broadcastId;
         this.media = media;
         this.type = type;
         this.extension = extension;
         this.index = index;
+        this.size = size;
     }
 
     public static final Creator<BroadcastMedia> CREATOR = new Creator<BroadcastMedia>() {
@@ -66,6 +70,10 @@ public class BroadcastMedia implements Parcelable {
         return index;
     }
 
+    public Size getSize() {
+        return size;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -79,6 +87,10 @@ public class BroadcastMedia implements Parcelable {
         dest.writeInt(type);
         dest.writeString(extension);
         dest.writeInt(index);
+        if(size != null) {
+            dest.writeInt(size.getWidth());
+            dest.writeInt(size.getHeight());
+        }
     }
 
     protected BroadcastMedia(Parcel in) {
@@ -88,5 +100,10 @@ public class BroadcastMedia implements Parcelable {
         type = in.readInt();
         extension = in.readString();
         index = in.readInt();
+        int width = in.readInt();
+        int height = in.readInt();
+        if(width != 0 && height != 0) {
+            size = new Size(width, height);
+        }
     }
 }
