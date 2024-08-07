@@ -88,7 +88,7 @@
                 android:id="@+id/media_1_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="230dp"
+                android:layout_marginEnd="50dp"
                 android:maxHeight="230dp"
                 android:adjustViewBounds="true"
                 android:visibility="gone" />
@@ -97,10 +97,10 @@
                 android:id="@+id/medias_2_to_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="50dp"
                 android:visibility="gone"
                 android:columnCount="2"
-                android:rowCount="2"
-                android:layout_gravity="center">
+                android:rowCount="2">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"

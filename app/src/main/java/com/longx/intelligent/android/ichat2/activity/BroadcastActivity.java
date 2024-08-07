@@ -85,38 +85,83 @@ public class BroadcastActivity extends BaseActivity {
             binding.darkCover.setVisibility(View.GONE);
             binding.moreIcon.setVisibility(View.GONE);
         }
+        for (int i = 0; i < 4; i++) {
+            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+            AppCompatImageView imageView = binding.medias2To4.findViewById(resId);
+            imageView.setVisibility(View.GONE);
+        }
+        binding.media11.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
-            binding.medias.setVisibility(View.VISIBLE);
             broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
-            int forTimes = Math.min(12, broadcastMedias.size());
-            for (int i = 0; i < forTimes; i++) {
-                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-                switch (broadcastMedia.getType()){
-                    case BroadcastMedia.TYPE_IMAGE:{
-                        int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-                        AppCompatImageView imageView = binding.medias.findViewById(resId);
-                        imageView.setVisibility(View.VISIBLE);
-                        GlideApp
-                                .with(getApplicationContext())
-                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                .centerCrop()
-                                .into(imageView);
-                        if(i == 11) binding.media12Layout.setVisibility(View.VISIBLE);
-                        if(broadcastMedias.size() > 12) {
-                            binding.darkCover.setVisibility(View.VISIBLE);
-                            binding.moreIcon.setVisibility(View.VISIBLE);
+            if(broadcastMedias.size() > 4) {
+                binding.medias.setVisibility(View.VISIBLE);
+                binding.medias2To4.setVisibility(View.GONE);
+                binding.media11.setVisibility(View.GONE);
+                int forTimes = Math.min(12, broadcastMedias.size());
+                for (int i = 0; i < forTimes; i++) {
+                    BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                    switch (broadcastMedia.getType()) {
+                        case BroadcastMedia.TYPE_IMAGE: {
+                            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = binding.medias.findViewById(resId);
+                            imageView.setVisibility(View.VISIBLE);
+                            GlideApp
+                                    .with(getApplicationContext())
+                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                    .centerCrop()
+                                    .into(imageView);
+                            if (i == 11) binding.media12Layout.setVisibility(View.VISIBLE);
+                            if (broadcastMedias.size() > 12) {
+                                binding.darkCover.setVisibility(View.VISIBLE);
+                                binding.moreIcon.setVisibility(View.VISIBLE);
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case BroadcastMedia.TYPE_VIDEO:{
+                        case BroadcastMedia.TYPE_VIDEO: {
 
-                        break;
+                            break;
+                        }
                     }
                 }
+            }else if(broadcastMedias.size() > 1){
+                binding.medias.setVisibility(View.GONE);
+                binding.medias2To4.setVisibility(View.VISIBLE);
+                binding.media11.setVisibility(View.GONE);
+                int forTimes = Math.min(4, broadcastMedias.size());
+                for (int i = 0; i < forTimes; i++) {
+                    BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                    switch (broadcastMedia.getType()) {
+                        case BroadcastMedia.TYPE_IMAGE: {
+                            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = binding.medias2To4.findViewById(resId);
+                            imageView.setVisibility(View.VISIBLE);
+                            GlideApp
+                                    .with(getApplicationContext())
+                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                    .centerCrop()
+                                    .into(imageView);
+                            break;
+                        }
+                        case BroadcastMedia.TYPE_VIDEO: {
+
+                            break;
+                        }
+                    }
+                }
+            }else {
+                binding.medias.setVisibility(View.GONE);
+                binding.medias2To4.setVisibility(View.GONE);
+                binding.media11.setVisibility(View.VISIBLE);
+                GlideApp
+                        .with(getApplicationContext())
+                        .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedias.get(0).getMediaId()))
+                        .into(binding.media11);
             }
         }else {
             binding.medias.setVisibility(View.GONE);
+            binding.medias2To4.setVisibility(View.GONE);
+            binding.media11.setVisibility(View.GONE);
         }
     }
 
