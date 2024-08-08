@@ -52,7 +52,7 @@ import java.util.Objects;
 public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<BroadcastsRecyclerAdapter.ViewHolder, BroadcastsRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
-    private final List<String> loadedList = new ArrayList<>();
+    private final Map<String, Size> singleMediaViewSizeMap= new HashMap<>();
 
     public BroadcastsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
@@ -211,21 +211,19 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.media11.setVisibility(View.VISIBLE);
                 Size size = broadcastMedias.get(0).getSize();
                 if(size != null) {
-                    if(!loadedList.contains(broadcastMedias.get(0).getMediaId())) {
+                    boolean successShow = showSingleMedia(holder, position);
+                    if(!successShow) {
                         holder.binding.mediasFrame.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
                                 holder.binding.mediasFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                                loadedList.add(broadcastMedias.get(0).getMediaId());
+                                Size viewSize = calculateViewSize(holder, position);
+                                singleMediaViewSizeMap.put(broadcastMedias.get(0).getMediaId(), viewSize);
                                 showSingleMedia(holder, position);
                             }
                         });
-                    }else {
-                        holder.binding.mediasFrame.post(() -> {
-                            showSingleMedia(holder, position);
-                        });
                     }
-                }else {
+                } else {
                     GlideApp
                             .with(activity.getApplicationContext())
                             .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
@@ -256,9 +254,34 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         setupYiers(holder, position);
     }
 
-    private void showSingleMedia(ViewHolder holder, int position) {
+    private boolean showSingleMedia(ViewHolder holder, int position) {
         List<BroadcastMedia> broadcastMedias = itemDataList.get(position).broadcast.getBroadcastMedias();
+        Size size = singleMediaViewSizeMap.get(broadcastMedias.get(0).getMediaId());
+        if(size == null) return false;
 
+        ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
+        layoutParams.width = size.getWidth();
+        layoutParams.height = size.getHeight();
+        holder.binding.media11.setLayoutParams(layoutParams);
+        GlideApp
+                .with(activity.getApplicationContext())
+                .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
+                .override(size.getWidth(), size.getHeight())
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        holder.binding.media11.setImageDrawable(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+        return true;
+    }
+
+    private Size calculateViewSize(ViewHolder holder, int position){
+        List<BroadcastMedia> broadcastMedias = itemDataList.get(position).broadcast.getBroadcastMedias();
         int viewWidth = holder.binding.mediasFrame.getWidth();
         int imageViewMaxWidth = UiUtil.pxToDp(activity, viewWidth - UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MARGIN_END_DP));
         Size size = broadcastMedias.get(0).getSize();
@@ -272,25 +295,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             viewHeight = UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP);
             viewWidth = (int) Math.round((viewHeight / (double) imageHeight) * imageWidth);
         }
-
-        ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
-        layoutParams.width = viewWidth;
-        layoutParams.height = viewHeight;
-        holder.binding.media11.setLayoutParams(layoutParams);
-        GlideApp
-                .with(activity.getApplicationContext())
-                .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
-                .override(viewWidth, viewHeight)
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        holder.binding.media11.setImageDrawable(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                    }
-                });
+        return new Size(viewWidth, viewHeight);
     }
 
     private void setupYiers(ViewHolder holder, int position) {
@@ -308,6 +313,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
 
     @SuppressLint("NotifyDataSetChanged")
     public void clearAndShow(){
+        singleMediaViewSizeMap.clear();
         itemDataList.clear();
         notifyDataSetChanged();
     }
