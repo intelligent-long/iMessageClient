@@ -4,15 +4,19 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
@@ -35,8 +39,12 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by LONG on 2024/7/29 at 下午12:13.
@@ -44,6 +52,7 @@ import java.util.List;
 public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<BroadcastsRecyclerAdapter.ViewHolder, BroadcastsRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
+    private final List<String> loadedList = new ArrayList<>();
 
     public BroadcastsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
@@ -87,7 +96,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ItemData itemData = itemDataList.get(position);
         String name = null;
         String avatarHash = null;
@@ -202,36 +211,40 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.media11.setVisibility(View.VISIBLE);
                 Size size = broadcastMedias.get(0).getSize();
                 if(size != null) {
-                    holder.binding.mediasFrame.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            int viewWidth = holder.binding.mediasFrame.getWidth();
-                            int imageViewMaxWidth = UiUtil.pxToDp(activity, viewWidth - UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MARGIN_END_DP));
-
-                            int imageWidth = size.getWidth();
-                            int imageHeight = size.getHeight();
-                            int viewHeight;
-                            if (imageWidth / (double) imageHeight > imageViewMaxWidth / (double) Constants.SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP) {
-                                viewWidth = UiUtil.dpToPx(activity, imageViewMaxWidth);
-                                viewHeight = (int) Math.round((viewWidth / (double) imageWidth) * imageHeight);
-                            } else {
-                                viewHeight = UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP);
-                                viewWidth = (int) Math.round((viewHeight / (double) imageHeight) * imageWidth);
+                    if(!loadedList.contains(broadcastMedias.get(0).getMediaId())) {
+                        holder.binding.mediasFrame.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                holder.binding.mediasFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                loadedList.add(broadcastMedias.get(0).getMediaId());
+                                showSingleMedia(holder, position);
                             }
+                        });
+                    }else {
+                        holder.binding.mediasFrame.post(() -> {
+                            showSingleMedia(holder, position);
+                        });
+                    }
+                }else {
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
+                            .into(new CustomTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
+                                    layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                    holder.binding.media11.setLayoutParams(layoutParams);
+                                    holder.binding.media11.setImageDrawable(resource);
+                                }
 
-                            ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
-                            layoutParams.width = viewWidth;
-                            layoutParams.height = viewHeight;
-                            holder.binding.media11.setLayoutParams(layoutParams);
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                            holder.binding.medias.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        }
-                    });
+                                }
+                            });
                 }
-                GlideApp
-                        .with(activity.getApplicationContext())
-                        .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
-                        .into(holder.binding.media11);
             }
         }else {
             holder.binding.mediasFrame.setVisibility(View.GONE);
@@ -241,6 +254,43 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }
 
         setupYiers(holder, position);
+    }
+
+    private void showSingleMedia(ViewHolder holder, int position) {
+        List<BroadcastMedia> broadcastMedias = itemDataList.get(position).broadcast.getBroadcastMedias();
+
+        int viewWidth = holder.binding.mediasFrame.getWidth();
+        int imageViewMaxWidth = UiUtil.pxToDp(activity, viewWidth - UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MARGIN_END_DP));
+        Size size = broadcastMedias.get(0).getSize();
+        int imageWidth = size.getWidth();
+        int imageHeight = size.getHeight();
+        int viewHeight;
+        if (imageWidth / (double) imageHeight > imageViewMaxWidth / (double) Constants.SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP) {
+            viewWidth = UiUtil.dpToPx(activity, imageViewMaxWidth);
+            viewHeight = (int) Math.round((viewWidth / (double) imageWidth) * imageHeight);
+        } else {
+            viewHeight = UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP);
+            viewWidth = (int) Math.round((viewHeight / (double) imageHeight) * imageWidth);
+        }
+
+        ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
+        layoutParams.width = viewWidth;
+        layoutParams.height = viewHeight;
+        holder.binding.media11.setLayoutParams(layoutParams);
+        GlideApp
+                .with(activity.getApplicationContext())
+                .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
+                .override(viewWidth, viewHeight)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        holder.binding.media11.setImageDrawable(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
     }
 
     private void setupYiers(ViewHolder holder, int position) {
