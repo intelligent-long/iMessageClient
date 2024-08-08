@@ -72,7 +72,7 @@ public class Broadcast implements Parcelable {
         ichatId = in.readString();
         time = new Date(in.readLong());
         text = in.readString();
-        in.readList(broadcastMedias, getClass().getClassLoader());
+        in.readTypedList(broadcastMedias, BroadcastMedia.CREATOR);
     }
 
     @Override
@@ -81,6 +81,6 @@ public class Broadcast implements Parcelable {
         dest.writeString(ichatId);
         dest.writeLong(time.getTime());
         dest.writeString(text);
-        dest.writeList(broadcastMedias);
+        dest.writeTypedList(broadcastMedias);
     }
 }

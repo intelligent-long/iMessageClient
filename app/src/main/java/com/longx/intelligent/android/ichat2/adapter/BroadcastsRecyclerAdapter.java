@@ -133,17 +133,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.text.setVisibility(View.GONE);
         }
         for (int i = 0; i < 12; i++) {
-            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-            AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
-            imageView.setVisibility(View.GONE);
+            int layoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
+            holder.binding.medias.findViewById(layoutResId).setVisibility(View.GONE);
             holder.binding.media12Layout.setVisibility(View.GONE);
             holder.binding.darkCover.setVisibility(View.GONE);
             holder.binding.moreIcon.setVisibility(View.GONE);
         }
         for (int i = 0; i < 4; i++) {
-            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-            AppCompatImageView imageView = holder.binding.medias2To4.findViewById(resId);
-            imageView.setVisibility(View.GONE);
+            int layoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
+            holder.binding.medias2To4.findViewById(layoutResId).setVisibility(View.GONE);
         }
         holder.binding.media11.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
@@ -159,15 +157,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = holder.binding.medias.findViewById(resId);
-                            imageView.setVisibility(View.VISIBLE);
+                            int layoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
+                            holder.binding.medias.findViewById(layoutResId).setVisibility(View.VISIBLE);
+                            int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = holder.binding.medias.findViewById(imageResId);
                             GlideApp
                                     .with(activity.getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
                                     .centerCrop()
                                     .into(imageView);
-                            if (i == 11) holder.binding.media12Layout.setVisibility(View.VISIBLE);
                             if (broadcastMedias.size() > 12) {
                                 holder.binding.darkCover.setVisibility(View.VISIBLE);
                                 holder.binding.moreIcon.setVisibility(View.VISIBLE);
@@ -189,9 +187,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = holder.binding.medias2To4.findViewById(resId);
-                            imageView.setVisibility(View.VISIBLE);
+                            int layoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
+                            holder.binding.medias2To4.findViewById(layoutResId).setVisibility(View.VISIBLE);
+                            int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = holder.binding.medias2To4.findViewById(imageResId);
                             GlideApp
                                     .with(activity.getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))

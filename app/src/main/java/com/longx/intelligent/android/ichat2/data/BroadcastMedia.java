@@ -90,6 +90,9 @@ public class BroadcastMedia implements Parcelable {
         if(size != null) {
             dest.writeInt(size.getWidth());
             dest.writeInt(size.getHeight());
+        } else {
+            dest.writeInt(-1);
+            dest.writeInt(-1);
         }
     }
 
@@ -102,7 +105,7 @@ public class BroadcastMedia implements Parcelable {
         index = in.readInt();
         int width = in.readInt();
         int height = in.readInt();
-        if(width != 0 && height != 0) {
+        if(width != -1 && height != -1) {
             size = new Size(width, height);
         }
     }

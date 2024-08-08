@@ -30,41 +30,26 @@
             android:paddingBottom="10dp"
             android:paddingHorizontal="19dp">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/avatar"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginEnd="21dp"
-                android:layout_centerVertical="true"
-                app:shapeAppearanceOverlay="@style/CircleImageAppearance"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@id/main_content"/>
-
-            <TextView
-                android:id="@+id/visibility_text"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@id/avatar"
-                android:visibility="gone"/>
-
             <RelativeLayout
-                android:id="@+id/main_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@id/avatar"
-                android:layout_below="@id/visibility_text">
+                android:id="@+id/user_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginEnd="21dp"
+                    android:layout_centerVertical="true"
+                    app:shapeAppearanceOverlay="@style/CircleImageAppearance"
+                    android:layout_alignParentStart="true"/>
 
                 <RelativeLayout
                     android:id="@+id/layout_name_and_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_toEndOf="@id/avatar"
+                    android:layout_centerVertical="true">
 
                     <TextView
                         android:id="@+id/name"
@@ -72,29 +57,33 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
                         android:textSize="21sp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@id/time"
                         android:maxLines="1"
-                        android:ellipsize="end" />
+                        android:ellipsize="end"/>
 
                     <TextView
                         android:id="@+id/time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="?attr/colorOutline"
-                        android:textSize="13sp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"/>
+                        android:textSize="14sp"
+                        android:layout_below="@id/name"
+                        android:layout_marginTop="5dp"/>
                 </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/main_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/user_info">
 
                 <TextView
                     android:id="@+id/text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:layout_marginTop="10dp"
-                    android:layout_below="@id/layout_name_and_time"
+                    android:layout_marginTop="15dp"
                     android:textSize="17sp"/>
 
                 <FrameLayout
@@ -108,8 +97,7 @@
                         android:id="@+id/media_1_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
-                        android:maxHeight="230dp"
+                        android:maxHeight="500dp"
                         android:adjustViewBounds="true"
                         android:visibility="gone" />
 
@@ -117,12 +105,13 @@
                         android:id="@+id/medias_2_to_4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
                         android:visibility="gone"
                         android:columnCount="2"
                         android:rowCount="2">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_2_to_4_1_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_row="0"
@@ -135,7 +124,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -144,6 +132,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_2_to_4_2_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -157,7 +147,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -166,6 +155,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_2_to_4_3_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6.5dp"
@@ -179,7 +170,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -188,6 +178,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_2_to_4_4_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -202,7 +194,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -217,10 +208,12 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:columnCount="3"
-                        android:rowCount="4"
+                        android:rowCount="10"
                         android:layout_gravity="center">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_1_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_row="0"
@@ -233,7 +226,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -242,6 +234,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_2_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -255,7 +249,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -264,6 +257,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_3_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -277,7 +272,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -286,6 +280,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_4_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6.5dp"
@@ -299,7 +295,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -308,6 +303,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_5_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -322,7 +319,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -331,6 +327,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_6_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -345,7 +343,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -354,6 +351,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_7_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6.5dp"
@@ -367,7 +366,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -376,6 +374,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_8_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -390,7 +390,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -399,6 +398,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_9_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -413,7 +414,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -422,6 +422,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_10_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6.5dp"
@@ -435,7 +437,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -444,6 +445,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_11_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -458,7 +461,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
-                                android:visibility="gone"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -467,6 +469,8 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_12_layout"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6.5dp"
@@ -476,9 +480,8 @@
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1">
 
-                            <FrameLayout
-                                android:id="@+id/media_12_layout"
-                                android:visibility="gone"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_12"
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:adjustViewBounds="true"
@@ -486,31 +489,433 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.appcompat.widget.AppCompatImageView
-                                    android:id="@+id/media_12"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:visibility="gone" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_13_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="4"
+                            android:layout_column="0"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
 
-                                <View
-                                    android:id="@+id/dark_cover"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="#50000000"
-                                    android:visibility="gone"/>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_13"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.appcompat.widget.AppCompatImageView
-                                    android:id="@+id/more_icon"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/more_horiz_24px"
-                                    android:tint="@color/white"
-                                    android:background="@drawable/shape_visible_shadow_background"
-                                    android:layout_gravity="center"
-                                    android:visibility="gone"/>
-                            </FrameLayout>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_14_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="4"
+                            android:layout_column="1"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_14"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_15_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="4"
+                            android:layout_column="2"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_15"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_16_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="5"
+                            android:layout_column="0"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_16"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_17_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="5"
+                            android:layout_column="1"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_17"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_18_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="5"
+                            android:layout_column="2"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_18"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_19_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="6"
+                            android:layout_column="0"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_19"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_20_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="6"
+                            android:layout_column="1"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_20"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_21_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="6"
+                            android:layout_column="2"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_21"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_22_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="7"
+                            android:layout_column="0"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_22"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_23_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="7"
+                            android:layout_column="1"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_23"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_24_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="7"
+                            android:layout_column="2"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_24"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_25_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="8"
+                            android:layout_column="0"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_25"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_26_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="8"
+                            android:layout_column="1"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_26"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_27_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="8"
+                            android:layout_column="2"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_27"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_28_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="9"
+                            android:layout_column="0"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_28"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_29_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="9"
+                            android:layout_column="1"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_29"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/media_30_layout"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:layout_row="9"
+                            android:layout_column="2"
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/media_30"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </GridLayout>
                 </FrameLayout>

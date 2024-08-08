@@ -22,6 +22,7 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 
@@ -77,18 +78,13 @@ public class BroadcastActivity extends BaseActivity {
         }else {
             binding.text.setVisibility(View.GONE);
         }
-        for (int i = 0; i < 12; i++) {
-            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-            AppCompatImageView imageView = binding.medias.findViewById(resId);
-            imageView.setVisibility(View.GONE);
-            binding.media12Layout.setVisibility(View.GONE);
-            binding.darkCover.setVisibility(View.GONE);
-            binding.moreIcon.setVisibility(View.GONE);
+        for (int i = 0; i < 30; i++) {
+            int imageLayoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
+            binding.medias.findViewById(imageLayoutResId).setVisibility(View.GONE);
         }
         for (int i = 0; i < 4; i++) {
-            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-            AppCompatImageView imageView = binding.medias2To4.findViewById(resId);
-            imageView.setVisibility(View.GONE);
+            int imageLayoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
+            binding.medias2To4.findViewById(imageLayoutResId).setVisibility(View.GONE);
         }
         binding.media11.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
@@ -99,24 +95,20 @@ public class BroadcastActivity extends BaseActivity {
                 binding.medias.setVisibility(View.VISIBLE);
                 binding.medias2To4.setVisibility(View.GONE);
                 binding.media11.setVisibility(View.GONE);
-                int forTimes = Math.min(12, broadcastMedias.size());
+                int forTimes = Math.min(30, broadcastMedias.size());
                 for (int i = 0; i < forTimes; i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int resId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = binding.medias.findViewById(resId);
-                            imageView.setVisibility(View.VISIBLE);
+                            int imageLayoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
+                            binding.medias.findViewById(imageLayoutResId).setVisibility(View.VISIBLE);
+                            int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = binding.medias.findViewById(imageResId);
                             GlideApp
                                     .with(getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
                                     .centerCrop()
                                     .into(imageView);
-                            if (i == 11) binding.media12Layout.setVisibility(View.VISIBLE);
-                            if (broadcastMedias.size() > 12) {
-                                binding.darkCover.setVisibility(View.VISIBLE);
-                                binding.moreIcon.setVisibility(View.VISIBLE);
-                            }
                             break;
                         }
                         case BroadcastMedia.TYPE_VIDEO: {
@@ -134,9 +126,10 @@ public class BroadcastActivity extends BaseActivity {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int resId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = binding.medias2To4.findViewById(resId);
-                            imageView.setVisibility(View.VISIBLE);
+                            int imageLayoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
+                            binding.medias2To4.findViewById(imageLayoutResId).setVisibility(View.VISIBLE);
+                            int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+                            AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
                             GlideApp
                                     .with(getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
