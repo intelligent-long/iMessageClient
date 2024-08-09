@@ -133,17 +133,64 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.text.setVisibility(View.GONE);
         }
         for (int i = 0; i < 12; i++) {
-            int layoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
-            holder.binding.medias.findViewById(layoutResId).setVisibility(View.GONE);
-            holder.binding.media12Layout.setVisibility(View.GONE);
-            holder.binding.darkCover.setVisibility(View.GONE);
-            holder.binding.moreIcon.setVisibility(View.GONE);
+            switch (i){
+                case 0:
+                    holder.binding.media1Layout.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    holder.binding.media2Layout.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    holder.binding.media3Layout.setVisibility(View.GONE);
+                    break;
+                case 3:
+                    holder.binding.media4Layout.setVisibility(View.GONE);
+                    break;
+                case 4:
+                    holder.binding.media5Layout.setVisibility(View.GONE);
+                    break;
+                case 5:
+                    holder.binding.media6Layout.setVisibility(View.GONE);
+                    break;
+                case 6:
+                    holder.binding.media7Layout.setVisibility(View.GONE);
+                    break;
+                case 7:
+                    holder.binding.media8Layout.setVisibility(View.GONE);
+                    break;
+                case 8:
+                    holder.binding.media9Layout.setVisibility(View.GONE);
+                    break;
+                case 9:
+                    holder.binding.media10Layout.setVisibility(View.GONE);
+                    break;
+                case 10:
+                    holder.binding.media11Layout.setVisibility(View.GONE);
+                    break;
+                case 11:
+                    holder.binding.media12Layout.setVisibility(View.GONE);
+                    holder.binding.darkCover.setVisibility(View.GONE);
+                    holder.binding.moreIcon.setVisibility(View.GONE);
+                    break;
+            }
         }
         for (int i = 0; i < 4; i++) {
-            int layoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
-            holder.binding.medias2To4.findViewById(layoutResId).setVisibility(View.GONE);
+            switch (i){
+                case 0:
+                    holder.binding.media2To41Layout.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    holder.binding.media2To42Layout.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    holder.binding.media2To43Layout.setVisibility(View.GONE);
+                    break;
+                case 3:
+                    holder.binding.media2To44Layout.setVisibility(View.GONE);
+                    break;
+            }
         }
-        holder.binding.media11.setVisibility(View.GONE);
+        holder.binding.mediaSingle.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
             holder.binding.mediasFrame.setVisibility(View.VISIBLE);
@@ -151,25 +198,72 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             if(broadcastMedias.size() > 4) {
                 holder.binding.medias.setVisibility(View.VISIBLE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
-                holder.binding.media11.setVisibility(View.GONE);
+                holder.binding.mediaSingle.setVisibility(View.GONE);
                 int forTimes = Math.min(12, broadcastMedias.size());
                 for (int i = 0; i < forTimes; i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int layoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
-                            holder.binding.medias.findViewById(layoutResId).setVisibility(View.VISIBLE);
-                            int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = holder.binding.medias.findViewById(imageResId);
+                            AppCompatImageView imageView = null;
+                            switch (i){
+                                case 0:
+                                    holder.binding.media1Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media1;
+                                    break;
+                                case 1:
+                                    holder.binding.media2Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media2;
+                                    break;
+                                case 2:
+                                    holder.binding.media3Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media3;
+                                    break;
+                                case 3:
+                                    holder.binding.media4Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media4;
+                                    break;
+                                case 4:
+                                    holder.binding.media5Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media5;
+                                    break;
+                                case 5:
+                                    holder.binding.media6Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media6;
+                                    break;
+                                case 6:
+                                    holder.binding.media7Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media7;
+                                    break;
+                                case 7:
+                                    holder.binding.media8Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media8;
+                                    break;
+                                case 8:
+                                    holder.binding.media9Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media9;
+                                    break;
+                                case 9:
+                                    holder.binding.media10Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media10;
+                                    break;
+                                case 10:
+                                    holder.binding.media11Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media11;
+                                    break;
+                                case 11:
+                                    holder.binding.media12Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media12;
+                                    if (broadcastMedias.size() > 12) {
+                                        holder.binding.darkCover.setVisibility(View.VISIBLE);
+                                        holder.binding.moreIcon.setVisibility(View.VISIBLE);
+                                    }
+                                    break;
+                            }
                             GlideApp
                                     .with(activity.getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
                                     .centerCrop()
                                     .into(imageView);
-                            if (broadcastMedias.size() > 12) {
-                                holder.binding.darkCover.setVisibility(View.VISIBLE);
-                                holder.binding.moreIcon.setVisibility(View.VISIBLE);
-                            }
                             break;
                         }
                         case BroadcastMedia.TYPE_VIDEO: {
@@ -181,16 +275,31 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             }else if(broadcastMedias.size() > 1){
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.VISIBLE);
-                holder.binding.media11.setVisibility(View.GONE);
+                holder.binding.mediaSingle.setVisibility(View.GONE);
                 int forTimes = Math.min(4, broadcastMedias.size());
                 for (int i = 0; i < forTimes; i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int layoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
-                            holder.binding.medias2To4.findViewById(layoutResId).setVisibility(View.VISIBLE);
-                            int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = holder.binding.medias2To4.findViewById(imageResId);
+                            AppCompatImageView imageView = null;
+                            switch (i){
+                                case 0:
+                                    holder.binding.media2To41Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media2To41;
+                                    break;
+                                case 1:
+                                    holder.binding.media2To42Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media2To42;
+                                    break;
+                                case 2:
+                                    holder.binding.media2To43Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media2To43;
+                                    break;
+                                case 3:
+                                    holder.binding.media2To44Layout.setVisibility(View.VISIBLE);
+                                    imageView = holder.binding.media2To44;
+                                    break;
+                            }
                             GlideApp
                                     .with(activity.getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
@@ -207,7 +316,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             }else {
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
-                holder.binding.media11.setVisibility(View.VISIBLE);
+                holder.binding.mediaSingle.setVisibility(View.VISIBLE);
                 Size size = broadcastMedias.get(0).getSize();
                 if(size != null) {
                     boolean successShow = showSingleMedia(holder, position);
@@ -229,11 +338,11 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                             .into(new CustomTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
+                                    ViewGroup.LayoutParams layoutParams = holder.binding.mediaSingle.getLayoutParams();
                                     layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                                     layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                                    holder.binding.media11.setLayoutParams(layoutParams);
-                                    holder.binding.media11.setImageDrawable(resource);
+                                    holder.binding.mediaSingle.setLayoutParams(layoutParams);
+                                    holder.binding.mediaSingle.setImageDrawable(resource);
                                 }
 
                                 @Override
@@ -247,7 +356,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.mediasFrame.setVisibility(View.GONE);
             holder.binding.medias.setVisibility(View.GONE);
             holder.binding.medias2To4.setVisibility(View.GONE);
-            holder.binding.media11.setVisibility(View.GONE);
+            holder.binding.mediaSingle.setVisibility(View.GONE);
         }
 
         setupYiers(holder, position);
@@ -258,10 +367,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         Size size = singleMediaViewSizeMap.get(broadcastMedias.get(0).getMediaId());
         if(size == null) return false;
 
-        ViewGroup.LayoutParams layoutParams = holder.binding.media11.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = holder.binding.mediaSingle.getLayoutParams();
         layoutParams.width = size.getWidth();
         layoutParams.height = size.getHeight();
-        holder.binding.media11.setLayoutParams(layoutParams);
+        holder.binding.mediaSingle.setLayoutParams(layoutParams);
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
@@ -269,7 +378,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        holder.binding.media11.setImageDrawable(resource);
+                        holder.binding.mediaSingle.setImageDrawable(resource);
                     }
 
                     @Override
