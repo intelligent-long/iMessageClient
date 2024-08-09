@@ -26,7 +26,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
+            android:paddingTop="17dp"
             android:paddingBottom="10dp"
             android:paddingHorizontal="19dp">
 
@@ -920,12 +920,73 @@
                     </GridLayout>
                 </FrameLayout>
 
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.6dp"
+                    android:layout_below="@id/medias_frame"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="?attr/colorSurfaceContainerHighest"
+                    android:alpha="0.9" />
+
+                <LinearLayout
+                    android:id="@+id/operate_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/divider1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/like_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textFontWeight="@integer/font_weight_medium"
+                        android:text="0"
+                        android:textColor="@android:color/black"
+                        android:textSize="16.5sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="喜欢"
+                        android:textSize="16.5sp" />
+
+                    <TextView
+                        android:id="@+id/comment_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:textFontWeight="@integer/font_weight_medium"
+                        android:text="0"
+                        android:textColor="@android:color/black"
+                        android:textSize="16.5sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="评论"
+                        android:textSize="16.5sp" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.6dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_below="@id/operate_count"
+                    android:background="?attr/colorSurfaceContainerHighest"
+                    android:alpha="0.9" />
+
                 <LinearLayout
                     android:id="@+id/operation_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/medias_frame"
-                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/divider2"
                     android:baselineAligned="false"
                     android:gravity="center_vertical">
 
@@ -945,13 +1006,6 @@
                             android:focusable="true"
                             android:paddingVertical="11dp"
                             android:src="@drawable/favorite_outline_24px" />
-
-                        <TextView
-                            android:id="@+id/like_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#56636F"
-                            android:textSize="14dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -970,13 +1024,6 @@
                             android:focusable="true"
                             android:paddingVertical="11dp"
                             android:src="@drawable/mode_comment_outline_24px" />
-
-                        <TextView
-                            android:id="@+id/comment_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#56636F"
-                            android:textSize="14dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -1013,6 +1060,16 @@
                             android:src="@drawable/more_vert_24px"/>
                     </LinearLayout>
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.6dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_below="@id/operation_bar"
+                    android:background="?attr/colorSurfaceContainerHighest"
+                    android:alpha="0.9"/>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
