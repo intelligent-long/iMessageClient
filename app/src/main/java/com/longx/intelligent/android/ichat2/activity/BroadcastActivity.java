@@ -210,6 +210,11 @@ public class BroadcastActivity extends BaseActivity {
                 setupAndStartMediaActivity(0);
             });
         }
+        binding.userInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ChannelActivity.class);
+            intent.putExtra(ExtraKeys.ICHAT_ID, broadcast.getIchatId());
+            startActivity(intent);
+        });
     }
 
     private void setupAndStartMediaActivity(int position){

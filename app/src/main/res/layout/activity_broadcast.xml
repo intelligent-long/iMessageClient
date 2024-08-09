@@ -32,7 +32,7 @@
 
             <RelativeLayout
                 android:id="@+id/user_info"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -46,7 +46,7 @@
 
                 <RelativeLayout
                     android:id="@+id/layout_name_and_time"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/avatar"
                     android:layout_centerVertical="true">
