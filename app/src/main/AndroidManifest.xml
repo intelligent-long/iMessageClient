@@ -116,7 +116,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ChatMediaActivity"
+            android:name=".activity.MediaActivity"
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity

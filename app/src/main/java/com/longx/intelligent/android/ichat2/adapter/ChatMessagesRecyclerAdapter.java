@@ -18,18 +18,22 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatFileActivity;
-import com.longx.intelligent.android.ichat2.activity.ChatMediaActivity;
+import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.ChatVoicePlayer;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
+import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
+import com.longx.intelligent.android.ichat2.media.MediaType;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
@@ -46,6 +50,7 @@ import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -472,19 +477,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             scrollDisabler.setScrollingDisabled(false);
         });
         View.OnClickListener onMediaMessageClickYier = v -> {
-            Intent intent = new Intent(activity, ChatMediaActivity.class);
-            ArrayList<ChatMessage> chatMessages = new ArrayList<>();
-            itemDataList.forEach(itemData -> {
-                ChatMessage chatMessage = itemData.chatMessage;
-                if(chatMessage.getType() == ChatMessage.TYPE_IMAGE || chatMessage.getType() == ChatMessage.TYPE_VIDEO) {
-                    chatMessages.add(chatMessage);
-                    if (currentItemData.chatMessage.equals(chatMessage)) {
-                        intent.putExtra(ExtraKeys.POSITION, chatMessages.size() - 1);
-                    }
-                }
-            });
-            intent.putParcelableArrayListExtra(ExtraKeys.CHAT_MESSAGES, chatMessages);
-            activity.startActivity(intent);
+            setupAndStartMediaActivity(currentItemData);
         };
         holder.binding.imageSend.setOnClickListener(onMediaMessageClickYier);
         holder.binding.imageReceive.setOnClickListener(onMediaMessageClickYier);
@@ -509,6 +502,71 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.continueVoicePlaybackSend.setOnClickListener(onVoiceContinue);
         holder.binding.pauseVoicePlaybackReceive.setOnClickListener(onVoicePause);
         holder.binding.continueVoicePlaybackReceive.setOnClickListener(onVoiceContinue);
+    }
+
+    private void setupAndStartMediaActivity(ItemData currentItemData) {
+        Intent intent = new Intent(activity, MediaActivity.class);
+        ArrayList<ChatMessage> chatMessages = new ArrayList<>();
+        itemDataList.forEach(itemData -> {
+            ChatMessage chatMessage = itemData.chatMessage;
+            if(chatMessage.getType() == ChatMessage.TYPE_IMAGE || chatMessage.getType() == ChatMessage.TYPE_VIDEO) {
+                chatMessages.add(chatMessage);
+                if (currentItemData.chatMessage.equals(chatMessage)) {
+                    intent.putExtra(ExtraKeys.POSITION, chatMessages.size() - 1);
+                }
+            }
+        });
+        ArrayList<Media> mediaList = new ArrayList<>();
+        chatMessages.forEach(chatMessage -> {
+            if(chatMessage.getType() == ChatMessage.TYPE_IMAGE){
+                MediaType mediaType = MediaType.IMAGE;
+                Uri uri = Uri.fromFile(new File(chatMessage.getImageFilePath()));
+                mediaList.add(new Media(mediaType, uri));
+            }else if(chatMessage.getType() == ChatMessage.TYPE_VIDEO){
+                MediaType mediaType = MediaType.VIDEO;
+                Uri uri = Uri.fromFile(new File(chatMessage.getVideoFilePath()));
+                mediaList.add(new Media(mediaType, uri));
+            }
+        });
+        intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
+        intent.putExtra(ExtraKeys.BUTTON_TEXT, "保存");
+        MediaActivity.setActionButtonYier(v1 -> {
+            int currentItem = MediaActivity.getCurrentItemIndex();
+            if(currentItem == -1) return;
+            ChatMessage chatMessage = chatMessages.get(currentItem);
+            switch (chatMessage.getType()){
+                case ChatMessage.TYPE_IMAGE:{
+                    new Thread(() -> {
+                        OperationDialog operationDialog = new OperationDialog(MediaActivity.getInstance());
+                        operationDialog.show();
+                        try {
+                            PublicFileAccessor.ChatImage.save(chatMessage);
+                            operationDialog.dismiss();
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                        }catch (IOException e){
+                            ErrorLogger.log(e);
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                        }
+                    }).start();
+                    break;
+                }
+                case ChatMessage.TYPE_VIDEO:{
+                    new Thread(() -> {
+                        OperationDialog operationDialog = new OperationDialog(MediaActivity.getInstance());
+                        operationDialog.show();
+                        try {
+                            PublicFileAccessor.ChatVideo.save(chatMessage);
+                            operationDialog.dismiss();
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                        }catch (IOException e){
+                            ErrorLogger.log(e);
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                        }
+                    }).start();
+                }
+            }
+        });
+        activity.startActivity(intent);
     }
 
     @Override

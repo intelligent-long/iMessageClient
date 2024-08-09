@@ -33,4 +33,6 @@ public class ExtraKeys {
     public static final String MAX_ALLOW_SIZE = "max_allow_size";
     public static final String MEDIAS = "medias";
     public static final String BROADCAST = "broadcast";
+    public static final String BUTTON_TEXT = "button_text";
+    public static final String GLIDE_LOAD = "glide_load";
 }

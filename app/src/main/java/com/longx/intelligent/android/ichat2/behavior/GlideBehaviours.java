@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.behavior;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.CustomTarget;
@@ -83,10 +84,18 @@ public class GlideBehaviours {
     }
 
     public static void loadToFile(Context context, String url, CustomTarget<File> customTarget){
-        loadToFile(context, url, customTarget, false);
+        loadToFile(context, Uri.parse(url), customTarget, false);
     }
 
     public static void loadToFile(Context context, String url, CustomTarget<File> customTarget, boolean originalSize){
+        loadToFile(context, Uri.parse(url), customTarget, originalSize);
+    }
+
+    public static void loadToFile(Context context, Uri uri, CustomTarget<File> customTarget){
+        loadToFile(context, uri, customTarget, false);
+    }
+
+    public static void loadToFile(Context context, Uri uri, CustomTarget<File> customTarget, boolean originalSize){
         GlideRequest<File> glideRequest = GlideApp
                 .with(context)
                 .downloadOnly();
@@ -94,7 +103,7 @@ public class GlideBehaviours {
             glideRequest = glideRequest.override(Target.SIZE_ORIGINAL);
         }
         glideRequest
-                .load(url)
+                .load(uri)
                 .into(customTarget);
     }
 }

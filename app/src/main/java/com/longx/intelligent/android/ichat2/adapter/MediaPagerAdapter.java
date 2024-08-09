@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,18 +20,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
-import com.longx.intelligent.android.ichat2.activity.ChatMediaActivity;
-import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMediaBinding;
-import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
@@ -52,14 +54,16 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     private Handler handler;
     private static final int SEEKBAR_MAX = 10000;
     private final Map<Integer, ViewHolder> viewHolderMap = new HashMap<>();
+    private final boolean glideLoad;
 
-    public MediaPagerAdapter(Activity activity, List<Media> mediaList) {
+    public MediaPagerAdapter(Activity activity, List<Media> mediaList, boolean glideLoad) {
         this.activity = activity;
         List<ItemData> itemDataList = new ArrayList<>();
         mediaList.forEach(media -> {
             itemDataList.add(new ItemData(media));
         });
         this.itemDataList = itemDataList;
+        this.glideLoad = glideLoad;
     }
 
     public static class ItemData{
@@ -134,7 +138,20 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
                                 });
                     }
                 });
-                holder.binding.photoView.setImage(ImageSource.uri(imageUri));
+                if(glideLoad) {
+                    GlideBehaviours.loadToFile(activity.getApplicationContext(), imageUri, new CustomTarget<File>() {
+                        @Override
+                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                            holder.binding.photoView.setImage(ImageSource.uri(Uri.fromFile(resource)));
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                        }
+                    }, true);
+                }else {
+                    holder.binding.photoView.setImage(ImageSource.uri(imageUri));
+                }
                 setupPhotoView(holder.binding, position);
                 break;
             }

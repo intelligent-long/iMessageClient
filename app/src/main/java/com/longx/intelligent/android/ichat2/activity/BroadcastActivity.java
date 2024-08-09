@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
+import com.longx.intelligent.android.ichat2.media.MediaType;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -27,6 +31,7 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,6 +47,7 @@ public class BroadcastActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
         showContent();
+        setupYiers();
     }
 
     private void showContent() {
@@ -87,7 +93,7 @@ public class BroadcastActivity extends BaseActivity {
             int imageLayoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
             binding.medias2To4.findViewById(imageLayoutResId).setVisibility(View.GONE);
         }
-        binding.media11.setVisibility(View.GONE);
+        binding.mediaSingle.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
             binding.mediasFrame.setVisibility(View.VISIBLE);
@@ -95,7 +101,7 @@ public class BroadcastActivity extends BaseActivity {
             if(broadcastMedias.size() > 4) {
                 binding.medias.setVisibility(View.VISIBLE);
                 binding.medias2To4.setVisibility(View.GONE);
-                binding.media11.setVisibility(View.GONE);
+                binding.mediaSingle.setVisibility(View.GONE);
                 int forTimes = Math.min(30, broadcastMedias.size());
                 for (int i = 0; i < forTimes; i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
@@ -113,7 +119,6 @@ public class BroadcastActivity extends BaseActivity {
                             break;
                         }
                         case BroadcastMedia.TYPE_VIDEO: {
-
                             break;
                         }
                     }
@@ -121,9 +126,9 @@ public class BroadcastActivity extends BaseActivity {
             }else if(broadcastMedias.size() > 1){
                 binding.medias.setVisibility(View.GONE);
                 binding.medias2To4.setVisibility(View.VISIBLE);
-                binding.media11.setVisibility(View.GONE);
-                int forTimes = Math.min(4, broadcastMedias.size());
-                for (int i = 0; i < forTimes; i++) {
+                binding.mediaSingle.setVisibility(View.GONE);
+                int times = broadcastMedias.size();
+                for (int i = 0; i < times; i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
@@ -139,7 +144,6 @@ public class BroadcastActivity extends BaseActivity {
                             break;
                         }
                         case BroadcastMedia.TYPE_VIDEO: {
-
                             break;
                         }
                     }
@@ -147,18 +151,85 @@ public class BroadcastActivity extends BaseActivity {
             }else {
                 binding.medias.setVisibility(View.GONE);
                 binding.medias2To4.setVisibility(View.GONE);
-                binding.media11.setVisibility(View.VISIBLE);
+                binding.mediaSingle.setVisibility(View.VISIBLE);
                 GlideApp
                         .with(getApplicationContext())
                         .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedias.get(0).getMediaId()))
-                        .into(binding.media11);
+                        .into(binding.mediaSingle);
             }
         }else {
             binding.mediasFrame.setVisibility(View.GONE);
             binding.medias.setVisibility(View.GONE);
             binding.medias2To4.setVisibility(View.GONE);
-            binding.media11.setVisibility(View.GONE);
+            binding.mediaSingle.setVisibility(View.GONE);
         }
     }
 
+    private void setupYiers() {
+        List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
+        if(broadcastMedias.size() > 4) {
+            int forTimes = Math.min(30, broadcastMedias.size());
+            for (int i = 0; i < forTimes; i++) {
+                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                switch (broadcastMedia.getType()) {
+                    case BroadcastMedia.TYPE_IMAGE: {
+                        int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                        AppCompatImageView imageView = binding.medias.findViewById(imageResId);
+                        int finalI = i;
+                        imageView.setOnClickListener(v -> {
+                            setupAndStartMediaActivity(finalI);
+                        });
+                        break;
+                    }
+                    case BroadcastMedia.TYPE_VIDEO: {
+                        break;
+                    }
+                }
+            }
+        }else if(broadcastMedias.size() > 1){
+            int times = broadcastMedias.size();
+            for (int i = 0; i < times; i++) {
+                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                switch (broadcastMedia.getType()) {
+                    case BroadcastMedia.TYPE_IMAGE: {
+                        int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+                        AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
+                        int finalI = i;
+                        imageView.setOnClickListener(v -> {
+                            setupAndStartMediaActivity(finalI);
+                        });
+                        break;
+                    }
+                    case BroadcastMedia.TYPE_VIDEO: {
+                        break;
+                    }
+                }
+            }
+        }else {
+            binding.mediaSingle.setOnClickListener(v -> {
+                setupAndStartMediaActivity(0);
+            });
+        }
+    }
+
+    private void setupAndStartMediaActivity(int position){
+        Intent intent = new Intent(this, MediaActivity.class);
+        intent.putExtra(ExtraKeys.POSITION, position);
+        ArrayList<Media> mediaList = new ArrayList<>();
+        List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
+        broadcastMedias.forEach(broadcastMedia -> {
+            switch (broadcastMedia.getType()){
+                case BroadcastMedia.TYPE_IMAGE:
+                    mediaList.add(new Media(MediaType.IMAGE, Uri.parse(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))));
+                    break;
+                case BroadcastMedia.TYPE_VIDEO:
+                    break;
+            }
+        });
+        intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
+        intent.putExtra(ExtraKeys.BUTTON_TEXT, "保存");
+        intent.putExtra(ExtraKeys.GLIDE_LOAD, true);
+        MediaActivity.setActionButtonYier(null);
+        startActivity(intent);
+    }
 }

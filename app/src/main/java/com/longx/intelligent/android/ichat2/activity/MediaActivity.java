@@ -2,42 +2,37 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.MediaPagerAdapter;
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
-import com.longx.intelligent.android.ichat2.data.ChatMessage;
-import com.longx.intelligent.android.ichat2.databinding.ActivityChatMediaBinding;
-import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
+import com.longx.intelligent.android.ichat2.databinding.ActivityMediaBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
-    private ActivityChatMediaBinding binding;
-    private List<ChatMessage> chatMessages;
+public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
+    private static ActivityMediaBinding binding;
+    private List<Media> mediaList;
     private int position;
     private MediaPagerAdapter adapter;
     private boolean pureContent;
+    private static View.OnClickListener actionButtonYier;
+    private static MediaActivity instance;
+    private boolean glideLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityChatMediaBinding.inflate(getLayoutInflater());
+        instance = this;
+        binding = ActivityMediaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
@@ -49,25 +44,15 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     }
 
     private void getIntentData() {
-        chatMessages = getIntent().getParcelableArrayListExtra(ExtraKeys.CHAT_MESSAGES);
+        mediaList = getIntent().getParcelableArrayListExtra(ExtraKeys.MEDIAS);
         position = getIntent().getIntExtra(ExtraKeys.POSITION, 0);
+        binding.actionButton.setText(getIntent().getStringExtra(ExtraKeys.BUTTON_TEXT));;
+        glideLoad = getIntent().getBooleanExtra(ExtraKeys.GLIDE_LOAD, false);
     }
 
     private void showContent() {
-        binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
-        List<Media> mediaList = new ArrayList<>();
-        chatMessages.forEach(chatMessage -> {
-            if(chatMessage.getType() == ChatMessage.TYPE_IMAGE){
-                MediaType mediaType = MediaType.IMAGE;
-                Uri uri = Uri.fromFile(new File(chatMessage.getImageFilePath()));
-                mediaList.add(new Media(mediaType, uri));
-            }else if(chatMessage.getType() == ChatMessage.TYPE_VIDEO){
-                MediaType mediaType = MediaType.VIDEO;
-                Uri uri = Uri.fromFile(new File(chatMessage.getVideoFilePath()));
-                mediaList.add(new Media(mediaType, uri));
-            }
-        });
-        adapter = new MediaPagerAdapter(this, mediaList);
+        binding.toolbar.setTitle((position + 1) + " / " + mediaList.size());
+        adapter = new MediaPagerAdapter(this, mediaList, glideLoad);
         adapter.setOnRecyclerItemActionYier(this);
         adapter.setOnRecyclerItemClickYier(this);
         binding.viewPager.setAdapter(adapter);
@@ -85,10 +70,10 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if(ChatMediaActivity.this.position != position){
-                    right = ChatMediaActivity.this.position > position;
-                    ChatMediaActivity.this.position = position;
-                    binding.toolbar.setTitle((position + 1) + " / " + chatMessages.size());
+                if(MediaActivity.this.position != position){
+                    right = MediaActivity.this.position > position;
+                    MediaActivity.this.position = position;
+                    binding.toolbar.setTitle((position + 1) + " / " + mediaList.size());
                 }
             }
 
@@ -98,7 +83,7 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 boolean thisPreviousPositionOffsetGreaterThanNow = previousPositionOffset > positionOffset;
                 previousPositionOffset = positionOffset;
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
-                    int previousPosition = right ? ChatMediaActivity.this.position + 1 : ChatMediaActivity.this.position - 1;
+                    int previousPosition = right ? MediaActivity.this.position + 1 : MediaActivity.this.position - 1;
                     if(previousPosition != -1) {
                         if (positionOffset == 0 && adapter.getItemDataList().get(previousPosition).getMedia().getMediaType() == MediaType.IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
@@ -110,41 +95,9 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
                 previousPositionOffsetGreaterThanNow = thisPreviousPositionOffsetGreaterThanNow;
             }
         });
-        binding.saveButton.setOnClickListener(v -> {
-            int currentItem = binding.viewPager.getCurrentItem();
-            ChatMessage chatMessage = chatMessages.get(currentItem);
-            switch (chatMessage.getType()){
-                case ChatMessage.TYPE_IMAGE:{
-                    new Thread(() -> {
-                        OperationDialog operationDialog = new OperationDialog(this);
-                        operationDialog.show();
-                        try {
-                            PublicFileAccessor.ChatImage.save(chatMessage);
-                            operationDialog.dismiss();
-                            MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
-                        }catch (IOException e){
-                            ErrorLogger.log(e);
-                            MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
-                        }
-                    }).start();
-                    break;
-                }
-                case ChatMessage.TYPE_VIDEO:{
-                    new Thread(() -> {
-                        OperationDialog operationDialog = new OperationDialog(this);
-                        operationDialog.show();
-                        try {
-                            PublicFileAccessor.ChatVideo.save(chatMessage);
-                            operationDialog.dismiss();
-                            MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
-                        }catch (IOException e){
-                            ErrorLogger.log(e);
-                            MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
-                        }
-                    }).start();
-                }
-            }
-        });
+        if(actionButtonYier != null) {
+            binding.actionButton.setOnClickListener(actionButtonYier);
+        }
     }
 
     private void setupPageSwitchTransformer() {
@@ -222,5 +175,18 @@ public class ChatMediaActivity extends BaseActivity implements RecyclerItemYiers
     protected void onDestroy() {
         super.onDestroy();
         adapter.releaseAllPlayer();
+    }
+
+    public static int getCurrentItemIndex(){
+        if(binding == null) return -1;
+        return binding.viewPager.getCurrentItem();
+    }
+
+    public static void setActionButtonYier(View.OnClickListener yier){
+        actionButtonYier = yier;
+    }
+
+    public static MediaActivity getInstance(){
+        return instance;
     }
 }
