@@ -1,8 +1,10 @@
 package com.longx.intelligent.android.ichat2.media.helper;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -154,5 +156,33 @@ public class MediaHelper {
             }
         }
         return new Size(videoWidth, videoHeight);
+    }
+
+    public static Bitmap getRotatedBitmap(ContentResolver contentResolver, Uri uri) {
+        try {
+            InputStream inputStream = contentResolver.openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            ExifInterface exif = new ExifInterface(inputStream);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    return rotateBitmap(bitmap, 90);
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    return rotateBitmap(bitmap, 180);
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return rotateBitmap(bitmap, 270);
+                default:
+                    return bitmap;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Bitmap rotateBitmap(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 }

@@ -19,6 +19,7 @@ public class ExtraKeys {
     public static final String MEDIA_INFO_LIST = "media_info_list";
     public static final String URIS = "uris";
     public static final String FILE_PATHS = "file_paths";
+    public static final String FILE_PATH = "file_path";
     public static final String FILE_NAMES = "file_names";
     public static final String CHAT_MESSAGE = "chat_message";
     public static final String CHAT_MESSAGES = "chat_messages";

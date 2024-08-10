@@ -132,12 +132,8 @@ public class ChooseImagesActivity extends BaseActivity{
             }
         });
         adapter.setOnRecyclerItemClickYier((position, view) -> {
-            ArrayList<MediaInfo> imageInfoList = new ArrayList<>();
-            for (ChooseMediasRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
-                imageInfoList.add(itemData.getMediaInfo());
-            }
             Intent intent = new Intent(this, PreviewToChooseImageActivity.class);
-            intent.putExtra(ExtraKeys.URI, imageInfoList.get(position).getUri());
+            intent.putExtra(ExtraKeys.FILE_PATH, adapter.getItemDataList().get(position).getMediaInfo().getPath());
             startActivity(intent);
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {

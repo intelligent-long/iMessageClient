@@ -1,26 +1,38 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToChooseImageBinding;
+import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
+import java.io.File;
+
 public class PreviewToChooseImageActivity extends BaseActivity {
     private ActivityPreviewToChooseImageBinding binding;
-    private Uri uri;
+    private String filePath;
     private boolean purePhoto;
 
     @Override
@@ -31,7 +43,7 @@ public class PreviewToChooseImageActivity extends BaseActivity {
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
-        uri = getIntent().getParcelableExtra(ExtraKeys.URI);
+        filePath = getIntent().getStringExtra(ExtraKeys.FILE_PATH);
         binding.appBarLayout.bringToFront();
         showContent();
     }
@@ -72,7 +84,7 @@ public class PreviewToChooseImageActivity extends BaseActivity {
     }
 
     private void showPhoto() {
-        binding.photo.setImage(ImageSource.uri(uri));
+        binding.photo.setImage(ImageSource.uri(Uri.fromFile(new File(filePath))));
     }
 
     private void setPurePhoto(boolean purePhoto) {

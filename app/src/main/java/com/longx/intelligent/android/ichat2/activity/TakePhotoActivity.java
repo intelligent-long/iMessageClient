@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTakePhotoBinding;
+import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -117,7 +119,7 @@ public class TakePhotoActivity extends BaseActivity {
     }
 
     private void showPhoto() {
-        binding.photo.setImage(ImageSource.uri(photoUri));
+        binding.photo.setImage(ImageSource.uri(Uri.fromFile(photoFile)));
     }
 
     private void setPurePhoto(boolean purePhoto) {
