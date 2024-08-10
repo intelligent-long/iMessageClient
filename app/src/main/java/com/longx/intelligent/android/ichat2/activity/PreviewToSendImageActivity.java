@@ -15,6 +15,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendImageBinding;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
 public class PreviewToSendImageActivity extends BaseActivity {
@@ -60,7 +61,7 @@ public class PreviewToSendImageActivity extends BaseActivity {
             @Override
             public void onScaleChanged(float newScale, int origin) {
                 setPurePhoto(true);
-                swipeDownGestureYier.setEnabled(newScale == binding.photo.getMinScale());
+                swipeDownGestureYier.setEnabled(Utils.approximatelyEqual(newScale, binding.photo.getMinScale(), 0.001F));
             }
 
             @Override

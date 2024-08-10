@@ -55,4 +55,8 @@ public class Utils {
         }
         return uriList;
     }
+
+    public static boolean approximatelyEqual(float a, float b, float epsilon) {
+        return Math.abs(a - b) < epsilon;
+    }
 }

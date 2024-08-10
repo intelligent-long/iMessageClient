@@ -35,6 +35,7 @@ import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
 import java.io.File;
@@ -199,22 +200,12 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         });
         binding.photoView.setOnClickListener(v -> {
             if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.photoView);
-//            if(activity.isPureContent()){
-//                binding.topShadowCover.setVisibility(View.GONE);
-//            }else {
-//                binding.topShadowCover.setVisibility(View.VISIBLE);
-//            }
         });
         binding.photoView.setOnStateChangedListener(new SubsamplingScaleImageView.OnStateChangedListener() {
             @Override
             public void onScaleChanged(float newScale, int origin) {
                 if(onRecyclerItemActionYier != null) onRecyclerItemActionYier.onRecyclerItemAction(position, newScale != binding.photoView.getMinScale());
-                swipeDownGestureYier.setEnabled(newScale == binding.photoView.getMinScale());
-//                if(activity.isPureContent()){
-//                    binding.topShadowCover.setVisibility(View.GONE);
-//                }else {
-//                    binding.topShadowCover.setVisibility(View.VISIBLE);
-//                }
+                swipeDownGestureYier.setEnabled(Utils.approximatelyEqual(newScale, binding.photoView.getMinScale(), 0.001F));
             }
 
             @Override
@@ -228,13 +219,6 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     private void setupPlayerView(RecyclerItemChatMediaBinding binding, int position){
         binding.playerView.setOnClickListener(v -> {
             if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.playerView);
-//            if(activity.isPureContent()){
-//                binding.playControl.setVisibility(View.GONE);
-//                binding.topShadowCover.setVisibility(View.GONE);
-//            }else {
-//                binding.playControl.setVisibility(View.VISIBLE);
-//                binding.topShadowCover.setVisibility(View.VISIBLE);
-//            }
         });
         SwipeDownGestureYier swipeDownGestureYier = new SwipeDownGestureYier(activity) {
             @Override
