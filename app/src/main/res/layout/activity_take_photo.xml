@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/transparent"
-            app:menu="@menu/toolbar_activity_take_and_send_photo"/>
+            app:menu="@menu/toolbar_activity_take_photo"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.longx.intelligent.android.ichat2.ui.SubsamplingScalePhotoView

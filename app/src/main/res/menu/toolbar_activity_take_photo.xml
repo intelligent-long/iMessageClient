@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/send"
-        android:title="发送"
-        android:icon="@drawable/send_fill_24px"
+        android:id="@+id/action"
+        android:title=""
         app:iconTint="@color/white"
         app:showAsAction="always"/>
 </menu>

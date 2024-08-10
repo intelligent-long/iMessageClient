@@ -6,6 +6,7 @@ import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,7 +20,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
-import com.longx.intelligent.android.ichat2.databinding.ActivityTakeAndSendPhotoBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityTakePhotoBinding;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -27,8 +28,8 @@ import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import java.io.File;
 import java.io.IOException;
 
-public class TakeAndSendPhotoActivity extends BaseActivity {
-    private ActivityTakeAndSendPhotoBinding binding;
+public class TakePhotoActivity extends BaseActivity {
+    private ActivityTakePhotoBinding binding;
     private ActivityResultLauncher<Intent> takePictureLauncher;
     private Uri photoUri;
     private File photoFile;
@@ -37,12 +38,17 @@ public class TakeAndSendPhotoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityTakeAndSendPhotoBinding.inflate(getLayoutInflater());
+        binding = ActivityTakePhotoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
         binding.appBar.bringToFront();
+        int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
+        String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
+        MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
+        item.setIcon(actionIconResId);
+        item.setTitle(menuTitle);
         takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -128,7 +134,7 @@ public class TakeAndSendPhotoActivity extends BaseActivity {
 
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.send){
+            if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
                 intent.putExtra(ExtraKeys.URIS, new Uri[]{photoUri});
                 setResult(RESULT_OK, intent);

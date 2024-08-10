@@ -154,6 +154,12 @@ public class SendBroadcastActivity extends BaseActivity {
                 intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
                 addImageResultLauncher.launch(intent);
             });
+            bottomSheet.setOnClickTakePhotoYier(v1 -> {
+                Intent intent = new Intent(this, TakePhotoActivity.class);
+                intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
+                intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
+                addImageResultLauncher.launch(intent);
+            });
             bottomSheet.show();
         });
     }

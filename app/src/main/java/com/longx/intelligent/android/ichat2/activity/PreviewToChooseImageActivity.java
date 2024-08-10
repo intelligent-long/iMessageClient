@@ -12,21 +12,21 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendImageBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToChooseImageBinding;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
-public class PreviewToSendImageActivity extends BaseActivity {
-    private ActivityPreviewToSendImageBinding binding;
+public class PreviewToChooseImageActivity extends BaseActivity {
+    private ActivityPreviewToChooseImageBinding binding;
     private Uri uri;
     private boolean purePhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPreviewToSendImageBinding.inflate(getLayoutInflater());
+        binding = ActivityPreviewToChooseImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
@@ -78,11 +78,11 @@ public class PreviewToSendImageActivity extends BaseActivity {
     private void setPurePhoto(boolean purePhoto) {
         if(purePhoto){
             binding.appBarLayout.setVisibility(View.GONE);
-            WindowAndSystemUiUtil.setSystemUIShown(PreviewToSendImageActivity.this, false);
+            WindowAndSystemUiUtil.setSystemUIShown(PreviewToChooseImageActivity.this, false);
             this.purePhoto = true;
         }else {
             binding.appBarLayout.setVisibility(View.VISIBLE);
-            WindowAndSystemUiUtil.setSystemUIShown(PreviewToSendImageActivity.this, true);
+            WindowAndSystemUiUtil.setSystemUIShown(PreviewToChooseImageActivity.this, true);
             this.purePhoto = false;
         }
     }

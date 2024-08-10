@@ -38,7 +38,6 @@ import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecora
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ChooseImagesActivity extends BaseActivity{
     private ActivityChooseImagesBinding binding;
@@ -137,7 +136,7 @@ public class ChooseImagesActivity extends BaseActivity{
             for (ChooseMediasRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
                 imageInfoList.add(itemData.getMediaInfo());
             }
-            Intent intent = new Intent(this, PreviewToSendImageActivity.class);
+            Intent intent = new Intent(this, PreviewToChooseImageActivity.class);
             intent.putExtra(ExtraKeys.URI, imageInfoList.get(position).getUri());
             startActivity(intent);
         });

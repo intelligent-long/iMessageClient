@@ -87,7 +87,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.TakeAndSendPhotoActivity"
+            android:name=".activity.TakePhotoActivity"
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
@@ -120,7 +120,7 @@
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
-            android:name=".activity.PreviewToSendImageActivity"
+            android:name=".activity.PreviewToChooseImageActivity"
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity

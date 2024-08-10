@@ -337,7 +337,10 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             sendImageMessageResultLauncher.launch(intent);
         });
         binding.morePanelTakePhoto.setOnClickListener(v -> {
-            sendImageMessageResultLauncher.launch(new Intent(this, TakeAndSendPhotoActivity.class));
+            Intent intent = new Intent(this, TakePhotoActivity.class);
+            intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
+            intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
+            sendImageMessageResultLauncher.launch(intent);
         });
         binding.morePanelSendFile.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
