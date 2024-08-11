@@ -53,13 +53,14 @@ public class ChooseImagesActivity extends BaseActivity{
     private boolean uiInited;
     private List<Uri> chosenUriList;
     private int maxAllowSize;
+    private boolean remove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChooseImagesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setupUiFromIntent();
+        getIntentDataAndSetupUi();
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
         changeWindowAndSystemUi();
         init();
@@ -67,7 +68,8 @@ public class ChooseImagesActivity extends BaseActivity{
         setupYiers();
     }
 
-    private void setupUiFromIntent() {
+    private void getIntentDataAndSetupUi() {
+        remove = getIntent().getBooleanExtra(ExtraKeys.REMOVE, true);
         String toolbarTitle = getIntent().getStringExtra(ExtraKeys.TOOLBAR_TITLE);
         int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
         String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
@@ -140,6 +142,7 @@ public class ChooseImagesActivity extends BaseActivity{
             if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
                 intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
+                intent.putExtra(ExtraKeys.REMOVE, remove);
                 setResult(RESULT_OK, intent);
                 finish();
             }

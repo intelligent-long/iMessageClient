@@ -36,6 +36,7 @@ public class TakePhotoActivity extends BaseActivity {
     private Uri photoUri;
     private File photoFile;
     private boolean purePhoto;
+    private boolean remove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class TakePhotoActivity extends BaseActivity {
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
         binding.appBar.bringToFront();
+        remove = getIntent().getBooleanExtra(ExtraKeys.REMOVE, false);
         int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
         String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
         MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
@@ -139,6 +141,7 @@ public class TakePhotoActivity extends BaseActivity {
             if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
                 intent.putExtra(ExtraKeys.URIS, new Uri[]{photoUri});
+                intent.putExtra(ExtraKeys.REMOVE, remove);
                 setResult(RESULT_OK, intent);
                 finish();
             }

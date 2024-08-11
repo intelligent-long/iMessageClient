@@ -136,40 +136,41 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         for (int i = 0; i < 12; i++) {
             switch (i){
                 case 0:
-                    holder.binding.media1Layout.setVisibility(View.GONE);
+                    holder.binding.media1.setVisibility(View.GONE);
                     break;
                 case 1:
-                    holder.binding.media2Layout.setVisibility(View.GONE);
+                    holder.binding.media2.setVisibility(View.GONE);
                     break;
                 case 2:
-                    holder.binding.media3Layout.setVisibility(View.GONE);
+                    holder.binding.media3.setVisibility(View.GONE);
                     break;
                 case 3:
-                    holder.binding.media4Layout.setVisibility(View.GONE);
+                    holder.binding.media4.setVisibility(View.GONE);
                     break;
                 case 4:
-                    holder.binding.media5Layout.setVisibility(View.GONE);
+                    holder.binding.media5.setVisibility(View.GONE);
                     break;
                 case 5:
-                    holder.binding.media6Layout.setVisibility(View.GONE);
+                    holder.binding.media6.setVisibility(View.GONE);
                     break;
                 case 6:
-                    holder.binding.media7Layout.setVisibility(View.GONE);
+                    holder.binding.media7.setVisibility(View.GONE);
                     break;
                 case 7:
-                    holder.binding.media8Layout.setVisibility(View.GONE);
+                    holder.binding.media8.setVisibility(View.GONE);
                     break;
                 case 8:
-                    holder.binding.media9Layout.setVisibility(View.GONE);
+                    holder.binding.media9.setVisibility(View.GONE);
                     break;
                 case 9:
-                    holder.binding.media10Layout.setVisibility(View.GONE);
+                    holder.binding.media10.setVisibility(View.GONE);
                     break;
                 case 10:
-                    holder.binding.media11Layout.setVisibility(View.GONE);
+                    holder.binding.media11.setVisibility(View.GONE);
                     break;
                 case 11:
                     holder.binding.media12Layout.setVisibility(View.GONE);
+                    holder.binding.media12.setVisibility(View.GONE);
                     holder.binding.darkCover.setVisibility(View.GONE);
                     holder.binding.moreIcon.setVisibility(View.GONE);
                     break;
@@ -178,16 +179,16 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         for (int i = 0; i < 4; i++) {
             switch (i){
                 case 0:
-                    holder.binding.media2To41Layout.setVisibility(View.GONE);
+                    holder.binding.media2To41.setVisibility(View.GONE);
                     break;
                 case 1:
-                    holder.binding.media2To42Layout.setVisibility(View.GONE);
+                    holder.binding.media2To42.setVisibility(View.GONE);
                     break;
                 case 2:
-                    holder.binding.media2To43Layout.setVisibility(View.GONE);
+                    holder.binding.media2To43.setVisibility(View.GONE);
                     break;
                 case 3:
-                    holder.binding.media2To44Layout.setVisibility(View.GONE);
+                    holder.binding.media2To44.setVisibility(View.GONE);
                     break;
             }
         }
@@ -208,47 +209,36 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                             AppCompatImageView imageView = null;
                             switch (i){
                                 case 0:
-                                    holder.binding.media1Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media1;
                                     break;
                                 case 1:
-                                    holder.binding.media2Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media2;
                                     break;
                                 case 2:
-                                    holder.binding.media3Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media3;
                                     break;
                                 case 3:
-                                    holder.binding.media4Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media4;
                                     break;
                                 case 4:
-                                    holder.binding.media5Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media5;
                                     break;
                                 case 5:
-                                    holder.binding.media6Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media6;
                                     break;
                                 case 6:
-                                    holder.binding.media7Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media7;
                                     break;
                                 case 7:
-                                    holder.binding.media8Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media8;
                                     break;
                                 case 8:
-                                    holder.binding.media9Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media9;
                                     break;
                                 case 9:
-                                    holder.binding.media10Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media10;
                                     break;
                                 case 10:
-                                    holder.binding.media11Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media11;
                                     break;
                                 case 11:
@@ -260,6 +250,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                                     }
                                     break;
                             }
+                            imageView.setVisibility(View.VISIBLE);
                             GlideApp
                                     .with(activity.getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
@@ -277,30 +268,26 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.VISIBLE);
                 holder.binding.mediaSingle.setVisibility(View.GONE);
-                int forTimes = Math.min(4, broadcastMedias.size());
-                for (int i = 0; i < forTimes; i++) {
+                for (int i = 0; i < broadcastMedias.size(); i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
                             AppCompatImageView imageView = null;
                             switch (i){
                                 case 0:
-                                    holder.binding.media2To41Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media2To41;
                                     break;
                                 case 1:
-                                    holder.binding.media2To42Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media2To42;
                                     break;
                                 case 2:
-                                    holder.binding.media2To43Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media2To43;
                                     break;
                                 case 3:
-                                    holder.binding.media2To44Layout.setVisibility(View.VISIBLE);
                                     imageView = holder.binding.media2To44;
                                     break;
                             }
+                            imageView.setVisibility(View.VISIBLE);
                             GlideApp
                                     .with(activity.getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))

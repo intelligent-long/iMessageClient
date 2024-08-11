@@ -22,4 +22,12 @@ public class Size {
     public int getHeight() {
         return height;
     }
+
+    @Override
+    public String toString() {
+        return "Size{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }
