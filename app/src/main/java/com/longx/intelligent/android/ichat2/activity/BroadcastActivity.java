@@ -86,12 +86,12 @@ public class BroadcastActivity extends BaseActivity {
             binding.text.setVisibility(View.GONE);
         }
         for (int i = 0; i < 30; i++) {
-            int imageLayoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
-            binding.medias.findViewById(imageLayoutResId).setVisibility(View.GONE);
+            int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+            binding.medias.findViewById(imageResId).setVisibility(View.GONE);
         }
         for (int i = 0; i < 4; i++) {
-            int imageLayoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
-            binding.medias2To4.findViewById(imageLayoutResId).setVisibility(View.GONE);
+            int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+            binding.medias2To4.findViewById(imageResId).setVisibility(View.GONE);
         }
         binding.mediaSingle.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
@@ -107,10 +107,9 @@ public class BroadcastActivity extends BaseActivity {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int imageLayoutResId = ResourceUtil.getResId("media_" + (i + 1) + "_layout", R.id.class);
-                            binding.medias.findViewById(imageLayoutResId).setVisibility(View.VISIBLE);
                             int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
                             AppCompatImageView imageView = binding.medias.findViewById(imageResId);
+                            imageView.setVisibility(View.VISIBLE);
                             GlideApp
                                     .with(getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
@@ -132,10 +131,9 @@ public class BroadcastActivity extends BaseActivity {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int imageLayoutResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1) + "_layout", R.id.class);
-                            binding.medias2To4.findViewById(imageLayoutResId).setVisibility(View.VISIBLE);
                             int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
                             AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
+                            imageView.setVisibility(View.VISIBLE);
                             GlideApp
                                     .with(getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
