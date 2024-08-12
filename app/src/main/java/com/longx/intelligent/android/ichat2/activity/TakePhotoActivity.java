@@ -140,7 +140,7 @@ public class TakePhotoActivity extends BaseActivity {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.URIS, new Uri[]{photoUri});
+                intent.putExtra(ExtraKeys.URIS, new Uri[]{Uri.fromFile(photoFile)});
                 intent.putExtra(ExtraKeys.REMOVE, remove);
                 setResult(RESULT_OK, intent);
                 finish();
