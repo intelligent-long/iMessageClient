@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -46,20 +47,20 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
 
         if(chosenUriList != null) {
             for (int i = 0; i < itemDataList.size(); i++) {
-                Uri uri = itemDataList.get(i).mediaInfo.getUri();
+                Uri uri = Uri.fromFile(new File(itemDataList.get(i).mediaInfo.getPath()));
                 for (int j = 0; j < chosenUriList.size(); j++) {
                     if (chosenUriList.get(j).equals(uri)) {
                         checkedUris.add(uri);
-                        checkedPositions.add(i + 1);
                         List<Uri> sortedCheckedUris = new ArrayList<>(checkedUris);
                         sortedCheckedUris.sort(Comparator.comparingInt(chosenUriList::indexOf));
+                        checkedUris.clear();
+                        checkedUris.addAll(sortedCheckedUris);
+                        checkedPositions.add(i + 1);
                         List<Integer> sortedCheckedPositions = new ArrayList<>();
                         for (Uri uri1 : sortedCheckedUris) {
                             int originalIndex = checkedUris.indexOf(uri1);
                             sortedCheckedPositions.add(checkedPositions.get(originalIndex));
                         }
-                        checkedUris.clear();
-                        checkedUris.addAll(sortedCheckedUris);
                         checkedPositions.clear();
                         checkedPositions.addAll(sortedCheckedPositions);
                         break;
@@ -123,7 +124,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetItemView(holder);
         ItemData itemData = itemDataList.get(position);
-        Uri uri = itemData.mediaInfo.getUri();
+        Uri uri = Uri.fromFile(new File(itemData.mediaInfo.getPath()));
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.binding.getRoot().setOnClickListener(v -> {
             if (onRecyclerItemClickYier != null)

@@ -48,6 +48,7 @@ public class SendBroadcastActivity extends BaseActivity {
     private final ArrayList<Media> mediaList = new ArrayList<>();
     private static final int MEDIA_COLUMN_COUNT = 3;
     private SendBroadcastMediasRecyclerAdapter adapter;
+    private final SpaceGridDecorationSetter spaceGridDecorationSetter = new SpaceGridDecorationSetter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class SendBroadcastActivity extends BaseActivity {
 
     private void initUi() {
         binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, MEDIA_COLUMN_COUNT));
-        new SpaceGridDecorationSetter().setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
+        spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
     }
 
     private void setupYiers() {
@@ -194,6 +195,7 @@ public class SendBroadcastActivity extends BaseActivity {
             binding.recyclerViewMedias.setVisibility(View.GONE);
         }else {
             binding.recyclerViewMedias.setVisibility(View.VISIBLE);
+            spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
             adapter = new SendBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaList);
             binding.recyclerViewMedias.setAdapter(adapter);
         }
