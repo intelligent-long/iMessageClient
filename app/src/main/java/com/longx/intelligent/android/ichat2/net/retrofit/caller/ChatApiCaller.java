@@ -107,7 +107,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength);
+                progressYier.onProgressUpdate(progress, contentLength, -1);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", fileName, progressRequestBody);
@@ -167,7 +167,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength);
+                progressYier.onProgressUpdate(progress, contentLength, -1);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", fileName, progressRequestBody);
@@ -227,7 +227,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength);
+                progressYier.onProgressUpdate(progress, contentLength, -1);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("video", fileName, progressRequestBody);
@@ -287,7 +287,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength);
+                progressYier.onProgressUpdate(progress, contentLength, -1);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("voice", fileName, progressRequestBody);

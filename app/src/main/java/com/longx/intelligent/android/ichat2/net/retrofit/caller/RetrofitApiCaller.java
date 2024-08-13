@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
+import com.longx.intelligent.android.ichat2.dialog.ProgressOperatingDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.xcheng.retrofit.Callback;
@@ -270,6 +271,64 @@ public abstract class RetrofitApiCaller {
                     }
                 }
             });
+        }
+    }
+
+    public static class ProgressCommonYier<T> extends BaseCommonYier<T>{
+        private Activity activity;
+        private boolean showOperationDialog = true;
+        private ProgressOperatingDialog progressOperatingDialog;
+
+        public ProgressCommonYier() {
+        }
+
+        public ProgressCommonYier(Activity activity) {
+            super(activity);
+            this.activity = activity;
+        }
+
+        public ProgressCommonYier(Activity activity, boolean showOperationDialog, boolean showErrorInfo) {
+            super(activity, showErrorInfo);
+            this.activity = activity;
+            this.showOperationDialog = showOperationDialog;
+        }
+
+        @Override
+        public void start(Call<T> call) {
+            if(showOperationDialog){
+                if(getActivity() != null) {
+                    showOperationDialog(call);
+                }
+            }
+        }
+
+        protected void showOperationDialog(Call<T> call) {
+            getActivity().runOnUiThread(() -> {
+                progressOperatingDialog = new ProgressOperatingDialog(getActivity(), () -> {
+                    setBeCanceled(true);
+                    call.cancel();
+                });
+                progressOperatingDialog.show();
+            });
+        }
+
+        @Override
+        public void complete(Call<T> call) {
+            if (progressOperatingDialog != null) {
+                if(getActivity() != null) {
+                    getActivity().runOnUiThread(() -> progressOperatingDialog.dismiss());
+                }
+            }
+        }
+
+        public void updateProgress(long current, long total){
+            if (progressOperatingDialog != null) {
+                getActivity().runOnUiThread(() -> progressOperatingDialog.setProgress(current, total));
+            }
+        }
+
+        public Activity getActivity() {
+            return activity;
         }
     }
 }

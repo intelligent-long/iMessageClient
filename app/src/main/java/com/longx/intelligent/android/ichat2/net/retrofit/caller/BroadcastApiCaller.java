@@ -15,7 +15,9 @@ import com.longx.intelligent.android.ichat2.net.retrofit.api.BroadcastApi;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
+import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.xcheng.retrofit.CompletableCall;
+import com.xcheng.retrofit.ProgressRequestBody;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,10 +40,11 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> sendBroadcast(LifecycleOwner lifecycleOwner, Context context,
                                                                  SendBroadcastPostBody postBody, List<Uri> mediaUris,
-                                                                 BaseYier<OperationStatus> yier){
+                                                                 BaseYier<OperationStatus> yier, ProgressYier progressYier){
         RequestBody bodyPart = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
         List<MultipartBody.Part> mediaPart = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
+        final int[] index = {0};
         if(mediaUris != null) mediaUris.forEach(mediaUri -> {
             String fileName = FileHelper.getFileNameFromUri(context, mediaUri);
             String mimeType = FileHelper.getMimeType(context, mediaUri);
@@ -70,7 +73,15 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
                     }
                 }
             };
-            mediaPart.add(MultipartBody.Part.createFormData("medias", fileName, requestBody));
+            ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
+
+                @Override
+                protected void onUpload(long progress, long contentLength, boolean done) {
+                    progressYier.onProgressUpdate(progress, contentLength, index[0]);
+                    if(done) index[0]++;
+                }
+            };
+            mediaPart.add(MultipartBody.Part.createFormData("medias", fileName, progressRequestBody));
         });
         CompletableCall<OperationStatus> call = getApiImplementation().sendBroadcast(bodyPart, mediaPart);
         call.enqueue(lifecycleOwner, yier);

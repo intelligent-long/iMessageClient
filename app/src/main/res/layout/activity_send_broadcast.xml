@@ -44,6 +44,26 @@
                     app:icon="@drawable/wifi_tethering_24px"
                     app:iconSize="22dp"
                     android:layout_marginEnd="10dp"/>
+
+                <TextView
+                    android:id="@+id/send_item_count_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="15dp"
+                    android:textSize="21sp"
+                    android:visibility="gone"/>
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/send_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
+                    app:indicatorSize="35dp"
+                    app:trackThickness="3.8dp"
+                    android:max="10000"/>
             </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

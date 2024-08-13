@@ -31,6 +31,7 @@ import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.util.ArrayList;
@@ -122,7 +123,15 @@ public class SendBroadcastActivity extends BaseActivity {
                 MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
                 return;
             };
-            BroadcastApiCaller.sendBroadcast(this, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+            BroadcastApiCaller.sendBroadcast(null, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationStatus>(this, false, true) {
+                @Override
+                public void start(Call<OperationStatus> call) {
+                    super.start(call);
+                    binding.sendBroadcastButton.setVisibility(View.GONE);
+                    binding.sendIndicator.setVisibility(View.VISIBLE);
+                    binding.sendItemCountIndicator.setVisibility(View.VISIBLE);
+                }
+
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
@@ -130,10 +139,29 @@ public class SendBroadcastActivity extends BaseActivity {
                         GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
                             broadcastReloadYiers.forEach(BroadcastReloadYier::onBroadcastReload);
                         });
-                        MessageDisplayer.showToast(getContext(), "广播已发送", Toast.LENGTH_SHORT);
+                        MessageDisplayer.showToast(getContext(), "已发送", Toast.LENGTH_SHORT);
                         finish();
                     });
                 }
+
+                @Override
+                public void complete(Call<OperationStatus> call) {
+                    super.complete(call);
+                    binding.sendBroadcastButton.setVisibility(View.VISIBLE);
+                    binding.sendIndicator.setVisibility(View.GONE);
+                    binding.sendItemCountIndicator.setVisibility(View.GONE);
+                }
+            }, (current, total, index) -> {
+                runOnUiThread(() -> {
+                    int progress = (int)((current / (double) total) * binding.sendIndicator.getMax());
+                    binding.sendIndicator.setProgress(progress, false);
+                    int indexShow = index + 1;
+                    if(indexShow == mediaUris.size() && progress == binding.sendIndicator.getMax()) {
+                        binding.sendItemCountIndicator.setText("等待中");
+                    }else {
+                        binding.sendItemCountIndicator.setText(String.valueOf(indexShow));
+                    }
+                });
             });
         });
         binding.addImageOrVideoFab.setOnClickListener(v -> {
