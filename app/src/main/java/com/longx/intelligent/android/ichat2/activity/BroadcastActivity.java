@@ -3,34 +3,32 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.bottomsheet.BroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
+import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -213,6 +211,7 @@ public class BroadcastActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.ICHAT_ID, broadcast.getIchatId());
             startActivity(intent);
         });
+        binding.more.setOnClickListener(v -> new BroadcastMoreOperationBottomSheet(this).show());
     }
 
     private void setupAndStartMediaActivity(int position){
@@ -232,7 +231,31 @@ public class BroadcastActivity extends BaseActivity {
         intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
         intent.putExtra(ExtraKeys.BUTTON_TEXT, "保存");
         intent.putExtra(ExtraKeys.GLIDE_LOAD, true);
-        MediaActivity.setActionButtonYier(null);
+        MediaActivity.setActionButtonYier(v -> {
+            int currentItem = MediaActivity.getCurrentItemIndex();
+            if(currentItem == -1) return;
+            BroadcastMedia broadcastMedia = broadcastMedias.get(currentItem);
+            switch (broadcastMedia.getType()){
+                case BroadcastMedia.TYPE_IMAGE:
+                    new Thread(() -> {
+                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
+                        operatingDialog.show();
+                        try {
+                            PublicFileAccessor.BroadcastMedia.saveImage(this, broadcast, currentItem);
+                            operatingDialog.dismiss();
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                        }catch (IOException | InterruptedException e){
+                            ErrorLogger.log(e);
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                        }
+                    }).start();
+                    break;
+                case BroadcastMedia.TYPE_VIDEO:
+
+                    break;
+            }
+
+        });
         startActivity(intent);
     }
 }

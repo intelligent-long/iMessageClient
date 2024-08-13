@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 
@@ -102,6 +104,13 @@ public class DataPaths {
             SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
             String fileName = yyyyMMddHHmmss.format(new Date());
             return getPublicFilePath() + File.separator + "拍摄" + File.separator + "视频" + File.separator + fileName;
+        }
+
+        public static String getBroadcastImageFilePath(Broadcast broadcast, int mediaIndex){
+            BroadcastMedia broadcastMedia = broadcast.getBroadcastMedias().get(mediaIndex);
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(broadcast.getTime().getTime()) + "_" + broadcast.getBroadcastId() + "_" + broadcastMedia.getMediaId() + "." + broadcastMedia.getExtension();
+            return getPublicFilePath() + File.separator + "广播图片" + File.separator + fileName;
         }
     }
 }

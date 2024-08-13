@@ -540,7 +540,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
                         operatingDialog.show();
                         try {
-                            PublicFileAccessor.ChatImage.save(chatMessage);
+                            PublicFileAccessor.ChatMedia.saveImage(chatMessage);
                             operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
@@ -555,7 +555,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
                         operatingDialog.show();
                         try {
-                            PublicFileAccessor.ChatVideo.save(chatMessage);
+                            PublicFileAccessor.ChatMedia.saveVideo(chatMessage);
                             operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
