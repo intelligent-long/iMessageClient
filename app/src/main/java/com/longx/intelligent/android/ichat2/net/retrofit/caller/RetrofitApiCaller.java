@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -7,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
+import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.xcheng.retrofit.Callback;
@@ -105,7 +106,7 @@ public abstract class RetrofitApiCaller {
             this.context = context;
         }
 
-        public BaseCommonYier(AppCompatActivity activity, boolean showErrorInfo) {
+        public BaseCommonYier(Activity activity, boolean showErrorInfo) {
             this(activity);
             this.showErrorInfo = showErrorInfo;
         }
@@ -155,19 +156,19 @@ public abstract class RetrofitApiCaller {
     }
 
     public static class CommonYier<T> extends BaseCommonYier<T> {
-        private AppCompatActivity activity;
+        private Activity activity;
         private boolean showOperationDialog = true;
-        private OperationDialog operationDialog;
+        private OperatingDialog operatingDialog;
 
         public CommonYier() {
         }
 
-        public CommonYier(AppCompatActivity activity) {
+        public CommonYier(Activity activity) {
             super(activity);
             this.activity = activity;
         }
 
-        public CommonYier(AppCompatActivity activity, boolean showOperationDialog, boolean showErrorInfo) {
+        public CommonYier(Activity activity, boolean showOperationDialog, boolean showErrorInfo) {
             super(activity, showErrorInfo);
             this.activity = activity;
             this.showOperationDialog = showOperationDialog;
@@ -184,43 +185,43 @@ public abstract class RetrofitApiCaller {
 
         protected void showOperationDialog(Call<T> call) {
             getActivity().runOnUiThread(() -> {
-                operationDialog = new OperationDialog(getActivity(), () -> {
+                operatingDialog = new OperatingDialog(getActivity(), () -> {
                     setBeCanceled(true);
                     call.cancel();
                 });
-                operationDialog.show();
+                operatingDialog.show();
             });
         }
 
         @Override
         public void complete(Call<T> call) {
-            if (operationDialog != null) {
+            if (operatingDialog != null) {
                 if(getActivity() != null) {
-                    getActivity().runOnUiThread(() -> operationDialog.dismiss());
+                    getActivity().runOnUiThread(() -> operatingDialog.dismiss());
                 }
             }
         }
 
-        public AppCompatActivity getActivity() {
+        public Activity getActivity() {
             return activity;
         }
     }
 
     public static class DelayedShowDialogCommonYier<T> extends CommonYier<T> {
-        private OperationDialog operationDialog;
+        private OperatingDialog operatingDialog;
         private Timer waitToShowOperationDialogTimer;
         private long showOperationDialogDelay = 200L;
         private boolean showOperationDialogCanceled;
 
-        public DelayedShowDialogCommonYier(AppCompatActivity activity) {
+        public DelayedShowDialogCommonYier(Activity activity) {
             super(activity);
         }
 
-        public DelayedShowDialogCommonYier(AppCompatActivity activity, long showOperationDialogDelay) {
+        public DelayedShowDialogCommonYier(Activity activity, long showOperationDialogDelay) {
             this(activity, showOperationDialogDelay, true);
         }
 
-        public DelayedShowDialogCommonYier(AppCompatActivity activity, long showOperationDialogDelay, boolean showErrorInfo) {
+        public DelayedShowDialogCommonYier(Activity activity, long showOperationDialogDelay, boolean showErrorInfo) {
             super(activity, true, showErrorInfo);
             this.showOperationDialogDelay = showOperationDialogDelay;
         }
@@ -243,11 +244,11 @@ public abstract class RetrofitApiCaller {
         @Override
         public synchronized void complete(Call<T> call) {
             showOperationDialogCanceled = true;
-            if (operationDialog != null) {
+            if (operatingDialog != null) {
                 if(getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         synchronized (DelayedShowDialogCommonYier.this) {
-                            operationDialog.dismiss();
+                            operatingDialog.dismiss();
                             if(waitToShowOperationDialogTimer != null) {
                                 waitToShowOperationDialogTimer.cancel();
                             }
@@ -261,11 +262,11 @@ public abstract class RetrofitApiCaller {
             getActivity().runOnUiThread(() -> {
                 synchronized (DelayedShowDialogCommonYier.this) {
                     if (!showOperationDialogCanceled) {
-                        operationDialog = new OperationDialog(getActivity(), () -> {
+                        operatingDialog = new OperatingDialog(getActivity(), () -> {
                             setBeCanceled(true);
                             call.cancel();
                         });
-                        operationDialog.show();
+                        operatingDialog.show();
                     }
                 }
             });

@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.dialog;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,7 +37,7 @@ public class ServerSettingDialog extends AbstractDialog{
     private DialogServerSettingBinding binding;
     private final String[] serverTypeNames;
 
-    public ServerSettingDialog(AppCompatActivity activity) {
+    public ServerSettingDialog(Activity activity) {
         super(activity, true);
         serverTypeNames = new String[]{
                 getActivity().getString(R.string.server_type_central),

@@ -58,7 +58,7 @@ public class ChannelMoreOperationBottomSheet extends AbstractBottomSheet{
 
     private void deleteChannel() {
         DeleteChannelAssociationPostBody postBody = new DeleteChannelAssociationPostBody(channel.getIchatId());
-        ChannelApiCaller.deleteAssociatedChannel(getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
+        ChannelApiCaller.deleteAssociatedChannel((AppCompatActivity)getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
             @Override
             public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                 super.ok(data, row, call);

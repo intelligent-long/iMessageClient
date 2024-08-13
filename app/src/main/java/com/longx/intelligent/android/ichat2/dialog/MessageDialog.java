@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.dialog;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 
 import androidx.appcompat.app.AlertDialog;
@@ -14,11 +15,11 @@ public class MessageDialog extends AbstractDialog{
     private final String title;
     private final String message;
 
-    public MessageDialog(AppCompatActivity activity, String message) {
+    public MessageDialog(Activity activity, String message) {
         this(activity, null, message);
     }
 
-    public MessageDialog(AppCompatActivity activity, String title, String message) {
+    public MessageDialog(Activity activity, String title, String message) {
         super(activity, true);
         this.title = title;
         this.message = message;

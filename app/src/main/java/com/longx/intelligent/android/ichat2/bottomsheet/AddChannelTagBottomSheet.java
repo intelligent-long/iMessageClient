@@ -38,7 +38,7 @@ public class AddChannelTagBottomSheet extends AbstractBottomSheet{
         binding.addButton.setOnClickListener(v -> {
             String inputtedTagName = UiUtil.getEditTextString(binding.addTagInput);
             AddChannelTagPostBody postBody = new AddChannelTagPostBody(inputtedTagName);
-            ChannelApiCaller.addTag(getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
+            ChannelApiCaller.addTag((AppCompatActivity)getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);

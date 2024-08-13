@@ -61,7 +61,7 @@ public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
             List<String> checkedChannelIchatIds = new ArrayList<>();
             checkedChannels.forEach(channel -> checkedChannelIchatIds.add(channel.getIchatId()));
             AddChannelsToTagPostBody postBody = new AddChannelsToTagPostBody(tagId, checkedChannelIchatIds);
-            ChannelApiCaller.addChannelsToTag(getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
+            ChannelApiCaller.addChannelsToTag((AppCompatActivity)getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);

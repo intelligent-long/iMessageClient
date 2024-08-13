@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.bottomsheet;
 
+import android.app.Activity;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,11 +12,11 @@ import com.longx.intelligent.android.ichat2.R;
  * Created by LONG on 2024/2/5 at 4:22 AM.
  */
 public abstract class AbstractBottomSheet {
-    private AppCompatActivity activity;
+    private final Activity activity;
     private final BottomSheetDialog bottomSheetDialog;
     private View contentView;
 
-    public AbstractBottomSheet(AppCompatActivity activity) {
+    public AbstractBottomSheet(Activity activity) {
         this.activity = activity;
         bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetDialog);
     }
@@ -43,7 +44,7 @@ public abstract class AbstractBottomSheet {
         bottomSheetDialog.dismiss();
     }
 
-    public AppCompatActivity getActivity() {
+    public Activity getActivity() {
         return activity;
     }
 }

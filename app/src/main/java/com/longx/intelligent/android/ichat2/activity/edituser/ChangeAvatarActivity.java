@@ -12,7 +12,7 @@ import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChangeAvatarBinding;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
-import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
+import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -40,15 +40,15 @@ public class ChangeAvatarActivity extends BaseActivity {
                 binding.cropImageView.rotateImage(90);
             }else if(item.getItemId() == R.id.change){
                 new Thread(() -> {
-                    OperationDialog operationDialog = new OperationDialog(this);
-                    operationDialog.show();
+                    OperatingDialog operatingDialog = new OperatingDialog(this);
+                    operatingDialog.show();
                     Bitmap croppedImage = binding.cropImageView.getCroppedImage();
                     if(croppedImage == null){
-                        operationDialog.dismiss();
+                        operatingDialog.dismiss();
                         MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.SHORT);
                     }else {
                         byte[] avatar = Utils.encodeBitmapToBytes(croppedImage, Bitmap.CompressFormat.PNG, 100);
-                        operationDialog.dismiss();
+                        operatingDialog.dismiss();
                         onImageCropped(avatar);
                     }
                 }).start();

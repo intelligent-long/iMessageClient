@@ -31,7 +31,7 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMessageBinding;
-import com.longx.intelligent.android.ichat2.dialog.OperationDialog;
+import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
@@ -537,11 +537,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             switch (chatMessage.getType()){
                 case ChatMessage.TYPE_IMAGE:{
                     new Thread(() -> {
-                        OperationDialog operationDialog = new OperationDialog(MediaActivity.getInstance());
-                        operationDialog.show();
+                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
+                        operatingDialog.show();
                         try {
                             PublicFileAccessor.ChatImage.save(chatMessage);
-                            operationDialog.dismiss();
+                            operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
                             ErrorLogger.log(e);
@@ -552,11 +552,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 }
                 case ChatMessage.TYPE_VIDEO:{
                     new Thread(() -> {
-                        OperationDialog operationDialog = new OperationDialog(MediaActivity.getInstance());
-                        operationDialog.show();
+                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
+                        operatingDialog.show();
                         try {
                             PublicFileAccessor.ChatVideo.save(chatMessage);
-                            operationDialog.dismiss();
+                            operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
                             ErrorLogger.log(e);

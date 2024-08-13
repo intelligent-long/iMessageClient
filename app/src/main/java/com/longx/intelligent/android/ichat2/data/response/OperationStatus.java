@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.data.response;
 
+import android.app.Activity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
@@ -128,7 +130,7 @@ public class OperationStatus {
         }
     }
 
-    public <T extends OperationStatus> void commonHandleResult(AppCompatActivity activity, int[] messageCodes, ResultHandler successHandler, HandleResult... handleResult){
+    public <T extends OperationStatus> void commonHandleResult(Activity activity, int[] messageCodes, ResultHandler successHandler, HandleResult... handleResult){
         if(getCode() == 0){
             if(successHandler != null) successHandler.handle();
         } else {
@@ -151,7 +153,7 @@ public class OperationStatus {
         }
     }
 
-    public <T extends OperationStatus> void commonHandleResult(AppCompatActivity activity, int[] messageCodes, ResultHandler successHandler){
+    public <T extends OperationStatus> void commonHandleResult(Activity activity, int[] messageCodes, ResultHandler successHandler){
         commonHandleResult(activity, messageCodes, successHandler, new HandleResult[0]);
     }
 
