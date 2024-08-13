@@ -66,6 +66,7 @@ public class TakePhotoActivity extends BaseActivity {
                             setupYiers();
                         }
                     }else {
+                        photoFile.delete();
                         finish();
                     }
                 }

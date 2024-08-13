@@ -570,7 +570,7 @@
                         android:layout_height="wrap_content"
                         android:textFontWeight="@integer/font_weight_medium"
                         android:text="0"
-                        android:textColor="@android:color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="16.5sp" />
 
                     <TextView
@@ -587,7 +587,7 @@
                         android:layout_marginStart="20dp"
                         android:textFontWeight="@integer/font_weight_medium"
                         android:text="0"
-                        android:textColor="@android:color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="16.5sp" />
 
                     <TextView
