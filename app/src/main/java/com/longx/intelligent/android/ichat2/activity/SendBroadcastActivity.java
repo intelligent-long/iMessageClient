@@ -130,6 +130,7 @@ public class SendBroadcastActivity extends BaseActivity {
                     binding.sendBroadcastButton.setVisibility(View.GONE);
                     binding.sendIndicator.setVisibility(View.VISIBLE);
                     binding.sendItemCountIndicator.setVisibility(View.VISIBLE);
+                    UiUtil.setViewGroupEnabled(binding.content, false, true);
                 }
 
                 @Override
@@ -150,6 +151,7 @@ public class SendBroadcastActivity extends BaseActivity {
                     binding.sendBroadcastButton.setVisibility(View.VISIBLE);
                     binding.sendIndicator.setVisibility(View.GONE);
                     binding.sendItemCountIndicator.setVisibility(View.GONE);
+                    UiUtil.setViewGroupEnabled(binding.content, true, true);
                 }
             }, (current, total, index) -> {
                 runOnUiThread(() -> {
