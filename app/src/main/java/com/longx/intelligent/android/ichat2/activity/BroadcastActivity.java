@@ -33,6 +33,8 @@ import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -233,6 +235,9 @@ public class BroadcastActivity extends BaseActivity {
                         data.commonHandleResult(BroadcastActivity.this, new int[]{}, () -> {
                             MessageDisplayer.showToast(getApplicationContext(), "已删除", Toast.LENGTH_LONG);
                             finish();
+                            GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
+                                broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(broadcast.getBroadcastId()));
+                            });
                         });
                     }
                 });

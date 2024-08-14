@@ -40,6 +40,8 @@ import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.Comparator;
@@ -55,11 +57,13 @@ import retrofit2.Response;
  */
 public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<BroadcastsRecyclerAdapter.ViewHolder, BroadcastsRecyclerAdapter.ItemData> {
     private final Activity activity;
+    private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ItemData> itemDataList;
     private final Map<String, Size> singleMediaViewSizeMap= new HashMap<>();
 
-    public BroadcastsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
+    public BroadcastsRecyclerAdapter(Activity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView, List<ItemData> itemDataList) {
         this.activity = activity;
+        this.recyclerView = recyclerView;
         sortItemDataList(itemDataList);
         this.itemDataList = itemDataList;
     }
@@ -421,6 +425,9 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                         super.ok(data, row, call);
                         data.commonHandleResult(activity, new int[]{}, () -> {
                             MessageDisplayer.autoShow(activity, "已删除", MessageDisplayer.Duration.LONG);
+                            GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
+                                broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(itemData.broadcast.getBroadcastId()));
+                            });
                         });
                     }
                 });
@@ -445,5 +452,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         int insertPosition = itemDataList.size();
         itemDataList.addAll(insertPosition, items);
         notifyItemRangeInserted(insertPosition + 1, items.size());
+    }
+
+    public void removeItemAndShow(String broadcastId){
+        for (int i = 0; i < itemDataList.size(); i++) {
+            if(itemDataList.get(i).broadcast.getBroadcastId().equals(broadcastId)){
+                itemDataList.remove(i);
+                notifyItemRemoved(i + (recyclerView.hasHeader() ? 1 : 0));
+                break;
+            }
+        }
     }
 }

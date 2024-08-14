@@ -34,6 +34,7 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -46,7 +47,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier {
+public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
@@ -74,6 +75,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         restoreState(savedInstanceState);
         showOrHideBroadcastReloadedTime();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
+        GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
         if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts();
         return binding.getRoot();
     }
@@ -82,6 +84,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     public void onDetach() {
         super.onDetach();
         GlobalYiersHolder.removeYier(requireContext(), BroadcastReloadYier.class, this);
+        GlobalYiersHolder.removeYier(requireContext(), BroadcastDeletedYier.class, this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -259,7 +262,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true);
         binding.recyclerView.setLayoutManager(layoutManager);
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        adapter = new BroadcastsRecyclerAdapter(requireActivity(), itemDataList);
+        adapter = new BroadcastsRecyclerAdapter(requireActivity(), binding.recyclerView, itemDataList);
         binding.recyclerView.setAdapter(adapter);
         UiUtil.setViewHeight(headerBinding.load, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
@@ -400,7 +403,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
-                data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{-101, -102}, () -> {
+                data.commonHandleResult(requireActivity(), new int[]{-101, -102}, () -> {
                     if (breakFetchNextPage(call)) return;
                     stopFetchNextPage = !row.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
@@ -428,5 +431,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     @Override
     public void onBroadcastReload() {
         fetchAndRefreshBroadcasts();
+    }
+
+    @Override
+    public void onBroadcastDeleted(String broadcastId) {
+        adapter.removeItemAndShow(broadcastId);
     }
 }
