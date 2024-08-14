@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,7 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
-import com.longx.intelligent.android.ichat2.activity.PreviewToSendBroadcastMediaActivity;
+import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendBroadcastMediasBinding;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
@@ -68,9 +70,21 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
 
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.image.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, PreviewToSendBroadcastMediaActivity.class);
+            Intent intent = new Intent(activity, MediaActivity.class);
             intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
             intent.putExtra(ExtraKeys.POSITION, position);
+            intent.putExtra(ExtraKeys.BUTTON_TEXT, "移除");
+            MediaActivity.setActionButtonYier(v1 -> {
+                int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
+                ArrayList<Media> mediaList1 = MediaActivity.getInstance().getMediaList();
+                mediaList1.remove(currentItem);
+                if(mediaList1.isEmpty()) MediaActivity.getInstance().finish();
+                MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == mediaList1.size() ? currentItem : currentItem + 1) + " / " + mediaList1.size());
+                MediaActivity.getInstance().getAdapter().removeItem(currentItem);
+                Intent intent1 = new Intent();
+                intent1.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList1);
+                MediaActivity.getInstance().setResult(RESULT_OK, intent1);
+            });
             returnFromPreviewToSendMediaResultLauncher.launch(intent);
         });
     }

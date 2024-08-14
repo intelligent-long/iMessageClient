@@ -531,7 +531,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
         intent.putExtra(ExtraKeys.BUTTON_TEXT, "保存");
         MediaActivity.setActionButtonYier(v1 -> {
-            int currentItem = MediaActivity.getCurrentItemIndex();
+            int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
             if(currentItem == -1) return;
             ChatMessage chatMessage = chatMessages.get(currentItem);
             switch (chatMessage.getType()){

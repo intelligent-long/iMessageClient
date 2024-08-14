@@ -264,7 +264,7 @@ public class BroadcastActivity extends BaseActivity {
         intent.putExtra(ExtraKeys.BUTTON_TEXT, "保存");
         intent.putExtra(ExtraKeys.GLIDE_LOAD, true);
         MediaActivity.setActionButtonYier(v -> {
-            int currentItem = MediaActivity.getCurrentItemIndex();
+            int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
             if(currentItem == -1) return;
             BroadcastMedia broadcastMedia = broadcastMedias.get(currentItem);
             switch (broadcastMedia.getType()){

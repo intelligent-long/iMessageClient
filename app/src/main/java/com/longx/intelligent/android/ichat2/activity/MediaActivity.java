@@ -17,12 +17,13 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
-    private static ActivityMediaBinding binding;
-    private List<Media> mediaList;
+    private ActivityMediaBinding binding;
+    private ArrayList<Media> mediaList;
     private int position;
     private MediaPagerAdapter adapter;
     private boolean pureContent;
@@ -86,7 +87,7 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
                 previousPositionOffset = positionOffset;
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
                     int previousPosition = right ? MediaActivity.this.position + 1 : MediaActivity.this.position - 1;
-                    if(previousPosition != -1) {
+                    if(previousPosition != -1 && !(previousPosition >= adapter.getItemCount())) {
                         if (positionOffset == 0 && adapter.getItemDataList().get(previousPosition).getMedia().getMediaType() == MediaType.IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
                         }
@@ -165,22 +166,22 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.startPlayer(position);
+        if(adapter.getItemCount() != 0) adapter.startPlayer(position);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        adapter.pausePlayer(position);
+        if(adapter.getItemCount() != 0) adapter.pausePlayer(position);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        adapter.releaseAllPlayer();
+        if(adapter.getItemCount() != 0) adapter.releaseAllPlayer();
     }
 
-    public static int getCurrentItemIndex(){
+    public int getCurrentItemIndex(){
         if(binding == null) return -1;
         return binding.viewPager.getCurrentItem();
     }
@@ -195,5 +196,17 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
 
     public boolean isPureContent() {
         return pureContent;
+    }
+
+    public MediaPagerAdapter getAdapter() {
+        return adapter;
+    }
+
+    public ArrayList<Media> getMediaList() {
+        return mediaList;
+    }
+
+    public ActivityMediaBinding getBinding() {
+        return binding;
     }
 }
