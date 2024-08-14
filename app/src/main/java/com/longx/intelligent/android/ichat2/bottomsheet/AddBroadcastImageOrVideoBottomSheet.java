@@ -31,20 +31,20 @@ public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
 
     private void setupListeners() {
         binding.addImage.setOnClickListener(v -> {
-            if(onClickAddImageYier != null) onClickAddImageYier.onClick(v);
             dismiss();
+            if(onClickAddImageYier != null) onClickAddImageYier.onClick(v);
         });
         binding.addVideo.setOnClickListener(v -> {
-            if(onClickAddVideoYier != null) onClickAddVideoYier.onClick(v);
             dismiss();
+            if(onClickAddVideoYier != null) onClickAddVideoYier.onClick(v);
         });
         binding.takePhoto.setOnClickListener(v -> {
-            if(onClickTakePhotoYier != null) onClickTakePhotoYier.onClick(v);
             dismiss();
+            if(onClickTakePhotoYier != null) onClickTakePhotoYier.onClick(v);
         });
         binding.recordVideo.setOnClickListener(v -> {
-            if(onClickRecordVideoYier != null) onClickRecordVideoYier.onClick(v);
             dismiss();
+            if(onClickRecordVideoYier != null) onClickRecordVideoYier.onClick(v);
         });
     }
 

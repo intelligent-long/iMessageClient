@@ -28,6 +28,10 @@ public class ConfirmDialog extends AbstractDialog{
     private ButtonInfo negativeButtonInfo;
     private ButtonInfo neutralButtonInfo;
 
+    public ConfirmDialog(Activity activity){
+        this(activity, "是否继续？");
+    }
+
     public ConfirmDialog(Activity activity, String message) {
         this(activity, null, message);
     }

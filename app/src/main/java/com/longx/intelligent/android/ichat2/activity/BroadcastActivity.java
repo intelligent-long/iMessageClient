@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
@@ -18,11 +20,15 @@ import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
@@ -32,6 +38,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class BroadcastActivity extends BaseActivity {
     private ActivityBroadcastBinding binding;
@@ -211,7 +220,25 @@ public class BroadcastActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.ICHAT_ID, broadcast.getIchatId());
             startActivity(intent);
         });
-        binding.more.setOnClickListener(v -> new BroadcastMoreOperationBottomSheet(this).show());
+        BroadcastMoreOperationBottomSheet moreOperationBottomSheet = new BroadcastMoreOperationBottomSheet(this);
+        binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
+        moreOperationBottomSheet.setDeleteClickYier(v -> {
+            ConfirmDialog confirmDialog = new ConfirmDialog(this);
+            confirmDialog.setNegativeButton(null);
+            confirmDialog.setPositiveButton((dialog, which) -> {
+                BroadcastApiCaller.deleteBroadcast(this, broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
+                    @Override
+                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                        super.ok(data, row, call);
+                        data.commonHandleResult(BroadcastActivity.this, new int[]{}, () -> {
+                            MessageDisplayer.showToast(getApplicationContext(), "已删除", Toast.LENGTH_LONG);
+                            finish();
+                        });
+                    }
+                });
+            });
+            confirmDialog.show();
+        });
     }
 
     private void setupAndStartMediaActivity(int position){

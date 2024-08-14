@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.bottomsheet;
 
 import android.app.Activity;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +12,9 @@ import com.longx.intelligent.android.ichat2.databinding.BottomSheetBroadcastMore
  */
 public class BroadcastMoreOperationBottomSheet extends AbstractBottomSheet{
     private BottomSheetBroadcastMoreOperationBinding binding;
+    private View.OnClickListener deleteClickYier;
+    private View.OnClickListener editClickYier;
+    private View.OnClickListener changePermissionClickYier;
 
     public BroadcastMoreOperationBottomSheet(Activity activity) {
         super(activity);
@@ -25,6 +29,29 @@ public class BroadcastMoreOperationBottomSheet extends AbstractBottomSheet{
     }
 
     private void setupYiers() {
+        binding.optionDelete.setOnClickListener(v -> {
+            dismiss();
+            if(deleteClickYier != null) deleteClickYier.onClick(v);
+        });
+        binding.optionEdit.setOnClickListener(v -> {
+            dismiss();
+            if(editClickYier != null) editClickYier.onClick(v);
+        });
+        binding.optionChangePermission.setOnClickListener(v -> {
+            dismiss();
+            if(changePermissionClickYier != null) changePermissionClickYier.onClick(v);
+        });
+    }
 
+    public void setDeleteClickYier(View.OnClickListener deleteClickYier) {
+        this.deleteClickYier = deleteClickYier;
+    }
+
+    public void setEditClickYier(View.OnClickListener editClickYier) {
+        this.editClickYier = editClickYier;
+    }
+
+    public void setChangePermissionClickYier(View.OnClickListener changePermissionClickYier) {
+        this.changePermissionClickYier = changePermissionClickYier;
     }
 }
