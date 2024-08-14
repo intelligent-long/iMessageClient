@@ -196,27 +196,17 @@ public class SendBroadcastActivity extends BaseActivity {
     }
 
     private void onImagesChosen(List<Uri> uriList, boolean remove) {
-        List<Media> toAdds = new ArrayList<>();
+        List<Media> imageMediaList = new ArrayList<>();
         uriList.forEach(uri -> {
             Media media = new Media(MediaType.IMAGE, uri);
-            if(!mediaList.contains(media)) toAdds.add(media);
+            imageMediaList.add(media);
         });
-        List<Media> toRemoves = new ArrayList<>();
-        if(remove) {
-            mediaList.forEach(media -> {
-                if (!uriList.contains(media.getUri())) toRemoves.add(media);
-            });
-        }
-        AtomicInteger imageSize = new AtomicInteger();
-        mediaList.forEach(media -> {
-            if(media.getMediaType() == MediaType.IMAGE) imageSize.getAndIncrement();
-        });
-        if(imageSize.get() + toAdds.size() - toRemoves.size() > Constants.MAX_BROADCAST_IMAGE_COUNT){
+        if(imageMediaList.size() > Constants.MAX_BROADCAST_IMAGE_COUNT){
             MessageDisplayer.autoShow(this, "最多附带 " + Constants.MAX_BROADCAST_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
             return;
         }
-        mediaList.addAll(toAdds);
-        mediaList.removeAll(toRemoves);
+        if(remove) mediaList.clear();
+        mediaList.addAll(imageMediaList);
         showImages();
     }
 

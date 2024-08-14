@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -58,5 +59,10 @@ public class Utils {
 
     public static boolean approximatelyEqual(float a, float b, float epsilon) {
         return Math.abs(a - b) < epsilon;
+    }
+
+    public static <T> String listToString(List<T> list) {
+        Object[] listArray = list.toArray(new Object[0]);
+        return Arrays.deepToString(listArray);
     }
 }

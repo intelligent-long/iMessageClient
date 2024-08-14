@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -52,12 +53,14 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
         private Material3SwitchPreference preferenceChangeEmailVisibility;
         private Material3SwitchPreference preferenceChangeSexVisibility;
         private Material3SwitchPreference preferenceChangeRegionVisibility;
+        private Activity activity;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences_edit_user_profile_visibility, rootKey);
             doDefaultActions();
             GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
+            activity = requireActivity();
         }
 
         @Override
@@ -146,7 +149,7 @@ public class EditUserProfileVisibilitySettingsActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                    data.commonHandleResult(activity, new int[]{}, () -> {
                         SharedPreferencesAccessor.UserProfilePref.saveServerUserProfileVisibility(applicationContext,
                                 new UserInfo.UserProfileVisibility(emailVisibilityChecked, sexVisibilityChecked, regionVisibilityChecked));
                         SharedPreferencesAccessor.UserProfilePref.saveAppUserProfileVisibility(applicationContext,
