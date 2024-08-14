@@ -60,12 +60,14 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ItemData> itemDataList;
     private final Map<String, Size> singleMediaViewSizeMap= new HashMap<>();
+    private final Self currentUserProfile;
 
     public BroadcastsRecyclerAdapter(Activity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView, List<ItemData> itemDataList) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         sortItemDataList(itemDataList);
         this.itemDataList = itemDataList;
+        currentUserProfile = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
     }
 
     public static class ItemData{
@@ -108,7 +110,6 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         ItemData itemData = itemDataList.get(position);
         String name = null;
         String avatarHash = null;
-        Self currentUserProfile = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
         if(currentUserProfile.getIchatId().equals(itemData.broadcast.getIchatId())){
             name = currentUserProfile.getUsername();
             avatarHash = currentUserProfile.getAvatar() == null ? null : currentUserProfile.getAvatar().getHash();
