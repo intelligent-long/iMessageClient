@@ -208,4 +208,8 @@ public class UiUtil {
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
         }
     }
+
+    public static void setViewVisibility(View view, int visibility){
+        if(view.getVisibility() != visibility) view.setVisibility(visibility);
+    }
 }

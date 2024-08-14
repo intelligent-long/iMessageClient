@@ -55,7 +55,7 @@ public class PreviewToSendBroadcastMediaActivity extends BaseActivity implements
 
     private void showContent() {
         binding.toolbar.setTitle((position + 1) + " / " + medias.size());
-        adapter = new MediaPagerAdapter(this, medias, false);
+        adapter = null;
         adapter.setOnRecyclerItemActionYier(this);
         adapter.setOnRecyclerItemClickYier(this);
         binding.viewPager.setAdapter(adapter);

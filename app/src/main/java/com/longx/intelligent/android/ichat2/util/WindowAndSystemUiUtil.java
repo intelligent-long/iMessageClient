@@ -242,7 +242,9 @@ public class WindowAndSystemUiUtil {
             systemUiVisibility |= hideFlag;
             systemUiVisibility &= ~ showFlag;
         }
-        decorView.setSystemUiVisibility(systemUiVisibility);
+        if(decorView.getSystemUiVisibility() != systemUiVisibility) {
+            decorView.setSystemUiVisibility(systemUiVisibility);
+        }
     }
 
 }

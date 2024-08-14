@@ -27,8 +27,10 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
+import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMediaBinding;
+import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
@@ -48,7 +50,7 @@ import java.util.Map;
  * Created by LONG on 2024/5/28 at 9:24 PM.
  */
 public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.ViewHolder> {
-    private final Activity activity;
+    private final MediaActivity activity;
     private final List<ItemData> itemDataList;
     private RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
@@ -57,7 +59,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     private final Map<Integer, ViewHolder> viewHolderMap = new HashMap<>();
     private final boolean glideLoad;
 
-    public MediaPagerAdapter(Activity activity, List<Media> mediaList, boolean glideLoad) {
+    public MediaPagerAdapter(MediaActivity activity, List<Media> mediaList, boolean glideLoad) {
         this.activity = activity;
         List<ItemData> itemDataList = new ArrayList<>();
         mediaList.forEach(media -> {
@@ -109,6 +111,17 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetView(holder);
+        if(activity.isPureContent()){
+            UiUtil.setViewVisibility(holder.binding.topShadowCover, View.GONE);
+            if(itemDataList.get(position).media.getMediaType() == MediaType.VIDEO) {
+                UiUtil.setViewVisibility(holder.binding.playControl, View.GONE);
+            }
+        }else {
+            UiUtil.setViewVisibility(holder.binding.topShadowCover, View.VISIBLE);
+            if(itemDataList.get(position).media.getMediaType() == MediaType.VIDEO) {
+                UiUtil.setViewVisibility(holder.binding.playControl, View.VISIBLE);
+            }
+        }
         viewHolderMap.put(position, holder);
         Media media = itemDataList.get(position).media;
         switch (media.getMediaType()){
