@@ -61,7 +61,7 @@
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
-            android:name=".activity.SendVideoMessagesActivity"
+            android:name=".activity.ChooseVideosActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/DarkStatusBarActivity" />

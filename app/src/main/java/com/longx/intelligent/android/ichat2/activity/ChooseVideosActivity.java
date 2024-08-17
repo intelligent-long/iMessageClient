@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChooseMediasRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.databinding.ActivitySendVideoMessagesBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityChooseVideosBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryFooterBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBinding;
 import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
@@ -36,8 +37,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendVideoMessagesActivity extends BaseActivity {
-    private ActivitySendVideoMessagesBinding binding;
+public class ChooseVideosActivity extends BaseActivity {
+    private ActivityChooseVideosBinding binding;
     private LayoutGalleryHeaderBinding headerBinding;
     private LayoutGalleryFooterBinding footerBinding;
     private SpaceGridDecorationSetter spaceGridDecorationSetter;
@@ -52,13 +53,24 @@ public class SendVideoMessagesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySendVideoMessagesBinding.inflate(getLayoutInflater());
+        binding = ActivityChooseVideosBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        getIntentDataAndSetupUi();
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
         changeWindowAndSystemUi();
         init();
         showContent();
         setupYiers();
+    }
+
+    private void getIntentDataAndSetupUi() {
+        String toolbarTitle = getIntent().getStringExtra(ExtraKeys.TOOLBAR_TITLE);
+        int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
+        String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
+        binding.title.setText(toolbarTitle);
+        MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
+        item.setIcon(actionIconResId);
+        item.setTitle(menuTitle);
     }
 
     private void changeWindowAndSystemUi() {
@@ -135,7 +147,7 @@ public class SendVideoMessagesActivity extends BaseActivity {
             }
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.send){
+            if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
                 intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
                 setResult(RESULT_OK, intent);

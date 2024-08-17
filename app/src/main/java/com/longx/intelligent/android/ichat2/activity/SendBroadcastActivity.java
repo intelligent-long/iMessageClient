@@ -25,26 +25,24 @@ import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
-import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class SendBroadcastActivity extends BaseActivity {
     private ActivitySendBroadcastBinding binding;
-    private ActivityResultLauncher<Intent> addImageResultLauncher;
+    private ActivityResultLauncher<Intent> addImagesResultLauncher;
+    private ActivityResultLauncher<Intent> addVideosResultLauncher;
     private ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<Media> mediaList = new ArrayList<>();
     private static final int MEDIA_COLUMN_COUNT = 3;
@@ -63,7 +61,7 @@ public class SendBroadcastActivity extends BaseActivity {
     }
 
     private void initResultLauncher() {
-        addImageResultLauncher = registerForActivityResult(
+        addImagesResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
@@ -72,6 +70,15 @@ public class SendBroadcastActivity extends BaseActivity {
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
                         List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
                         onImagesChosen(uriList, remove);
+                    }
+                }
+        );
+        addVideosResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = Objects.requireNonNull(result.getData());
+
                     }
                 }
         );
@@ -168,7 +175,7 @@ public class SendBroadcastActivity extends BaseActivity {
         });
         binding.addImageOrVideoFab.setOnClickListener(v -> {
             AddBroadcastImageOrVideoBottomSheet bottomSheet = new AddBroadcastImageOrVideoBottomSheet(this);
-            bottomSheet.setOnClickAddImageYier(v1 -> {
+            bottomSheet.setOnClickAddImagesYier(v1 -> {
                 Intent intent = new Intent(this, ChooseImagesActivity.class);
                 intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择图片");
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
@@ -182,14 +189,21 @@ public class SendBroadcastActivity extends BaseActivity {
                 intent.putExtra(ExtraKeys.URIS, uris.toArray(new Uri[0]));
                 intent.putExtra(ExtraKeys.REMOVE, true);
                 intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
-                addImageResultLauncher.launch(intent);
+                addImagesResultLauncher.launch(intent);
             });
             bottomSheet.setOnClickTakePhotoYier(v1 -> {
                 Intent intent = new Intent(this, TakePhotoActivity.class);
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
                 intent.putExtra(ExtraKeys.REMOVE, false);
-                addImageResultLauncher.launch(intent);
+                addImagesResultLauncher.launch(intent);
+            });
+            bottomSheet.setOnClickAddVideosYier(v1 -> {
+                Intent intent = new Intent(this, ChooseVideosActivity.class);
+                intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择视频");
+                intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
+                intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
+                addVideosResultLauncher.launch(intent);
             });
             bottomSheet.show();
         });

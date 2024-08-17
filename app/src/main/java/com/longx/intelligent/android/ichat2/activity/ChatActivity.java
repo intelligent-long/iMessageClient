@@ -351,7 +351,11 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             sendFileMessageResultLauncher.launch(intent);
         });
         binding.morePanelVideo.setOnClickListener(v -> {
-            sendVideoMessageResultLauncher.launch(new Intent(this, SendVideoMessagesActivity.class));
+            Intent intent = new Intent(this, ChooseVideosActivity.class);
+            intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送视频");
+            intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
+            intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
+            sendVideoMessageResultLauncher.launch(intent);
         });
         binding.morePanelRecordVideo.setOnClickListener(v -> {
             sendVideoMessageResultLauncher.launch(new Intent(this, RecordAndSendVideoActivity.class));

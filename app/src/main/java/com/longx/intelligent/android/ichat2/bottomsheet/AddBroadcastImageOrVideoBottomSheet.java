@@ -5,7 +5,6 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddBroadcastImageOrVideo2Binding;
-import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddBroadcastImageOrVideoBinding;
 
 /**
  * Created by LONG on 2024/8/4 at 上午4:40.
@@ -48,11 +47,11 @@ public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
         });
     }
 
-    public void setOnClickAddImageYier(View.OnClickListener onClickAddImageYier) {
+    public void setOnClickAddImagesYier(View.OnClickListener onClickAddImageYier) {
         this.onClickAddImageYier = onClickAddImageYier;
     }
 
-    public void setOnClickAddVideoYier(View.OnClickListener onClickAddVideoYier) {
+    public void setOnClickAddVideosYier(View.OnClickListener onClickAddVideoYier) {
         this.onClickAddVideoYier = onClickAddVideoYier;
     }
 
