@@ -365,6 +365,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .apply(requestOptions)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailReceive);
+//                    holder.binding.videoDuration.setText(TimeUtil.formatTime(itemData.chatMessage.));
                     break;
                 }
                 case ChatMessage.TYPE_VOICE:{

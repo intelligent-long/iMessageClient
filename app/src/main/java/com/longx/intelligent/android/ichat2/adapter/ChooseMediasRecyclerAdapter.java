@@ -19,7 +19,8 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChooseMedias
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
@@ -32,15 +33,10 @@ import java.util.List;
  */
 public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseMediasRecyclerAdapter.ViewHolder, ChooseMediasRecyclerAdapter.ItemData> {
     private final AppCompatActivity activity;
-    private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
     private final List<ChooseMediasRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
     private final List<Integer> checkedPositions = new ArrayList<>();
     private final List<Uri> checkedUris = new ArrayList<>();
-    private int maxAllowSize;
-
-    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ChooseMediasRecyclerAdapter.ItemData> itemDataList, List<Uri> chosenUriList){
-        this(activity, itemDataList, chosenUriList, -1);
-    }
+    private final int maxAllowSize;
 
     public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ChooseMediasRecyclerAdapter.ItemData> itemDataList, List<Uri> chosenUriList, int maxAllowSize) {
         this.activity = activity;
@@ -95,10 +91,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
 
     private void sortDataList(List<ItemData> itemDataList) {
         itemDataList.sort(Comparator.comparingLong(t0 -> t0.getMediaInfo().getAddedTime()));
-    }
-
-    public void setOnRecyclerItemClickYier(RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier) {
-        this.onRecyclerItemClickYier = onRecyclerItemClickYier;
     }
 
     @NonNull
@@ -177,31 +169,35 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         });
         switch (itemData.mediaInfo.getMediaType()){
             case IMAGE:{
-                showPreviewImage(itemData.mediaInfo.getUri(), holder);
+                showImage(itemData.mediaInfo, holder);
                 break;
             }
             case VIDEO:{
-                showVideoThumbnail(itemData.mediaInfo.getPath(), holder);
+                showVideo(itemData.mediaInfo, holder);
                 break;
             }
         }
     }
 
-    private void showPreviewImage(Uri imageFileUri, ChooseMediasRecyclerAdapter.ViewHolder holder) {
+    private void showImage(MediaInfo mediaInfo, ViewHolder holder) {
         GlideApp
                 .with(activity.getApplicationContext())
-                .load(imageFileUri)
+                .load(mediaInfo.getUri())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
+        holder.binding.videoDuration.setVisibility(View.GONE);
     }
 
-    private void showVideoThumbnail(String videoPath, @NonNull ViewHolder holder) {
+    private void showVideo(MediaInfo mediaInfo, ViewHolder holder) {
         GlideApp
                 .with(activity.getApplicationContext())
-                .load(videoPath)
+                .load(mediaInfo.getPath())
                 .frame(1000_000)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
+        holder.binding.videoDuration.setVisibility(View.VISIBLE);
+        holder.binding.videoDuration.setText(TimeUtil.formatTime(mediaInfo.getVideoDuration()));
+        holder.binding.videoDuration.bringToFront();
     }
 
     public List<Uri> getCheckedUris() {
