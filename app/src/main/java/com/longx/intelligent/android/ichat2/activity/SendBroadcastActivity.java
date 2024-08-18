@@ -15,7 +15,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.SendBroadcastMediasRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastImageOrVideoBottomSheet;
+import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastMediaBottomSheet;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
@@ -164,7 +164,7 @@ public class SendBroadcastActivity extends BaseActivity {
             });
         });
         binding.addImageOrVideoFab.setOnClickListener(v -> {
-            AddBroadcastImageOrVideoBottomSheet bottomSheet = new AddBroadcastImageOrVideoBottomSheet(this);
+            AddBroadcastMediaBottomSheet bottomSheet = new AddBroadcastMediaBottomSheet(this);
             bottomSheet.setOnClickAddMediaYier(v1 -> {
                 Intent intent = new Intent(this, ChooseMediasActivity.class);
                 intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择媒体");

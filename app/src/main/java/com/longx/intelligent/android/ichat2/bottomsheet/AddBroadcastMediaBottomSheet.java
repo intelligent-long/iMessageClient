@@ -4,25 +4,25 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddBroadcastImageOrVideo2Binding;
+import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddBroadcastMediaBinding;
 
 /**
  * Created by LONG on 2024/8/4 at 上午4:40.
  */
-public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
-    private BottomSheetAddBroadcastImageOrVideo2Binding binding;
+public class AddBroadcastMediaBottomSheet extends AbstractBottomSheet {
+    private BottomSheetAddBroadcastMediaBinding binding;
     private View.OnClickListener onClickAddMediaYier;
     private View.OnClickListener onClickTakePhotoYier;
     private View.OnClickListener onClickRecordVideoYier;
 
-    public AddBroadcastImageOrVideoBottomSheet(AppCompatActivity activity) {
+    public AddBroadcastMediaBottomSheet(AppCompatActivity activity) {
         super(activity);
         create();
     }
 
     @Override
     protected void onCreate() {
-        binding = BottomSheetAddBroadcastImageOrVideo2Binding.inflate(getActivity().getLayoutInflater());
+        binding = BottomSheetAddBroadcastMediaBinding.inflate(getActivity().getLayoutInflater());
         setContentView(binding.getRoot());
         setupListeners();
     }
