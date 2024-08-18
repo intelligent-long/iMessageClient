@@ -37,4 +37,5 @@ public class ExtraKeys {
     public static final String BUTTON_TEXT = "button_text";
     public static final String GLIDE_LOAD = "glide_load";
     public static final String REMOVE = "remove";
+    public static final String MEDIA_TYPE = "media_type";
 }

@@ -1,24 +1,27 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import androidx.annotation.NonNull;
+import androidx.exifinterface.media.ExifInterface;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
-import androidx.annotation.NonNull;
-import androidx.exifinterface.media.ExifInterface;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChooseMediasRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.databinding.ActivityChooseVideosBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityChooseMediasBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryFooterBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBinding;
+import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.media.helper.LocationHelper;
@@ -27,6 +30,7 @@ import com.longx.intelligent.android.ichat2.ui.LocationNameSwitcher;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.value.Variables;
@@ -35,25 +39,30 @@ import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecora
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class ChooseVideosActivity extends BaseActivity {
-    private ActivityChooseVideosBinding binding;
+public class ChooseMediasActivity extends BaseActivity{
+    private ActivityChooseMediasBinding binding;
     private LayoutGalleryHeaderBinding headerBinding;
     private LayoutGalleryFooterBinding footerBinding;
-    private SpaceGridDecorationSetter spaceGridDecorationSetter;
-    private LocationNameSwitcher locationNameSwitcher;
-    private String currentDirectoryPath;
-    private boolean uiInited;
+    private MediaType mediaType;
     private ChooseMediasRecyclerAdapter adapter;
     private GridLayoutManager gridLayoutManager;
+    private SpaceGridDecorationSetter spaceGridDecorationSetter;
     private int headerSpaceOriginalHeight;
-    private List<DirectoryInfo> allVideoDirectories;
+    private LocationNameSwitcher locationNameSwitcher;
+    private List<DirectoryInfo> allMediaDirectories;
+    private String currentDirectoryPath;
+    private boolean uiInited;
+    private List<Uri> chosenUriList;
+    private int maxAllowSize;
+    private boolean remove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityChooseVideosBinding.inflate(getLayoutInflater());
+        binding = ActivityChooseMediasBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getIntentDataAndSetupUi();
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
@@ -64,6 +73,11 @@ public class ChooseVideosActivity extends BaseActivity {
     }
 
     private void getIntentDataAndSetupUi() {
+        String mediaTypeEnumName = getIntent().getStringExtra(ExtraKeys.MEDIA_TYPE);
+        if(mediaTypeEnumName != null){
+            mediaType = MediaType.valueOf(mediaTypeEnumName);
+        }
+        remove = getIntent().getBooleanExtra(ExtraKeys.REMOVE, true);
         String toolbarTitle = getIntent().getStringExtra(ExtraKeys.TOOLBAR_TITLE);
         int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
         String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
@@ -71,6 +85,11 @@ public class ChooseVideosActivity extends BaseActivity {
         MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
         item.setIcon(actionIconResId);
         item.setTitle(menuTitle);
+        Parcelable[] parcelableArrayExtra = getIntent().getParcelableArrayExtra(ExtraKeys.URIS);
+        if(parcelableArrayExtra != null) {
+            chosenUriList = Utils.parseParcelableArray(parcelableArrayExtra);
+        }
+        maxAllowSize = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_SIZE, -1);
     }
 
     private void changeWindowAndSystemUi() {
@@ -96,12 +115,55 @@ public class ChooseVideosActivity extends BaseActivity {
         binding.recyclerView.scrollToEnd(false);
     }
 
+    private void setupYiers() {
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView r, int dx, int dy) {
+                super.onScrolled(r, dx, dy);
+                updateInfos();
+            }
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.action){
+                Intent intent = new Intent();
+                intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
+                intent.putExtra(ExtraKeys.REMOVE, remove);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+            return true;
+        });
+        binding.directoryAutoCompleteTextView.setOnItemClickListener(new AutoCompleteTextViewAutoSelectOnItemClickYier(binding.directoryAutoCompleteTextView){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                super.onItemClick(parent, view, position, id);
+                if(position == 0) {
+                    currentDirectoryPath = null;
+                }else {
+                    DirectoryInfo directoryInfo = allMediaDirectories.get(position - 1);
+                    currentDirectoryPath = directoryInfo.getPath();
+                }
+                showContent();
+                setupYiers();
+                binding.recyclerView.scrollToEnd(false);
+            }
+        });
+    }
+
     private void initAutoCompleteTextView() {
-        allVideoDirectories = MediaStoreHelper.getAllVideoDirectories(this);
         List<String> directoryNames = new ArrayList<>();
-        directoryNames.add("所有视频");
-        allVideoDirectories.forEach(videoDirectory -> {
-            directoryNames.add(new File(videoDirectory.getPath()).getName());
+        if(mediaType == null){
+            allMediaDirectories = MediaStoreHelper.getAllMediaDirectories(this);
+            directoryNames.add("所有媒体");
+        }else if(mediaType.equals(MediaType.IMAGE)) {
+            allMediaDirectories = MediaStoreHelper.getAllImageDirectories(this);
+            directoryNames.add("所有图片");
+        }else if(mediaType.equals(MediaType.VIDEO)){
+            allMediaDirectories = MediaStoreHelper.getAllVideoDirectories(this);
+            directoryNames.add("所有视频");
+        }
+        allMediaDirectories.forEach(mediaDirectory -> {
+            directoryNames.add(new File(mediaDirectory.getPath()).getName());
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -114,66 +176,35 @@ public class ChooseVideosActivity extends BaseActivity {
         }
     }
 
-    private void setupYiers() {
-        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView r, int dx, int dy) {
-                super.onScrolled(r, dx, dy);
-                updateInfos();
-            }
-        });
-        adapter.setOnRecyclerItemClickYier((position, view) -> {
-            ArrayList<MediaInfo> videoInfoList = new ArrayList<>();
-            for (ChooseMediasRecyclerAdapter.ItemData itemData : adapter.getItemDataList()) {
-                videoInfoList.add(itemData.getMediaInfo());
-            }
-            Intent intent = new Intent(this, PreviewToSendVideoActivity.class);
-            intent.putExtra(ExtraKeys.URI, videoInfoList.get(position).getUri());
-            startActivity(intent);
-        });
-        binding.directoryAutoCompleteTextView.setOnItemClickListener(new AutoCompleteTextViewAutoSelectOnItemClickYier(binding.directoryAutoCompleteTextView){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                super.onItemClick(parent, view, position, id);
-                if(position == 0) {
-                    currentDirectoryPath = null;
-                }else {
-                    DirectoryInfo directoryInfo = allVideoDirectories.get(position - 1);
-                    currentDirectoryPath = directoryInfo.getPath();
-                }
-                showContent();
-                setupYiers();
-                binding.recyclerView.scrollToEnd(false);
-            }
-        });
-        binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.action){
-                Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-            return true;
-        });
-    }
-
     private void showContent() {
-        adapter = new ChooseMediasRecyclerAdapter(this, getData(), null);
+        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenUriList, maxAllowSize);
         showMedias();
         binding.recyclerView.post(this::updateInfos);
         showTotalSize();
     }
 
     private List<ChooseMediasRecyclerAdapter.ItemData> getData(){
-        List<MediaInfo> videos;
+        List<MediaInfo> mediaInfos = Collections.emptyList();
         if(currentDirectoryPath == null) {
-            videos = MediaStoreHelper.getAllVideos(this);
+            if(mediaType == null){
+                mediaInfos = MediaStoreHelper.getAllMedias(this);
+            }else if(mediaType.equals(MediaType.IMAGE)) {
+                mediaInfos = MediaStoreHelper.getAllImages(this);
+            }else if(mediaType.equals(MediaType.VIDEO)){
+                mediaInfos = MediaStoreHelper.getAllVideos(this);
+            }
         }else {
-            videos = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath);
+            if(mediaType == null){
+                mediaInfos = MediaStoreHelper.getAllDirectoryMedias(this, currentDirectoryPath);
+            }else if(mediaType.equals(MediaType.IMAGE)) {
+                mediaInfos = MediaStoreHelper.getAllDirectoryImages(this, currentDirectoryPath);
+            }else if(mediaType.equals(MediaType.VIDEO)){
+                mediaInfos = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath);
+            }
         }
         List<ChooseMediasRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        videos.forEach(video -> {
-            itemDataList.add(new ChooseMediasRecyclerAdapter.ItemData(video));
+        mediaInfos.forEach(mediaInfo -> {
+            itemDataList.add(new ChooseMediasRecyclerAdapter.ItemData(mediaInfo));
         });
         return itemDataList;
     }
@@ -212,14 +243,14 @@ public class ChooseVideosActivity extends BaseActivity {
     }
 
     private void showTotalSize(){
-        int videosCount = MediaStoreHelper.getVideoCount(this, currentDirectoryPath, false);
-        footerBinding.total.setText(videosCount + "个视频");
+        int imagesCount = MediaStoreHelper.getImagesCount(this, currentDirectoryPath, false);
+        footerBinding.total.setText(imagesCount + "张照片");
     }
 
     private void updateInfos() {
         ChooseMediasRecyclerAdapter chooseMediasRecyclerAdapter = (ChooseMediasRecyclerAdapter) binding.recyclerView.getAdapter();
         if(chooseMediasRecyclerAdapter.getItemDataList().isEmpty()) return;
-        androidx.recyclerview.widget.RecyclerView.LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
         if(layoutManager instanceof LinearLayoutManager){
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
             int firstItemPosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();

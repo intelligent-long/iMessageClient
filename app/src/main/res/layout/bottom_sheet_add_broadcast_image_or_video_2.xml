@@ -24,7 +24,7 @@
         android:rowCount="1">
 
         <LinearLayout
-            android:id="@+id/add_image"
+            android:id="@+id/add_media"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
@@ -47,34 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:text="图片"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/add_video"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            android:layout_row="0"
-            android:layout_column="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:src="@drawable/slideshow_fill_24px"
-                app:tint="?attr/colorControlNormal"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:text="视频"/>
+                android:text="媒体"/>
         </LinearLayout>
 
         <LinearLayout

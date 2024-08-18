@@ -41,8 +41,7 @@ import retrofit2.Response;
 
 public class SendBroadcastActivity extends BaseActivity {
     private ActivitySendBroadcastBinding binding;
-    private ActivityResultLauncher<Intent> addImagesResultLauncher;
-    private ActivityResultLauncher<Intent> addVideosResultLauncher;
+    private ActivityResultLauncher<Intent> addMediasResultLauncher;
     private ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<Media> mediaList = new ArrayList<>();
     private static final int MEDIA_COLUMN_COUNT = 3;
@@ -61,7 +60,7 @@ public class SendBroadcastActivity extends BaseActivity {
     }
 
     private void initResultLauncher() {
-        addImagesResultLauncher = registerForActivityResult(
+        addMediasResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
@@ -70,15 +69,6 @@ public class SendBroadcastActivity extends BaseActivity {
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
                         List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
                         onImagesChosen(uriList, remove);
-                    }
-                }
-        );
-        addVideosResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Intent data = Objects.requireNonNull(result.getData());
-
                     }
                 }
         );
@@ -175,9 +165,9 @@ public class SendBroadcastActivity extends BaseActivity {
         });
         binding.addImageOrVideoFab.setOnClickListener(v -> {
             AddBroadcastImageOrVideoBottomSheet bottomSheet = new AddBroadcastImageOrVideoBottomSheet(this);
-            bottomSheet.setOnClickAddImagesYier(v1 -> {
-                Intent intent = new Intent(this, ChooseImagesActivity.class);
-                intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择图片");
+            bottomSheet.setOnClickAddMediaYier(v1 -> {
+                Intent intent = new Intent(this, ChooseMediasActivity.class);
+                intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择媒体");
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
                 List<Uri> uris = new ArrayList<>();
@@ -189,21 +179,14 @@ public class SendBroadcastActivity extends BaseActivity {
                 intent.putExtra(ExtraKeys.URIS, uris.toArray(new Uri[0]));
                 intent.putExtra(ExtraKeys.REMOVE, true);
                 intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
-                addImagesResultLauncher.launch(intent);
+                addMediasResultLauncher.launch(intent);
             });
             bottomSheet.setOnClickTakePhotoYier(v1 -> {
                 Intent intent = new Intent(this, TakePhotoActivity.class);
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
                 intent.putExtra(ExtraKeys.REMOVE, false);
-                addImagesResultLauncher.launch(intent);
-            });
-            bottomSheet.setOnClickAddVideosYier(v1 -> {
-                Intent intent = new Intent(this, ChooseVideosActivity.class);
-                intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择视频");
-                intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
-                intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
-                addVideosResultLauncher.launch(intent);
+                addMediasResultLauncher.launch(intent);
             });
             bottomSheet.show();
         });
@@ -233,5 +216,9 @@ public class SendBroadcastActivity extends BaseActivity {
             adapter = new SendBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaList);
             binding.recyclerViewMedias.setAdapter(adapter);
         }
+    }
+
+    private void onVideosChosen(List<Uri> uriList){
+
     }
 }

@@ -14,14 +14,14 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToSendVideoBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityPreviewToChooseVideoBinding;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
-public class PreviewToSendVideoActivity extends BaseActivity {
-    private ActivityPreviewToSendVideoBinding binding;
+public class PreviewToChooseVideoActivity extends BaseActivity {
+    private ActivityPreviewToChooseVideoBinding binding;
     private Uri uri;
     private ExoPlayer player;
     private Handler handler;
@@ -32,7 +32,7 @@ public class PreviewToSendVideoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPreviewToSendVideoBinding.inflate(getLayoutInflater());
+        binding = ActivityPreviewToChooseVideoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));

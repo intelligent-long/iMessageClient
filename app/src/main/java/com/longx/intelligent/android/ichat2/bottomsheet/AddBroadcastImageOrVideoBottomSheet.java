@@ -11,8 +11,7 @@ import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddBroadcastI
  */
 public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
     private BottomSheetAddBroadcastImageOrVideo2Binding binding;
-    private View.OnClickListener onClickAddImageYier;
-    private View.OnClickListener onClickAddVideoYier;
+    private View.OnClickListener onClickAddMediaYier;
     private View.OnClickListener onClickTakePhotoYier;
     private View.OnClickListener onClickRecordVideoYier;
 
@@ -29,13 +28,9 @@ public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
     }
 
     private void setupListeners() {
-        binding.addImage.setOnClickListener(v -> {
+        binding.addMedia.setOnClickListener(v -> {
             dismiss();
-            if(onClickAddImageYier != null) onClickAddImageYier.onClick(v);
-        });
-        binding.addVideo.setOnClickListener(v -> {
-            dismiss();
-            if(onClickAddVideoYier != null) onClickAddVideoYier.onClick(v);
+            if(onClickAddMediaYier != null) onClickAddMediaYier.onClick(v);
         });
         binding.takePhoto.setOnClickListener(v -> {
             dismiss();
@@ -47,12 +42,8 @@ public class AddBroadcastImageOrVideoBottomSheet extends AbstractBottomSheet {
         });
     }
 
-    public void setOnClickAddImagesYier(View.OnClickListener onClickAddImageYier) {
-        this.onClickAddImageYier = onClickAddImageYier;
-    }
-
-    public void setOnClickAddVideosYier(View.OnClickListener onClickAddVideoYier) {
-        this.onClickAddVideoYier = onClickAddVideoYier;
+    public void setOnClickAddMediaYier(View.OnClickListener onClickAddMediaYier) {
+        this.onClickAddMediaYier = onClickAddMediaYier;
     }
 
     public void setOnClickTakePhotoYier(View.OnClickListener onClickTakePhotoYier) {

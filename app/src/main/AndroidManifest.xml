@@ -57,13 +57,8 @@
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
-            android:name=".activity.PreviewToSendVideoActivity"
+            android:name=".activity.PreviewToChooseVideoActivity"
             android:exported="false"
-            android:theme="@style/DarkStatusBarActivity" />
-        <activity
-            android:name=".activity.ChooseVideosActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
             android:name=".activity.ChatFileActivity"
@@ -119,7 +114,7 @@
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
         <activity
-            android:name=".activity.ChooseImagesActivity"
+            android:name=".activity.ChooseMediasActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/DarkStatusBarActivity" />

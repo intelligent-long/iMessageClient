@@ -35,6 +35,7 @@ import com.longx.intelligent.android.ichat2.data.request.SendVideoChatMessagePos
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
+import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -329,7 +330,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             if(hasFocus) hideMorePanel();
         });
         binding.morePanelImage.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ChooseImagesActivity.class);
+            Intent intent = new Intent(this, ChooseMediasActivity.class);
+            intent.putExtra(ExtraKeys.MEDIA_TYPE, MediaType.IMAGE.name());
             intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送图片");
             intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
             intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
@@ -351,10 +353,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             sendFileMessageResultLauncher.launch(intent);
         });
         binding.morePanelVideo.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ChooseVideosActivity.class);
+            Intent intent = new Intent(this, ChooseMediasActivity.class);
+            intent.putExtra(ExtraKeys.MEDIA_TYPE, MediaType.VIDEO.name());
             intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送视频");
             intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
             intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
+            intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT);
             sendVideoMessageResultLauncher.launch(intent);
         });
         binding.morePanelRecordVideo.setOnClickListener(v -> {

@@ -27,7 +27,7 @@ public class MediaStoreHelper {
         return getDirectoryImages(context, null, page, pageSize);
     }
 
-    public static List<MediaInfo> geAllImages(Context context) {
+    public static List<MediaInfo> getAllImages(Context context) {
         return getAllDirectoryImages(context, null);
     }
 
@@ -224,7 +224,7 @@ public class MediaStoreHelper {
     }
 
     private static List<MediaInfo> getAllMedias(Context context, String directoryPath, MediaType mediaType) {
-        List<MediaInfo> mediaUris = new ArrayList<>();
+        List<MediaInfo> mediaInfos = new ArrayList<>();
         List<String> projection = new ArrayList<>();
         projection.add(MediaStore.Files.FileColumns.DATA);
         projection.add(MediaStore.Files.FileColumns.MEDIA_TYPE);
@@ -354,7 +354,7 @@ public class MediaStoreHelper {
                         dateModified = cursor.getLong(columnIndexImageDateModified);
                         int imageWidth = cursor.getInt(columnIndexImageWidth);
                         int imageHeight = cursor.getInt(columnIndexImageHeight);
-                        mediaUris.add(new MediaInfo(contentUri, filePath, MediaType.IMAGE, dateAdded, dateModified, dateTaken, -1, imageWidth, imageHeight, -1, -1));
+                        mediaInfos.add(new MediaInfo(contentUri, filePath, MediaType.IMAGE, dateAdded, dateModified, dateTaken, -1, imageWidth, imageHeight, -1, -1));
                     } else if (mediaType1 == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO) {
                         Uri contentUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaId));
                         dateAdded = cursor.getLong(columnIndexVideoDateAdded);
@@ -363,14 +363,14 @@ public class MediaStoreHelper {
                         long videoDuration = cursor.getLong(columnIndexDuration);
                         int videoWidth = cursor.getInt(columnIndexVideoWidth);
                         int videoHeight = cursor.getInt(columnIndexVideoHeight);
-                        mediaUris.add(new MediaInfo(contentUri, filePath, MediaType.VIDEO, dateAdded, dateModified, dateTaken, videoDuration, -1, -1, videoWidth, videoHeight));
+                        mediaInfos.add(new MediaInfo(contentUri, filePath, MediaType.VIDEO, dateAdded, dateModified, dateTaken, videoDuration, -1, -1, videoWidth, videoHeight));
                     }
                 }
             } finally {
                 cursor.close();
             }
         }
-        return mediaUris;
+        return mediaInfos;
     }
 
     public static List<DirectoryInfo> getAllMediaDirectories(Context context) {

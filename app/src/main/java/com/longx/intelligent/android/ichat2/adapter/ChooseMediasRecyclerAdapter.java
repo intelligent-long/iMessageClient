@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +11,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.PreviewToChooseImageActivity;
+import com.longx.intelligent.android.ichat2.activity.PreviewToChooseVideoActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChooseMediasBinding;
+import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -127,8 +130,16 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         Uri uri = Uri.fromFile(new File(itemData.mediaInfo.getPath()));
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.binding.getRoot().setOnClickListener(v -> {
-            if (onRecyclerItemClickYier != null)
-                onRecyclerItemClickYier.onRecyclerItemClick(position, v);
+            MediaInfo mediaInfo = itemDataList.get(position).getMediaInfo();
+            if(mediaInfo.getMediaType().equals(MediaType.IMAGE)) {
+                Intent intent = new Intent(activity, PreviewToChooseImageActivity.class);
+                intent.putExtra(ExtraKeys.FILE_PATH, mediaInfo.getPath());
+                activity.startActivity(intent);
+            }else if(mediaInfo.getMediaType().equals(MediaType.VIDEO)){
+                Intent intent = new Intent(activity, PreviewToChooseVideoActivity.class);
+                intent.putExtra(ExtraKeys.URI, mediaInfo.getUri());
+                activity.startActivity(intent);
+            }
         });
         if(checkedPositions.contains(position + 1)){
             holder.binding.checkButton.setVisibility(View.GONE);
@@ -188,7 +199,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(videoPath)
-                .frame(1000000)
+                .frame(1000_000)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
     }
