@@ -26,7 +26,6 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
     private boolean bottomInit;
     private final int bottomInitBehavior;
     private final List<ApproachEdgeYierTrigger> approachEdgeYierTriggers = new ArrayList<>();
-    private final List<OnApproachEdgeYier> onApproachEdgeYiers = new ArrayList<>();
     private final Set<OnScrollUpDownYier> onScrollUpDownYiers = new HashSet<>();
     private final Set<OnThresholdScrollUpDownYier> onThresholdScrollUpDownYiers = new HashSet<>();
 
@@ -345,7 +344,6 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
     }
 
     public void addOnApproachEdgeYier(int approach, OnApproachEdgeYier onApproachEdgeYier){
-        this.onApproachEdgeYiers.add(onApproachEdgeYier);
         ApproachEdgeYierTrigger approachEdgeYierTrigger = new ApproachEdgeYierTrigger(onApproachEdgeYier, approach);
         approachEdgeYierTriggers.add(approachEdgeYierTrigger);
         addOnScrollListener(approachEdgeYierTrigger);

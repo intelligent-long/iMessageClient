@@ -11,6 +11,7 @@ public class Constants {
     public static final SimpleDateFormat COMMON_SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
     public static final long CHAT_MESSAGE_SHOW_TIME_INTERVAL = 5 * 60 * 1000;
     public static final double GRID_SPACE_DP = 2.7;
+    public static final int GRID_COLUMN = 3;
     public static final String TIME_FORMAT_PATTERN_Y_M_D = "yyyy 年 M 月 d 日";
     public static final String TIME_FORMAT_PATTERN_D = "d 日";
     public static final String TIME_FORMAT_PATTERN_M_D = "M 月 d 日";

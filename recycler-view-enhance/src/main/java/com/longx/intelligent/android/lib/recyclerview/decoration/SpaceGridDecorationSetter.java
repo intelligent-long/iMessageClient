@@ -28,7 +28,7 @@ public class SpaceGridDecorationSetter {
 
     private static int dpToPx(Context context, double dp) {
         float density = context.getResources().getDisplayMetrics().density;
-        return Math.round((int)(dp * density));
+        return Math.round((float) (dp * density));
     }
 
     public void remove(RecyclerView recyclerView){

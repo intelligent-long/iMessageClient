@@ -16,7 +16,7 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
     private int spacing;
     private boolean includeEdge;
     private SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider;
-    private int recyclerViewWidth = -1; // 用于存储 RecyclerView 的实际宽度
+    private int recyclerViewWidth = -1;
 
     public SpaceGridItemDecoration(Context context, int spanCount, int spacing, boolean includeEdge) {
         this.context = context;
@@ -27,7 +27,6 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, androidx.recyclerview.widget.RecyclerView parent, RecyclerView.State state) {
-        // 获取 RecyclerView 的实际宽度
         if (recyclerViewWidth == -1 && parent.getWidth() > 0) {
             recyclerViewWidth = parent.getWidth();
         }
@@ -36,7 +35,7 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     private void setItemSpace(Rect outRect, View view, RecyclerView parent) {
-        int position = parent.getChildAdapterPosition(view); // item position
+        int position = parent.getChildAdapterPosition(view);
         if(parent.isPositionHeader(position) || parent.isPositionFooter(position)){
             return;
         }
@@ -44,27 +43,27 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
             position -= 1;
         }
 
-        int column = position % spanCount; // item column
+        int column = position % spanCount;
 
         if (includeEdge) {
             outRect.left = spacing - column * spacing / spanCount;
             outRect.right = (column + 1) * spacing / spanCount;
 
-            if (position < spanCount) { // top edge
+            if (position < spanCount) {
                 outRect.top = spacing;
             }
-            outRect.bottom = spacing; // item bottom
+            outRect.bottom = spacing;
         } else {
             outRect.left = column * spacing / spanCount;
             outRect.right = spacing - (column + 1) * spacing / spanCount;
             if (position >= spanCount) {
-                outRect.top = spacing; // item top
+                outRect.top = spacing;
             }
         }
     }
 
     private void setItemSize(View view, RecyclerView parent) {
-        int position = parent.getChildAdapterPosition(view); // item position
+        int position = parent.getChildAdapterPosition(view);
         if(parent.isPositionHeader(position) || parent.isPositionFooter(position)){
             return;
         }
@@ -74,7 +73,6 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
             itemPosition = position - 1;
         }
 
-        // 获取 RecyclerView 的实际宽度
         if (recyclerViewWidth == -1) {
             recyclerViewWidth = parent.getWidth();
         }
@@ -92,7 +90,6 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     private int calculateItemWidth() {
-        // 使用 RecyclerView 的实际宽度计算 item 宽度
         return (recyclerViewWidth - (spanCount - 1) * spacing) / spanCount;
     }
 

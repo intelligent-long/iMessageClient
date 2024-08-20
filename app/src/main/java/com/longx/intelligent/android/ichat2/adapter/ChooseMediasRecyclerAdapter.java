@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.PreviewToChooseImageActivity;
@@ -117,7 +118,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        resetItemView(holder);
         ItemData itemData = itemDataList.get(position);
         Uri uri = Uri.fromFile(new File(itemData.mediaInfo.getPath()));
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -182,7 +182,8 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private void showImage(MediaInfo mediaInfo, ViewHolder holder) {
         GlideApp
                 .with(activity.getApplicationContext())
-                .load(mediaInfo.getUri())
+                .load(mediaInfo.getPath())
+                .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
         holder.binding.videoDuration.setVisibility(View.GONE);
@@ -193,6 +194,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 .with(activity.getApplicationContext())
                 .load(mediaInfo.getPath())
                 .frame(1000_000)
+                .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
         holder.binding.videoDuration.setVisibility(View.VISIBLE);

@@ -34,7 +34,6 @@ public class MaxHeightSpaceGridItemDecoration extends RecyclerView.ItemDecoratio
             parent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    // 移除监听器以避免多次调用
                     parent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     recyclerViewWidth = parent.getWidth();
                     widthInitialized = true;

@@ -210,20 +210,19 @@ public class ChooseMediasActivity extends BaseActivity{
     }
 
     private void showMedias(){
-        int gridColumn = 4;
-        gridLayoutManager = new GridLayoutManager(this, gridColumn);
+        gridLayoutManager = new GridLayoutManager(this, Constants.GRID_COLUMN);
         binding.recyclerView.setLayoutManager(gridLayoutManager);
         binding.recyclerView.setAdapter(adapter);
-        setupGrid(gridColumn);
+        setupGrid();
     }
 
-    private void setupGrid(int columnCount) {
-        gridLayoutManager.setSpanCount(columnCount);
+    private void setupGrid() {
+        gridLayoutManager.setSpanCount(Constants.GRID_COLUMN);
         binding.recyclerView.removeHeaderView();
         binding.recyclerView.removeFooterView();
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
-        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, columnCount, Constants.GRID_SPACE_DP, false, null);
+        spaceGridDecorationSetter.setSpace(this, binding.recyclerView, Constants.GRID_COLUMN, Constants.GRID_SPACE_DP, false, null);
         postCalculateAndSetHeaderSpaceHeight();
     }
 
