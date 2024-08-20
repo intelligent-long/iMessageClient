@@ -36,6 +36,7 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
+import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -335,7 +336,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送图片");
             intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
             intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
-            intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT);
+            intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT);
             sendImageMessageResultLauncher.launch(intent);
         });
         binding.morePanelTakePhoto.setOnClickListener(v -> {
@@ -358,7 +359,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送视频");
             intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
             intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
-            intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT);
+            intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT);
             sendVideoMessageResultLauncher.launch(intent);
         });
         binding.morePanelRecordVideo.setOnClickListener(v -> {
@@ -549,8 +550,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = Objects.requireNonNull(result.getData());
-                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
-                        List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
+                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.MEDIA_INFOS));
+                        List<MediaInfo> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
                         if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
                             MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
                         }else {
@@ -598,19 +599,19 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     if(result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null) {
-                            Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
-                            List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
-                            for (Uri uri : uriList) {
-                                long fileSize = FileUtil.getFileSize(this, uri);
+                            Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.MEDIA_INFOS));
+                            List<MediaInfo> mediaInfos = Utils.parseParcelableArray(parcelableArrayExtra);
+                            for (MediaInfo mediaInfo : mediaInfos) {
+                                long fileSize = FileUtil.getFileSize(this, mediaInfo.getUri());
                                 if(fileSize > Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE){
                                     MessageDisplayer.autoShow(this, "发送文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE), MessageDisplayer.Duration.LONG);
                                     return;
                                 }
                             }
-                            if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT){
+                            if(mediaInfos.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT){
                                 MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT + " 个文件", MessageDisplayer.Duration.LONG);
                             }else {
-                                onSendVideoMessages(uriList);
+                                onSendVideoMessages(mediaInfos);
                             }
                         }
                     }
@@ -618,17 +619,17 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         );
     }
 
-    private void onSendImageMessages(List<Uri> uriList){
+    private void onSendImageMessages(List<MediaInfo> mediaInfos){
         AtomicInteger index = new AtomicInteger();
-        sendImageMessages(uriList, index);
+        sendImageMessages(mediaInfos, index);
     }
 
-    private void sendImageMessages(List<Uri> uriList, AtomicInteger index){
-        if(index.get() == uriList.size()) return;
-        Uri uri = uriList.get(index.get());
-        String fileName = FileHelper.getFileNameFromUri(this, uri);
+    private void sendImageMessages(List<MediaInfo> mediaInfos, AtomicInteger index){
+        if(index.get() == mediaInfos.size()) return;
+        MediaInfo mediaInfo = mediaInfos.get(index.get());
+        String fileName = FileHelper.getFileNameFromUri(this, mediaInfo.getUri());
         SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), fileName);
-        ChatApiCaller.sendImageChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+        ChatApiCaller.sendImageChatMessage(this, this, mediaInfo.getUri(), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
@@ -658,7 +659,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     });
                 });
                 index.incrementAndGet();
-                sendImageMessages(uriList, index);
+                sendImageMessages(mediaInfos, index);
             }
 
             @Override
@@ -676,13 +677,13 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             @Override
             public void complete(Call<OperationData> call) {
                 super.complete(call);
-                if(index.get() == uriList.size()){
+                if(index.get() == mediaInfos.size()){
                     toNormalState();
                 }
             }
         }, (current, total, i) -> {
             runOnUiThread(() -> {
-                binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + uriList.size());
+                binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + mediaInfos.size());
                 int progress = (int)((current / (double) total) * binding.sendProgressIndicator.getMax());
                 binding.sendProgressIndicator.setProgress(progress, true);
             });
@@ -760,17 +761,17 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         });
     }
 
-    private void onSendVideoMessages(List<Uri> uriList){
+    private void onSendVideoMessages(List<MediaInfo> mediaInfos){
         AtomicInteger index = new AtomicInteger();
-        sendVideoMessages(uriList, index);
+        sendVideoMessages(mediaInfos, index);
     }
 
-    private void sendVideoMessages(List<Uri> uriList, AtomicInteger index){
-        if(index.get() == uriList.size()) return;
-        Uri uri = uriList.get(index.get());
-        String fileName = FileHelper.getFileNameFromUri(this, uri);
+    private void sendVideoMessages(List<MediaInfo> mediaInfos, AtomicInteger index){
+        if(index.get() == mediaInfos.size()) return;
+        MediaInfo mediaInfo = mediaInfos.get(index.get());
+        String fileName = FileHelper.getFileNameFromUri(this, mediaInfo.getUri());
         SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(channel.getIchatId(), fileName);
-        ChatApiCaller.sendVideoChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+        ChatApiCaller.sendVideoChatMessage(this, this, mediaInfo.getUri(), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
@@ -795,7 +796,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             @Override
             public void complete(Call<OperationData> call) {
                 super.complete(call);
-                if (index.get() == uriList.size()) {
+                if (index.get() == mediaInfos.size()) {
                     toNormalState();
                 }
             }
@@ -820,12 +821,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     });
                 });
                 index.incrementAndGet();
-                sendVideoMessages(uriList, index);
+                sendVideoMessages(mediaInfos, index);
             }
 
         }, (current, total, i) -> {
             runOnUiThread(() -> {
-                binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + uriList.size());
+                binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + mediaInfos.size());
                 int progress = (int)((current / (double) total) * binding.sendProgressIndicator.getMax());
                 binding.sendProgressIndicator.setProgress(progress, true);
             });

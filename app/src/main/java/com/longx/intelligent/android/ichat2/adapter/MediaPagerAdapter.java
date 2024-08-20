@@ -30,6 +30,7 @@ import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMediaBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
+import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -55,27 +56,27 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     private final Map<Integer, ViewHolder> viewHolderMap = new HashMap<>();
     private final boolean glideLoad;
 
-    public MediaPagerAdapter(MediaActivity activity, List<Media> mediaList, boolean glideLoad) {
+    public MediaPagerAdapter(MediaActivity activity, List<MediaInfo> mediaInfoList, boolean glideLoad) {
         this.activity = activity;
         List<ItemData> itemDataList = new ArrayList<>();
-        mediaList.forEach(media -> {
-            itemDataList.add(new ItemData(media));
+        mediaInfoList.forEach(mediaInfo -> {
+            itemDataList.add(new ItemData(mediaInfo));
         });
         this.itemDataList = itemDataList;
         this.glideLoad = glideLoad;
     }
 
     public static class ItemData{
-        private final Media media;
+        private final MediaInfo mediaInfo;
         private ExoPlayer player;
         private Runnable updateProgressAction;
 
-        public ItemData(Media media) {
-            this.media = media;
+        public ItemData(MediaInfo mediaInfo) {
+            this.mediaInfo = mediaInfo;
         }
 
-        public Media getMedia() {
-            return media;
+        public MediaInfo getMediaInfo() {
+            return mediaInfo;
         }
     }
 
@@ -109,23 +110,23 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         resetView(holder);
         if(activity.isPureContent()){
             UiUtil.setViewVisibility(holder.binding.topShadowCover, View.GONE);
-            if(itemDataList.get(position).media.getMediaType() == MediaType.VIDEO) {
+            if(itemDataList.get(position).mediaInfo.getMediaType() == MediaType.VIDEO) {
                 UiUtil.setViewVisibility(holder.binding.playControl, View.GONE);
             }
         }else {
             UiUtil.setViewVisibility(holder.binding.topShadowCover, View.VISIBLE);
-            if(itemDataList.get(position).media.getMediaType() == MediaType.VIDEO) {
+            if(itemDataList.get(position).mediaInfo.getMediaType() == MediaType.VIDEO) {
                 UiUtil.setViewVisibility(holder.binding.playControl, View.VISIBLE);
             }
         }
         viewHolderMap.put(position, holder);
-        Media media = itemDataList.get(position).media;
-        switch (media.getMediaType()){
+        MediaInfo mediaInfo = itemDataList.get(position).mediaInfo;
+        switch (mediaInfo.getMediaType()){
             case IMAGE:{
                 changeTopCoverHeight(holder, false);
                 holder.binding.topShadowCover.bringToFront();
                 holder.binding.photoView.setVisibility(View.VISIBLE);
-                Uri imageUri = media.getUri();
+                Uri imageUri = mediaInfo.getUri();
                 holder.binding.photoView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener(){
                     @Override
                     public void onImageLoadError(Exception e) {
@@ -249,7 +250,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         binding.playerView.setVisibility(View.GONE);
         binding.playControl.setVisibility(View.VISIBLE);
         binding.playControl.bringToFront();
-        MediaItem mediaItem = MediaItem.fromUri(itemDataList.get(position).media.getUri());
+        MediaItem mediaItem = MediaItem.fromUri(itemDataList.get(position).mediaInfo.getUri());
         player.setMediaItem(mediaItem);
 
         player.addListener(new Player.Listener() {

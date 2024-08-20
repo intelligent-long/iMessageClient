@@ -170,4 +170,17 @@ public class MediaInfo implements Parcelable {
         dest.writeInt(videoWidth);
         dest.writeInt(videoHeight);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MediaInfo mediaInfo = (MediaInfo) o;
+        return addedTime == mediaInfo.addedTime && modifiedTime == mediaInfo.modifiedTime && photoTakenTime == mediaInfo.photoTakenTime && videoDuration == mediaInfo.videoDuration && imageWidth == mediaInfo.imageWidth && imageHeight == mediaInfo.imageHeight && videoWidth == mediaInfo.videoWidth && videoHeight == mediaInfo.videoHeight && Objects.equals(uri, mediaInfo.uri) && Objects.equals(path, mediaInfo.path) && mediaType == mediaInfo.mediaType && Objects.equals(exifInterface, mediaInfo.exifInterface);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uri, path, mediaType, addedTime, modifiedTime, photoTakenTime, videoDuration, imageWidth, imageHeight, videoWidth, videoHeight, exifInterface);
+    }
 }

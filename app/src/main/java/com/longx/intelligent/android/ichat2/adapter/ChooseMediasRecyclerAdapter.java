@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.PreviewToChooseImageActivity;
@@ -28,37 +27,40 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by LONG on 2024/5/25 at 5:53 PM.
  */
 public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseMediasRecyclerAdapter.ViewHolder, ChooseMediasRecyclerAdapter.ItemData> {
     private final AppCompatActivity activity;
-    private final List<ChooseMediasRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+    private final List<ItemData> itemDataList = new ArrayList<>();
     private final List<Integer> checkedPositions = new ArrayList<>();
-    private final List<Uri> checkedUris = new ArrayList<>();
-    private final int maxAllowSize;
+    private final List<MediaInfo> checkedMediaInfos = new ArrayList<>();
+    private final int maxAllowImageSize;
+    private final int maxAllowVideoSize;
 
-    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ChooseMediasRecyclerAdapter.ItemData> itemDataList, List<Uri> chosenUriList, int maxAllowSize) {
+    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ItemData> itemDataList, List<MediaInfo> chosenMediaInfoList, int maxAllowImageSize, int maxAllowVideoSize) {
         this.activity = activity;
-        this.maxAllowSize = maxAllowSize;
+        this.maxAllowImageSize = maxAllowImageSize;
+        this.maxAllowVideoSize = maxAllowVideoSize;
         sortDataList(itemDataList);
         this.itemDataList.addAll(itemDataList);
 
-        if(chosenUriList != null) {
+        if(chosenMediaInfoList != null) {
             for (int i = 0; i < itemDataList.size(); i++) {
-                Uri uri = Uri.fromFile(new File(itemDataList.get(i).mediaInfo.getPath()));
-                for (int j = 0; j < chosenUriList.size(); j++) {
-                    if (chosenUriList.get(j).equals(uri)) {
-                        checkedUris.add(uri);
-                        List<Uri> sortedCheckedUris = new ArrayList<>(checkedUris);
-                        sortedCheckedUris.sort(Comparator.comparingInt(chosenUriList::indexOf));
-                        checkedUris.clear();
-                        checkedUris.addAll(sortedCheckedUris);
+                MediaInfo mediaInfo = itemDataList.get(i).mediaInfo;
+                for (int j = 0; j < chosenMediaInfoList.size(); j++) {
+                    if (chosenMediaInfoList.get(j).equals(mediaInfo)) {
+                        checkedMediaInfos.add(mediaInfo);
+                        List<MediaInfo> sortedCheckedMediaInfos = new ArrayList<>(checkedMediaInfos);
+                        sortedCheckedMediaInfos.sort(Comparator.comparingInt(chosenMediaInfoList::indexOf));
+                        checkedMediaInfos.clear();
+                        checkedMediaInfos.addAll(sortedCheckedMediaInfos);
                         checkedPositions.add(i + 1);
                         List<Integer> sortedCheckedPositions = new ArrayList<>();
-                        for (Uri uri1 : sortedCheckedUris) {
-                            int originalIndex = checkedUris.indexOf(uri1);
+                        for (MediaInfo mediaInfo1 : sortedCheckedMediaInfos) {
+                            int originalIndex = checkedMediaInfos.indexOf(mediaInfo1);
                             sortedCheckedPositions.add(checkedPositions.get(originalIndex));
                         }
                         checkedPositions.clear();
@@ -119,7 +121,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        Uri uri = Uri.fromFile(new File(itemData.mediaInfo.getPath()));
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.binding.getRoot().setOnClickListener(v -> {
             MediaInfo mediaInfo = itemDataList.get(position).getMediaInfo();
@@ -138,7 +139,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             holder.binding.cancelCheckButton.setVisibility(View.VISIBLE);
             holder.binding.darkCover.setVisibility(View.VISIBLE);
             holder.binding.index.setVisibility(View.VISIBLE);
-            holder.binding.index.setText(String.valueOf(checkedUris.indexOf(uri) + 1));
+            holder.binding.index.setText(String.valueOf(checkedMediaInfos.indexOf(itemData.mediaInfo) + 1));
         }else {
             holder.binding.checkButton.setVisibility(View.VISIBLE);
             holder.binding.cancelCheckButton.setVisibility(View.GONE);
@@ -147,21 +148,34 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             holder.binding.index.setText(null);
         }
         holder.binding.checkButton.setOnClickListener(v -> {
-            if(maxAllowSize != -1 && checkedUris.size() == maxAllowSize){
-                MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowSize + " 个项目", MessageDisplayer.Duration.LONG);
+            AtomicInteger checkedImageSize = new AtomicInteger();
+            AtomicInteger checkedVideoSize = new AtomicInteger();
+            checkedMediaInfos.forEach(checkedMediaInfo -> {
+                if(checkedMediaInfo.getMediaType() == MediaType.IMAGE){
+                    checkedImageSize.getAndIncrement();
+                }else if(checkedMediaInfo.getMediaType() == MediaType.VIDEO){
+                    checkedVideoSize.getAndIncrement();
+                }
+            });
+            if(maxAllowImageSize != -1 && checkedImageSize.get() == maxAllowImageSize){
+                MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowImageSize + " 个图片", MessageDisplayer.Duration.LONG);
                 return;
             }
-            checkedUris.add(uri);
+            if(maxAllowVideoSize != -1 && checkedVideoSize.get() == maxAllowVideoSize){
+                MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowImageSize + " 个视频", MessageDisplayer.Duration.LONG);
+                return;
+            }
+            checkedMediaInfos.add(itemData.mediaInfo);
             checkedPositions.add(position + 1);
             notifyItemChanged(position + 1);
         });
         holder.binding.cancelCheckButton.setOnClickListener(v -> {
-            int index = checkedUris.indexOf(uri);
-            checkedUris.remove(uri);
+            checkedMediaInfos.remove(itemData.mediaInfo);
             checkedPositions.remove((Integer) (position + 1));
             notifyItemChanged(position + 1);
-            checkedUris.forEach(uri1 -> {
-                int index1 = checkedUris.indexOf(uri1);
+            int index = checkedMediaInfos.indexOf(itemData.mediaInfo);
+            checkedMediaInfos.forEach(mediaInfo -> {
+                int index1 = checkedMediaInfos.indexOf(mediaInfo);
                 if(index1 >= index) {
                     notifyItemChanged(checkedPositions.get(index1));
                 }
@@ -202,7 +216,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.videoDuration.bringToFront();
     }
 
-    public List<Uri> getCheckedUris() {
-        return checkedUris;
+    public List<MediaInfo> getCheckedMediaInfos() {
+        return checkedMediaInfos;
     }
 }

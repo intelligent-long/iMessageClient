@@ -55,8 +55,9 @@ public class ChooseMediasActivity extends BaseActivity{
     private List<DirectoryInfo> allMediaDirectories;
     private String currentDirectoryPath;
     private boolean uiInited;
-    private List<Uri> chosenUriList;
-    private int maxAllowSize;
+    private List<MediaInfo> chosenMediaList;
+    private int maxAllowImageSize;
+    private int maxAllowVideoSize;
     private boolean remove;
 
     @Override
@@ -85,11 +86,12 @@ public class ChooseMediasActivity extends BaseActivity{
         MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
         item.setIcon(actionIconResId);
         item.setTitle(menuTitle);
-        Parcelable[] parcelableArrayExtra = getIntent().getParcelableArrayExtra(ExtraKeys.URIS);
+        Parcelable[] parcelableArrayExtra = getIntent().getParcelableArrayExtra(ExtraKeys.MEDIA_INFOS);
         if(parcelableArrayExtra != null) {
-            chosenUriList = Utils.parseParcelableArray(parcelableArrayExtra);
+            chosenMediaList = Utils.parseParcelableArray(parcelableArrayExtra);
         }
-        maxAllowSize = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_SIZE, -1);
+        maxAllowImageSize = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, -1);
+        maxAllowVideoSize = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, -1);
     }
 
     private void changeWindowAndSystemUi() {
@@ -126,7 +128,7 @@ public class ChooseMediasActivity extends BaseActivity{
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.URIS, adapter.getCheckedUris().toArray(new Uri[0]));
+                intent.putExtra(ExtraKeys.MEDIA_INFOS, adapter.getCheckedMediaInfos().toArray(new MediaInfo[0]));
                 intent.putExtra(ExtraKeys.REMOVE, remove);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -177,7 +179,7 @@ public class ChooseMediasActivity extends BaseActivity{
     }
 
     private void showContent() {
-        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenUriList, maxAllowSize);
+        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenMediaList, maxAllowImageSize, maxAllowVideoSize);
         showMedias();
         binding.recyclerView.post(this::updateInfos);
         showTotalSize();

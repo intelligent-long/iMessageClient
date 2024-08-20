@@ -22,7 +22,7 @@ import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySendBroadcastBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
-import com.longx.intelligent.android.ichat2.media.data.Media;
+import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -43,7 +43,7 @@ public class SendBroadcastActivity extends BaseActivity {
     private ActivitySendBroadcastBinding binding;
     private ActivityResultLauncher<Intent> addMediasResultLauncher;
     private ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
-    private final ArrayList<Media> mediaList = new ArrayList<>();
+    private final ArrayList<MediaInfo> mediaInfoList = new ArrayList<>();
     private static final int MEDIA_COLUMN_COUNT = 3;
     private SendBroadcastMediasRecyclerAdapter adapter;
     private final SpaceGridDecorationSetter spaceGridDecorationSetter = new SpaceGridDecorationSetter();
@@ -66,9 +66,9 @@ public class SendBroadcastActivity extends BaseActivity {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = Objects.requireNonNull(result.getData());
                         boolean remove = data.getBooleanExtra(ExtraKeys.REMOVE, true);
-                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.URIS));
-                        List<Uri> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
-                        onImagesChosen(uriList, remove);
+                        Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.MEDIA_INFOS));
+                        List<MediaInfo> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
+                        onMediaInfosChosen(uriList, remove);
                     }
                 }
         );
@@ -77,13 +77,13 @@ public class SendBroadcastActivity extends BaseActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = Objects.requireNonNull(result.getData());
-                        ArrayList<Media> medias = Objects.requireNonNull(data.getParcelableArrayListExtra(ExtraKeys.MEDIAS));
-                        if(medias.isEmpty()){
+                        ArrayList<MediaInfo> mediaInfos = Objects.requireNonNull(data.getParcelableArrayListExtra(ExtraKeys.MEDIA_INFOS));
+                        if(mediaInfos.isEmpty()){
                             binding.recyclerViewMedias.setVisibility(View.GONE);
                         }
-                        mediaList.clear();
-                        mediaList.addAll(medias);
-                        adapter.changeAllDataAndShow(medias);
+                        mediaInfoList.clear();
+                        mediaInfoList.addAll(mediaInfos);
+                        adapter.changeAllDataAndShow(mediaInfos);
                     }
                 }
         );
@@ -99,7 +99,7 @@ public class SendBroadcastActivity extends BaseActivity {
             String broadcastText = UiUtil.getEditTextString(binding.textInput);
             if(broadcastText != null && broadcastText.isEmpty()) broadcastText = null;
             ArrayList<Integer> broadcastMediaTypes = new ArrayList<>();
-            mediaList.forEach(media -> {
+            mediaInfoList.forEach(media -> {
                 if(media.getMediaType() == MediaType.IMAGE) {
                     broadcastMediaTypes.add(BroadcastMedia.TYPE_IMAGE);
                 }else if(media.getMediaType() == MediaType.VIDEO) {
@@ -107,13 +107,13 @@ public class SendBroadcastActivity extends BaseActivity {
                 }
             });
             ArrayList<String> broadcastMediaExtensions = new ArrayList<>();
-            mediaList.forEach(media -> {
+            mediaInfoList.forEach(media -> {
                 String fileExtensionFromUri = FileHelper.getFileExtensionFromUri(this, media.getUri());
                 broadcastMediaExtensions.add(fileExtensionFromUri);
             });
             SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions);
             List<Uri> mediaUris = new ArrayList<>();
-            mediaList.forEach(media -> {
+            mediaInfoList.forEach(media -> {
                 mediaUris.add(media.getUri());
             });
             if(broadcastText == null && mediaUris.isEmpty()) {
@@ -163,22 +163,16 @@ public class SendBroadcastActivity extends BaseActivity {
                 });
             });
         });
-        binding.addImageOrVideoFab.setOnClickListener(v -> {
+        binding.addMediaFab.setOnClickListener(v -> {
             AddBroadcastMediaBottomSheet bottomSheet = new AddBroadcastMediaBottomSheet(this);
             bottomSheet.setOnClickAddMediaYier(v1 -> {
                 Intent intent = new Intent(this, ChooseMediasActivity.class);
                 intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "选择媒体");
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
-                List<Uri> uris = new ArrayList<>();
-                mediaList.forEach(media -> {
-                    if(media.getMediaType() == MediaType.IMAGE) {
-                        uris.add(media.getUri());
-                    }
-                });
-                intent.putExtra(ExtraKeys.URIS, uris.toArray(new Uri[0]));
+                intent.putExtra(ExtraKeys.MEDIA_INFOS, mediaInfoList.toArray(new MediaInfo[0]));
                 intent.putExtra(ExtraKeys.REMOVE, true);
-                intent.putExtra(ExtraKeys.MAX_ALLOW_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
+                intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
                 addMediasResultLauncher.launch(intent);
             });
             bottomSheet.setOnClickTakePhotoYier(v1 -> {
@@ -192,33 +186,20 @@ public class SendBroadcastActivity extends BaseActivity {
         });
     }
 
-    private void onImagesChosen(List<Uri> uriList, boolean remove) {
-        List<Media> imageMediaList = new ArrayList<>();
-        uriList.forEach(uri -> {
-            Media media = new Media(MediaType.IMAGE, uri);
-            imageMediaList.add(media);
-        });
-        if(imageMediaList.size() > Constants.MAX_BROADCAST_IMAGE_COUNT){
-            MessageDisplayer.autoShow(this, "最多附带 " + Constants.MAX_BROADCAST_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
-            return;
-        }
-        if(remove) mediaList.clear();
-        mediaList.addAll(imageMediaList);
-        showImages();
+    private void onMediaInfosChosen(List<MediaInfo> mediaInfos, boolean remove) {
+        if(remove) mediaInfoList.clear();
+        mediaInfoList.addAll(mediaInfos);
+        showMedias();
     }
 
-    private void showImages(){
-        if(mediaList.isEmpty()){
+    private void showMedias(){
+        if(mediaInfoList.isEmpty()){
             binding.recyclerViewMedias.setVisibility(View.GONE);
         }else {
             binding.recyclerViewMedias.setVisibility(View.VISIBLE);
             spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
-            adapter = new SendBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaList);
+            adapter = new SendBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaInfoList);
             binding.recyclerViewMedias.setAdapter(adapter);
         }
-    }
-
-    private void onVideosChosen(List<Uri> uriList){
-
     }
 }

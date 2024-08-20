@@ -16,7 +16,7 @@ public class ExtraKeys {
     public static final String INIT_TAB_INDEX = "init_tab_index";
     public static final String NEED_RESTORE_INSTANCE_STATE = "need_restore_instance_state";
     public static final String POSITION = "position";
-    public static final String MEDIA_INFO_LIST = "media_info_list";
+    public static final String MEDIA_INFOS = "media_info_list";
     public static final String URIS = "uris";
     public static final String FILE_PATHS = "file_paths";
     public static final String FILE_PATH = "file_path";
@@ -31,7 +31,8 @@ public class ExtraKeys {
     public static final String TOOLBAR_TITLE = "toolbar_title";
     public static final String RES_ID = "res_id";
     public static final String MENU_TITLE = "menu_title";
-    public static final String MAX_ALLOW_SIZE = "max_allow_size";
+    public static final String MAX_ALLOW_IMAGE_SIZE = "max_allow_image_size";
+    public static final String MAX_ALLOW_VIDEO_SIZE = "max_allow_video_size";
     public static final String MEDIAS = "medias";
     public static final String BROADCAST = "broadcast";
     public static final String BUTTON_TEXT = "button_text";
