@@ -98,10 +98,10 @@ public class SendBroadcastActivity extends BaseActivity {
             String broadcastText = UiUtil.getEditTextString(binding.textInput);
             if(broadcastText != null && broadcastText.isEmpty()) broadcastText = null;
             ArrayList<Integer> broadcastMediaTypes = new ArrayList<>();
-            mediaInfoList.forEach(media -> {
-                if(media.getMediaType() == MediaType.IMAGE) {
+            mediaInfoList.forEach(mediaInfo -> {
+                if(mediaInfo.getMediaType() == MediaType.IMAGE) {
                     broadcastMediaTypes.add(BroadcastMedia.TYPE_IMAGE);
-                }else if(media.getMediaType() == MediaType.VIDEO) {
+                }else if(mediaInfo.getMediaType() == MediaType.VIDEO) {
                     broadcastMediaTypes.add(BroadcastMedia.TYPE_VIDEO);
                 }
             });
@@ -112,8 +112,8 @@ public class SendBroadcastActivity extends BaseActivity {
             });
             SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions);
             List<Uri> mediaUris = new ArrayList<>();
-            mediaInfoList.forEach(media -> {
-                mediaUris.add(media.getUri());
+            mediaInfoList.forEach(mediaInfo -> {
+                mediaUris.add(mediaInfo.getUri());
             });
             if(broadcastText == null && mediaUris.isEmpty()) {
                 MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
