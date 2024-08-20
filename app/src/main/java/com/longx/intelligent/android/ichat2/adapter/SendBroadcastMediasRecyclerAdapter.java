@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -18,6 +19,7 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendBroadcas
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -59,18 +61,34 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Uri uri = mediaInfoList.get(position).getUri();
-        GlideApp
-                .with(activity.getApplicationContext())
-                .load(uri)
-                .centerCrop()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.binding.image);
+        MediaInfo mediaInfo = mediaInfoList.get(position);
+        switch (mediaInfo.getMediaType()){
+            case IMAGE:
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(mediaInfo.getUri())
+                        .centerCrop()
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(holder.binding.imageView);
+                holder.binding.videoDuration.setVisibility(View.GONE);
+                break;
+            case VIDEO:
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(mediaInfo.getUri())
+                        .frame(1000_000)
+                        .centerCrop()
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(holder.binding.imageView);
+                holder.binding.videoDuration.setVisibility(View.VISIBLE);
+                holder.binding.videoDuration.setText(TimeUtil.formatTime(mediaInfo.getVideoDuration()));
+                holder.binding.videoDuration.bringToFront();
+        }
         setupYiers(holder, position);
     }
 
     private void setupYiers(ViewHolder holder, int position) {
-        holder.binding.image.setOnClickListener(v -> {
+        holder.binding.imageView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, MediaActivity.class);
             intent.putParcelableArrayListExtra(ExtraKeys.MEDIA_INFOS, mediaInfoList);
             intent.putExtra(ExtraKeys.POSITION, position);

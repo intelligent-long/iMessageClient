@@ -91,7 +91,6 @@ public class SendBroadcastActivity extends BaseActivity {
 
     private void initUi() {
         binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, MEDIA_COLUMN_COUNT));
-        spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
     }
 
     private void setupYiers() {
