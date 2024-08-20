@@ -32,6 +32,7 @@ import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.SwipeDownGestureYier;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -51,10 +52,10 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     private final List<ItemData> itemDataList;
     private RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
-    private Handler handler;
     private static final int SEEKBAR_MAX = 10000;
     private final Map<Integer, ViewHolder> viewHolderMap = new HashMap<>();
     private final boolean glideLoad;
+    private final List<Integer> removedPositions = new ArrayList<>();
 
     public MediaPagerAdapter(MediaActivity activity, List<MediaInfo> mediaInfoList, boolean glideLoad) {
         this.activity = activity;
@@ -115,9 +116,6 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
             }
         }else {
             UiUtil.setViewVisibility(holder.binding.topShadowCover, View.VISIBLE);
-            if(itemDataList.get(position).mediaInfo.getMediaType() == MediaType.VIDEO) {
-                UiUtil.setViewVisibility(holder.binding.playControl, View.VISIBLE);
-            }
         }
         viewHolderMap.put(position, holder);
         MediaInfo mediaInfo = itemDataList.get(position).mediaInfo;
@@ -169,6 +167,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
             case VIDEO:{
                 changeTopCoverHeight(holder, true);
                 holder.binding.topShadowCover.bringToFront();
+                holder.binding.timePlay.setText(TimeUtil.formatTime(0) + " / " + TimeUtil.formatTime(0));
                 holder.binding.playControl.bringToFront();
                 initializePlayer(holder.binding, position);
                 initializeSeekBar(holder.binding, position);
@@ -248,8 +247,6 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         itemDataList.get(position).player = player;
         binding.playerView.setPlayer(player);
         binding.playerView.setVisibility(View.GONE);
-        binding.playControl.setVisibility(View.VISIBLE);
-        binding.playControl.bringToFront();
         MediaItem mediaItem = MediaItem.fromUri(itemDataList.get(position).mediaInfo.getUri());
         player.setMediaItem(mediaItem);
 
@@ -290,7 +287,11 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         binding.seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ExoPlayer player = itemDataList.get(position).player;
+                int[] position1 = {position};
+                removedPositions.forEach(removedPosition -> {
+                    if(removedPosition < position1[0]) position1[0]--;
+                });
+                ExoPlayer player = itemDataList.get(position1[0]).player;
                 if (fromUser && player != null) {
                     long duration = player.getDuration();
                     player.seekTo((long) ((progress / (double) SEEKBAR_MAX) * duration));
@@ -308,28 +309,52 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
             }
         });
 
-        handler = new Handler();
-        itemDataList.get(position).updateProgressAction = () -> updateProgress(binding, position);
+        itemDataList.get(position).updateProgressAction = () -> {
+            updateProgress(binding, position);
+        };
     }
 
     private void startProgressUpdates(int position) {
-        handler.post(itemDataList.get(position).updateProgressAction);
+        int[] position1 = {position};
+        removedPositions.forEach(removedPosition -> {
+            if(removedPosition < position1[0]) position1[0]--;
+        });
+        if(position1[0] >= itemDataList.size()) return;
+        new Handler().post(itemDataList.get(position1[0]).updateProgressAction);
     }
 
     private void stopProgressUpdates(int position) {
-        handler.removeCallbacks(itemDataList.get(position).updateProgressAction);
+        int[] position1 = {position};
+        removedPositions.forEach(removedPosition -> {
+            if(removedPosition < position1[0]) position1[0]--;
+        });
+        if(position1[0] >= itemDataList.size()) return;
+        new Handler().removeCallbacks(itemDataList.get(position1[0]).updateProgressAction);
     }
 
     private void updateProgress(RecyclerItemChatMediaBinding binding, int position) {
-        ExoPlayer player = itemDataList.get(position).player;
-        if (player != null && player.isPlaying()) {
-            binding.seekbar.setMax(SEEKBAR_MAX);
-            long currentPosition = player.getCurrentPosition();
-            long duration = player.getDuration();
-            int progress = (int) ((currentPosition / (double) duration) * SEEKBAR_MAX);
-            binding.seekbar.setProgress(progress);
-            binding.timePlay.setText(TimeUtil.formatTime(currentPosition) + " / " + TimeUtil.formatTime(duration));
-            handler.postDelayed(itemDataList.get(position).updateProgressAction, 1);
+        try {
+            int[] position1 = {position};
+            removedPositions.forEach(removedPosition -> {
+                if(removedPosition < position1[0]) position1[0]--;
+            });
+            ExoPlayer player = itemDataList.get(position1[0]).player;
+            if (player != null && player.isPlaying()) {
+                if(activity.isPureContent()){
+                    UiUtil.setViewVisibility(binding.playControl, View.GONE);
+                }else {
+                    UiUtil.setViewVisibility(binding.playControl, View.VISIBLE);
+                }
+                binding.seekbar.setMax(SEEKBAR_MAX);
+                long currentPosition = player.getCurrentPosition();
+                long duration = player.getDuration();
+                int progress = (int) ((currentPosition / (double) duration) * SEEKBAR_MAX);
+                binding.seekbar.setProgress(progress);
+                binding.timePlay.setText(TimeUtil.formatTime(currentPosition) + " / " + TimeUtil.formatTime(duration));
+                new Handler().postDelayed(itemDataList.get(position1[0]).updateProgressAction, 1);
+            }
+        }catch (Exception e){
+            ErrorLogger.log(e);
         }
     }
 
@@ -387,6 +412,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     }
 
     public void removeItem(int position){
+        removedPositions.add(position);
         itemDataList.remove(position);
         notifyItemRemoved(position);
     }

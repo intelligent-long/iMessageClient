@@ -97,12 +97,12 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                 int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
                 ArrayList<MediaInfo> mediaInfos = MediaActivity.getInstance().getMediaInfoList();
                 mediaInfos.remove(currentItem);
+                Intent intent1 = new Intent();
+                intent1.putParcelableArrayListExtra(ExtraKeys.MEDIA_INFOS, mediaInfos);
+                MediaActivity.getInstance().setResult(RESULT_OK, intent1);
                 if(mediaInfos.isEmpty()) MediaActivity.getInstance().finish();
                 MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == mediaInfos.size() ? currentItem : currentItem + 1) + " / " + mediaInfos.size());
                 MediaActivity.getInstance().getAdapter().removeItem(currentItem);
-                Intent intent1 = new Intent();
-                intent1.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaInfos);
-                MediaActivity.getInstance().setResult(RESULT_OK, intent1);
             });
             returnFromPreviewToSendMediaResultLauncher.launch(intent);
         });

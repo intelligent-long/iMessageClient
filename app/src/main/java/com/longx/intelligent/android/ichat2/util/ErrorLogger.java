@@ -11,6 +11,10 @@ public class ErrorLogger {
         log(null, o, null);
     }
 
+    public static void log(Throwable t){
+        log(null, "", t);
+    }
+
     public static void log(Class<?> clazz, Object o){
         log(clazz, o, null);
     }

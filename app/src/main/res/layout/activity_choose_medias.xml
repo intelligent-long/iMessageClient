@@ -88,5 +88,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:bottom_init="true"
-        app:bottom_init_behavior="always"/>
+        app:bottom_init_behavior="always"
+        android:layerType="hardware"/>
 </com.longx.intelligent.android.ichat2.ui.PassThroughCoordinatorLayout>

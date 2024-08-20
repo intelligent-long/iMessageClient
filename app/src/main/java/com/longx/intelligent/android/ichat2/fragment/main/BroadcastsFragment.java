@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.ChooseMediasActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
@@ -29,6 +30,7 @@ import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerF
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -180,6 +182,26 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     }
 
     private void setupYiers() {
+        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE) {
+                    GlideApp.with(requireContext()).resumeRequests();
+                } else if (newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING || newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING) {
+                    GlideApp.with(requireContext()).pauseRequests();
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (Math.abs(dy) < 200) {
+                    GlideApp.with(requireContext()).resumeRequests();
+                }
+            }
+        });
         binding.recyclerView.addOnApproachEdgeYier(7, new RecyclerView.OnApproachEdgeYier() {
             @Override
             public void onApproachStart() {

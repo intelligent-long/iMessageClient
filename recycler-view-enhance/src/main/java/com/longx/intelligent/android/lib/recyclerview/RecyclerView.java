@@ -65,6 +65,7 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
     }
 
     private void init(){
+        forceHasOverlappingRendering(false);
         addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {

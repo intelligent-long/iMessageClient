@@ -27,6 +27,7 @@ import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.media.helper.LocationHelper;
 import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
 import com.longx.intelligent.android.ichat2.ui.LocationNameSwitcher;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -123,6 +124,26 @@ public class ChooseMediasActivity extends BaseActivity{
             public void onScrolled(@NonNull RecyclerView r, int dx, int dy) {
                 super.onScrolled(r, dx, dy);
                 updateInfos();
+            }
+        });
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    GlideApp.with(ChooseMediasActivity.this).resumeRequests();
+                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
+                    GlideApp.with(ChooseMediasActivity.this).pauseRequests();
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (Math.abs(dy) < 200) {
+                    GlideApp.with(ChooseMediasActivity.this).resumeRequests();
+                }
             }
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
