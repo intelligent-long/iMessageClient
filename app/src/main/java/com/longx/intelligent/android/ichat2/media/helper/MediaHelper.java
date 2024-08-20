@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.media.helper;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -9,6 +10,7 @@ import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.util.Size;
 
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
@@ -184,5 +186,31 @@ public class MediaHelper {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    public static long getVideoDuration(String videoPath) {
+        long duration = 0;
+        try(MediaMetadataRetriever retriever = new MediaMetadataRetriever()) {
+            retriever.setDataSource(videoPath);
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            duration = Long.parseLong(time);
+        } catch (IOException e) {
+            ErrorLogger.log(e);
+        }
+        return duration;
+    }
+
+    public static long getVideoDuration(Context context, Uri videoUri) {
+        String[] projection = {MediaStore.Video.Media.DURATION};
+        Cursor cursor = context.getContentResolver().query(videoUri, projection, null, null, null);
+        long duration = 0;
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int durationIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+                duration = cursor.getLong(durationIndex);
+            }
+            cursor.close();
+        }
+        return duration;
     }
 }

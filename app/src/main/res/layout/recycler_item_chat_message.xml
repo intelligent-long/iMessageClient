@@ -146,6 +146,15 @@
                     android:src="@drawable/play_circle_outline_lighter_24px"
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
+
+                <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                    android:id="@+id/video_duration_receive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="9dp"
+                    android:layout_gravity="start|bottom"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"/>
             </FrameLayout>
 
             <LinearLayout
@@ -359,12 +368,12 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/play_circle_outline_w300_24px"
+                    android:src="@drawable/play_circle_outline_w200_24px"
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
 
                 <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
-                    android:id="@+id/video_duration"
+                    android:id="@+id/video_duration_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="9dp"

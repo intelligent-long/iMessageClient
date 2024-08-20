@@ -61,6 +61,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="9dp"
         android:layout_gravity="start|bottom"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textColor="@color/white"/>
 </FrameLayout>

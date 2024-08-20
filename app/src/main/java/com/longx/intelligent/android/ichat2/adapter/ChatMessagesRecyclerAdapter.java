@@ -259,6 +259,9 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .apply(requestOptions)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailSend);
+                    if(itemData.chatMessage.getVideoDuration() != null) {
+                        holder.binding.videoDurationSend.setText(TimeUtil.formatTime(itemData.chatMessage.getVideoDuration()));
+                    }
                     break;
                 }
                 case ChatMessage.TYPE_VOICE:{
@@ -361,11 +364,13 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     GlideApp
                             .with(activity.getApplicationContext())
                             .load(itemData.chatMessage.getVideoFilePath())
-                            .frame(1000000)
+                            .frame(1000_000)
                             .apply(requestOptions)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailReceive);
-//                    holder.binding.videoDuration.setText(TimeUtil.formatTime(itemData.chatMessage.));
+                    if(itemData.chatMessage.getVideoDuration() != null) {
+                        holder.binding.videoDurationReceive.setText(TimeUtil.formatTime(itemData.chatMessage.getVideoDuration()));
+                    }
                     break;
                 }
                 case ChatMessage.TYPE_VOICE:{

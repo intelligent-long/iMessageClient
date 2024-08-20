@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.data;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcel;
@@ -18,6 +19,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
@@ -95,6 +97,8 @@ public class ChatMessage implements Parcelable {
                                 chatMessage.setVideoFilePath(chatVideoFilePath);
                                 Size videoSize = MediaHelper.getVideoSize(chatVideoFilePath);
                                 chatMessage.setVideoSize(videoSize);
+                                long videoDuration = MediaHelper.getVideoDuration(chatVideoFilePath);
+                                chatMessage.setVideoDuration(videoDuration);
                                 commonDoOfMainDoOnNewChatMessage(chatMessage, context);
                                 mainHandler.post(resultsYier::onResults);
                             } catch (IOException e) {
@@ -176,6 +180,8 @@ public class ChatMessage implements Parcelable {
     private String videoFilePath;
     @JsonIgnore
     private Size videoSize;
+    @JsonIgnore
+    private Long videoDuration;
     @JsonIgnore
     private String voiceFilePath;
     @JsonIgnore
@@ -327,6 +333,14 @@ public class ChatMessage implements Parcelable {
         this.voiceListened = voiceListened;
     }
 
+    public Long getVideoDuration() {
+        return videoDuration;
+    }
+
+    public void setVideoDuration(Long videoDuration) {
+        this.videoDuration = videoDuration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -363,6 +377,8 @@ public class ChatMessage implements Parcelable {
             fileFilePath = in.readString();
         }else if(type == TYPE_VIDEO){
             videoFilePath = in.readString();
+            videoSize = in.readSize();
+            videoDuration = in.readLong();
         }else if(type == TYPE_VOICE){
             byte tmpVoiceListened = in.readByte();
             voiceListened = tmpVoiceListened == 0 ? null : tmpVoiceListened == 1;
@@ -408,6 +424,8 @@ public class ChatMessage implements Parcelable {
             dest.writeString(fileFilePath);
         }else if(type == TYPE_VIDEO){
             dest.writeString(videoFilePath);
+            dest.writeSize(videoSize);
+            dest.writeLong(videoDuration);
         }else if(type == TYPE_VOICE){
             dest.writeByte((byte) (voiceListened == null ? 0 : voiceListened ? 1 : 2));
         }

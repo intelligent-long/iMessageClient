@@ -73,6 +73,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH, chatMessage.getVideoFilePath());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getWidth());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getHeight());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_DURATION, chatMessage.getVideoDuration());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH, chatMessage.getVoiceFilePath());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED, chatMessage.isVoiceListened());
             long id = getDatabase().insertWithOnConflict(((ChatMessageDatabaseHelper)getHelper()).getTableName(), null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -105,6 +106,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String videoFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH);
                 Integer videoWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH);
                 Integer videoHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT);
+                Long videoDuration = DatabaseUtil.getLong(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_DURATION);
                 String voiceFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH);
                 Boolean voiceListened = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED);
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, null, null, null, null);
@@ -117,6 +119,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 chatMessage.setVideoSize(new Size(videoWidth == null ? 0 : videoWidth, videoHeight == null ? 0 : videoHeight));
                 chatMessage.setVoiceFilePath(voiceFilePath);
                 chatMessage.setVoiceListened(voiceListened);
+                chatMessage.setVideoDuration(videoDuration);
                 result.add(chatMessage);
             }
         } finally {
@@ -209,6 +212,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String videoFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH);
                 Integer videoWidth = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH);
                 Integer videoHeight = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT);
+                Long videoDuration = DatabaseUtil.getLong(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_DURATION);
                 String voiceFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH);
                 Boolean voiceListened = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED);
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, fileName, null, null, null, null);
@@ -221,6 +225,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 chatMessage.setVideoSize(new Size(videoWidth == null ? 0 : videoWidth, videoHeight == null ? 0 : videoHeight));
                 chatMessage.setVoiceFilePath(voiceFilePath);
                 chatMessage.setVoiceListened(voiceListened);
+                chatMessage.setVideoDuration(videoDuration);
                 return chatMessage;
             }
         }finally {
@@ -248,6 +253,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_FILE_PATH, chatMessage.getVideoFilePath());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_WIDTH, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getWidth());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_HEIGHT, chatMessage.getVideoSize() == null ? null : chatMessage.getVideoSize().getHeight());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_DURATION, chatMessage.getVideoDuration());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_FILE_PATH, chatMessage.getVoiceFilePath());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_LISTENED, chatMessage.isVoiceListened());
             long rowCount = getDatabase().update(((ChatMessageDatabaseHelper)getHelper()).getTableName(), contentValues, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + "=\"" + chatMessage.getUuid() + "\"", null);
