@@ -205,21 +205,12 @@ public class BroadcastActivity extends BaseActivity {
         }else if(broadcastMedias.size() > 1){
             int times = broadcastMedias.size();
             for (int i = 0; i < times; i++) {
-                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-                switch (broadcastMedia.getType()) {
-                    case BroadcastMedia.TYPE_IMAGE: {
-                        int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-                        AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
-                        int finalI = i;
-                        imageView.setOnClickListener(v -> {
-                            setupAndStartMediaActivity(finalI);
-                        });
-                        break;
-                    }
-                    case BroadcastMedia.TYPE_VIDEO: {
-                        break;
-                    }
-                }
+                int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+                AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
+                int finalI = i;
+                imageView.setOnClickListener(v -> {
+                    setupAndStartMediaActivity(finalI);
+                });
             }
         }else {
             binding.mediaSingle.setOnClickListener(v -> {
