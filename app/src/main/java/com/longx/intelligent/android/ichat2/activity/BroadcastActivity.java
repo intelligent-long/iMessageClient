@@ -29,6 +29,7 @@ import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.ui.NoPaddingTextView;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
@@ -98,10 +99,6 @@ public class BroadcastActivity extends BaseActivity {
             int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
             binding.medias.findViewById(imageResId).setVisibility(View.GONE);
         }
-        for (int i = 0; i < 4; i++) {
-            int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-            binding.medias2To4.findViewById(imageResId).setVisibility(View.GONE);
-        }
         binding.mediaSingle.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
@@ -138,20 +135,32 @@ public class BroadcastActivity extends BaseActivity {
                 int times = broadcastMedias.size();
                 for (int i = 0; i < times; i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-                    switch (broadcastMedia.getType()) {
-                        case BroadcastMedia.TYPE_IMAGE: {
-                            int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
-                            imageView.setVisibility(View.VISIBLE);
-                            GlideApp
-                                    .with(getApplicationContext())
-                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                    .centerCrop()
-                                    .into(imageView);
-                            break;
-                        }
-                        case BroadcastMedia.TYPE_VIDEO: {
-                            break;
+                    int layoutResId = ResourceUtil.getResId("layout_media_2_to_4_" + (i + 1), R.id.class);
+                    int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
+                    int videoDurationResId = ResourceUtil.getResId("video_duration_2_to_4_" + (i + 1), R.id.class);
+                    binding.medias2To4.findViewById(layoutResId).setVisibility(View.VISIBLE);
+                    AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
+                    NoPaddingTextView videoDuration = binding.medias2To4.findViewById(videoDurationResId);
+                    if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
+                        GlideApp
+                                .with(getApplicationContext())
+                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                .centerCrop()
+                                .into(imageView);
+                        videoDuration.setVisibility(View.GONE);
+                    }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
+                        GlideApp
+                                .with(getApplicationContext())
+                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                .frame(1000_000)
+                                .centerCrop()
+                                .into(imageView);
+                        videoDuration.setVisibility(View.VISIBLE);
+                        videoDuration.bringToFront();
+                        if(broadcastMedia.getVideoDuration() != null) {
+                            videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                        }else {
+                            videoDuration.setText("video");
                         }
                     }
                 }
@@ -257,6 +266,7 @@ public class BroadcastActivity extends BaseActivity {
                     mediaList.add(new Media(MediaType.IMAGE, Uri.parse(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))));
                     break;
                 case BroadcastMedia.TYPE_VIDEO:
+                    mediaList.add(new Media(MediaType.VIDEO, Uri.parse(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))));
                     break;
             }
         });

@@ -24,6 +24,7 @@ import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LONG on 2024/8/5 at 下午2:45.
@@ -90,18 +91,20 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.imageView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, MediaActivity.class);
-            intent.putParcelableArrayListExtra(ExtraKeys.MEDIA_INFOS, mediaInfoList);
+            ArrayList<Media> mediaList = new ArrayList<>();
+            mediaInfoList.forEach(mediaInfo -> mediaList.add(new Media(mediaInfo.getMediaType(), mediaInfo.getUri())));
+            intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
             intent.putExtra(ExtraKeys.POSITION, position);
             intent.putExtra(ExtraKeys.BUTTON_TEXT, "移除");
             MediaActivity.setActionButtonYier(v1 -> {
                 int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
-                ArrayList<MediaInfo> mediaInfos = MediaActivity.getInstance().getMediaInfoList();
-                mediaInfos.remove(currentItem);
+                ArrayList<Media> medias = MediaActivity.getInstance().getMediaList();
+                medias.remove(currentItem);
                 Intent intent1 = new Intent();
-                intent1.putParcelableArrayListExtra(ExtraKeys.MEDIA_INFOS, mediaInfos);
+                intent1.putParcelableArrayListExtra(ExtraKeys.MEDIAS, medias);
                 MediaActivity.getInstance().setResult(RESULT_OK, intent1);
-                if(mediaInfos.isEmpty()) MediaActivity.getInstance().finish();
-                MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == mediaInfos.size() ? currentItem : currentItem + 1) + " / " + mediaInfos.size());
+                if(medias.isEmpty()) MediaActivity.getInstance().finish();
+                MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
                 MediaActivity.getInstance().getAdapter().removeItem(currentItem);
             });
             returnFromPreviewToSendMediaResultLauncher.launch(intent);

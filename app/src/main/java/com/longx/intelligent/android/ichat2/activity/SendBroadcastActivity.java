@@ -22,6 +22,7 @@ import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySendBroadcastBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -77,10 +78,18 @@ public class SendBroadcastActivity extends BaseActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = Objects.requireNonNull(result.getData());
-                        ArrayList<MediaInfo> mediaInfos = Objects.requireNonNull(data.getParcelableArrayListExtra(ExtraKeys.MEDIA_INFOS));
-                        if(mediaInfos.isEmpty()){
+                        ArrayList<Media> medias = Objects.requireNonNull(data.getParcelableArrayListExtra(ExtraKeys.MEDIAS));
+                        if(medias.isEmpty()){
                             binding.recyclerViewMedias.setVisibility(View.GONE);
                         }
+                        ArrayList<MediaInfo> mediaInfos = new ArrayList<>();
+                        medias.forEach(media -> {
+                            mediaInfoList.forEach(mediaInfo -> {
+                                if(media.getUri().equals(mediaInfo.getUri())){
+                                    mediaInfos.add(mediaInfo);
+                                }
+                            });
+                        });
                         mediaInfoList.clear();
                         mediaInfoList.addAll(mediaInfos);
                         adapter.changeAllDataAndShow(mediaInfos);

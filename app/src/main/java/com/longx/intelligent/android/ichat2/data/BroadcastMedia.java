@@ -20,11 +20,12 @@ public class BroadcastMedia implements Parcelable {
     private String extension;
     private int index;
     private Size size;
+    private Long videoDuration;
 
     public BroadcastMedia() {
     }
 
-    public BroadcastMedia(String mediaId, String broadcastId, byte[] media, int type, String extension, int index, Size size) {
+    public BroadcastMedia(String mediaId, String broadcastId, byte[] media, int type, String extension, int index, Size size, Long videoDuration) {
         this.mediaId = mediaId;
         this.broadcastId = broadcastId;
         this.media = media;
@@ -32,6 +33,7 @@ public class BroadcastMedia implements Parcelable {
         this.extension = extension;
         this.index = index;
         this.size = size;
+        this.videoDuration = videoDuration;
     }
 
     public static final Creator<BroadcastMedia> CREATOR = new Creator<BroadcastMedia>() {
@@ -74,6 +76,10 @@ public class BroadcastMedia implements Parcelable {
         return size;
     }
 
+    public Long getVideoDuration() {
+        return videoDuration;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -94,6 +100,7 @@ public class BroadcastMedia implements Parcelable {
             dest.writeInt(-1);
             dest.writeInt(-1);
         }
+        dest.writeLong(videoDuration == null ? -1 : videoDuration);
     }
 
     protected BroadcastMedia(Parcel in) {
@@ -108,5 +115,7 @@ public class BroadcastMedia implements Parcelable {
         if(width != -1 && height != -1) {
             size = new Size(width, height);
         }
+        long videoDuration = in.readLong();
+        if(videoDuration != -1 ) this.videoDuration = videoDuration;
     }
 }

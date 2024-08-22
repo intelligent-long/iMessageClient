@@ -109,8 +109,8 @@
                         android:columnCount="2"
                         android:rowCount="2">
 
-                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                            android:id="@+id/media_2_to_4_1"
+                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
+                            android:id="@+id/layout_media_2_to_4_1"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:adjustViewBounds="true"
@@ -118,44 +118,112 @@
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone"/>
+                            android:visibility="gone">
 
-                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                            android:id="@+id/media_2_to_4_2"
+                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                                android:id="@+id/media_2_to_4_1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true" />
+
+                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                                android:id="@+id/video_duration_2_to_4_1"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="9dp"
+                                android:layout_gravity="start|bottom"
+                                android:textSize="13sp"
+                                android:textColor="@color/white"/>
+                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
+
+                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
+                            android:id="@+id/layout_media_2_to_4_2"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:adjustViewBounds="true"
-                            android:layout_marginStart="6.5dp"
                             android:layout_row="0"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:layout_marginStart="6.5dp"
+                            android:visibility="gone">
 
-                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                            android:id="@+id/media_2_to_4_3"
+                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                                android:id="@+id/media_2_to_4_2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"/>
+
+                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                                android:id="@+id/video_duration_2_to_4_2"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="9dp"
+                                android:layout_gravity="start|bottom"
+                                android:textSize="13sp"
+                                android:textColor="@color/white"/>
+                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
+
+                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
+                            android:id="@+id/layout_media_2_to_4_3"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:adjustViewBounds="true"
-                            android:layout_marginTop="6.5dp"
                             android:layout_row="1"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:layout_marginTop="6.5dp"
+                            android:visibility="gone">
 
-                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                            android:id="@+id/media_2_to_4_4"
+                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                                android:id="@+id/media_2_to_4_3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true" />
+
+                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                                android:id="@+id/video_duration_2_to_4_3"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="9dp"
+                                android:layout_gravity="start|bottom"
+                                android:textSize="13sp"
+                                android:textColor="@color/white"/>
+                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
+
+                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
+                            android:id="@+id/layout_media_2_to_4_4"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:adjustViewBounds="true"
-                            android:layout_marginStart="6.5dp"
-                            android:layout_marginTop="6.5dp"
                             android:layout_row="1"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:layout_marginStart="6.5dp"
+                            android:layout_marginTop="6.5dp"
+                            android:visibility="gone">
+
+                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                                android:id="@+id/media_2_to_4_4"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true" />
+
+                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                                android:id="@+id/video_duration_2_to_4_4"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="9dp"
+                                android:layout_gravity="start|bottom"
+                                android:textSize="13sp"
+                                android:textColor="@color/white"/>
+                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
                     </GridLayout>
 
                     <GridLayout

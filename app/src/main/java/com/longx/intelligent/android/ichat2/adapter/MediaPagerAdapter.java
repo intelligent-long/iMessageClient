@@ -1,7 +1,6 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -49,7 +48,7 @@ import java.util.Map;
  */
 public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.ViewHolder> {
     private final MediaActivity activity;
-    private final List<ItemData> itemDataList;
+    private final List<ItemData> itemDataList = new ArrayList<>();
     private RecyclerItemYiers.OnRecyclerItemActionYier onRecyclerItemActionYier;
     private RecyclerItemYiers.OnRecyclerItemClickYier onRecyclerItemClickYier;
     private static final int SEEKBAR_MAX = 10000;
@@ -57,27 +56,25 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     private final boolean glideLoad;
     private final List<Integer> removedPositions = new ArrayList<>();
 
-    public MediaPagerAdapter(MediaActivity activity, List<MediaInfo> mediaInfoList, boolean glideLoad) {
+    public MediaPagerAdapter(MediaActivity activity, List<Media> mediaList, boolean glideLoad) {
         this.activity = activity;
-        List<ItemData> itemDataList = new ArrayList<>();
-        mediaInfoList.forEach(mediaInfo -> {
-            itemDataList.add(new ItemData(mediaInfo));
+        mediaList.forEach(media -> {
+            itemDataList.add(new ItemData(media));
         });
-        this.itemDataList = itemDataList;
         this.glideLoad = glideLoad;
     }
 
     public static class ItemData{
-        private final MediaInfo mediaInfo;
+        private final Media media;
         private ExoPlayer player;
         private Runnable updateProgressAction;
 
-        public ItemData(MediaInfo mediaInfo) {
-            this.mediaInfo = mediaInfo;
+        public ItemData(Media media) {
+            this.media = media;
         }
 
-        public MediaInfo getMediaInfo() {
-            return mediaInfo;
+        public Media getMedia() {
+            return media;
         }
     }
 
@@ -111,20 +108,20 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         resetView(holder);
         if(activity.isPureContent()){
             UiUtil.setViewVisibility(holder.binding.topShadowCover, View.GONE);
-            if(itemDataList.get(position).mediaInfo.getMediaType() == MediaType.VIDEO) {
+            if(itemDataList.get(position).media.getMediaType() == MediaType.VIDEO) {
                 UiUtil.setViewVisibility(holder.binding.playControl, View.GONE);
             }
         }else {
             UiUtil.setViewVisibility(holder.binding.topShadowCover, View.VISIBLE);
         }
         viewHolderMap.put(position, holder);
-        MediaInfo mediaInfo = itemDataList.get(position).mediaInfo;
-        switch (mediaInfo.getMediaType()){
+        Media media = itemDataList.get(position).media;
+        switch (media.getMediaType()){
             case IMAGE:{
                 changeTopCoverHeight(holder, false);
                 holder.binding.topShadowCover.bringToFront();
                 holder.binding.photoView.setVisibility(View.VISIBLE);
-                Uri imageUri = mediaInfo.getUri();
+                Uri imageUri = media.getUri();
                 holder.binding.photoView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener(){
                     @Override
                     public void onImageLoadError(Exception e) {
@@ -247,7 +244,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         itemDataList.get(position).player = player;
         binding.playerView.setPlayer(player);
         binding.playerView.setVisibility(View.GONE);
-        MediaItem mediaItem = MediaItem.fromUri(itemDataList.get(position).mediaInfo.getUri());
+        MediaItem mediaItem = MediaItem.fromUri(itemDataList.get(position).media.getUri());
         player.setMediaItem(mediaItem);
 
         player.addListener(new Player.Listener() {

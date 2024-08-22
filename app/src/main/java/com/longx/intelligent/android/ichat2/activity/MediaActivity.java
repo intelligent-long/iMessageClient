@@ -12,19 +12,17 @@ import com.longx.intelligent.android.ichat2.adapter.MediaPagerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMediaBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
-import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnRecyclerItemActionYier, RecyclerItemYiers.OnRecyclerItemClickYier {
     private ActivityMediaBinding binding;
-    private ArrayList<MediaInfo> mediaInfoList;
+    private ArrayList<Media> mediaList;
     private int position;
     private MediaPagerAdapter adapter;
     private boolean pureContent;
@@ -48,15 +46,15 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
     }
 
     private void getIntentData() {
-        mediaInfoList = getIntent().getParcelableArrayListExtra(ExtraKeys.MEDIA_INFOS);
+        mediaList = getIntent().getParcelableArrayListExtra(ExtraKeys.MEDIAS);
         position = getIntent().getIntExtra(ExtraKeys.POSITION, 0);
         binding.actionButton.setText(getIntent().getStringExtra(ExtraKeys.BUTTON_TEXT));;
         glideLoad = getIntent().getBooleanExtra(ExtraKeys.GLIDE_LOAD, false);
     }
 
     private void showContent() {
-        binding.toolbar.setTitle((position + 1) + " / " + mediaInfoList.size());
-        adapter = new MediaPagerAdapter(this, mediaInfoList, glideLoad);
+        binding.toolbar.setTitle((position + 1) + " / " + mediaList.size());
+        adapter = new MediaPagerAdapter(this, mediaList, glideLoad);
         adapter.setOnRecyclerItemActionYier(this);
         adapter.setOnRecyclerItemClickYier(this);
         binding.viewPager.setAdapter(adapter);
@@ -77,7 +75,7 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
                 if(MediaActivity.this.position != position){
                     right = MediaActivity.this.position > position;
                     MediaActivity.this.position = position;
-                    binding.toolbar.setTitle((position + 1) + " / " + mediaInfoList.size());
+                    binding.toolbar.setTitle((position + 1) + " / " + mediaList.size());
                 }
             }
 
@@ -89,7 +87,7 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
                     int previousPosition = right ? MediaActivity.this.position + 1 : MediaActivity.this.position - 1;
                     if(previousPosition != -1 && !(previousPosition >= adapter.getItemCount())) {
-                        if (positionOffset == 0 && adapter.getItemDataList().get(previousPosition).getMediaInfo().getMediaType() == MediaType.IMAGE) {
+                        if (positionOffset == 0 && adapter.getItemDataList().get(previousPosition).getMedia().getMediaType() == MediaType.IMAGE) {
                             binding.viewPager.post(() -> adapter.notifyItemChanged(previousPosition));
                         }
                         adapter.pausePlayer(previousPosition);
@@ -133,12 +131,12 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
             MediaPagerAdapter.ViewHolder viewHolder = integerViewHolderEntry.getValue();
             if(pureContent) {
                 UiUtil.setViewVisibility(viewHolder.getBinding().topShadowCover, View.GONE);
-                if(adapter.getItemDataList().get(position).getMediaInfo().getMediaType() == MediaType.VIDEO) {
+                if(adapter.getItemDataList().get(position).getMedia().getMediaType() == MediaType.VIDEO) {
                     UiUtil.setViewVisibility(viewHolder.getBinding().playControl, View.GONE);
                 }
             }else {
                 UiUtil.setViewVisibility(viewHolder.getBinding().topShadowCover, View.VISIBLE);
-                if(adapter.getItemDataList().get(position).getMediaInfo().getMediaType() == MediaType.VIDEO) {
+                if(adapter.getItemDataList().get(position).getMedia().getMediaType() == MediaType.VIDEO) {
                     UiUtil.setViewVisibility(viewHolder.getBinding().playControl, View.VISIBLE);
                 }
             }
@@ -203,8 +201,8 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
         return adapter;
     }
 
-    public ArrayList<MediaInfo> getMediaInfoList() {
-        return mediaInfoList;
+    public ArrayList<Media> getMediaList() {
+        return mediaList;
     }
 
     public ActivityMediaBinding getBinding() {
