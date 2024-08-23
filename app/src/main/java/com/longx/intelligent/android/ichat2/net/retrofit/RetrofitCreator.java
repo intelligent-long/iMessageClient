@@ -2,16 +2,10 @@ package com.longx.intelligent.android.ichat2.net.retrofit;
 
 import android.content.Context;
 
-import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ServerSetting;
-import com.longx.intelligent.android.ichat2.net.CookieJar;
 import com.longx.intelligent.android.ichat2.net.OkHttpClientCreator;
 import com.longx.intelligent.android.ichat2.net.ServerProperties;
 import com.xcheng.retrofit.CompletableCallAdapterFactory;
-import com.xcheng.retrofit.LogInterceptor;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -31,10 +25,20 @@ public class RetrofitCreator {
                 .build();
     }
 
-    public static Retrofit createTemporary(String baseUrl){
+    public static Retrofit customBaseUrl(String baseUrl){
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(OkHttpClientCreator.client)
+                .addCallAdapterFactory(CompletableCallAdapterFactory.INSTANCE)
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
+    }
+
+    public static Retrofit customTimeout(Context context, long connectTimeout, long readTimeout, long writeTimeout){
+        String baseUrl = ServerProperties.getBaseUrl(context);
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(OkHttpClientCreator.customTimeout(connectTimeout, readTimeout, writeTimeout))
                 .addCallAdapterFactory(CompletableCallAdapterFactory.INSTANCE)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();

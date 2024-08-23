@@ -24,4 +24,14 @@ public class OkHttpClientCreator {
                 .addNetworkInterceptor(logInterceptor)
                 .build();
     }
+
+    public static OkHttpClient customTimeout(long connectTimeout, long readTimeout, long writeTimeout){
+        return new OkHttpClient.Builder()
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .cookieJar(CookieJar.get())
+                .addNetworkInterceptor(logInterceptor)
+                .build();
+    }
 }

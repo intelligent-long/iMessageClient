@@ -29,7 +29,7 @@ public class AuthApiCaller extends RetrofitApiCaller{
         if(baseUrl == null){
             return getApiImplementation();
         }
-        Retrofit retrofit = RetrofitCreator.createTemporary(baseUrl);
+        Retrofit retrofit = RetrofitCreator.customBaseUrl(baseUrl);
         return getApiImplementation(retrofit, AuthApi.class);
     }
 

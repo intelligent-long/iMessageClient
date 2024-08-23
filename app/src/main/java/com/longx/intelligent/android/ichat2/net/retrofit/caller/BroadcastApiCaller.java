@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
+import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.BroadcastApi;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
@@ -34,8 +35,16 @@ import retrofit2.http.Query;
  * Created by LONG on 2024/7/28 at 上午2:49.
  */
 public class BroadcastApiCaller extends RetrofitApiCaller{
+    private static final long SEND_BROADCAST_CONNECT_TIMEOUT = 60;
+    private static final long SEND_BROADCAST_READ_TIMEOUT = 60 * 10;
+    private static final long SEND_BROADCAST_WRITE_TIMEOUT = 60;
+
     public static BroadcastApi getApiImplementation(){
         return getApiImplementation(BroadcastApi.class);
+    }
+
+    public static BroadcastApi getApiImplementation(Context context, long connectTimeout, long readTimeout, long writeTimeout){
+        return getApiImplementation(RetrofitCreator.customTimeout(context, connectTimeout, readTimeout, writeTimeout), BroadcastApi.class);
     }
 
     public static CompletableCall<OperationStatus> sendBroadcast(LifecycleOwner lifecycleOwner, Context context,
@@ -83,7 +92,7 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
             };
             mediaPart.add(MultipartBody.Part.createFormData("medias", fileName, progressRequestBody));
         });
-        CompletableCall<OperationStatus> call = getApiImplementation().sendBroadcast(bodyPart, mediaPart);
+        CompletableCall<OperationStatus> call = getApiImplementation(context, SEND_BROADCAST_CONNECT_TIMEOUT, SEND_BROADCAST_READ_TIMEOUT, SEND_BROADCAST_WRITE_TIMEOUT).sendBroadcast(bodyPart, mediaPart);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
