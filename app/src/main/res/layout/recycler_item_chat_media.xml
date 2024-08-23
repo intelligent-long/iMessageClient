@@ -99,4 +99,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:use_controller="false"/>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:visibility="gone"
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        app:indicatorSize="50dp"
+        app:trackThickness="4.8dp"/>
 </FrameLayout>

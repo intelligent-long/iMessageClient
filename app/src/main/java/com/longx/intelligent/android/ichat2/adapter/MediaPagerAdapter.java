@@ -189,6 +189,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         holder.binding.loadFailedView.setVisibility(View.GONE);
         holder.binding.playControl.setVisibility(View.GONE);
         holder.binding.playerView.setVisibility(View.GONE);
+        holder.binding.loadingIndicator.setVisibility(View.GONE);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -264,7 +265,11 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
 
             @Override
             public void onPlaybackStateChanged(int playbackState) {
-                if (playbackState == Player.STATE_ENDED) {
+                if (playbackState == Player.STATE_BUFFERING) {
+                    binding.loadingIndicator.setVisibility(View.VISIBLE);
+                } else if (playbackState == Player.STATE_READY) {
+                    binding.loadingIndicator.setVisibility(View.GONE);
+                } else if (playbackState == Player.STATE_ENDED) {
                     stopProgressUpdates(position);
                 }
             }
