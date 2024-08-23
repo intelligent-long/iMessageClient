@@ -181,6 +181,7 @@ public class SendBroadcastActivity extends BaseActivity {
                 intent.putExtra(ExtraKeys.MEDIA_INFOS, mediaInfoList.toArray(new MediaInfo[0]));
                 intent.putExtra(ExtraKeys.REMOVE, true);
                 intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
+                intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, Constants.MAX_BROADCAST_VIDEO_COUNT);
                 addMediasResultLauncher.launch(intent);
             });
             bottomSheet.setOnClickTakePhotoYier(v1 -> {

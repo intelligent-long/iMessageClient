@@ -157,12 +157,14 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     checkedVideoSize.getAndIncrement();
                 }
             });
-            if(maxAllowImageSize != -1 && checkedImageSize.get() == maxAllowImageSize){
+            if(itemData.mediaInfo.getMediaType().equals(MediaType.IMAGE)
+                    && maxAllowImageSize != -1 && checkedImageSize.get() == maxAllowImageSize){
                 MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowImageSize + " 个图片", MessageDisplayer.Duration.LONG);
                 return;
             }
-            if(maxAllowVideoSize != -1 && checkedVideoSize.get() == maxAllowVideoSize){
-                MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowImageSize + " 个视频", MessageDisplayer.Duration.LONG);
+            if(itemData.mediaInfo.getMediaType().equals(MediaType.VIDEO)
+                    && maxAllowVideoSize != -1 && checkedVideoSize.get() == maxAllowVideoSize){
+                MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowVideoSize + " 个视频", MessageDisplayer.Duration.LONG);
                 return;
             }
             checkedMediaInfos.add(itemData.mediaInfo);
