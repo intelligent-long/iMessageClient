@@ -108,5 +108,5 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         app:indicatorSize="50dp"
-        app:trackThickness="4.8dp"/>
+        app:trackThickness="5dp"/>
 </FrameLayout>

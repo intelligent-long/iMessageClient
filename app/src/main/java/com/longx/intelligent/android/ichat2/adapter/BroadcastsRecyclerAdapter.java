@@ -7,6 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -142,85 +145,57 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }else {
             holder.binding.text.setVisibility(View.GONE);
         }
-        for (int i = 0; i < 12; i++) {
-            switch (i){
-                case 0:
-                    holder.binding.layoutMedia1.setVisibility(View.GONE);
-                    break;
-                case 1:
-                    holder.binding.layoutMedia2.setVisibility(View.GONE);
-                    break;
-                case 2:
-                    holder.binding.layoutMedia3.setVisibility(View.GONE);
-                    break;
-                case 3:
-                    holder.binding.layoutMedia4.setVisibility(View.GONE);
-                    break;
-                case 4:
-                    holder.binding.layoutMedia5.setVisibility(View.GONE);
-                    break;
-                case 5:
-                    holder.binding.layoutMedia6.setVisibility(View.GONE);
-                    break;
-                case 6:
-                    holder.binding.layoutMedia7.setVisibility(View.GONE);
-                    break;
-                case 7:
-                    holder.binding.layoutMedia8.setVisibility(View.GONE);
-                    break;
-                case 8:
-                    holder.binding.layoutMedia9.setVisibility(View.GONE);
-                    break;
-                case 9:
-                    holder.binding.layoutMedia10.setVisibility(View.GONE);
-                    break;
-                case 10:
-                    holder.binding.layoutMedia11.setVisibility(View.GONE);
-                    break;
-                case 11:
-                    holder.binding.layoutMedia12.setVisibility(View.GONE);
-                    break;
-            }
-        }
-        for (int i = 0; i < 4; i++) {
-            switch (i){
-                case 0:
-                    holder.binding.layoutMedia2To41.setVisibility(View.GONE);
-                    break;
-                case 1:
-                    holder.binding.layoutMedia2To42.setVisibility(View.GONE);
-                    break;
-                case 2:
-                    holder.binding.layoutMedia2To43.setVisibility(View.GONE);
-                    break;
-                case 3:
-                    holder.binding.layoutMedia2To44.setVisibility(View.GONE);
-                    break;
-            }
-        }
         holder.binding.mediaSingle.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
             holder.binding.mediasFrame.setVisibility(View.VISIBLE);
             broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
             if(broadcastMedias.size() > 4) {
+                //大于4个
                 holder.binding.medias.setVisibility(View.VISIBLE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
                 holder.binding.mediaSingle.setVisibility(View.GONE);
-                int forTimes = Math.min(12, broadcastMedias.size());
+                ImageView[] imageViews = {
+                        holder.binding.media1, holder.binding.media2, holder.binding.media3, holder.binding.media4,
+                        holder.binding.media5, holder.binding.media6, holder.binding.media7, holder.binding.media8,
+                        holder.binding.media9, holder.binding.media10, holder.binding.media11, holder.binding.media12
+                };
+                TextView[] videoDurationViews = {
+                        holder.binding.videoDuration1, holder.binding.videoDuration2, holder.binding.videoDuration3, holder.binding.videoDuration4,
+                        holder.binding.videoDuration5, holder.binding.videoDuration6, holder.binding.videoDuration7, holder.binding.videoDuration8,
+                        holder.binding.videoDuration9, holder.binding.videoDuration10, holder.binding.videoDuration11, holder.binding.videoDuration12
+                };
+                setupImageVisibilities(imageViews, broadcastMedias);
+                int forTimes = Math.min(imageViews.length, broadcastMedias.size());
                 for (int i = 0; i < forTimes; i++) {
-                    setupImage(holder, i, broadcastMedias);
-                    setupVideoDuration(holder, i, broadcastMedias);
+                    setupImage(imageViews, i, broadcastMedias);
+                    setupVideoDuration(videoDurationViews, i, broadcastMedias);
+                }
+                if(broadcastMedias.size() > imageViews.length){
+                    holder.binding.darkCover.setVisibility(View.VISIBLE);
+                    holder.binding.moreIcon.setVisibility(View.VISIBLE);
+                }else {
+                    holder.binding.darkCover.setVisibility(View.GONE);
+                    holder.binding.moreIcon.setVisibility(View.GONE);
                 }
             }else if(broadcastMedias.size() > 1){
+                //2到4个
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.VISIBLE);
                 holder.binding.mediaSingle.setVisibility(View.GONE);
+                ImageView[] imageViews = {
+                        holder.binding.media2To41, holder.binding.media2To42, holder.binding.media2To43, holder.binding.media2To44
+                };
+                TextView[] videoDurationViews = {
+                        holder.binding.videoDuration2To41, holder.binding.videoDuration2To42, holder.binding.videoDuration2To43, holder.binding.videoDuration2To44
+                };
+                setupImageVisibilities(imageViews, broadcastMedias);
                 for (int i = 0; i < broadcastMedias.size(); i++) {
-                    setupImage2To4(holder, i, broadcastMedias);
-                    setupVideoDuration2To4(holder, i, broadcastMedias);
+                    setupImage(imageViews, i, broadcastMedias);
+                    setupVideoDuration(videoDurationViews, i, broadcastMedias);
                 }
             }else {
+                //1个
                 holder.binding.mediaSingle.setImageDrawable(null);
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
@@ -270,200 +245,45 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         setupYiers(holder, position);
     }
 
-    private void setupImage(@NonNull ViewHolder holder, int i, List<BroadcastMedia> broadcastMedias) {
-        BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-        AppCompatImageView imageView = null;
-        SquareFrameLayout layout = null;
-        switch (i){
-            case 0:
-                imageView = holder.binding.media1;
-                layout = holder.binding.layoutMedia1;
-                break;
-            case 1:
-                imageView = holder.binding.media2;
-                layout = holder.binding.layoutMedia2;
-                break;
-            case 2:
-                imageView = holder.binding.media3;
-                layout = holder.binding.layoutMedia3;
-                break;
-            case 3:
-                imageView = holder.binding.media4;
-                layout = holder.binding.layoutMedia4;
-                break;
-            case 4:
-                imageView = holder.binding.media5;
-                layout = holder.binding.layoutMedia5;
-                break;
-            case 5:
-                imageView = holder.binding.media6;
-                layout = holder.binding.layoutMedia6;
-                break;
-            case 6:
-                imageView = holder.binding.media7;
-                layout = holder.binding.layoutMedia7;
-                break;
-            case 7:
-                imageView = holder.binding.media8;
-                layout = holder.binding.layoutMedia8;
-                break;
-            case 8:
-                imageView = holder.binding.media9;
-                layout = holder.binding.layoutMedia9;
-                break;
-            case 9:
-                imageView = holder.binding.media10;
-                layout = holder.binding.layoutMedia10;
-                break;
-            case 10:
-                imageView = holder.binding.media11;
-                layout = holder.binding.layoutMedia11;
-                break;
-            case 11:
-                imageView = holder.binding.media12;
-                layout = holder.binding.layoutMedia12;
-                if (broadcastMedias.size() > 12) {
-                    holder.binding.darkCover.setVisibility(View.VISIBLE);
-                    holder.binding.moreIcon.setVisibility(View.VISIBLE);
-                }
-                break;
-        }
-        layout.setVisibility(View.VISIBLE);
-        if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
-            GlideApp
-                    .with(activity.getApplicationContext())
-                    .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                    .centerCrop()
-                    .into(imageView);
-        }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
-            GlideApp
-                    .with(activity.getApplicationContext())
-                    .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                    .frame(1000_000)
-                    .centerCrop()
-                    .into(imageView);
-        }
-    }
-
-    private void setupVideoDuration(ViewHolder holder, int i, List<BroadcastMedia> broadcastMedias) {
-        BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-        NoPaddingTextView videoDuration = null;
-        switch (i){
-            case 0:
-                videoDuration = holder.binding.videoDuration1;
-                break;
-            case 1:
-                videoDuration = holder.binding.videoDuration2;
-                break;
-            case 2:
-                videoDuration = holder.binding.videoDuration3;
-                break;
-            case 3:
-                videoDuration = holder.binding.videoDuration4;
-                break;
-            case 4:
-                videoDuration = holder.binding.videoDuration5;
-                break;
-            case 5:
-                videoDuration = holder.binding.videoDuration6;
-                break;
-            case 6:
-                videoDuration = holder.binding.videoDuration7;
-                break;
-            case 7:
-                videoDuration = holder.binding.videoDuration8;
-                break;
-            case 8:
-                videoDuration = holder.binding.videoDuration9;
-                break;
-            case 9:
-                videoDuration = holder.binding.videoDuration10;
-                break;
-            case 10:
-                videoDuration = holder.binding.videoDuration11;
-                break;
-            case 11:
-                videoDuration = holder.binding.videoDuration12;
-                break;
-        }
-        if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
-            videoDuration.setVisibility(View.GONE);
-        }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
-            videoDuration.setVisibility(View.VISIBLE);
-            videoDuration.bringToFront();
-            if(broadcastMedia.getVideoDuration() != null) {
-                videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+    private void setupImageVisibilities(ImageView[] imageViews, List<BroadcastMedia> broadcastMedias){
+        for (int i = 0; i < imageViews.length; i++) {
+            if(i < broadcastMedias.size()){
+                imageViews[i].setVisibility(View.VISIBLE);
             }else {
-                videoDuration.setText("video");
+                imageViews[i].setVisibility(View.GONE);
             }
         }
     }
 
-    private void setupImage2To4(@NonNull ViewHolder holder, int i, List<BroadcastMedia> broadcastMedias) {
+    private void setupImage(ImageView[] imageViews, int i, List<BroadcastMedia> broadcastMedias) {
         BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-        AppCompatImageView imageView = null;
-        SquareFrameLayout layout = null;
-        switch (i){
-            case 0:
-                imageView = holder.binding.media2To41;
-                layout = holder.binding.layoutMedia2To41;
-                break;
-            case 1:
-                imageView = holder.binding.media2To42;
-                layout = holder.binding.layoutMedia2To42;
-                break;
-            case 2:
-                imageView = holder.binding.media2To43;
-                layout = holder.binding.layoutMedia2To43;
-                break;
-            case 3:
-                imageView = holder.binding.media2To44;
-                layout = holder.binding.layoutMedia2To44;
-                break;
-        }
-        layout.setVisibility(View.VISIBLE);
         if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
             GlideApp
                     .with(activity.getApplicationContext())
                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
                     .centerCrop()
-                    .into(imageView);
+                    .into(imageViews[i]);
         }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
             GlideApp
                     .with(activity.getApplicationContext())
                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
                     .frame(1000_000)
                     .centerCrop()
-                    .into(imageView);
+                    .into(imageViews[i]);
         }
     }
 
-    private void setupVideoDuration2To4(@NonNull ViewHolder holder, int i, List<BroadcastMedia> broadcastMedias) {
+    private void setupVideoDuration(TextView[] videoDurationViews, int i, List<BroadcastMedia> broadcastMedias) {
         BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-        NoPaddingTextView videoDuration = null;
-        switch (i) {
-            case 0:
-                videoDuration = holder.binding.videoDuration2To41;
-                break;
-            case 1:
-                videoDuration = holder.binding.videoDuration2To42;
-                break;
-            case 2:
-                videoDuration = holder.binding.videoDuration2To43;
-                break;
-            case 3:
-                videoDuration = holder.binding.videoDuration2To44;
-                break;
-        }
         if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
-            videoDuration.setVisibility(View.GONE);
+            videoDurationViews[i].setVisibility(View.GONE);
         }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
-            videoDuration.setVisibility(View.VISIBLE);
-            videoDuration.bringToFront();
+            videoDurationViews[i].setVisibility(View.VISIBLE);
+            videoDurationViews[i].bringToFront();
             if(broadcastMedia.getVideoDuration() != null) {
-                videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                videoDurationViews[i].setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
             }else {
-                videoDuration.setText("video");
+                videoDurationViews[i].setText("video");
             }
         }
     }
