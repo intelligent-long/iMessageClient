@@ -92,14 +92,7 @@ public class BroadcastActivity extends BaseActivity {
         if(broadcast.getText() != null) {
             binding.text.setVisibility(View.VISIBLE);
             binding.text.setText(broadcast.getText());
-        }else {
-            binding.text.setVisibility(View.GONE);
         }
-        for (int i = 0; i < 30; i++) {
-            int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-            binding.medias.findViewById(imageResId).setVisibility(View.GONE);
-        }
-        binding.mediaSingle.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
             binding.mediasFrame.setVisibility(View.VISIBLE);
@@ -111,11 +104,11 @@ public class BroadcastActivity extends BaseActivity {
                 int forTimes = Math.min(30, broadcastMedias.size());
                 for (int i = 0; i < forTimes; i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                    int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                    AppCompatImageView imageView = binding.medias.findViewById(imageResId);
+                    imageView.setVisibility(View.VISIBLE);
                     switch (broadcastMedia.getType()) {
                         case BroadcastMedia.TYPE_IMAGE: {
-                            int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-                            AppCompatImageView imageView = binding.medias.findViewById(imageResId);
-                            imageView.setVisibility(View.VISIBLE);
                             GlideApp
                                     .with(getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
@@ -124,6 +117,21 @@ public class BroadcastActivity extends BaseActivity {
                             break;
                         }
                         case BroadcastMedia.TYPE_VIDEO: {
+                            GlideApp
+                                    .with(getApplicationContext())
+                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                    .frame(1000_000)
+                                    .centerCrop()
+                                    .into(imageView);
+                            int videoDurationResId = ResourceUtil.getResId("video_duration_" + (i + 1), R.id.class);
+                            NoPaddingTextView videoDuration = binding.medias.findViewById(videoDurationResId);
+                            videoDuration.setVisibility(View.VISIBLE);
+                            videoDuration.bringToFront();
+                            if(broadcastMedia.getVideoDuration() != null) {
+                                videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                            }else {
+                                videoDuration.setText("video");
+                            }
                             break;
                         }
                     }
@@ -132,35 +140,37 @@ public class BroadcastActivity extends BaseActivity {
                 binding.medias.setVisibility(View.GONE);
                 binding.medias2To4.setVisibility(View.VISIBLE);
                 binding.mediaSingle.setVisibility(View.GONE);
-                int times = broadcastMedias.size();
-                for (int i = 0; i < times; i++) {
+                for (int i = 0; i < broadcastMedias.size(); i++) {
                     BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-                    int layoutResId = ResourceUtil.getResId("layout_media_2_to_4_" + (i + 1), R.id.class);
                     int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
-                    int videoDurationResId = ResourceUtil.getResId("video_duration_2_to_4_" + (i + 1), R.id.class);
-                    binding.medias2To4.findViewById(layoutResId).setVisibility(View.VISIBLE);
                     AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
-                    NoPaddingTextView videoDuration = binding.medias2To4.findViewById(videoDurationResId);
-                    if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
-                        GlideApp
-                                .with(getApplicationContext())
-                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                .centerCrop()
-                                .into(imageView);
-                        videoDuration.setVisibility(View.GONE);
-                    }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
-                        GlideApp
-                                .with(getApplicationContext())
-                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                .frame(1000_000)
-                                .centerCrop()
-                                .into(imageView);
-                        videoDuration.setVisibility(View.VISIBLE);
-                        videoDuration.bringToFront();
-                        if(broadcastMedia.getVideoDuration() != null) {
-                            videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
-                        }else {
-                            videoDuration.setText("video");
+                    imageView.setVisibility(View.VISIBLE);
+                    switch (broadcastMedia.getType()) {
+                        case BroadcastMedia.TYPE_IMAGE: {
+                            GlideApp
+                                    .with(getApplicationContext())
+                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                    .centerCrop()
+                                    .into(imageView);
+                            break;
+                        }
+                        case BroadcastMedia.TYPE_VIDEO: {
+                            GlideApp
+                                    .with(getApplicationContext())
+                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                    .frame(1000_000)
+                                    .centerCrop()
+                                    .into(imageView);
+                            int videoDurationResId = ResourceUtil.getResId("video_duration_2_to_4_" + (i + 1), R.id.class);
+                            NoPaddingTextView videoDuration = binding.medias2To4.findViewById(videoDurationResId);
+                            videoDuration.setVisibility(View.VISIBLE);
+                            videoDuration.bringToFront();
+                            if(broadcastMedia.getVideoDuration() != null) {
+                                videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                            }else {
+                                videoDuration.setText("video");
+                            }
+                            break;
                         }
                     }
                 }
@@ -168,10 +178,31 @@ public class BroadcastActivity extends BaseActivity {
                 binding.medias.setVisibility(View.GONE);
                 binding.medias2To4.setVisibility(View.GONE);
                 binding.mediaSingle.setVisibility(View.VISIBLE);
-                GlideApp
-                        .with(getApplicationContext())
-                        .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedias.get(0).getMediaId()))
-                        .into(binding.mediaSingle);
+                BroadcastMedia broadcastMedia = broadcastMedias.get(0);
+                switch (broadcastMedia.getType()) {
+                    case BroadcastMedia.TYPE_IMAGE: {
+                        GlideApp
+                                .with(getApplicationContext())
+                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                .into(binding.mediaSingle);
+                        break;
+                    }
+                    case BroadcastMedia.TYPE_VIDEO: {
+                        GlideApp
+                                .with(getApplicationContext())
+                                .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                .frame(1000_000)
+                                .into(binding.mediaSingle);
+                        binding.videoDurationSingle.setVisibility(View.VISIBLE);
+                        binding.videoDurationSingle.bringToFront();
+                        if (broadcastMedia.getVideoDuration() != null) {
+                            binding.videoDurationSingle.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                        } else {
+                            binding.videoDurationSingle.setText("video");
+                        }
+                        break;
+                    }
+                }
             }
         }else {
             binding.mediasFrame.setVisibility(View.GONE);

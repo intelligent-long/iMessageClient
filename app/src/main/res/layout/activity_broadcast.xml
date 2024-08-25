@@ -91,7 +91,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="15dp"
-                    android:layout_below="@id/text">
+                    android:layout_below="@id/text"
+                    android:visibility="gone">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/media_single"
@@ -101,6 +102,17 @@
                         android:adjustViewBounds="true"
                         android:visibility="gone" />
 
+                    <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                        android:id="@+id/video_duration_single"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:layout_gravity="start|bottom"
+                        android:textSize="13sp"
+                        android:textColor="@color/white"/>
+
                     <GridLayout
                         android:id="@+id/medias_2_to_4"
                         android:layout_width="match_parent"
@@ -109,121 +121,101 @@
                         android:columnCount="2"
                         android:rowCount="2">
 
-                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
-                            android:id="@+id/layout_media_2_to_4_1"
+                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                            android:id="@+id/media_2_to_4_1"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_row="0"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone">
+                            android:visibility="gone" />
 
-                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                                android:id="@+id/media_2_to_4_1"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true" />
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_2_to_4_1"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="0"
+                            android:layout_marginStart="7dp"
+                            android:layout_marginBottom="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"/>
 
-                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
-                                android:id="@+id/video_duration_2_to_4_1"
-                                android:visibility="gone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="9dp"
-                                android:layout_gravity="start|bottom"
-                                android:textSize="13sp"
-                                android:textColor="@color/white"/>
-                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
-
-                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
-                            android:id="@+id/layout_media_2_to_4_2"
+                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                            android:id="@+id/media_2_to_4_2"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_row="0"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:layout_marginStart="6.5dp"
-                            android:visibility="gone">
+                            android:visibility="gone"/>
 
-                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                                android:id="@+id/media_2_to_4_2"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true"/>
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_2_to_4_2"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"/>
 
-                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
-                                android:id="@+id/video_duration_2_to_4_2"
-                                android:visibility="gone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="9dp"
-                                android:layout_gravity="start|bottom"
-                                android:textSize="13sp"
-                                android:textColor="@color/white"/>
-                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
-
-                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
-                            android:id="@+id/layout_media_2_to_4_3"
+                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                            android:id="@+id/media_2_to_4_3"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_row="1"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:layout_marginTop="6.5dp"
-                            android:visibility="gone">
+                            android:visibility="gone" />
 
-                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                                android:id="@+id/media_2_to_4_3"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true" />
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_2_to_4_3"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="1"
+                            android:layout_column="0"
+                            android:layout_marginStart="7dp"
+                            android:layout_marginBottom="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"/>
 
-                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
-                                android:id="@+id/video_duration_2_to_4_3"
-                                android:visibility="gone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="9dp"
-                                android:layout_gravity="start|bottom"
-                                android:textSize="13sp"
-                                android:textColor="@color/white"/>
-                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
-
-                        <com.longx.intelligent.android.ichat2.ui.SquareFrameLayout
-                            android:id="@+id/layout_media_2_to_4_4"
+                        <com.longx.intelligent.android.ichat2.ui.SquareImageView
+                            android:id="@+id/media_2_to_4_4"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_row="1"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
-                            android:visibility="gone">
+                            android:visibility="gone" />
 
-                            <com.longx.intelligent.android.ichat2.ui.SquareImageView
-                                android:id="@+id/media_2_to_4_4"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true" />
-
-                            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
-                                android:id="@+id/video_duration_2_to_4_4"
-                                android:visibility="gone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="9dp"
-                                android:layout_gravity="start|bottom"
-                                android:textSize="13sp"
-                                android:textColor="@color/white"/>
-                        </com.longx.intelligent.android.ichat2.ui.SquareFrameLayout>
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_2_to_4_4"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="1"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"/>
                     </GridLayout>
 
                     <GridLayout
@@ -239,206 +231,397 @@
                             android:id="@+id/media_1"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_row="0"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_2"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_row="0"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_3"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_row="0"
                             android:layout_column="2"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_4"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="1"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="1"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_5"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="1"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="1"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_6"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="1"
                             android:layout_column="2"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="1"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_7"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="2"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="2"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_8"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="2"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="2"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_9"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="2"
                             android:layout_column="2"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="2"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_10"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="3"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="3"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_11"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="3"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="3"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_12"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="3"
                             android:layout_column="2"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="3"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_13"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="4"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_13"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="4"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_14"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="4"
                             android:layout_column="1"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="4"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_15"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="4"
                             android:layout_column="2"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_15"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="4"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_16"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="5"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_16"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="5"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_17"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="5"
@@ -446,12 +629,24 @@
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_17"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="5"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_18"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="5"
@@ -460,23 +655,47 @@
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
 
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_18"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="5"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
+
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_19"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="6"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_19"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="6"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_20"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="6"
@@ -484,12 +703,24 @@
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_20"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="6"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_21"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="6"
@@ -498,23 +729,47 @@
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
 
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="6"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
+
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_22"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="7"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="7"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_23"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="7"
@@ -522,12 +777,24 @@
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_23"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="7"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_24"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="7"
@@ -536,23 +803,47 @@
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
 
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_24"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="7"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
+
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_25"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="8"
                             android:layout_column="0"
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_25"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="8"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
 
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_26"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="8"
@@ -561,11 +852,23 @@
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
 
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_26"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="8"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
+
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_27"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="8"
@@ -574,11 +877,23 @@
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
 
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_27"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="8"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
+
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_28"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="9"
                             android:layout_column="0"
@@ -586,11 +901,23 @@
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
 
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_28"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="9"
+                            android:layout_column="0"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
+
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_29"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="9"
@@ -599,11 +926,23 @@
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
 
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_29"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="9"
+                            android:layout_column="1"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
+
                         <com.longx.intelligent.android.ichat2.ui.SquareImageView
                             android:id="@+id/media_30"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginStart="6.5dp"
                             android:layout_marginTop="6.5dp"
                             android:layout_row="9"
@@ -611,6 +950,19 @@
                             android:layout_rowWeight="1"
                             android:layout_columnWeight="1"
                             android:visibility="gone" />
+
+                        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                            android:id="@+id/video_duration_30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_row="9"
+                            android:layout_column="2"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginStart="13.5dp"
+                            android:layout_gravity="start|bottom"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:visibility="gone"/>
                     </GridLayout>
                 </FrameLayout>
 

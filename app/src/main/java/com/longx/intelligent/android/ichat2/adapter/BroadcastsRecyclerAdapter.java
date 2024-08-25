@@ -155,6 +155,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.medias.setVisibility(View.VISIBLE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
                 holder.binding.mediaSingle.setVisibility(View.GONE);
+                holder.binding.videoDurationSingle.setVisibility(View.GONE);
                 ImageView[] imageViews = {
                         holder.binding.media1, holder.binding.media2, holder.binding.media3, holder.binding.media4,
                         holder.binding.media5, holder.binding.media6, holder.binding.media7, holder.binding.media8,
@@ -183,6 +184,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.VISIBLE);
                 holder.binding.mediaSingle.setVisibility(View.GONE);
+                holder.binding.videoDurationSingle.setVisibility(View.GONE);
                 ImageView[] imageViews = {
                         holder.binding.media2To41, holder.binding.media2To42, holder.binding.media2To43, holder.binding.media2To44
                 };
@@ -200,7 +202,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
                 holder.binding.mediaSingle.setVisibility(View.VISIBLE);
-                Size size = broadcastMedias.get(0).getSize();
+                holder.binding.videoDurationSingle.setVisibility(View.VISIBLE);
+                holder.binding.videoDurationSingle.bringToFront();
+                BroadcastMedia broadcastMedia = broadcastMedias.get(0);
+                if(broadcastMedia.getVideoDuration() != null) {
+                    holder.binding.videoDurationSingle.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                }else {
+                    holder.binding.videoDurationSingle.setText("video");
+                }
+                Size size = broadcastMedia.getSize();
                 if(size != null) {
                     boolean successShow = showSingleMedia(holder, position);
                     if(!successShow) {
@@ -209,7 +219,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                             public void onGlobalLayout() {
                                 holder.binding.mediasFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                                 Size viewSize = calculateViewSize(holder, position);
-                                singleMediaViewSizeMap.put(broadcastMedias.get(0).getMediaId(), viewSize);
+                                singleMediaViewSizeMap.put(broadcastMedia.getMediaId(), viewSize);
                                 showSingleMedia(holder, position);
                             }
                         });
@@ -217,7 +227,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 } else {
                     GlideApp
                             .with(activity.getApplicationContext())
-                            .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
+                            .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
                             .into(new CustomTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
