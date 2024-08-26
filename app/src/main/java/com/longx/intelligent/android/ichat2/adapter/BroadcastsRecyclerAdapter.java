@@ -222,13 +222,14 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 if(size != null) {
                     boolean successShow = showSingleMedia(holder, position);
                     if(!successShow) {
-                        holder.binding.mediaSingle.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        holder.binding.mediaSingle.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                             @Override
-                            public void onGlobalLayout() {
-                                holder.binding.mediaSingle.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            public boolean onPreDraw() {
+                                holder.binding.mediaSingle.getViewTreeObserver().removeOnPreDrawListener(this);
                                 Size viewSize = calculateViewSize(holder, position);
                                 singleMediaViewSizeMap.put(broadcastMedia.getMediaId(), viewSize);
                                 showSingleMedia(holder, position);
+                                return true;
                             }
                         });
                     }
