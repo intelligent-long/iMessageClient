@@ -148,7 +148,6 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         holder.binding.mediaSingle.setVisibility(View.GONE);
         List<BroadcastMedia> broadcastMedias = itemData.broadcast.getBroadcastMedias();
         if(broadcastMedias != null && !broadcastMedias.isEmpty()){
-            holder.binding.mediasFrame.setVisibility(View.VISIBLE);
             broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
             if(broadcastMedias.size() > 4) {
                 //大于4个
@@ -166,7 +165,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                         holder.binding.videoDuration5, holder.binding.videoDuration6, holder.binding.videoDuration7, holder.binding.videoDuration8,
                         holder.binding.videoDuration9, holder.binding.videoDuration10, holder.binding.videoDuration11, holder.binding.videoDuration12
                 };
-                setupImageVisibilities(imageViews, broadcastMedias);
+                setImageViewsVisibility(imageViews, broadcastMedias);
+                for (TextView videoDurationView : videoDurationViews) {
+                    videoDurationView.setVisibility(View.INVISIBLE);
+                }
                 int forTimes = Math.min(imageViews.length, broadcastMedias.size());
                 for (int i = 0; i < forTimes; i++) {
                     setupImage(imageViews, i, broadcastMedias);
@@ -191,7 +193,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 TextView[] videoDurationViews = {
                         holder.binding.videoDuration2To41, holder.binding.videoDuration2To42, holder.binding.videoDuration2To43, holder.binding.videoDuration2To44
                 };
-                setupImageVisibilities(imageViews, broadcastMedias);
+                setImageViewsVisibility2To4(imageViews, broadcastMedias);
+                for (TextView videoDurationView : videoDurationViews) {
+                    videoDurationView.setVisibility(View.INVISIBLE);
+                }
                 for (int i = 0; i < broadcastMedias.size(); i++) {
                     setupImage(imageViews, i, broadcastMedias);
                     setupVideoDuration(videoDurationViews, i, broadcastMedias);
@@ -205,19 +210,21 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.videoDurationSingle.setVisibility(View.VISIBLE);
                 holder.binding.videoDurationSingle.bringToFront();
                 BroadcastMedia broadcastMedia = broadcastMedias.get(0);
-                if(broadcastMedia.getVideoDuration() != null) {
-                    holder.binding.videoDurationSingle.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
-                }else {
-                    holder.binding.videoDurationSingle.setText("video");
+                if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO) {
+                    if (broadcastMedia.getVideoDuration() != null) {
+                        holder.binding.videoDurationSingle.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                    } else {
+                        holder.binding.videoDurationSingle.setText("video");
+                    }
                 }
                 Size size = broadcastMedia.getSize();
                 if(size != null) {
                     boolean successShow = showSingleMedia(holder, position);
                     if(!successShow) {
-                        holder.binding.mediasFrame.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        holder.binding.mediaSingle.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
-                                holder.binding.mediasFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                holder.binding.mediaSingle.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                                 Size viewSize = calculateViewSize(holder, position);
                                 singleMediaViewSizeMap.put(broadcastMedia.getMediaId(), viewSize);
                                 showSingleMedia(holder, position);
@@ -228,6 +235,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     GlideApp
                             .with(activity.getApplicationContext())
                             .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
+                            .placeholder(R.drawable.ic_glide_placeholder)
                             .into(new CustomTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -246,7 +254,6 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 }
             }
         }else {
-            holder.binding.mediasFrame.setVisibility(View.GONE);
             holder.binding.medias.setVisibility(View.GONE);
             holder.binding.medias2To4.setVisibility(View.GONE);
             holder.binding.mediaSingle.setVisibility(View.GONE);
@@ -255,37 +262,76 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         setupYiers(holder, position);
     }
 
-    private void setupImageVisibilities(ImageView[] imageViews, List<BroadcastMedia> broadcastMedias){
+    private void setImageViewsVisibility(ImageView[] imageViews,  List<BroadcastMedia> broadcastMedias){
+        int imageSize = broadcastMedias.size();
         for (int i = 0; i < imageViews.length; i++) {
-            if(i < broadcastMedias.size()){
+            if(i < imageSize){
                 imageViews[i].setVisibility(View.VISIBLE);
             }else {
-                imageViews[i].setVisibility(View.GONE);
+                if(imageSize <= 3){
+                    if(i < 3) {
+                        imageViews[i].setVisibility(View.INVISIBLE);
+                    }else {
+                        imageViews[i].setVisibility(View.GONE);
+                    }
+                }else if(imageSize <= 6){
+                    if(i < 6) {
+                        imageViews[i].setVisibility(View.INVISIBLE);
+                    }else {
+                        imageViews[i].setVisibility(View.GONE);
+                    }
+                }else if(imageSize <= 9){
+                    if(i < 9) {
+                        imageViews[i].setVisibility(View.INVISIBLE);
+                    }else {
+                        imageViews[i].setVisibility(View.GONE);
+                    }
+                }else {
+                    imageViews[i].setVisibility(View.INVISIBLE);
+                }
+            }
+        }
+    }
+
+    private void setImageViewsVisibility2To4(ImageView[] imageViews, List<BroadcastMedia> broadcastMedias){
+        int imageSize = broadcastMedias.size();
+        for (int i = 0; i < imageViews.length; i++) {
+            if(i < imageSize){
+                imageViews[i].setVisibility(View.VISIBLE);
+            }else {
+                if(imageSize <= 2){
+                    if(i < 2) {
+                        imageViews[i].setVisibility(View.INVISIBLE);
+                    }else {
+                        imageViews[i].setVisibility(View.GONE);
+                    }
+                }else if(imageSize <= 4){
+                    if(i < 4) {
+                        imageViews[i].setVisibility(View.INVISIBLE);
+                    }else {
+                        imageViews[i].setVisibility(View.GONE);
+                    }
+                }else {
+                    imageViews[i].setVisibility(View.INVISIBLE);
+                }
             }
         }
     }
 
     private void setupImage(ImageView[] imageViews, int i, List<BroadcastMedia> broadcastMedias) {
         BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-        if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
-            GlideApp
-                    .with(activity.getApplicationContext())
-                    .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                    .centerCrop()
-                    .into(imageViews[i]);
-        }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
-            GlideApp
-                    .with(activity.getApplicationContext())
-                    .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                    .centerCrop()
-                    .into(imageViews[i]);
-        }
+        GlideApp
+                .with(activity.getApplicationContext())
+                .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
+                .placeholder(R.drawable.ic_glide_placeholder)
+                .centerCrop()
+                .into(imageViews[i]);
     }
 
     private void setupVideoDuration(TextView[] videoDurationViews, int i, List<BroadcastMedia> broadcastMedias) {
         BroadcastMedia broadcastMedia = broadcastMedias.get(i);
         if(broadcastMedia.getType() == BroadcastMedia.TYPE_IMAGE) {
-            videoDurationViews[i].setVisibility(View.GONE);
+            videoDurationViews[i].setVisibility(View.INVISIBLE);
         }else if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
             videoDurationViews[i].setVisibility(View.VISIBLE);
             videoDurationViews[i].bringToFront();
@@ -309,6 +355,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
+                .placeholder(R.drawable.ic_glide_placeholder)
                 .override(size.getWidth(), size.getHeight())
                 .into(new CustomTarget<Drawable>() {
                     @Override
@@ -325,7 +372,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
 
     private Size calculateViewSize(ViewHolder holder, int position){
         List<BroadcastMedia> broadcastMedias = itemDataList.get(position).broadcast.getBroadcastMedias();
-        int viewWidth = holder.binding.mediasFrame.getWidth();
+        int viewWidth = holder.binding.mainContent.getWidth();
         int imageViewMaxWidth = UiUtil.pxToDp(activity, viewWidth - UiUtil.dpToPx(activity, Constants.SINGLE_BROADCAST_IMAGE_VIEW_MARGIN_END_DP));
         Size size = broadcastMedias.get(0).getSize();
         int imageWidth = size.getWidth();
