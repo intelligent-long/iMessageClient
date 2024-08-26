@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
@@ -235,7 +236,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     GlideApp
                             .with(activity.getApplicationContext())
                             .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                            .placeholder(R.drawable.ic_glide_placeholder)
+                            .placeholder(AppCompatResources.getDrawable(activity, R.drawable.cached_24px))
                             .into(new CustomTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -323,7 +324,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                .placeholder(R.drawable.ic_glide_placeholder)
+                .placeholder(AppCompatResources.getDrawable(activity, R.drawable.cached_24px))
                 .centerCrop()
                 .into(imageViews[i]);
     }
@@ -355,18 +356,9 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedias.get(0).getMediaId()))
-                .placeholder(R.drawable.ic_glide_placeholder)
+                .placeholder(AppCompatResources.getDrawable(activity, R.drawable.cached_24px))
                 .override(size.getWidth(), size.getHeight())
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        holder.binding.mediaSingle.setImageDrawable(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                    }
-                });
+                .into(holder.binding.mediaSingle);
         return true;
     }
 
