@@ -209,7 +209,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         GlideApp
                 .with(activity.getApplicationContext())
                 .load(mediaInfo.getPath())
-                .frame(1000_000)
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);

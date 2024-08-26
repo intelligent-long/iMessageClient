@@ -255,7 +255,6 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     GlideApp
                             .with(activity.getApplicationContext())
                             .load(itemData.chatMessage.getVideoFilePath())
-                            .frame(1000000)
                             .apply(requestOptions)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailSend);
@@ -364,7 +363,6 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     GlideApp
                             .with(activity.getApplicationContext())
                             .load(itemData.chatMessage.getVideoFilePath())
-                            .frame(1000_000)
                             .apply(requestOptions)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailReceive);

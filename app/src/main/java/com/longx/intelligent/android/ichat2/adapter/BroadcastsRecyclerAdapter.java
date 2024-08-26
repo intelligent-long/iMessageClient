@@ -277,7 +277,6 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             GlideApp
                     .with(activity.getApplicationContext())
                     .load(NetDataUrls.getBroadcastMediaDataUrl(activity, broadcastMedia.getMediaId()))
-                    .frame(1000_000)
                     .centerCrop()
                     .into(imageViews[i]);
         }

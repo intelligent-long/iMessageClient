@@ -120,7 +120,6 @@ public class BroadcastActivity extends BaseActivity {
                             GlideApp
                                     .with(getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                    .frame(1000_000)
                                     .centerCrop()
                                     .into(imageView);
                             int videoDurationResId = ResourceUtil.getResId("video_duration_" + (i + 1), R.id.class);
@@ -158,7 +157,6 @@ public class BroadcastActivity extends BaseActivity {
                             GlideApp
                                     .with(getApplicationContext())
                                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                    .frame(1000_000)
                                     .centerCrop()
                                     .into(imageView);
                             int videoDurationResId = ResourceUtil.getResId("video_duration_2_to_4_" + (i + 1), R.id.class);
@@ -191,7 +189,6 @@ public class BroadcastActivity extends BaseActivity {
                         GlideApp
                                 .with(getApplicationContext())
                                 .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                .frame(1000_000)
                                 .into(binding.mediaSingle);
                         binding.videoDurationSingle.setVisibility(View.VISIBLE);
                         binding.videoDurationSingle.bringToFront();
@@ -217,21 +214,12 @@ public class BroadcastActivity extends BaseActivity {
         if(broadcastMedias.size() > 4) {
             int forTimes = Math.min(30, broadcastMedias.size());
             for (int i = 0; i < forTimes; i++) {
-                BroadcastMedia broadcastMedia = broadcastMedias.get(i);
-                switch (broadcastMedia.getType()) {
-                    case BroadcastMedia.TYPE_IMAGE: {
-                        int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
-                        AppCompatImageView imageView = binding.medias.findViewById(imageResId);
-                        int finalI = i;
-                        imageView.setOnClickListener(v -> {
-                            setupAndStartMediaActivity(finalI);
-                        });
-                        break;
-                    }
-                    case BroadcastMedia.TYPE_VIDEO: {
-                        break;
-                    }
-                }
+                int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
+                AppCompatImageView imageView = binding.medias.findViewById(imageResId);
+                int finalI = i;
+                imageView.setOnClickListener(v -> {
+                    setupAndStartMediaActivity(finalI);
+                });
             }
         }else if(broadcastMedias.size() > 1){
             int times = broadcastMedias.size();

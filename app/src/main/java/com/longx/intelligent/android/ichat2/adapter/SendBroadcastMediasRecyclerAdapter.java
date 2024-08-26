@@ -77,7 +77,6 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                 GlideApp
                         .with(activity.getApplicationContext())
                         .load(mediaInfo.getUri())
-                        .frame(1000_000)
                         .centerCrop()
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.binding.imageView);

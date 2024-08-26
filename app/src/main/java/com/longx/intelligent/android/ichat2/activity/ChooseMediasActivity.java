@@ -141,7 +141,7 @@ public class ChooseMediasActivity extends BaseActivity{
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (Math.abs(dy) < 200) {
+                if (Math.abs(dy) < 170) {
                     GlideApp.with(ChooseMediasActivity.this).resumeRequests();
                 }
             }
