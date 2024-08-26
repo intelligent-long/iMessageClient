@@ -215,6 +215,11 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             }
             return true;
         });
+        binding.layoutBroadcast.setOnClickListener(v -> {
+            Intent intent = new Intent(this, BroadcastChannelActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, channel);
+            startActivity(intent);
+        });
     }
 
     private void setLongClickCopyYiers() {
