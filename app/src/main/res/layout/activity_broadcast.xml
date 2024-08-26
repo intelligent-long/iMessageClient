@@ -55,7 +55,7 @@
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
+                        android:textFontWeight="@integer/font_weight_medium"
                         android:textSize="21sp"
                         android:maxLines="1"
                         android:ellipsize="end"/>

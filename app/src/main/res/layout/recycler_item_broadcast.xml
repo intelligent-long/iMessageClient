@@ -52,7 +52,6 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/long_android_font_ncjk_gs_sc_medium"
                 android:textSize="21sp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
