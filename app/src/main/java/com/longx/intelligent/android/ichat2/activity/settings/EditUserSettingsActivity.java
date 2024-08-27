@@ -4,12 +4,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.Preference;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
@@ -65,8 +67,11 @@ public class EditUserSettingsActivity extends BaseActivity{
     }
 
     private void setupYiers() {
-        binding.fab.setOnClickListener(v -> {
-            startActivity(new Intent(this, EditUserProfileVisibilitySettingsActivity.class));
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.profile_visibility){
+                startActivity(new Intent(EditUserSettingsActivity.this, EditUserProfileVisibilitySettingsActivity.class));
+            }
+            return false;
         });
     }
 

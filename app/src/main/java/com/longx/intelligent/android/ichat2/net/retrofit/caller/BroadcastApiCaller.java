@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
@@ -105,6 +106,12 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> deleteBroadcast(LifecycleOwner lifecycleOwner, String broadcastId, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().deleteBroadcast(broadcastId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(LifecycleOwner lifecycleOwner, String channelId, String lastBroadcastId, int ps, BaseYier<PaginatedOperationData<Broadcast>> yier){
+        CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchChannelBroadcastsLimit(channelId, lastBroadcastId, ps);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

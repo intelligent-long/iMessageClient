@@ -33,4 +33,7 @@ public interface BroadcastApi {
 
     @POST("broadcast/delete")
     CompletableCall<OperationStatus> deleteBroadcast(@Query("broadcast_id") String broadcastId);
+
+    @GET("broadcast/channel/limit")
+    CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(@Query("channel_id") String channelId, @Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps);
 }

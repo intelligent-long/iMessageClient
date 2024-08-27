@@ -24,6 +24,7 @@ import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerFooterBinding;
@@ -55,7 +56,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
     private LayoutBroadcastRecyclerFooterBinding footerBinding;
     private MainActivity mainActivity;
-    private int pn;
     private boolean stopFetchNextPage;
     private CountDownLatch NEXT_PAGE_LATCH;
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
@@ -78,7 +78,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         showOrHideBroadcastReloadedTime();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
-        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts();
+        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts(true);
         return binding.getRoot();
     }
 
@@ -105,7 +105,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             }else {
                 binding.toStartFab.hide();
             }
-            pn = savedInstanceState.getInt(InstanceStateKeys.BroadcastFragment.CURRENT_PN);
             stopFetchNextPage = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, false);
             ArrayList<Parcelable> parcelableArrayList = savedInstanceState.getParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA);
             if(parcelableArrayList != null) {
@@ -148,7 +147,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         }
         outState.putBoolean(InstanceStateKeys.BroadcastFragment.SEND_BROADCAST_FAB_EXPANDED_STATE, binding.sendBroadcastFab.isExtended());
         outState.putBoolean(InstanceStateKeys.BroadcastFragment.TO_START_FAB_VISIBILITY_STATE, binding.toStartFab.isShown());
-        outState.putInt(InstanceStateKeys.BroadcastFragment.CURRENT_PN, pn);
         outState.putBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, stopFetchNextPage);
         if(adapter != null){
             List<BroadcastsRecyclerAdapter.ItemData> itemDataList = adapter.getItemDataList();
@@ -247,7 +245,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             toStart();
         });
         headerBinding.load.setOnClickListener(v -> {
-            fetchAndRefreshBroadcasts();
+            fetchAndRefreshBroadcasts(false);
         });
         binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             @Override
@@ -286,7 +284,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(requireActivity(), binding.recyclerView, itemDataList);
         binding.recyclerView.setAdapter(adapter);
-        UiUtil.setViewHeight(headerBinding.load, UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext()));
+        int headerItemHeight = UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext());
+        UiUtil.setViewHeight(headerBinding.load, headerItemHeight);
+        UiUtil.setViewHeight(headerBinding.loadIndicator, headerItemHeight);
+        UiUtil.setViewHeight(headerBinding.loadFailedView, headerItemHeight);
+        UiUtil.setViewHeight(headerBinding.noBroadcastView, headerItemHeight);
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
     }
@@ -307,8 +309,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         SharedPreferencesAccessor.ApiJson.Broadcasts.addRecords(requireContext(), broadcasts);
     }
 
-    private void fetchAndRefreshBroadcasts(){
-        pn = 1;
+    private void fetchAndRefreshBroadcasts(boolean init){
         stopFetchNextPage = true;
         if(nextPageCall != null) {
             breakFetchNextPage(nextPageCall);
@@ -318,15 +319,19 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
                 super.start(call);
+                binding.recyclerView.scrollToStart(false);
                 headerBinding.loadFailedView.setVisibility(View.GONE);
                 headerBinding.loadFailedText.setText(null);
                 headerBinding.loadIndicator.setVisibility(View.VISIBLE);
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
+                if(!init)headerBinding.load.setVisibility(View.GONE);
             }
 
             @Override
             public void complete(Call<PaginatedOperationData<Broadcast>> call) {
                 super.complete(call);
                 headerBinding.loadIndicator.setVisibility(View.GONE);
+                headerBinding.load.setVisibility(View.VISIBLE);
                 binding.appbar.setExpanded(true);
                 binding.recyclerView.scrollToStart(false);
                 if (mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
@@ -337,6 +342,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 super.notOk(code, message, row, call);
                 headerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 headerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
                 binding.recyclerView.scrollToStart(false);
             }
 
@@ -345,13 +351,14 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 super.failure(t, call);
                 headerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 headerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
                 binding.recyclerView.scrollToStart(false);
             }
 
             @Override
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, row, call);
-                data.commonHandleResult(requireActivity(), new int[]{-101, -102}, () -> {
+                data.commonHandleResult(requireActivity(), new int[]{-101}, () -> {
                     stopFetchNextPage = !row.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     saveHistoryBroadcastsData(broadcastList, true);
@@ -363,7 +370,12 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     adapter.addItemsAndShow(itemDataList);
                     SharedPreferencesAccessor.DefaultPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
-                });
+                }, new OperationStatus.HandleResult(-102, () -> {
+                    headerBinding.loadFailedView.setVisibility(View.GONE);
+                    headerBinding.loadFailedText.setText(null);
+                    headerBinding.loadIndicator.setVisibility(View.GONE);
+                    headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+                }));
             }
         });
     }
@@ -380,7 +392,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     private synchronized void nextPage() {
         NEXT_PAGE_LATCH = new CountDownLatch(1);
-        pn ++;
         String lastBroadcastId = adapter.getItemDataList().get(adapter.getItemCount() - 1).getBroadcast().getBroadcastId();
         BroadcastApiCaller.fetchBroadcastsLimit(this, lastBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
 
@@ -392,6 +403,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 footerBinding.loadFailedView.setVisibility(View.GONE);
                 footerBinding.loadFailedText.setText(null);
                 footerBinding.loadIndicator.setVisibility(View.VISIBLE);
+                footerBinding.noBroadcastView.setVisibility(View.GONE);
             }
 
             @Override
@@ -408,6 +420,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 if (breakFetchNextPage(call)) return;
                 footerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 footerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
+                footerBinding.noBroadcastView.setVisibility(View.GONE);
                 binding.recyclerView.scrollToEnd(false);
                 stopFetchNextPage = true;
             }
@@ -418,6 +431,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 if (breakFetchNextPage(call)) return;
                 footerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 footerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
+                footerBinding.noBroadcastView.setVisibility(View.GONE);
                 binding.recyclerView.scrollToEnd(false);
                 stopFetchNextPage = true;
             }
@@ -435,7 +449,12 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                         itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                     });
                     adapter.addItemsAndShow(itemDataList);
-                });
+                }, new OperationStatus.HandleResult(-102, () -> {
+                    footerBinding.loadFailedView.setVisibility(View.GONE);
+                    footerBinding.loadFailedText.setText(null);
+                    footerBinding.loadIndicator.setVisibility(View.GONE);
+                    footerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+                }));
             }
         });
     }
@@ -452,7 +471,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     @Override
     public void onBroadcastReload() {
-        fetchAndRefreshBroadcasts();
+        fetchAndRefreshBroadcasts(false);
     }
 
     @Override
