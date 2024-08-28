@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,9 @@ import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
@@ -34,7 +38,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastChannelActivity extends BaseActivity {
+public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier {
     private ActivityBroadcastChannelBinding binding;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
     private LayoutBroadcastRecyclerFooterBinding footerBinding;
@@ -61,6 +65,15 @@ public class BroadcastChannelActivity extends BaseActivity {
         showContent();
         fetchAndRefreshBroadcasts();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, BroadcastReloadYier.class, this);
+        GlobalYiersHolder.holdYier(this, BroadcastDeletedYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, BroadcastReloadYier.class, this);
+        GlobalYiersHolder.removeYier(this, BroadcastDeletedYier.class, this);
     }
 
     private void intentData() {
@@ -175,6 +188,10 @@ public class BroadcastChannelActivity extends BaseActivity {
                     }
                 }
             }
+        });
+        binding.toolbar.getMenu().findItem(R.id.send_broadcast).setOnMenuItemClickListener(item -> {
+            startActivity(new Intent(this, SendBroadcastActivity.class));
+            return false;
         });
     }
 
@@ -330,5 +347,15 @@ public class BroadcastChannelActivity extends BaseActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBroadcastReload() {
+        fetchAndRefreshBroadcasts();
+    }
+
+    @Override
+    public void onBroadcastDeleted(String broadcastId) {
+        adapter.removeItemAndShow(broadcastId);
     }
 }

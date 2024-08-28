@@ -7,14 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +23,7 @@ import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.bottomsheet.BroadcastMoreOperationBottomSheet;
+import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
@@ -39,8 +37,6 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.ui.NoPaddingTextView;
-import com.longx.intelligent.android.ichat2.ui.SquareFrameLayout;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -393,27 +389,31 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             intent.putExtra(ExtraKeys.ICHAT_ID, itemData.broadcast.getIchatId());
             activity.startActivity(intent);
         });
-        BroadcastMoreOperationBottomSheet moreOperationBottomSheet = new BroadcastMoreOperationBottomSheet(activity);
-        holder.binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
-        moreOperationBottomSheet.setDeleteClickYier(v -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(activity);
-            confirmDialog.setNegativeButton(null);
-            confirmDialog.setPositiveButton((dialog, which) -> {
-                BroadcastApiCaller.deleteBroadcast((LifecycleOwner) activity, itemData.broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
-                    @Override
-                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                        super.ok(data, row, call);
-                        data.commonHandleResult(activity, new int[]{}, () -> {
-                            MessageDisplayer.autoShow(activity, "已删除", MessageDisplayer.Duration.LONG);
-                            GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
-                                broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(itemData.broadcast.getBroadcastId()));
+        if(itemData.broadcast.getIchatId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())) {
+            SelfBroadcastMoreOperationBottomSheet moreOperationBottomSheet = new SelfBroadcastMoreOperationBottomSheet(activity);
+            holder.binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
+            moreOperationBottomSheet.setDeleteClickYier(v -> {
+                ConfirmDialog confirmDialog = new ConfirmDialog(activity);
+                confirmDialog.setNegativeButton(null);
+                confirmDialog.setPositiveButton((dialog, which) -> {
+                    BroadcastApiCaller.deleteBroadcast((LifecycleOwner) activity, itemData.broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
+                        @Override
+                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                            super.ok(data, row, call);
+                            data.commonHandleResult(activity, new int[]{}, () -> {
+                                MessageDisplayer.autoShow(activity, "已删除", MessageDisplayer.Duration.LONG);
+                                GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
+                                    broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(itemData.broadcast.getBroadcastId()));
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
                 });
+                confirmDialog.show();
             });
-            confirmDialog.show();
-        });
+        }else {
+            holder.binding.more.setOnClickListener(null);
+        }
     }
 
     private void sortItemDataList(List<ItemData> itemDataList){

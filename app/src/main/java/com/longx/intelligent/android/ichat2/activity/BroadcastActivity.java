@@ -7,12 +7,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.bottomsheet.BroadcastMoreOperationBottomSheet;
+import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -241,28 +240,32 @@ public class BroadcastActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.ICHAT_ID, broadcast.getIchatId());
             startActivity(intent);
         });
-        BroadcastMoreOperationBottomSheet moreOperationBottomSheet = new BroadcastMoreOperationBottomSheet(this);
-        binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
-        moreOperationBottomSheet.setDeleteClickYier(v -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(this);
-            confirmDialog.setNegativeButton(null);
-            confirmDialog.setPositiveButton((dialog, which) -> {
-                BroadcastApiCaller.deleteBroadcast(this, broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
-                    @Override
-                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                        super.ok(data, row, call);
-                        data.commonHandleResult(BroadcastActivity.this, new int[]{}, () -> {
-                            MessageDisplayer.showToast(getApplicationContext(), "已删除", Toast.LENGTH_LONG);
-                            finish();
-                            GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
-                                broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(broadcast.getBroadcastId()));
+        if(broadcast.getIchatId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getIchatId())) {
+            SelfBroadcastMoreOperationBottomSheet moreOperationBottomSheet = new SelfBroadcastMoreOperationBottomSheet(this);
+            binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
+            moreOperationBottomSheet.setDeleteClickYier(v -> {
+                ConfirmDialog confirmDialog = new ConfirmDialog(this);
+                confirmDialog.setNegativeButton(null);
+                confirmDialog.setPositiveButton((dialog, which) -> {
+                    BroadcastApiCaller.deleteBroadcast(this, broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
+                        @Override
+                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+                            super.ok(data, row, call);
+                            data.commonHandleResult(BroadcastActivity.this, new int[]{}, () -> {
+                                MessageDisplayer.showToast(getApplicationContext(), "已删除", Toast.LENGTH_LONG);
+                                finish();
+                                GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
+                                    broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(broadcast.getBroadcastId()));
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
                 });
+                confirmDialog.show();
             });
-            confirmDialog.show();
-        });
+        }else {
+
+        }
     }
 
     private void setupAndStartMediaActivity(int position){
