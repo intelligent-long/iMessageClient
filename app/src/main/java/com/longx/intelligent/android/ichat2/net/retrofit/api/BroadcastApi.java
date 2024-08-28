@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.xcheng.retrofit.CompletableCall;
@@ -36,4 +37,9 @@ public interface BroadcastApi {
 
     @GET("broadcast/channel/limit")
     CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(@Query("channel_id") String channelId, @Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps, @Query("desc") boolean desc);
+
+    @POST("broadcast/edit")
+    @Multipart
+    @Headers("LogLevel:HEADERS")
+    CompletableCall<OperationData> editBroadcast(@Part("body") RequestBody postBody, @Part("add_medias") List<MultipartBody.Part> addMedias);
 }

@@ -19,7 +19,7 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_send_broadcast">
+            app:title="@string/title_edit_broadcast">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="55dp"
                     android:layout_gravity="end|center_vertical"
-                    android:text="@string/title_send_broadcast"
+                    android:text="@string/title_edit_broadcast"
                     android:textSize="14sp"
                     app:icon="@drawable/wifi_tethering_24px"
                     app:iconSize="22dp"
@@ -68,19 +68,16 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_above="@+id/layout_broadcast_permission">
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -133,59 +130,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fab_margin_end"
-            android:layout_marginBottom="1dp"
+            android:layout_marginBottom="@dimen/fab_margin_bottom"
             android:contentDescription="选择图片或视频"
             app:fabCustomSize="59dp"
             app:srcCompat="@drawable/add_photo_alternate_outline_24px"
-            android:layout_above="@id/layout_broadcast_permission"
-            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|end"
             tools:ignore="HardcodedText" />
-
-        <LinearLayout
-            android:id="@+id/layout_broadcast_permission"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_card_background_low_radius_28"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentBottom="true"
-            android:clipToOutline="true">
-
-            <RelativeLayout
-                android:id="@+id/click_view_broadcast_permission"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="30dp"
-                android:paddingEnd="27dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="66dp"
-                    android:gravity="center_vertical"
-                    android:text="广播权限"
-                    android:textSize="17sp"/>
-
-                <TextView
-                    android:id="@+id/permission_summary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="66dp"
-                    android:gravity="center_vertical"
-                    android:textSize="15.6sp"
-                    android:textColor="#A8A8A8"
-                    android:layout_toStartOf="@id/arrow_right"
-                    android:layout_marginEnd="18dp"/>
-
-                <ImageView
-                    android:id="@+id/arrow_right"
-                    android:layout_width="24dp"
-                    android:layout_height="66dp"
-                    android:src="@drawable/arrow_forward_24px"
-                    android:layout_alignParentEnd="true"
-                    app:tint="#CCCCCC" />
-            </RelativeLayout>
-        </LinearLayout>
-    </RelativeLayout>
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

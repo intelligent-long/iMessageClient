@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.request.EditBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -39,6 +40,9 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
     private static final long SEND_BROADCAST_CONNECT_TIMEOUT = 60;
     private static final long SEND_BROADCAST_READ_TIMEOUT = 60 * 10;
     private static final long SEND_BROADCAST_WRITE_TIMEOUT = 60;
+    private static final long EDIT_BROADCAST_CONNECT_TIMEOUT = 60;
+    private static final long EDIT_BROADCAST_READ_TIMEOUT = 60 * 10;
+    private static final long EDIT_BROADCAST_WRITE_TIMEOUT = 60;
 
     public static BroadcastApi getApiImplementation(){
         return getApiImplementation(BroadcastApi.class);
@@ -112,6 +116,57 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(LifecycleOwner lifecycleOwner, String channelId, String lastBroadcastId, int ps, boolean desc, BaseYier<PaginatedOperationData<Broadcast>> yier){
         CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchChannelBroadcastsLimit(channelId, lastBroadcastId, ps, desc);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> editBroadcast(LifecycleOwner lifecycleOwner, Context context,
+                                                               EditBroadcastPostBody postBody, List<Uri> addMediaUris,
+                                                               BaseYier<OperationData> yier, ProgressYier progressYier){
+        RequestBody bodyPart = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+        List<MultipartBody.Part> addMediaPart = new ArrayList<>();
+
+        ContentResolver contentResolver = context.getContentResolver();
+        final int[] index = {0};
+        if(addMediaUris != null) addMediaUris.forEach(addMediaUri -> {
+            String fileName = FileHelper.getFileNameFromUri(context, addMediaUri);
+            String mimeType = FileHelper.getMimeType(context, addMediaUri);
+            RequestBody requestBody = new RequestBody() {
+                @Override
+                public MediaType contentType() {
+                    return MediaType.parse(mimeType);
+                }
+
+                @Override
+                public long contentLength() throws IOException {
+                    return FileUtil.getFileSize(context, addMediaUri);
+                }
+
+                @Override
+                public void writeTo(BufferedSink sink) throws IOException {
+                    try (InputStream inputStream = contentResolver.openInputStream(addMediaUri)) {
+                        if (inputStream == null) {
+                            throw new IOException("Unable to open input stream from URI");
+                        }
+                        byte[] buffer = new byte[10240];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            sink.write(buffer, 0, bytesRead);
+                        }
+                    }
+                }
+            };
+            ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
+
+                @Override
+                protected void onUpload(long progress, long contentLength, boolean done) {
+                    progressYier.onProgressUpdate(progress, contentLength, index[0]);
+                    if(done) index[0]++;
+                }
+            };
+            addMediaPart.add(MultipartBody.Part.createFormData("add_medias", fileName, progressRequestBody));
+        });
+        CompletableCall<OperationData> call = getApiImplementation(context, EDIT_BROADCAST_CONNECT_TIMEOUT, EDIT_BROADCAST_READ_TIMEOUT, EDIT_BROADCAST_WRITE_TIMEOUT).editBroadcast(bodyPart, addMediaPart);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

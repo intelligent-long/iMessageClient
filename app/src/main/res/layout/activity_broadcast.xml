@@ -84,7 +84,7 @@
                     android:visibility="gone"
                     android:layout_marginTop="15dp"
                     android:textSize="18sp"
-                    android:letterSpacing="0.01"
+                    android:letterSpacing="0.007"
                     android:lineSpacingMultiplier="1.17"/>
 
                 <FrameLayout

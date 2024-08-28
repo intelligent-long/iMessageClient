@@ -11,15 +11,15 @@ public class SendBroadcastPostBody {
 
     private List<Integer> mediaTypes;
 
-    private List<String> mediaExtension;
+    private List<String> mediaExtensions;
 
     public SendBroadcastPostBody() {
     }
 
-    public SendBroadcastPostBody(String text, List<Integer> mediaTypes, List<String> mediaExtension) {
+    public SendBroadcastPostBody(String text, List<Integer> mediaTypes, List<String> mediaExtensions) {
         this.text = text;
         this.mediaTypes = mediaTypes;
-        this.mediaExtension = mediaExtension;
+        this.mediaExtensions = mediaExtensions;
     }
 
     public String getText() {
@@ -30,7 +30,7 @@ public class SendBroadcastPostBody {
         return mediaTypes;
     }
 
-    public List<String> getMediaExtension() {
-        return mediaExtension;
+    public List<String> getMediaExtensions() {
+        return mediaExtensions;
     }
 }

@@ -23,6 +23,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
+import com.longx.intelligent.android.ichat2.activity.EditBroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
@@ -412,6 +413,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     });
                 });
                 confirmDialog.show();
+            });
+            moreOperationBottomSheet.setEditClickYier(v -> {
+                Intent intent = new Intent(activity, EditBroadcastActivity.class);
+                activity.startActivity(intent);
             });
         }else {
             holder.binding.more.setOnClickListener(null);

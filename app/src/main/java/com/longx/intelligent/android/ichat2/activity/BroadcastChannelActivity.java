@@ -24,6 +24,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCall
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -52,6 +53,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
     private CountDownLatch NEXT_PAGE_LATCH;
     private int appBarExtendedState;
+    private Date broadcastReloadedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,6 +268,8 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
                     });
                     adapter.clearAndShow();
                     adapter.addItemsAndShow(itemDataList);
+                    broadcastReloadedTime = new Date();
+                    showOrHideBroadcastReloadedTime();
                 }, new OperationStatus.HandleResult(-102, () -> {
                     headerBinding.loadFailedView.setVisibility(View.GONE);
                     headerBinding.loadFailedText.setText(null);
@@ -413,6 +417,8 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
                         itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                     });
                     adapter.addItemsToStartAndShow(itemDataList);
+                    broadcastReloadedTime = new Date();
+                    showOrHideBroadcastReloadedTime();
                     if(row.body().hasMore()){
                         loadNews(ichatId);
                     }
@@ -421,5 +427,14 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
                 }));
             }
         });
+    }
+
+    private void showOrHideBroadcastReloadedTime() {
+        if(broadcastReloadedTime == null){
+            headerBinding.reloadTime.setVisibility(View.GONE);
+        }else {
+            headerBinding.reloadTime.setVisibility(View.VISIBLE);
+            headerBinding.reloadTime.setText("更新时间 " + TimeUtil.formatRelativeTime(broadcastReloadedTime));
+        }
     }
 }
