@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     android:layout_marginTop="15dp"
-                    android:textSize="17sp"
+                    android:textSize="18sp"
                     android:letterSpacing="0.01"
                     android:lineSpacingMultiplier="1.17"/>
 

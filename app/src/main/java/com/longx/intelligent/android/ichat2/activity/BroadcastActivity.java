@@ -22,6 +22,7 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.dialog.CopyTextDialog;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
@@ -266,6 +267,10 @@ public class BroadcastActivity extends BaseActivity {
         }else {
 
         }
+        binding.text.setOnLongClickListener(v -> {
+            new CopyTextDialog(this, broadcast.getText()).show();
+            return false;
+        });
     }
 
     private void setupAndStartMediaActivity(int position){

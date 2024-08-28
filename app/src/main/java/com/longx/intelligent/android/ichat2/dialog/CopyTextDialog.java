@@ -29,7 +29,6 @@ public class CopyTextDialog extends AbstractDialog{
     @Override
     protected View createView(LayoutInflater layoutInflater) {
         DialogCopyTextBinding binding = DialogCopyTextBinding.inflate(getActivity().getLayoutInflater());
-        binding.editText.setInputType(InputType.TYPE_NULL);
         binding.editText.setText(text);
         return binding.getRoot();
     }
