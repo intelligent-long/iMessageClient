@@ -143,7 +143,7 @@ public class SendBroadcastActivity extends BaseActivity {
                     super.ok(data, row, call);
                     data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102}, () -> {
                         GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
-                            broadcastReloadYiers.forEach(BroadcastReloadYier::onBroadcastReload);
+                            broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
                         });
                         MessageDisplayer.showToast(getContext(), "已发送", Toast.LENGTH_SHORT);
                         finish();

@@ -98,8 +98,8 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(LifecycleOwner lifecycleOwner, String lastBroadcastId, int ps, BaseYier<PaginatedOperationData<Broadcast>> yier){
-        CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchBroadcastsLimit(lastBroadcastId, ps);
+    public static CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(LifecycleOwner lifecycleOwner, String lastBroadcastId, int ps, boolean desc, BaseYier<PaginatedOperationData<Broadcast>> yier){
+        CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchBroadcastsLimit(lastBroadcastId, ps, desc);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
@@ -110,8 +110,8 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(LifecycleOwner lifecycleOwner, String channelId, String lastBroadcastId, int ps, BaseYier<PaginatedOperationData<Broadcast>> yier){
-        CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchChannelBroadcastsLimit(channelId, lastBroadcastId, ps);
+    public static CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(LifecycleOwner lifecycleOwner, String channelId, String lastBroadcastId, int ps, boolean desc, BaseYier<PaginatedOperationData<Broadcast>> yier){
+        CompletableCall<PaginatedOperationData<Broadcast>> call = getApiImplementation().fetchChannelBroadcastsLimit(channelId, lastBroadcastId, ps, desc);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

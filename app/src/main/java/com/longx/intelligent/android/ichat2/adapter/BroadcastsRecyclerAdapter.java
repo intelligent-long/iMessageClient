@@ -443,4 +443,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             }
         }
     }
+
+    public void addItemsToStartAndShow(List<ItemData> items){
+        sortItemDataList(items);
+        itemDataList.addAll(0, items);
+        notifyItemRangeInserted(0, items.size());
+    }
 }

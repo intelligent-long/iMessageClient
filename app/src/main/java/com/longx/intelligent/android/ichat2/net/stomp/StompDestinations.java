@@ -15,4 +15,5 @@ public class StompDestinations {
     public static final String CHANNELS_UPDATE = "/user" + PREFIX_QUEUE + "/channels_update";
     public static final String CHAT_MESSAGES_UPDATE = "/user" + PREFIX_QUEUE + "/chat_messages_update";
     public static final String CHANNEL_TAGS_UPDATE = "/user" + PREFIX_QUEUE + "/channel_tags_update";
+    public static final String BROADCASTS_NEWS_UPDATE = "/user" + PREFIX_QUEUE + "/broadcasts_news_update";
 }

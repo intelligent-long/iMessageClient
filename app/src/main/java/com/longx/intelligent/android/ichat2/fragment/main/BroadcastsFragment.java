@@ -30,12 +30,14 @@ import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerH
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastLoadNewsYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -48,7 +50,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier {
+public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastLoadNewsYier {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
@@ -76,6 +78,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         showOrHideBroadcastReloadedTime();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
+        GlobalYiersHolder.holdYier(requireContext(), BroadcastLoadNewsYier.class, this);
         if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts(true);
         return binding.getRoot();
     }
@@ -85,6 +88,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         super.onDetach();
         GlobalYiersHolder.removeYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), BroadcastDeletedYier.class, this);
+        GlobalYiersHolder.removeYier(requireContext(), BroadcastLoadNewsYier.class, this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -312,7 +316,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         if(nextPageCall != null) {
             breakFetchNextPage(nextPageCall);
         }
-        BroadcastApiCaller.fetchBroadcastsLimit(this, null, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
+        BroadcastApiCaller.fetchBroadcastsLimit(this, null, Constants.FETCH_BROADCAST_PAGE_SIZE, true, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -391,7 +395,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private synchronized void nextPage() {
         NEXT_PAGE_LATCH = new CountDownLatch(1);
         String lastBroadcastId = adapter.getItemDataList().get(adapter.getItemCount() - 1).getBroadcast().getBroadcastId();
-        BroadcastApiCaller.fetchBroadcastsLimit(this, lastBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
+        BroadcastApiCaller.fetchBroadcastsLimit(this, lastBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, true, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -468,12 +472,73 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     }
 
     @Override
-    public void onBroadcastReload() {
+    public void reloadBroadcast() {
         fetchAndRefreshBroadcasts(false);
     }
 
     @Override
     public void onBroadcastDeleted(String broadcastId) {
         adapter.removeItemAndShow(broadcastId);
+    }
+
+    @Override
+    public void loadNews(String ichatId) {
+        String firstBroadcastId = adapter.getItemDataList().get(0).getBroadcast().getBroadcastId();
+        BroadcastApiCaller.fetchBroadcastsLimit(this, firstBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, false, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
+
+            @Override
+            public void start(Call<PaginatedOperationData<Broadcast>> call) {
+                super.start(call);
+                headerBinding.loadFailedView.setVisibility(View.GONE);
+                headerBinding.loadFailedText.setText(null);
+                headerBinding.loadIndicator.setVisibility(View.VISIBLE);
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
+                headerBinding.load.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void complete(Call<PaginatedOperationData<Broadcast>> call) {
+                super.complete(call);
+                headerBinding.loadIndicator.setVisibility(View.GONE);
+                headerBinding.load.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
+                super.notOk(code, message, row, call);
+                headerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                headerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void failure(Throwable t, Call<PaginatedOperationData<Broadcast>> call) {
+                super.failure(t, call);
+                headerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                headerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, row, call);
+                data.commonHandleResult(requireActivity(), new int[]{-101}, () -> {
+                    List<Broadcast> broadcastList = data.getData();
+                    saveHistoryBroadcastsData(broadcastList, false);
+                    List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+                    broadcastList.forEach(broadcast -> {
+                        itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+                    });
+                    adapter.addItemsToStartAndShow(itemDataList);
+                    SharedPreferencesAccessor.DefaultPref.saveBroadcastReloadedTime(requireContext(), new Date());
+                    showOrHideBroadcastReloadedTime();
+                    if(row.body().hasMore()){
+                        loadNews(ichatId);
+                    }
+                }, new OperationStatus.HandleResult(-102, () -> {
+                    ErrorLogger.log("没有获取到新广播");
+                }));
+            }
+        });
     }
 }

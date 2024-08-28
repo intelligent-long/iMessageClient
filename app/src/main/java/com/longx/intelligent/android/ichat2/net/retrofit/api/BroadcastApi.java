@@ -29,11 +29,11 @@ public interface BroadcastApi {
     CompletableCall<OperationStatus> sendBroadcast(@Part("body") RequestBody postBody, @Part List<MultipartBody.Part> medias);
 
     @GET("broadcast/limit")
-    CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(@Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps);
+    CompletableCall<PaginatedOperationData<Broadcast>> fetchBroadcastsLimit(@Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps, @Query("desc") boolean desc);
 
     @POST("broadcast/delete")
     CompletableCall<OperationStatus> deleteBroadcast(@Query("broadcast_id") String broadcastId);
 
     @GET("broadcast/channel/limit")
-    CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(@Query("channel_id") String channelId, @Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps);
+    CompletableCall<PaginatedOperationData<Broadcast>> fetchChannelBroadcastsLimit(@Query("channel_id") String channelId, @Query("last_broadcast_id") String lastBroadcastId, @Query("ps") int ps, @Query("desc") boolean desc);
 }
