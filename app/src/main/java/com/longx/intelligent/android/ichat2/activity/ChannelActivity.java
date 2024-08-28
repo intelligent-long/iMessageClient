@@ -217,7 +217,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         });
         binding.layoutBroadcast.setOnClickListener(v -> {
             Intent intent = new Intent(this, BroadcastChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL, channel);
+            intent.putExtra(ExtraKeys.CHANNEL, isSelf ? self.toChannel() : channel);
             startActivity(intent);
         });
     }

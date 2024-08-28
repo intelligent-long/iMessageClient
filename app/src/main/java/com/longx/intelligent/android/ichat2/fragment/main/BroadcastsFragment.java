@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.activity.ChooseMediasActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
@@ -271,7 +269,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     }
 
     private void setupFab() {
-        float fabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(requireContext()) + WindowAndSystemUiUtil.getActionBarSize(requireContext()) + requireContext().getResources().getDimension(R.dimen.fab_margin_bottom);
+        float fabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(requireContext()) + WindowAndSystemUiUtil.getActionBarHeight(requireContext()) + requireContext().getResources().getDimension(R.dimen.fab_margin_bottom);
         float smallFabMarginTop = fabMarginTop + UiUtil.dpToPx(requireContext(), 70);
         float fabMarginEnd = requireContext().getResources().getDimension(R.dimen.fab_margin_end);
         UiUtil.setViewMargin(binding.sendBroadcastFab, 0, (int) fabMarginTop, (int) fabMarginEnd, 0);
@@ -284,7 +282,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(requireActivity(), binding.recyclerView, itemDataList);
         binding.recyclerView.setAdapter(adapter);
-        int headerItemHeight = UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarSize(requireContext());
+        int headerItemHeight = UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarHeight(requireContext());
         UiUtil.setViewHeight(headerBinding.load, headerItemHeight);
         UiUtil.setViewHeight(headerBinding.loadIndicator, headerItemHeight);
         UiUtil.setViewHeight(headerBinding.loadFailedView, headerItemHeight);

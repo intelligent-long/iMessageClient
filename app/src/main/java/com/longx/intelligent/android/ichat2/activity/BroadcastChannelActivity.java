@@ -1,16 +1,13 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
@@ -31,7 +28,6 @@ import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -48,6 +44,7 @@ public class BroadcastChannelActivity extends BaseActivity {
     private boolean stopFetchNextPage;
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
     private CountDownLatch NEXT_PAGE_LATCH;
+    private int appBarExtendedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +55,7 @@ public class BroadcastChannelActivity extends BaseActivity {
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         intentData();
+        setupToolbar();
         setupFab();
         setupRecyclerView();
         showContent();
@@ -69,23 +67,18 @@ public class BroadcastChannelActivity extends BaseActivity {
         channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
     }
 
-    private void setupFab() {
+    private void setupToolbar() {
         String currentUserIchatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getIchatId();
-        float fabMarginTop;
+        MenuItem menuItem = binding.toolbar.getMenu().findItem(R.id.send_broadcast);
+        menuItem.setVisible(currentUserIchatId.equals(channel.getIchatId()));
+    }
+
+    private void setupFab() {
         float smallFabMarginTop;
         float fabMarginEnd = getResources().getDimension(R.dimen.fab_margin_end);
-        if(currentUserIchatId.equals(channel.getIchatId())){
-            smallFabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(this) + WindowAndSystemUiUtil.getActionBarSize(this) + getResources().getDimension(R.dimen.fab_margin_bottom);
-            UiUtil.setViewMargin(binding.toStartFab, 0, (int) smallFabMarginTop, (int) fabMarginEnd, 0);
-            binding.toStartFab.setVisibility(View.GONE);
-        }else {
-            fabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(this) + WindowAndSystemUiUtil.getActionBarSize(this) + getResources().getDimension(R.dimen.fab_margin_bottom);
-            smallFabMarginTop = fabMarginTop + UiUtil.dpToPx(this, 70);
-            UiUtil.setViewMargin(binding.sendBroadcastFab, 0, (int) fabMarginTop, (int) fabMarginEnd, 0);
-            UiUtil.setViewMargin(binding.toStartFab, 0, (int) smallFabMarginTop, (int) fabMarginEnd, 0);
-            binding.sendBroadcastFab.setVisibility(View.GONE);
-            binding.toStartFab.setVisibility(View.GONE);
-        }
+        smallFabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(this) + WindowAndSystemUiUtil.getActionBarHeight(this);
+        UiUtil.setViewMargin(binding.toStartFab, 0, (int) smallFabMarginTop, (int) fabMarginEnd, 0);
+        binding.toStartFab.setVisibility(View.GONE);
     }
 
     private void setupRecyclerView() {
@@ -94,7 +87,7 @@ public class BroadcastChannelActivity extends BaseActivity {
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         adapter = new BroadcastsRecyclerAdapter(this, binding.recyclerView, itemDataList);
         binding.recyclerView.setAdapter(adapter);
-        int headerItemHeight = UiUtil.dpToPx(this, 172) - WindowAndSystemUiUtil.getActionBarSize(this);
+        int headerItemHeight = UiUtil.dpToPx(this, 172) - WindowAndSystemUiUtil.getActionBarHeight(this);
         UiUtil.setViewHeight(headerBinding.load, headerItemHeight);
         UiUtil.setViewHeight(headerBinding.loadIndicator, headerItemHeight);
         UiUtil.setViewHeight(headerBinding.loadFailedView, headerItemHeight);
@@ -146,24 +139,23 @@ public class BroadcastChannelActivity extends BaseActivity {
         binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50){
             @Override
             public void onScrollUp() {
-                if(!binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.extend();
             }
 
             @Override
             public void onScrollDown() {
-                if(binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.shrink();
                 if(!binding.recyclerView.isApproachEnd(5)) binding.appbar.setExpanded(false);
             }
         });
-        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (binding.recyclerView.isApproachStart(15)) {
-                    binding.toStartFab.hide();
-                } else {
-                    binding.toStartFab.show();
-                }
+        binding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                appBarExtendedState = 2;
+                binding.toStartFab.show();
+            } else if (verticalOffset == 0) {
+                appBarExtendedState = 0;
+                binding.toStartFab.hide();
+            } else {
+                appBarExtendedState = 1;
+                binding.toStartFab.hide();
             }
         });
         binding.toStartFab.setOnClickListener(v -> {
@@ -209,7 +201,7 @@ public class BroadcastChannelActivity extends BaseActivity {
                 headerBinding.loadFailedView.setVisibility(View.GONE);
                 headerBinding.loadFailedText.setText(null);
                 headerBinding.loadIndicator.setVisibility(View.VISIBLE);
-//                headerBinding.noBroadcastView.setVisibility(View.GONE);
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
                 headerBinding.load.setVisibility(View.GONE);
             }
 
@@ -227,7 +219,7 @@ public class BroadcastChannelActivity extends BaseActivity {
                 super.notOk(code, message, row, call);
                 headerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 headerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
-//                headerBinding.noBroadcastView.setVisibility(View.GONE);
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
                 binding.recyclerView.scrollToStart(false);
             }
 
@@ -236,7 +228,7 @@ public class BroadcastChannelActivity extends BaseActivity {
                 super.failure(t, call);
                 headerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 headerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
-//                headerBinding.noBroadcastView.setVisibility(View.GONE);
+                headerBinding.noBroadcastView.setVisibility(View.GONE);
                 binding.recyclerView.scrollToStart(false);
             }
 
@@ -256,7 +248,7 @@ public class BroadcastChannelActivity extends BaseActivity {
                     headerBinding.loadFailedView.setVisibility(View.GONE);
                     headerBinding.loadFailedText.setText(null);
                     headerBinding.loadIndicator.setVisibility(View.GONE);
-//                    headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+                    headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
                 }));
             }
         });

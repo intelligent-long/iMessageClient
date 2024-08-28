@@ -202,7 +202,7 @@ public class WindowAndSystemUiUtil {
         decorView.setSystemUiVisibility(flag);
     }
 
-    public static int getActionBarSize(Context context){
+    public static int getActionBarHeight(Context context){
         TypedValue tv = new TypedValue();
         if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());

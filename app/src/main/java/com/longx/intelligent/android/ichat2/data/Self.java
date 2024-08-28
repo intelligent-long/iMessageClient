@@ -91,4 +91,8 @@ public class Self extends UserInfo{
     public WaysToFindMe getWaysToFindMe() {
         return waysToFindMe;
     }
+
+    public Channel toChannel(){
+        return new Channel(ichatId, ichatIdUser, email, username, null, avatar, sex, firstRegion, secondRegion, thirdRegion, true);
+    }
 }

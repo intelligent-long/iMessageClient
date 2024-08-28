@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.MenuItem;
@@ -255,7 +254,7 @@ public class ChooseMediasActivity extends BaseActivity{
                 headerSpaceOriginalHeight = headerBinding.space.getHeight();
             }
             int spaceHeight = headerSpaceOriginalHeight
-                    + (WindowAndSystemUiUtil.getActionBarSize(this) - binding.title.getHeight()) / 2
+                    + (WindowAndSystemUiUtil.getActionBarHeight(this) - binding.title.getHeight()) / 2
                     + binding.time.getHeight()
                     + UiUtil.getViewMargin(binding.time)[1]
                     + binding.location.getHeight()
