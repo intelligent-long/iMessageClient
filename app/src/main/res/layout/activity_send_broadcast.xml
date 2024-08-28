@@ -95,8 +95,7 @@
                     android:layout_marginEnd="16dp"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="5dp"
-                    android:textColor="?attr/colorOutline"
-                    android:text="0/1000"/>
+                    android:textColor="?attr/colorOutline"/>
 
                 <LinearLayout
                     android:id="@+id/layout_broadcast_input"

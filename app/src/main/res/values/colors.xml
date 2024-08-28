@@ -11,6 +11,6 @@
     <color name="chat_message_send_text">#171717</color>
     <color name="chat_message_send_background_green">#87ED7B</color>
     <color name="chat_message_send_background_blue">#71B9F0</color>
-    <color name="action_red">#FF2637</color>
+    <color name="negative_red">#FF2637</color>
     <color name="divider">#D1D1D1</color>
 </resources>

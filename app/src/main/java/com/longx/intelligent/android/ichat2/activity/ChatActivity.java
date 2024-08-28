@@ -491,7 +491,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     }
 
     private void changeCancelSendTalkFabToCancel() {
-        binding.cancelSendTalkFab.setSupportImageTintList(ColorStateList.valueOf(getColor(R.color.action_red)));
+        binding.cancelSendTalkFab.setSupportImageTintList(ColorStateList.valueOf(getColor(R.color.negative_red)));
         binding.cancelSendTalkFab.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction(() -> isFabScaledUp = true).start();
     }
 

@@ -81,6 +81,6 @@
             android:layout_height="wrap_content"
             android:text="删除频道"
             android:textAppearance="@style/BottomSheetItemTitle"
-            android:textColor="@color/action_red" />
+            android:textColor="@color/negative_red" />
     </LinearLayout>
 </LinearLayout>

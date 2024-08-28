@@ -31,6 +31,7 @@ import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.util.ArrayList;
@@ -106,6 +107,10 @@ public class SendBroadcastActivity extends BaseActivity {
         binding.sendBroadcastButton.setOnClickListener(v -> {
             String broadcastText = UiUtil.getEditTextString(binding.textInput);
             if(broadcastText != null && broadcastText.isEmpty()) broadcastText = null;
+            if(broadcastText != null && broadcastText.length() > Constants.MAX_BROADCAST_TEXT_LENGTH){
+                MessageDisplayer.autoShow(this, "文字数量不合法", MessageDisplayer.Duration.SHORT);
+                return;
+            }
             ArrayList<Integer> broadcastMediaTypes = new ArrayList<>();
             mediaInfoList.forEach(mediaInfo -> {
                 if(mediaInfo.getMediaType() == MediaType.IMAGE) {
@@ -192,6 +197,21 @@ public class SendBroadcastActivity extends BaseActivity {
                 addMediasResultLauncher.launch(intent);
             });
             bottomSheet.show();
+        });
+        binding.textCounter.setText("0/" + Constants.MAX_BROADCAST_TEXT_LENGTH);
+        binding.textInput.addTextChangedListener(new TextChangedYier(){
+            private final int textColorNormal = binding.textCounter.getCurrentTextColor();
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                super.onTextChanged(s, start, before, count);
+                binding.textCounter.setText(s.length() + "/" + Constants.MAX_BROADCAST_TEXT_LENGTH);
+                if (s.length() > Constants.MAX_BROADCAST_TEXT_LENGTH) {
+                    binding.textCounter.setTextColor(getColor(R.color.negative_red));
+                } else {
+                    binding.textCounter.setTextColor(textColorNormal);
+                }
+            }
         });
     }
 

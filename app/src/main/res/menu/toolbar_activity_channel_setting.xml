@@ -6,6 +6,6 @@
         android:id="@+id/delete_channel"
         android:title="删除频道"
         android:icon="@drawable/person_remove_fill_24px"
-        app:iconTint="@color/action_red"
+        app:iconTint="@color/negative_red"
         app:showAsAction="always"/>
 </menu>
