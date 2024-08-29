@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
@@ -29,7 +28,7 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
-import com.longx.intelligent.android.ichat2.yier.BroadcastLoadNewsYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -42,7 +41,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastLoadNewsYier {
+public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastFetchNewsYier {
     private ActivityBroadcastChannelBinding binding;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
     private LayoutBroadcastRecyclerFooterBinding footerBinding;
@@ -72,7 +71,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         setupYiers();
         GlobalYiersHolder.holdYier(this, BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(this, BroadcastDeletedYier.class, this);
-        GlobalYiersHolder.holdYier(this, BroadcastLoadNewsYier.class, this);
+        GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, BroadcastReloadYier.class, this);
         GlobalYiersHolder.removeYier(this, BroadcastDeletedYier.class, this);
-        GlobalYiersHolder.removeYier(this, BroadcastLoadNewsYier.class, this);
+        GlobalYiersHolder.removeYier(this, BroadcastFetchNewsYier.class, this);
     }
 
     private void intentData() {
@@ -369,7 +368,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     }
 
     @Override
-    public void loadNews(String ichatId) {
+    public void fetchNews(String ichatId) {
         if(!ichatId.equals(channel.getIchatId())) return;
         String firstBroadcastId = adapter.getItemDataList().get(0).getBroadcast().getBroadcastId();
         BroadcastApiCaller.fetchChannelBroadcastsLimit(this, channel.getIchatId(), firstBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, false, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
@@ -420,7 +419,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
                     broadcastReloadedTime = new Date();
                     showOrHideBroadcastReloadedTime();
                     if(row.body().hasMore()){
-                        loadNews(ichatId);
+                        fetchNews(ichatId);
                     }
                 }, new OperationStatus.HandleResult(-102, () -> {
                     ErrorLogger.log("没有获取到新广播");

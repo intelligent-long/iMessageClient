@@ -56,6 +56,7 @@ import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
+import com.longx.intelligent.android.ichat2.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ChangeUiYier;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
@@ -70,13 +71,14 @@ import q.rorbin.badgeview.Badge;
 
 public class MainActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier,
         ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener, NewContentBadgeDisplayYier,
-        LinkPermissionOperatorActivity {
+        LinkPermissionOperatorActivity, BroadcastFetchNewsYier {
     private ActivityMainBinding binding;
     private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
     private Badge channelNavBadge;
     private boolean needInitFetchBroadcast = true;
     private MenuItem lastBottomNavSelectedItem;
+    private boolean needFetchNewBroadcasts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
         animateNavIconVisibility(navHostFragment);
         requestPermissions();
     }
@@ -105,6 +108,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.removeYier(this, BroadcastFetchNewsYier.class, this);
     }
 
     private void requestPermissions(){
@@ -469,5 +473,25 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     public boolean isNeedInitFetchBroadcast() {
         return needInitFetchBroadcast;
+    }
+
+    @Override
+    public void fetchNews(String ichatId) {
+        FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
+        Fragment fragment = fragmentManager.getFragments().get(0);
+        if (fragment instanceof BroadcastsFragment) {
+            needFetchNewBroadcasts = false;
+            ((BroadcastsFragment) fragment).fetchNews();
+        }else {
+            needFetchNewBroadcasts = true;
+        }
+    }
+
+    public void setNeedFetchNewBroadcasts(boolean needFetchNewBroadcasts) {
+        this.needFetchNewBroadcasts = needFetchNewBroadcasts;
+    }
+
+    public boolean isNeedFetchNewBroadcasts() {
+        return needFetchNewBroadcasts;
     }
 }

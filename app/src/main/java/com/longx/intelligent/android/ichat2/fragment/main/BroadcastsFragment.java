@@ -37,7 +37,6 @@ import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
-import com.longx.intelligent.android.ichat2.yier.BroadcastLoadNewsYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -50,7 +49,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastLoadNewsYier {
+public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
@@ -78,8 +77,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         showOrHideBroadcastReloadedTime();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
-        GlobalYiersHolder.holdYier(requireContext(), BroadcastLoadNewsYier.class, this);
-        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) fetchAndRefreshBroadcasts(true);
+        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) {
+            fetchAndRefreshBroadcasts(true);
+        }else if(mainActivity != null && mainActivity.isNeedFetchNewBroadcasts()) {
+            fetchNews();
+        }
         return binding.getRoot();
     }
 
@@ -88,7 +90,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         super.onDetach();
         GlobalYiersHolder.removeYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), BroadcastDeletedYier.class, this);
-        GlobalYiersHolder.removeYier(requireContext(), BroadcastLoadNewsYier.class, this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -481,8 +482,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         adapter.removeItemAndShow(broadcastId);
     }
 
-    @Override
-    public void loadNews(String ichatId) {
+    public void fetchNews() {
         String firstBroadcastId = adapter.getItemDataList().get(0).getBroadcast().getBroadcastId();
         BroadcastApiCaller.fetchBroadcastsLimit(this, firstBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, false, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
 
@@ -501,6 +501,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 super.complete(call);
                 headerBinding.loadIndicator.setVisibility(View.GONE);
                 headerBinding.load.setVisibility(View.VISIBLE);
+                if (mainActivity != null) mainActivity.setNeedFetchNewBroadcasts(false);
             }
 
             @Override
@@ -533,7 +534,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     SharedPreferencesAccessor.DefaultPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                     if(row.body().hasMore()){
-                        loadNews(ichatId);
+                        fetchNews();
                     }
                 }, new OperationStatus.HandleResult(-102, () -> {
                     ErrorLogger.log("没有获取到新广播");

@@ -10,8 +10,7 @@ import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
-import com.longx.intelligent.android.ichat2.yier.BroadcastLoadNewsYier;
-import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
@@ -107,8 +106,8 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateBroadcastsNews(Context context, String ichatId){
-        GlobalYiersHolder.getYiers(BroadcastLoadNewsYier.class).ifPresent(broadcastReloadYiers -> {
-            broadcastReloadYiers.forEach(broadcastLoadNewsYier -> broadcastLoadNewsYier.loadNews(ichatId));
+        GlobalYiersHolder.getYiers(BroadcastFetchNewsYier.class).ifPresent(broadcastReloadYiers -> {
+            broadcastReloadYiers.forEach(broadcastFetchNewsYier -> broadcastFetchNewsYier.fetchNews(ichatId));
         });
     }
 
