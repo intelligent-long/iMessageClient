@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.adapter.SendBroadcastMediasRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.adapter.EditBroadcastMediasRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastMediaBottomSheet;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
@@ -46,8 +46,7 @@ public class SendBroadcastActivity extends BaseActivity {
     private ActivityResultLauncher<Intent> addMediasResultLauncher;
     private ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<MediaInfo> mediaInfoList = new ArrayList<>();
-    private static final int MEDIA_COLUMN_COUNT = 3;
-    private SendBroadcastMediasRecyclerAdapter adapter;
+    private EditBroadcastMediasRecyclerAdapter adapter;
     private final SpaceGridDecorationSetter spaceGridDecorationSetter = new SpaceGridDecorationSetter();
 
     @Override
@@ -56,12 +55,12 @@ public class SendBroadcastActivity extends BaseActivity {
         binding = ActivitySendBroadcastBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupCloseBackNavigation(binding.toolbar);
-        initResultLauncher();
+        registerResultLauncher();
         initUi();
         setupYiers();
     }
 
-    private void initResultLauncher() {
+    private void registerResultLauncher() {
         addMediasResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -100,7 +99,7 @@ public class SendBroadcastActivity extends BaseActivity {
     }
 
     private void initUi() {
-        binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, MEDIA_COLUMN_COUNT));
+        binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, Constants.EDIT_BROADCAST_MEDIA_COLUMN_COUNT));
     }
 
     private void setupYiers() {
@@ -226,8 +225,9 @@ public class SendBroadcastActivity extends BaseActivity {
             binding.recyclerViewMedias.setVisibility(View.GONE);
         }else {
             binding.recyclerViewMedias.setVisibility(View.VISIBLE);
-            spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, MEDIA_COLUMN_COUNT, Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
-            adapter = new SendBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaInfoList);
+            spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, Constants.EDIT_BROADCAST_MEDIA_COLUMN_COUNT, 
+                    Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
+            adapter = new EditBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaInfoList, false);
             binding.recyclerViewMedias.setAdapter(adapter);
         }
     }

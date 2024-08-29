@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendBroadcastMediasBinding;
@@ -24,20 +25,24 @@ import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by LONG on 2024/8/5 at 下午2:45.
  */
-public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<SendBroadcastMediasRecyclerAdapter.ViewHolder, Uri> {
+public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<EditBroadcastMediasRecyclerAdapter.ViewHolder, Uri> {
     private final Activity activity;
     private final ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<MediaInfo> mediaInfoList;
+    private boolean mediaActivityGlideLoad;
 
-    public SendBroadcastMediasRecyclerAdapter(Activity activity, ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher, ArrayList<MediaInfo> mediaInfoList) {
+    public EditBroadcastMediasRecyclerAdapter(Activity activity,
+                                              ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher,
+                                              ArrayList<MediaInfo> mediaInfoList,
+                                              boolean mediaActivityGlideLoad) {
         this.activity = activity;
         this.returnFromPreviewToSendMediaResultLauncher = returnFromPreviewToSendMediaResultLauncher;
         this.mediaInfoList = mediaInfoList;
+        this.mediaActivityGlideLoad = mediaActivityGlideLoad;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,6 +74,7 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                         .with(activity.getApplicationContext())
                         .load(mediaInfo.getUri())
                         .centerCrop()
+                        .placeholder(R.drawable.glide_placeholder)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.binding.imageView);
                 holder.binding.videoDuration.setVisibility(View.GONE);
@@ -78,6 +84,7 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                         .with(activity.getApplicationContext())
                         .load(mediaInfo.getUri())
                         .centerCrop()
+                        .placeholder(R.drawable.glide_placeholder)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.binding.imageView);
                 holder.binding.videoDuration.setVisibility(View.VISIBLE);
@@ -91,6 +98,7 @@ public class SendBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
         holder.binding.imageView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, MediaActivity.class);
             ArrayList<Media> mediaList = new ArrayList<>();
+            intent.putExtra(ExtraKeys.GLIDE_LOAD, mediaActivityGlideLoad);
             mediaInfoList.forEach(mediaInfo -> mediaList.add(new Media(mediaInfo.getMediaType(), mediaInfo.getUri())));
             intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
             intent.putExtra(ExtraKeys.POSITION, position);

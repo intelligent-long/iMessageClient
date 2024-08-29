@@ -16,20 +16,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <RelativeLayout
+    <FrameLayout
         android:visibility="gone"
         android:id="@+id/load_failed_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/load_failed_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="加载失败"
             android:theme="@style/Theme.Material3.Dark"
             android:textSize="16sp"
             android:padding="50dp"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="100dp"
             android:background="@drawable/shape_visible_shadow_background"/>
 
@@ -37,7 +38,7 @@
             android:id="@+id/spare_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </RelativeLayout>
+    </FrameLayout>
 
     <RelativeLayout
         android:visibility="gone"

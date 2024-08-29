@@ -416,6 +416,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             });
             moreOperationBottomSheet.setEditClickYier(v -> {
                 Intent intent = new Intent(activity, EditBroadcastActivity.class);
+                intent.putExtra(ExtraKeys.BROADCAST, itemData.broadcast);
                 activity.startActivity(intent);
             });
         }else {

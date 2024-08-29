@@ -26,7 +26,7 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChatMediaBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemMediaBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
@@ -79,14 +79,14 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final RecyclerItemChatMediaBinding binding;
+        private final RecyclerItemMediaBinding binding;
 
-        public ViewHolder(RecyclerItemChatMediaBinding binding) {
+        public ViewHolder(RecyclerItemMediaBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        public RecyclerItemChatMediaBinding getBinding() {
+        public RecyclerItemMediaBinding getBinding() {
             return binding;
         }
     }
@@ -94,7 +94,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemChatMediaBinding binding = RecyclerItemChatMediaBinding.inflate(activity.getLayoutInflater(), parent, false);
+        RecyclerItemMediaBinding binding = RecyclerItemMediaBinding.inflate(activity.getLayoutInflater(), parent, false);
         return new ViewHolder(binding);
     }
 
@@ -128,6 +128,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
                         super.onImageLoadError(e);
                         holder.binding.photoView.setVisibility(View.GONE);
                         holder.binding.loadFailedView.setVisibility(View.VISIBLE);
+                        holder.binding.loadFailedText.bringToFront();
                         Glide.with(activity.getApplicationContext())
                                 .load(imageUri)
                                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -193,7 +194,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setupPhotoView(RecyclerItemChatMediaBinding binding, int position) {
+    private void setupPhotoView(RecyclerItemMediaBinding binding, int position) {
         SwipeDownGestureYier swipeDownGestureYier = new SwipeDownGestureYier(activity) {
             @Override
             public void onSwipeDown() {
@@ -223,7 +224,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setupPlayerView(RecyclerItemChatMediaBinding binding, int position){
+    private void setupPlayerView(RecyclerItemMediaBinding binding, int position){
         binding.playerView.setOnClickListener(v -> {
             if(onRecyclerItemClickYier != null) onRecyclerItemClickYier.onRecyclerItemClick(position, binding.playerView);
         });
@@ -240,7 +241,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         });
     }
 
-    private void initializePlayer(RecyclerItemChatMediaBinding binding, int position) {
+    private void initializePlayer(RecyclerItemMediaBinding binding, int position) {
         ExoPlayer player = new ExoPlayer.Builder(activity).build();
         itemDataList.get(position).player = player;
         binding.playerView.setPlayer(player);
@@ -285,7 +286,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         binding.pauseButton.setOnClickListener(v -> player.pause());
     }
 
-    private void initializeSeekBar(RecyclerItemChatMediaBinding binding, int position) {
+    private void initializeSeekBar(RecyclerItemMediaBinding binding, int position) {
         binding.seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -334,7 +335,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
         new Handler().removeCallbacks(itemDataList.get(position1[0]).updateProgressAction);
     }
 
-    private void updateProgress(RecyclerItemChatMediaBinding binding, int position) {
+    private void updateProgress(RecyclerItemMediaBinding binding, int position) {
         try {
             int[] position1 = {position};
             removedPositions.forEach(removedPosition -> {

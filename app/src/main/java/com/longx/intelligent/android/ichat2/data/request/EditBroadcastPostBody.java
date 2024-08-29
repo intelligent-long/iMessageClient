@@ -9,23 +9,21 @@ import java.util.Map;
 public class EditBroadcastPostBody {
     private String broadcastId;
     private String newText;
-    private List<String> deleteMediaIds;
+    private Map<String, Integer> leftMedias;
     private List<Integer> addMediaTypes;
     private List<String> addMediaExtensions;
     private List<Integer> addMediaIndexes;
-    private Map<String, Integer> leftMediaIndexes;
 
     public EditBroadcastPostBody() {
     }
 
-    public EditBroadcastPostBody(String broadcastId, String newText, List<String> deleteMediaIds, List<Integer> addMediaTypes, List<String> addMediaExtensions, List<Integer> addMediaIndexes, Map<String, Integer> leftMediaIndexes) {
+    public EditBroadcastPostBody(String broadcastId, String newText, List<Integer> addMediaTypes, List<String> addMediaExtensions, List<Integer> addMediaIndexes, Map<String, Integer> leftMedias) {
         this.broadcastId = broadcastId;
         this.newText = newText;
-        this.deleteMediaIds = deleteMediaIds;
         this.addMediaTypes = addMediaTypes;
         this.addMediaExtensions = addMediaExtensions;
         this.addMediaIndexes = addMediaIndexes;
-        this.leftMediaIndexes = leftMediaIndexes;
+        this.leftMedias = leftMedias;
     }
 
     public String getBroadcastId() {
@@ -34,10 +32,6 @@ public class EditBroadcastPostBody {
 
     public String getNewText() {
         return newText;
-    }
-
-    public List<String> getDeleteMediaIds() {
-        return deleteMediaIds;
     }
 
     public List<Integer> getAddMediaTypes() {
@@ -52,7 +46,7 @@ public class EditBroadcastPostBody {
         return addMediaIndexes;
     }
 
-    public Map<String, Integer> getLeftMediaIndexes() {
-        return leftMediaIndexes;
+    public Map<String, Integer> getLeftMedias() {
+        return leftMedias;
     }
 }

@@ -99,7 +99,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         init();
         showContent();
         setupYiers();
-        initResultLauncher();
+        registerResultLauncher();
     }
 
     @Override
@@ -544,7 +544,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         this.showMessagePopupOnKeyboardClosed = showMessagePopupOnKeyboardClosed;
     }
 
-    private void initResultLauncher() {
+    private void registerResultLauncher() {
         sendImageMessageResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
