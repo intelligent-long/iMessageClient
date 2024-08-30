@@ -78,7 +78,8 @@
             android:ellipsize="end"
             android:maxLines="11"
             android:letterSpacing="0.007"
-            android:lineSpacingMultiplier="1.17"
+            android:lineSpacingMultiplier="1.2"
+            android:breakStrategy="simple"
             app:layout_constraintTop_toBottomOf="@id/layout_name_and_time"/>
 
         <androidx.appcompat.widget.AppCompatImageView

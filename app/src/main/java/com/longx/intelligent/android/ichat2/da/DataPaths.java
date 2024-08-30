@@ -7,7 +7,6 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
-import com.longx.intelligent.android.ichat2.util.FileUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -82,35 +81,23 @@ public class DataPaths {
             return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "iChat";
         }
 
-        public static String getChatImageFilePath(ChatMessage chatMessage){
+        public static String getChatFilePath(ChatMessage chatMessage){
             SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + FileUtil.getFileExtension(chatMessage.getFileName());
-            return getPublicFilePath() + File.separator + "聊天图片" + File.separator + fileName;
+            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "_" + chatMessage.getFileName();
+            return getPublicFilePath() + File.separator + "Chat" + File.separator + fileName;
         }
 
-        public static String getCapturedChatPhotoFilePath(){
-            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = yyyyMMddHHmmss.format(new Date());
-            return getPublicFilePath() + File.separator + "拍摄" + File.separator + "照片" + File.separator + fileName;
-        }
-
-        public static String getChatVideoFilePath(ChatMessage chatMessage){
-            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = yyyyMMddHHmmss.format(chatMessage.getTime().getTime()) + "_" + chatMessage.getUuid() + "." + FileUtil.getFileExtension(chatMessage.getFileName());
-            return getPublicFilePath() + File.separator + "聊天视频" + File.separator + fileName;
-        }
-
-        public static String getCapturedChatVideoFilePath(){
-            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = yyyyMMddHHmmss.format(new Date());
-            return getPublicFilePath() + File.separator + "拍摄" + File.separator + "视频" + File.separator + fileName;
-        }
-
-        public static String getBroadcastImageFilePath(Broadcast broadcast, int mediaIndex){
+        public static String getBroadcastFilePath(Broadcast broadcast, int mediaIndex){
             BroadcastMedia broadcastMedia = broadcast.getBroadcastMedias().get(mediaIndex);
             SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
             String fileName = yyyyMMddHHmmss.format(broadcast.getTime().getTime()) + "_" + broadcast.getBroadcastId() + "_" + broadcastMedia.getMediaId() + "." + broadcastMedia.getExtension();
-            return getPublicFilePath() + File.separator + "广播图片" + File.separator + fileName;
+            return getPublicFilePath() + File.separator + "Broadcast" + File.separator + fileName;
+        }
+
+        public static String getCapturedMediaFilePath(){
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(new Date());
+            return getPublicFilePath() + File.separator + "Captured" + File.separator + fileName;
         }
     }
 }

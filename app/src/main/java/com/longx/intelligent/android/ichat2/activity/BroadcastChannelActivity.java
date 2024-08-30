@@ -135,7 +135,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
             @Override
             public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (Math.abs(dy) < 170) {
+                if (Math.abs(dy) < 190) {
                     GlideApp.with(BroadcastChannelActivity.this).resumeRequests();
                 }
             }

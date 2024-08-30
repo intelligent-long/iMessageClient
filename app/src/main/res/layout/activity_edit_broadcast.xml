@@ -68,42 +68,42 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+        <TextView
+            android:id="@+id/text_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+            android:textColor="?attr/colorOutline"/>
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@id/text_counter">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/text_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="5dp"
-                    android:textColor="?attr/colorOutline"/>
-
                 <LinearLayout
                     android:id="@+id/layout_broadcast_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/text_counter"
                     android:orientation="vertical"
                     android:background="@drawable/shape_card_background_low_radius_28"
                     android:paddingHorizontal="26dp"
                     android:paddingVertical="26dp"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginHorizontal="15.7dp"
                     android:elevation="5dp"
                     android:theme="@style/ThemeOverlay.LighterZShadow11">
 
@@ -113,7 +113,9 @@
                         android:layout_height="wrap_content"
                         android:hint="广播正文"
                         android:textColorHint="?attr/colorOnSurface"
-                        android:background="@color/transparent"/>
+                        android:background="@color/transparent"
+                        android:letterSpacing="0.007"
+                        android:lineSpacingMultiplier="1.2"/>
 
                     <com.longx.intelligent.android.lib.recyclerview.RecyclerView
                         android:id="@+id/recycler_view_medias"
@@ -124,17 +126,17 @@
                 </LinearLayout>
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_media_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/fab_margin_end"
-            android:layout_marginBottom="@dimen/fab_margin_bottom"
-            android:contentDescription="选择图片或视频"
-            app:fabCustomSize="59dp"
-            app:srcCompat="@drawable/add_photo_alternate_outline_24px"
-            android:layout_gravity="bottom|end"
-            tools:ignore="HardcodedText" />
-    </FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_media_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/fab_margin_end"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:contentDescription="选择图片或视频"
+        app:fabCustomSize="59dp"
+        app:srcCompat="@drawable/add_photo_alternate_outline_24px"
+        android:layout_gravity="bottom|end"
+        tools:ignore="HardcodedText" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

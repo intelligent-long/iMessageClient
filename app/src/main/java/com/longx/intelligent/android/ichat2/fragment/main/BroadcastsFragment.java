@@ -204,7 +204,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             @Override
             public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (Math.abs(dy) < 170) {
+                if (Math.abs(dy) < 190) {
                     GlideApp.with(requireContext()).resumeRequests();
                 }
             }

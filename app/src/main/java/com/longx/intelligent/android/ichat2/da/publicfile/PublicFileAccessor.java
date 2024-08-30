@@ -9,17 +9,14 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
-import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
@@ -31,24 +28,24 @@ public class PublicFileAccessor {
 
     public static class ChatMedia {
         public static String saveImage(ChatMessage chatMessage) throws IOException {
-            String savePath = DataPaths.PublicFile.getChatImageFilePath(chatMessage);
+            String savePath = DataPaths.PublicFile.getChatFilePath(chatMessage);
             return FileHelper.save(FileHelper.streamOf(chatMessage.getImageFilePath()), savePath);
         }
 
         public static String saveVideo(ChatMessage chatMessage) throws IOException {
-            String savePath = DataPaths.PublicFile.getChatVideoFilePath(chatMessage);
+            String savePath = DataPaths.PublicFile.getChatFilePath(chatMessage);
             return FileHelper.save(FileHelper.streamOf(chatMessage.getVideoFilePath()), savePath);
         }
     }
 
     public static class CapturedMedia{
         public static File createPhotoFile() throws IOException {
-            String filePath = DataPaths.PublicFile.getCapturedChatPhotoFilePath();
+            String filePath = DataPaths.PublicFile.getCapturedMediaFilePath();
             return FileHelper.createFile(filePath);
         }
 
         public static File createVideoFile() throws IOException {
-            String filePath = DataPaths.PublicFile.getCapturedChatVideoFilePath();
+            String filePath = DataPaths.PublicFile.getCapturedMediaFilePath();
             return FileHelper.createFile(filePath);
         }
     }
@@ -56,7 +53,7 @@ public class PublicFileAccessor {
     public static class BroadcastMedia{
         public static String saveImage(Context context, Broadcast broadcast, int mediaIndex) throws IOException, InterruptedException {
             CountDownLatch countDownLatch = new CountDownLatch(1);
-            String savePath = DataPaths.PublicFile.getBroadcastImageFilePath(broadcast, mediaIndex);
+            String savePath = DataPaths.PublicFile.getBroadcastFilePath(broadcast, mediaIndex);
             final String[] savedPath = new String[1];
             final IOException[] ioException = new IOException[1];
             GlideBehaviours.loadToFile(context, NetDataUrls.getBroadcastMediaDataUrl(context, broadcast.getBroadcastMedias().get(mediaIndex).getMediaId()), new CustomTarget<File>() {
