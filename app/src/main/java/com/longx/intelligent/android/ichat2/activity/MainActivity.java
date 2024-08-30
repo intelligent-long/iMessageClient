@@ -76,9 +76,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
     private Badge channelNavBadge;
-    private boolean needInitFetchBroadcast = true;
     private MenuItem lastBottomNavSelectedItem;
-    private boolean needFetchNewBroadcasts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -467,31 +465,15 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
     }
 
-    public void setNeedInitFetchBroadcast(boolean needInitFetchBroadcast) {
-        this.needInitFetchBroadcast = needInitFetchBroadcast;
-    }
-
-    public boolean isNeedInitFetchBroadcast() {
-        return needInitFetchBroadcast;
-    }
-
     @Override
     public void fetchNews(String ichatId) {
         FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
         Fragment fragment = fragmentManager.getFragments().get(0);
         if (fragment instanceof BroadcastsFragment) {
-            needFetchNewBroadcasts = false;
+            BroadcastsFragment.needFetchNewBroadcasts = false;
             ((BroadcastsFragment) fragment).fetchNews();
         }else {
-            needFetchNewBroadcasts = true;
+            BroadcastsFragment.needFetchNewBroadcasts = true;
         }
-    }
-
-    public void setNeedFetchNewBroadcasts(boolean needFetchNewBroadcasts) {
-        this.needFetchNewBroadcasts = needFetchNewBroadcasts;
-    }
-
-    public boolean isNeedFetchNewBroadcasts() {
-        return needFetchNewBroadcasts;
     }
 }

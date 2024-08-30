@@ -27,7 +27,7 @@ public class MediaInfo implements Parcelable {
     private final long addedTime;
     private final long modifiedTime;
     private final long photoTakenTime;
-    private final long videoDuration;
+    private long videoDuration;
     private final int imageWidth;
     private final int imageHeight;
     private final int videoWidth;
@@ -88,6 +88,10 @@ public class MediaInfo implements Parcelable {
 
     public long getVideoDuration() {
         return videoDuration;
+    }
+
+    public void setVideoDuration(long videoDuration) {
+        this.videoDuration = videoDuration;
     }
 
     public int getImageWidth() {
@@ -176,11 +180,11 @@ public class MediaInfo implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MediaInfo mediaInfo = (MediaInfo) o;
-        return addedTime == mediaInfo.addedTime && modifiedTime == mediaInfo.modifiedTime && photoTakenTime == mediaInfo.photoTakenTime && videoDuration == mediaInfo.videoDuration && imageWidth == mediaInfo.imageWidth && imageHeight == mediaInfo.imageHeight && videoWidth == mediaInfo.videoWidth && videoHeight == mediaInfo.videoHeight && Objects.equals(uri, mediaInfo.uri) && Objects.equals(path, mediaInfo.path) && mediaType == mediaInfo.mediaType && Objects.equals(exifInterface, mediaInfo.exifInterface);
+        return Objects.equals(uri, mediaInfo.uri) && Objects.equals(path, mediaInfo.path) && mediaType == mediaInfo.mediaType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uri, path, mediaType, addedTime, modifiedTime, photoTakenTime, videoDuration, imageWidth, imageHeight, videoWidth, videoHeight, exifInterface);
+        return Objects.hash(uri, path, mediaType);
     }
 }

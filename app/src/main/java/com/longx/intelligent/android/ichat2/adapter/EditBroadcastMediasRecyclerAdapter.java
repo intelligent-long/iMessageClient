@@ -33,7 +33,7 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
     private final Activity activity;
     private final ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<MediaInfo> mediaInfoList;
-    private boolean mediaActivityGlideLoad;
+    private final boolean mediaActivityGlideLoad;
 
     public EditBroadcastMediasRecyclerAdapter(Activity activity,
                                               ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher,

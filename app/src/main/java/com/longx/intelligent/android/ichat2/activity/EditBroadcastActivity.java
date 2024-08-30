@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.EditBroadcastMediasRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastMediaBottomSheet;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.databinding.ActivityEditBroadcastBinding;
@@ -26,6 +27,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ public class EditBroadcastActivity extends BaseActivity {
         intentData();
         init();
         registerResultLauncher();
+        setupYiers();
         showContent();
     }
 
@@ -89,5 +92,30 @@ public class EditBroadcastActivity extends BaseActivity {
             adapter = new EditBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaInfoList, true);
             binding.recyclerViewMedias.setAdapter(adapter);
         }
+    }
+
+    private void setupYiers() {
+        binding.editBroadcastButton.setOnClickListener(v -> {
+
+        });
+        binding.addMediaFab.setOnClickListener(v -> {
+            AddBroadcastMediaBottomSheet bottomSheet = new AddBroadcastMediaBottomSheet(this);
+            bottomSheet.show();
+        });
+        binding.textCounter.setText("0/" + Constants.MAX_BROADCAST_TEXT_LENGTH);
+        binding.textInput.addTextChangedListener(new TextChangedYier(){
+            private final int textColorNormal = binding.textCounter.getCurrentTextColor();
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                super.onTextChanged(s, start, before, count);
+                binding.textCounter.setText(s.length() + "/" + Constants.MAX_BROADCAST_TEXT_LENGTH);
+                if (s.length() > Constants.MAX_BROADCAST_TEXT_LENGTH) {
+                    binding.textCounter.setTextColor(getColor(R.color.negative_red));
+                } else {
+                    binding.textCounter.setTextColor(textColorNormal);
+                }
+            }
+        });
     }
 }

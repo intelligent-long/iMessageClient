@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.media.helper;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.provider.MediaStore;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -558,5 +560,97 @@ public class MediaStoreHelper {
         cursor.close();
         return path;
     }
+
+    @SuppressLint("Range")
+    public static Uri getContentUriFromFileUri(Context context, Uri fileUri) {
+        String filePath = fileUri.getPath();
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media._ID},
+                MediaStore.Images.Media.DATA + "=? ",
+                new String[]{filePath}, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID));
+            cursor.close();
+            return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + id);
+        } else {
+            if (cursor != null) {
+                cursor.close();
+            }
+            cursor = context.getContentResolver().query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    new String[]{MediaStore.Video.Media._ID},
+                    MediaStore.Video.Media.DATA + "=? ",
+                    new String[]{filePath}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                cursor.close();
+                return Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "" + id);
+            } else if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
+    public static MediaInfo getMediaInfoFromUri(Context context, Uri uri) {
+        String[] projection;
+        MediaType mediaType;
+
+        if (uri.toString().contains("images")) {
+            mediaType = MediaType.IMAGE;
+            projection = new String[]{
+                    MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.DATE_ADDED,
+                    MediaStore.Images.Media.DATE_MODIFIED,
+                    MediaStore.Images.Media.DATE_TAKEN,
+                    MediaStore.Images.Media.HEIGHT,
+                    MediaStore.Images.Media.WIDTH
+            };
+        } else if (uri.toString().contains("video")) {
+            mediaType = MediaType.VIDEO;
+            projection = new String[]{
+                    MediaStore.Video.Media.DATA,
+                    MediaStore.Video.Media._ID,
+                    MediaStore.Video.Media.DATE_ADDED,
+                    MediaStore.Video.Media.DATE_MODIFIED,
+                    MediaStore.Video.Media.DATE_TAKEN,
+                    MediaStore.Video.Media.DURATION,
+                    MediaStore.Video.Media.HEIGHT,
+                    MediaStore.Video.Media.WIDTH
+            };
+        } else {
+            throw new IllegalArgumentException("Invalid Uri: " + uri);
+        }
+
+        ContentResolver contentResolver = context.getContentResolver();
+        try (Cursor cursor = contentResolver.query(uri, projection, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
+                String filePath = cursor.getString(columnIndexData);
+                if (mediaType == MediaType.IMAGE) {
+                    long dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED));
+                    long dateModified = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED));
+                    long dateTaken = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN));
+                    int imageWidth = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.WIDTH));
+                    int imageHeight = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.HEIGHT));
+                    return new MediaInfo(uri, filePath, mediaType, dateAdded, dateModified, dateTaken, -1, imageWidth, imageHeight, -1, -1);
+                } else if (mediaType == MediaType.VIDEO) {
+                    long dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED));
+                    long dateModified = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED));
+                    long dateTaken = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN));
+                    long videoDuration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                    int videoWidth = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH));
+                    int videoHeight = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT));
+                    return new MediaInfo(uri, filePath, mediaType, dateAdded, dateModified, dateTaken, videoDuration, -1, -1, videoWidth, videoHeight);
+                }
+            }
+        } catch (Exception e) {
+            ErrorLogger.log(e);
+        }
+        return null;
+    }
+
 
 }

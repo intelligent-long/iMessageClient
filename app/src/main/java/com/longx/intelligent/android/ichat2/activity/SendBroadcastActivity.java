@@ -145,7 +145,7 @@ public class SendBroadcastActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
                     super.ok(data, row, call);
-                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102}, () -> {
+                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102, -103, -104}, () -> {
                         GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
                             broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
                         });
@@ -190,6 +190,13 @@ public class SendBroadcastActivity extends BaseActivity {
             });
             bottomSheet.setOnClickTakePhotoYier(v1 -> {
                 Intent intent = new Intent(this, TakePhotoActivity.class);
+                intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
+                intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
+                intent.putExtra(ExtraKeys.REMOVE, false);
+                addMediasResultLauncher.launch(intent);
+            });
+            bottomSheet.setOnClickRecordVideoYier(v1 -> {
+                Intent intent = new Intent(this, RecordVideoActivity.class);
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
                 intent.putExtra(ExtraKeys.MENU_TITLE, "完成");
                 intent.putExtra(ExtraKeys.REMOVE, false);

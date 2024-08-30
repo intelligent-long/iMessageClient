@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -21,7 +22,10 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
-import com.longx.intelligent.android.ichat2.databinding.ActivityRecordAndSendVideoBinding;
+import com.longx.intelligent.android.ichat2.databinding.ActivityRecordVideoBinding;
+import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
+import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
+import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
@@ -29,9 +33,10 @@ import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
-public class RecordAndSendVideoActivity extends BaseActivity {
-    private ActivityRecordAndSendVideoBinding binding;
+public class RecordVideoActivity extends BaseActivity {
+    private ActivityRecordVideoBinding binding;
     private ActivityResultLauncher<Intent> recordVideoLauncher;
     private Uri videoUri;
     private File videoFile;
@@ -40,15 +45,18 @@ public class RecordAndSendVideoActivity extends BaseActivity {
     private Handler handler;
     private Runnable updateProgressAction;
     private static final int SEEKBAR_MAX = 10000;
+    private boolean remove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRecordAndSendVideoBinding.inflate(getLayoutInflater());
+        binding = ActivityRecordVideoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         WindowAndSystemUiUtil.extendContentUnderSystemBars(this, null, null,
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
+        binding.appBar.bringToFront();
+        intentData();
         recordVideoLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -62,11 +70,21 @@ public class RecordAndSendVideoActivity extends BaseActivity {
                             setupYiers();
                         }
                     }else {
+                        videoFile.delete();
                         finish();
                     }
                 }
         );
         openCameraForVideo();
+    }
+
+    private void intentData() {
+        remove = getIntent().getBooleanExtra(ExtraKeys.REMOVE, false);
+        int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
+        String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
+        MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
+        item.setIcon(actionIconResId);
+        item.setTitle(menuTitle);
     }
 
     private void openCameraForVideo() {
@@ -96,9 +114,17 @@ public class RecordAndSendVideoActivity extends BaseActivity {
 
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.send){
+            if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.URIS, new Uri[]{videoUri});
+                MediaInfo mediaInfoFromUri = MediaStoreHelper.getMediaInfoFromUri(this,
+                        Objects.requireNonNull(MediaStoreHelper.getContentUriFromFileUri(this, Uri.fromFile(videoFile))));
+                if(player != null) {
+                    mediaInfoFromUri.setVideoDuration(player.getDuration());
+                }else {
+                    mediaInfoFromUri.setVideoDuration(MediaHelper.getVideoDuration(videoFile.getPath()));
+                }
+                intent.putExtra(ExtraKeys.MEDIA_INFOS, new MediaInfo[]{mediaInfoFromUri});
+                intent.putExtra(ExtraKeys.REMOVE, remove);
                 setResult(RESULT_OK, intent);
                 finish();
             }

@@ -34,7 +34,7 @@
                 app:layout_collapseMode="pin">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/send_broadcast_button"
+                    android:id="@+id/edit_broadcast_button"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="55dp"
@@ -46,7 +46,7 @@
                     android:layout_marginEnd="10dp"/>
 
                 <TextView
-                    android:id="@+id/send_item_count_indicator"
+                    android:id="@+id/edit_item_count_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -55,7 +55,7 @@
                     android:visibility="gone"/>
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/send_indicator"
+                    android:id="@+id/edit_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"

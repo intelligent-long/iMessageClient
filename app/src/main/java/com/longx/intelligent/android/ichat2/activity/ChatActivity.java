@@ -363,7 +363,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             sendVideoMessageResultLauncher.launch(intent);
         });
         binding.morePanelRecordVideo.setOnClickListener(v -> {
-            sendVideoMessageResultLauncher.launch(new Intent(this, RecordAndSendVideoActivity.class));
+            sendVideoMessageResultLauncher.launch(new Intent(this, RecordVideoActivity.class));
         });
         binding.holdToTalkButton.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {

@@ -22,13 +22,16 @@ import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTakePhotoBinding;
+import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
+import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class TakePhotoActivity extends BaseActivity {
     private ActivityTakePhotoBinding binding;
@@ -47,12 +50,7 @@ public class TakePhotoActivity extends BaseActivity {
                 ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
         binding.appBar.bringToFront();
-        remove = getIntent().getBooleanExtra(ExtraKeys.REMOVE, false);
-        int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
-        String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
-        MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
-        item.setIcon(actionIconResId);
-        item.setTitle(menuTitle);
+        intentData();
         takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -72,6 +70,15 @@ public class TakePhotoActivity extends BaseActivity {
                 }
         );
         dispatchTakePictureIntent();
+    }
+
+    private void intentData() {
+        remove = getIntent().getBooleanExtra(ExtraKeys.REMOVE, false);
+        int actionIconResId = getIntent().getIntExtra(ExtraKeys.RES_ID, -1);
+        String menuTitle = getIntent().getStringExtra(ExtraKeys.MENU_TITLE);
+        MenuItem item = binding.toolbar.getMenu().findItem(R.id.action);
+        item.setIcon(actionIconResId);
+        item.setTitle(menuTitle);
     }
 
     private void dispatchTakePictureIntent() {
@@ -141,7 +148,9 @@ public class TakePhotoActivity extends BaseActivity {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.action){
                 Intent intent = new Intent();
-                intent.putExtra(ExtraKeys.URIS, new Uri[]{Uri.fromFile(photoFile)});
+                MediaInfo mediaInfoFromUri = MediaStoreHelper.getMediaInfoFromUri(this,
+                        Objects.requireNonNull(MediaStoreHelper.getContentUriFromFileUri(this, Uri.fromFile(photoFile))));
+                intent.putExtra(ExtraKeys.MEDIA_INFOS, new MediaInfo[]{mediaInfoFromUri});
                 intent.putExtra(ExtraKeys.REMOVE, remove);
                 setResult(RESULT_OK, intent);
                 finish();

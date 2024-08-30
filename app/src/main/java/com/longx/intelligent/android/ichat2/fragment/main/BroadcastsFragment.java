@@ -60,6 +60,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
     private boolean willToStart;
 
+    public static boolean needInitFetchBroadcast = true;
+    public static boolean needFetchNewBroadcasts;
+    public static boolean needReFetchBroadcast;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,9 +81,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         showOrHideBroadcastReloadedTime();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
-        if(mainActivity != null && mainActivity.isNeedInitFetchBroadcast()) {
+        if(needInitFetchBroadcast) {
             fetchAndRefreshBroadcasts(true);
-        }else if(mainActivity != null && mainActivity.isNeedFetchNewBroadcasts()) {
+        }else if(needReFetchBroadcast) {
+            fetchAndRefreshBroadcasts(false);
+        }else if(needFetchNewBroadcasts) {
             fetchNews();
         }
         return binding.getRoot();
@@ -328,6 +334,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 headerBinding.loadIndicator.setVisibility(View.VISIBLE);
                 headerBinding.noBroadcastView.setVisibility(View.GONE);
                 if(!init)headerBinding.load.setVisibility(View.GONE);
+                needReFetchBroadcast = true;
             }
 
             @Override
@@ -337,7 +344,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 headerBinding.load.setVisibility(View.VISIBLE);
                 binding.appbar.setExpanded(true);
                 binding.recyclerView.scrollToStart(false);
-                if (mainActivity != null) mainActivity.setNeedInitFetchBroadcast(false);
+                needInitFetchBroadcast = false;
+                needReFetchBroadcast = false;
             }
 
             @Override
@@ -501,7 +509,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 super.complete(call);
                 headerBinding.loadIndicator.setVisibility(View.GONE);
                 headerBinding.load.setVisibility(View.VISIBLE);
-                if (mainActivity != null) mainActivity.setNeedFetchNewBroadcasts(false);
+                needFetchNewBroadcasts = false;
             }
 
             @Override

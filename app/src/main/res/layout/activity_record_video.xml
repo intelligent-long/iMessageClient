@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/transparent"
-            app:menu="@menu/toolbar_activity_record_and_send_video"/>
+            app:menu="@menu/toolbar_activity_record_video"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
