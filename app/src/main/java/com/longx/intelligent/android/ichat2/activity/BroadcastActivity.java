@@ -250,8 +250,8 @@ public class BroadcastActivity extends BaseActivity {
                 confirmDialog.setPositiveButton((dialog, which) -> {
                     BroadcastApiCaller.deleteBroadcast(this, broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
                         @Override
-                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                            super.ok(data, row, call);
+                        public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                            super.ok(data, raw, call);
                             data.commonHandleResult(BroadcastActivity.this, new int[]{}, () -> {
                                 MessageDisplayer.showToast(getApplicationContext(), "已删除", Toast.LENGTH_LONG);
                                 finish();
@@ -301,7 +301,7 @@ public class BroadcastActivity extends BaseActivity {
                         OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
                         operatingDialog.show();
                         try {
-                            PublicFileAccessor.BroadcastMedia.saveImage(this, broadcast, currentItem);
+                            PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity.getInstance(), broadcast, currentItem);
                             operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException | InterruptedException e){
@@ -311,7 +311,17 @@ public class BroadcastActivity extends BaseActivity {
                     }).start();
                     break;
                 case BroadcastMedia.TYPE_VIDEO:
-
+                    new Thread(() -> {
+                        PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity.getInstance(), broadcast, currentItem, results -> {
+                            if(results[0] != null){
+                                if(results[0] == Boolean.TRUE){
+                                    MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                                }else if(results[0] == Boolean.FALSE){
+                                    MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.LONG);
+                                }
+                            }
+                        });
+                    }).start();
                     break;
             }
 

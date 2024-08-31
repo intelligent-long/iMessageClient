@@ -1,8 +1,6 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelTagBi
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -95,8 +92,8 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     .setPositiveButton((dialog, which) -> {
                         ChannelApiCaller.deleteChannelTag(activity, channelTag.getId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
                             @Override
-                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                                super.ok(data, row, call);
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
                                 data.commonHandleResult(activity, new int[]{}, () -> {
                                     MessageDisplayer.autoShow(activity, "已删除", MessageDisplayer.Duration.SHORT);
                                 });

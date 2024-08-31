@@ -143,8 +143,8 @@ public class ChannelAdditionActivity extends BaseActivity {
                     .setPositiveButton("确定", (dialog, which) -> {
                         ChannelApiCaller.acceptAddChannel(this, new AcceptAddChannelPostBody(channelAddition.getUuid()), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
-                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                                super.ok(data, row, call);
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
                                 data.commonHandleResult(ChannelAdditionActivity.this, new int[]{-101, -102, -103}, () -> {
                                     new MessageDialog(ChannelAdditionActivity.this, "添加频道", "频道已添加").show();
                                 });

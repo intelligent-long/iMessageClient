@@ -40,8 +40,8 @@ public class AddChannelTagBottomSheet extends AbstractBottomSheet{
             AddChannelTagPostBody postBody = new AddChannelTagPostBody(inputtedTagName);
             ChannelApiCaller.addTag((AppCompatActivity)getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(getActivity(), new int[]{}, () -> {
                         MessageDisplayer.autoShow(getActivity(), "已添加", MessageDisplayer.Duration.SHORT);
                         dismiss();

@@ -1,13 +1,8 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 
-import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.activity.edituser.ChangeUsernameActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -19,8 +14,6 @@ import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
-
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -48,8 +41,8 @@ public class SettingChannelNoteActivity extends BaseActivity {
             SetNoteToAssociatedChannelPostBody postBody = new SetNoteToAssociatedChannelPostBody(channel.getIchatId(), inputtedNote);
             ChannelApiCaller.setNoteToAssociatedChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101, -102}, () -> {
                         binding.noteInput.setText(inputtedNote);
                         binding.deleteButton.setVisibility(View.VISIBLE);
@@ -64,8 +57,8 @@ public class SettingChannelNoteActivity extends BaseActivity {
                     .setPositiveButton((dialog, which) -> {
                         ChannelApiCaller.deleteNoteOfAssociatedChannel(this, channel.getIchatId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
-                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                                super.ok(data, row, call);
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
                                 data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101}, () -> {
                                     binding.noteInput.setText(null);
                                     binding.deleteButton.setVisibility(View.GONE);

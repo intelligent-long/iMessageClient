@@ -367,10 +367,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             }
 
             @Override
-            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
-                super.ok(data, row, call);
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(requireActivity(), new int[]{-101}, () -> {
-                    stopFetchNextPage = !row.body().hasMore();
+                    stopFetchNextPage = !raw.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     saveHistoryBroadcastsData(broadcastList, true);
                     List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
@@ -448,11 +448,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             }
 
             @Override
-            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
-                super.ok(data, row, call);
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(requireActivity(), new int[]{-101, -102}, () -> {
                     if (breakFetchNextPage(call)) return;
-                    stopFetchNextPage = !row.body().hasMore();
+                    stopFetchNextPage = !raw.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     saveHistoryBroadcastsData(broadcastList, false);
                     List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
@@ -529,8 +529,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             }
 
             @Override
-            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
-                super.ok(data, row, call);
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(requireActivity(), new int[]{-101}, () -> {
                     List<Broadcast> broadcastList = data.getData();
                     saveHistoryBroadcastsData(broadcastList, false);
@@ -541,7 +541,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     adapter.addItemsToStartAndShow(itemDataList);
                     SharedPreferencesAccessor.DefaultPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
-                    if(row.body().hasMore()){
+                    if(raw.body().hasMore()){
                         fetchNews();
                     }
                 }, new OperationStatus.HandleResult(-102, () -> {

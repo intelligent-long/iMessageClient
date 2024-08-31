@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.util.Log;
 
+import com.longx.intelligent.android.ichat2.da.WritingProgressCallback;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -24,12 +26,28 @@ import java.util.Objects;
 public class FileUtil {
 
     public static void transfer(InputStream is, OutputStream os) throws IOException {
+        transfer(is, os, null);
+    }
+
+    public static void transfer(InputStream is, OutputStream os, boolean[] cancel) throws IOException {
+        transfer(is, os, null, -1, cancel);
+    }
+
+    public static void transfer(InputStream is, OutputStream os, WritingProgressCallback writingProgressCallback, long total, boolean[] cancel) throws IOException {
+        int bytesWritten = 0;
         try (InputStream inputStream = new BufferedInputStream(is);
              OutputStream outputStream = new BufferedOutputStream(os)) {
             byte[] buffer = new byte[10240];
             int bytesRead;
             while ((bytesRead = inputStream.read(buffer)) != -1) {
+                if(cancel != null && cancel[0]) {
+                    return;
+                }
                 outputStream.write(buffer, 0, bytesRead);
+                if(writingProgressCallback != null) {
+                    bytesWritten += bytesRead;
+                    writingProgressCallback.onProgressUpdate(bytesWritten, total);
+                }
             }
         }
     }
@@ -125,11 +143,9 @@ public class FileUtil {
         }
 
         if (scheme.equals("file")) {
-            // Handle file scheme
             File file = new File(uri.getPath());
             fileSize = file.length();
         } else if (scheme.equals("content")) {
-            // Handle content scheme
             Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 try {
@@ -143,7 +159,6 @@ public class FileUtil {
             }
 
             if (fileSize == 0) {
-                // Fallback for some content providers that do not provide the size
                 try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
                     if (inputStream != null) {
                         fileSize = inputStream.available();

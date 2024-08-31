@@ -5,18 +5,22 @@ import android.content.Context;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.da.FileHelper;
+import com.longx.intelligent.android.ichat2.da.WritingProgressCallback;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
-import com.longx.intelligent.android.ichat2.dialog.ProgressOperatingDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 import com.xcheng.retrofit.Callback;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -36,9 +40,9 @@ public abstract class RetrofitApiCaller {
 
     public interface Yier<T> {
         void start(Call<T> call);
-        void ok(T data, Response<T> row, Call<T> call);
-        void notOk(int code, String message, Response<T> row, Call<T> call);
-        void failure(Throwable row, Call<T> call);
+        void ok(T data, Response<T> raw, Call<T> call);
+        void notOk(int code, String message, Response<T> raw, Call<T> call);
+        void failure(Throwable raw, Call<T> call);
         void complete(Call<T> call);
     }
 
@@ -74,12 +78,12 @@ public abstract class RetrofitApiCaller {
         }
 
         @Override
-        public void ok(T data, Response<T> row, Call<T> call) {
+        public void ok(T data, Response<T> raw, Call<T> call) {
 
         }
 
         @Override
-        public void notOk(int code, String message, Response<T> row, Call<T> call) {
+        public void notOk(int code, String message, Response<T> raw, Call<T> call) {
 
         }
 
@@ -118,7 +122,7 @@ public abstract class RetrofitApiCaller {
         }
 
         @Override
-        public void notOk(int code, String message, Response<T> row, Call<T> call) {
+        public void notOk(int code, String message, Response<T> raw, Call<T> call) {
             if(showErrorInfo) {
                 if (context != null) {
                     String showMessage = "HTTP 状态码异常  >  " + code;
@@ -160,6 +164,7 @@ public abstract class RetrofitApiCaller {
         private Activity activity;
         private boolean showOperationDialog = true;
         private OperatingDialog operatingDialog;
+        private boolean canceled;
 
         public CommonYier() {
         }
@@ -189,6 +194,7 @@ public abstract class RetrofitApiCaller {
                 operatingDialog = new OperatingDialog(getActivity(), () -> {
                     setBeCanceled(true);
                     call.cancel();
+                    onCancel();
                 });
                 operatingDialog.show();
             });
@@ -203,8 +209,20 @@ public abstract class RetrofitApiCaller {
             }
         }
 
+        public void onCancel(){
+            canceled = true;
+        }
+
         public Activity getActivity() {
             return activity;
+        }
+
+        protected OperatingDialog getOperatingDialog() {
+            return operatingDialog;
+        }
+
+        protected boolean isCanceled(){
+            return canceled;
         }
     }
 
@@ -274,61 +292,65 @@ public abstract class RetrofitApiCaller {
         }
     }
 
-    public static class ProgressCommonYier<T> extends BaseCommonYier<T>{
-        private Activity activity;
-        private boolean showOperationDialog = true;
-        private ProgressOperatingDialog progressOperatingDialog;
+    public static class DownloadCommonYier extends CommonYier<okhttp3.ResponseBody> {
+        private final String saveTo;
+        private final WritingProgressCallback writingProgressCallback;
+        private final boolean[] cancel = new boolean[1];
+        private OperatingDialog progressOperatingDialog;
+        private final boolean showProgressDialog;
+        private final ResultsYier resultsYier;
 
-        public ProgressCommonYier() {
+        public DownloadCommonYier(Activity activity, String saveTo, boolean showProgressDialog, ResultsYier resultsYier) {
+            this(activity, saveTo, showProgressDialog, null, resultsYier);
         }
 
-        public ProgressCommonYier(Activity activity) {
-            super(activity);
-            this.activity = activity;
-        }
-
-        public ProgressCommonYier(Activity activity, boolean showOperationDialog, boolean showErrorInfo) {
-            super(activity, showErrorInfo);
-            this.activity = activity;
-            this.showOperationDialog = showOperationDialog;
+        public DownloadCommonYier(Activity activity, String saveTo, boolean showProgressDialog, WritingProgressCallback writingProgressCallback, ResultsYier resultsYier) {
+            super(activity, false, true);
+            this.showProgressDialog = showProgressDialog;
+            this.saveTo = saveTo;
+            this.writingProgressCallback = writingProgressCallback;
+            this.resultsYier = resultsYier;
         }
 
         @Override
-        public void start(Call<T> call) {
-            if(showOperationDialog){
-                if(getActivity() != null) {
-                    showOperationDialog(call);
-                }
-            }
-        }
-
-        protected void showOperationDialog(Call<T> call) {
-            getActivity().runOnUiThread(() -> {
-                progressOperatingDialog = new ProgressOperatingDialog(getActivity(), () -> {
+        public void start(Call<ResponseBody> call) {
+            super.start(call);
+            if(getActivity() != null && showProgressDialog) {
+                progressOperatingDialog = new OperatingDialog(getActivity(), () -> {
                     setBeCanceled(true);
                     call.cancel();
+                    onCancel();
                 });
                 progressOperatingDialog.show();
-            });
+            }
         }
 
         @Override
-        public void complete(Call<T> call) {
-            if (progressOperatingDialog != null) {
-                if(getActivity() != null) {
-                    getActivity().runOnUiThread(() -> progressOperatingDialog.dismiss());
+        public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
+            new Thread(() -> {
+                try (InputStream inputStream = data.byteStream()) {
+                    long contentLength = data.contentLength();
+                    if (writingProgressCallback != null) {
+                        FileHelper.save(inputStream, saveTo, contentLength, writingProgressCallback, cancel);
+                    } else if (progressOperatingDialog != null) {
+                        FileHelper.save(inputStream, saveTo, contentLength, (current, total) -> {
+                            progressOperatingDialog.updateProgress(current, total);
+                        }, cancel);
+                        progressOperatingDialog.dismiss();
+                    }
+                    resultsYier.onResults(Boolean.TRUE, saveTo);
+                } catch (IOException e) {
+                    ErrorLogger.log(e);
+                    resultsYier.onResults(Boolean.FALSE, saveTo);
                 }
-            }
+            }).start();
         }
 
-        public void updateProgress(long current, long total){
-            if (progressOperatingDialog != null) {
-                getActivity().runOnUiThread(() -> progressOperatingDialog.setProgress(current, total));
-            }
-        }
-
-        public Activity getActivity() {
-            return activity;
+        @Override
+        public void onCancel() {
+            super.onCancel();
+            cancel[0] = isCanceled();
+            resultsYier.onResults((Object) null, saveTo);
         }
     }
 }

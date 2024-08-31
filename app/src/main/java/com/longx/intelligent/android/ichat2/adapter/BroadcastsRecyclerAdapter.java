@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.text.InputFilter;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -401,8 +399,8 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 confirmDialog.setPositiveButton((dialog, which) -> {
                     BroadcastApiCaller.deleteBroadcast((LifecycleOwner) activity, itemData.broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
                         @Override
-                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                            super.ok(data, row, call);
+                        public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                            super.ok(data, raw, call);
                             data.commonHandleResult(activity, new int[]{}, () -> {
                                 MessageDisplayer.autoShow(activity, "已删除", MessageDisplayer.Duration.LONG);
                                 GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {

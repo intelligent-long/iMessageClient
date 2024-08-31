@@ -55,9 +55,17 @@ public class FileHelper {
     }
 
     public static String save(InputStream contentStream, String path) throws IOException {
+        return save(contentStream, path, -1, null, null);
+    }
+
+    public static String save(InputStream contentStream, String path, long total, WritingProgressCallback writingProgressCallback, boolean[] cancel) throws IOException {
         File file = createFile(path);
         try (FileOutputStream outputStream = new FileOutputStream(file)){
-            FileUtil.transfer(contentStream, outputStream);
+            if(writingProgressCallback != null) {
+                FileUtil.transfer(contentStream, outputStream, writingProgressCallback, total, cancel);
+            }else {
+                FileUtil.transfer(contentStream, outputStream);
+            }
             return file.getAbsolutePath();
         }
     }

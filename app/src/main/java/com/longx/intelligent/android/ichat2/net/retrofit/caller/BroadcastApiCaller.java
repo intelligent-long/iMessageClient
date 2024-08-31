@@ -15,7 +15,6 @@ import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.BroadcastApi;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 import com.longx.intelligent.android.ichat2.yier.ProgressYier;
@@ -30,8 +29,8 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okio.BufferedSink;
-import retrofit2.http.Query;
 
 /**
  * Created by LONG on 2024/7/28 at 上午2:49.
@@ -168,6 +167,12 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
         });
         CompletableCall<OperationData> call = getApiImplementation(context, EDIT_BROADCAST_CONNECT_TIMEOUT, EDIT_BROADCAST_READ_TIMEOUT, EDIT_BROADCAST_WRITE_TIMEOUT).editBroadcast(bodyPart, addMediaPart);
         call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<ResponseBody> downloadMediaData(LifecycleOwner lifecycleOwner, String mediaId, DownloadCommonYier downloadCommonYier){
+        CompletableCall<ResponseBody> call = getApiImplementation().downloadMediaData(mediaId);
+        call.enqueue(lifecycleOwner, downloadCommonYier);
         return call;
     }
 }

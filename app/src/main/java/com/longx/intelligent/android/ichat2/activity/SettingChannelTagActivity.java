@@ -2,15 +2,8 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -29,8 +22,6 @@ import com.longx.intelligent.android.ichat2.databinding.ActivitySettingChannelTa
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
-import com.longx.intelligent.android.ichat2.yier.RecyclerItemYiers;
-import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,8 +96,8 @@ public class SettingChannelTagActivity extends BaseActivity implements ContentUp
             SetChannelTagsPostBody postBody = new SetChannelTagsPostBody(channel.getIchatId(), newTagNames, toAddTagIds, toRemoveTagIds);
             ChannelApiCaller.setChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(getActivity(), new int[]{-101}, () -> {
                         binding.layoutNewTags.setVisibility(View.GONE);
                         MessageDisplayer.autoShow(getActivity(), "设置成功", MessageDisplayer.Duration.SHORT);

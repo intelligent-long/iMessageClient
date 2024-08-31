@@ -1,13 +1,10 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -20,7 +17,6 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemTagChannelBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
@@ -31,7 +27,6 @@ import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -142,8 +137,8 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
                         RemoveChannelsOfTagPostBody postBody = new RemoveChannelsOfTagPostBody(channelTag.getId(), channelIchatIdList);
                         ChannelApiCaller.removeChannelsOfTag(tagChannelActivity, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(tagChannelActivity){
                             @Override
-                            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                                super.ok(data, row, call);
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
                                 data.commonHandleResult(tagChannelActivity, new int[]{}, () -> {
                                     MessageDisplayer.autoShow(tagChannelActivity, "已移除", MessageDisplayer.Duration.SHORT);
                                 });

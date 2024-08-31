@@ -90,8 +90,8 @@ public class ChannelAdditionsActivity extends BaseActivity implements ChannelAdd
         onStartFetch();
         ChannelApiCaller.fetchAllAdditionActivities(this, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(ChannelAdditionsActivity.this, new int[]{}, () -> {
                     List<ChannelAddition> channelAdditions = data.getData(new TypeReference<List<ChannelAddition>>() {
                     });

@@ -34,8 +34,8 @@ public class ChangeUsernameActivity extends BaseActivity {
                 ChangeUsernamePostBody postBody = new ChangeUsernamePostBody(inputtedUsername);
                 UserApiCaller.changeUsername(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                     @Override
-                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                        super.ok(data, row, call);
+                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                        super.ok(data, raw, call);
                         data.commonHandleResult(ChangeUsernameActivity.this, new int[]{-101}, () -> {
                             new MessageDialog(ChangeUsernameActivity.this, "修改成功").show();
                         });

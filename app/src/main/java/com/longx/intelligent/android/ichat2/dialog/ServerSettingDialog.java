@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -177,7 +176,7 @@ public class ServerSettingDialog extends AbstractDialog{
                 MessageDisplayer.showSnackbar(getActivity(), "服务器设置不合法", Snackbar.LENGTH_SHORT);
             }
             try {
-                File dataFolder = new File(DataPaths.PrivateFile.getPrivateFileFolderPath(getActivity()));
+                File dataFolder = new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity()));
                 dataFolder.mkdirs();
                 String dataFolderName = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(getActivity()).getDataFolder();
                 boolean dataFolderExist = FileUtil.dirContainsFile(Objects.requireNonNull(dataFolder.getParentFile()), dataFolderName);
@@ -192,7 +191,7 @@ public class ServerSettingDialog extends AbstractDialog{
                 try {
                     OkHttpClientCreator.create();
                     RetrofitCreator.create(getActivity());
-                    new File(DataPaths.PrivateFile.getPrivateFileFolderPath(getActivity())).mkdirs();
+                    new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity())).mkdirs();
                 } catch (Exception e) {
                     ErrorLogger.log(getClass(), e);
                     MessageDisplayer.showSnackbar(getActivity(), "出错了", Snackbar.LENGTH_LONG);

@@ -1,7 +1,6 @@
 package com.longx.intelligent.android.ichat2.data;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcel;
@@ -19,7 +18,6 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
@@ -42,8 +40,8 @@ public class ChatMessage implements Parcelable {
             case TYPE_IMAGE:{
                 ChatApiCaller.fetchChatMessageImage(null, chatMessage.imageId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
                     @Override
-                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                        super.ok(data, row, call);
+                    public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
+                        super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();
@@ -66,8 +64,8 @@ public class ChatMessage implements Parcelable {
             case TYPE_FILE:{
                 ChatApiCaller.fetchChatMessageFile(null, chatMessage.fileId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
                     @Override
-                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                        super.ok(data, row, call);
+                    public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
+                        super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();
@@ -88,8 +86,8 @@ public class ChatMessage implements Parcelable {
             case TYPE_VIDEO:{
                 ChatApiCaller.fetchChatMessageVideo(null, chatMessage.videoId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
                     @Override
-                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                        super.ok(data, row, call);
+                    public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
+                        super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();
@@ -115,8 +113,8 @@ public class ChatMessage implements Parcelable {
                 chatMessage.setVoiceListened(false);
                 ChatApiCaller.fetchChatMessageVoice(null, chatMessage.voiceId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
                     @Override
-                    public void ok(ResponseBody data, Response<ResponseBody> row, Call<ResponseBody> call) {
-                        super.ok(data, row, call);
+                    public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
+                        super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();

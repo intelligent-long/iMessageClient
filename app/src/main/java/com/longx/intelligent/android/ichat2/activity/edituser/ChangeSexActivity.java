@@ -39,8 +39,8 @@ public class ChangeSexActivity extends BaseActivity {
                 ChangeSexPostBody postBody = new ChangeSexPostBody(sex);
                 UserApiCaller.changeSex(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                     @Override
-                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                        super.ok(data, row, call);
+                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                        super.ok(data, raw, call);
                         data.commonHandleResult(ChangeSexActivity.this, new int[]{-101}, () -> {
                             new MessageDialog(ChangeSexActivity.this, "修改成功").show();
                         });

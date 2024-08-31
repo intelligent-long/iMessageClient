@@ -18,7 +18,6 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
@@ -122,8 +121,8 @@ public class ContentUpdater {
         }else {
             UserApiCaller.whoAmI(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CURRENT_USER_INFO, context) {
                 @Override
-                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleSuccessResult(() -> {
                         Self self = data.getData(Self.class);
                         SharedPreferencesAccessor.UserProfilePref.saveCurrentUserProfile(context, self);
@@ -136,8 +135,8 @@ public class ContentUpdater {
     public static void updateChannelAdditionNotViewCount(Context context, ResultsYier resultsYier){
         ChannelApiCaller.fetchChannelAdditionUnviewedCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNEL_ADDITIONS_UNVIEWED_COUNT, context){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
                     ChannelAdditionNotViewedCount notViewedCount = data.getData(ChannelAdditionNotViewedCount.class);
                     SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, notViewedCount);
@@ -150,8 +149,8 @@ public class ContentUpdater {
     public static void updateChannels(Context context, ResultsYier resultsYier){
         ChannelApiCaller.fetchAllAssociations(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNELS, context){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
                     ChannelDatabaseManager.getInstance().clearChannels();
                     List<ChannelAssociation> channelAssociations = data.getData(new TypeReference<List<ChannelAssociation>>() {
@@ -166,8 +165,8 @@ public class ContentUpdater {
     public static void updateChatMessages(Context context, ResultsYier resultsYier){
         ChatApiCaller.fetchAllNewChatMessages(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHAT_MESSAGES, context){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
                     List<ChatMessage> chatMessages = data.getData(new TypeReference<List<ChatMessage>>() {
                     });
@@ -206,8 +205,8 @@ public class ContentUpdater {
     public static void updateChannelTags(Context context, ResultsYier resultsYier){
         ChannelApiCaller.fetchAllTags(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHANNEL_TAGS, context){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
                     List<ChannelTag> channelTags = data.getData(new TypeReference<List<ChannelTag>>() {
                     });

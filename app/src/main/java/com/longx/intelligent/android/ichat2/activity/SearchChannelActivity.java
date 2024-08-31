@@ -80,8 +80,8 @@ public class SearchChannelActivity extends BaseActivity {
                 if(Objects.equals(UiUtil.getEditTextString(binding.searchByAutoComplete), searchByNames[0])){
                     ChannelApiCaller.findChannelByIchatIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
                         @Override
-                        public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                            super.ok(data, row, call);
+                        public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                            super.ok(data, raw, call);
                             data.commonHandleResult(SearchChannelActivity.this, new int[]{-101}, () -> {
                                 Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);
@@ -94,8 +94,8 @@ public class SearchChannelActivity extends BaseActivity {
                 }else if(Objects.equals(UiUtil.getEditTextString(binding.searchByAutoComplete), searchByNames[1])){
                     ChannelApiCaller.findChannelByEmail(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
                         @Override
-                        public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                            super.ok(data, row, call);
+                        public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                            super.ok(data, raw, call);
                             data.commonHandleResult(SearchChannelActivity.this, new int[]{-101}, () -> {
                                 Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(SearchChannelActivity.this, ChannelActivity.class);

@@ -53,8 +53,8 @@ public class ChangeRegionActivity extends BaseActivity {
                 ChangeRegionPostBody postBody = new ChangeRegionPostBody(currentFirstRegionAdcode, currentSecondRegionAdcode, currentThirdRegionAdcode);
                 UserApiCaller.changeRegion(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                     @Override
-                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                        super.ok(data, row, call);
+                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                        super.ok(data, raw, call);
                         data.commonHandleResult(ChangeRegionActivity.this, new int[]{-101, -102, -103, -104, -105}, () -> {
                             new MessageDialog(ChangeRegionActivity.this, "修改成功").show();
                         });
@@ -75,8 +75,8 @@ public class ChangeRegionActivity extends BaseActivity {
     private void fetchAndSetupFirstRegionAutoCompleteTextView(ResultsYier resultsYier){
         UserApiCaller.fetchAllFirstRegions(this, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(ChangeRegionActivity.this, new int[]{}, () -> {
                     allFirstRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
                     });
@@ -123,8 +123,8 @@ public class ChangeRegionActivity extends BaseActivity {
         }else {
             UserApiCaller.fetchAllSecondRegions(this, firstRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
                 @Override
-                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(ChangeRegionActivity.this, new int[]{}, () -> {
                         allSecondRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
                         });
@@ -172,8 +172,8 @@ public class ChangeRegionActivity extends BaseActivity {
         }else {
             UserApiCaller.fetchAllThirdRegions(this, secondRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
                 @Override
-                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(ChangeRegionActivity.this, new int[]{}, () -> {
                         allThirdRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
                         });

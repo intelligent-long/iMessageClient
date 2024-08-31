@@ -118,10 +118,12 @@ public class RecordVideoActivity extends BaseActivity {
                 Intent intent = new Intent();
                 MediaInfo mediaInfoFromUri = MediaStoreHelper.getMediaInfoFromUri(this,
                         Objects.requireNonNull(MediaStoreHelper.getContentUriFromFileUri(this, Uri.fromFile(videoFile))));
-                if(player != null) {
-                    mediaInfoFromUri.setVideoDuration(player.getDuration());
-                }else {
-                    mediaInfoFromUri.setVideoDuration(MediaHelper.getVideoDuration(videoFile.getPath()));
+                if (mediaInfoFromUri.getVideoDuration() <= 0) {
+                    if (player != null) {
+                        mediaInfoFromUri.setVideoDuration(player.getDuration());
+                    } else {
+                        mediaInfoFromUri.setVideoDuration(MediaHelper.getVideoDuration(videoFile.getPath()));
+                    }
                 }
                 intent.putExtra(ExtraKeys.MEDIA_INFOS, new MediaInfo[]{mediaInfoFromUri});
                 intent.putExtra(ExtraKeys.REMOVE, remove);

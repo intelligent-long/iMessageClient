@@ -192,8 +192,8 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         SortTagsPostBody postBody = new SortTagsPostBody(orderMap);
         ChannelApiCaller.sortChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
             @Override
-            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                super.ok(data, row, call);
+            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(TagActivity.this, new int[]{-101, -102, -103}, () -> {
                     switchDragSortState();
                     MessageDisplayer.autoShow(getActivity(), "排序成功", MessageDisplayer.Duration.SHORT);

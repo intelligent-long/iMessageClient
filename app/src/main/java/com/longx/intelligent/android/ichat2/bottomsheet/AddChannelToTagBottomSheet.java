@@ -5,18 +5,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.adapter.AddChannelToTagRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
-import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
-import com.longx.intelligent.android.ichat2.data.ChannelTag;
-import com.longx.intelligent.android.ichat2.data.request.AddChannelTagPostBody;
 import com.longx.intelligent.android.ichat2.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
-import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddChannelTagBinding;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAddChannelToTagBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +57,8 @@ public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
             AddChannelsToTagPostBody postBody = new AddChannelsToTagPostBody(tagId, checkedChannelIchatIds);
             ChannelApiCaller.addChannelsToTag((AppCompatActivity)getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(getActivity(), new int[]{}, () -> {
                         MessageDisplayer.autoShow(getActivity(), "已添加", MessageDisplayer.Duration.SHORT);
                         dismiss();

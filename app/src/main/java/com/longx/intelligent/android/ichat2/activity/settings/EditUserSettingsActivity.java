@@ -4,14 +4,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.preference.Preference;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.MenuItem;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
@@ -37,7 +35,6 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.ichat2.preference.ChangeAvatarPreference;
 import com.longx.intelligent.android.ichat2.preference.ProfileItemPreference;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
-import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
 import java.util.List;
 
@@ -162,8 +159,8 @@ public class EditUserSettingsActivity extends BaseActivity{
                             .setPositiveButton((dialog, which) -> {
                                 UserApiCaller.removeAvatar(getActivity(), new RetrofitApiCaller.CommonYier<OperationStatus>((AppCompatActivity) getActivity()) {
                                     @Override
-                                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                                        super.ok(data, row, call);
+                                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                        super.ok(data, raw, call);
                                         data.commonHandleResult(getActivity(), new int[]{}, () -> {
                                             MessageDisplayer.autoShow(getActivity(), "头像已移除", MessageDisplayer.Duration.SHORT);
                                         });

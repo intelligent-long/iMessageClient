@@ -1,10 +1,8 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -22,7 +20,6 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -56,8 +53,8 @@ public class ChannelSettingActivity extends BaseActivity {
             PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getIchatId(), new ChatMessageAllow(changeTo, switchNoticeChecked)),
                     new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
                         @Override
-                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                            super.ok(data, row, call);
+                        public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                            super.ok(data, raw, call);
                             data.commonHandleResult(ChannelSettingActivity
                                     .this, new int[]{}, () -> {
                                 binding.switchVoiceMessage.setChecked(changeTo);
@@ -78,8 +75,8 @@ public class ChannelSettingActivity extends BaseActivity {
             PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getIchatId(), new ChatMessageAllow(switchVoiceMessageChecked, changeTo)),
                     new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
                         @Override
-                        public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                            super.ok(data, row, call);
+                        public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                            super.ok(data, raw, call);
                             data.commonHandleResult(ChannelSettingActivity.this, new int[]{}, () -> {
                                 binding.switchNotice.setChecked(changeTo);
                             });
@@ -126,8 +123,8 @@ public class ChannelSettingActivity extends BaseActivity {
         DeleteChannelAssociationPostBody postBody = new DeleteChannelAssociationPostBody(channel.getIchatId());
         ChannelApiCaller.deleteAssociatedChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
             @Override
-            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                super.ok(data, row, call);
+            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(getActivity(), new int[]{}, () -> {
                     ActivityOperator.getActivitiesOf(ChatActivity.class).forEach(chatActivity -> {
                         if(chatActivity.getChannel().getIchatId().equals(channel.getIchatId())){

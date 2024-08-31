@@ -87,8 +87,8 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                 }
 
                 @Override
-                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(ChannelActivity.this, new int[]{-101}, () -> {
                         channel = data.getData(Channel.class);
                         if(channel != null){

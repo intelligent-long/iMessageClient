@@ -256,10 +256,10 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
             }
 
             @Override
-            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
-                super.ok(data, row, call);
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(BroadcastChannelActivity.this, new int[]{-101}, () -> {
-                    stopFetchNextPage = !row.body().hasMore();
+                    stopFetchNextPage = !raw.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
                     broadcastList.forEach(broadcast -> {
@@ -326,11 +326,11 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
             }
 
             @Override
-            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
-                super.ok(data, row, call);
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(BroadcastChannelActivity.this, new int[]{-101}, () -> {
                     if (breakFetchNextPage(call)) return;
-                    stopFetchNextPage = !row.body().hasMore();
+                    stopFetchNextPage = !raw.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
                     broadcastList.forEach(broadcast -> {
@@ -407,8 +407,8 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
             }
 
             @Override
-            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> row, Call<PaginatedOperationData<Broadcast>> call) {
-                super.ok(data, row, call);
+            public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(BroadcastChannelActivity.this, new int[]{-101}, () -> {
                     List<Broadcast> broadcastList = data.getData();
                     List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
@@ -418,7 +418,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
                     adapter.addItemsToStartAndShow(itemDataList);
                     broadcastReloadedTime = new Date();
                     showOrHideBroadcastReloadedTime();
-                    if(row.body().hasMore()){
+                    if(raw.body().hasMore()){
                         fetchNews(ichatId);
                     }
                 }, new OperationStatus.HandleResult(-102, () -> {

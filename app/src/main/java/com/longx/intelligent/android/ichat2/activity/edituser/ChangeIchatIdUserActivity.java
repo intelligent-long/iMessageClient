@@ -33,8 +33,8 @@ public class ChangeIchatIdUserActivity extends BaseActivity {
     private void checkNowCanChange() {
         UserApiCaller.ichatIdUserNowCanChange(null, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 500L){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(ChangeIchatIdUserActivity.this, new int[]{}, null,
                         new OperationStatus.HandleResult(101, () -> {
                             String desc = data.getMessage();
@@ -60,8 +60,8 @@ public class ChangeIchatIdUserActivity extends BaseActivity {
                 ChangeIchatIdUserPostBody postBody = new ChangeIchatIdUserPostBody(inputtedIchatIdUser);
                 UserApiCaller.changeIchatIdUser(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                     @Override
-                    public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                        super.ok(data, row, call);
+                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                        super.ok(data, raw, call);
                         data.commonHandleResult(ChangeIchatIdUserActivity.this, new int[]{-101, -102, -103, -104}, () -> {
                             new MessageDialog(ChangeIchatIdUserActivity.this, "修改成功").show();
                         });

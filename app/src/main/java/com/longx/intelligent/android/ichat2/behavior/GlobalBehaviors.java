@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.Application;
-import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -44,8 +43,8 @@ public class GlobalBehaviors {
                 IchatIdUserLoginPostBody postBody = new IchatIdUserLoginPostBody(loginIchatIdUser, loginPassword);
                 AuthApiCaller.ichatIdUserLogin(activity, postBody, new RetrofitApiCaller.CommonYier<OperationData>(activity){
                     @Override
-                    public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                        super.ok(data, row, call);
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                             Self self = data.getData(Self.class);
                             onLoginSuccess(activity, self);
@@ -58,8 +57,8 @@ public class GlobalBehaviors {
                 EmailLoginPostBody postBody = new EmailLoginPostBody(loginEmail, loginPassword);
                 AuthApiCaller.emailLogin(activity, postBody, new RetrofitApiCaller.CommonYier<OperationData>(activity){
                     @Override
-                    public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                        super.ok(data, row, call);
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                             Self self = data.getData(Self.class);
                             onLoginSuccess(activity, self);
@@ -72,8 +71,8 @@ public class GlobalBehaviors {
                 VerifyCodeLoginPostBody postBody = new VerifyCodeLoginPostBody(loginEmail, loginVerifyCode);
                 AuthApiCaller.verifyCodeLogin(activity, postBody, new RetrofitApiCaller.CommonYier<OperationData>(activity){
                     @Override
-                    public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                        super.ok(data, row, call);
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102, -103}, () -> {
                             Self self = data.getData(Self.class);
                             onLoginSuccess(activity, self);
@@ -117,7 +116,7 @@ public class GlobalBehaviors {
         AppCompatActivity activity = context instanceof AppCompatActivity ? ((AppCompatActivity) context) : null;
         AuthApiCaller.logout(activity, failureBaseUrl, cookie, new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
             @Override
-            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
+            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                 data.commonHandleResult(activity, new int[]{}, () -> {
                     onLogoutSuccess(activity);
                     if (resultsYier != null) resultsYier.onResults(true, call, false);
@@ -157,8 +156,8 @@ public class GlobalBehaviors {
         SendVerifyCodePostBody postBody = new SendVerifyCodePostBody(email);
         AuthApiCaller.sendVerifyCode(activity, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(activity, true, true) {
             @Override
-            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                super.ok(data, row, call);
+            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                     String notice = data.getDetails().get("notice").get(0);
                     new MessageDialog(activity, notice).show();
@@ -171,8 +170,8 @@ public class GlobalBehaviors {
         SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(context, true);
         AuthApiCaller.fetchOfflineDetail(null, new RetrofitApiCaller.BaseYier<OperationData>(){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(null, new int[]{}, () -> {
                     OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
                     if (ActivityOperator.getActivityList().isEmpty()) {

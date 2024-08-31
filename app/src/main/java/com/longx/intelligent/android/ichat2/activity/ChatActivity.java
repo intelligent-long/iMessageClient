@@ -161,8 +161,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private void viewAllNewChatMessages() {
         ChatApiCaller.viewAllNewMessage(this, channel.getIchatId(), new RetrofitApiCaller.BaseCommonYier<OperationStatus>(this){
             @Override
-            public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                super.ok(data, row, call);
+            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
                     openedChatDatabaseManager.updateNotViewedCount(0, channel.getIchatId());
                     chatMessageDatabaseManager.setAllToViewed();
@@ -273,8 +273,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 }
 
                 @Override
-                public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(ChatActivity.this, new int[]{-101}, () -> {
                         binding.messageInput.setText(null);
                         ChatMessage chatMessage = data.getData(ChatMessage.class);
@@ -640,8 +640,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             }
 
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(ChatActivity.this, new int[]{-101, -102}, () -> {
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
@@ -711,8 +711,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             }
 
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(ChatActivity.this, new int[]{-101, -102}, () -> {
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
@@ -802,8 +802,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             }
 
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(ChatActivity.this, new int[]{-101, -102}, () -> {
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);

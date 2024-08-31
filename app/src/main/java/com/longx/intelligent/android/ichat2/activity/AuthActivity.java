@@ -258,8 +258,8 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
         RegistrationPostBody postBody = new RegistrationPostBody(registerEmail, registerUsername, registerPassword, registerVerifyCode);
         AuthApiCaller.register(this, postBody, new RetrofitApiCaller.CommonYier<OperationData>(this){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(AuthActivity.this, new int[]{-101, -102, -103}, () -> {
                     Self self = data.getData(Self.class);
                     String message = "邮箱: " + self.getEmail() + "\n注册成功，是否登录？";
@@ -285,8 +285,8 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
             ChangePasswordPostBody postBody = new ChangePasswordPostBody(resetPasswordPassword, resetPasswordVerifyCode);
             AuthApiCaller.changePassword(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(AuthActivity.this, new int[]{-101, -102}, () -> {
                         new MessageDialog(AuthActivity.this, "修改成功").show();
                     });
@@ -296,8 +296,8 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
             ResetPasswordPostBody postBody = new ResetPasswordPostBody(resetPasswordEmail, resetPasswordPassword, resetPasswordVerifyCode);
             AuthApiCaller.resetPassword(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
-                public void ok(OperationStatus data, Response<OperationStatus> row, Call<OperationStatus> call) {
-                    super.ok(data, row, call);
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
                     data.commonHandleResult(AuthActivity.this, new int[]{-101, -102}, () -> {
                         new MessageDialog(AuthActivity.this, "修改成功").show();
                     });
@@ -350,8 +350,8 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
         if(!offlineDetailNeedFetch) return;
         AuthApiCaller.fetchOfflineDetail(null, new RetrofitApiCaller.BaseYier<OperationData>(){
             @Override
-            public void ok(OperationData data, Response<OperationData> row, Call<OperationData> call) {
-                super.ok(data, row, call);
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
                 data.commonHandleResult(AuthActivity.this, new int[]{}, () -> {
                     OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
                     SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(AuthActivity.this, offlineDetail);

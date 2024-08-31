@@ -5,21 +5,31 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by LONG on 2024/5/29 at 3:19 PM.
@@ -59,13 +69,24 @@ public class PublicFileAccessor {
             GlideBehaviours.loadToFile(context, NetDataUrls.getBroadcastMediaDataUrl(context, broadcast.getBroadcastMedias().get(mediaIndex).getMediaId()), new CustomTarget<File>() {
                 @Override
                 public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                    InputStream inputStream = null;
                     try {
-                        savedPath[0] = FileHelper.save(Files.newInputStream(resource.toPath()), savePath);
+                        inputStream = Files.newInputStream(resource.toPath());
+                        savedPath[0] = FileHelper.save(inputStream, savePath);
                         countDownLatch.countDown();
                     } catch (IOException e) {
                         ErrorLogger.log(e);
                         ioException[0] = e;
                         countDownLatch.countDown();
+                    }finally {
+                        try {
+                            if (inputStream != null) {
+                                inputStream.close();
+                            }
+                        } catch (IOException e) {
+                            ErrorLogger.log(e);
+                            ioException[0] = e;
+                        }
                     }
                 }
 
@@ -76,6 +97,13 @@ public class PublicFileAccessor {
             countDownLatch.await();
             if(ioException[0] != null) throw ioException[0];
             return savedPath[0];
+        }
+
+        public static String saveVideo(AppCompatActivity activity, Broadcast broadcast, int mediaIndex, ResultsYier resultsYier) {
+            String savePath = DataPaths.PublicFile.getBroadcastFilePath(broadcast, mediaIndex);
+            BroadcastApiCaller.downloadMediaData(activity, broadcast.getBroadcastMedias().get(mediaIndex).getMediaId(),
+                    new RetrofitApiCaller.DownloadCommonYier(activity, savePath, true, resultsYier));
+            return savePath;
         }
     }
 }
