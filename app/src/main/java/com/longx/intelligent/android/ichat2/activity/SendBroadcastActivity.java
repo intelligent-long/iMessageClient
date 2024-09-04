@@ -26,11 +26,13 @@ import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.CollectionUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
@@ -216,6 +218,31 @@ public class SendBroadcastActivity extends BaseActivity {
                     binding.textCounter.setTextColor(getColor(R.color.negative_red));
                 } else {
                     binding.textCounter.setTextColor(textColorNormal);
+                }
+            }
+        });
+        binding.textInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus){
+                if(!mediaInfoList.isEmpty()){
+                    binding.recyclerViewMedias.setVisibility(View.GONE);
+                }
+            }
+        });
+        binding.textInput.setOnClickListener(v -> {
+            if(!mediaInfoList.isEmpty()){
+                binding.recyclerViewMedias.setVisibility(View.GONE);
+            }
+        });
+        new KeyboardVisibilityYier(this).setYier(new KeyboardVisibilityYier.Yier() {
+
+            @Override
+            public void onKeyboardOpened() {
+            }
+
+            @Override
+            public void onKeyboardClosed() {
+                if(!mediaInfoList.isEmpty()){
+                    binding.recyclerViewMedias.setVisibility(View.VISIBLE);
                 }
             }
         });

@@ -235,7 +235,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 }
             }
         });
-        KeyboardVisibilityYier.setYier(this, new KeyboardVisibilityYier.Yier() {
+        new KeyboardVisibilityYier(this).setYier(new KeyboardVisibilityYier.Yier() {
+
             @Override
             public void onKeyboardOpened() {
                 if(!(nextPn < 0)){
@@ -317,7 +318,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             UiUtil.openKeyboard(binding.messageInput);
         });
         binding.moreButton.setOnClickListener(v -> {
-            if(KeyboardVisibilityYier.isKeyboardVisible(this)) {
+            if(new KeyboardVisibilityYier(this).isKeyboardVisible()) {
                 UiUtil.hideKeyboard(binding.messageInput);
                 showMorePanelOnKeyboardClosed = true;
             }else {

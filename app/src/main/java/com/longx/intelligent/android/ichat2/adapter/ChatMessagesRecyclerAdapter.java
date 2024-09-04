@@ -455,7 +455,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             return true;
         };
         View.OnLongClickListener onMessageSendLongClickYier = v -> {
-            if(KeyboardVisibilityYier.isKeyboardVisible(activity)) {
+            if(new KeyboardVisibilityYier(activity).isKeyboardVisible()) {
                 activity.setShowMessagePopupOnKeyboardClosed(() -> {
                     scrollDisabler.setScrollingDisabled(true);
                     popupWindow.show(holder.binding.layoutMessageSend, true);

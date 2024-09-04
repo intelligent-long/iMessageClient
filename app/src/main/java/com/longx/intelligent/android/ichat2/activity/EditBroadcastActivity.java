@@ -27,6 +27,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
@@ -72,7 +73,7 @@ public class EditBroadcastActivity extends BaseActivity {
 
     private void showContent() {
         binding.textInput.setText(broadcast.getText());
-        if(CollectionUtil.hasData(broadcast.getBroadcastMedias())){
+        if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
             binding.recyclerViewMedias.setVisibility(View.VISIBLE);
             spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, Constants.EDIT_BROADCAST_MEDIA_COLUMN_COUNT,
                     Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
@@ -114,6 +115,31 @@ public class EditBroadcastActivity extends BaseActivity {
                     binding.textCounter.setTextColor(getColor(R.color.negative_red));
                 } else {
                     binding.textCounter.setTextColor(textColorNormal);
+                }
+            }
+        });
+        binding.textInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus){
+                if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
+                    binding.recyclerViewMedias.setVisibility(View.GONE);
+                }
+            }
+        });
+        binding.textInput.setOnClickListener(v -> {
+            if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
+                binding.recyclerViewMedias.setVisibility(View.GONE);
+            }
+        });
+        new KeyboardVisibilityYier(this).setYier(new KeyboardVisibilityYier.Yier() {
+
+            @Override
+            public void onKeyboardOpened() {
+            }
+
+            @Override
+            public void onKeyboardClosed() {
+                if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
+                    binding.recyclerViewMedias.setVisibility(View.VISIBLE);
                 }
             }
         });

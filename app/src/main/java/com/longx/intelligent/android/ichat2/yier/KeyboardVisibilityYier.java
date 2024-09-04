@@ -1,22 +1,25 @@
 package com.longx.intelligent.android.ichat2.yier;
 
-
 import android.app.Activity;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
 public class KeyboardVisibilityYier {
+
     public interface Yier {
         void onKeyboardOpened();
         void onKeyboardClosed();
     }
 
-    private static ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
+    private final View rootView;
 
-    public static void setYier(Activity activity, final Yier listener) {
-        final View rootView = activity.findViewById(android.R.id.content);
+    public KeyboardVisibilityYier(Activity activity) {
+        rootView = activity.findViewById(android.R.id.content);
+    }
 
+    public void setYier(final Yier listener) {
         globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             private boolean isKeyboardVisible;
 
@@ -27,7 +30,7 @@ public class KeyboardVisibilityYier {
                 int screenHeight = rootView.getRootView().getHeight();
                 int keypadHeight = screenHeight - r.bottom;
 
-                boolean isKeyboardNowVisible = keypadHeight > screenHeight * 0.25;
+                boolean isKeyboardNowVisible = keypadHeight > screenHeight * 0.15;
 
                 if (isKeyboardNowVisible != isKeyboardVisible) {
                     isKeyboardVisible = isKeyboardNowVisible;
@@ -43,19 +46,17 @@ public class KeyboardVisibilityYier {
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
     }
 
-    public static void removeYier(Activity activity) {
-        final View rootView = activity.findViewById(android.R.id.content);
+    public void removeYier() {
         if (globalLayoutListener != null) {
             rootView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
         }
     }
 
-    public static boolean isKeyboardVisible(Activity activity) {
-        View rootView = activity.findViewById(android.R.id.content);
+    public boolean isKeyboardVisible() {
         Rect rect = new Rect();
         rootView.getWindowVisibleDisplayFrame(rect);
         int screenHeight = rootView.getRootView().getHeight();
         int keypadHeight = screenHeight - rect.bottom;
-        return keypadHeight > screenHeight * 0.25;
+        return keypadHeight > screenHeight * 0.15;
     }
 }

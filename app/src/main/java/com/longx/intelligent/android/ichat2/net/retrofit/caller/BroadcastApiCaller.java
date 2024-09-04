@@ -55,9 +55,17 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
                                                                  SendBroadcastPostBody postBody, List<Uri> mediaUris,
                                                                  BaseYier<OperationStatus> yier, ProgressYier progressYier){
         RequestBody bodyPart = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+        final int[] index = {0};
+        ProgressRequestBody progressBodyPart = new ProgressRequestBody(bodyPart) {
+
+            @Override
+            protected void onUpload(long progress, long contentLength, boolean done) {
+                progressYier.onProgressUpdate(progress, contentLength, index[0]);
+                if(done) index[0]++;
+            }
+        };
         List<MultipartBody.Part> mediaPart = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
-        final int[] index = {0};
         if(mediaUris != null) mediaUris.forEach(mediaUri -> {
             String fileName = FileHelper.getFileNameFromUri(context, mediaUri);
             String mimeType = FileHelper.getMimeType(context, mediaUri);
@@ -96,7 +104,7 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
             };
             mediaPart.add(MultipartBody.Part.createFormData("medias", fileName, progressRequestBody));
         });
-        CompletableCall<OperationStatus> call = getApiImplementation(context, SEND_BROADCAST_CONNECT_TIMEOUT, SEND_BROADCAST_READ_TIMEOUT, SEND_BROADCAST_WRITE_TIMEOUT).sendBroadcast(bodyPart, mediaPart);
+        CompletableCall<OperationStatus> call = getApiImplementation(context, SEND_BROADCAST_CONNECT_TIMEOUT, SEND_BROADCAST_READ_TIMEOUT, SEND_BROADCAST_WRITE_TIMEOUT).sendBroadcast(progressBodyPart, mediaPart);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
