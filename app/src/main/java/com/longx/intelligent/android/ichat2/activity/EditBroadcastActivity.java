@@ -129,6 +129,7 @@ public class EditBroadcastActivity extends BaseActivity {
             if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
                 binding.recyclerViewMedias.setVisibility(View.GONE);
             }
+
         });
         new KeyboardVisibilityYier(this).setYier(new KeyboardVisibilityYier.Yier() {
 
