@@ -55,7 +55,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
     private LayoutBroadcastRecyclerFooterBinding footerBinding;
-    private MainActivity mainActivity;
     private boolean stopFetchNextPage;
     private CountDownLatch NEXT_PAGE_LATCH;
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
@@ -72,7 +71,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mainActivity = getMainActivity();
         binding = FragmentBroadcastsBinding.inflate(inflater, container, false);
         headerBinding = LayoutBroadcastRecyclerHeaderBinding.inflate(inflater, container, false);
         footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(inflater, container, false);

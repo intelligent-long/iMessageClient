@@ -264,6 +264,11 @@ public class BroadcastActivity extends BaseActivity {
                 });
                 confirmDialog.show();
             });
+            moreOperationBottomSheet.setEditClickYier(v -> {
+                Intent intent = new Intent(this, EditBroadcastActivity.class);
+                intent.putExtra(ExtraKeys.BROADCAST, broadcast);
+                startActivity(intent);
+            });
         }else {
 
         }
