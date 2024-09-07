@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.api.ChatApi;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
+import com.longx.intelligent.android.ichat2.yier.MultiProgressYier;
 import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.xcheng.retrofit.CompletableCall;
 import com.xcheng.retrofit.ProgressRequestBody;
@@ -107,7 +108,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength, -1);
+                progressYier.onProgressUpdate(progress, contentLength);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", fileName, progressRequestBody);
@@ -167,7 +168,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength, -1);
+                progressYier.onProgressUpdate(progress, contentLength);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", fileName, progressRequestBody);
@@ -227,7 +228,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength, -1);
+                progressYier.onProgressUpdate(progress, contentLength);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("video", fileName, progressRequestBody);
@@ -287,7 +288,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody) {
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength, -1);
+                progressYier.onProgressUpdate(progress, contentLength);
             }
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("voice", fileName, progressRequestBody);

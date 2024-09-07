@@ -26,6 +26,11 @@
         <item name="android:textSize">37sp</item>
     </style>
 
+    <style name="CollapsedTitleTextStyle" parent="">
+        <item name="android:fontFamily">@font/long_android_font_ncjk_gs_sc_regular</item>
+        <item name="android:textSize">22.2sp</item>
+    </style>
+
     <style name="CircleImageAppearance" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

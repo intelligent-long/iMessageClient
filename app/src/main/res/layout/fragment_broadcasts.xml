@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:collapsedTitleTextAppearance="@style/CollapsedTitleTextStyle"
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
@@ -44,7 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         app:icon="@drawable/wifi_tethering_24px"
-        android:text="@string/fab_text_send_broadcast"/>
+        android:text="@string/fab_text_send_broadcast"
+        android:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/to_start_fab"

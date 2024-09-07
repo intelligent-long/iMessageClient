@@ -17,7 +17,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.BroadcastApi;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
-import com.longx.intelligent.android.ichat2.yier.ProgressYier;
+import com.longx.intelligent.android.ichat2.yier.MultiProgressYier;
 import com.xcheng.retrofit.CompletableCall;
 import com.xcheng.retrofit.ProgressRequestBody;
 
@@ -53,14 +53,15 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> sendBroadcast(LifecycleOwner lifecycleOwner, Context context,
                                                                  SendBroadcastPostBody postBody, List<Uri> mediaUris,
-                                                                 BaseYier<OperationStatus> yier, ProgressYier progressYier){
+                                                                 BaseYier<OperationStatus> yier, MultiProgressYier multiProgressYier){
         RequestBody bodyPart = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
+        int count = 1 + (mediaUris != null ? mediaUris.size() : 0);
         final int[] index = {0};
         ProgressRequestBody progressBodyPart = new ProgressRequestBody(bodyPart) {
 
             @Override
             protected void onUpload(long progress, long contentLength, boolean done) {
-                progressYier.onProgressUpdate(progress, contentLength, index[0]);
+                multiProgressYier.onProgressUpdate(progress, contentLength, index[0], count);
                 if(done) index[0]++;
             }
         };
@@ -98,7 +99,7 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
                 @Override
                 protected void onUpload(long progress, long contentLength, boolean done) {
-                    progressYier.onProgressUpdate(progress, contentLength, index[0]);
+                    multiProgressYier.onProgressUpdate(progress, contentLength, index[0], count);
                     if(done) index[0]++;
                 }
             };
@@ -129,12 +130,20 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> editBroadcast(LifecycleOwner lifecycleOwner, Context context,
                                                                EditBroadcastPostBody postBody, List<Uri> addMediaUris,
-                                                               BaseYier<OperationData> yier, ProgressYier progressYier){
+                                                               BaseYier<OperationData> yier, MultiProgressYier multiProgressYier){
         RequestBody bodyPart = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-        List<MultipartBody.Part> addMediaPart = new ArrayList<>();
+        int count = 1 + (addMediaUris != null ? addMediaUris.size() : 0);
+        int[] index = {0};
+        ProgressRequestBody progressBodyPart = new ProgressRequestBody(bodyPart) {
 
+            @Override
+            protected void onUpload(long progress, long contentLength, boolean done) {
+                multiProgressYier.onProgressUpdate(progress, contentLength, index[0], count);
+                if(done) index[0]++;
+            }
+        };
+        List<MultipartBody.Part> addMediaPart = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
-        final int[] index = {0};
         if(addMediaUris != null) addMediaUris.forEach(addMediaUri -> {
             String fileName = FileHelper.getFileNameFromUri(context, addMediaUri);
             String mimeType = FileHelper.getMimeType(context, addMediaUri);
@@ -167,13 +176,13 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
                 @Override
                 protected void onUpload(long progress, long contentLength, boolean done) {
-                    progressYier.onProgressUpdate(progress, contentLength, index[0]);
+                    multiProgressYier.onProgressUpdate(progress, contentLength, index[0], count);
                     if(done) index[0]++;
                 }
             };
             addMediaPart.add(MultipartBody.Part.createFormData("add_medias", fileName, progressRequestBody));
         });
-        CompletableCall<OperationData> call = getApiImplementation(context, EDIT_BROADCAST_CONNECT_TIMEOUT, EDIT_BROADCAST_READ_TIMEOUT, EDIT_BROADCAST_WRITE_TIMEOUT).editBroadcast(bodyPart, addMediaPart);
+        CompletableCall<OperationData> call = getApiImplementation(context, EDIT_BROADCAST_CONNECT_TIMEOUT, EDIT_BROADCAST_READ_TIMEOUT, EDIT_BROADCAST_WRITE_TIMEOUT).editBroadcast(progressBodyPart, addMediaPart);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

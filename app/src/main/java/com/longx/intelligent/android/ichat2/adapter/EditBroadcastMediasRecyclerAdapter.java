@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.MediaActivity;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerItemEditBroadcastMediasBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendBroadcastMediasBinding;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
@@ -46,8 +47,8 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final RecyclerItemSendBroadcastMediasBinding binding;
-        public ViewHolder(RecyclerItemSendBroadcastMediasBinding binding) {
+        private final RecyclerItemEditBroadcastMediasBinding binding;
+        public ViewHolder(RecyclerItemEditBroadcastMediasBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -56,7 +57,7 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemSendBroadcastMediasBinding binding = RecyclerItemSendBroadcastMediasBinding.inflate(activity.getLayoutInflater());
+        RecyclerItemEditBroadcastMediasBinding binding = RecyclerItemEditBroadcastMediasBinding.inflate(activity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
@@ -90,6 +91,11 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                 holder.binding.videoDuration.setVisibility(View.VISIBLE);
                 holder.binding.videoDuration.setText(TimeUtil.formatTime(mediaInfo.getVideoDuration()));
                 holder.binding.videoDuration.bringToFront();
+        }
+        if(mediaInfo.getPath() == null){
+            holder.binding.cloudIcon.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.cloudIcon.setVisibility(View.GONE);
         }
         setupYiers(holder, position);
     }

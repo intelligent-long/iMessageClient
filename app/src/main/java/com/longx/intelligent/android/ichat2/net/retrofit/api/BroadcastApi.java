@@ -44,7 +44,7 @@ public interface BroadcastApi {
     @POST("broadcast/edit")
     @Multipart
     @Headers("LogLevel:HEADERS")
-    CompletableCall<OperationData> editBroadcast(@Part("body") RequestBody postBody, @Part("add_medias") List<MultipartBody.Part> addMedias);
+    CompletableCall<OperationData> editBroadcast(@Part("body") RequestBody postBody, @Part List<MultipartBody.Part> addMedias);
 
     @GET("broadcast/media/data/{mediaId}")
     @Headers("LogLevel:HEADERS")

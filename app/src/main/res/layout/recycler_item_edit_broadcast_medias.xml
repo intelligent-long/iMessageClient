@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.longx.intelligent.android.ichat2.ui.SquareImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+        android:id="@+id/video_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="9dp"
+        android:layout_gravity="start|bottom"
+        android:textSize="13sp"
+        android:textColor="@color/white"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cloud_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="1.5dp"
+        android:src="@drawable/cloud_outline_24px"
+        android:tint="@color/white"
+        android:background="@drawable/shape_visible_shadow_background"
+        android:layout_gravity="center"/>
+</FrameLayout>

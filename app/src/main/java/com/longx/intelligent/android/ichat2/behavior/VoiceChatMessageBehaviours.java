@@ -199,7 +199,7 @@ public class VoiceChatMessageBehaviours {
                 chatActivity.toVoiceState();
             }
 
-        }, (current, total, index) -> {
+        }, (current, total) -> {
             chatActivity.runOnUiThread(() -> {
                 int progress = (int)((current / (double) total) * 100);
                 chatActivity.getBinding().sendProgressIndicator.setProgress(progress, true);

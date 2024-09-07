@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -236,17 +237,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 if(!binding.recyclerView.isApproachEnd(5)) binding.appbar.setExpanded(false);
             }
         });
-        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (binding.recyclerView.isApproachStart(15)) {
-                    binding.toStartFab.hide();
-                } else {
-                    binding.toStartFab.show();
-                }
-            }
-        });
         binding.sendBroadcastFab.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
         });
@@ -267,6 +257,27 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     }
                 }
             }
+        });
+        binding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                binding.sendBroadcastFab.show();
+                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(false);
+                binding.toStartFab.show();
+            } else if (verticalOffset == 0) {
+                binding.sendBroadcastFab.hide();
+                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
+                binding.toStartFab.hide();
+            } else {
+                binding.sendBroadcastFab.hide();
+                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
+                binding.toStartFab.hide();
+            }
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.send_broadcast){
+                startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
+            }
+            return false;
         });
     }
 

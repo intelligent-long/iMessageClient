@@ -70,8 +70,8 @@ public class SendBroadcastActivity extends BaseActivity {
                         Intent data = Objects.requireNonNull(result.getData());
                         boolean remove = data.getBooleanExtra(ExtraKeys.REMOVE, true);
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.MEDIA_INFOS));
-                        List<MediaInfo> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
-                        onMediaInfosChosen(uriList, remove);
+                        List<MediaInfo> mediaInfos = Utils.parseParcelableArray(parcelableArrayExtra);
+                        onMediaInfosChosen(mediaInfos, remove);
                     }
                 }
         );
@@ -113,27 +113,23 @@ public class SendBroadcastActivity extends BaseActivity {
                 return;
             }
             ArrayList<Integer> broadcastMediaTypes = new ArrayList<>();
+            ArrayList<String> broadcastMediaExtensions = new ArrayList<>();
+            List<Uri> mediaUris = new ArrayList<>();
             mediaInfoList.forEach(mediaInfo -> {
                 if(mediaInfo.getMediaType() == MediaType.IMAGE) {
                     broadcastMediaTypes.add(BroadcastMedia.TYPE_IMAGE);
                 }else if(mediaInfo.getMediaType() == MediaType.VIDEO) {
                     broadcastMediaTypes.add(BroadcastMedia.TYPE_VIDEO);
                 }
-            });
-            ArrayList<String> broadcastMediaExtensions = new ArrayList<>();
-            mediaInfoList.forEach(media -> {
-                String fileExtensionFromUri = FileHelper.getFileExtensionFromUri(this, media.getUri());
+                String fileExtensionFromUri = FileHelper.getFileExtensionFromUri(this, mediaInfo.getUri());
                 broadcastMediaExtensions.add(fileExtensionFromUri);
-            });
-            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions);
-            List<Uri> mediaUris = new ArrayList<>();
-            mediaInfoList.forEach(mediaInfo -> {
                 mediaUris.add(mediaInfo.getUri());
             });
             if(broadcastText == null && mediaUris.isEmpty()) {
                 MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
                 return;
             };
+            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions);
             BroadcastApiCaller.sendBroadcast(null, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationStatus>(this, false, true) {
                 @Override
                 public void start(Call<OperationStatus> call) {
@@ -164,15 +160,14 @@ public class SendBroadcastActivity extends BaseActivity {
                     binding.sendItemCountIndicator.setVisibility(View.GONE);
                     UiUtil.setViewGroupEnabled(binding.content, true, true);
                 }
-            }, (current, total, index) -> {
+            }, (current, total, index, count) -> {
                 runOnUiThread(() -> {
                     int progress = (int)((current / (double) total) * binding.sendIndicator.getMax());
                     binding.sendIndicator.setProgress(progress, false);
-                    int indexShow = index + 1;
-                    if(indexShow == mediaUris.size() && progress == binding.sendIndicator.getMax()) {
+                    if(index + 1 == count && progress == binding.sendIndicator.getMax()) {
                         binding.sendItemCountIndicator.setText("等待中");
                     }else {
-                        binding.sendItemCountIndicator.setText(String.valueOf(indexShow));
+                        binding.sendItemCountIndicator.setText(String.valueOf(index + 1));
                     }
                 });
             });

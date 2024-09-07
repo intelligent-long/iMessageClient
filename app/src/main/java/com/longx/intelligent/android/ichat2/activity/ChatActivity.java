@@ -682,7 +682,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     toNormalState();
                 }
             }
-        }, (current, total, i) -> {
+        }, (current, total) -> {
             runOnUiThread(() -> {
                 binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + mediaInfos.size());
                 int progress = (int)((current / (double) total) * binding.sendProgressIndicator.getMax());
@@ -753,7 +753,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     toNormalState();
                 }
             }
-        }, (current, total, i) -> {
+        }, (current, total) -> {
             runOnUiThread(() -> {
                 binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + uriList.size());
                 int progress = (int)((current / (double) total) * binding.sendProgressIndicator.getMax());
@@ -825,7 +825,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                 sendVideoMessages(mediaInfos, index);
             }
 
-        }, (current, total, i) -> {
+        }, (current, total) -> {
             runOnUiThread(() -> {
                 binding.sendItemCountIndicator.setText(index.get() + 1 + " / " + mediaInfos.size());
                 int progress = (int)((current / (double) total) * binding.sendProgressIndicator.getMax());
