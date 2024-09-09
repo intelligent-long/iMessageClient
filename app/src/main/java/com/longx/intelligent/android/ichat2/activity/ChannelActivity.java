@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -17,6 +18,7 @@ import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Self;
@@ -201,9 +203,11 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }
         for (int i = 0; i < recentBroadcastMedias.size(); i++) {
             RecentBroadcastMedia recentBroadcastMedia = recentBroadcastMedias.get(i);
+            int layoutResId = ResourceUtil.getResId("layout_recent_broadcast_media_" + (i + 1), R.id.class);
+            FrameLayout layout = findViewById(layoutResId);
+            layout.setVisibility(View.VISIBLE);
             int imageResId = ResourceUtil.getResId("recent_broadcast_media_" + (i + 1), R.id.class);
             AppCompatImageView imageView = findViewById(imageResId);
-            imageView.setVisibility(View.VISIBLE);
             GlideApp.with(getApplicationContext())
                     .load(NetDataUrls.getBroadcastMediaDataUrl(this, recentBroadcastMedia.getMediaId()))
                     .placeholder(AppCompatResources.getDrawable(this, R.drawable.cached_24px))
@@ -212,6 +216,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                             new RoundedCorners(UiUtil.dpToPx(this, 10))
                     ))
                     .into(imageView);
+            if(recentBroadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
+                int videoIconResId = ResourceUtil.getResId("recent_broadcast_video_icon_" + (i + 1), R.id.class);
+                findViewById(videoIconResId).setVisibility(View.VISIBLE);
+            }
         }
     }
 
