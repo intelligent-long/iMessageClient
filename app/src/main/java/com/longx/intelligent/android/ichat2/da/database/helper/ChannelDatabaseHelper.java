@@ -3,6 +3,8 @@ package com.longx.intelligent.android.ichat2.da.database.helper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.Date;
+
 /**
  * Created by LONG on 2024/5/9 at 7:43 PM.
  */
@@ -15,6 +17,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TABLE_NAME_CHANNELS = "channels";
         public static final String TABLE_NAME_TAGS = "tags";
         public static final String TABLE_NAME_TAG_CHANNELS = "tag_channels";
+        public static final String TABLE_NAME_RECENT_BROADCAST_MEDIAS = "recent_broadcast_medias";
     }
 
     public static class TableChannelAssociationsColumns {
@@ -63,6 +66,17 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TAG_ID = "tag_id";
         public static final String ICHAT_ID = "ichat_id";
 
+    }
+
+    public static class TableRecentBroadcastMedias {
+        public static final String ICHAT_ID = "ichat_id";
+        public static final String BROADCAST_ID = "broadcast_id";
+        public static final String MEDIA_ID = "media_id";
+        public static final String TYPE = "type";
+        public static final String EXTENSION = "extension";
+        public static final String VIDEO_DURATION = "video_duration";
+        public static final String INDEX = "`index`";
+        public static final String RAW_INDEX = "index";
     }
 
     public ChannelDatabaseHelper(Context context, String ichatId) {
@@ -126,6 +140,16 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableTagChannelsColumns.ICHAT_ID + " VARCHAR"
                 + ");";
         db.execSQL(create_sql_4);
+        String create_sql_5 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS + "("
+                + TableRecentBroadcastMedias.ICHAT_ID + " VARCHAR,"
+                + TableRecentBroadcastMedias.BROADCAST_ID + " VARCHAR,"
+                + TableRecentBroadcastMedias.MEDIA_ID + " VARCHAR,"
+                + TableRecentBroadcastMedias.TYPE + " INTEGER,"
+                + TableRecentBroadcastMedias.EXTENSION + " VARCHAR,"
+                + TableRecentBroadcastMedias.VIDEO_DURATION + " LONG,"
+                + TableRecentBroadcastMedias.INDEX + " INTEGER"
+                + ");";
+        db.execSQL(create_sql_5);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
 

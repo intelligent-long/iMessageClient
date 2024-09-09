@@ -4,6 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.AppCompatImageView;
+
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
@@ -12,12 +18,17 @@ import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ResourceUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
@@ -179,6 +190,28 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }
         if(binding.layoutEmail.getVisibility() == View.GONE && binding.layoutUsername.getVisibility() == View.GONE && binding.layoutRegion.getVisibility() == View.GONE){
             binding.infos.setVisibility(View.GONE);
+        }
+        showRecentBroadcastMedias();
+    }
+
+    private void showRecentBroadcastMedias() {
+        List<RecentBroadcastMedia> recentBroadcastMedias = ChannelDatabaseManager.getInstance().findRecentBroadcastMedias(isSelf ? self.getIchatId() : ichatId);
+        if(recentBroadcastMedias.size() > Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE){
+            recentBroadcastMedias = recentBroadcastMedias.subList(0, Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE);
+        }
+        for (int i = 0; i < recentBroadcastMedias.size(); i++) {
+            RecentBroadcastMedia recentBroadcastMedia = recentBroadcastMedias.get(i);
+            int imageResId = ResourceUtil.getResId("recent_broadcast_media_" + (i + 1), R.id.class);
+            AppCompatImageView imageView = findViewById(imageResId);
+            imageView.setVisibility(View.VISIBLE);
+            GlideApp.with(getApplicationContext())
+                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, recentBroadcastMedia.getMediaId()))
+                    .placeholder(AppCompatResources.getDrawable(this, R.drawable.cached_24px))
+                    .transform(new MultiTransformation<>(
+                            new CenterCrop(),
+                            new RoundedCorners(UiUtil.dpToPx(this, 10))
+                    ))
+                    .into(imageView);
         }
     }
 

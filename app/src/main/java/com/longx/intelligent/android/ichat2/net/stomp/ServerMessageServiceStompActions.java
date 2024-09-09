@@ -7,6 +7,8 @@ import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.HoldableActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
@@ -17,6 +19,7 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,9 +109,28 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateBroadcastsNews(Context context, String ichatId){
-        GlobalYiersHolder.getYiers(BroadcastFetchNewsYier.class).ifPresent(broadcastReloadYiers -> {
-            broadcastReloadYiers.forEach(broadcastFetchNewsYier -> broadcastFetchNewsYier.fetchNews(ichatId));
+        GlobalYiersHolder.getYiers(BroadcastFetchNewsYier.class).ifPresent(broadcastFetchNewsYiers -> {
+            broadcastFetchNewsYiers.forEach(broadcastFetchNewsYier -> broadcastFetchNewsYier.fetchNews(ichatId));
         });
+    }
+
+    public static void updateRecentBroadcastMedias(Context context, String ichatId){
+        if(ichatId == null || ichatId.isEmpty()){
+            List<String> channelIds = new ArrayList<>();
+            channelIds.add(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId());
+            ChannelDatabaseManager.getInstance().findAllAssociations().forEach(channelAssociation -> {
+                channelIds.add(channelAssociation.getChannelIchatId());
+            });
+            channelIds.forEach(channelId -> {
+                ContentUpdater.updateRecentBroadcastMedias(context, channelId, results -> {
+
+                });
+            });
+        }else {
+            ContentUpdater.updateRecentBroadcastMedias(context, ichatId, results -> {
+
+            });
+        }
     }
 
 }

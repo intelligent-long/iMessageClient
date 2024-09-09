@@ -3,21 +3,29 @@ package com.longx.intelligent.android.ichat2.behavior;
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.longx.intelligent.android.ichat2.activity.BroadcastChannelActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
+import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
@@ -43,6 +51,7 @@ public class ContentUpdater {
         String ID_CHANNELS = "channels";
         String ID_CHAT_MESSAGES = "chat_messages";
         String ID_CHANNEL_TAGS = "channel_tags";
+        String ID_RECENT_BROADCAST_MEDIAS = "recent_broadcast_medias";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -216,5 +225,40 @@ public class ContentUpdater {
                 });
             }
         });
+    }
+
+    public static void updateRecentBroadcastMedias(Context context, String ichatId, ResultsYier resultsYier){
+        BroadcastApiCaller.fetchChannelBroadcastsLimit(null, ichatId, null, 50, true,
+                new ContentUpdateApiYier<PaginatedOperationData<Broadcast>>(OnServerContentUpdateYier.ID_RECENT_BROADCAST_MEDIAS, context){
+                    @Override
+                    public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleSuccessResult(() -> {
+                            List<Broadcast> broadcastList = data.getData();
+                            List<RecentBroadcastMedia> recentBroadcastMedias = new ArrayList<>();
+                            int index = 0;
+                            OUTER: for (Broadcast broadcast : broadcastList) {
+                                List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
+                                if(broadcastMedias != null){
+                                    broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
+                                    for (BroadcastMedia broadcastMedia : broadcastMedias) {
+                                        recentBroadcastMedias.add(new RecentBroadcastMedia(
+                                                broadcast.getIchatId(),
+                                                broadcastMedia.getBroadcastId(),
+                                                broadcastMedia.getMediaId(),
+                                                broadcastMedia.getType(),
+                                                broadcastMedia.getExtension(),
+                                                broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO ? broadcastMedia.getVideoDuration() : -2,
+                                                index ++));
+                                        if(index >= Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE) break OUTER;
+                                    }
+                                }
+                            }
+                            if(!recentBroadcastMedias.isEmpty()) {
+                                ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(recentBroadcastMedias);
+                            }
+                        });
+                    }
+                });
     }
 }

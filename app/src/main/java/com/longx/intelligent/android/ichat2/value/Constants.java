@@ -31,4 +31,5 @@ public class Constants {
     public static final int SINGLE_BROADCAST_IMAGE_VIEW_MARGIN_END_DP = 50;
     public static final int MAX_BROADCAST_TEXT_LENGTH = 1000;
     public static final int EDIT_BROADCAST_MEDIA_COLUMN_COUNT = 3;
+    public static final int RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE = 4;
 }

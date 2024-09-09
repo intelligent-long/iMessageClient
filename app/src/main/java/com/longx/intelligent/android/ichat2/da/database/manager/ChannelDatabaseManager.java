@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.da.database.manager;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,10 +13,12 @@ import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.ChatMessageAllow;
+import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.util.DatabaseUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -338,7 +341,6 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-
     public ChannelTag findOneChannelTags(String tagId){
         openDatabaseIfClosed();
         try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t"
@@ -382,4 +384,66 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
     }
+
+    public boolean updateRecentBroadcastMedias(List<RecentBroadcastMedia> recentBroadcastMedias){
+        AtomicBoolean result = new AtomicBoolean(true);
+        openDatabaseIfClosed();
+        getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS,
+                ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID + " = ?",
+                new String[]{recentBroadcastMedias.get(0).getIchatId()});
+
+        try{
+            recentBroadcastMedias.forEach(recentBroadcastMedia -> {
+                ContentValues values = new ContentValues();
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID, recentBroadcastMedia.getIchatId());
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.BROADCAST_ID, recentBroadcastMedia.getBroadcastId());
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.MEDIA_ID, recentBroadcastMedia.getMediaId());
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.TYPE, recentBroadcastMedia.getType());
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.EXTENSION, recentBroadcastMedia.getExtension());
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.VIDEO_DURATION, recentBroadcastMedia.getVideoDuration());
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.INDEX, recentBroadcastMedia.getIndex());
+                long id = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS, null,
+                        values, SQLiteDatabase.CONFLICT_IGNORE);
+                if (id == -1) {
+                    result.set(false);
+                }
+            });
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return result.get();
+    }
+
+    @SuppressLint("Range")
+    public List<RecentBroadcastMedia> findRecentBroadcastMedias(String ichatId) {
+        List<RecentBroadcastMedia> recentBroadcastMedias = new ArrayList<>();
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().query(
+                ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS,
+                null,
+                ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID + " = ?",
+                new String[]{ichatId},
+                null,
+                null,
+                ChannelDatabaseHelper.TableRecentBroadcastMedias.INDEX
+        )) {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    String ichatId1 = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID));
+                    String broadcastId = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.BROADCAST_ID));
+                    String mediaId = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.MEDIA_ID));
+                    int type = cursor.getInt(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.TYPE));
+                    String extension = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.EXTENSION));
+                    long videoDuration = cursor.getLong(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.VIDEO_DURATION));
+                    int index = cursor.getInt(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.RAW_INDEX));
+                    recentBroadcastMedias.add(new RecentBroadcastMedia(ichatId1, broadcastId, mediaId, type, extension, videoDuration, index));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            releaseDatabaseIfUnused();
+        }
+        recentBroadcastMedias.sort(Comparator.comparingInt(RecentBroadcastMedia::getIndex));
+        return recentBroadcastMedias;
+    }
+
 }
