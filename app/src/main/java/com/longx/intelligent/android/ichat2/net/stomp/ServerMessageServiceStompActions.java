@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
+import com.longx.intelligent.android.ichat2.yier.RecentBroadcastMediasUpdateYier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,12 +124,20 @@ public class ServerMessageServiceStompActions {
             });
             channelIds.forEach(channelId -> {
                 ContentUpdater.updateRecentBroadcastMedias(context, channelId, results -> {
-
+                    GlobalYiersHolder.getYiers(RecentBroadcastMediasUpdateYier.class).ifPresent(recentBroadcastMediasUpdateYiers -> {
+                        recentBroadcastMediasUpdateYiers.forEach(recentBroadcastMediasUpdateYier -> {
+                            recentBroadcastMediasUpdateYier.onRecentBroadcastMediasUpdate(channelId);
+                        });
+                    });
                 });
             });
         }else {
             ContentUpdater.updateRecentBroadcastMedias(context, ichatId, results -> {
-
+                GlobalYiersHolder.getYiers(RecentBroadcastMediasUpdateYier.class).ifPresent(recentBroadcastMediasUpdateYiers -> {
+                    recentBroadcastMediasUpdateYiers.forEach(recentBroadcastMediasUpdateYier -> {
+                        recentBroadcastMediasUpdateYier.onRecentBroadcastMediasUpdate(ichatId);
+                    });
+                });
             });
         }
     }

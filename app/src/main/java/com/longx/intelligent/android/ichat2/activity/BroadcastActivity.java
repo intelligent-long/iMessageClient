@@ -29,12 +29,14 @@ import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.ui.NoPaddingTextView;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.io.IOException;
@@ -45,7 +47,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastActivity extends BaseActivity {
+public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYier {
     private ActivityBroadcastBinding binding;
     private Broadcast broadcast;
 
@@ -58,6 +60,13 @@ public class BroadcastActivity extends BaseActivity {
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, BroadcastUpdateYier.class, this);
     }
 
     private void showContent() {
@@ -258,6 +267,7 @@ public class BroadcastActivity extends BaseActivity {
                                 GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
                                     broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(broadcast.getBroadcastId()));
                                 });
+                                ServerMessageServiceStompActions.updateRecentBroadcastMedias(BroadcastActivity.this, broadcast.getIchatId());
                             });
                         }
                     });
@@ -332,5 +342,12 @@ public class BroadcastActivity extends BaseActivity {
 
         });
         startActivity(intent);
+    }
+
+    @Override
+    public void updateOneBroadcast(Broadcast newBroadcast) {
+        broadcast = newBroadcast;
+        showContent();
+        setupYiers();
     }
 }

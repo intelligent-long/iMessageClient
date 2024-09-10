@@ -38,6 +38,7 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
@@ -406,6 +407,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                                 GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
                                     broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(itemData.broadcast.getBroadcastId()));
                                 });
+                                ServerMessageServiceStompActions.updateRecentBroadcastMedias(activity, itemData.broadcast.getIchatId());
                             });
                         }
                     });
@@ -437,7 +439,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         sortItemDataList(items);
         int insertPosition = itemDataList.size();
         itemDataList.addAll(insertPosition, items);
-        notifyItemRangeInserted(insertPosition + 1, items.size());
+        notifyItemRangeInserted(insertPosition + (recyclerView.hasHeader() ? 1 : 0), items.size());
     }
 
     public void removeItemAndShow(String broadcastId){
@@ -454,5 +456,16 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         sortItemDataList(items);
         itemDataList.addAll(0, items);
         notifyItemRangeInserted(0, items.size());
+    }
+
+    public void updateOneBroadcast(Broadcast newBroadcast){
+        for (int i = 0; i < itemDataList.size(); i++) {
+            Broadcast broadcast = itemDataList.get(i).broadcast;
+            if(broadcast.getBroadcastId().equals(newBroadcast.getBroadcastId())){
+                itemDataList.set(i, new ItemData(newBroadcast));
+                notifyItemChanged(i + (recyclerView.hasHeader() ? 1 : 0));
+                break;
+            }
+        }
     }
 }

@@ -255,6 +255,7 @@ public class ContentUpdater {
                                 }
                             }
                             ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(recentBroadcastMedias, ichatId);
+                            resultsYier.onResults();
                         });
                     }
                 });

@@ -39,6 +39,7 @@ import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -50,7 +51,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier {
+public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastUpdateYier {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
@@ -80,6 +81,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         showOrHideBroadcastReloadedTime();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
+        GlobalYiersHolder.holdYier(requireContext(), BroadcastUpdateYier.class, this);
         if(needInitFetchBroadcast) {
             fetchAndRefreshBroadcasts(true);
         }else if(needReFetchBroadcast) {
@@ -95,6 +97,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         super.onDetach();
         GlobalYiersHolder.removeYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), BroadcastDeletedYier.class, this);
+        GlobalYiersHolder.removeYier(requireContext(), BroadcastUpdateYier.class, this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -558,5 +561,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 }));
             }
         });
+    }
+
+    @Override
+    public void updateOneBroadcast(Broadcast newBroadcast) {
+        if(adapter != null) adapter.updateOneBroadcast(newBroadcast);
     }
 }

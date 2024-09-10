@@ -34,13 +34,14 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.RecentBroadcastMediasUpdateYier;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
+public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, RecentBroadcastMediasUpdateYier {
     private ActivityChannelBinding binding;
     private String ichatId;
     private Channel channel;
@@ -58,12 +59,14 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         setupUi();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(this, RecentBroadcastMediasUpdateYier.class, this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(this, RecentBroadcastMediasUpdateYier.class, this);
     }
 
     private void getUserInfoAndShow() {
@@ -306,5 +309,12 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
 
     public Channel getChannel() {
         return channel;
+    }
+
+    @Override
+    public void onRecentBroadcastMediasUpdate(String ichatId) {
+        if(ichatId.equals(isSelf ? self.getIchatId() : this.ichatId)) {
+            showRecentBroadcastMedias();
+        }
     }
 }

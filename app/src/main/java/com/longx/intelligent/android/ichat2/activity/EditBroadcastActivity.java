@@ -28,10 +28,13 @@ import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
@@ -294,12 +297,13 @@ public class EditBroadcastActivity extends BaseActivity {
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(EditBroadcastActivity.this, new int[]{-101, -102, -103, -104}, () -> {
-//                        GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
-//                            broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
-//                        });
                         MessageDisplayer.showToast(getContext(), "已编辑", Toast.LENGTH_SHORT);
                         finish();
-                        //TODO
+                        Broadcast editedBroadcast = data.getData(Broadcast.class);
+                        GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                            broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(editedBroadcast));
+                        });
+                        ServerMessageServiceStompActions.updateRecentBroadcastMedias(EditBroadcastActivity.this, broadcast.getIchatId());
                     });
                 }
 

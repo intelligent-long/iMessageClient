@@ -17,6 +17,7 @@ import com.longx.intelligent.android.ichat2.adapter.EditBroadcastMediasRecyclerA
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastMediaBottomSheet;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -26,6 +27,7 @@ import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -144,10 +146,11 @@ public class SendBroadcastActivity extends BaseActivity {
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102, -103, -104}, () -> {
+                        MessageDisplayer.showToast(getContext(), "已发送", Toast.LENGTH_SHORT);
                         GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
                             broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
                         });
-                        MessageDisplayer.showToast(getContext(), "已发送", Toast.LENGTH_SHORT);
+                        ServerMessageServiceStompActions.updateRecentBroadcastMedias(getContext(), SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(getContext()).getIchatId());
                         finish();
                     });
                 }
