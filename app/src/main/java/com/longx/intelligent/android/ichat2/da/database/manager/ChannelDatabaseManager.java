@@ -385,13 +385,12 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public boolean updateRecentBroadcastMedias(List<RecentBroadcastMedia> recentBroadcastMedias){
+    public boolean updateRecentBroadcastMedias(List<RecentBroadcastMedia> recentBroadcastMedias, String ichatId){
         AtomicBoolean result = new AtomicBoolean(true);
         openDatabaseIfClosed();
         getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS,
                 ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID + " = ?",
-                new String[]{recentBroadcastMedias.get(0).getIchatId()});
-
+                new String[]{ichatId});
         try{
             recentBroadcastMedias.forEach(recentBroadcastMedia -> {
                 ContentValues values = new ContentValues();

@@ -254,9 +254,7 @@ public class ContentUpdater {
                                     }
                                 }
                             }
-                            if(!recentBroadcastMedias.isEmpty()) {
-                                ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(recentBroadcastMedias);
-                            }
+                            ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(recentBroadcastMedias, ichatId);
                         });
                     }
                 });

@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -198,27 +199,40 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
 
     private void showRecentBroadcastMedias() {
         List<RecentBroadcastMedia> recentBroadcastMedias = ChannelDatabaseManager.getInstance().findRecentBroadcastMedias(isSelf ? self.getIchatId() : ichatId);
-        if(recentBroadcastMedias.size() > Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE){
-            recentBroadcastMedias = recentBroadcastMedias.subList(0, Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE);
-        }
-        for (int i = 0; i < recentBroadcastMedias.size(); i++) {
-            RecentBroadcastMedia recentBroadcastMedia = recentBroadcastMedias.get(i);
-            int layoutResId = ResourceUtil.getResId("layout_recent_broadcast_media_" + (i + 1), R.id.class);
-            FrameLayout layout = findViewById(layoutResId);
-            layout.setVisibility(View.VISIBLE);
-            int imageResId = ResourceUtil.getResId("recent_broadcast_media_" + (i + 1), R.id.class);
-            AppCompatImageView imageView = findViewById(imageResId);
-            GlideApp.with(getApplicationContext())
-                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, recentBroadcastMedia.getMediaId()))
-                    .placeholder(AppCompatResources.getDrawable(this, R.drawable.cached_24px))
-                    .transform(new MultiTransformation<>(
-                            new CenterCrop(),
-                            new RoundedCorners(UiUtil.dpToPx(this, 10))
-                    ))
-                    .into(imageView);
-            if(recentBroadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO){
-                int videoIconResId = ResourceUtil.getResId("recent_broadcast_video_icon_" + (i + 1), R.id.class);
-                findViewById(videoIconResId).setVisibility(View.VISIBLE);
+        if(recentBroadcastMedias.isEmpty()){
+            binding.layoutBroadcastWithMedias.setVisibility(View.GONE);
+            binding.layoutBroadcastNoMedias.setVisibility(View.VISIBLE);
+        }else {
+            binding.layoutBroadcastWithMedias.setVisibility(View.VISIBLE);
+            binding.layoutBroadcastNoMedias.setVisibility(View.GONE);
+            if (recentBroadcastMedias.size() > Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE) {
+                recentBroadcastMedias = recentBroadcastMedias.subList(0, Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE);
+            }
+            for (int i = 0; i < Constants.RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE; i++) {
+                int layoutResId = ResourceUtil.getResId("layout_recent_broadcast_media_" + (i + 1), R.id.class);
+                FrameLayout layout = findViewById(layoutResId);
+                if (i < recentBroadcastMedias.size()) {
+                    RecentBroadcastMedia recentBroadcastMedia = recentBroadcastMedias.get(i);
+                    layout.setVisibility(View.VISIBLE);
+                    int imageResId = ResourceUtil.getResId("recent_broadcast_media_" + (i + 1), R.id.class);
+                    AppCompatImageView imageView = findViewById(imageResId);
+                    GlideApp.with(getApplicationContext())
+                            .load(NetDataUrls.getBroadcastMediaDataUrl(this, recentBroadcastMedia.getMediaId()))
+                            .placeholder(AppCompatResources.getDrawable(this, R.drawable.cached_24px))
+                            .transform(new MultiTransformation<>(
+                                    new CenterCrop(),
+                                    new RoundedCorners(UiUtil.dpToPx(this, 10))
+                            ))
+                            .into(imageView);
+                    int videoIconResId = ResourceUtil.getResId("recent_broadcast_video_icon_" + (i + 1), R.id.class);
+                    if (recentBroadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO) {
+                        findViewById(videoIconResId).setVisibility(View.VISIBLE);
+                    } else {
+                        findViewById(videoIconResId).setVisibility(View.GONE);
+                    }
+                } else {
+                    layout.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -256,11 +270,13 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             }
             return true;
         });
-        binding.layoutBroadcast.setOnClickListener(v -> {
+        View.OnClickListener yier = v -> {
             Intent intent = new Intent(this, BroadcastChannelActivity.class);
             intent.putExtra(ExtraKeys.CHANNEL, isSelf ? self.toChannel() : channel);
             startActivity(intent);
-        });
+        };
+        binding.clickLayoutBroadcastWithMedias.setOnClickListener(yier);
+        binding.clickLayoutBroadcastNoMedias.setOnClickListener(yier);
     }
 
     private void setLongClickCopyYiers() {
