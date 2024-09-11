@@ -64,18 +64,11 @@ public class DragSortRecycler extends RecyclerView.ItemDecoration implements OnI
     private int viewHandleId = -1;
 
 
-    OnItemMovedListener moveInterface;
+    OnDragMovedYier onDragMovedYier;
 
     private boolean isDragging;
     @Nullable
     OnDragStateChangedListener dragStateChangedListener;
-
-
-
-    public interface OnItemMovedListener
-    {
-        public void onItemMoved(int from, int to);
-    }
 
     public interface OnDragStateChangedListener {
         public void onDragStart();
@@ -96,9 +89,9 @@ public class DragSortRecycler extends RecyclerView.ItemDecoration implements OnI
     /*
      * Set the item move interface
      */
-    public void setOnItemMovedListener(OnItemMovedListener swif)
-    {
-        moveInterface = swif;
+
+    public void setOnDragMovedYier(OnDragMovedYier onDragMovedYier) {
+        this.onDragMovedYier = onDragMovedYier;
     }
 
     public void setViewHandleId(int id)
@@ -352,8 +345,8 @@ public class DragSortRecycler extends RecyclerView.ItemDecoration implements OnI
             if ((e.getAction() == MotionEvent.ACTION_UP) && selectedDragItemPos != -1)
             {
                 int newPos = getNewPostion(rv);
-                if (moveInterface != null)
-                    moveInterface.onItemMoved(selectedDragItemPos, newPos);
+                if (onDragMovedYier != null)
+                    onDragMovedYier.onDragMoved(selectedDragItemPos, newPos);
             }
 
             setIsDragging(false);

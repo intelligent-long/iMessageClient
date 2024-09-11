@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
@@ -37,6 +38,7 @@ import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
+import com.longx.intelligent.android.lib.recyclerview.dragsort.DragSortItemTouchCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ public class SendBroadcastActivity extends BaseActivity {
     private ActivitySendBroadcastBinding binding;
     private ActivityResultLauncher<Intent> addMediasResultLauncher;
     private ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
-    private final ArrayList<MediaInfo> mediaInfoList = new ArrayList<>();
+    private ArrayList<MediaInfo> mediaInfoList = new ArrayList<>();
     private EditBroadcastMediasRecyclerAdapter adapter;
     private final SpaceGridDecorationSetter spaceGridDecorationSetter = new SpaceGridDecorationSetter();
 
@@ -244,6 +246,12 @@ public class SendBroadcastActivity extends BaseActivity {
                 }
             }
         });
+
+        DragSortItemTouchCallback dragSortItemTouchCallback = new DragSortItemTouchCallback((from, to) -> {
+            adapter.moveAndShow(from, to);
+            mediaInfoList = new ArrayList<>(adapter.getMediaInfoList());
+        });
+        new ItemTouchHelper(dragSortItemTouchCallback).attachToRecyclerView(binding.recyclerViewMedias);
     }
 
     private void onMediaInfosChosen(List<MediaInfo> mediaInfos, boolean remove) {

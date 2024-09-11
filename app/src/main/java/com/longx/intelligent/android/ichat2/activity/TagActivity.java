@@ -110,7 +110,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         dragSortRecycler.setFloatingBgColor(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
         dragSortRecycler.setFloatingAlpha(1F);
         dragSortRecycler.setAutoScrollSpeed(0.3F);
-        dragSortRecycler.setOnItemMovedListener((from, to) -> {
+        dragSortRecycler.setOnDragMovedYier((from, to) -> {
             adapter.moveAndShow(from, to);
         });
         binding.fab.setOnClickListener(v -> {
