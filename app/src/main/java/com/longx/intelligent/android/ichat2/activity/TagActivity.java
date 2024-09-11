@@ -24,7 +24,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.ui.DisableExpandAppBarBehavior;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
-import com.longx.intelligent.android.lib.recyclerview.DragSortRecycler;
+import com.longx.intelligent.android.lib.recyclerview.dragsort.DragSortRecycler;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.HashMap;

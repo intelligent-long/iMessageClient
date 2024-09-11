@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-package com.longx.intelligent.android.lib.recyclerview;
+package com.longx.intelligent.android.lib.recyclerview.dragsort;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

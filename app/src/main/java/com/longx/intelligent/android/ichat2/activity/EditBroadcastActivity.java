@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
@@ -38,8 +39,9 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
-import com.longx.intelligent.android.lib.recyclerview.DragSortRecycler;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
+import com.longx.intelligent.android.lib.recyclerview.dragsort.DragSortItemTouchCallback;
+import com.longx.intelligent.android.lib.recyclerview.dragsort.OnDragMovedYier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +62,6 @@ public class EditBroadcastActivity extends BaseActivity {
     private ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final Map<Integer, MediaInfo> leftMediaInfoMap = new HashMap<>();
     private final Map<Integer, MediaInfo> addMediaInfoMap = new HashMap<>();
-    private DragSortRecycler dragSortRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,14 +97,6 @@ public class EditBroadcastActivity extends BaseActivity {
 
     private void init(){
         binding.recyclerViewMedias.setLayoutManager(new GridLayoutManager(this, Constants.EDIT_BROADCAST_MEDIA_COLUMN_COUNT));
-        dragSortRecycler = new DragSortRecycler();
-        dragSortRecycler.setViewHandleId(R.id.root);
-        dragSortRecycler.setFloatingBgColor(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainer));
-        dragSortRecycler.setFloatingAlpha(1F);
-        dragSortRecycler.setAutoScrollSpeed(0.3F);
-        binding.recyclerViewMedias.addItemDecoration(dragSortRecycler);
-        binding.recyclerViewMedias.addOnItemTouchListener(dragSortRecycler);
-        binding.recyclerViewMedias.addOnScrollListener(dragSortRecycler.getScrollListener());
     }
 
     private ArrayList<MediaInfo> getSortedMediaInfoList(){
@@ -336,9 +329,10 @@ public class EditBroadcastActivity extends BaseActivity {
             });
         });
 
-        dragSortRecycler.setOnItemMovedListener((from, to) -> {
+        DragSortItemTouchCallback dragSortItemTouchCallback = new DragSortItemTouchCallback((from, to) -> {
             adapter.moveAndShow(from, to);
         });
+        new ItemTouchHelper(dragSortItemTouchCallback).attachToRecyclerView(binding.recyclerViewMedias);
     }
 
     private void onMediaInfosChosen(List<MediaInfo> mediaInfos, boolean remove) {
