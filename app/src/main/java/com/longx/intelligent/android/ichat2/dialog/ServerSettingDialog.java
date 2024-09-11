@@ -155,6 +155,7 @@ public class ServerSettingDialog extends AbstractDialog{
                                 }
                             });
                         })
+                        .setNegativeButton(null)
                         .show();
             } else {
                 onChangeServerSetting();
@@ -204,7 +205,7 @@ public class ServerSettingDialog extends AbstractDialog{
     private boolean saveServerSetting() {
         String serverTypeName = UiUtil.getEditTextString(binding.serverTypeAutoCompleteTextView);
         String host = UiUtil.getEditTextString(binding.hostInput);
-        if(host == null || host.equals("")){
+        if(host == null || host.isEmpty()){
             MessageDisplayer.showSnackbar(getActivity(), "主机不合法", Snackbar.LENGTH_SHORT);
             return false;
         }
@@ -219,7 +220,7 @@ public class ServerSettingDialog extends AbstractDialog{
             return false;
         }
         String dataFolder = UiUtil.getEditTextString(binding.dataFolderInput);
-        if(dataFolder == null || dataFolder.length() == 0){
+        if(dataFolder == null || dataFolder.isEmpty()){
             MessageDisplayer.showSnackbar(getActivity(), "数据文件夹不合法", Snackbar.LENGTH_SHORT);
             return false;
         }

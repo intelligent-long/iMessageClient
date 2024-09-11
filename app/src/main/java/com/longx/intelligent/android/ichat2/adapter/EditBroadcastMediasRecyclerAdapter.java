@@ -26,6 +26,7 @@ import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by LONG on 2024/8/5 at 下午2:45.
@@ -35,6 +36,7 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
     private final ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher;
     private final ArrayList<MediaInfo> mediaInfoList;
     private final boolean mediaActivityGlideLoad;
+    private ArrayList<MediaInfo> pastMediaInfoList;
 
     public EditBroadcastMediasRecyclerAdapter(Activity activity,
                                               ActivityResultLauncher<Intent> returnFromPreviewToSendMediaResultLauncher,
@@ -129,5 +131,33 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
         this.mediaInfoList.clear();
         this.mediaInfoList.addAll(mediaInfos);
         notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void moveAndShow(int from, int to){
+        if(pastMediaInfoList == null) {
+            pastMediaInfoList = new ArrayList<>(mediaInfoList);
+        }
+        if (from < to) {
+            if(to == mediaInfoList.size()) to --;
+            for (int i = from; i < to; i++) {
+                Collections.swap(mediaInfoList, i, i + 1);
+            }
+        } else {
+            for (int i = from; i > to; i--) {
+                Collections.swap(mediaInfoList, i, i - 1);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void cancelMoveAndShow(){
+        if(pastMediaInfoList != null) {
+            this.mediaInfoList.clear();
+            this.mediaInfoList.addAll(pastMediaInfoList);
+            pastMediaInfoList = null;
+            notifyDataSetChanged();
+        }
     }
 }

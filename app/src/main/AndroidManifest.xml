@@ -47,6 +47,7 @@
         <activity
             android:name=".activity.BroadcastChannelActivity"
             android:exported="false"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.BroadcastActivity"
