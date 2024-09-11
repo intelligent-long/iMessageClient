@@ -31,7 +31,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCall
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
-import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -41,7 +41,6 @@ import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 import com.longx.intelligent.android.lib.recyclerview.dragsort.DragSortItemTouchCallback;
-import com.longx.intelligent.android.lib.recyclerview.dragsort.OnDragMovedYier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,6 +154,19 @@ public class EditBroadcastActivity extends BaseActivity {
                         boolean remove = data.getBooleanExtra(ExtraKeys.REMOVE, true);
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.MEDIA_INFOS));
                         List<MediaInfo> mediaInfos = Utils.parseParcelableArray(parcelableArrayExtra);
+                        for (MediaInfo mediaInfo : mediaInfos) {
+                            if(mediaInfo.getMediaType().equals(MediaType.IMAGE)){
+                                if(FileUtil.getFileSize(mediaInfo.getPath()) > Constants.MAX_BROADCAST_IMAGE_SIZE){
+                                    MessageDisplayer.autoShow(this, "图片文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_BROADCAST_IMAGE_SIZE), MessageDisplayer.Duration.LONG);
+                                    return;
+                                }
+                            }else if(mediaInfo.getMediaType().equals(MediaType.VIDEO)){
+                                if(FileUtil.getFileSize(mediaInfo.getPath()) > Constants.MAX_BROADCAST_VIDEO_SIZE){
+                                    MessageDisplayer.autoShow(this, "视频文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_BROADCAST_VIDEO_SIZE), MessageDisplayer.Duration.LONG);
+                                    return;
+                                }
+                            }
+                        }
                         onMediaInfosChosen(mediaInfos, remove);
                     }
                 }
@@ -228,8 +240,10 @@ public class EditBroadcastActivity extends BaseActivity {
                 intent.putExtra(ExtraKeys.RES_ID, R.drawable.check_24px);
                 intent.putExtra(ExtraKeys.MEDIA_INFOS, getSortedMediaInfoList().toArray(new MediaInfo[0]));
                 intent.putExtra(ExtraKeys.REMOVE, true);
-                intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, Constants.MAX_BROADCAST_IMAGE_COUNT);
-                intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, Constants.MAX_BROADCAST_VIDEO_COUNT);
+                intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_COUNT, Constants.MAX_BROADCAST_IMAGE_COUNT);
+                intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_COUNT, Constants.MAX_BROADCAST_VIDEO_COUNT);
+                intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, Constants.MAX_BROADCAST_IMAGE_SIZE);
+                intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, Constants.MAX_BROADCAST_VIDEO_SIZE);
                 addMediasResultLauncher.launch(intent);
             });
             bottomSheet.setOnClickTakePhotoYier(v1 -> {

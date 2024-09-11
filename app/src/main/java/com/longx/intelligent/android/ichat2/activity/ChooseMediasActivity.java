@@ -56,8 +56,10 @@ public class ChooseMediasActivity extends BaseActivity{
     private String currentDirectoryPath;
     private boolean uiInited;
     private List<MediaInfo> chosenMediaList;
-    private int maxAllowImageSize;
-    private int maxAllowVideoSize;
+    private int maxAllowImageCount;
+    private int maxAllowVideoCount;
+    private long maxAllowImageSize;
+    private long maxAllowVideoSize;
     private boolean remove;
 
     @Override
@@ -65,7 +67,7 @@ public class ChooseMediasActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         binding = ActivityChooseMediasBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        getIntentDataAndSetupUi();
+        intentData();
         setupBackNavigation(binding.toolbar, getColor(R.color.white));
         changeWindowAndSystemUi();
         init();
@@ -73,7 +75,7 @@ public class ChooseMediasActivity extends BaseActivity{
         setupYiers();
     }
 
-    private void getIntentDataAndSetupUi() {
+    private void intentData() {
         String mediaTypeEnumName = getIntent().getStringExtra(ExtraKeys.MEDIA_TYPE);
         if(mediaTypeEnumName != null){
             mediaType = MediaType.valueOf(mediaTypeEnumName);
@@ -90,8 +92,10 @@ public class ChooseMediasActivity extends BaseActivity{
         if(parcelableArrayExtra != null) {
             chosenMediaList = Utils.parseParcelableArray(parcelableArrayExtra);
         }
-        maxAllowImageSize = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, -1);
-        maxAllowVideoSize = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, -1);
+        maxAllowImageCount = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_IMAGE_COUNT, -1);
+        maxAllowVideoCount = getIntent().getIntExtra(ExtraKeys.MAX_ALLOW_VIDEO_COUNT, -1);
+        maxAllowImageSize = getIntent().getLongExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, -1);
+        maxAllowVideoSize = getIntent().getLongExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, -1);
     }
 
     private void changeWindowAndSystemUi() {
@@ -199,7 +203,7 @@ public class ChooseMediasActivity extends BaseActivity{
     }
 
     private void showContent() {
-        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenMediaList, maxAllowImageSize, maxAllowVideoSize);
+        adapter = new ChooseMediasRecyclerAdapter(this, getData(), chosenMediaList, maxAllowImageCount, maxAllowVideoCount, maxAllowImageSize, maxAllowVideoSize);
         showMedias();
         binding.recyclerView.post(this::updateInfos);
         showTotalSize();

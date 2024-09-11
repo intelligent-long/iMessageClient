@@ -31,8 +31,10 @@ public class ExtraKeys {
     public static final String TOOLBAR_TITLE = "toolbar_title";
     public static final String RES_ID = "res_id";
     public static final String MENU_TITLE = "menu_title";
-    public static final String MAX_ALLOW_IMAGE_SIZE = "max_allow_image_size";
-    public static final String MAX_ALLOW_VIDEO_SIZE = "max_allow_video_size";
+    public static final String MAX_ALLOW_IMAGE_COUNT = "max_allow_image_count";
+    public static final String MAX_ALLOW_VIDEO_COUNT = "max_allow_video_count";
+    public static final String MAX_ALLOW_IMAGE_SIZE = "max_allow_image_file_size";
+    public static final String MAX_ALLOW_VIDEO_SIZE = "max_allow_video_file_size";
     public static final String MEDIAS = "medias";
     public static final String BROADCAST = "broadcast";
     public static final String BUTTON_TEXT = "button_text";

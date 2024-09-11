@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -40,10 +41,11 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private final int maxAllowImageSize;
     private final int maxAllowVideoSize;
 
-    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ItemData> itemDataList, List<MediaInfo> chosenMediaInfoList, int maxAllowImageSize, int maxAllowVideoSize) {
+    public ChooseMediasRecyclerAdapter(AppCompatActivity activity, List<ItemData> itemDataList, List<MediaInfo> chosenMediaInfoList,
+                                       int maxAllowImageCount, int maxAllowVideoCount, long maxAllowImageSize, long maxAllowVideoSize) {
         this.activity = activity;
-        this.maxAllowImageSize = maxAllowImageSize;
-        this.maxAllowVideoSize = maxAllowVideoSize;
+        this.maxAllowImageSize = maxAllowImageCount;
+        this.maxAllowVideoSize = maxAllowVideoCount;
         sortDataList(itemDataList);
         this.itemDataList.addAll(itemDataList);
 
@@ -166,6 +168,18 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     && maxAllowVideoSize != -1 && checkedVideoSize.get() == maxAllowVideoSize){
                 MessageDisplayer.autoShow(activity, "最多选择 " + maxAllowVideoSize + " 个视频", MessageDisplayer.Duration.LONG);
                 return;
+            }
+            if(itemData.mediaInfo.getMediaType().equals(MediaType.IMAGE)){
+                if(FileUtil.getFileSize(itemData.mediaInfo.getPath()) > maxAllowImageSize){
+                    MessageDisplayer.autoShow(activity, "图片文件最大不能超过 " + FileUtil.formatFileSize(maxAllowImageSize), MessageDisplayer.Duration.LONG);
+                    return;
+                }
+            }
+            if(itemData.mediaInfo.getMediaType().equals(MediaType.VIDEO)){
+                if(FileUtil.getFileSize(itemData.mediaInfo.getPath()) > maxAllowVideoSize){
+                    MessageDisplayer.autoShow(activity, "视频文件最大不能超过 " + FileUtil.formatFileSize(maxAllowVideoSize), MessageDisplayer.Duration.LONG);
+                    return;
+                }
             }
             checkedMediaInfos.add(itemData.mediaInfo);
             checkedPositions.add(position + 1);

@@ -20,12 +20,15 @@ public class Constants {
     public static final int MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT = 30;
     public static final int MAX_ONCE_SEND_CHAT_MESSAGE_FILE_COUNT = 10;
     public static final int MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT = 10;
-    public static final int MAX_SEND_CHAT_MESSAGE_FILE_SIZE = 512 * 1024 * 1024;
-    public static final int MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE = 512 * 1024 * 1024;
+    public static final long MAX_SEND_CHAT_MESSAGE_FILE_SIZE = 512 * 1024 * 1024;
+    public static final long MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE = 512 * 1024 * 1024;
+    public static final long MAX_SEND_CHAT_MESSAGE_IMAGE_SIZE = 64 * 1024 * 1024;
     public static final int MAX_CHAT_VOICE_TIME_SEC = 120;
     public static final int FETCH_BROADCAST_PAGE_SIZE = 30;
     public static final int MAX_BROADCAST_IMAGE_COUNT = 30;
     public static final int MAX_BROADCAST_VIDEO_COUNT = 5;
+    public static final long MAX_BROADCAST_IMAGE_SIZE = 64 * 1024 * 1024;
+    public static final long MAX_BROADCAST_VIDEO_SIZE = 512 * 1024 * 1024;
     public static final double GRID_SPACE_SEND_BROADCAST_DP = 5;
     public static final int SINGLE_BROADCAST_IMAGE_VIEW_MAX_HEIGHT_DP = 230;
     public static final int SINGLE_BROADCAST_IMAGE_VIEW_MARGIN_END_DP = 50;

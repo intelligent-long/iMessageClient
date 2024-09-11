@@ -337,7 +337,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送图片");
             intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
             intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
-            intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT);
+            intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_COUNT, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT);
+            intent.putExtra(ExtraKeys.MAX_ALLOW_IMAGE_SIZE, Constants.MAX_SEND_CHAT_MESSAGE_IMAGE_SIZE);
             sendImageMessageResultLauncher.launch(intent);
         });
         binding.morePanelTakePhoto.setOnClickListener(v -> {
@@ -360,7 +361,8 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             intent.putExtra(ExtraKeys.TOOLBAR_TITLE, "发送视频");
             intent.putExtra(ExtraKeys.RES_ID, R.drawable.send_fill_24px);
             intent.putExtra(ExtraKeys.MENU_TITLE, "发送");
-            intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT);
+            intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_COUNT, Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT);
+            intent.putExtra(ExtraKeys.MAX_ALLOW_VIDEO_SIZE, Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE);
             sendVideoMessageResultLauncher.launch(intent);
         });
         binding.morePanelRecordVideo.setOnClickListener(v -> {
@@ -552,11 +554,18 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = Objects.requireNonNull(result.getData());
                         Parcelable[] parcelableArrayExtra = Objects.requireNonNull(data.getParcelableArrayExtra(ExtraKeys.MEDIA_INFOS));
-                        List<MediaInfo> uriList = Utils.parseParcelableArray(parcelableArrayExtra);
-                        if(uriList.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
+                        List<MediaInfo> mediaInfos = Utils.parseParcelableArray(parcelableArrayExtra);
+                        for (MediaInfo mediaInfo : mediaInfos) {
+                            long fileSize = FileUtil.getFileSize(this, mediaInfo.getUri());
+                            if(fileSize > Constants.MAX_SEND_CHAT_MESSAGE_IMAGE_SIZE){
+                                MessageDisplayer.autoShow(this, "发送图片文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE), MessageDisplayer.Duration.LONG);
+                                return;
+                            }
+                        }
+                        if(mediaInfos.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT){
                             MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_IMAGE_COUNT + " 张图片", MessageDisplayer.Duration.LONG);
                         }else {
-                            onSendImageMessages(uriList);
+                            onSendImageMessages(mediaInfos);
                         }
                     }
                 }
@@ -605,12 +614,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                             for (MediaInfo mediaInfo : mediaInfos) {
                                 long fileSize = FileUtil.getFileSize(this, mediaInfo.getUri());
                                 if(fileSize > Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE){
-                                    MessageDisplayer.autoShow(this, "发送文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE), MessageDisplayer.Duration.LONG);
+                                    MessageDisplayer.autoShow(this, "发送视频文件最大不能超过 " + FileUtil.formatFileSize(Constants.MAX_SEND_CHAT_MESSAGE_VIDEO_SIZE), MessageDisplayer.Duration.LONG);
                                     return;
                                 }
                             }
                             if(mediaInfos.size() > Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT){
-                                MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT + " 个文件", MessageDisplayer.Duration.LONG);
+                                MessageDisplayer.autoShow(this, "最多一次发送 " + Constants.MAX_ONCE_SEND_CHAT_MESSAGE_VIDEO_COUNT + " 个视频", MessageDisplayer.Duration.LONG);
                             }else {
                                 onSendVideoMessages(mediaInfos);
                             }
