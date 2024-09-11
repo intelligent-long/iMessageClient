@@ -331,6 +331,16 @@ public class EditBroadcastActivity extends BaseActivity {
 
         DragSortItemTouchCallback dragSortItemTouchCallback = new DragSortItemTouchCallback((from, to) -> {
             adapter.moveAndShow(from, to);
+            leftMediaInfoMap.clear();
+            addMediaInfoMap.clear();
+            int index = 0;
+            for (MediaInfo mediaInfo : adapter.getMediaInfoList()) {
+                if(mediaInfo.getPath() == null){
+                    leftMediaInfoMap.put(index ++, mediaInfo);
+                }else {
+                    addMediaInfoMap.put(index ++, mediaInfo);
+                }
+            }
         });
         new ItemTouchHelper(dragSortItemTouchCallback).attachToRecyclerView(binding.recyclerViewMedias);
     }

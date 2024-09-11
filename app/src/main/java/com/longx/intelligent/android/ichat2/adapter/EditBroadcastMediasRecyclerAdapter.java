@@ -133,7 +133,6 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
         notifyDataSetChanged();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void moveAndShow(int from, int to){
         if(pastMediaInfoList == null) {
             pastMediaInfoList = new ArrayList<>(mediaInfoList);
@@ -148,7 +147,7 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                 Collections.swap(mediaInfoList, i, i - 1);
             }
         }
-        notifyDataSetChanged();
+        notifyItemMoved(from, to);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -159,5 +158,9 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
             pastMediaInfoList = null;
             notifyDataSetChanged();
         }
+    }
+
+    public ArrayList<MediaInfo> getMediaInfoList() {
+        return mediaInfoList;
     }
 }
