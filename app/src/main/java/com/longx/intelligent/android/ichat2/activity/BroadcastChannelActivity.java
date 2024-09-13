@@ -30,6 +30,7 @@ import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -41,7 +42,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastFetchNewsYier {
+public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastFetchNewsYier, BroadcastUpdateYier {
     private ActivityBroadcastChannelBinding binding;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
     private LayoutBroadcastRecyclerFooterBinding footerBinding;
@@ -72,6 +73,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         GlobalYiersHolder.holdYier(this, BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(this, BroadcastDeletedYier.class, this);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
+        GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
     }
 
     @Override
@@ -80,6 +82,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         GlobalYiersHolder.removeYier(this, BroadcastReloadYier.class, this);
         GlobalYiersHolder.removeYier(this, BroadcastDeletedYier.class, this);
         GlobalYiersHolder.removeYier(this, BroadcastFetchNewsYier.class, this);
+        GlobalYiersHolder.removeYier(this, BroadcastUpdateYier.class, this);
     }
 
     private void intentData() {
@@ -435,5 +438,10 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
             headerBinding.reloadTime.setVisibility(View.VISIBLE);
             headerBinding.reloadTime.setText("更新时间 " + TimeUtil.formatRelativeTime(broadcastReloadedTime));
         }
+    }
+
+    @Override
+    public void updateOneBroadcast(Broadcast newBroadcast) {
+        if(adapter != null) adapter.updateOneBroadcast(newBroadcast, true);
     }
 }

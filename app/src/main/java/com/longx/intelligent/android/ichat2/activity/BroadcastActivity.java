@@ -222,6 +222,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         }else {
             binding.like.setImageResource(R.drawable.favorite_outline_24px);
         }
+        binding.likeCount.setText(String.valueOf(broadcast.getLikeCount()));
     }
 
     private void setupYiers() {
@@ -302,6 +303,9 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                             broadcast = data.getData(Broadcast.class);
                             showContent();
                             setupYiers();
+                            GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                                broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
+                            });
                         });
                     }
                 });
@@ -314,6 +318,9 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                             broadcast = data.getData(Broadcast.class);
                             showContent();
                             setupYiers();
+                            GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                                broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
+                            });
                         });
                     }
                 });

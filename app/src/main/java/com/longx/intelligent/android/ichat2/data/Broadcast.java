@@ -99,4 +99,17 @@ public class Broadcast implements Parcelable {
         dest.writeInt(liked ? 1 : 0);
         dest.writeInt(likeCount);
     }
+
+    @Override
+    public String toString() {
+        return "Broadcast{" +
+                "broadcastId='" + broadcastId + '\'' +
+                ", ichatId='" + ichatId + '\'' +
+                ", time=" + time +
+                ", text='" + text + '\'' +
+                ", broadcastMedias=" + broadcastMedias +
+                ", liked=" + liked +
+                ", likeCount=" + likeCount +
+                '}';
+    }
 }

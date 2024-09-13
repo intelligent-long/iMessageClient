@@ -392,7 +392,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         ItemData itemData = itemDataList.get(position);
         holder.binding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(activity, BroadcastActivity.class);
-            intent.putExtra(ExtraKeys.BROADCAST, itemData.broadcast);
+            intent.putExtra(ExtraKeys.BROADCAST, itemDataList.get(position).broadcast);
             activity.startActivity(intent);
         });
         holder.binding.avatar.setOnClickListener(v -> {
@@ -431,6 +431,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }else {
             holder.binding.more.setOnClickListener(null);
         }
+        UiUtil.setViewEnabled(holder.binding.like, true, false);
         holder.binding.like.setOnClickListener(v -> {
             UiUtil.setViewEnabled(holder.binding.like, false, false);
             if(!itemDataList.get(position).broadcast.isLiked()) {
@@ -451,8 +452,8 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
-                            updateOneBroadcast(data.getData(Broadcast.class), false);
                             holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);
+                            updateOneBroadcast(data.getData(Broadcast.class), false);
                             UiUtil.setViewEnabled(holder.binding.like, true, false);
                         });
                     }
