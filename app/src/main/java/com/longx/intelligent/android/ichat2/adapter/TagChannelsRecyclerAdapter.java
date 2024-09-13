@@ -134,7 +134,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
                     .setPositiveButton((dialog, which) -> {
                         List<String> channelIchatIdList = new ArrayList<>();
                         channelIchatIdList.add(itemData.channel.getIchatId());
-                        RemoveChannelsOfTagPostBody postBody = new RemoveChannelsOfTagPostBody(channelTag.getId(), channelIchatIdList);
+                        RemoveChannelsOfTagPostBody postBody = new RemoveChannelsOfTagPostBody(channelTag.getTagId(), channelIchatIdList);
                         ChannelApiCaller.removeChannelsOfTag(tagChannelActivity, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(tagChannelActivity){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {

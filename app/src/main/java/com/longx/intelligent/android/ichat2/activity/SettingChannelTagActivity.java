@@ -87,11 +87,11 @@ public class SettingChannelTagActivity extends BaseActivity implements ContentUp
             List<String> newTagNames = newChannelTagsAdapter.getNewTagNames();
             List<String> toAddTagIds = new ArrayList<>();
             channelTagsAdapter.getToAddChannelTags().forEach(channelTag -> {
-                toAddTagIds.add(channelTag.getId());
+                toAddTagIds.add(channelTag.getTagId());
             });
             List<String> toRemoveTagIds = new ArrayList<>();
             channelTagsAdapter.getToRemoveChannelTags().forEach(channelTag -> {
-                toRemoveTagIds.add(channelTag.getId());
+                toRemoveTagIds.add(channelTag.getTagId());
             });
             SetChannelTagsPostBody postBody = new SetChannelTagsPostBody(channel.getIchatId(), newTagNames, toAddTagIds, toRemoveTagIds);
             ChannelApiCaller.setChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){

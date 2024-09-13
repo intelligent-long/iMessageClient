@@ -286,6 +286,9 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             new CopyTextDialog(this, broadcast.getText()).show();
             return false;
         });
+        binding.like.setOnClickListener(v -> {
+
+        });
     }
 
     private void setupAndStartMediaActivity(int position){

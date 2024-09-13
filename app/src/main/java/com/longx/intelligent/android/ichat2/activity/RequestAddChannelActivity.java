@@ -78,7 +78,7 @@ public class RequestAddChannelActivity extends BaseActivity {
                         String inputtedNote = UiUtil.getEditTextString(binding.noteInput);
                         if(inputtedNote.isEmpty()) inputtedNote = null;
                         List<String> presetChannelTagIds = new ArrayList<>();
-                        presetChannelTags.forEach(presetChannelTag -> presetChannelTagIds.add(presetChannelTag.getId()));
+                        presetChannelTags.forEach(presetChannelTag -> presetChannelTagIds.add(presetChannelTag.getTagId()));
                         RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channel.getIchatIdUser(), inputtedMessage, inputtedNote, newChannelTagNames, presetChannelTagIds);
                         ChannelApiCaller.requestAddChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override

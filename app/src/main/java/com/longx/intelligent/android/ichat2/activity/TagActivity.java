@@ -187,7 +187,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
         List<ChannelTag> channelTags = adapter.getChannelTags();
         Map<String, Integer> orderMap = new HashMap<>();
         channelTags.forEach(channelTag -> {
-            orderMap.put(channelTag.getId(), channelTag.getOrder());
+            orderMap.put(channelTag.getTagId(), channelTag.getOrder());
         });
         SortTagsPostBody postBody = new SortTagsPostBody(orderMap);
         ChannelApiCaller.sortChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){

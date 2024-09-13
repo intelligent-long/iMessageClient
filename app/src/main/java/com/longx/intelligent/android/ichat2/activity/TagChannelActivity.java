@@ -1,15 +1,8 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -23,7 +16,6 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.databinding.ActivityTagChannelBinding;
-import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
@@ -88,7 +80,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.add_channel){
-                new AddChannelToTagBottomSheet(this, channelTag.getId(), canAddChannels).show();
+                new AddChannelToTagBottomSheet(this, channelTag.getTagId(), canAddChannels).show();
             }
             return true;
         });

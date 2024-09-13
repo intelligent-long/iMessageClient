@@ -38,7 +38,7 @@ public class RenameChannelTagBottomSheet extends AbstractBottomSheet{
     private void setupYiers() {
         binding.doneButton.setOnClickListener(v -> {
             String inputtedTagName = UiUtil.getEditTextString(binding.tagNameInput);
-            ChangeChannelTagNamePostBody postBody = new ChangeChannelTagNamePostBody(channelTag.getId(), inputtedTagName);
+            ChangeChannelTagNamePostBody postBody = new ChangeChannelTagNamePostBody(channelTag.getTagId(), inputtedTagName);
             ChannelApiCaller.changeTagName((AppCompatActivity)getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {

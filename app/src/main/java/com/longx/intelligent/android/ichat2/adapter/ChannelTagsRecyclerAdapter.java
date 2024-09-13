@@ -80,7 +80,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         ChannelTag channelTag = channelTags.get(position);
         holder.binding.content.setOnClickListener(v -> {
             Intent intent = new Intent(activity, TagChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL_TAG_ID, channelTag.getId());
+            intent.putExtra(ExtraKeys.CHANNEL_TAG_ID, channelTag.getTagId());
             activity.startActivity(intent);
         });
         holder.binding.clickViewRename.setOnClickListener(v -> {
@@ -90,7 +90,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             new ConfirmDialog(activity, "是否继续？")
                     .setNegativeButton(null)
                     .setPositiveButton((dialog, which) -> {
-                        ChannelApiCaller.deleteChannelTag(activity, channelTag.getId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
+                        ChannelApiCaller.deleteChannelTag(activity, channelTag.getTagId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                 super.ok(data, raw, call);

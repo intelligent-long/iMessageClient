@@ -12,7 +12,7 @@ import java.util.Objects;
  * Created by LONG on 2024/6/3 at 5:34 PM.
  */
 public class ChannelTag implements Parcelable {
-    private String id;
+    private String tagId;
     private String ichatId;
     private String name;
     private int order;
@@ -21,8 +21,8 @@ public class ChannelTag implements Parcelable {
     public ChannelTag() {
     }
 
-    public ChannelTag(String id, String ichatId, String name, int order, List<String> channelIchatIdList) {
-        this.id = id;
+    public ChannelTag(String tagId, String ichatId, String name, int order, List<String> channelIchatIdList) {
+        this.tagId = tagId;
         this.ichatId = ichatId;
         this.name = name;
         this.order = order;
@@ -41,8 +41,8 @@ public class ChannelTag implements Parcelable {
         }
     };
 
-    public String getId() {
-        return id;
+    public String getTagId() {
+        return tagId;
     }
 
     public String getIchatId() {
@@ -75,7 +75,7 @@ public class ChannelTag implements Parcelable {
     }
 
     protected ChannelTag(Parcel in) {
-        id = in.readString();
+        tagId = in.readString();
         ichatId = in.readString();
         name = in.readString();
         order = in.readInt();
@@ -84,7 +84,7 @@ public class ChannelTag implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeString(tagId);
         dest.writeString(ichatId);
         dest.writeString(name);
         dest.writeInt(order);
@@ -96,11 +96,11 @@ public class ChannelTag implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChannelTag that = (ChannelTag) o;
-        return order == that.order && Objects.equals(id, that.id) && Objects.equals(ichatId, that.ichatId) && Objects.equals(name, that.name) && Objects.equals(channelIchatIdList, that.channelIchatIdList);
+        return order == that.order && Objects.equals(tagId, that.tagId) && Objects.equals(ichatId, that.ichatId) && Objects.equals(name, that.name) && Objects.equals(channelIchatIdList, that.channelIchatIdList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ichatId, name, order, channelIchatIdList);
+        return Objects.hash(tagId, ichatId, name, order, channelIchatIdList);
     }
 }

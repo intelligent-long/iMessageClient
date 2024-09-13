@@ -18,16 +18,20 @@ public class Broadcast implements Parcelable {
     private Date time;
     private String text;
     private List<BroadcastMedia> broadcastMedias = new ArrayList<>();
+    private boolean liked;
+    private int likeCount;
 
     public Broadcast() {
     }
 
-    public Broadcast(String broadcastId, String ichatId, Date time, String text, List<BroadcastMedia> broadcastMedias) {
+    public Broadcast(String broadcastId, String ichatId, Date time, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount) {
         this.broadcastId = broadcastId;
         this.ichatId = ichatId;
         this.time = time;
         this.text = text;
         this.broadcastMedias = broadcastMedias;
+        this.liked = liked;
+        this.likeCount = likeCount;
     }
 
     public String getBroadcastId() {
@@ -48,6 +52,14 @@ public class Broadcast implements Parcelable {
 
     public List<BroadcastMedia> getBroadcastMedias() {
         return broadcastMedias;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
     }
 
     public static final Creator<Broadcast> CREATOR = new Creator<Broadcast>() {
@@ -73,6 +85,8 @@ public class Broadcast implements Parcelable {
         time = new Date(in.readLong());
         text = in.readString();
         in.readTypedList(broadcastMedias, BroadcastMedia.CREATOR);
+        liked = in.readInt() == 1;
+        likeCount = in.readInt();
     }
 
     @Override
@@ -82,5 +96,7 @@ public class Broadcast implements Parcelable {
         dest.writeLong(time.getTime());
         dest.writeString(text);
         dest.writeTypedList(broadcastMedias);
+        dest.writeInt(liked ? 1 : 0);
+        dest.writeInt(likeCount);
     }
 }

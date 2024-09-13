@@ -268,7 +268,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         try {
             OUTER: for (ChannelTag channelTag : channelTags) {
                 ContentValues values = new ContentValues();
-                values.put(ChannelDatabaseHelper.TableTagsColumns.ID, channelTag.getId());
+                values.put(ChannelDatabaseHelper.TableTagsColumns.ID, channelTag.getTagId());
                 values.put(ChannelDatabaseHelper.TableTagsColumns.ICHAT_ID, channelTag.getIchatId());
                 values.put(ChannelDatabaseHelper.TableTagsColumns.NAME, channelTag.getName());
                 values.put(ChannelDatabaseHelper.TableTagsColumns.ORDER, channelTag.getOrder());
@@ -280,7 +280,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 }
                 for (String channelIchatId : channelTag.getChannelIchatIdList()) {
                     ContentValues values1 = new ContentValues();
-                    values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, channelTag.getId());
+                    values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, channelTag.getTagId());
                     values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.ICHAT_ID, channelIchatId);
                     long rowId1 = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS, null,
                             values1, SQLiteDatabase.CONFLICT_REPLACE);
