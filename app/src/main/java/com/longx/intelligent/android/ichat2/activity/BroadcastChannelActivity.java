@@ -107,7 +107,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
         binding.recyclerView.setLayoutManager(layoutManager);
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        adapter = new BroadcastsRecyclerAdapter(this, binding.recyclerView, itemDataList);
+        adapter = new BroadcastsRecyclerAdapter(this, binding.recyclerView, itemDataList, this);
         binding.recyclerView.setAdapter(adapter);
         int headerItemHeight = UiUtil.dpToPx(this, 172) - WindowAndSystemUiUtil.getActionBarHeight(this);
         UiUtil.setViewHeight(headerBinding.load, headerItemHeight);

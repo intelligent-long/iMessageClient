@@ -47,6 +47,7 @@ import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
+import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -67,13 +68,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     private final List<ItemData> itemDataList;
     private final Map<String, Size> singleMediaViewSizeMap= new HashMap<>();
     private final Self currentUserProfile;
+    private final BroadcastUpdateYier ignoreUpdateBroadcastInteractionsBroadcastUpdateYier;
 
-    public BroadcastsRecyclerAdapter(AppCompatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView, List<ItemData> itemDataList) {
+    public BroadcastsRecyclerAdapter(AppCompatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView, List<ItemData> itemDataList, BroadcastUpdateYier ignoreUpdateBroadcastInteractionsBroadcastUpdateYier) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         sortItemDataList(itemDataList);
         this.itemDataList = itemDataList;
         currentUserProfile = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
+        this.ignoreUpdateBroadcastInteractionsBroadcastUpdateYier = ignoreUpdateBroadcastInteractionsBroadcastUpdateYier;
     }
 
     public static class ItemData{
@@ -441,7 +444,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                         super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                             holder.binding.like.setImageResource(R.drawable.favorite_fill_broadcast_liked_24px);
-                            updateOneBroadcast(data.getData(Broadcast.class), false);
+                            Broadcast broadcast = data.getData(Broadcast.class);
+                            updateOneBroadcast(broadcast, false);
+                            GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                                broadcastUpdateYiers.forEach(broadcastUpdateYier -> {
+                                    if(!broadcastUpdateYier.equals(ignoreUpdateBroadcastInteractionsBroadcastUpdateYier)) {
+                                        broadcastUpdateYier.updateOneBroadcast(broadcast);
+                                    }
+                                });
+                            });
                             UiUtil.setViewEnabled(holder.binding.like, true, false);
                         });
                     }
@@ -453,7 +464,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                         super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                             holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);
-                            updateOneBroadcast(data.getData(Broadcast.class), false);
+                            Broadcast broadcast = data.getData(Broadcast.class);
+                            updateOneBroadcast(broadcast, false);
+                            GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                                broadcastUpdateYiers.forEach(broadcastUpdateYier -> {
+                                    if(!broadcastUpdateYier.equals(ignoreUpdateBroadcastInteractionsBroadcastUpdateYier)) {
+                                        broadcastUpdateYier.updateOneBroadcast(broadcast);
+                                    }
+                                });
+                            });
                             UiUtil.setViewEnabled(holder.binding.like, true, false);
                         });
                     }

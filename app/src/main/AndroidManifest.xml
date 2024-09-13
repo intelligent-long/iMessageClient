@@ -41,6 +41,9 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.BroadcastInteractionsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.EditBroadcastActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

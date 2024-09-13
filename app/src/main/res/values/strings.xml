@@ -59,6 +59,7 @@
     <string name="channel_addition_activity_receive">收到</string>
     <string name="no_content">无内容</string>
     <string name="user_guide_info">请在所有限制后台运行的应用中，移除对本应用的限制。</string>
+    <string name="title_broadcast_interactions">广播互动</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>

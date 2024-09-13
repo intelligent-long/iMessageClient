@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.BroadcastInteractionsActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
@@ -281,6 +282,12 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             }
             return false;
         });
+        View actionView = binding.toolbar.getMenu().findItem(R.id.interaction_notification).getActionView();
+        if(actionView != null){
+            actionView.findViewById(R.id.image_button).setOnClickListener(v -> {
+                startActivity(new Intent(requireContext(), BroadcastInteractionsActivity.class));
+            });
+        }
     }
 
     public void toStart() {
@@ -304,7 +311,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true);
         binding.recyclerView.setLayoutManager(layoutManager);
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        adapter = new BroadcastsRecyclerAdapter((AppCompatActivity) requireActivity(), binding.recyclerView, itemDataList);
+        adapter = new BroadcastsRecyclerAdapter((AppCompatActivity) requireActivity(), binding.recyclerView, itemDataList, this);
         binding.recyclerView.setAdapter(adapter);
         int headerItemHeight = UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarHeight(requireContext());
         UiUtil.setViewHeight(headerBinding.load, headerItemHeight);
