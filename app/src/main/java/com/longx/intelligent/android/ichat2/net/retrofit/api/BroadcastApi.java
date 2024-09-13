@@ -49,4 +49,10 @@ public interface BroadcastApi {
     @GET("broadcast/media/data/{mediaId}")
     @Headers("LogLevel:HEADERS")
     CompletableCall<ResponseBody> downloadMediaData(@Path("mediaId") String mediaId);
+
+    @POST("broadcast/like/{broadcastId}")
+    CompletableCall<OperationData> likeBroadcast(@Path("broadcastId") String broadcastId);
+
+    @POST("broadcast/like/cancel/{broadcastId}")
+    CompletableCall<OperationData> cancelLikeBroadcast(@Path("broadcastId") String broadcastId);
 }

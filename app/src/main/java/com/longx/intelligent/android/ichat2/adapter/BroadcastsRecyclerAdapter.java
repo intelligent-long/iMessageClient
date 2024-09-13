@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.Size;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemBroadcastBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -40,6 +42,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCall
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -59,13 +62,13 @@ import retrofit2.Response;
  * Created by LONG on 2024/7/29 at 下午12:13.
  */
 public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<BroadcastsRecyclerAdapter.ViewHolder, BroadcastsRecyclerAdapter.ItemData> {
-    private final Activity activity;
+    private final AppCompatActivity activity;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ItemData> itemDataList;
     private final Map<String, Size> singleMediaViewSizeMap= new HashMap<>();
     private final Self currentUserProfile;
 
-    public BroadcastsRecyclerAdapter(Activity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView, List<ItemData> itemDataList) {
+    public BroadcastsRecyclerAdapter(AppCompatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView, List<ItemData> itemDataList) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         sortItemDataList(itemDataList);
@@ -259,6 +262,12 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.mediaSingle.setVisibility(View.GONE);
         }
 
+        if(itemData.broadcast.isLiked()){
+            holder.binding.like.setImageResource(R.drawable.favorite_fill_broadcast_liked_24px);
+        }else {
+            holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);
+        }
+
         setupYiers(holder, position);
     }
 
@@ -422,6 +431,34 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }else {
             holder.binding.more.setOnClickListener(null);
         }
+        holder.binding.like.setOnClickListener(v -> {
+            UiUtil.setViewEnabled(holder.binding.like, false, false);
+            if(!itemDataList.get(position).broadcast.isLiked()) {
+                BroadcastApiCaller.likeBroadcast(activity, itemDataList.get(position).broadcast.getBroadcastId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(activity) {
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
+                            holder.binding.like.setImageResource(R.drawable.favorite_fill_broadcast_liked_24px);
+                            updateOneBroadcast(data.getData(Broadcast.class), false);
+                            UiUtil.setViewEnabled(holder.binding.like, true, false);
+                        });
+                    }
+                });
+            }else {
+                BroadcastApiCaller.cancelLikeBroadcast(activity, itemDataList.get(position).broadcast.getBroadcastId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(activity){
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
+                            updateOneBroadcast(data.getData(Broadcast.class), false);
+                            holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);
+                            UiUtil.setViewEnabled(holder.binding.like, true, false);
+                        });
+                    }
+                });
+            }
+        });
     }
 
     private void sortItemDataList(List<ItemData> itemDataList){
@@ -458,12 +495,12 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         notifyItemRangeInserted(0, items.size());
     }
 
-    public void updateOneBroadcast(Broadcast newBroadcast){
+    public void updateOneBroadcast(Broadcast newBroadcast, boolean notifyItemChanged){
         for (int i = 0; i < itemDataList.size(); i++) {
             Broadcast broadcast = itemDataList.get(i).broadcast;
             if(broadcast.getBroadcastId().equals(newBroadcast.getBroadcastId())){
                 itemDataList.set(i, new ItemData(newBroadcast));
-                notifyItemChanged(i + (recyclerView.hasHeader() ? 1 : 0));
+                if(notifyItemChanged) notifyItemChanged(i + (recyclerView.hasHeader() ? 1 : 0));
                 break;
             }
         }

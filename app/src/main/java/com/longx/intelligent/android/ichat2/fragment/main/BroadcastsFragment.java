@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -303,7 +304,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true);
         binding.recyclerView.setLayoutManager(layoutManager);
         ArrayList<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-        adapter = new BroadcastsRecyclerAdapter(requireActivity(), binding.recyclerView, itemDataList);
+        adapter = new BroadcastsRecyclerAdapter((AppCompatActivity) requireActivity(), binding.recyclerView, itemDataList);
         binding.recyclerView.setAdapter(adapter);
         int headerItemHeight = UiUtil.dpToPx(requireContext(), 172) - WindowAndSystemUiUtil.getActionBarHeight(requireContext());
         UiUtil.setViewHeight(headerBinding.load, headerItemHeight);
@@ -565,6 +566,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     @Override
     public void updateOneBroadcast(Broadcast newBroadcast) {
-        if(adapter != null) adapter.updateOneBroadcast(newBroadcast);
+        if(adapter != null) adapter.updateOneBroadcast(newBroadcast, true);
     }
 }

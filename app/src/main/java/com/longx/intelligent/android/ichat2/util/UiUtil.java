@@ -123,6 +123,7 @@ public class UiUtil {
     }
 
     public static void setViewEnabled(View view, boolean enable, boolean changeAlpha) {
+        view.setEnabled(enable);
         if(changeAlpha) {
             if (enable) {
                 view.setAlpha(1F);
@@ -130,7 +131,6 @@ public class UiUtil {
                 view.setAlpha(0.26F);
             }
         }
-        view.setEnabled(enable);
     }
 
     public static void setViewWidth(View view, int width) {

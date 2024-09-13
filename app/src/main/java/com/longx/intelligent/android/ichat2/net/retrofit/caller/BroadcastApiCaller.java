@@ -31,6 +31,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
+import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2024/7/28 at 上午2:49.
@@ -190,6 +191,18 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
     public static CompletableCall<ResponseBody> downloadMediaData(LifecycleOwner lifecycleOwner, String mediaId, DownloadCommonYier downloadCommonYier){
         CompletableCall<ResponseBody> call = getApiImplementation().downloadMediaData(mediaId);
         call.enqueue(lifecycleOwner, downloadCommonYier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> likeBroadcast(LifecycleOwner lifecycleOwner, String broadcastId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().likeBroadcast(broadcastId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> cancelLikeBroadcast(LifecycleOwner lifecycleOwner, String broadcastId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().cancelLikeBroadcast(broadcastId);
+        call.enqueue(lifecycleOwner, yier);
         return call;
     }
 }

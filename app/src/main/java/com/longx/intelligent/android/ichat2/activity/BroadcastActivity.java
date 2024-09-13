@@ -19,6 +19,7 @@ import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -216,6 +217,11 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             binding.medias2To4.setVisibility(View.GONE);
             binding.mediaSingle.setVisibility(View.GONE);
         }
+        if(broadcast.isLiked()){
+            binding.like.setImageResource(R.drawable.favorite_fill_broadcast_liked_24px);
+        }else {
+            binding.like.setImageResource(R.drawable.favorite_outline_24px);
+        }
     }
 
     private void setupYiers() {
@@ -287,7 +293,31 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             return false;
         });
         binding.like.setOnClickListener(v -> {
-
+            if(!broadcast.isLiked()) {
+                BroadcastApiCaller.likeBroadcast(this, broadcast.getBroadcastId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
+                            broadcast = data.getData(Broadcast.class);
+                            showContent();
+                            setupYiers();
+                        });
+                    }
+                });
+            }else {
+                BroadcastApiCaller.cancelLikeBroadcast(this, broadcast.getBroadcastId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
+                            broadcast = data.getData(Broadcast.class);
+                            showContent();
+                            setupYiers();
+                        });
+                    }
+                });
+            }
         });
     }
 
