@@ -60,6 +60,9 @@
     <string name="no_content">无内容</string>
     <string name="user_guide_info">请在所有限制后台运行的应用中，移除对本应用的限制。</string>
     <string name="title_broadcast_interactions">广播互动</string>
+    <string name="broadcast_interactions_activity_like">喜欢</string>
+    <string name="broadcast_interactions_activity_comment">评论</string>
+    <string name="broadcast_interactions_activity_reply">回复</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>
@@ -112,4 +115,6 @@
     <string name="preference_key_ways_to_find_me">ways_to_find_me</string>
     <string name="preference_key_change_can_find_me_by_ichat_id">change_can_find_me_by_ichat_id</string>
     <string name="preference_key_change_can_find_me_by_email">change_can_find_me_by_email</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

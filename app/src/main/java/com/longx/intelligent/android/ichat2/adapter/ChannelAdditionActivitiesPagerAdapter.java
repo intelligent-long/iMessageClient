@@ -32,7 +32,7 @@ public class ChannelAdditionActivitiesPagerAdapter extends FragmentStateAdapter 
             case 1: return channelAdditionSendFragment;
             case 2: return channelAdditionReceiveFragment;
         }
-        return new ChannelAdditionPendingFragment();
+        return channelAdditionPendingFragment;
     }
 
     @Override
