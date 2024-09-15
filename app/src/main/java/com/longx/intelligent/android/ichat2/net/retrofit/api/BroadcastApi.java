@@ -55,4 +55,7 @@ public interface BroadcastApi {
 
     @POST("broadcast/like/cancel/{broadcastId}")
     CompletableCall<OperationData> cancelLikeBroadcast(@Path("broadcastId") String broadcastId);
+
+    @GET("broadcast/like/news_count")
+    CompletableCall<OperationData> fetchBroadcastLikeNewsCount();
 }

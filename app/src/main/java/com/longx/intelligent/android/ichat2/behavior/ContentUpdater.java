@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -42,6 +43,7 @@ import retrofit2.Response;
 /**
  * Created by LONG on 2024/4/1 at 4:41 AM.
  */
+//主要只操作数据获取和存储
 public class ContentUpdater {
     private static final List<String> updatingIds = new ArrayList<>();
 
@@ -52,6 +54,7 @@ public class ContentUpdater {
         String ID_CHAT_MESSAGES = "chat_messages";
         String ID_CHANNEL_TAGS = "channel_tags";
         String ID_RECENT_BROADCAST_MEDIAS = "recent_broadcast_medias";
+        String ID_BROADCAST_LIKE_NEWS_COUNT = "broadcast_like_news_count";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -259,5 +262,19 @@ public class ContentUpdater {
                         });
                     }
                 });
+    }
+
+    public static void updateNewBroadcastLikesCount(Context context, ResultsYier resultsYier){
+        BroadcastApiCaller.fetchBroadcastLikeNewsCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_BROADCAST_LIKE_NEWS_COUNT, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleSuccessResult(() -> {
+                    Integer newsCount = data.getData(Integer.class);
+                    SharedPreferencesAccessor.NewContentCount.saveBroadcastLikeNewsCount(context, newsCount);
+                    resultsYier.onResults(newsCount);
+                });
+            }
+        });
     }
 }

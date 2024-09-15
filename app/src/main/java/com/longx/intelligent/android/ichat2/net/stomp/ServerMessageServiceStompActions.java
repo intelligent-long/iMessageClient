@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * Created by LONG on 2024/4/1 at 5:03 AM.
  */
+//处理数据更新，以及附带其他操作
 public class ServerMessageServiceStompActions {
 
     public static void updateCurrentUserProfile(Context context){
@@ -140,6 +141,20 @@ public class ServerMessageServiceStompActions {
                 });
             });
         }
+    }
+
+    public static void updateNewBroadcastLikesCount(Context context){
+        ContentUpdater.updateNewBroadcastLikesCount(context, results -> {
+            int newsCount = (int) results[0];
+            if(newsCount > 0){
+                //TODO：通知
+            }
+            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                    newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.BROADCAST_LIKES);
+                });
+            });
+        });
     }
 
 }

@@ -11,18 +11,20 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Parcelable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastInteractionsActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
-import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -32,6 +34,7 @@ import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerF
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
@@ -43,6 +46,7 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
@@ -50,10 +54,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import q.rorbin.badgeview.Badge;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastUpdateYier {
+public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastUpdateYier, NewContentBadgeDisplayYier {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
     private LayoutBroadcastRecyclerHeaderBinding headerBinding;
@@ -62,6 +67,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private CountDownLatch NEXT_PAGE_LATCH;
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
     private boolean willToStart;
+    private Badge newInteractionsBadge;
 
     public static boolean needInitFetchBroadcast = true;
     public static boolean needFetchNewBroadcasts;
@@ -81,9 +87,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         setupRecyclerView();
         restoreState(savedInstanceState);
         showOrHideBroadcastReloadedTime();
+        setupBadge();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
         if(needInitFetchBroadcast) {
             fetchAndRefreshBroadcasts(true);
         }else if(needReFetchBroadcast) {
@@ -100,6 +108,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.removeYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), BroadcastDeletedYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), BroadcastUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -320,6 +329,14 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         UiUtil.setViewHeight(headerBinding.noBroadcastView, headerItemHeight);
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
+    }
+
+    private void setupBadge() {
+        View actionView = binding.toolbar.getMenu().findItem(R.id.interaction_notification).getActionView();
+        if(actionView != null){
+            ImageButton imageButton = actionView.findViewById(R.id.image_button);
+            newInteractionsBadge = BadgeDisplayer.initBadge(requireContext(), imageButton, 0, Gravity.END | Gravity.TOP);
+        }
     }
 
     private void loadHistoryBroadcastsData() {
@@ -566,6 +583,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     }
                 }, new OperationStatus.HandleResult(-102, () -> {
                     ErrorLogger.log("没有获取到新广播");
+                    MessageDisplayer.showToast(getContext(), "没有获取到新广播", Toast.LENGTH_LONG);
                 }));
             }
         });
@@ -574,5 +592,12 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     @Override
     public void updateOneBroadcast(Broadcast newBroadcast) {
         if(adapter != null) adapter.updateOneBroadcast(newBroadcast, true);
+    }
+
+    @Override
+    public void showNewContentBadge(ID id, int newContentCount) {
+        if(id.equals(ID.BROADCAST_LIKES)){
+            newInteractionsBadge.setBadgeNumber(newContentCount);
+        }
     }
 }

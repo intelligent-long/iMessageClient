@@ -105,6 +105,9 @@ public class ServerMessageServiceStomp {
         stomp.subscribe(StompDestinations.RECENT_BROADCAST_MEDIAS_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateRecentBroadcastMedias(context, message.getPayload());
         });
+        stomp.subscribe(StompDestinations.BROADCASTS_LIKES_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateNewBroadcastLikesCount(context);
+        });
     }
 
     public static synchronized boolean isConnected(){

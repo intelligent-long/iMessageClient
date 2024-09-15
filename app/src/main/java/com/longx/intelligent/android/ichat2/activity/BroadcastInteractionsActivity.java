@@ -21,9 +21,7 @@ public class BroadcastInteractionsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        PAGER_TITLES = new String[]{getString(R.string.broadcast_interactions_activity_like),
-                getString(R.string.broadcast_interactions_activity_comment),
-                getString(R.string.broadcast_interactions_activity_reply)};
+        PAGER_TITLES = new String[]{getString(R.string.broadcast_interactions_activity_like), getString(R.string.broadcast_interactions_activity_comment), getString(R.string.broadcast_interactions_activity_reply)};
         super.onCreate(savedInstanceState);
         binding = ActivityBroadcastInteractionsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
