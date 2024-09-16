@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastLikeBinding;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 
 public class BroadcastLikeFragment extends Fragment {
     private FragmentBroadcastLikeBinding binding;

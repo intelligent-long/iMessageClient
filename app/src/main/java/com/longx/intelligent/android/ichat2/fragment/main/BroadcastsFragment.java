@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastInteractionsActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
@@ -114,7 +116,17 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             int appBarVerticalOffset = savedInstanceState.getInt(InstanceStateKeys.BroadcastFragment.APP_BAR_LAYOUT_STATE, 0);
-            binding.appbar.post(() -> binding.appbar.setExpanded(appBarVerticalOffset == 0, false));
+            binding.appbar.post(() -> {
+                binding.appbar.setExpanded(appBarVerticalOffset == 0, false);
+                if(appBarVerticalOffset != 0){
+                    binding.sendBroadcastFab.show();
+                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
+                    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 0), layoutParams.bottomMargin);
+                    binding.toolbar.requestLayout();
+                }else {
+                    binding.sendBroadcastFab.hide();
+                }
+            });
             boolean isSendBroadcastFabExpanded = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.SEND_BROADCAST_FAB_EXPANDED_STATE, true);
             if (isSendBroadcastFabExpanded) {
                 binding.sendBroadcastFab.extend();

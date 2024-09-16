@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.EditBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -32,6 +33,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by LONG on 2024/7/28 at 上午2:49.
@@ -208,6 +210,12 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> fetchBroadcastLikeNewsCount(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchBroadcastLikeNewsCount();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<PaginatedOperationData<BroadcastLike>> fetchLikesOfSelfBroadcasts(LifecycleOwner lifecycleOwner, String lastLikeId, int ps, BaseYier<PaginatedOperationData<BroadcastLike>> yier){
+        CompletableCall<PaginatedOperationData<BroadcastLike>> call = getApiImplementation().fetchLikesOfSelfBroadcasts(lastLikeId, ps);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

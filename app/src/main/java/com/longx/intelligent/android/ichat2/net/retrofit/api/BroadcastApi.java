@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -58,4 +59,7 @@ public interface BroadcastApi {
 
     @GET("broadcast/like/news_count")
     CompletableCall<OperationData> fetchBroadcastLikeNewsCount();
+
+    @GET("broadcast/like/limit")
+    CompletableCall<PaginatedOperationData<BroadcastLike>> fetchLikesOfSelfBroadcasts(@Query("last_like_id") String lastLikeId, @Query("ps") int ps);
 }
