@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.fragment.main.BroadcastsFragment;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
@@ -150,6 +151,7 @@ public class GlobalBehaviors {
         SharedPreferencesAccessor.UserProfilePref.clear(context);
         ContentUpdater.updateCurrentUserProfile(context, self);
         DatabaseInitiator.initAll(context);
+        BroadcastsFragment.needInitFetchBroadcast = true;
     }
 
     public static void sendVerifyCode(AppCompatActivity activity, String email) {

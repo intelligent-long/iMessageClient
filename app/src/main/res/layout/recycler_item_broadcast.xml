@@ -557,8 +557,9 @@
 
         <LinearLayout
             android:id="@+id/layout_like"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:minWidth="40dp"
             android:gravity="start|center_vertical">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -575,8 +576,7 @@
                 android:id="@+id/like_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#56636F"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
         <View
@@ -586,8 +586,9 @@
 
         <LinearLayout
             android:id="@+id/layout_comment"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:minWidth="40dp"
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -604,8 +605,7 @@
                 android:id="@+id/comment_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#56636F"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
         <View

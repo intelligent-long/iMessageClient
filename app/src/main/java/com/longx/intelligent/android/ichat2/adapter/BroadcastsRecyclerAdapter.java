@@ -271,6 +271,13 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);
         }
 
+        if(itemData.broadcast.getLikeCount() > 0){
+            holder.binding.likeCount.setText(String.valueOf(itemData.broadcast.getLikeCount()));
+            holder.binding.likeCount.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.likeCount.setVisibility(View.GONE);
+        }
+
         setupYiers(holder, position);
     }
 
@@ -410,7 +417,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 ConfirmDialog confirmDialog = new ConfirmDialog(activity);
                 confirmDialog.setNegativeButton(null);
                 confirmDialog.setPositiveButton((dialog, which) -> {
-                    BroadcastApiCaller.deleteBroadcast((LifecycleOwner) activity, itemData.broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
+                    BroadcastApiCaller.deleteBroadcast(activity, itemData.broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
                         @Override
                         public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                             super.ok(data, raw, call);
@@ -443,9 +450,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
-                            holder.binding.like.setImageResource(R.drawable.favorite_fill_broadcast_liked_24px);
                             Broadcast broadcast = data.getData(Broadcast.class);
                             updateOneBroadcast(broadcast, false);
+                            holder.binding.like.setImageResource(R.drawable.favorite_fill_broadcast_liked_24px);
+                            if(itemDataList.get(position).broadcast.getLikeCount() > 0){
+                                holder.binding.likeCount.setText(String.valueOf(itemDataList.get(position).broadcast.getLikeCount()));
+                                holder.binding.likeCount.setVisibility(View.VISIBLE);
+                            }else {
+                                holder.binding.likeCount.setVisibility(View.GONE);
+                            }
                             GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
                                 broadcastUpdateYiers.forEach(broadcastUpdateYier -> {
                                     if(!broadcastUpdateYier.equals(ignoreUpdateBroadcastInteractionsBroadcastUpdateYier)) {
@@ -453,8 +466,13 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                                     }
                                 });
                             });
-                            UiUtil.setViewEnabled(holder.binding.like, true, false);
                         });
+                    }
+
+                    @Override
+                    public synchronized void complete(Call<OperationData> call) {
+                        super.complete(call);
+                        UiUtil.setViewEnabled(holder.binding.like, true, false);
                     }
                 });
             }else {
@@ -463,9 +481,15 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
-                            holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);
                             Broadcast broadcast = data.getData(Broadcast.class);
                             updateOneBroadcast(broadcast, false);
+                            holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);
+                            if(itemDataList.get(position).broadcast.getLikeCount() > 0){
+                                holder.binding.likeCount.setText(String.valueOf(itemDataList.get(position).broadcast.getLikeCount()));
+                                holder.binding.likeCount.setVisibility(View.VISIBLE);
+                            }else {
+                                holder.binding.likeCount.setVisibility(View.GONE);
+                            }
                             GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
                                 broadcastUpdateYiers.forEach(broadcastUpdateYier -> {
                                     if(!broadcastUpdateYier.equals(ignoreUpdateBroadcastInteractionsBroadcastUpdateYier)) {
@@ -473,8 +497,13 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                                     }
                                 });
                             });
-                            UiUtil.setViewEnabled(holder.binding.like, true, false);
                         });
+                    }
+
+                    @Override
+                    public synchronized void complete(Call<OperationData> call) {
+                        super.complete(call);
+                        UiUtil.setViewEnabled(holder.binding.like, true, false);
                     }
                 });
             }

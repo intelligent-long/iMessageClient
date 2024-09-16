@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
     private Badge channelNavBadge;
+    private Badge broadcastNavBadge;
     private MenuItem lastBottomNavSelectedItem;
 
     @Override
@@ -437,6 +438,20 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
     }
 
+    public synchronized void showNavigationBroadcastBadge(){
+        if(broadcastNavBadge == null) {
+            @SuppressLint("RestrictedApi") View view = ((BottomNavigationMenuView) binding.bottomNavigation.getChildAt(0)).getChildAt(2);
+            broadcastNavBadge = BadgeDisplayer.initIndicatorBadge(this, view, Gravity.START | Gravity.BOTTOM, 73, 56, true);
+        }
+    }
+
+    public synchronized void hideNavigationBroadcastBadge(){
+        if(broadcastNavBadge != null) {
+            broadcastNavBadge.hide(true);
+            broadcastNavBadge = null;
+        }
+    }
+
     @Override
     public void showNewContentBadge(ID id, int newContentCount) {
         switch (id){
@@ -462,6 +477,12 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                     hideNavigationChannelBadge();
                 }
                 break;
+            case BROADCAST_LIKES:
+                if(newContentCount > 0){
+                    showNavigationBroadcastBadge();
+                }else {
+                    hideNavigationBroadcastBadge();
+                }
         }
     }
 
