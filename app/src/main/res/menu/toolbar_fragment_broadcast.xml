@@ -8,9 +8,9 @@
         app:showAsAction="always"
         app:actionLayout="@layout/layout_broadcast_interaction_notification"/>
 
-    <item
-        android:id="@+id/send_broadcast"
-        android:title="发送广播"
-        android:icon="@drawable/wifi_tethering_24px"
-        app:showAsAction="always"/>
+<!--    <item-->
+<!--        android:id="@+id/send_broadcast"-->
+<!--        android:title="发送广播"-->
+<!--        android:icon="@drawable/wifi_tethering_24px"-->
+<!--        app:showAsAction="always"/>-->
 </menu>

@@ -106,7 +106,7 @@ public class ChannelAdditionPendingFragment extends Fragment implements ChannelA
                 pendingChannelAdditions.add(channelAdditionInfo);
             }
         });
-        if(pendingChannelAdditions.size() == 0){
+        if(pendingChannelAdditions.isEmpty()){
             if(!fetchingVisible) toNoContentVisible();
         }else {
             if(!fetchingVisible) toRecyclerViewVisible();

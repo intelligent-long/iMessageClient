@@ -273,23 +273,35 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         binding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
                 binding.sendBroadcastFab.show();
-                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(false);
+//                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(false);
+                binding.sendBroadcastButton.setVisibility(View.GONE);
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 0), layoutParams.bottomMargin);
                 binding.toStartFab.show();
             } else if (verticalOffset == 0) {
                 binding.sendBroadcastFab.hide();
-                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
+//                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
+                binding.sendBroadcastButton.setVisibility(View.VISIBLE);
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 155), layoutParams.bottomMargin);
                 binding.toStartFab.hide();
             } else {
                 binding.sendBroadcastFab.hide();
-                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
+//                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
+                binding.sendBroadcastButton.setVisibility(View.VISIBLE);
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 155), layoutParams.bottomMargin);
                 binding.toStartFab.hide();
             }
         });
-        binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.send_broadcast){
-                startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
-            }
-            return false;
+//        binding.toolbar.setOnMenuItemClickListener(item -> {
+//            if(item.getItemId() == R.id.send_broadcast){
+//                startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
+//            }
+//            return false;
+//        });
+        binding.sendBroadcastButton.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
         });
         View actionView = binding.toolbar.getMenu().findItem(R.id.interaction_notification).getActionView();
         if(actionView != null){
