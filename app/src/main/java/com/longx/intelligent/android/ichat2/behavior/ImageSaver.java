@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,11 @@ public class ImageSaver {
     private static Uri saveImageForApiQAndAbove(Context context, File sourceImageFile, String saveFileName, String dcimRelativePath) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, saveFileName);
-        contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
+        String mimeType = URLConnection.guessContentTypeFromName(saveFileName);
+        if (mimeType == null) {
+            mimeType = "image/jpeg";
+        }
+        contentValues.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
         contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + File.separator + dcimRelativePath);
         contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1);
         Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
