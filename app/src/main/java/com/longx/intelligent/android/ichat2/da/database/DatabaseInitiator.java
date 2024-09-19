@@ -3,6 +3,7 @@ package com.longx.intelligent.android.ichat2.da.database;
 import android.content.Context;
 
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 
 /**
@@ -12,5 +13,6 @@ public class DatabaseInitiator {
     public static void initAll(Context context){
         ChannelDatabaseManager.init(context);
         OpenedChatDatabaseManager.init(context);
+        ChatMessageDatabaseManager.clearInstances();
     }
 }

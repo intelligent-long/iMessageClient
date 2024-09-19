@@ -29,6 +29,10 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         super(helper);
     }
 
+    public static void clearInstances(){
+        instanceMap.clear();
+    }
+
     private synchronized static void initInstance(Context context, String channelIchatId) {
         ChatMessageDatabaseHelper chatMessageDatabaseHelper = new ChatMessageDatabaseHelper(context, channelIchatId, SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId());
         ChatMessageDatabaseManager messageDatabaseManager = new ChatMessageDatabaseManager(chatMessageDatabaseHelper);
