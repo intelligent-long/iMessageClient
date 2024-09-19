@@ -10,6 +10,7 @@ import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.EditBroadcastPostBody;
+import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -32,6 +33,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
+import retrofit2.http.Body;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -222,6 +224,12 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> fetchBroadcast(LifecycleOwner lifecycleOwner, String broadcastId, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchBroadcast(broadcastId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> makeBroadcastLikesToOld(LifecycleOwner lifecycleOwner, MakeBroadcastLikesToOldPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().makeBroadcastLikesToOld(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

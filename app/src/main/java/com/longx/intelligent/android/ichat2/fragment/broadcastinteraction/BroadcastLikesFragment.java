@@ -13,15 +13,18 @@ import android.view.ViewGroup;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastLikesRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
+import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastLikesBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastLikesRecyclerFooterBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -34,6 +37,7 @@ public class BroadcastLikesFragment extends Fragment {
     private BroadcastLikesRecyclerAdapter adapter;
     private CountDownLatch NEXT_PAGE_LATCH;
     private boolean stopFetchNextPage;
+    private List<BroadcastLike> makedToOldBroadcastLikes = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,13 @@ public class BroadcastLikesFragment extends Fragment {
                         nextPage();
                     }
                 }
+            }
+        });
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                makeBroadcastLikesToOldOnServer();
             }
         });
     }
@@ -153,5 +164,29 @@ public class BroadcastLikesFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    private void makeBroadcastLikesToOldOnServer() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+        int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        List<String> toMakeToOldBroadcastLikeIds = new ArrayList<>();
+        for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+            try {
+                BroadcastLike broadcastLike = adapter.getItemDataList().get(i).getBroadcastLike();
+                if (broadcastLike.isNew()) {
+                    if (!makedToOldBroadcastLikes.contains(broadcastLike)) {
+                        toMakeToOldBroadcastLikeIds.add(broadcastLike.getLikeId());
+                        makedToOldBroadcastLikes.add(broadcastLike);
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+                ErrorLogger.log(e);
+            }
+        }
+        if (!toMakeToOldBroadcastLikeIds.isEmpty()) {
+            MakeBroadcastLikesToOldPostBody postBody = new MakeBroadcastLikesToOldPostBody(toMakeToOldBroadcastLikeIds);
+            BroadcastApiCaller.makeBroadcastLikesToOld(requireActivity(), postBody, new RetrofitApiCaller.BaseCommonYier<>(requireActivity()));
+        }
     }
 }

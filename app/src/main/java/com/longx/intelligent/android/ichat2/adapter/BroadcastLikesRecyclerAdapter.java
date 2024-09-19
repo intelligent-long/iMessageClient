@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
@@ -114,6 +115,7 @@ public class BroadcastLikesRecyclerAdapter extends WrappableRecyclerViewAdapter<
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void addItemsToEndAndShow(List<BroadcastLike> broadcastLikes){
         broadcastLikes.sort((o1, o2) -> - o1.getLikeTime().compareTo(o2.getLikeTime()));
         broadcastLikes.forEach(broadcastLike -> itemDataList.add(new ItemData(broadcastLike)));
