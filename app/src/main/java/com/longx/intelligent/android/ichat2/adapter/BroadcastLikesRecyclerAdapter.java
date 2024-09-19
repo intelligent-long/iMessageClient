@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -18,6 +21,7 @@ import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -98,9 +102,20 @@ public class BroadcastLikesRecyclerAdapter extends WrappableRecyclerViewAdapter<
                 .into(holder.binding.broadcastCover);
         holder.binding.broadcastTime.setText(TimeUtil.formatRelativeTime(broadcastLike.getBroadcastTime()));
         holder.binding.broadcastText.setText(broadcastLike.getBroadcastText());
+        setupYiers(holder, position);
+    }
+
+    private void setupYiers(ViewHolder holder, int position) {
+        BroadcastLike broadcastLike = itemDataList.get(position).broadcastLike;
+        holder.binding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(activity, BroadcastActivity.class);
+            intent.putExtra(ExtraKeys.BROADCAST_ID, broadcastLike.getBroadcastId());
+            activity.startActivity(intent);
+        });
     }
 
     public void addItemsToEndAndShow(List<BroadcastLike> broadcastLikes){
+        broadcastLikes.sort((o1, o2) -> - o1.getLikeTime().compareTo(o2.getLikeTime()));
         broadcastLikes.forEach(broadcastLike -> itemDataList.add(new ItemData(broadcastLike)));
         notifyDataSetChanged();
     }

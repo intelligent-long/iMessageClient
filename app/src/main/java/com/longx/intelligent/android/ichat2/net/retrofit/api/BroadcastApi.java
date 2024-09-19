@@ -62,4 +62,7 @@ public interface BroadcastApi {
 
     @GET("broadcast/like/limit")
     CompletableCall<PaginatedOperationData<BroadcastLike>> fetchLikesOfSelfBroadcasts(@Query("last_like_id") String lastLikeId, @Query("ps") int ps);
+
+    @GET("broadcast/{broadcastId}")
+    CompletableCall<OperationData> fetchBroadcast(@Path("broadcastId") String broadcastId);
 }

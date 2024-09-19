@@ -13,5 +13,5 @@
     <color name="chat_message_send_background_blue">#71B9F0</color>
     <color name="negative_red">#FF2637</color>
     <color name="divider">#D1D1D1</color>
-    <color name="broadcast_liked">#FF1A47</color>
+    <color name="broadcast_liked">#F7113F</color>
 </resources>

@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastLikesRecy
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -42,10 +43,29 @@ public class BroadcastLikesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentBroadcastLikesBinding.inflate(inflater, container, false);
-        footerBinding = LayoutBroadcastLikesRecyclerFooterBinding.inflate(inflater, container, false);
+        footerBinding = LayoutBroadcastLikesRecyclerFooterBinding.inflate(inflater, binding.getRoot(), false);
         init();
         fetchAndShowContent();
+        setupYiers();
         return binding.getRoot();
+    }
+
+    private void setupYiers() {
+        binding.recyclerView.addOnApproachEdgeYier(7, new RecyclerView.OnApproachEdgeYier() {
+            @Override
+            public void onApproachStart() {
+
+            }
+
+            @Override
+            public void onApproachEnd() {
+                if(!stopFetchNextPage) {
+                    if(NEXT_PAGE_LATCH == null || NEXT_PAGE_LATCH.getCount() == 0) {
+                        nextPage();
+                    }
+                }
+            }
+        });
     }
 
     private void init() {
@@ -66,6 +86,47 @@ public class BroadcastLikesFragment extends Fragment {
             lastLikeId = adapter.getItemDataList().get(adapter.getItemCount() - 1).getBroadcastLike().getLikeId();
         }
         BroadcastApiCaller.fetchLikesOfSelfBroadcasts(this, lastLikeId, Constants.FETCH_BROADCAST_LIKES_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(){
+
+            @Override
+            public void start(Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.start(call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadFailedView.setVisibility(View.GONE);
+                footerBinding.loadFailedText.setText(null);
+                footerBinding.loadIndicator.setVisibility(View.VISIBLE);
+                footerBinding.noContentView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void complete(Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.complete(call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadIndicator.setVisibility(View.GONE);
+                NEXT_PAGE_LATCH.countDown();
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<PaginatedOperationData<BroadcastLike>> row, Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.notOk(code, message, row, call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                footerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
+                footerBinding.noContentView.setVisibility(View.GONE);
+                binding.recyclerView.scrollToEnd(false);
+                stopFetchNextPage = true;
+            }
+
+            @Override
+            public void failure(Throwable t, Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.failure(t, call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadFailedView.setVisibility(View.VISIBLE);
+                footerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
+                footerBinding.noContentView.setVisibility(View.GONE);
+                binding.recyclerView.scrollToEnd(false);
+                stopFetchNextPage = true;
+            }
+
             @Override
             public void ok(PaginatedOperationData<BroadcastLike> data, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
                 super.ok(data, raw, call);
@@ -75,10 +136,10 @@ public class BroadcastLikesFragment extends Fragment {
                     List<BroadcastLike> broadcastLikeList = data.getData();
                     adapter.addItemsToEndAndShow(broadcastLikeList);
                 }, new OperationStatus.HandleResult(-102, () -> {
-//                    footerBinding.loadFailedView.setVisibility(View.GONE);
-//                    footerBinding.loadFailedText.setText(null);
-//                    footerBinding.loadIndicator.setVisibility(View.GONE);
-//                    footerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+                    footerBinding.loadFailedView.setVisibility(View.GONE);
+                    footerBinding.loadFailedText.setText(null);
+                    footerBinding.loadIndicator.setVisibility(View.GONE);
+                    footerBinding.noContentView.setVisibility(View.VISIBLE);
                 }));
             }
         });
@@ -87,7 +148,7 @@ public class BroadcastLikesFragment extends Fragment {
     private boolean breakFetchNextPage(Call<PaginatedOperationData<BroadcastLike>> call) {
         if(stopFetchNextPage) {
             call.cancel();
-//            footerBinding.loadIndicator.setVisibility(View.GONE);
+            footerBinding.loadIndicator.setVisibility(View.GONE);
             if(NEXT_PAGE_LATCH != null && NEXT_PAGE_LATCH.getCount() == 1) NEXT_PAGE_LATCH.countDown();
             return true;
         }

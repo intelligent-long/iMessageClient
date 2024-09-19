@@ -41,4 +41,5 @@ public class ExtraKeys {
     public static final String GLIDE_LOAD = "glide_load";
     public static final String REMOVE = "remove";
     public static final String MEDIA_TYPE = "media_type";
+    public static final String BROADCAST_ID = "broadcast_id";
 }

@@ -59,9 +59,31 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
-        showContent();
-        setupYiers();
-        GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
+        if(broadcast != null) {
+            showContent();
+            setupYiers();
+            GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
+        }else {
+            binding.scrollView.setVisibility(View.GONE);
+            String broadcastId = getIntent().getStringExtra(ExtraKeys.BROADCAST_ID);
+            if(broadcastId != null){
+                BroadcastApiCaller.fetchBroadcast(this, broadcastId, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                            binding.scrollView.setVisibility(View.VISIBLE);
+                            broadcast = data.getData(Broadcast.class);
+                            showContent();
+                            setupYiers();
+                            GlobalYiersHolder.holdYier(BroadcastActivity.this, BroadcastUpdateYier.class, BroadcastActivity.this);
+                        }, new OperationStatus.HandleResult(-101, () -> {
+                            binding.noBroadcast.setVisibility(View.VISIBLE);
+                        }));
+                    }
+                });
+            }
+        }
     }
 
     @Override

@@ -18,7 +18,18 @@
             android:layout_height="?attr/actionBarSize"/>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <TextView
+        android:id="@+id/no_broadcast"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="21sp"
+        android:textColor="?attr/colorOutline"
+        android:text="没有广播"/>
+
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar">
