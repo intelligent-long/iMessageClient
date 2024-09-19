@@ -35,4 +35,5 @@ public class Constants {
     public static final int MAX_BROADCAST_TEXT_LENGTH = 1000;
     public static final int EDIT_BROADCAST_MEDIA_COLUMN_COUNT = 3;
     public static final int RECENT_BROADCAST_MEDIAS_SHOW_ITEM_SIZE = 4;
+    public static final int FETCH_BROADCAST_LIKES_PAGE_SIZE = 30;
 }

@@ -133,13 +133,11 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         if (avatarHash == null) {
             GlideApp
                     .with(activity.getApplicationContext())
-                    .asBitmap()
                     .load(R.drawable.default_avatar)
                     .into(holder.binding.avatar);
         } else {
             GlideApp
                     .with(activity.getApplicationContext())
-                    .asBitmap()
                     .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
                     .into(holder.binding.avatar);
         }

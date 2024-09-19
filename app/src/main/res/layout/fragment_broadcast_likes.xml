@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.broadcastinteraction.BroadcastLikeFragment">
+    tools:context=".fragment.broadcastinteraction.BroadcastLikesFragment">
 
     <com.longx.intelligent.android.lib.recyclerview.RecyclerView
         android:id="@+id/recycler_view"

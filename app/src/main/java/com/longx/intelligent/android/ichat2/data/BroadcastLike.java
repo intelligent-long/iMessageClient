@@ -9,6 +9,7 @@ public class BroadcastLike {
     private String likeId;
     private String fromId;
     private String fromName;
+    private String avatarHash;
     private Date likeTime;
     private String broadcastId;
     private String broadcastText;
@@ -20,10 +21,11 @@ public class BroadcastLike {
     public BroadcastLike() {
     }
 
-    public BroadcastLike(String likeId, String fromId, String fromName, Date likeTime, String broadcastId, String broadcastText, Boolean broadcastDeleted, Date broadcastTime, String coverMediaId, Boolean isNew) {
+    public BroadcastLike(String likeId, String fromId, String fromName, String avatarHash, Date likeTime, String broadcastId, String broadcastText, Boolean broadcastDeleted, Date broadcastTime, String coverMediaId, Boolean isNew) {
         this.likeId = likeId;
         this.fromId = fromId;
         this.fromName = fromName;
+        this.avatarHash = avatarHash;
         this.likeTime = likeTime;
         this.broadcastId = broadcastId;
         this.broadcastText = broadcastText;
@@ -43,6 +45,10 @@ public class BroadcastLike {
 
     public String getFromName() {
         return fromName;
+    }
+
+    public String getAvatarHash() {
+        return avatarHash;
     }
 
     public Date getLikeTime() {

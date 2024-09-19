@@ -36,6 +36,11 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="BroadcastLikeCoverImageAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">25dp</item>
+    </style>
+
     <style name="MainActivityDrawerItemTextStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/black</item>
