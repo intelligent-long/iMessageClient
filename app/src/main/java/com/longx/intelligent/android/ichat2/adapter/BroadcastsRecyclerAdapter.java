@@ -210,15 +210,17 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 holder.binding.medias.setVisibility(View.GONE);
                 holder.binding.medias2To4.setVisibility(View.GONE);
                 holder.binding.mediaSingle.setVisibility(View.VISIBLE);
-                holder.binding.videoDurationSingle.setVisibility(View.VISIBLE);
-                holder.binding.videoDurationSingle.bringToFront();
                 BroadcastMedia broadcastMedia = broadcastMedias.get(0);
                 if(broadcastMedia.getType() == BroadcastMedia.TYPE_VIDEO) {
+                    holder.binding.videoDurationSingle.setVisibility(View.VISIBLE);
+                    holder.binding.videoDurationSingle.bringToFront();
                     if (broadcastMedia.getVideoDuration() != null) {
                         holder.binding.videoDurationSingle.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
                     } else {
                         holder.binding.videoDurationSingle.setText("video");
                     }
+                }else {
+                    holder.binding.videoDurationSingle.setVisibility(View.GONE);
                 }
                 Size size = broadcastMedia.getSize();
                 if(size != null) {
