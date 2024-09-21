@@ -63,6 +63,7 @@
     <string name="broadcast_interactions_activity_like">喜欢</string>
     <string name="broadcast_interactions_activity_comment">评论</string>
     <string name="broadcast_interactions_activity_reply">回复</string>
+    <string name="title_all_likes_of_broadcast">喜欢</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>

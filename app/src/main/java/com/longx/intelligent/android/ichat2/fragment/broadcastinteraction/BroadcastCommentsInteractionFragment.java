@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastCommentsBinding;
+import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastCommentsInteractionBinding;
 
-public class BroadcastCommentsFragment extends Fragment {
-    private FragmentBroadcastCommentsBinding binding;
+public class BroadcastCommentsInteractionFragment extends Fragment {
+    private FragmentBroadcastCommentsInteractionBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class BroadcastCommentsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentBroadcastCommentsBinding.inflate(inflater, container, false);
+        binding = FragmentBroadcastCommentsInteractionBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 }

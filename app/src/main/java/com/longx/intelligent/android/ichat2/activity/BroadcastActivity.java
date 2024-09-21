@@ -24,6 +24,8 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
+import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastLikePreviewItemBinding;
+import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastLikesAllButtonBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.CopyTextDialog;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
@@ -419,11 +421,66 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     }
 
     private void fetchAndShowLikesPreview() {
-        BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(this){
+        BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(this, false){
+            @Override
+            public void start(Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.start(call);
+                binding.likeLoadingIndicator.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void failure(Throwable t, Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.failure(t, call);
+                binding.likeLoadFailedText.setVisibility(View.VISIBLE);
+                binding.likeLoadFailedText.setText("出错了 > " + t.getClass().getName());
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.notOk(code, message, raw, call);
+                binding.likeLoadFailedText.setVisibility(View.VISIBLE);
+                binding.likeLoadFailedText.setText("HTTP 状态码异常 > " + code);
+            }
+
+            @Override
+            public void complete(Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.complete(call);
+                binding.likeLoadingIndicator.setVisibility(View.GONE);
+            }
+
             @Override
             public void ok(PaginatedOperationData<BroadcastLike> data, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
                 super.ok(data, raw, call);
-
+                data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                    List<BroadcastLike> broadcastLikeList = data.getData();
+                    broadcastLikeList.sort((o1, o2) -> - o1.getLikeTime().compareTo(o2.getLikeTime()));
+                    broadcastLikeList.forEach(broadcastLike -> {
+                        String channelName;
+                        Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastLike.getFromId());
+                        if(channel != null) {
+                            channelName = channel.getName();
+                        }else {
+                            channelName = broadcastLike.getFromName();
+                        }
+                        LayoutBroadcastLikePreviewItemBinding likePreviewItemBinding = LayoutBroadcastLikePreviewItemBinding.inflate(getLayoutInflater());
+                        likePreviewItemBinding.channelName.setText(channelName);
+                        binding.likeFlowLayout.addView(likePreviewItemBinding.getRoot());
+                        likePreviewItemBinding.clickView.setOnClickListener(v -> {
+                            Intent intent = new Intent(BroadcastActivity.this, ChannelActivity.class);
+                            intent.putExtra(ExtraKeys.ICHAT_ID, broadcastLike.getFromId());
+                            startActivity(intent);
+                        });
+                    });
+                    LayoutBroadcastLikesAllButtonBinding likesAllButtonBinding = LayoutBroadcastLikesAllButtonBinding.inflate(getLayoutInflater());
+                    binding.likeFlowLayout.addView(likesAllButtonBinding.getRoot());
+                    likesAllButtonBinding.clickView.setOnClickListener(v -> {
+                        Intent intent = new Intent(BroadcastActivity.this, BroadcastLikesActivity.class);
+                        intent.putExtra(ExtraKeys.BROADCAST, broadcast);
+                        startActivity(intent);
+                    });
+                }, new OperationStatus.HandleResult(-102, () -> {
+                    binding.layoutLike.setVisibility(View.GONE);
+                }));
             }
         });
     }

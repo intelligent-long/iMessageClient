@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.longx.intelligent.android.ichat2.adapter.BroadcastLikesRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.adapter.BroadcastLikesInteractionRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
-import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastLikesBinding;
+import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastLikesInteractionBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerFooterBroadcastLikesBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -31,10 +30,10 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastLikesFragment extends Fragment {
-    private FragmentBroadcastLikesBinding binding;
+public class BroadcastLikesInteractionFragment extends Fragment {
+    private FragmentBroadcastLikesInteractionBinding binding;
     private RecyclerFooterBroadcastLikesBinding footerBinding;
-    private BroadcastLikesRecyclerAdapter adapter;
+    private BroadcastLikesInteractionRecyclerAdapter adapter;
     private CountDownLatch NEXT_PAGE_LATCH;
     private boolean stopFetchNextPage;
     private List<BroadcastLike> makedToOldBroadcastLikes = new ArrayList<>();
@@ -46,7 +45,7 @@ public class BroadcastLikesFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentBroadcastLikesBinding.inflate(inflater, container, false);
+        binding = FragmentBroadcastLikesInteractionBinding.inflate(inflater, container, false);
         footerBinding = RecyclerFooterBroadcastLikesBinding.inflate(inflater, binding.getRoot(), false);
         init();
         fetchAndShowContent();
@@ -81,7 +80,7 @@ public class BroadcastLikesFragment extends Fragment {
 
     private void init() {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new BroadcastLikesRecyclerAdapter(requireActivity());
+        adapter = new BroadcastLikesInteractionRecyclerAdapter(requireActivity());
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setFooterView(footerBinding.getRoot());
     }
