@@ -95,7 +95,7 @@ public class BroadcastLikesInteractionFragment extends Fragment {
         if(adapter.getItemCount() > 0){
             lastLikeId = adapter.getItemDataList().get(adapter.getItemCount() - 1).getBroadcastLike().getLikeId();
         }
-        BroadcastApiCaller.fetchLikesOfSelfBroadcasts(this, lastLikeId, Constants.FETCH_BROADCAST_LIKES_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(){
+        BroadcastApiCaller.fetchLikesOfSelfBroadcasts(this, lastLikeId, Constants.FETCH_BROADCAST_LIKES_INTERACTION_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(){
 
             @Override
             public void start(Call<PaginatedOperationData<BroadcastLike>> call) {
