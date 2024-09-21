@@ -18,8 +18,8 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ChooseMediasRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChooseMediasBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryFooterBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutGalleryHeaderBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerFooterGalleryBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerHeaderGalleryBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.DirectoryInfo;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
@@ -44,8 +44,8 @@ import java.util.List;
 
 public class ChooseMediasActivity extends BaseActivity{
     private ActivityChooseMediasBinding binding;
-    private LayoutGalleryHeaderBinding headerBinding;
-    private LayoutGalleryFooterBinding footerBinding;
+    private RecyclerHeaderGalleryBinding headerBinding;
+    private RecyclerFooterGalleryBinding footerBinding;
     private MediaType mediaType;
     private ChooseMediasRecyclerAdapter adapter;
     private GridLayoutManager gridLayoutManager;
@@ -104,8 +104,8 @@ public class ChooseMediasActivity extends BaseActivity{
     }
 
     private void init() {
-        headerBinding = LayoutGalleryHeaderBinding.inflate(getLayoutInflater());
-        footerBinding = LayoutGalleryFooterBinding.inflate(getLayoutInflater());
+        headerBinding = RecyclerHeaderGalleryBinding.inflate(getLayoutInflater());
+        footerBinding = RecyclerFooterGalleryBinding.inflate(getLayoutInflater());
         spaceGridDecorationSetter = new SpaceGridDecorationSetter();
         locationNameSwitcher = new LocationNameSwitcher(this, binding.location);
         UiUtil.setViewHeight(footerBinding.navigationSpace, WindowAndSystemUiUtil.getNavigationBarHeight(this));

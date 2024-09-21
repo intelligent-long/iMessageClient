@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
+import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
@@ -111,6 +112,11 @@ public class BroadcastLikesRecyclerAdapter extends WrappableRecyclerViewAdapter<
         holder.binding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(activity, BroadcastActivity.class);
             intent.putExtra(ExtraKeys.BROADCAST_ID, broadcastLike.getBroadcastId());
+            activity.startActivity(intent);
+        });
+        holder.binding.avatar.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ChannelActivity.class);
+            intent.putExtra(ExtraKeys.ICHAT_ID, broadcastLike.getFromId());
             activity.startActivity(intent);
         });
     }

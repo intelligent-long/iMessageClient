@@ -16,11 +16,13 @@ import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseM
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
+import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.CopyTextDialog;
@@ -60,9 +62,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         setupDefaultBackNavigation(binding.toolbar);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
         if(broadcast != null) {
-            showContent();
-            setupYiers();
-            GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
+            initDo();
         }else {
             binding.scrollView.setVisibility(View.GONE);
             String broadcastId = getIntent().getStringExtra(ExtraKeys.BROADCAST_ID);
@@ -74,9 +74,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
                             binding.scrollView.setVisibility(View.VISIBLE);
                             broadcast = data.getData(Broadcast.class);
-                            showContent();
-                            setupYiers();
-                            GlobalYiersHolder.holdYier(BroadcastActivity.this, BroadcastUpdateYier.class, BroadcastActivity.this);
+                            initDo();
                         }, new OperationStatus.HandleResult(-101, () -> {
                             binding.noBroadcast.setVisibility(View.VISIBLE);
                         }));
@@ -84,6 +82,14 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 });
             }
         }
+    }
+
+    private void initDo() {
+        showContent();
+        setupYiers();
+        GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
+        fetchAndShowLikesPreview();
+        commentNextPage();
     }
 
     @Override
@@ -409,7 +415,20 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     @Override
     public void updateOneBroadcast(Broadcast newBroadcast) {
         broadcast = newBroadcast;
-        showContent();
-        setupYiers();
+        initDo();
+    }
+
+    private void fetchAndShowLikesPreview() {
+        BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(this){
+            @Override
+            public void ok(PaginatedOperationData<BroadcastLike> data, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
+                super.ok(data, raw, call);
+
+            }
+        });
+    }
+
+    private void commentNextPage() {
+
     }
 }

@@ -30,7 +30,7 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.adapter.ChannelsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.databinding.FragmentChannelsBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutChannelRecyclerViewHeaderBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerHeaderChannelBinding;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
@@ -44,7 +44,7 @@ import q.rorbin.badgeview.Badge;
 
 public class ChannelsFragment extends BaseMainFragment implements WrappableRecyclerViewAdapter.OnItemClickYier<ChannelsRecyclerAdapter.ItemData>, ContentUpdater.OnServerContentUpdateYier, NewContentBadgeDisplayYier {
     private FragmentChannelsBinding binding;
-    private LayoutChannelRecyclerViewHeaderBinding headerViewBinding;
+    private RecyclerHeaderChannelBinding headerViewBinding;
     private int channelAdditionActivitiesNewContentCount;
     private Badge newChannelBadge;
 
@@ -146,7 +146,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), this, itemDataList);
         channelsRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelsRecyclerAdapter);
-        headerViewBinding = LayoutChannelRecyclerViewHeaderBinding.inflate(inflater);
+        headerViewBinding = RecyclerHeaderChannelBinding.inflate(inflater);
         newChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
     }

@@ -58,15 +58,18 @@ public interface BroadcastApi {
     @POST("broadcast/like/cancel/{broadcastId}")
     CompletableCall<OperationData> cancelLikeBroadcast(@Path("broadcastId") String broadcastId);
 
-    @GET("broadcast/like/news_count")
+    @GET("broadcast/like/to_self/news_count")
     CompletableCall<OperationData> fetchBroadcastLikeNewsCount();
 
-    @GET("broadcast/like/limit")
+    @GET("broadcast/like/to_self/limit")
     CompletableCall<PaginatedOperationData<BroadcastLike>> fetchLikesOfSelfBroadcasts(@Query("last_like_id") String lastLikeId, @Query("ps") int ps);
 
     @GET("broadcast/{broadcastId}")
     CompletableCall<OperationData> fetchBroadcast(@Path("broadcastId") String broadcastId);
 
-    @POST("broadcast/like/to_old")
+    @POST("broadcast/like/to_self/to_old")
     CompletableCall<OperationStatus> makeBroadcastLikesToOld(@Body MakeBroadcastLikesToOldPostBody body);
+
+    @GET("broadcast/like/limit")
+    CompletableCall<PaginatedOperationData<BroadcastLike>> fetchLikesOfBroadcast(@Query("broadcast_id") String broadcastId, @Query("last_like_id") String lastLikeId, @Query("ps") int ps);
 }

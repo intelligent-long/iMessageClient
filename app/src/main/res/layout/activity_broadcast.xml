@@ -1141,6 +1141,57 @@
                     android:background="?attr/colorSurfaceContainerHighest"
                     android:alpha="0.9"/>
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/main_content">
+
+                <TextView
+                    android:id="@+id/like_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textFontWeight="@integer/font_weight_medium"
+                    android:text="喜欢"
+                    android:textSize="17sp" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/like_loading_indicator"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="10dp"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/like_load_failed_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:background="?attr/colorErrorContainer"
+                    android:textColor="?attr/colorOnErrorContainer"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+
+                <org.apmem.tools.layouts.FlowLayout
+                    android:id="@+id/like_flow_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="5dp" />
+
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.6dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="?attr/colorSurfaceContainerHighest"
+                    android:alpha="0.9"/>
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

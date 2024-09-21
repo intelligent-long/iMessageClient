@@ -19,8 +19,8 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastChannelBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerFooterBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerFooterBroadcastBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerHeaderBroadcastBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
@@ -46,8 +46,8 @@ import retrofit2.Response;
 
 public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastFetchNewsYier, BroadcastUpdateYier {
     private ActivityBroadcastChannelBinding binding;
-    private LayoutBroadcastRecyclerHeaderBinding headerBinding;
-    private LayoutBroadcastRecyclerFooterBinding footerBinding;
+    private RecyclerHeaderBroadcastBinding headerBinding;
+    private RecyclerFooterBroadcastBinding footerBinding;
     private BroadcastsRecyclerAdapter adapter;
     private Channel channel;
     private boolean willToStart;
@@ -61,8 +61,8 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityBroadcastChannelBinding.inflate(getLayoutInflater());
-        headerBinding = LayoutBroadcastRecyclerHeaderBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
-        footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
+        headerBinding = RecyclerHeaderBroadcastBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
+        footerBinding = RecyclerFooterBroadcastBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         intentData();

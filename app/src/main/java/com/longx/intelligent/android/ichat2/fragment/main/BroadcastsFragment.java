@@ -32,8 +32,8 @@ import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastsBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerFooterBinding;
-import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastRecyclerHeaderBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerFooterBroadcastBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerHeaderBroadcastBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
@@ -63,8 +63,8 @@ import retrofit2.Response;
 public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastUpdateYier, NewContentBadgeDisplayYier {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
-    private LayoutBroadcastRecyclerHeaderBinding headerBinding;
-    private LayoutBroadcastRecyclerFooterBinding footerBinding;
+    private RecyclerHeaderBroadcastBinding headerBinding;
+    private RecyclerFooterBroadcastBinding footerBinding;
     private boolean stopFetchNextPage;
     private CountDownLatch NEXT_PAGE_LATCH;
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
@@ -83,8 +83,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentBroadcastsBinding.inflate(inflater, container, false);
-        headerBinding = LayoutBroadcastRecyclerHeaderBinding.inflate(inflater, container, false);
-        footerBinding = LayoutBroadcastRecyclerFooterBinding.inflate(inflater, container, false);
+        headerBinding = RecyclerHeaderBroadcastBinding.inflate(inflater, container, false);
+        footerBinding = RecyclerFooterBroadcastBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
         restoreState(savedInstanceState);
@@ -295,14 +295,14 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 //                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
                 binding.sendBroadcastButton.setVisibility(View.VISIBLE);
                 ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
-                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 155), layoutParams.bottomMargin);
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 148.5F), layoutParams.bottomMargin);
                 binding.toStartFab.hide();
             } else {
                 binding.sendBroadcastFab.hide();
 //                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(true);
                 binding.sendBroadcastButton.setVisibility(View.VISIBLE);
                 ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
-                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 155), layoutParams.bottomMargin);
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 148.5F), layoutParams.bottomMargin);
                 binding.toStartFab.hide();
             }
         });
