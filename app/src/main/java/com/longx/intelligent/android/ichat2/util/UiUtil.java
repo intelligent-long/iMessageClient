@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -13,12 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Created by LONG on 2024/1/15 at 2:51 AM.
@@ -212,4 +208,46 @@ public class UiUtil {
     public static void setViewVisibility(View view, int visibility){
         if(view.getVisibility() != visibility) view.setVisibility(visibility);
     }
+
+    public static boolean isViewCovered(View view) {
+        View currentView = view;
+        while (currentView.getParent() instanceof ViewGroup) {
+            ViewGroup parent = (ViewGroup) currentView.getParent();
+            int index = parent.indexOfChild(currentView);
+
+            for (int i = index + 1; i < parent.getChildCount(); i++) {
+                View sibling = parent.getChildAt(i);
+                Rect viewRect = new Rect();
+                Rect siblingRect = new Rect();
+                view.getGlobalVisibleRect(viewRect);
+                sibling.getGlobalVisibleRect(siblingRect);
+
+                if (Rect.intersects(viewRect, siblingRect)) {
+                    return true;
+                }
+            }
+            currentView = parent;
+        }
+        return false;
+    }
+
+    public static boolean isViewOutOfScreen(View view) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        int viewLeft = location[0];
+        int viewRight = viewLeft + view.getWidth();
+        int viewTop = location[1];
+        int viewBottom = viewTop + view.getHeight();
+
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+
+        return viewRight <= 0 || viewLeft >= screenWidth || viewBottom <= 0 || viewTop >= screenHeight;
+    }
+
+    public static boolean isViewVisibleOnScreen(View view){
+        return !(isViewCovered(view) || isViewOutOfScreen(view));
+    }
+
 }

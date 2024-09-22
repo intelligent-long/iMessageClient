@@ -40,6 +40,7 @@ import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
@@ -360,6 +361,17 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 });
             }
         });
+        binding.comment.getViewTreeObserver().addOnScrollChangedListener(this::checkAndShowOrHideFab);
+        binding.comment.post(this::checkAndShowOrHideFab);
+    }
+
+    private void checkAndShowOrHideFab() {
+        boolean viewVisibleOnScreen = UiUtil.isViewVisibleOnScreen(binding.comment);
+        if(viewVisibleOnScreen){
+            binding.fab.hide();
+        }else {
+            binding.fab.show();
+        }
     }
 
     private void setupAndStartMediaActivity(int position){

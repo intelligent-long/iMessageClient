@@ -1206,4 +1206,17 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/fab_margin_end"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:contentDescription="评论"
+        app:icon="@drawable/mode_comment_outline_24px"
+        android:text="评论"
+        android:visibility="gone"/>
 </RelativeLayout>
