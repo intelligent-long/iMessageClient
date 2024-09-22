@@ -269,7 +269,26 @@ public class ChooseMediasActivity extends BaseActivity{
 
     private void showTotalSize(){
         int imagesCount = MediaStoreHelper.getImagesCount(this, currentDirectoryPath, false);
-        footerBinding.total.setText(imagesCount + "张照片");
+        int videoCount = MediaStoreHelper.getVideoCount(this, currentDirectoryPath, false);
+        String text = "";
+        if(mediaType == null){
+            if(imagesCount > 0 && videoCount > 0){
+                text = imagesCount + "张图片、" + videoCount + "个视频";
+            }else if(imagesCount > 0){
+                text = imagesCount + "张图片";
+            }else if(videoCount > 0){
+                text = videoCount + "个视频";
+            }
+        }else if(mediaType.equals(MediaType.IMAGE)){
+            if(imagesCount > 0){
+                text = imagesCount + "张图片";
+            }
+        }else if(mediaType.equals(MediaType.VIDEO)){
+            if(videoCount > 0){
+                text = videoCount + "个视频";
+            }
+        }
+        footerBinding.total.setText(text);
     }
 
     private void updateInfos() {
