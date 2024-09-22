@@ -78,6 +78,16 @@
                         android:textSize="14sp"
                         android:layout_below="@id/name"
                         android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        android:id="@+id/last_edit_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOutline"
+                        android:textSize="14sp"
+                        android:layout_below="@id/time"
+                        android:layout_marginTop="5dp"
+                        android:visibility="gone"/>
                 </RelativeLayout>
             </RelativeLayout>
 

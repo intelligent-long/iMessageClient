@@ -141,7 +141,11 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
                     .into(holder.binding.avatar);
         }
-        holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.broadcast.getTime()));
+        if(itemData.broadcast.getLastEditTime() != null){
+            holder.binding.time.setText("编辑于 " + TimeUtil.formatRelativeTime(itemData.broadcast.getLastEditTime()));
+        }else {
+            holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.broadcast.getTime()));
+        }
         if(itemData.broadcast.getText() != null) {
             holder.binding.text.setVisibility(View.VISIBLE);
             holder.binding.text.setText(itemData.broadcast.getText());

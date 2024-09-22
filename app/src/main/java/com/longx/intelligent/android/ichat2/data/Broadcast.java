@@ -16,6 +16,7 @@ public class Broadcast implements Parcelable {
     private String broadcastId;
     private String ichatId;
     private Date time;
+    private Date lastEditTime;
     private String text;
     private List<BroadcastMedia> broadcastMedias = new ArrayList<>();
     private boolean liked;
@@ -24,10 +25,11 @@ public class Broadcast implements Parcelable {
     public Broadcast() {
     }
 
-    public Broadcast(String broadcastId, String ichatId, Date time, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount) {
+    public Broadcast(String broadcastId, String ichatId, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount) {
         this.broadcastId = broadcastId;
         this.ichatId = ichatId;
         this.time = time;
+        this.lastEditTime = lastEditTime;
         this.text = text;
         this.broadcastMedias = broadcastMedias;
         this.liked = liked;
@@ -44,6 +46,10 @@ public class Broadcast implements Parcelable {
 
     public Date getTime() {
         return time;
+    }
+
+    public Date getLastEditTime() {
+        return lastEditTime;
     }
 
     public String getText() {
@@ -83,6 +89,8 @@ public class Broadcast implements Parcelable {
         broadcastId = in.readString();
         ichatId = in.readString();
         time = new Date(in.readLong());
+        long l = in.readLong();
+        lastEditTime = l == -1 ? null : new Date(l);
         text = in.readString();
         in.readTypedList(broadcastMedias, BroadcastMedia.CREATOR);
         liked = in.readInt() == 1;
@@ -94,6 +102,7 @@ public class Broadcast implements Parcelable {
         dest.writeString(broadcastId);
         dest.writeString(ichatId);
         dest.writeLong(time.getTime());
+        dest.writeLong(lastEditTime == null ? -1 : lastEditTime.getTime());
         dest.writeString(text);
         dest.writeTypedList(broadcastMedias);
         dest.writeInt(liked ? 1 : 0);
@@ -106,6 +115,7 @@ public class Broadcast implements Parcelable {
                 "broadcastId='" + broadcastId + '\'' +
                 ", ichatId='" + ichatId + '\'' +
                 ", time=" + time +
+                ", lastEditTime=" + lastEditTime +
                 ", text='" + text + '\'' +
                 ", broadcastMedias=" + broadcastMedias +
                 ", liked=" + liked +

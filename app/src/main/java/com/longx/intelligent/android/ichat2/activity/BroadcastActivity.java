@@ -129,6 +129,10 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                     .into(binding.avatar);
         }
         binding.time.setText(TimeUtil.formatRelativeTime(broadcast.getTime()));
+        if(broadcast.getLastEditTime() != null){
+            binding.lastEditTime.setText("编辑于 " + TimeUtil.formatRelativeTime(broadcast.getLastEditTime()));
+            binding.lastEditTime.setVisibility(View.VISIBLE);
+        }
         if(broadcast.getText() != null) {
             binding.text.setVisibility(View.VISIBLE);
             binding.text.setText(broadcast.getText());
