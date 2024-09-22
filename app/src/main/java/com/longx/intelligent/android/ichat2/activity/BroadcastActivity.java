@@ -368,9 +368,9 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private void checkAndShowOrHideFab() {
         boolean viewVisibleOnScreen = UiUtil.isViewVisibleOnScreen(binding.comment);
         if(viewVisibleOnScreen){
-            binding.fab.hide();
+            binding.commentFab.hide();
         }else {
-            binding.fab.show();
+            binding.commentFab.show();
         }
     }
 
