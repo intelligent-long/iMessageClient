@@ -44,6 +44,7 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ import retrofit2.Response;
 public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYier {
     private ActivityBroadcastBinding binding;
     private Broadcast broadcast;
+    private boolean onComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -363,9 +365,23 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         });
         binding.comment.getViewTreeObserver().addOnScrollChangedListener(this::checkAndShowOrHideFab);
         binding.comment.post(this::checkAndShowOrHideFab);
+        binding.comment.setOnClickListener(v -> startComment());
+        binding.commentFab.setOnClickListener(v -> startComment());
+        new KeyboardVisibilityYier(this).setYier(new KeyboardVisibilityYier.Yier() {
+            @Override
+            public void onKeyboardOpened() {
+
+            }
+
+            @Override
+            public void onKeyboardClosed() {
+                endComment();
+            }
+        });
     }
 
     private void checkAndShowOrHideFab() {
+        if(onComment) return;
         boolean viewVisibleOnScreen = UiUtil.isViewVisibleOnScreen(binding.comment);
         if(viewVisibleOnScreen){
             binding.commentFab.hide();
@@ -503,5 +519,18 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
     private void commentNextPage() {
 
+    }
+
+    private void startComment(){
+        onComment = true;
+        binding.sendCommentBar.setVisibility(View.VISIBLE);
+        binding.commentFab.setVisibility(View.GONE);
+        UiUtil.openKeyboard(binding.commentInput);
+    }
+
+    private void endComment(){
+        onComment = false;
+        binding.sendCommentBar.setVisibility(View.GONE);
+        checkAndShowOrHideFab();
     }
 }

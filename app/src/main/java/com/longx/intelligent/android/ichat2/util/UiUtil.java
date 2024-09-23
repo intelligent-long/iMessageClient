@@ -211,25 +211,33 @@ public class UiUtil {
 
     public static boolean isViewCovered(View view) {
         View currentView = view;
+
         while (currentView.getParent() instanceof ViewGroup) {
             ViewGroup parent = (ViewGroup) currentView.getParent();
             int index = parent.indexOfChild(currentView);
 
             for (int i = index + 1; i < parent.getChildCount(); i++) {
                 View sibling = parent.getChildAt(i);
-                Rect viewRect = new Rect();
-                Rect siblingRect = new Rect();
-                view.getGlobalVisibleRect(viewRect);
-                sibling.getGlobalVisibleRect(siblingRect);
 
-                if (Rect.intersects(viewRect, siblingRect)) {
-                    return true;
+                if (sibling.getVisibility() == View.VISIBLE) {
+                    Rect viewRect = new Rect();
+                    Rect siblingRect = new Rect();
+
+                    view.getGlobalVisibleRect(viewRect);
+                    sibling.getGlobalVisibleRect(siblingRect);
+
+                    if (Rect.intersects(viewRect, siblingRect)) {
+                        return true;
+                    }
                 }
             }
+
             currentView = parent;
         }
+
         return false;
     }
+
 
     public static boolean isViewOutOfScreen(View view) {
         int[] location = new int[2];
@@ -247,7 +255,9 @@ public class UiUtil {
     }
 
     public static boolean isViewVisibleOnScreen(View view){
-        return !(isViewCovered(view) || isViewOutOfScreen(view));
+        boolean viewCovered = isViewCovered(view);
+        boolean viewOutOfScreen = isViewOutOfScreen(view);
+        return !(viewCovered || viewOutOfScreen);
     }
 
 }

@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
+import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -68,8 +69,11 @@ public interface BroadcastApi {
     CompletableCall<OperationData> fetchBroadcast(@Path("broadcastId") String broadcastId);
 
     @POST("broadcast/like/to_self/to_old")
-    CompletableCall<OperationStatus> makeBroadcastLikesToOld(@Body MakeBroadcastLikesToOldPostBody body);
+    CompletableCall<OperationStatus> makeBroadcastLikesToOld(@Body MakeBroadcastLikesToOldPostBody postBody);
 
     @GET("broadcast/like/limit")
     CompletableCall<PaginatedOperationData<BroadcastLike>> fetchLikesOfBroadcast(@Query("broadcast_id") String broadcastId, @Query("last_like_id") String lastLikeId, @Query("ps") int ps);
+
+    @POST("broadcast/comment")
+    CompletableCall<OperationData> commentBroadcast(@Body CommentBroadcastPostBody postBody);
 }
