@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.request.EditBroadcastPostBody;
@@ -243,6 +244,12 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> commentBroadcast(LifecycleOwner lifecycleOwner, CommentBroadcastPostBody postBody, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().commentBroadcast(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<PaginatedOperationData<BroadcastComment>> fetchCommentsOfBroadcast(LifecycleOwner lifecycleOwner, String broadcastId, String lastCommentId, int ps, BaseYier<PaginatedOperationData<BroadcastComment>> yier){
+        CompletableCall<PaginatedOperationData<BroadcastComment>> call = getApiImplementation().fetchCommentsOfBroadcast(broadcastId, lastCommentId, ps);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

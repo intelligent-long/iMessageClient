@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
@@ -63,6 +64,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityBroadcastBinding.inflate(getLayoutInflater());
+        setAutoCancelInput(false);
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
@@ -379,7 +381,32 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             }
         });
         binding.sendCommentButton.setOnClickListener(v -> {
+            String commentText = UiUtil.getEditTextString(binding.commentInput);
+            if(commentText == null || commentText.isEmpty()) return;
+            CommentBroadcastPostBody postBody = new CommentBroadcastPostBody(broadcast.getBroadcastId(), commentText, null);
+            BroadcastApiCaller.commentBroadcast(BroadcastActivity.this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+                @Override
+                public void start(Call<OperationData> call) {
+                    super.start(call);
+                    binding.sendCommentButton.setVisibility(View.GONE);
+                    binding.sendCommentIndicator.setVisibility(View.VISIBLE);
+                }
 
+                @Override
+                public void complete(Call<OperationData> call) {
+                    super.complete(call);
+                    binding.sendCommentButton.setVisibility(View.VISIBLE);
+                    binding.sendCommentIndicator.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+
+                    });
+                }
+            });
         });
     }
 

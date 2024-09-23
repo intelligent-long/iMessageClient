@@ -28,7 +28,7 @@
         android:textColor="?attr/colorOutline"
         android:text="没有广播"/>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -1082,7 +1082,6 @@
                         android:layout_weight="1"/>
 
                     <LinearLayout
-                        android:id="@+id/layout_comment"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:gravity="center">
@@ -1205,8 +1204,42 @@
                     android:background="?attr/colorSurfaceContainerHighest"
                     android:alpha="0.9"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/layout_like">
+
+                <TextView
+                    android:id="@+id/comment_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:textFontWeight="@integer/font_weight_medium"
+                    android:text="评论"
+                    android:textSize="17sp" />
+
+                <com.longx.intelligent.android.lib.recyclerview.RecyclerView
+                    android:id="@+id/comment_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="5dp"/>
+
+                <View
+                    android:id="@+id/divider5"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.6dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="?attr/colorSurfaceContainerHighest"
+                    android:alpha="0.9"/>
+            </LinearLayout>
         </RelativeLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/comment_fab"
