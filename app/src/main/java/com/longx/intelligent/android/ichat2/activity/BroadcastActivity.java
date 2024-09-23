@@ -66,6 +66,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
+        GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
         if(broadcast != null) {
             initDo();
         }else {
@@ -92,7 +93,6 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private void initDo() {
         showContent();
         setupYiers();
-        GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
         fetchAndShowLikesPreview();
         commentNextPage();
     }
@@ -378,6 +378,9 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 endComment();
             }
         });
+        binding.sendCommentButton.setOnClickListener(v -> {
+
+        });
     }
 
     private void checkAndShowOrHideFab() {
@@ -453,6 +456,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     }
 
     private void fetchAndShowLikesPreview() {
+        binding.likeFlowLayout.removeAllViews();
         BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(this, false){
             @Override
             public void start(Call<PaginatedOperationData<BroadcastLike>> call) {
