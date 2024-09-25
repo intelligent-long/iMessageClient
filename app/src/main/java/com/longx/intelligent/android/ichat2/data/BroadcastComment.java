@@ -95,8 +95,12 @@ public class BroadcastComment {
         return broadcastDeleted;
     }
 
-    public Boolean getNew() {
+    public Boolean isNew() {
         return isNew;
+    }
+
+    public void setNew(Boolean isNew) {
+        this.isNew = isNew;
     }
 
     public void setBroadcastText(String broadcastText) {

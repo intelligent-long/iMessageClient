@@ -3,19 +3,24 @@ package com.longx.intelligent.android.ichat2.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.adapter.BroadcastCommentsLinearLayoutViews;
+import com.longx.intelligent.android.ichat2.adapter.BroadcastCommentsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -27,6 +32,7 @@ import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastLikePreviewItemBinding;
 import com.longx.intelligent.android.ichat2.databinding.LayoutBroadcastLikesAllButtonBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerFooterBroadcastCommentsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.CopyTextDialog;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
@@ -42,15 +48,18 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.ResourceUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
+import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -59,6 +68,10 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private ActivityBroadcastBinding binding;
     private Broadcast broadcast;
     private boolean onComment;
+    private BroadcastCommentsLinearLayoutViews commentsLinearLayoutViews;
+    private RecyclerFooterBroadcastCommentsBinding footerBinding;
+    private CountDownLatch NEXT_PAGE_LATCH;
+    private boolean stopFetchNextPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +81,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
+        init();
         GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
         if(broadcast != null) {
             initDo();
@@ -90,6 +104,12 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 });
             }
         }
+    }
+
+    private void init(){
+        commentsLinearLayoutViews = new BroadcastCommentsLinearLayoutViews(this, binding.commentView);
+        footerBinding = RecyclerFooterBroadcastCommentsBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
+        commentsLinearLayoutViews.setFooter(footerBinding.getRoot());
     }
 
     private void initDo() {
@@ -408,6 +428,18 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 }
             });
         });
+        binding.scrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            int height = binding.scrollView.getHeight();
+            View content = binding.scrollView.getChildAt(0);
+            int totalHeight = content.getHeight();
+            if (scrollY + height >= totalHeight - 300) {
+                if(!stopFetchNextPage) {
+                    if(NEXT_PAGE_LATCH == null || NEXT_PAGE_LATCH.getCount() == 0) {
+                        commentNextPage();
+                    }
+                }
+            }
+        });
     }
 
     private void checkAndShowOrHideFab() {
@@ -548,10 +580,6 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         });
     }
 
-    private void commentNextPage() {
-
-    }
-
     private void startComment(){
         onComment = true;
         binding.sendCommentBar.setVisibility(View.VISIBLE);
@@ -562,6 +590,75 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private void endComment(){
         onComment = false;
         binding.sendCommentBar.setVisibility(View.GONE);
-        checkAndShowOrHideFab();
+        new Handler().postDelayed(this::checkAndShowOrHideFab, 300);
+    }
+
+    private void commentNextPage() {
+        NEXT_PAGE_LATCH = new CountDownLatch(1);
+        String lastCommentId = null;
+        if(!commentsLinearLayoutViews.getAllItems().isEmpty()){
+            lastCommentId = commentsLinearLayoutViews.getAllItems().get(commentsLinearLayoutViews.getAllItems().size() - 1).getCommentId();
+        }
+        BroadcastApiCaller.fetchCommentsOfBroadcast(this, broadcast.getBroadcastId(), lastCommentId, Constants.FETCH_BROADCAST_COMMENTS_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastComment>>(){
+            @Override
+            public void start(Call<PaginatedOperationData<BroadcastComment>> call) {
+                super.start(call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadFailedText.setVisibility(View.GONE);
+                footerBinding.loadFailedText.setText(null);
+                footerBinding.loadingIndicator.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void complete(Call<PaginatedOperationData<BroadcastComment>> call) {
+                super.complete(call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadingIndicator.setVisibility(View.GONE);
+                NEXT_PAGE_LATCH.countDown();
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<PaginatedOperationData<BroadcastComment>> row, Call<PaginatedOperationData<BroadcastComment>> call) {
+                super.notOk(code, message, row, call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadFailedText.setVisibility(View.VISIBLE);
+                footerBinding.loadFailedText.setText("HTTP 状态码异常 > " + code);
+                binding.scrollView.scrollTo(0, binding.scrollView.getChildAt(0).getHeight());
+                stopFetchNextPage = true;
+            }
+
+            @Override
+            public void failure(Throwable t, Call<PaginatedOperationData<BroadcastComment>> call) {
+                super.failure(t, call);
+                if (breakFetchNextPage(call)) return;
+                footerBinding.loadFailedText.setVisibility(View.VISIBLE);
+                footerBinding.loadFailedText.setText("出错了 > " + t.getClass().getName());
+                binding.scrollView.scrollTo(0, binding.scrollView.getChildAt(0).getHeight());
+                stopFetchNextPage = true;
+            }
+
+            @Override
+            public void ok(PaginatedOperationData<BroadcastComment> data, Response<PaginatedOperationData<BroadcastComment>> raw, Call<PaginatedOperationData<BroadcastComment>> call) {
+                super.ok(data, raw, call);
+                data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                    if (breakFetchNextPage(call)) return;
+                    stopFetchNextPage = !raw.body().hasMore();
+                    List<BroadcastComment> broadcastCommentList = data.getData();
+                    commentsLinearLayoutViews.addItemsAndShow(broadcastCommentList);
+                }, new OperationStatus.HandleResult(-102, () -> {
+                    binding.layoutComment.setVisibility(View.GONE);
+                }));
+            }
+        });
+    }
+
+    private boolean breakFetchNextPage(Call<PaginatedOperationData<BroadcastComment>> call) {
+        if(stopFetchNextPage) {
+            call.cancel();
+            footerBinding.loadingIndicator.setVisibility(View.GONE);
+            if(NEXT_PAGE_LATCH != null && NEXT_PAGE_LATCH.getCount() == 1) NEXT_PAGE_LATCH.countDown();
+            return true;
+        }
+        return false;
     }
 }

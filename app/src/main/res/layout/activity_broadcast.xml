@@ -1222,21 +1222,14 @@
                     android:text="评论"
                     android:textSize="17sp" />
 
-                <com.longx.intelligent.android.lib.recyclerview.RecyclerView
-                    android:id="@+id/comment_recycler_view"
+                <LinearLayout
+                    android:id="@+id/comment_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
                     android:layout_marginTop="2dp"
-                    android:layout_marginBottom="5dp"/>
-
-                <View
-                    android:id="@+id/divider5"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.6dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="?attr/colorSurfaceContainerHighest"
-                    android:alpha="0.9"/>
+                    android:layout_marginBottom="5dp"
+                    android:orientation="vertical" />
             </LinearLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
