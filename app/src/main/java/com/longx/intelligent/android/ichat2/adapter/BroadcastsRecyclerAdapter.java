@@ -524,6 +524,12 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 });
             }
         });
+        holder.binding.comment.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, BroadcastActivity.class);
+            intent.putExtra(ExtraKeys.BROADCAST, itemData.broadcast);
+            intent.putExtra(ExtraKeys.DO_THAT_THING, true);
+            activity.startActivity(intent);
+        });
     }
 
     private void sortItemDataList(List<ItemData> itemDataList){

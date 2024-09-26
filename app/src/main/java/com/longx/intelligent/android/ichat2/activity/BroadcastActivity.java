@@ -105,6 +105,10 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 });
             }
         }
+        boolean startComment = getIntent().getBooleanExtra(ExtraKeys.DO_THAT_THING, false);
+        if(startComment){
+            binding.commentInput.postDelayed(this::startComment, 900);
+        }
     }
 
     private void init(){
@@ -458,11 +462,17 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
     private void checkAndShowOrHideFab() {
         if(onComment) return;
-        boolean viewVisibleOnScreen = UiUtil.isViewVisibleOnScreen(binding.comment);
-        if(viewVisibleOnScreen){
+        View view = binding.scrollView.getChildAt(0);
+        int diff = (view.getBottom() - (binding.scrollView.getHeight() + binding.scrollView.getScrollY()));
+        if (diff == 0) {
             binding.commentFab.hide();
         }else {
-            binding.commentFab.show();
+            boolean viewVisibleOnScreen = UiUtil.isViewVisibleOnScreen(binding.comment);
+            if (viewVisibleOnScreen) {
+                binding.commentFab.hide();
+            } else {
+                binding.commentFab.show();
+            }
         }
     }
 
