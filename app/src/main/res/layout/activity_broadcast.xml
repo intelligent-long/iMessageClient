@@ -1268,7 +1268,7 @@
             android:maxHeight="200dp"
             android:minHeight="48dp"
             android:layout_toStartOf="@id/buttons"
-            android:paddingVertical="10dp"
+            android:paddingVertical="22dp"
             android:textCursorDrawable="@drawable/shape_chat_message_cursor"/>
 
         <FrameLayout

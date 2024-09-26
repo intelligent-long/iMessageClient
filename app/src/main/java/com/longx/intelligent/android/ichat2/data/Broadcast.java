@@ -21,11 +21,13 @@ public class Broadcast implements Parcelable {
     private List<BroadcastMedia> broadcastMedias = new ArrayList<>();
     private boolean liked;
     private int likeCount;
+    private boolean commented;
+    private int commentCount;
 
     public Broadcast() {
     }
 
-    public Broadcast(String broadcastId, String ichatId, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount) {
+    public Broadcast(String broadcastId, String ichatId, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount, boolean commented, int commentCount) {
         this.broadcastId = broadcastId;
         this.ichatId = ichatId;
         this.time = time;
@@ -34,6 +36,8 @@ public class Broadcast implements Parcelable {
         this.broadcastMedias = broadcastMedias;
         this.liked = liked;
         this.likeCount = likeCount;
+        this.commented = commented;
+        this.commentCount = commentCount;
     }
 
     public String getBroadcastId() {
@@ -68,6 +72,14 @@ public class Broadcast implements Parcelable {
         return likeCount;
     }
 
+    public boolean isCommented() {
+        return commented;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
     public static final Creator<Broadcast> CREATOR = new Creator<Broadcast>() {
         @Override
         public Broadcast createFromParcel(Parcel in) {
@@ -95,6 +107,8 @@ public class Broadcast implements Parcelable {
         in.readTypedList(broadcastMedias, BroadcastMedia.CREATOR);
         liked = in.readInt() == 1;
         likeCount = in.readInt();
+        commented = in.readInt() == 1;
+        commentCount = in.readInt();
     }
 
     @Override
@@ -107,6 +121,8 @@ public class Broadcast implements Parcelable {
         dest.writeTypedList(broadcastMedias);
         dest.writeInt(liked ? 1 : 0);
         dest.writeInt(likeCount);
+        dest.writeInt(commented ? 1 : 0);
+        dest.writeInt(commentCount);
     }
 
     @Override
@@ -120,6 +136,8 @@ public class Broadcast implements Parcelable {
                 ", broadcastMedias=" + broadcastMedias +
                 ", liked=" + liked +
                 ", likeCount=" + likeCount +
+                ", commented=" + commented +
+                ", commentCount=" + commentCount +
                 '}';
     }
 }

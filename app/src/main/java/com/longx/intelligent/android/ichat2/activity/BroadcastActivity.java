@@ -282,6 +282,12 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             binding.like.setImageResource(R.drawable.favorite_outline_24px);
         }
         binding.likeCount.setText(String.valueOf(broadcast.getLikeCount()));
+        if(broadcast.isCommented()){
+            binding.comment.setImageResource(R.drawable.mode_comment_fill_24px);
+        }else {
+            binding.comment.setImageResource(R.drawable.mode_comment_outline_24px);
+        }
+        binding.commentCount.setText(String.valueOf(broadcast.getCommentCount()));
     }
 
     private void setupYiers() {

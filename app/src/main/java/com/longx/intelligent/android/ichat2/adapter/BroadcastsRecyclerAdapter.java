@@ -282,6 +282,18 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.likeCount.setVisibility(View.GONE);
         }
 
+        if(itemData.broadcast.isCommented()){
+            holder.binding.comment.setImageResource(R.drawable.mode_comment_fill_24px);
+        }else {
+            holder.binding.comment.setImageResource(R.drawable.mode_comment_outline_24px);
+        }
+
+        if(itemData.broadcast.getCommentCount() > 0){
+            holder.binding.commentCount.setText(String.valueOf(itemData.broadcast.getCommentCount()));
+            holder.binding.commentCount.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.commentCount.setVisibility(View.GONE);
+        }
         setupYiers(holder, position);
     }
 
