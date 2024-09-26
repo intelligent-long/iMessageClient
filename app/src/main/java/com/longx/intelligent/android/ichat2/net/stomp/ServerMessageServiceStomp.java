@@ -108,6 +108,12 @@ public class ServerMessageServiceStomp {
         stomp.subscribe(StompDestinations.BROADCASTS_LIKES_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateNewBroadcastLikesCount(context);
         });
+        stomp.subscribe(StompDestinations.BROADCASTS_COMMENTS_UPDATE, null, message -> {
+
+        });
+        stomp.subscribe(StompDestinations.BROADCASTS_REPLIES_UPDATE, null, message -> {
+
+        });
     }
 
     public static synchronized boolean isConnected(){

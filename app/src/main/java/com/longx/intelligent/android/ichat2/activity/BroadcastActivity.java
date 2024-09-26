@@ -54,6 +54,7 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
+import com.xcheng.retrofit.CompletableCall;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -429,7 +430,14 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
-
+                        broadcast = data.getData(Broadcast.class);
+                        showContent();
+                        setupYiers();
+                        commentsLinearLayoutViews.clear();
+                        stopFetchNextPage = false;
+                        GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                            broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
+                        });
                     });
                 }
             });
