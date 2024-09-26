@@ -109,7 +109,7 @@ public class ServerMessageServiceStomp {
             ServerMessageServiceStompActions.updateNewBroadcastLikesCount(context);
         });
         stomp.subscribe(StompDestinations.BROADCASTS_COMMENTS_UPDATE, null, message -> {
-
+            ServerMessageServiceStompActions.updateNewBroadcastCommentsCount(context);
         });
         stomp.subscribe(StompDestinations.BROADCASTS_REPLIES_UPDATE, null, message -> {
 

@@ -8,7 +8,7 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
  * Created by LONG on 2024/5/3 at 3:58 PM.
  */
 public interface NewContentBadgeDisplayYier {
-    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES}
+    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES, BROADCAST_COMMENTS}
 
     static int getChannelAdditionActivitiesNewContentCount(Context context){
         return SharedPreferencesAccessor.NewContentCount.getChannelAdditionActivitiesRequester(context)
@@ -16,8 +16,11 @@ public interface NewContentBadgeDisplayYier {
     }
 
     static int getBroadcastLikesNewsCount(Context context){
-        int likeNewsCount = SharedPreferencesAccessor.NewContentCount.getBroadcastLikeNewsCount(context);
-        return likeNewsCount;
+        return SharedPreferencesAccessor.NewContentCount.getBroadcastLikeNewsCount(context);
+    }
+
+    static int getBroadcastCommentsNewsCount(Context context){
+        return SharedPreferencesAccessor.NewContentCount.getBroadcastCommentNewsCount(context);
     }
 
     default void autoShowNewContentBadge(Context context, ID id){
@@ -29,8 +32,10 @@ public interface NewContentBadgeDisplayYier {
                 showNewContentBadge(id, -1);
                 break;
             case BROADCAST_LIKES:
-                showNewContentBadge(id, getBroadcastLikesNewsCount(context));
+            case BROADCAST_COMMENTS:
+                showNewContentBadge(id, getBroadcastLikesNewsCount(context) + getBroadcastCommentsNewsCount(context));
                 break;
+
         }
     }
 

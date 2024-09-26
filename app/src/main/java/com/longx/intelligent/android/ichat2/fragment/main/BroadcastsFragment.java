@@ -94,6 +94,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastUpdateYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
+        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_COMMENTS);
         if(needInitFetchBroadcast) {
             fetchAndRefreshBroadcasts(true);
         }else if(needReFetchBroadcast) {
@@ -111,6 +112,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.removeYier(requireContext(), BroadcastDeletedYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), BroadcastUpdateYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
+        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_COMMENTS);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -620,7 +622,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     @Override
     public void showNewContentBadge(ID id, int newContentCount) {
-        if(id.equals(ID.BROADCAST_LIKES)){
+        if(id.equals(ID.BROADCAST_LIKES) || id.equals(ID.BROADCAST_COMMENTS)){
             newInteractionsBadge.setBadgeNumber(newContentCount);
         }
     }

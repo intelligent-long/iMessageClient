@@ -403,6 +403,7 @@ public class SharedPreferencesAccessor {
             private static final String CHANNEL_ADDITION_ACTIVITIES_REQUESTER = "channel_addition_activities_requester";
             private static final String CHANNEL_ADDITION_ACTIVITIES_RESPONDER = "channel_addition_activities_responder";
             private static final String BROADCAST_LIKE_NEWS_COUNT = "broadcast_like_news_count";
+            private static final String BROADCAST_COMMENT_NEWS_COUNT = "broadcast_comment_news_count";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -436,6 +437,18 @@ public class SharedPreferencesAccessor {
         public static int getBroadcastLikeNewsCount(Context context){
             return getSharedPreferences(context)
                     .getInt(Key.BROADCAST_LIKE_NEWS_COUNT, 0);
+        }
+
+        public static void saveBroadcastCommentNewsCount(Context context, int newsCount){
+            getSharedPreferences(context)
+                    .edit()
+                    .putInt(Key.BROADCAST_COMMENT_NEWS_COUNT, newsCount)
+                    .apply();
+        }
+
+        public static int getBroadcastCommentNewsCount(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.BROADCAST_COMMENT_NEWS_COUNT, 0);
         }
     }
 

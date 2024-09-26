@@ -254,4 +254,10 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationData> fetchBroadcastCommentNewsCount(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchBroadcastCommentNewsCount();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

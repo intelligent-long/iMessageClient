@@ -55,6 +55,7 @@ public class ContentUpdater {
         String ID_CHANNEL_TAGS = "channel_tags";
         String ID_RECENT_BROADCAST_MEDIAS = "recent_broadcast_medias";
         String ID_BROADCAST_LIKE_NEWS_COUNT = "broadcast_like_news_count";
+        String ID_BROADCAST_COMMENT_NEWS_COUNT = "broadcast_comment_news_count";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -272,6 +273,20 @@ public class ContentUpdater {
                 data.commonHandleSuccessResult(() -> {
                     Integer newsCount = data.getData(Integer.class);
                     SharedPreferencesAccessor.NewContentCount.saveBroadcastLikeNewsCount(context, newsCount);
+                    resultsYier.onResults(newsCount);
+                });
+            }
+        });
+    }
+
+    public static void updateNewBroadcastCommentsCount(Context context, ResultsYier resultsYier){
+        BroadcastApiCaller.fetchBroadcastCommentNewsCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_BROADCAST_COMMENT_NEWS_COUNT, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleSuccessResult(() -> {
+                    Integer newsCount = data.getData(Integer.class);
+                    SharedPreferencesAccessor.NewContentCount.saveBroadcastCommentNewsCount(context, newsCount);
                     resultsYier.onResults(newsCount);
                 });
             }
