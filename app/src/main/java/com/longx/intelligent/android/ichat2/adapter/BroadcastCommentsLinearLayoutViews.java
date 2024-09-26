@@ -17,6 +17,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 /**
  * Created by LONG on 2024/9/25 at 下午2:27.
@@ -54,8 +55,10 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
         String currentUserIchatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId();
         if(currentUserIchatId.equals(broadcastComment.getFromId())){
             binding.layoutDeleteComment.setVisibility(View.VISIBLE);
+            UiUtil.setViewWidth(binding.space, UiUtil.dpToPx(activity, 15));
         }else {
             binding.layoutDeleteComment.setVisibility(View.GONE);
+            UiUtil.setViewWidth(binding.space, UiUtil.dpToPx(activity, 21));
         }
         setupYiers(binding, broadcastComment, activity);
         return binding.getRoot();
