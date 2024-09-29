@@ -201,7 +201,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void showRecentBroadcastMedias() {
-        List<RecentBroadcastMedia> recentBroadcastMedias = ChannelDatabaseManager.getInstance().findRecentBroadcastMedias(isSelf ? self.getIchatId() : ichatId);
+        List<RecentBroadcastMedia> recentBroadcastMedias = ChannelDatabaseManager.getInstance().findRecentBroadcastMedias(isSelf ? self.getIchatId() : getIchatId());
         if(recentBroadcastMedias.isEmpty()){
             binding.layoutBroadcastWithMedias.setVisibility(View.GONE);
             binding.layoutBroadcastNoMedias.setVisibility(View.VISIBLE);
@@ -238,6 +238,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                 }
             }
         }
+    }
+
+    private String getIchatId() {
+        return ichatId == null ? channel.getIchatId() : ichatId;
     }
 
     private void setupYiers() {
@@ -303,7 +307,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             }
         }
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNELS)){
-            showOrFetchAndShow(ichatId == null ? channel.getIchatId() : ichatId);
+            showOrFetchAndShow(getIchatId());
         }
     }
 
