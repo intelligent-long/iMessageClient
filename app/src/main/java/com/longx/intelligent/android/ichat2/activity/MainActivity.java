@@ -478,11 +478,13 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 }
                 break;
             case BROADCAST_LIKES:
+            case BROADCAST_COMMENTS:
                 if(newContentCount > 0){
                     showNavigationBroadcastBadge();
                 }else {
                     hideNavigationBroadcastBadge();
                 }
+                break;
         }
     }
 

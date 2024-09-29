@@ -12,6 +12,7 @@ import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.request.EditBroadcastPostBody;
+import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -263,6 +264,12 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<PaginatedOperationData<BroadcastComment>> fetchCommentsOfSelfBroadcasts(LifecycleOwner lifecycleOwner, String lastCommentId, int ps, BaseYier<PaginatedOperationData<BroadcastComment>> yier){
         CompletableCall<PaginatedOperationData<BroadcastComment>> call = getApiImplementation().fetchCommentsOfSelfBroadcasts(lastCommentId, ps);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> makeBroadcastCommentsToOld(LifecycleOwner lifecycleOwner, MakeBroadcastCommentsToOldPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().makeBroadcastCommentsToOld(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

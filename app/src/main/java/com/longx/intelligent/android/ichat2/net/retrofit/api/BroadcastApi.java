@@ -4,6 +4,7 @@ import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBody;
+import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -88,4 +89,7 @@ public interface BroadcastApi {
 
     @GET("broadcast/comment/to_self/limit")
     CompletableCall<PaginatedOperationData<BroadcastComment>> fetchCommentsOfSelfBroadcasts(@Query("last_comment_id") String lastCommentId, @Query("ps") int ps);
+
+    @POST("broadcast/comment/to_self/to_old")
+    CompletableCall<OperationStatus> makeBroadcastCommentsToOld(@Body MakeBroadcastCommentsToOldPostBody postBody);
 }
