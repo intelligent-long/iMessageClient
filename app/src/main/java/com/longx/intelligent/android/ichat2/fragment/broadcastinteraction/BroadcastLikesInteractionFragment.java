@@ -16,7 +16,7 @@ import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOld
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.databinding.FragmentBroadcastLikesInteractionBinding;
-import com.longx.intelligent.android.ichat2.databinding.RecyclerFooterBroadcastLikesBinding;
+import com.longx.intelligent.android.ichat2.databinding.RecyclerFooterBroadcastLikesInteractionBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
@@ -32,7 +32,7 @@ import retrofit2.Response;
 
 public class BroadcastLikesInteractionFragment extends Fragment {
     private FragmentBroadcastLikesInteractionBinding binding;
-    private RecyclerFooterBroadcastLikesBinding footerBinding;
+    private RecyclerFooterBroadcastLikesInteractionBinding footerBinding;
     private BroadcastLikesInteractionRecyclerAdapter adapter;
     private CountDownLatch NEXT_PAGE_LATCH;
     private boolean stopFetchNextPage;
@@ -46,7 +46,7 @@ public class BroadcastLikesInteractionFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentBroadcastLikesInteractionBinding.inflate(inflater, container, false);
-        footerBinding = RecyclerFooterBroadcastLikesBinding.inflate(inflater, binding.getRoot(), false);
+        footerBinding = RecyclerFooterBroadcastLikesInteractionBinding.inflate(inflater, binding.getRoot(), false);
         init();
         fetchAndShowContent();
         setupYiers();

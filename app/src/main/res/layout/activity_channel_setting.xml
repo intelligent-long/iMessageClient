@@ -179,23 +179,24 @@
                 android:textSize="21sp"
                 android:text="广播权限"/>
         </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/delete_channel"
-            style="@style/Widget.Material3.Button.TonalButton.Icon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="18dp"
-            android:layout_marginVertical="8dp"
-            android:layout_marginHorizontal="21dp"
-            app:icon="@drawable/person_remove_fill_24px"
-            app:iconTint="@color/negative_red"
-            app:iconSize="24dp"
-            app:iconGravity="textStart"
-            app:iconPadding="8dp"
-            android:text="删除频道"
-            android:textSize="20sp"
-            android:textColor="@color/negative_red"
-            android:backgroundTint="?attr/colorSurfaceContainer" />
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/delete_channel"
+        style="@style/Widget.Material3.Button.TonalButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="18dp"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="21dp"
+        android:layout_gravity="bottom"
+        app:icon="@drawable/person_remove_fill_24px"
+        app:iconTint="@color/negative_red"
+        app:iconSize="24dp"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        android:text="删除频道"
+        android:textSize="20sp"
+        android:textColor="@color/negative_red"
+        android:backgroundTint="?attr/colorSurfaceContainer" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

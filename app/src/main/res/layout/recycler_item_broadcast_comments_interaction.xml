@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="19dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="21dp"
+        app:shapeAppearanceOverlay="@style/CircleImageAppearance"/>
+
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/avatar">
+
+        <RelativeLayout
+            android:id="@+id/name_and_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/time_and_badge"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <LinearLayout
+                android:id="@+id/time_and_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true">
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOutline"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/badge"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@drawable/shape_red_badge"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:ellipsize="end"
+            android:maxLines="11"
+            android:letterSpacing="0.007"
+            android:lineSpacingMultiplier="1.2"
+            android:breakStrategy="simple"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_broadcast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_card_background_low_radius_25">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/broadcast_cover"
+                android:layout_width="77dp"
+                android:layout_height="77dp"
+                app:shapeAppearanceOverlay="@style/BroadcastLikeCoverImageAppearance" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:layout_toEndOf="@id/broadcast_cover">
+
+                <TextView
+                    android:id="@+id/broadcast_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="top"
+                    android:textColor="?attr/colorOutline"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/broadcast_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textSize="17sp"
+                    android:ellipsize="end"
+                    android:maxLines="6"
+                    android:letterSpacing="0.007"
+                    android:lineSpacingMultiplier="1.2"
+                    android:breakStrategy="simple" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

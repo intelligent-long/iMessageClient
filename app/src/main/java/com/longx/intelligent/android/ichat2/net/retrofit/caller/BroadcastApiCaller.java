@@ -260,4 +260,10 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<PaginatedOperationData<BroadcastComment>> fetchCommentsOfSelfBroadcasts(LifecycleOwner lifecycleOwner, String lastCommentId, int ps, BaseYier<PaginatedOperationData<BroadcastComment>> yier){
+        CompletableCall<PaginatedOperationData<BroadcastComment>> call = getApiImplementation().fetchCommentsOfSelfBroadcasts(lastCommentId, ps);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

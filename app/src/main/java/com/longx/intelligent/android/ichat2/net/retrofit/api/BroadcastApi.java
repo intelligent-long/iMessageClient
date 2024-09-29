@@ -85,4 +85,7 @@ public interface BroadcastApi {
 
     @GET("broadcast/comment/to_self/news_count")
     CompletableCall<OperationData> fetchBroadcastCommentNewsCount();
+
+    @GET("broadcast/comment/to_self/limit")
+    CompletableCall<PaginatedOperationData<BroadcastComment>> fetchCommentsOfSelfBroadcasts(@Query("last_comment_id") String lastCommentId, @Query("ps") int ps);
 }
