@@ -29,7 +29,7 @@ public class AuthMoreOperationBottomSheet extends AbstractBottomSheet{
     private void setupListeners() {
         binding.serverSetting.setOnClickListener(v -> {
             dismiss();
-            new ServerSettingDialog(getActivity()).show();
+            new ServerSettingDialog(getActivity()).forShow();
         });
         binding.softwareUpdate.setOnClickListener(v -> {
             dismiss();

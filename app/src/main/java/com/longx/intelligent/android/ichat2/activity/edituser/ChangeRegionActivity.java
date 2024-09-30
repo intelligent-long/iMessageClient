@@ -56,7 +56,7 @@ public class ChangeRegionActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeRegionActivity.this, new int[]{-101, -102, -103, -104, -105}, () -> {
-                            new MessageDialog(ChangeRegionActivity.this, "修改成功").show();
+                            new MessageDialog(ChangeRegionActivity.this, "修改成功").forShow();
                         });
                     }
                 });

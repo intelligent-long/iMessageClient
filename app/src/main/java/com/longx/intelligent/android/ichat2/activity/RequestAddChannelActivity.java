@@ -85,12 +85,12 @@ public class RequestAddChannelActivity extends BaseActivity {
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                 super.ok(data, raw, call);
                                 data.commonHandleResult(RequestAddChannelActivity.this, new int[]{-101, -102, -103, -104}, () -> {
-                                    new MessageDialog(RequestAddChannelActivity.this, "发送请求", "已发送添加频道请求").show();
+                                    new MessageDialog(RequestAddChannelActivity.this, "发送请求", "已发送添加频道请求").forShow();
                                 });
                             }
                         });
                     })
-                    .show();
+                    .forShow();
         });
         binding.clickViewPresettingTag.setOnClickListener(v -> {
             Intent intent = new Intent(this, PresettingChannelTagActivity.class);

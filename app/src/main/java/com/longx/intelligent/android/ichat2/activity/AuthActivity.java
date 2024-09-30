@@ -270,7 +270,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                                 toEmailLoginWay(true);
                                 showLogin();
                             })
-                            .show();
+                            .forShow();
                 });
             }
         });
@@ -288,7 +288,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(AuthActivity.this, new int[]{-101, -102}, () -> {
-                        new MessageDialog(AuthActivity.this, "修改成功").show();
+                        new MessageDialog(AuthActivity.this, "修改成功").forShow();
                     });
                 }
             });
@@ -299,7 +299,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(AuthActivity.this, new int[]{-101, -102}, () -> {
-                        new MessageDialog(AuthActivity.this, "修改成功").show();
+                        new MessageDialog(AuthActivity.this, "修改成功").forShow();
                     });
                 }
             });
@@ -374,7 +374,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
         });
         needShowOfflineDetails.sort(Comparator.comparing(OfflineDetail::getTime));
         needShowOfflineDetails.forEach(needShowOfflineDetail -> {
-            new MessageDialog(this, "登陆会话已失效", needShowOfflineDetail.getDesc()).show();
+            new MessageDialog(this, "登陆会话已失效", needShowOfflineDetail.getDesc()).forShow();
             SharedPreferencesAccessor.AuthPref.saveShowedOfflineDetailTime(this, needShowOfflineDetail.getTime());
         });
     }

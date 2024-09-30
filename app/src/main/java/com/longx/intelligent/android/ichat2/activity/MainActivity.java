@@ -128,7 +128,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                         .setNeutralButton("忽略", (dialog, which) -> {
                             SharedPreferencesAccessor.DefaultPref.disableRequestIgnoreBatteryOptimize(this);
                         })
-                        .show();
+                        .forShow();
             }
         }
         List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();

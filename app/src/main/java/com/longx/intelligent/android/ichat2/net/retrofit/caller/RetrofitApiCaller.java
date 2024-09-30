@@ -196,7 +196,7 @@ public abstract class RetrofitApiCaller {
                     call.cancel();
                     onCancel();
                 });
-                operatingDialog.show();
+                operatingDialog.forShow();
             });
         }
 
@@ -285,7 +285,7 @@ public abstract class RetrofitApiCaller {
                             setBeCanceled(true);
                             call.cancel();
                         });
-                        operatingDialog.show();
+                        operatingDialog.forShow();
                     }
                 }
             });
@@ -321,7 +321,7 @@ public abstract class RetrofitApiCaller {
                     call.cancel();
                     onCancel();
                 });
-                progressOperatingDialog.show();
+                progressOperatingDialog.forShow();
             }
         }
 

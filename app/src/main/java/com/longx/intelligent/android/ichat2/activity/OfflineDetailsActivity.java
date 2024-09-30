@@ -1,12 +1,8 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -40,7 +36,7 @@ public class OfflineDetailsActivity extends BaseActivity {
                             SharedPreferencesAccessor.ApiJson.OfflineDetails.clearRecords(this);
                             showContent();
                         })
-                        .show();
+                        .forShow();
             }
             return true;
         });

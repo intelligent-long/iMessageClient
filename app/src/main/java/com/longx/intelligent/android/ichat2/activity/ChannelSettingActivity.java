@@ -101,11 +101,11 @@ public class ChannelSettingActivity extends BaseActivity {
                                         .setPositiveButton((dialog1, which1) -> {
                                             deleteChannel();
                                         })
-                                        .show();
+                                        .forShow();
                             }
                         }, 150);
                     })
-                    .show();
+                    .forShow();
         });
         binding.clickViewNote.setOnClickListener(v -> {
             Intent intent = new Intent(this, SettingChannelNoteActivity.class);

@@ -11,13 +11,9 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
-import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
-
-import java.util.Objects;
 
 /**
  * Created by LONG on 2024/1/8 at 9:20 PM.
@@ -27,6 +23,7 @@ public abstract class AbstractDialog {
     private final MaterialAlertDialogBuilder dialogBuilder;
     private AlertDialog dialog;
     private final ContextThemeWrapper dialogContext;
+    private boolean passDirectShow;
 
     public AbstractDialog(Activity activity) {
         this(activity, false);
@@ -56,21 +53,37 @@ public abstract class AbstractDialog {
 
     protected abstract AlertDialog create(MaterialAlertDialogBuilder builder);
 
-    public void show(){
+    public void forShow(){
         activity.runOnUiThread(() -> {
             View view = createView(activity.getLayoutInflater().cloneInContext(dialogContext));
             if(view != null){
                 dialogBuilder.setView(view);
             }
             dialog = create(dialogBuilder);
-            try {
-                dialog.show();
-            }catch (WindowManager.BadTokenException ignore){}
             if (view != null) {
                 setAutoCancelInput(view);
             }
+            onDialogCreated();
+            if(!passDirectShow) {
+                show();
+            }
+        });
+    }
+
+    public void show() {
+        activity.runOnUiThread(() -> {
+            try {
+                dialog.show();
+            }catch (WindowManager.BadTokenException ignore){}
+            adjustDialogSize();
             onDialogShowed();
         });
+    }
+
+    protected void onDialogCreated() {
+    }
+
+    protected void adjustDialogSize() {
     }
 
     protected void onDialogShowed(){
@@ -113,5 +126,9 @@ public abstract class AbstractDialog {
 
     public AlertDialog getDialog() {
         return dialog;
+    }
+
+    public void setPassDirectShow(boolean passDirectShow) {
+        this.passDirectShow = passDirectShow;
     }
 }

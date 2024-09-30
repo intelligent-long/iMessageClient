@@ -8,12 +8,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastCommentsLinearLayoutViews;
-import com.longx.intelligent.android.ichat2.adapter.BroadcastCommentsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -53,8 +51,6 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
-import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
-import com.xcheng.retrofit.CompletableCall;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -349,7 +345,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         }
                     });
                 });
-                confirmDialog.show();
+                confirmDialog.forShow();
             });
             moreOperationBottomSheet.setEditClickYier(v -> {
                 Intent intent = new Intent(this, EditBroadcastActivity.class);
@@ -360,7 +356,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
         }
         binding.text.setOnLongClickListener(v -> {
-            new CopyTextDialog(this, broadcast.getText()).show();
+            new CopyTextDialog(this, broadcast.getText()).forShow();
             return false;
         });
         binding.like.setOnClickListener(v -> {
@@ -502,7 +498,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 case BroadcastMedia.TYPE_IMAGE:
                     new Thread(() -> {
                         OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
-                        operatingDialog.show();
+                        operatingDialog.forShow();
                         try {
                             PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity.getInstance(), broadcast, currentItem);
                             operatingDialog.dismiss();

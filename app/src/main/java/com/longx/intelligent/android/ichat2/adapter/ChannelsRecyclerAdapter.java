@@ -14,11 +14,9 @@ import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChannelBindi
 import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
 import com.longx.intelligent.android.ichat2.fragment.main.ChannelsFragment;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -129,7 +127,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
                 }
                 fastLocateDialog.dismiss();
             });
-            fastLocateDialog.show();
+            fastLocateDialog.forShow();
         });
     }
 

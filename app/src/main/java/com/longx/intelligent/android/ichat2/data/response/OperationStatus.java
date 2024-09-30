@@ -2,8 +2,6 @@ package com.longx.intelligent.android.ichat2.data.response;
 
 import android.app.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 
 import java.util.ArrayList;
@@ -141,7 +139,7 @@ public class OperationStatus {
             }
             String failureMessage = buildFailureMessage(messageCodes, excludeCodes);
             if(failureMessage != null) {
-                new MessageDialog(activity, failureMessage).show();
+                new MessageDialog(activity, failureMessage).forShow();
             }
         }
         //处理其他结果

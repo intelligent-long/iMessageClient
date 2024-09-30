@@ -12,7 +12,6 @@ import com.longx.intelligent.android.ichat2.activity.OpenSourceLicensesActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityVersionSettingsBinding;
 import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
-import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
@@ -84,7 +83,7 @@ public class VersionSettingsActivity extends BaseActivity {
             if(preference.equals(preferenceOpenSourceLicenses)){
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
             }else if(preference.equals(preferenceUserGuide)){
-                new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).show();
+                new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).forShow();
             }
             return true;
         }

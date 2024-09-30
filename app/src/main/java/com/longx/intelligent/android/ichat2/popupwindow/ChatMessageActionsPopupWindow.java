@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
-import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.PopupWindowChatMessageActionsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -16,8 +15,6 @@ import com.longx.intelligent.android.ichat2.dialog.CopyTextDialog;
 import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
-
-import java.util.Date;
 
 /**
  * Created by LONG on 2024/5/17 at 9:23 AM.
@@ -51,11 +48,11 @@ public class ChatMessageActionsPopupWindow {
         binding.clickViewTime.setOnClickListener(v -> {
             popupWindow.dismiss();
             String timeText = TimeUtil.formatDetailedRelativeTime(chatMessage.getTime());
-            new CustomViewMessageDialog(activity, timeText).show();
+            new CustomViewMessageDialog(activity, timeText).forShow();
         });
         binding.clickViewCopy.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new CopyTextDialog(activity, chatMessage.getText()).show();
+            new CopyTextDialog(activity, chatMessage.getText()).forShow();
         });
         binding.clickViewDelete.setOnClickListener(v -> {
             new ConfirmDialog(activity, "是否继续？")
@@ -85,7 +82,7 @@ public class ChatMessageActionsPopupWindow {
                         }
                         onDeletedYier.onDeleted();
                     })
-                    .show();
+                    .forShow();
         });
     }
 
