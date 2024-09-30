@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.activity.PreviewToChooseImageActivity;
 import com.longx.intelligent.android.ichat2.activity.PreviewToChooseVideoActivity;
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChooseMediasBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
+import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
@@ -126,16 +128,25 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         ItemData itemData = itemDataList.get(position);
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.binding.getRoot().setOnClickListener(v -> {
-            MediaInfo mediaInfo = itemDataList.get(position).getMediaInfo();
-            if(mediaInfo.getMediaType().equals(MediaType.IMAGE)) {
-                Intent intent = new Intent(activity, PreviewToChooseImageActivity.class);
-                intent.putExtra(ExtraKeys.FILE_PATH, mediaInfo.getPath());
-                activity.startActivity(intent);
-            }else if(mediaInfo.getMediaType().equals(MediaType.VIDEO)){
-                Intent intent = new Intent(activity, PreviewToChooseVideoActivity.class);
-                intent.putExtra(ExtraKeys.URI, mediaInfo.getUri());
-                activity.startActivity(intent);
+            Intent intent = new Intent(activity, MediaActivity.class);
+            int current = 49;
+            int startPosition = position - 49;
+            int endPosition = position + 50;
+            if(startPosition < 0) {
+                startPosition = 0;
+                current = position;
             }
+            if(endPosition >= itemDataList.size()){
+                endPosition = itemDataList.size() - 1;
+            }
+            ArrayList<Media> mediaList = new ArrayList<>();
+            for (int i = startPosition; i <= endPosition; i++) {
+                MediaInfo mediaInfo1 = itemDataList.get(i).mediaInfo;
+                mediaList.add(new Media(mediaInfo1.getMediaType(), mediaInfo1.getUri()));
+            }
+            intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
+            intent.putExtra(ExtraKeys.POSITION, current);
+            activity.startActivity(intent);
         });
         if(checkedPositions.contains(position + 1)){
             holder.binding.checkButton.setVisibility(View.GONE);
