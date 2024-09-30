@@ -69,6 +69,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private RecyclerFooterBroadcastCommentsBinding footerBinding;
     private CountDownLatch NEXT_PAGE_LATCH;
     private boolean stopFetchNextPage;
+    private String replyToCommentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -410,7 +411,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         binding.sendCommentButton.setOnClickListener(v -> {
             String commentText = UiUtil.getEditTextString(binding.commentInput);
             if(commentText == null || commentText.isEmpty()) return;
-            CommentBroadcastPostBody postBody = new CommentBroadcastPostBody(broadcast.getBroadcastId(), commentText, null);
+            CommentBroadcastPostBody postBody = new CommentBroadcastPostBody(broadcast.getBroadcastId(), commentText, replyToCommentId);
             BroadcastApiCaller.commentBroadcast(BroadcastActivity.this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
                 @Override
                 public void start(Call<OperationData> call) {
@@ -602,8 +603,10 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
     private void startComment(){
         onComment = true;
+        replyToCommentId = null;
         binding.sendCommentBar.setVisibility(View.VISIBLE);
         binding.commentFab.setVisibility(View.GONE);
+        binding.commentInput.setHint("评论");
         UiUtil.openKeyboard(binding.commentInput);
     }
 
@@ -611,6 +614,22 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         onComment = false;
         binding.sendCommentBar.setVisibility(View.GONE);
         new Handler().postDelayed(this::checkAndShowOrHideFab, 300);
+    }
+
+    public void startReply(BroadcastComment broadcastComment){
+        onComment = true;
+        replyToCommentId = broadcastComment.getCommentId();
+        binding.sendCommentBar.setVisibility(View.VISIBLE);
+        binding.commentFab.setVisibility(View.GONE);
+        Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastComment.getFromId());
+        String name;
+        if(channel != null){
+            name = channel.getName();
+        }else {
+            name = broadcastComment.getFromName();
+        }
+        binding.commentInput.setHint("回复 " + name);
+        UiUtil.openKeyboard(binding.commentInput);
     }
 
     private void commentNextPage() {

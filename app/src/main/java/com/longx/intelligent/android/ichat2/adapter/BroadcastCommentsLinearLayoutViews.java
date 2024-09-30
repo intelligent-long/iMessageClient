@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -38,8 +39,8 @@ import retrofit2.Response;
  */
 public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<BroadcastComment> {
 
-    public BroadcastCommentsLinearLayoutViews(AppCompatActivity activity, LinearLayout linearLayout) {
-        super(activity, linearLayout);
+    public BroadcastCommentsLinearLayoutViews(BroadcastActivity broadcastActivity, LinearLayout linearLayout) {
+        super(broadcastActivity, linearLayout);
     }
 
     @Override
@@ -74,27 +75,27 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             binding.layoutDeleteComment.setVisibility(View.GONE);
             UiUtil.setViewWidth(binding.space, UiUtil.dpToPx(activity, 21));
         }
-        setupYiers(binding, broadcastComment, (AppCompatActivity) activity);
+        setupYiers(binding, broadcastComment, (BroadcastActivity) activity);
         return binding.getRoot();
     }
 
-    private void setupYiers(RecyclerItemBroadcastCommentBinding binding, BroadcastComment broadcastComment, AppCompatActivity activity) {
+    private void setupYiers(RecyclerItemBroadcastCommentBinding binding, BroadcastComment broadcastComment, BroadcastActivity broadcastActivity) {
         binding.avatar.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, ChannelActivity.class);
+            Intent intent = new Intent(broadcastActivity, ChannelActivity.class);
             intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getFromId());
-            activity.startActivity(intent);
+            broadcastActivity.startActivity(intent);
         });
         binding.deleteComment.setOnClickListener(v -> {
-            new ConfirmDialog(activity)
+            new ConfirmDialog(broadcastActivity)
                     .setNegativeButton(null)
                     .setPositiveButton(new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            BroadcastApiCaller.deleteBroadcastComment(activity, broadcastComment.getCommentId(), new RetrofitApiCaller.CommonYier<OperationData>(activity) {
+                            BroadcastApiCaller.deleteBroadcastComment(broadcastActivity, broadcastComment.getCommentId(), new RetrofitApiCaller.CommonYier<OperationData>(broadcastActivity) {
                                 @Override
                                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                     super.ok(data, raw, call);
-                                    data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
+                                    data.commonHandleResult(broadcastActivity, new int[]{-101, -102}, () -> {
                                         Broadcast broadcast = data.getData(Broadcast.class);
                                         removeView(broadcastComment);
                                         GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
@@ -108,6 +109,9 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                         }
                     })
                     .forShow();
+        });
+        binding.reply.setOnClickListener(v -> {
+            broadcastActivity.startReply(broadcastComment);
         });
     }
 }

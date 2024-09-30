@@ -73,10 +73,10 @@
         android:id="@+id/space"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/layout_comment_buttons"/>
+        android:layout_toStartOf="@id/layout_buttons"/>
 
     <LinearLayout
-        android:id="@+id/layout_comment_buttons"
+        android:id="@+id/layout_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
