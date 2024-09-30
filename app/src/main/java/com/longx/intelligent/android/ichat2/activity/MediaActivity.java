@@ -61,6 +61,11 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
         binding.viewPager.setOffscreenPageLimit(2);
         binding.viewPager.setCurrentItem(position, false);
         setupPageSwitchTransformer();
+        if(actionButtonYier != null){
+            binding.actionButton.setVisibility(View.VISIBLE);
+        }else {
+            binding.actionButton.setVisibility(View.GONE);
+        }
     }
 
     private void setupYiers() {
@@ -178,6 +183,8 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
     protected void onDestroy() {
         super.onDestroy();
         if(adapter.getItemCount() != 0) adapter.releaseAllPlayer();
+        actionButtonYier = null;
+        instance = null;
     }
 
     public int getCurrentItemIndex(){
@@ -187,6 +194,13 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
 
     public static void setActionButtonYier(View.OnClickListener yier){
         actionButtonYier = yier;
+        if(instance != null && instance.binding != null) {
+            if(yier != null) {
+                instance.binding.actionButton.post(() -> instance.binding.actionButton.setVisibility(View.VISIBLE));
+            }else {
+                instance.binding.actionButton.post(() -> instance.binding.actionButton.setVisibility(View.GONE));
+            }
+        }
     }
 
     public static MediaActivity getInstance(){
