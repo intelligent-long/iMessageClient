@@ -92,4 +92,7 @@ public interface BroadcastApi {
 
     @POST("broadcast/comment/to_self/to_old")
     CompletableCall<OperationStatus> makeBroadcastCommentsToOld(@Body MakeBroadcastCommentsToOldPostBody postBody);
+
+    @POST("broadcast/comment/delete/{commentId}")
+    CompletableCall<OperationData> deleteBroadcastComment(@Path("commentId") String commentId);
 }

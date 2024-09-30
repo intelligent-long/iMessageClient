@@ -38,6 +38,16 @@ public abstract class LinearLayoutViews<T> {
         linearLayout.removeAllViews();
     }
 
+    public synchronized void removeView(int position){
+        linearLayout.removeViewAt(position);
+        allItems.remove(position);
+    }
+
+    public synchronized void removeView(T item){
+        linearLayout.removeViewAt(allItems.indexOf(item));
+        allItems.remove(item);
+    }
+
     public abstract View getView(T item, Activity activity);
 
     public List<T> getAllItems() {

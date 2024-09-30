@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.data;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by LONG on 2024/9/23 at 6:41 AM.
@@ -109,5 +110,18 @@ public class BroadcastComment {
 
     public void setCoverMediaId(String coverMediaId) {
         this.coverMediaId = coverMediaId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BroadcastComment that = (BroadcastComment) o;
+        return Objects.equals(commentId, that.commentId) && Objects.equals(broadcastId, that.broadcastId) && Objects.equals(fromId, that.fromId) && Objects.equals(text, that.text) && Objects.equals(toCommentId, that.toCommentId) && Objects.equals(commentTime, that.commentTime) && Objects.equals(toComment, that.toComment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(commentId, broadcastId, fromId, text, toCommentId, commentTime, toComment);
     }
 }

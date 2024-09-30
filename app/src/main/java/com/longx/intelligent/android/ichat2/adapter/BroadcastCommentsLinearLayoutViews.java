@@ -1,30 +1,44 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemBroadcastCommentBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by LONG on 2024/9/25 at 下午2:27.
  */
 public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<BroadcastComment> {
 
-    public BroadcastCommentsLinearLayoutViews(Activity activity, LinearLayout linearLayout) {
+    public BroadcastCommentsLinearLayoutViews(AppCompatActivity activity, LinearLayout linearLayout) {
         super(activity, linearLayout);
     }
 
@@ -60,15 +74,40 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             binding.layoutDeleteComment.setVisibility(View.GONE);
             UiUtil.setViewWidth(binding.space, UiUtil.dpToPx(activity, 21));
         }
-        setupYiers(binding, broadcastComment, activity);
+        setupYiers(binding, broadcastComment, (AppCompatActivity) activity);
         return binding.getRoot();
     }
 
-    private void setupYiers(RecyclerItemBroadcastCommentBinding binding, BroadcastComment broadcastComment, Activity activity) {
+    private void setupYiers(RecyclerItemBroadcastCommentBinding binding, BroadcastComment broadcastComment, AppCompatActivity activity) {
         binding.avatar.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
             intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getFromId());
             activity.startActivity(intent);
+        });
+        binding.deleteComment.setOnClickListener(v -> {
+            new ConfirmDialog(activity)
+                    .setNegativeButton(null)
+                    .setPositiveButton(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            BroadcastApiCaller.deleteBroadcastComment(activity, broadcastComment.getCommentId(), new RetrofitApiCaller.CommonYier<OperationData>(activity) {
+                                @Override
+                                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                                    super.ok(data, raw, call);
+                                    data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
+                                        Broadcast broadcast = data.getData(Broadcast.class);
+                                        removeView(broadcastComment);
+                                        GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                                            broadcastUpdateYiers.forEach(broadcastUpdateYier -> {
+                                                broadcastUpdateYier.updateOneBroadcast(broadcast);
+                                            });
+                                        });
+                                    });
+                                }
+                            });
+                        }
+                    })
+                    .forShow();
         });
     }
 }
