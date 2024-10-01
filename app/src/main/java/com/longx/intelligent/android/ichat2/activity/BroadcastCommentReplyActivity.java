@@ -1,7 +1,9 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,7 @@ public class BroadcastCommentReplyActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         intentData();
         showContent();
+        setupYiers();
     }
 
     private void intentData() {
@@ -59,5 +62,14 @@ public class BroadcastCommentReplyActivity extends BaseActivity {
         binding.name.setText(name);
         binding.time.setText(TimeUtil.formatRelativeTime(broadcastComment.getCommentTime()));
         binding.text.setText(broadcastComment.getText());
+    }
+
+    private void setupYiers() {
+        View.OnClickListener startChannelActivityYier = v -> {
+            Intent intent = new Intent(this, ChannelActivity.class);
+            intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getFromId());
+            startActivity(intent);
+        };
+        binding.layoutComment.setOnClickListener(startChannelActivityYier);
     }
 }

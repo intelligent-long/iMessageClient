@@ -42,11 +42,11 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/layout_comment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingHorizontal="23dp"
-                android:paddingVertical="12dp"
-                android:background="?attr/colorSurfaceContainerLow">
+                android:paddingVertical="12dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/avatar"
@@ -109,6 +109,14 @@
                         android:breakStrategy="simple"/>
                 </LinearLayout>
             </RelativeLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:dividerThickness="1dp"
+                app:dividerInsetStart="23dp"
+                app:dividerInsetEnd="23dp"
+                app:dividerColor="?attr/colorSurfaceContainerHighest"/>
 
             <com.longx.intelligent.android.lib.recyclerview.RecyclerView
                 android:id="@+id/recycler_view"
