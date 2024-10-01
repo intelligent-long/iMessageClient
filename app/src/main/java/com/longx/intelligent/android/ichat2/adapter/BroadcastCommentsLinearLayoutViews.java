@@ -75,6 +75,10 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             binding.layoutDeleteComment.setVisibility(View.GONE);
             UiUtil.setViewWidth(binding.space, UiUtil.dpToPx(activity, 21));
         }
+        if(broadcastComment.getReplyCount() > 0){
+            binding.layoutGoToReply.setVisibility(View.VISIBLE);
+            binding.goToReply.setText(broadcastComment.getReplyCount() + " 条回复");
+        }
         setupYiers(binding, broadcastComment, (BroadcastActivity) activity);
         return binding.getRoot();
     }

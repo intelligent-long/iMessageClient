@@ -411,7 +411,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         binding.sendCommentButton.setOnClickListener(v -> {
             String commentText = UiUtil.getEditTextString(binding.commentInput);
             if(commentText == null || commentText.isEmpty()) return;
-            CommentBroadcastPostBody postBody = new CommentBroadcastPostBody(broadcast.getBroadcastId(), commentText, replyToCommentId);
+            CommentBroadcastPostBody postBody = new CommentBroadcastPostBody(broadcast.getBroadcastId(), commentText, replyToCommentId, null);
             BroadcastApiCaller.commentBroadcast(BroadcastActivity.this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
                 @Override
                 public void start(Call<OperationData> call) {
@@ -431,6 +431,9 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                        UiUtil.hideKeyboard(binding.commentInput);
+                        binding.commentInput.setText("");
+                        binding.sendCommentBar.setVisibility(View.GONE);
                         broadcast = data.getData(Broadcast.class);
                         showContent();
                         setupYiers();

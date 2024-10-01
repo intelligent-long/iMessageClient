@@ -12,9 +12,13 @@ public class BroadcastComment {
     private String fromId;
     private String text;
     private String toCommentId;
+    private String toReplyCommentId;
     private Date commentTime;
 
     private BroadcastComment toComment;
+    private BroadcastComment toReplyComment;
+
+    private int replyCount;
 
     private String avatarHash;
     private String fromName;
@@ -27,14 +31,17 @@ public class BroadcastComment {
     public BroadcastComment() {
     }
 
-    public BroadcastComment(String commentId, String broadcastId, String fromId, String text, String toCommentId, Date commentTime, BroadcastComment toComment, String avatarHash, String fromName, String broadcastText, Date broadcastTime, String coverMediaId, Boolean broadcastDeleted, Boolean isNew) {
+    public BroadcastComment(String commentId, String broadcastId, String fromId, String text, String toCommentId, String toReplyCommentId, Date commentTime, BroadcastComment toComment, BroadcastComment toReplyComment, int replyCount, String avatarHash, String fromName, String broadcastText, Date broadcastTime, String coverMediaId, Boolean broadcastDeleted, Boolean isNew) {
         this.commentId = commentId;
         this.broadcastId = broadcastId;
         this.fromId = fromId;
         this.text = text;
         this.toCommentId = toCommentId;
+        this.toReplyCommentId = toReplyCommentId;
         this.commentTime = commentTime;
         this.toComment = toComment;
+        this.toReplyComment = toReplyComment;
+        this.replyCount = replyCount;
         this.avatarHash = avatarHash;
         this.fromName = fromName;
         this.broadcastText = broadcastText;
@@ -112,16 +119,28 @@ public class BroadcastComment {
         this.coverMediaId = coverMediaId;
     }
 
+    public String getToReplyCommentId() {
+        return toReplyCommentId;
+    }
+
+    public BroadcastComment getToReplyComment() {
+        return toReplyComment;
+    }
+
+    public int getReplyCount() {
+        return replyCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BroadcastComment that = (BroadcastComment) o;
-        return Objects.equals(commentId, that.commentId) && Objects.equals(broadcastId, that.broadcastId) && Objects.equals(fromId, that.fromId) && Objects.equals(text, that.text) && Objects.equals(toCommentId, that.toCommentId) && Objects.equals(commentTime, that.commentTime) && Objects.equals(toComment, that.toComment);
+        return Objects.equals(commentId, that.commentId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(commentId, broadcastId, fromId, text, toCommentId, commentTime, toComment);
+        return Objects.hash(commentId);
     }
 }
