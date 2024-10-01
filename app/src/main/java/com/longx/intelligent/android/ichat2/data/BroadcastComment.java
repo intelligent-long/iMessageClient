@@ -148,6 +148,10 @@ public class BroadcastComment implements Parcelable {
         return replyCount;
     }
 
+    public void setReplyCount(int replyCount) {
+        this.replyCount = replyCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

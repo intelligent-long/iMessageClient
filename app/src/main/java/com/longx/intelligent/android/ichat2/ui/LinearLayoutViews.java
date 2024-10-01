@@ -48,6 +48,19 @@ public abstract class LinearLayoutViews<T> {
         allItems.remove(item);
     }
 
+    public synchronized void updateView(T item){
+        int position = allItems.indexOf(item);
+        linearLayout.removeViewAt(position);
+        linearLayout.addView(getView(item, activity), position);
+        allItems.set(position, item);
+    }
+
+    public synchronized void updateView(int position, T item){
+        linearLayout.removeViewAt(position);
+        linearLayout.addView(getView(item, activity), position);
+        allItems.set(position, item);
+    }
+
     public abstract View getView(T item, Activity activity);
 
     public List<T> getAllItems() {
