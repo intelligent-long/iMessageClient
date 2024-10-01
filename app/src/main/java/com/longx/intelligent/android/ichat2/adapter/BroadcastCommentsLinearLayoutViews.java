@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
+import com.longx.intelligent.android.ichat2.activity.BroadcastCommentReplyActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -116,6 +117,11 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
         });
         binding.reply.setOnClickListener(v -> {
             broadcastActivity.startReply(broadcastComment);
+        });
+        binding.goToReply.setOnClickListener(v -> {
+            Intent intent = new Intent(broadcastActivity, BroadcastCommentReplyActivity.class);
+            intent.putExtra(ExtraKeys.BROADCAST_COMMENT, broadcastComment);
+            broadcastActivity.startActivity(intent);
         });
     }
 }

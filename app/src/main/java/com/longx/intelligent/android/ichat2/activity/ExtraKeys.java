@@ -43,4 +43,5 @@ public class ExtraKeys {
     public static final String MEDIA_TYPE = "media_type";
     public static final String BROADCAST_ID = "broadcast_id";
     public static final String DO_THAT_THING = "do_that_thing";
+    public static final String BROADCAST_COMMENT = "broadcast_comment";
 }

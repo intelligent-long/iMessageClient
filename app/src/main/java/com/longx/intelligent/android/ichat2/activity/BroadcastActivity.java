@@ -432,7 +432,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                     super.ok(data, raw, call);
                     data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
                         UiUtil.hideKeyboard(binding.commentInput);
-                        binding.commentInput.setText("");
+                        binding.commentInput.setText(null);
                         binding.sendCommentBar.setVisibility(View.GONE);
                         broadcast = data.getData(Broadcast.class);
                         showContent();

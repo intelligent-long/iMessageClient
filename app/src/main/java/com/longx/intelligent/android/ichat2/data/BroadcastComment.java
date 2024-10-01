@@ -1,12 +1,17 @@
 package com.longx.intelligent.android.ichat2.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * Created by LONG on 2024/9/23 at 6:41 AM.
  */
-public class BroadcastComment {
+public class BroadcastComment implements Parcelable {
     private String commentId;
     private String broadcastId;
     private String fromId;
@@ -50,6 +55,18 @@ public class BroadcastComment {
         this.broadcastDeleted = broadcastDeleted;
         this.isNew = isNew;
     }
+
+    public static final Creator<BroadcastComment> CREATOR = new Creator<BroadcastComment>() {
+        @Override
+        public BroadcastComment createFromParcel(Parcel in) {
+            return new BroadcastComment(in);
+        }
+
+        @Override
+        public BroadcastComment[] newArray(int size) {
+            return new BroadcastComment[size];
+        }
+    };
 
     public String getCommentId() {
         return commentId;
@@ -142,5 +159,49 @@ public class BroadcastComment {
     @Override
     public int hashCode() {
         return Objects.hash(commentId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    protected BroadcastComment(Parcel in) {
+        commentId = in.readString();
+        broadcastId = in.readString();
+        fromId = in.readString();
+        text = in.readString();
+        toCommentId = in.readString();
+        toReplyCommentId = in.readString();
+        toComment = in.readParcelable(BroadcastComment.class.getClassLoader());
+        toReplyComment = in.readParcelable(BroadcastComment.class.getClassLoader());
+        replyCount = in.readInt();
+        avatarHash = in.readString();
+        fromName = in.readString();
+        broadcastText = in.readString();
+        coverMediaId = in.readString();
+        byte tmpBroadcastDeleted = in.readByte();
+        broadcastDeleted = tmpBroadcastDeleted == 0 ? null : tmpBroadcastDeleted == 1;
+        byte tmpIsNew = in.readByte();
+        isNew = tmpIsNew == 0 ? null : tmpIsNew == 1;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(commentId);
+        dest.writeString(broadcastId);
+        dest.writeString(fromId);
+        dest.writeString(text);
+        dest.writeString(toCommentId);
+        dest.writeString(toReplyCommentId);
+        dest.writeParcelable(toComment, flags);
+        dest.writeParcelable(toReplyComment, flags);
+        dest.writeInt(replyCount);
+        dest.writeString(avatarHash);
+        dest.writeString(fromName);
+        dest.writeString(broadcastText);
+        dest.writeString(coverMediaId);
+        dest.writeByte((byte) (broadcastDeleted == null ? 0 : broadcastDeleted ? 1 : 2));
+        dest.writeByte((byte) (isNew == null ? 0 : isNew ? 1 : 2));
     }
 }
