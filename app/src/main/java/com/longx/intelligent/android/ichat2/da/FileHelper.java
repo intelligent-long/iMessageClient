@@ -58,11 +58,11 @@ public class FileHelper {
         return save(contentStream, path, -1, null, null);
     }
 
-    public static String save(InputStream contentStream, String path, long total, WritingProgressCallback writingProgressCallback, boolean[] cancel) throws IOException {
+    public static String save(InputStream contentStream, String path, long total, ProgressCallback progressCallback, boolean[] cancel) throws IOException {
         File file = createFile(path);
         try (FileOutputStream outputStream = new FileOutputStream(file)){
-            if(writingProgressCallback != null) {
-                FileUtil.transfer(contentStream, outputStream, writingProgressCallback, total, cancel);
+            if(progressCallback != null) {
+                FileUtil.transfer(contentStream, outputStream, progressCallback, total, cancel);
             }else {
                 FileUtil.transfer(contentStream, outputStream);
             }

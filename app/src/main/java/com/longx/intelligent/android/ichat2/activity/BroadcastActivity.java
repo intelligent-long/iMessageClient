@@ -411,7 +411,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         binding.sendCommentButton.setOnClickListener(v -> {
             String commentText = UiUtil.getEditTextString(binding.commentInput);
             if(commentText == null || commentText.isEmpty()) return;
-            CommentBroadcastPostBody postBody = new CommentBroadcastPostBody(broadcast.getBroadcastId(), commentText, replyToBroadcastComment.getCommentId(), null);
+            CommentBroadcastPostBody postBody = new CommentBroadcastPostBody(broadcast.getBroadcastId(), commentText, replyToBroadcastComment.getCommentId());
             BroadcastApiCaller.commentBroadcast(BroadcastActivity.this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
                 @Override
                 public void start(Call<OperationData> call) {
@@ -444,7 +444,6 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                             broadcast = data.getData(Broadcast.class);
                             showContent();
                             setupYiers();
-                            replyToBroadcastComment.setReplyCount(replyToBroadcastComment.getReplyCount() + 1);
                             commentsLinearLayoutViews.updateView(replyToBroadcastComment);
                         }
                     });

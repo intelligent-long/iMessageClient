@@ -6,20 +6,15 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
-import com.longx.intelligent.android.ichat2.activity.BroadcastCommentReplyActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
-import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
-import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemBroadcastCommentBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
@@ -28,7 +23,6 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
-import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
@@ -66,19 +60,10 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             name = broadcastComment.getFromName();
         }
         binding.name.setText(name);
-        binding.time.setText(TimeUtil.formatRelativeTime(broadcastComment.getCommentTime()));
+        binding.time.setText(TimeUtil.formatShortRelativeTime(broadcastComment.getCommentTime()));
         binding.text.setText(broadcastComment.getText());
-        String currentUserIchatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId();
-        if(currentUserIchatId.equals(broadcastComment.getFromId())){
-            binding.layoutDeleteComment.setVisibility(View.VISIBLE);
-            UiUtil.setViewWidth(binding.space, UiUtil.dpToPx(activity, 15));
-        }else {
-            binding.layoutDeleteComment.setVisibility(View.GONE);
-            UiUtil.setViewWidth(binding.space, UiUtil.dpToPx(activity, 21));
-        }
-        if(broadcastComment.getReplyCount() > 0){
-            binding.layoutGoToReply.setVisibility(View.VISIBLE);
-            binding.goToReply.setText(broadcastComment.getReplyCount() + " 条回复");
+        if(broadcastComment.getToCommentId() != null){
+            binding.layoutViewToComment.setVisibility(View.VISIBLE);
         }
         setupYiers(binding, broadcastComment, (BroadcastActivity) activity);
         return binding.getRoot();
@@ -90,7 +75,8 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getFromId());
             broadcastActivity.startActivity(intent);
         });
-        binding.deleteComment.setOnClickListener(v -> {
+        binding.getRoot().setOnLongClickListener(v -> {
+            //TODO
             new ConfirmDialog(broadcastActivity)
                     .setNegativeButton(null)
                     .setPositiveButton(new DialogInterface.OnClickListener() {
@@ -114,14 +100,10 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                         }
                     })
                     .forShow();
+            return false;
         });
         binding.reply.setOnClickListener(v -> {
             broadcastActivity.startReply(broadcastComment);
-        });
-        binding.goToReply.setOnClickListener(v -> {
-            Intent intent = new Intent(broadcastActivity, BroadcastCommentReplyActivity.class);
-            intent.putExtra(ExtraKeys.BROADCAST_COMMENT, broadcastComment);
-            broadcastActivity.startActivity(intent);
         });
     }
 }

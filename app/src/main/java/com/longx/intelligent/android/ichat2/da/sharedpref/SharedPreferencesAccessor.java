@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Created by LONG on 2024/3/26 at 11:22 PM.
@@ -588,6 +589,18 @@ public class SharedPreferencesAccessor {
                 });
                 broadcasts.sort(Comparator.comparing(Broadcast::getTime));
                 return broadcasts;
+            }
+
+            public static void deleteRecord(Context context, String broadcastId){
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
+                List<Broadcast> broadcasts = new ArrayList<>();
+                jsonSet.forEach(s -> {
+                    Broadcast broadcast = JsonUtil.toObject(s, Broadcast.class);
+                    broadcasts.add(broadcast);
+                });
+                broadcasts.removeIf(broadcast -> broadcast.getBroadcastId().equals(broadcastId));
+                clearRecords(context);
+                addRecords(context, broadcasts);
             }
         }
     }

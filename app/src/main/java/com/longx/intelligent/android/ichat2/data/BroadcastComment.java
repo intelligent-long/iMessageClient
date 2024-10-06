@@ -17,13 +17,9 @@ public class BroadcastComment implements Parcelable {
     private String fromId;
     private String text;
     private String toCommentId;
-    private String toReplyCommentId;
     private Date commentTime;
 
     private BroadcastComment toComment;
-    private BroadcastComment toReplyComment;
-
-    private int replyCount;
 
     private String avatarHash;
     private String fromName;
@@ -36,17 +32,14 @@ public class BroadcastComment implements Parcelable {
     public BroadcastComment() {
     }
 
-    public BroadcastComment(String commentId, String broadcastId, String fromId, String text, String toCommentId, String toReplyCommentId, Date commentTime, BroadcastComment toComment, BroadcastComment toReplyComment, int replyCount, String avatarHash, String fromName, String broadcastText, Date broadcastTime, String coverMediaId, Boolean broadcastDeleted, Boolean isNew) {
+    public BroadcastComment(String commentId, String broadcastId, String fromId, String text, String toCommentId, Date commentTime, BroadcastComment toComment, String avatarHash, String fromName, String broadcastText, Date broadcastTime, String coverMediaId, Boolean broadcastDeleted, Boolean isNew) {
         this.commentId = commentId;
         this.broadcastId = broadcastId;
         this.fromId = fromId;
         this.text = text;
         this.toCommentId = toCommentId;
-        this.toReplyCommentId = toReplyCommentId;
         this.commentTime = commentTime;
         this.toComment = toComment;
-        this.toReplyComment = toReplyComment;
-        this.replyCount = replyCount;
         this.avatarHash = avatarHash;
         this.fromName = fromName;
         this.broadcastText = broadcastText;
@@ -136,20 +129,12 @@ public class BroadcastComment implements Parcelable {
         this.coverMediaId = coverMediaId;
     }
 
-    public String getToReplyCommentId() {
-        return toReplyCommentId;
+    public void setToCommentId(String toCommentId) {
+        this.toCommentId = toCommentId;
     }
 
-    public BroadcastComment getToReplyComment() {
-        return toReplyComment;
-    }
-
-    public int getReplyCount() {
-        return replyCount;
-    }
-
-    public void setReplyCount(int replyCount) {
-        this.replyCount = replyCount;
+    public void setToComment(BroadcastComment toComment) {
+        this.toComment = toComment;
     }
 
     @Override
@@ -176,11 +161,8 @@ public class BroadcastComment implements Parcelable {
         fromId = in.readString();
         text = in.readString();
         toCommentId = in.readString();
-        toReplyCommentId = in.readString();
         commentTime = new Date(in.readLong());
         toComment = in.readParcelable(BroadcastComment.class.getClassLoader());
-        toReplyComment = in.readParcelable(BroadcastComment.class.getClassLoader());
-        replyCount = in.readInt();
         avatarHash = in.readString();
         fromName = in.readString();
         broadcastText = in.readString();
@@ -199,11 +181,8 @@ public class BroadcastComment implements Parcelable {
         dest.writeString(fromId);
         dest.writeString(text);
         dest.writeString(toCommentId);
-        dest.writeString(toReplyCommentId);
         dest.writeLong(commentTime.getTime());
         dest.writeParcelable(toComment, flags);
-        dest.writeParcelable(toReplyComment, flags);
-        dest.writeInt(replyCount);
         dest.writeString(avatarHash);
         dest.writeString(fromName);
         dest.writeString(broadcastText);

@@ -7,16 +7,14 @@ public class CommentBroadcastPostBody {
     private String broadcastId;
     private String text;
     private String toCommentId;
-    private String toReplyCommentId;
 
     public CommentBroadcastPostBody() {
     }
 
-    public CommentBroadcastPostBody(String broadcastId, String text, String toCommentId, String toReplyCommentId) {
+    public CommentBroadcastPostBody(String broadcastId, String text, String toCommentId) {
         this.broadcastId = broadcastId;
         this.text = text;
         this.toCommentId = toCommentId;
-        this.toReplyCommentId = toReplyCommentId;
     }
 
     public String getBroadcastId() {
@@ -29,9 +27,5 @@ public class CommentBroadcastPostBody {
 
     public String getToCommentId() {
         return toCommentId;
-    }
-
-    public String getToReplyCommentId() {
-        return toReplyCommentId;
     }
 }

@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
-import com.longx.intelligent.android.ichat2.da.WritingProgressCallback;
+import com.longx.intelligent.android.ichat2.da.ProgressCallback;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
@@ -294,7 +294,7 @@ public abstract class RetrofitApiCaller {
 
     public static class DownloadCommonYier extends CommonYier<okhttp3.ResponseBody> {
         private final String saveTo;
-        private final WritingProgressCallback writingProgressCallback;
+        private final ProgressCallback progressCallback;
         private final boolean[] cancel = new boolean[1];
         private OperatingDialog progressOperatingDialog;
         private final boolean showProgressDialog;
@@ -304,11 +304,11 @@ public abstract class RetrofitApiCaller {
             this(activity, saveTo, showProgressDialog, null, resultsYier);
         }
 
-        public DownloadCommonYier(Activity activity, String saveTo, boolean showProgressDialog, WritingProgressCallback writingProgressCallback, ResultsYier resultsYier) {
+        public DownloadCommonYier(Activity activity, String saveTo, boolean showProgressDialog, ProgressCallback progressCallback, ResultsYier resultsYier) {
             super(activity, false, true);
             this.showProgressDialog = showProgressDialog;
             this.saveTo = saveTo;
-            this.writingProgressCallback = writingProgressCallback;
+            this.progressCallback = progressCallback;
             this.resultsYier = resultsYier;
         }
 
@@ -330,8 +330,8 @@ public abstract class RetrofitApiCaller {
             new Thread(() -> {
                 try (InputStream inputStream = data.byteStream()) {
                     long contentLength = data.contentLength();
-                    if (writingProgressCallback != null) {
-                        FileHelper.save(inputStream, saveTo, contentLength, writingProgressCallback, cancel);
+                    if (progressCallback != null) {
+                        FileHelper.save(inputStream, saveTo, contentLength, progressCallback, cancel);
                     } else if (progressOperatingDialog != null) {
                         FileHelper.save(inputStream, saveTo, contentLength, (current, total) -> {
                             progressOperatingDialog.updateProgress(current, total);

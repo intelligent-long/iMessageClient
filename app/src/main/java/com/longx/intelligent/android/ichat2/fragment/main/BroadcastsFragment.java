@@ -551,6 +551,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     @Override
     public void onBroadcastDeleted(String broadcastId) {
         adapter.removeItemAndShow(broadcastId);
+        SharedPreferencesAccessor.ApiJson.Broadcasts.deleteRecord(requireContext(), broadcastId);
     }
 
     public void fetchNews() {

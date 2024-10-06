@@ -4,9 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
-import android.util.Log;
 
-import com.longx.intelligent.android.ichat2.da.WritingProgressCallback;
+import com.longx.intelligent.android.ichat2.da.ProgressCallback;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -33,7 +32,7 @@ public class FileUtil {
         transfer(is, os, null, -1, cancel);
     }
 
-    public static void transfer(InputStream is, OutputStream os, WritingProgressCallback writingProgressCallback, long total, boolean[] cancel) throws IOException {
+    public static void transfer(InputStream is, OutputStream os, ProgressCallback progressCallback, long total, boolean[] cancel) throws IOException {
         int bytesWritten = 0;
         try (InputStream inputStream = new BufferedInputStream(is);
              OutputStream outputStream = new BufferedOutputStream(os)) {
@@ -44,9 +43,9 @@ public class FileUtil {
                     return;
                 }
                 outputStream.write(buffer, 0, bytesRead);
-                if(writingProgressCallback != null) {
+                if(progressCallback != null) {
                     bytesWritten += bytesRead;
-                    writingProgressCallback.onProgressUpdate(bytesWritten, total);
+                    progressCallback.onProgressUpdate(bytesWritten, total);
                 }
             }
         }
