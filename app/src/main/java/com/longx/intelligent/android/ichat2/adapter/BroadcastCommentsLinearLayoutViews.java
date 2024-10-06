@@ -11,6 +11,7 @@ import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.Channel;
@@ -65,6 +66,7 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
         binding.time.setText(TimeUtil.formatShortRelativeTime(broadcastComment.getCommentTime()));
         binding.text.setText(broadcastComment.getText());
         if(broadcastComment.getToCommentId() != null){
+            binding.operationButtons.setVisibility(View.VISIBLE);
             binding.layoutViewToComment.setVisibility(View.VISIBLE);
         }
         setupYiers(binding, broadcastComment, (BroadcastActivity) activity);
