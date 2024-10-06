@@ -51,6 +51,7 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private CountDownLatch NEXT_PAGE_LATCH;
     private boolean stopFetchNextPage;
     private BroadcastComment replyToBroadcastComment;
+    private ResultsYier endReplyYier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -604,6 +606,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private void startComment(){
         onComment = true;
         replyToBroadcastComment = null;
+        endReplyYier = null;
         binding.sendCommentBar.setVisibility(View.VISIBLE);
         binding.commentFab.setVisibility(View.GONE);
         binding.commentInput.setHint("评论");
@@ -614,11 +617,16 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         onComment = false;
         binding.sendCommentBar.setVisibility(View.GONE);
         new Handler().postDelayed(this::checkAndShowOrHideFab, 300);
+        if(endReplyYier != null){
+            endReplyYier.onResults();
+            endReplyYier = null;
+        }
     }
 
-    public void startReply(BroadcastComment broadcastComment){
+    public void startReply(BroadcastComment broadcastComment, ResultsYier endReplyYier){
         onComment = true;
         replyToBroadcastComment = broadcastComment;
+        this.endReplyYier = endReplyYier;
         binding.sendCommentBar.setVisibility(View.VISIBLE);
         binding.commentFab.setVisibility(View.GONE);
         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastComment.getFromId());

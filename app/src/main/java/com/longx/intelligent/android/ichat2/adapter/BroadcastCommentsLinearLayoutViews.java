@@ -22,9 +22,11 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCall
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -103,7 +105,8 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             return false;
         });
         binding.reply.setOnClickListener(v -> {
-            broadcastActivity.startReply(broadcastComment);
+            binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(broadcastActivity, com.google.android.material.R.attr.colorSurfaceContainer));
+            broadcastActivity.startReply(broadcastComment, results -> binding.getRoot().setBackgroundColor(ColorUtil.getColor(broadcastActivity, R.color.transparent)));
         });
     }
 }
