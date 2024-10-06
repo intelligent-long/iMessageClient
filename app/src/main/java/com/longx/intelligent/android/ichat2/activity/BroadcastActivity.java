@@ -434,18 +434,11 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         UiUtil.hideKeyboard(binding.commentInput);
                         binding.commentInput.setText(null);
                         binding.sendCommentBar.setVisibility(View.GONE);
-                        if(replyToBroadcastComment == null) {
-                            commentsLinearLayoutViews.clear();
-                            stopFetchNextPage = false;
-                            GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
-                                broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
-                            });
-                        }else {
-                            broadcast = data.getData(Broadcast.class);
-                            showContent();
-                            setupYiers();
-                            commentsLinearLayoutViews.updateView(replyToBroadcastComment);
-                        }
+                        commentsLinearLayoutViews.clear();
+                        stopFetchNextPage = false;
+                        GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                            broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
+                        });
                     });
                 }
             });
