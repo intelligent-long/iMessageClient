@@ -21,6 +21,7 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.popupwindow.BroadcastCommentActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -80,30 +81,25 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             broadcastActivity.startActivity(intent);
         });
         binding.getRoot().setOnLongClickListener(v -> {
-            //TODO
-            new ConfirmDialog(broadcastActivity)
-                    .setNegativeButton(null)
-                    .setPositiveButton(new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            BroadcastApiCaller.deleteBroadcastComment(broadcastActivity, broadcastComment.getCommentId(), new RetrofitApiCaller.CommonYier<OperationData>(broadcastActivity) {
-                                @Override
-                                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                                    super.ok(data, raw, call);
-                                    data.commonHandleResult(broadcastActivity, new int[]{-101, -102}, () -> {
-                                        Broadcast broadcast = data.getData(Broadcast.class);
-                                        removeView(broadcastComment);
-                                        GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
-                                            broadcastUpdateYiers.forEach(broadcastUpdateYier -> {
-                                                broadcastUpdateYier.updateOneBroadcast(broadcast);
-                                            });
+            new BroadcastCommentActionsPopupWindow(broadcastActivity, broadcastComment)
+                    .setDeleteYier(v1 -> {
+                        BroadcastApiCaller.deleteBroadcastComment(broadcastActivity, broadcastComment.getCommentId(), new RetrofitApiCaller.CommonYier<OperationData>(broadcastActivity) {
+                            @Override
+                            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(broadcastActivity, new int[]{-101, -102}, () -> {
+                                    Broadcast broadcast = data.getData(Broadcast.class);
+                                    removeView(broadcastComment);
+                                    GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                                        broadcastUpdateYiers.forEach(broadcastUpdateYier -> {
+                                            broadcastUpdateYier.updateOneBroadcast(broadcast);
                                         });
                                     });
-                                }
-                            });
-                        }
+                                });
+                            }
+                        });
                     })
-                    .forShow();
+                    .show(binding.getRoot());
             return false;
         });
         binding.reply.setOnClickListener(v -> {
