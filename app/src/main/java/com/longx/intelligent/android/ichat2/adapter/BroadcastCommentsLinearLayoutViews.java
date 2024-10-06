@@ -66,10 +66,6 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
         binding.name.setText(name);
         binding.time.setText(TimeUtil.formatShortRelativeTime(broadcastComment.getCommentTime()));
         binding.text.setText(broadcastComment.getText());
-        if(broadcastComment.getToCommentId() != null){
-            binding.operationButtons.setVisibility(View.VISIBLE);
-            binding.layoutViewToComment.setVisibility(View.VISIBLE);
-        }
         setupYiers(binding, broadcastComment, (BroadcastActivity) activity);
         return binding.getRoot();
     }

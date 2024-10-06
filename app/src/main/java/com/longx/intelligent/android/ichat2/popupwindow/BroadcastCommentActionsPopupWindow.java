@@ -33,6 +33,9 @@ public class BroadcastCommentActionsPopupWindow {
         this.activity = activity;
         this.broadcastComment = broadcastComment;
         binding = PopupWindowBroadcastCommentActionsBinding.inflate(activity.getLayoutInflater());
+        if(broadcastComment.getToCommentId() == null){
+            binding.clickViewViewToComment.setVisibility(View.GONE);
+        }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
         setupYiers();
     }
@@ -59,7 +62,7 @@ public class BroadcastCommentActionsPopupWindow {
     }
 
     public void show(View anchorView) {
-        int yOffset = -anchorView.getHeight() - UiUtil.dpToPx(activity, HEIGHT_DP + 5);
+        int yOffset = -anchorView.getHeight() - UiUtil.dpToPx(activity, HEIGHT_DP);
         int screenWidth = activity.getWindow().getDecorView().getWidth();
         binding.getRoot().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupWidth = binding.getRoot().getMeasuredWidth();
