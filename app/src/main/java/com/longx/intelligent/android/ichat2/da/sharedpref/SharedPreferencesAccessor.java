@@ -602,6 +602,19 @@ public class SharedPreferencesAccessor {
                 clearRecords(context);
                 addRecords(context, broadcasts);
             }
+
+            public static void updateRecord(Context context, Broadcast broadcast){
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
+                List<Broadcast> broadcasts = new ArrayList<>();
+                jsonSet.forEach(s -> {
+                    Broadcast broadcast1 = JsonUtil.toObject(s, Broadcast.class);
+                    broadcasts.add(broadcast1);
+                });
+                broadcasts.removeIf(broadcast1 -> broadcast1.getBroadcastId().equals(broadcast.getBroadcastId()));
+                broadcasts.add(broadcast);
+                clearRecords(context);
+                addRecords(context, broadcasts);
+            }
         }
     }
 

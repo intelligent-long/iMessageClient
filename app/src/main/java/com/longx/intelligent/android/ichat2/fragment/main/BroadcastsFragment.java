@@ -619,6 +619,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     @Override
     public void updateOneBroadcast(Broadcast newBroadcast) {
         if(adapter != null) adapter.updateOneBroadcast(newBroadcast, true);
+        SharedPreferencesAccessor.ApiJson.Broadcasts.updateRecord(requireContext(), newBroadcast);
     }
 
     @Override
