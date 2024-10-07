@@ -3,8 +3,16 @@ package com.longx.intelligent.android.ichat2.adapter;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
@@ -30,6 +38,10 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import cn.hutool.core.lang.Filter;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -57,18 +69,39 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                     .load(NetDataUrls.getAvatarUrl(activity, broadcastComment.getAvatarHash()))
                     .into(binding.avatar);
         }
-        Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastComment.getFromId());
-        String name;
-        if(channel != null){
-            name = channel.getName();
-        }else {
-            name = broadcastComment.getFromName();
-        }
-        binding.name.setText(name);
+        binding.name.setText(broadcastComment.getFromNameIncludeNote());
         binding.time.setText(TimeUtil.formatShortRelativeTime(broadcastComment.getCommentTime()));
-        binding.text.setText(broadcastComment.getText());
+        showText(broadcastComment, binding, activity);
+
         setupYiers(binding, broadcastComment, (BroadcastActivity) activity);
         return binding.getRoot();
+    }
+
+    private void showText(BroadcastComment broadcastComment, RecyclerItemBroadcastCommentBinding binding, Activity activity) {
+        if(broadcastComment.getToCommentId() == null) {
+            binding.text.setText(broadcastComment.getText());
+        }else {
+            String toUserSpan = "@" + broadcastComment.getToComment().getFromNameIncludeNote() + " ";
+            SpannableString spannableString = new SpannableString(toUserSpan + broadcastComment.getText());
+            ClickableSpan userMentionClickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    Intent intent = new Intent(activity, ChannelActivity.class);
+                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
+                    activity.startActivity(intent);
+                }
+
+                @Override
+                public void updateDrawState(@NonNull TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                    ds.setColor(activity.getColor(R.color.ichat));
+                }
+            };
+            spannableString.setSpan(userMentionClickableSpan, 0, toUserSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            binding.text.setMovementMethod(LinkMovementMethod.getInstance());
+            binding.text.setText(spannableString);
+        }
     }
 
     private void setupYiers(RecyclerItemBroadcastCommentBinding binding, BroadcastComment broadcastComment, BroadcastActivity broadcastActivity) {
@@ -77,7 +110,7 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getFromId());
             broadcastActivity.startActivity(intent);
         });
-        binding.getRoot().setOnLongClickListener(v -> {
+        View.OnLongClickListener longClickYier = v -> {
             new BroadcastCommentActionsPopupWindow(broadcastActivity, broadcastComment)
                     .setDeleteYier(v1 -> {
                         BroadcastApiCaller.deleteBroadcastComment(broadcastActivity, broadcastComment.getCommentId(), new RetrofitApiCaller.CommonYier<OperationData>(broadcastActivity) {
@@ -97,8 +130,12 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                         });
                     })
                     .show(binding.getRoot());
-            return false;
-        });
+            return true;
+        };
+        binding.getRoot().setOnLongClickListener(longClickYier);
+        binding.text.setOnLongClickListener(longClickYier);
+        binding.avatar.setOnLongClickListener(longClickYier);
+        binding.reply.setOnLongClickListener(longClickYier);
         binding.reply.setOnClickListener(v -> {
             if(lastReplyIndex != -1){
                 getLinearLayout().getChildAt(lastReplyIndex).setBackgroundColor(ColorUtil.getColor(broadcastActivity, R.color.transparent));

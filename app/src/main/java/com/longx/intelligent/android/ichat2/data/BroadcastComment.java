@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -95,6 +97,17 @@ public class BroadcastComment implements Parcelable {
 
     public String getFromName() {
         return fromName;
+    }
+
+    public String getFromNameIncludeNote(){
+        Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(getFromId());
+        String name;
+        if(channel != null){
+            name = channel.getName();
+        }else {
+            name = getFromName();
+        }
+        return name;
     }
 
     public String getBroadcastText() {

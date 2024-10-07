@@ -80,14 +80,7 @@ public class BroadcastCommentsRecyclerAdapter extends WrappableRecyclerViewAdapt
                     .load(NetDataUrls.getAvatarUrl(activity, broadcastComment.getAvatarHash()))
                     .into(holder.binding.avatar);
         }
-        Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastComment.getFromId());
-        String name;
-        if(channel != null){
-            name = channel.getName();
-        }else {
-            name = broadcastComment.getFromName();
-        }
-        holder.binding.name.setText(name);
+        holder.binding.name.setText(broadcastComment.getFromNameIncludeNote());
         holder.binding.time.setText(TimeUtil.formatRelativeTime(broadcastComment.getCommentTime()));
         holder.binding.text.setText(broadcastComment.getText());
         setupYiers(holder, position);

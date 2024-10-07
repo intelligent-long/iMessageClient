@@ -629,14 +629,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         this.endReplyYier = endReplyYier;
         binding.sendCommentBar.setVisibility(View.VISIBLE);
         binding.commentFab.setVisibility(View.GONE);
-        Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastComment.getFromId());
-        String name;
-        if(channel != null){
-            name = channel.getName();
-        }else {
-            name = broadcastComment.getFromName();
-        }
-        binding.commentInput.setHint("回复 " + name);
+        binding.commentInput.setHint("回复 " + broadcastComment.getFromNameIncludeNote());
         UiUtil.openKeyboard(binding.commentInput);
     }
 
