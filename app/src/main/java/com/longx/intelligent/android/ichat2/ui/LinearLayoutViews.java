@@ -83,4 +83,8 @@ public abstract class LinearLayoutViews<T> {
             this.footerView = null;
         }
     }
+
+    public LinearLayout getLinearLayout() {
+        return linearLayout;
+    }
 }

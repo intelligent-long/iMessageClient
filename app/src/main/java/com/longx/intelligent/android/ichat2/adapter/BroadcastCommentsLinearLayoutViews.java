@@ -37,6 +37,7 @@ import retrofit2.Response;
  * Created by LONG on 2024/9/25 at 下午2:27.
  */
 public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<BroadcastComment> {
+    private int lastReplyIndex = -1;
 
     public BroadcastCommentsLinearLayoutViews(BroadcastActivity broadcastActivity, LinearLayout linearLayout) {
         super(broadcastActivity, linearLayout);
@@ -99,7 +100,11 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             return false;
         });
         binding.reply.setOnClickListener(v -> {
-            binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(broadcastActivity, com.google.android.material.R.attr.colorSurfaceContainer));
+            if(lastReplyIndex != -1){
+                getLinearLayout().getChildAt(lastReplyIndex).setBackgroundColor(ColorUtil.getColor(broadcastActivity, R.color.transparent));
+            }
+            lastReplyIndex = getAllItems().indexOf(broadcastComment);
+            binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(broadcastActivity, com.google.android.material.R.attr.colorSurfaceContainerLow));
             broadcastActivity.startReply(broadcastComment, results -> binding.getRoot().setBackgroundColor(ColorUtil.getColor(broadcastActivity, R.color.transparent)));
         });
     }
