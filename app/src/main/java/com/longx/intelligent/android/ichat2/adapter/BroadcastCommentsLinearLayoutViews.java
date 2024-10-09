@@ -30,6 +30,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.popupwindow.BroadcastCommentActionsPopupWindow;
+import com.longx.intelligent.android.ichat2.popupwindow.BroadcastToCommentPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
@@ -128,6 +129,10 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                                 });
                             }
                         });
+                    })
+                    .setViewToCommentYier(v1 -> {
+                        new BroadcastToCommentPopupWindow(broadcastActivity, broadcastComment.getToComment())
+                                .show(binding.getRoot());
                     })
                     .show(binding.getRoot());
             return true;

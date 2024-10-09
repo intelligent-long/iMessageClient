@@ -28,6 +28,7 @@ public class BroadcastCommentActionsPopupWindow {
     private final PopupWindowBroadcastCommentActionsBinding binding;
     private final int HEIGHT_DP = 86;
     private View.OnClickListener deleteYier;
+    private View.OnClickListener viewToCommentYier;
 
     public BroadcastCommentActionsPopupWindow(AppCompatActivity activity, BroadcastComment broadcastComment) {
         this.activity = activity;
@@ -51,13 +52,19 @@ public class BroadcastCommentActionsPopupWindow {
             new CopyTextDialog(activity, broadcastComment.getText()).forShow();
         });
         binding.clickViewDelete.setOnClickListener(v -> {
-            new ConfirmDialog(activity, "是否继续？")
+            if(deleteYier == null) return;
+            new ConfirmDialog(activity)
                     .setNegativeButton(null)
                     .setPositiveButton((dialog, which) -> {
                         popupWindow.dismiss();
                         deleteYier.onClick(v);
                     })
                     .forShow();
+        });
+        binding.clickViewViewToComment.setOnClickListener(v -> {
+            if(viewToCommentYier == null) return;
+            popupWindow.dismiss();
+            viewToCommentYier.onClick(v);
         });
     }
 
@@ -76,6 +83,11 @@ public class BroadcastCommentActionsPopupWindow {
 
     public BroadcastCommentActionsPopupWindow setDeleteYier(View.OnClickListener deleteYier) {
         this.deleteYier = deleteYier;
+        return this;
+    }
+
+    public BroadcastCommentActionsPopupWindow setViewToCommentYier(View.OnClickListener viewToCommentYier) {
+        this.viewToCommentYier = viewToCommentYier;
         return this;
     }
 }
