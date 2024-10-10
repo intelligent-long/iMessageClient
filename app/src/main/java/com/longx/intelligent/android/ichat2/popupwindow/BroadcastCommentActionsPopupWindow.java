@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastComment;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.PopupWindowBroadcastCommentActionsBinding;
@@ -36,6 +37,9 @@ public class BroadcastCommentActionsPopupWindow {
         binding = PopupWindowBroadcastCommentActionsBinding.inflate(activity.getLayoutInflater());
         if(broadcastComment.getToCommentId() == null){
             binding.clickViewViewToComment.setVisibility(View.GONE);
+        }
+        if(!broadcastComment.getFromId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())){
+            binding.clickViewDelete.setVisibility(View.GONE);
         }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
         setupYiers();

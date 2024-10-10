@@ -6,6 +6,7 @@ import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
+import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastReplyCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -95,4 +96,13 @@ public interface BroadcastApi {
 
     @POST("broadcast/comment/delete/{commentId}")
     CompletableCall<OperationData> deleteBroadcastComment(@Path("commentId") String commentId);
+
+    @GET("broadcast/reply_comment/to_self/news_count")
+    CompletableCall<OperationData> fetchBroadcastReplyCommentNewsCount();
+
+    @GET("broadcast/reply_comment/to_self/limit")
+    CompletableCall<PaginatedOperationData<BroadcastComment>> fetchReplyCommentsOfSelfBroadcasts(@Query("last_reply_comment_id") String lastReplyCommentId, @Query("ps") int ps);
+
+    @POST("broadcast/reply_comment/to_self/to_old")
+    CompletableCall<OperationStatus> makeBroadcastReplyCommentsToOld(@Body MakeBroadcastReplyCommentsToOldPostBody postBody);
 }

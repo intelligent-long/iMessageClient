@@ -3,7 +3,6 @@ package com.longx.intelligent.android.ichat2.behavior;
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.longx.intelligent.android.ichat2.activity.BroadcastChannelActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
@@ -18,14 +17,12 @@ import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
-import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
@@ -56,6 +53,7 @@ public class ContentUpdater {
         String ID_RECENT_BROADCAST_MEDIAS = "recent_broadcast_medias";
         String ID_BROADCAST_LIKE_NEWS_COUNT = "broadcast_like_news_count";
         String ID_BROADCAST_COMMENT_NEWS_COUNT = "broadcast_comment_news_count";
+        String ID_BROADCAST_REPLY_NEWS_COUNT = "broadcast_reply_news_count";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -287,6 +285,20 @@ public class ContentUpdater {
                 data.commonHandleSuccessResult(() -> {
                     Integer newsCount = data.getData(Integer.class);
                     SharedPreferencesAccessor.NewContentCount.saveBroadcastCommentNewsCount(context, newsCount);
+                    resultsYier.onResults(newsCount);
+                });
+            }
+        });
+    }
+
+    public static void updateNewBroadcastRepliesCount(Context context, ResultsYier resultsYier){
+        BroadcastApiCaller.fetchBroadcastReplyCommentNewsCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_BROADCAST_REPLY_NEWS_COUNT, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleSuccessResult(() -> {
+                    Integer newsCount = data.getData(Integer.class);
+                    SharedPreferencesAccessor.NewContentCount.saveBroadcastReplyCommentNewsCount(context, newsCount);
                     resultsYier.onResults(newsCount);
                 });
             }

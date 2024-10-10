@@ -624,7 +624,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     @Override
     public void showNewContentBadge(ID id, int newContentCount) {
-        if(id.equals(ID.BROADCAST_LIKES) || id.equals(ID.BROADCAST_COMMENTS)){
+        if(id.equals(ID.BROADCAST_LIKES) || id.equals(ID.BROADCAST_COMMENTS) || id.equals((ID.BROADCAST_REPLIES))){
             newInteractionsBadge.setBadgeNumber(newContentCount);
         }
     }

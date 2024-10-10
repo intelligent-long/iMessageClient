@@ -39,5 +39,5 @@ public class Constants {
     public static final int FETCH_BROADCAST_LIKES_PAGE_SIZE = 30;
     public static final int FETCH_BROADCAST_COMMENTS_PAGE_SIZE = 30;
     public static final int FETCH_BROADCAST_COMMENTS_INTERACTION_PAGE_SIZE = 30;
-    public static final int FETCH_BROADCAST_COMMENT_REPLIES_PAGE_SIZE = 30;
+    public static final int FETCH_BROADCAST_REPLY_COMMENTS_INTERACTION_PAGE_SIZE = 30;
 }

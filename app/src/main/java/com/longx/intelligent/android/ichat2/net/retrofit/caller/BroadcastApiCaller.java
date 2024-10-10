@@ -14,6 +14,7 @@ import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBod
 import com.longx.intelligent.android.ichat2.data.request.EditBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastLikesToOldPostBody;
+import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastReplyCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -276,6 +277,25 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationData> deleteBroadcastComment(LifecycleOwner lifecycleOwner, String commentId, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().deleteBroadcastComment(commentId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+
+    public static CompletableCall<OperationData> fetchBroadcastReplyCommentNewsCount(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchBroadcastReplyCommentNewsCount();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<PaginatedOperationData<BroadcastComment>> fetchReplyCommentsOfSelfBroadcasts(LifecycleOwner lifecycleOwner, String lastReplyCommentId, int ps, BaseYier<PaginatedOperationData<BroadcastComment>> yier){
+        CompletableCall<PaginatedOperationData<BroadcastComment>> call = getApiImplementation().fetchReplyCommentsOfSelfBroadcasts(lastReplyCommentId, ps);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> makeBroadcastReplyCommentsToOld(LifecycleOwner lifecycleOwner, MakeBroadcastReplyCommentsToOldPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().makeBroadcastReplyCommentsToOld(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

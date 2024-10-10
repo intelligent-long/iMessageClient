@@ -112,7 +112,7 @@ public class ServerMessageServiceStomp {
             ServerMessageServiceStompActions.updateNewBroadcastCommentsCount(context);
         });
         stomp.subscribe(StompDestinations.BROADCASTS_REPLIES_UPDATE, null, message -> {
-
+            ServerMessageServiceStompActions.updateNewBroadcastRepliesCount(context);
         });
     }
 

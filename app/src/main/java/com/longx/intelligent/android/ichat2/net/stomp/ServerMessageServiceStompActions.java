@@ -171,4 +171,18 @@ public class ServerMessageServiceStompActions {
         });
     }
 
+    public static void updateNewBroadcastRepliesCount(Context context){
+        ContentUpdater.updateNewBroadcastRepliesCount(context, results -> {
+            int newsCount = (int) results[0];
+            if(newsCount > 0){
+                //TODO：通知
+            }
+            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                    newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.BROADCAST_REPLIES);
+                });
+            });
+        });
+    }
+
 }
