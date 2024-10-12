@@ -123,10 +123,10 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                     .setViewToCommentYier(v1 -> {
                         BroadcastToCommentPopupWindow popupWindow = new BroadcastToCommentPopupWindow(broadcastActivity, broadcastComment.getToComment());
                         popupWindow.getPopupWindow().setOnDismissListener(() -> {
-                            binding.getRoot().setBackgroundColor(ColorUtil.getColor(broadcastActivity, R.color.transparent));
+                            cancelHighLight(broadcastComment);
                         });
                         popupWindow.show(binding.getRoot());
-                        binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(broadcastActivity, com.google.android.material.R.attr.colorSurfaceContainerLow));
+                        highLight(broadcastComment);
                     })
                     .show(binding.getRoot());
             return true;
