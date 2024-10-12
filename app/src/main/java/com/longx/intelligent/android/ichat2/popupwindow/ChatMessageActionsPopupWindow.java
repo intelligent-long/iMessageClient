@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.PopupWindowChatMessageActionsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -39,6 +40,10 @@ public class ChatMessageActionsPopupWindow {
                 binding.clickViewCopy.setVisibility(View.GONE);
                 break;
             }
+        }
+        if(!chatMessage.getFrom().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())){
+            binding.clickViewDelete.setVisibility(View.GONE);
+            binding.clickViewRevoke.setVisibility(View.GONE);
         }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
         setupYiers();
