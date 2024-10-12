@@ -24,6 +24,7 @@ import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OfflineDetailShowYier;
@@ -357,7 +358,9 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                     SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(AuthActivity.this, offlineDetail);
                     SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(AuthActivity.this, false);
                     showOfflineDetail();
-                });
+                }, new OperationStatus.HandleResult(-101, () -> {
+                    ErrorLogger.log("获取离线详情 Code: " + data.getCode() + ", Message: " + data.getMessage());
+                }));
             }
         });
     }

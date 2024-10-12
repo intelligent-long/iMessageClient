@@ -25,6 +25,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OfflineDetailShowYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
@@ -184,7 +185,9 @@ public class GlobalBehaviors {
                     GlobalYiersHolder.getYiers(OfflineDetailShowYier.class).ifPresent(offlineDetailShowYiers -> {
                         offlineDetailShowYiers.forEach(OfflineDetailShowYier::showOfflineDetail);
                     });
-                });
+                }, new OperationStatus.HandleResult(-101, () -> {
+                    ErrorLogger.log("获取离线详情 Code: " + data.getCode() + ", Message: " + data.getMessage());
+                }));
             }
         });
         SharedPreferencesAccessor.NetPref.saveLoginState(context, false);
