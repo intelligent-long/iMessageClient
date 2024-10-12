@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 
@@ -131,8 +132,12 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                         });
                     })
                     .setViewToCommentYier(v1 -> {
-                        new BroadcastToCommentPopupWindow(broadcastActivity, broadcastComment.getToComment())
-                                .show(binding.getRoot());
+                        BroadcastToCommentPopupWindow popupWindow = new BroadcastToCommentPopupWindow(broadcastActivity, broadcastComment.getToComment());
+                        popupWindow.getPopupWindow().setOnDismissListener(() -> {
+                            binding.getRoot().setBackgroundColor(ColorUtil.getColor(broadcastActivity, R.color.transparent));
+                        });
+                        popupWindow.show(binding.getRoot());
+                        binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(broadcastActivity, com.google.android.material.R.attr.colorSurfaceContainerLow));
                     })
                     .show(binding.getRoot());
             return true;
