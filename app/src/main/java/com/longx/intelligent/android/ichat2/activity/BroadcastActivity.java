@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Toast;
 
@@ -72,6 +73,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private boolean stopFetchNextPage;
     private BroadcastComment replyToBroadcastComment;
     private ResultsYier endReplyYier;
+    private ResultsYier onCommentsNextPageYier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,8 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         setAutoCancelInput(false);
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
+        BroadcastComment broadcastComment = getIntent().getParcelableExtra(ExtraKeys.BROADCAST_COMMENT);
+        if(broadcastComment != null) startLocateComment(broadcastComment);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
         init();
         GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
@@ -111,7 +115,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     }
 
     private void init(){
-        commentsLinearLayoutViews = new BroadcastCommentsLinearLayoutViews(this, binding.commentView);
+        commentsLinearLayoutViews = new BroadcastCommentsLinearLayoutViews(this, binding.commentView, binding.scrollView);
         footerBinding = RecyclerFooterBroadcastCommentsBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
         commentsLinearLayoutViews.setFooter(footerBinding.getRoot());
     }
@@ -685,6 +689,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                     stopFetchNextPage = !raw.body().hasMore();
                     List<BroadcastComment> broadcastCommentList = data.getData();
                     commentsLinearLayoutViews.addItemsAndShow(broadcastCommentList);
+                    if(onCommentsNextPageYier != null) onCommentsNextPageYier.onResults();
                 }, new OperationStatus.HandleResult(-102, () -> {
                     binding.layoutComment.setVisibility(View.GONE);
                 }));
@@ -700,5 +705,14 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             return true;
         }
         return false;
+    }
+
+    private void startLocateComment(BroadcastComment broadcastComment){
+        onCommentsNextPageYier = results -> {
+            boolean scrollSuccess = commentsLinearLayoutViews.scrollTo(broadcastComment, true, null);
+            if(!scrollSuccess){
+                commentNextPage();
+            }
+        };
     }
 }

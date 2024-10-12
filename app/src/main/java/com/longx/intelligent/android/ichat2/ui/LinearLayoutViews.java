@@ -1,8 +1,19 @@
 package com.longx.intelligent.android.ichat2.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+
+import androidx.core.widget.NestedScrollView;
+
+import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +24,16 @@ import java.util.List;
 public abstract class LinearLayoutViews<T> {
     private final Activity activity;
     private final LinearLayout linearLayout;
+    private final NestedScrollView scrollView;
     private final List<T> allItems = new ArrayList<>();
     private View footerView;
 
-    public LinearLayoutViews(Activity activity, LinearLayout linearLayout) {
+    private int currentHighLightIndex;
+
+    public LinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView scrollView) {
         this.activity = activity;
         this.linearLayout = linearLayout;
+        this.scrollView = scrollView;
     }
 
     public synchronized void addItemsAndShow(List<T> items){
@@ -86,5 +101,53 @@ public abstract class LinearLayoutViews<T> {
 
     public LinearLayout getLinearLayout() {
         return linearLayout;
+    }
+
+    public synchronized void highLight(int index){
+        if(currentHighLightIndex != -1){
+            getLinearLayout().getChildAt(currentHighLightIndex).setBackgroundColor(Color.TRANSPARENT);
+        }
+        currentHighLightIndex = index;
+        getLinearLayout().getChildAt(index).setBackgroundColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorSurfaceContainerLow));
+    }
+
+    public synchronized void highLight(T item){
+        highLight(allItems.indexOf(item));
+    }
+
+    public synchronized void cancelHighLight(int index){
+        currentHighLightIndex = -1;
+        getLinearLayout().getChildAt(index).setBackgroundColor(Color.TRANSPARENT);
+    }
+
+    public synchronized void cancelHighLight(T item){
+        cancelHighLight(allItems.indexOf(item));
+    }
+
+    public boolean scrollTo(T item, boolean smooth, View.OnTouchListener sourceOnTouchYier){
+        int index = allItems.indexOf(item);
+        if(index == -1) return false;
+        View childAt = linearLayout.getChildAt(index);
+        if(childAt == null) return false;
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public void onGlobalLayout() {
+                scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int bottom = childAt.getBottom();
+                if (smooth) {
+                    scrollView.smoothScrollTo(0, bottom);
+                } else {
+                    scrollView.scrollTo(0, bottom);
+                }
+                highLight(index);
+                scrollView.setOnTouchListener((v, event) -> {
+                    cancelHighLight(index);
+                    scrollView.setOnTouchListener(sourceOnTouchYier);
+                    return true;
+                });
+            }
+        });
+        return true;
     }
 }

@@ -102,6 +102,7 @@ public class BroadcastRepliesInteractionRecyclerAdapter extends WrappableRecycle
         holder.binding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(activity, BroadcastActivity.class);
             intent.putExtra(ExtraKeys.BROADCAST_ID, broadcastReplyComment.getBroadcastId());
+            intent.putExtra(ExtraKeys.BROADCAST_COMMENT, broadcastReplyComment);
             activity.startActivity(intent);
         });
         holder.binding.avatar.setOnClickListener(v -> {
