@@ -3,10 +3,12 @@ package com.longx.intelligent.android.ichat2.net.retrofit.api;
 import com.longx.intelligent.android.ichat2.data.request.ChangeAllowChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
 
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -22,4 +24,7 @@ public interface PermissionApi {
 
     @POST("permission/channel/chat_message/allow_chat_message/change")
     CompletableCall<OperationStatus> changeAllowChatMessage(@Body ChangeAllowChatMessagePostBody postBody);
+
+    @GET("permission/broadcast/channel_permission")
+    CompletableCall<OperationData> fetchBroadcastChannelPermission();
 }

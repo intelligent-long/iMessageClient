@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.BroadcastChannelPermissionActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -48,6 +49,8 @@ public class PrivacySettingsActivity extends BaseActivity {
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
         private Material3Preference preferenceUserProfileVisibility;
         private Material3Preference preferenceWaysToFindMe;
+        private Material3Preference preferenceBroadcastChannelPermission;
+        private Material3Preference preferenceDoNotSeeBroadcastChannel;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
@@ -64,6 +67,8 @@ public class PrivacySettingsActivity extends BaseActivity {
         protected void bindPreferences() {
             preferenceUserProfileVisibility = findPreference(getString(R.string.preference_key_user_profile_visibility));
             preferenceWaysToFindMe = findPreference(getString(R.string.preference_key_ways_to_find_me));
+            preferenceBroadcastChannelPermission = findPreference(getString(R.string.preference_key_broadcast_channel_permission));
+            preferenceDoNotSeeBroadcastChannel = findPreference(getString(R.string.preference_key_do_not_see_broadcast_channel));
         }
 
         @Override
@@ -74,6 +79,8 @@ public class PrivacySettingsActivity extends BaseActivity {
         protected void setupYiers() {
             preferenceUserProfileVisibility.setOnPreferenceClickListener(this);
             preferenceWaysToFindMe.setOnPreferenceClickListener(this);
+            preferenceBroadcastChannelPermission.setOnPreferenceClickListener(this);
+            preferenceDoNotSeeBroadcastChannel.setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -82,6 +89,10 @@ public class PrivacySettingsActivity extends BaseActivity {
                 startActivity(new Intent(requireContext(), EditUserProfileVisibilitySettingsActivity.class));
             }else if(preference.equals(preferenceWaysToFindMe)){
                 startActivity(new Intent(requireContext(), EditWaysToFindMeActivity.class));
+            }else if(preference.equals(preferenceBroadcastChannelPermission)){
+                startActivity(new Intent(requireContext(), BroadcastChannelPermissionActivity.class));
+            }else if(preference.equals(preferenceDoNotSeeBroadcastChannel)){
+
             }
             return true;
         }

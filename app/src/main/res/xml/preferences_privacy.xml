@@ -18,9 +18,11 @@
         app:title="广播">
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
-            app:title="广播频道权限" />
+            app:key="@string/preference_key_broadcast_channel_permission"
+            app:title="@string/title_broadcast_channel_permission" />
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_do_not_see_broadcast_channel"
             app:title="不看 TA 的广播" />
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
 

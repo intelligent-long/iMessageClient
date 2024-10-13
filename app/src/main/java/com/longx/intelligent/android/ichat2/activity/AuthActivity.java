@@ -72,9 +72,12 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
     @Override
     protected void onResume() {
         super.onResume();
-        onResumeSetupLoginWayAutoCompleteTextView();
-        showOfflineDetail();
-        checkAndFetchAndShowOfflineDetail();
+        boolean changePasswordMode = getIntent().getBooleanExtra(ExtraKeys.CHANGE_PASSWORD_MODE, false);
+        if(!changePasswordMode){
+            onResumeSetupLoginWayAutoCompleteTextView();
+            showOfflineDetail();
+            checkAndFetchAndShowOfflineDetail();
+        }
     }
 
     private void checkAndSwitchMode() {
