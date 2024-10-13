@@ -360,6 +360,8 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                     showOfflineDetail();
                 }, new OperationStatus.HandleResult(-101, () -> {
                     ErrorLogger.log("获取离线详情 Code: " + data.getCode() + ", Message: " + data.getMessage());
+                }), new OperationStatus.HandleResult(-200, () -> {
+                    ErrorLogger.log("获取离线详情 Code: " + data.getCode() + ", Message: " + data.getMessage());
                 }));
             }
         });
