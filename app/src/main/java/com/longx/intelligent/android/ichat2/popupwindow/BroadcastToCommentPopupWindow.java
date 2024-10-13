@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.popupwindow;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -70,6 +71,9 @@ public class BroadcastToCommentPopupWindow {
             ClickableSpan userMentionClickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
+                    Intent intent = new Intent(activity, ChannelActivity.class);
+                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
+                    activity.startActivity(intent);
                 }
 
                 @Override
@@ -82,6 +86,7 @@ public class BroadcastToCommentPopupWindow {
             spannableString.setSpan(userMentionClickableSpan, 0, toUserSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             binding.text.setMovementMethod(LinkMovementMethod.getInstance());
             binding.text.setText(spannableString);
+            binding.text.setHighlightColor(Color.TRANSPARENT);
         }
     }
 

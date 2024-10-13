@@ -29,6 +29,7 @@ import com.longx.intelligent.android.ichat2.popupwindow.BroadcastToCommentPopupW
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
@@ -141,7 +142,13 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
             }
             lastReplyIndex = getAllItems().indexOf(broadcastComment);
             highLight(broadcastComment);
-            broadcastActivity.startReply(broadcastComment, results -> cancelHighLight(broadcastComment));
+            broadcastActivity.startReply(broadcastComment, results -> {
+                try {
+                    cancelHighLight(broadcastComment);
+                }catch (Exception e){
+                    ErrorLogger.log(e);
+                }
+            });
         });
     }
 }
