@@ -8,9 +8,10 @@ import android.net.Uri;
 import androidx.preference.PreferenceManager;
 
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.behavior.ChatVoicePlayer;
+import com.longx.intelligent.android.ichat2.procedure.ChatVoicePlayer;
 import com.longx.intelligent.android.ichat2.data.Avatar;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
+import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.OfflineDetail;
@@ -19,8 +20,6 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.net.ServerProperties;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
-import com.longx.intelligent.android.ichat2.util.TimeUtil;
-import com.longx.intelligent.android.ichat2.value.Constants;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,18 +27,21 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * Created by LONG on 2024/3/26 at 11:22 PM.
  */
 public class SharedPreferencesAccessor {
 
+    public static SharedPreferences getCurrentUserSharedPreferences(Context context, String name){
+        String currentUserIchatId = UserProfilePref.getCurrentUserProfile(context).getIchatId();
+        return context.getSharedPreferences(name + "_" + currentUserIchatId, Context.MODE_PRIVATE);
+    }
+
     public static class DefaultPref {
         private static class Key {
             private static final String IGNORE_REQUEST_IGNORE_BATTERY_OPTIMIZE = "ignore_request_ignore_battery_optimize";
             private static final String SEARCH_CHANNEL_BY = "search_channel_by";
-            private static final String BROADCASTS_RELOADED_TIME = "broadcasts_reloaded_time";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return PreferenceManager.getDefaultSharedPreferences(context);
@@ -91,20 +93,6 @@ public class SharedPreferencesAccessor {
         public static String getSearchChannelBy(Context context){
             return getSharedPreferences(context)
                     .getString(Key.SEARCH_CHANNEL_BY, null);
-        }
-
-        public static void saveBroadcastReloadedTime(Context context, Date time){
-            getSharedPreferences(context)
-                    .edit()
-                    .putLong(Key.BROADCASTS_RELOADED_TIME, time.getTime())
-                    .apply();
-        }
-
-        public static Date getBroadcastReloadedTime(Context context){
-            long time = getSharedPreferences(context)
-                    .getLong(Key.BROADCASTS_RELOADED_TIME, -1);
-            if(time == -1) return null;
-            return new Date(time);
         }
     }
 
@@ -408,7 +396,7 @@ public class SharedPreferencesAccessor {
             private static final String BROADCAST_REPLY_COMMENT_NEWS_COUNT = "broadcast_reply_comment_news_count";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
-            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+            return getCurrentUserSharedPreferences(context, NAME);
         }
 
         public static void saveChannelAdditionActivities(Context context, ChannelAdditionNotViewedCount newContentCount){
@@ -495,7 +483,7 @@ public class SharedPreferencesAccessor {
             private static final String BROADCASTS = "broadcasts";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
-            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+            return getCurrentUserSharedPreferences(context, NAME);
         }
 
         public static class ChannelAdditionActivities{
@@ -676,7 +664,7 @@ public class SharedPreferencesAccessor {
             private static final String CHAT_VOICE_PLAYER_POSITION = "chat_voice_player_position";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
-            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+            return getCurrentUserSharedPreferences(context, NAME);
         }
 
         public static void saveChatVoicePlayerState(Context context, ChatVoicePlayer.State state){
@@ -695,6 +683,67 @@ public class SharedPreferencesAccessor {
             int position = sharedPreferences.getInt(Key.CHAT_VOICE_PLAYER_POSITION, -1);
             return new ChatVoicePlayer.State(id, uriString == null ? null : Uri.parse(uriString), position);
         }
+    }
+
+    public static class BroadcastPref{
+        private static final String NAME = "broadcast";
+        private static class Key {
+            private static final String APP_BROADCAST_CHANNEL_PERMISSION = "app_broadcast_channel_permission";
+            private static final String APP_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS = "app_broadcast_channel_permission_exclude_connected_channels";
+            private static final String SERVER_BROADCAST_CHANNEL_PERMISSION = "server_broadcast_channel_permission";
+            private static final String SERVER_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS = "server_broadcast_channel_permission_exclude_connected_channels";
+            private static final String BROADCASTS_RELOADED_TIME = "broadcasts_reloaded_time";
+        }
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        }
+
+        public static void saveBroadcastReloadedTime(Context context, Date time){
+            getSharedPreferences(context)
+                    .edit()
+                    .putLong(Key.BROADCASTS_RELOADED_TIME, time.getTime())
+                    .apply();
+        }
+
+        public static Date getBroadcastReloadedTime(Context context){
+            long time = getSharedPreferences(context)
+                    .getLong(Key.BROADCASTS_RELOADED_TIME, -1);
+            if(time == -1) return null;
+            return new Date(time);
+        }
+
+        public static void saveAppBroadcastChannelPermission(Context context, BroadcastChannelPermission broadcastChannelPermission){
+            getSharedPreferences(context)
+                    .edit()
+                    .putInt(Key.APP_BROADCAST_CHANNEL_PERMISSION, broadcastChannelPermission.getPermission())
+                    .putStringSet(Key.APP_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS, broadcastChannelPermission.getExcludeConnectedChannels())
+                    .apply();
+
+        }
+
+        public static BroadcastChannelPermission getAppBroadcastChannelPermission(Context context) {
+            int permission = getSharedPreferences(context).getInt(Key.APP_BROADCAST_CHANNEL_PERMISSION, -1);
+            Set<String> excludeConnectedChannels = getSharedPreferences(context).getStringSet(Key.APP_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS, null);
+            if(permission == -1 || excludeConnectedChannels == null) return null;
+            return new BroadcastChannelPermission(permission, excludeConnectedChannels);
+        }
+
+        public static void saveServerBroadcastChannelPermission(Context context, BroadcastChannelPermission broadcastChannelPermission){
+            getSharedPreferences(context)
+                    .edit()
+                    .putInt(Key.SERVER_BROADCAST_CHANNEL_PERMISSION, broadcastChannelPermission.getPermission())
+                    .putStringSet(Key.SERVER_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS, broadcastChannelPermission.getExcludeConnectedChannels())
+                    .apply();
+
+        }
+
+        public static BroadcastChannelPermission getServerBroadcastChannelPermission(Context context) {
+            int permission = getSharedPreferences(context).getInt(Key.SERVER_BROADCAST_CHANNEL_PERMISSION, -1);
+            Set<String> excludeConnectedChannels = getSharedPreferences(context).getStringSet(Key.SERVER_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS, null);
+            if(permission == -1 || excludeConnectedChannels == null) return null;
+            return new BroadcastChannelPermission(permission, excludeConnectedChannels);
+        }
+
     }
 
 }

@@ -1,9 +1,8 @@
-package com.longx.intelligent.android.ichat2.behavior;
+package com.longx.intelligent.android.ichat2.procedure;
 
 import static android.content.Context.POWER_SERVICE;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
@@ -13,10 +12,7 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.PowerManager;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -25,9 +21,6 @@ import android.hardware.SensorManager;
 import android.view.HapticFeedbackConstants;
 
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
-
-import java.io.IOException;
 
 public class ChatVoicePlayer {
     private MediaPlayer mediaPlayer;

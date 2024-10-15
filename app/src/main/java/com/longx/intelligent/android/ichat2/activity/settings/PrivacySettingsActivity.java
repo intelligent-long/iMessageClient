@@ -3,27 +3,15 @@ package com.longx.intelligent.android.ichat2.activity.settings;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastChannelPermissionActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
-import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPrivacySettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
-import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
-import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
-
-import java.util.List;
 
 public class PrivacySettingsActivity extends BaseActivity {
     private ActivityPrivacySettingsBinding binding;

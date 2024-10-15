@@ -1,4 +1,4 @@
-package com.longx.intelligent.android.ichat2.behavior;
+package com.longx.intelligent.android.ichat2.procedure;
 
 import android.content.Context;
 

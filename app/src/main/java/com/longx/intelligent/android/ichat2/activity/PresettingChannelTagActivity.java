@@ -6,25 +6,17 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.PresettingTagChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.adapter.PresettingTagNewChannelTagsRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.adapter.SettingTagChannelTagsRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.adapter.SettingTagNewChannelTagsRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddSettingChannelTagBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPresettingChannelTagBinding;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 

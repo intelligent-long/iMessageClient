@@ -1,4 +1,4 @@
-package com.longx.intelligent.android.ichat2.behavior;
+package com.longx.intelligent.android.ichat2.procedure;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
-import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideRequest;
 

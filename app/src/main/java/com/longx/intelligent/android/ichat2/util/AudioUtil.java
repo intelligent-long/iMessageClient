@@ -2,9 +2,8 @@ package com.longx.intelligent.android.ichat2.util;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 
 import java.io.File;
 import java.io.IOException;

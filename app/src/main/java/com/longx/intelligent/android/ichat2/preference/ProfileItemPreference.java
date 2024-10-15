@@ -9,10 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.preference.PreferenceViewHolder;
 
-import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
 /**

@@ -10,8 +10,11 @@ public class BroadcastChannelPermission {
     public static final int PUBLIC = 1;
     public static final int CONNECTED_CHANNEL_CIRCLE = 2;
 
-    private final int permission;
-    private final Set<String> excludeConnectedChannels;
+    private int permission;
+    private Set<String> excludeConnectedChannels;
+
+    public BroadcastChannelPermission() {
+    }
 
     public BroadcastChannelPermission(int permission, Set<String> excludeConnectedChannels) {
         this.permission = permission;

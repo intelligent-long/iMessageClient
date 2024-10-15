@@ -11,7 +11,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +19,12 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastInteractionsActivity;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.SendBroadcastActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -442,7 +440,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     });
                     adapter.clearAndShow();
                     adapter.addItemsAndShow(itemDataList);
-                    SharedPreferencesAccessor.DefaultPref.saveBroadcastReloadedTime(requireContext(), new Date());
+                    SharedPreferencesAccessor.BroadcastPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                 }, new OperationStatus.HandleResult(-102, () -> {
                     headerBinding.loadFailedView.setVisibility(View.GONE);
@@ -455,7 +453,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     }
 
     private void showOrHideBroadcastReloadedTime() {
-        Date broadcastReloadedTime = SharedPreferencesAccessor.DefaultPref.getBroadcastReloadedTime(requireContext());
+        Date broadcastReloadedTime = SharedPreferencesAccessor.BroadcastPref.getBroadcastReloadedTime(requireContext());
         if(broadcastReloadedTime == null){
             headerBinding.reloadTime.setVisibility(View.GONE);
         }else {
@@ -603,7 +601,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                         itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                     });
                     adapter.addItemsToStartAndShow(itemDataList);
-                    SharedPreferencesAccessor.DefaultPref.saveBroadcastReloadedTime(requireContext(), new Date());
+                    SharedPreferencesAccessor.BroadcastPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                     if(raw.body().hasMore()){
                         fetchNews();

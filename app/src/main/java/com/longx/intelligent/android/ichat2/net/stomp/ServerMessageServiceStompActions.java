@@ -6,7 +6,7 @@ import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.HoldableActivity;
-import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
+import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;

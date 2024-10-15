@@ -10,7 +10,7 @@ import android.webkit.MimeTypeMap;
 
 import androidx.core.content.FileProvider;
 
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 

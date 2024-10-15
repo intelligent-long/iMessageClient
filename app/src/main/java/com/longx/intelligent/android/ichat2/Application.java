@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2;
 
+import com.longx.intelligent.android.ichat2.procedure.InitFetcher;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
@@ -30,6 +31,7 @@ public class Application extends android.app.Application {
         boolean loginState = SharedPreferencesAccessor.NetPref.getLoginState(this);
         if(loginState) {
             ServerMessageService.work(this);
+            InitFetcher.doAll(this);
         }
     }
 }

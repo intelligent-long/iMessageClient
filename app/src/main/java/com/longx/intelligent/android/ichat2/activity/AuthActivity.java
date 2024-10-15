@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
+import com.longx.intelligent.android.ichat2.procedure.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.bottomsheet.AuthMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.OfflineDetail;

@@ -1,14 +1,12 @@
 package com.longx.intelligent.android.ichat2.permission;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -2,7 +2,7 @@ package com.longx.intelligent.android.ichat2.net.stomp;
 
 import android.content.Context;
 
-import com.longx.intelligent.android.ichat2.behavior.GlobalBehaviors;
+import com.longx.intelligent.android.ichat2.procedure.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.net.CookieJar;

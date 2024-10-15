@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +14,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.EditUserSettingsActivity;
-import com.longx.intelligent.android.ichat2.behavior.ContentUpdater;
-import com.longx.intelligent.android.ichat2.behavior.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
+import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;

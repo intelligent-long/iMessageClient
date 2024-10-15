@@ -1,9 +1,8 @@
-package com.longx.intelligent.android.ichat2.behavior;
+package com.longx.intelligent.android.ichat2.procedure;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 

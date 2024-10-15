@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.longx.intelligent.android.ichat2.behavior.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.ProgressCallback;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
