@@ -8,11 +8,15 @@ import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastChannelPermissionLinearLayoutViews;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
+import com.longx.intelligent.android.ichat2.data.UserInfo;
+import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastChannelPermissionPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastChannelPermissionBinding;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsFooterBroadcastChannelPermissionBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.CollectionUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 import retrofit2.Call;
@@ -94,10 +98,24 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
                 binding.radioPrivate.setChecked(false);
                 binding.radioConnectedChannelCircle.setChecked(true);
             }
+            int currentCheckedPermission = getCurrentCheckedPermission();
+            SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(this, new BroadcastChannelPermission(currentCheckedPermission, null));
         };
         binding.layoutPublic.setOnClickListener(yier);
         binding.layoutPrivate.setOnClickListener(yier);
         binding.layoutConnectedChannelCircle.setOnClickListener(yier);
+    }
+
+    private int getCurrentCheckedPermission() {
+        int permission = -1;
+        if(binding.radioPrivate.isChecked()){
+            permission = BroadcastChannelPermission.PRIVATE;
+        }else if(binding.radioPublic.isChecked()){
+            permission = BroadcastChannelPermission.PUBLIC;
+        }else if(binding.radioConnectedChannelCircle.isChecked()){
+            permission = BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE;
+        }
+        return permission;
     }
 
     @Override
@@ -107,6 +125,38 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
     }
 
     private void updateServerData() {
+        if(!binding.scrollView.isEnabled()) return;
+        int currentCheckedPermission = getCurrentCheckedPermission();
+        BroadcastChannelPermission appBroadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getAppBroadcastChannelPermission(this);
+        if(appBroadcastChannelPermission != null &&
+                appBroadcastChannelPermission.getPermission() == currentCheckedPermission &&
+                CollectionUtil.equals(appBroadcastChannelPermission.getExcludeConnectedChannels(), null)) { //TODO null
+            return;
+        }
+        BroadcastChannelPermission serverBroadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getServerBroadcastChannelPermission(this);
+        ChangeBroadcastChannelPermissionPostBody postBody = new ChangeBroadcastChannelPermissionPostBody(currentCheckedPermission, null);
+        PermissionApiCaller.changeBroadcastChannelPermission(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(this.getApplicationContext()){
 
+            @Override
+            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                super.ok(data, raw, call);
+                data.commonHandleResult(BroadcastChannelPermissionActivity.this, new int[]{}, () -> {
+                    SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, new BroadcastChannelPermission(currentCheckedPermission, null));
+                    SharedPreferencesAccessor.BroadcastPref.saveServerBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, new BroadcastChannelPermission(currentCheckedPermission, null));
+                });
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<OperationStatus> row, Call<OperationStatus> call) {
+                super.notOk(code, message, row, call);
+                SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, serverBroadcastChannelPermission);
+            }
+
+            @Override
+            public void failure(Throwable t, Call<OperationStatus> call) {
+                super.failure(t, call);
+                SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, serverBroadcastChannelPermission);
+            }
+        });
     }
 }
