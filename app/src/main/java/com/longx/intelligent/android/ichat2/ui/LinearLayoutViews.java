@@ -189,4 +189,16 @@ public abstract class LinearLayoutViews<T> {
         }
         return true;
     }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public ScrollView getScrollView() {
+        return scrollView;
+    }
+
+    public NestedScrollView getNestedScrollView() {
+        return nestedScrollView;
+    }
 }
