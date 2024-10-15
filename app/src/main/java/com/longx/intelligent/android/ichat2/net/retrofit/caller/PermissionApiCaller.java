@@ -2,17 +2,15 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 
 import androidx.lifecycle.LifecycleOwner;
 
-import com.google.android.exoplayer2.C;
 import com.longx.intelligent.android.ichat2.data.request.ChangeAllowChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastChannelPermissionPostBody;
+import com.longx.intelligent.android.ichat2.data.request.ChangeExcludeBroadcastChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.net.retrofit.api.PermissionApi;
 import com.xcheng.retrofit.CompletableCall;
-
-import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2024/6/7 at 6:02 PM.
@@ -48,6 +46,18 @@ public class PermissionApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> changeBroadcastChannelPermission(LifecycleOwner lifecycleOwner, ChangeBroadcastChannelPermissionPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().changeChannelPermission(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> fetchExcludeBroadcastChannels(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchExcludeBroadcastChannels();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> changeExcludeBroadcastChannels(LifecycleOwner lifecycleOwner, ChangeExcludeBroadcastChannelPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().changeExcludeBroadcastChannels(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

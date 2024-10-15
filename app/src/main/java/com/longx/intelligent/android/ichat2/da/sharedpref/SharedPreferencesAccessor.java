@@ -693,9 +693,12 @@ public class SharedPreferencesAccessor {
             private static final String SERVER_BROADCAST_CHANNEL_PERMISSION = "server_broadcast_channel_permission";
             private static final String SERVER_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS = "server_broadcast_channel_permission_exclude_connected_channels";
             private static final String BROADCASTS_RELOADED_TIME = "broadcasts_reloaded_time";
+            private static final String EXCLUDE_BROADCAST_CHANNELS_LOADED = "exclude_broadcast_channels_loaded";
+            private static final String APP_EXCLUDE_BROADCAST_CHANNELS = "app_exclude_broadcast_channels";
+            private static final String SERVER_EXCLUDE_BROADCAST_CHANNELS = "server_exclude_broadcast_channels";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
-            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+            return getCurrentUserSharedPreferences(context, NAME);
         }
 
         public static void saveBroadcastReloadedTime(Context context, Date time){
@@ -742,6 +745,36 @@ public class SharedPreferencesAccessor {
             Set<String> excludeConnectedChannels = getSharedPreferences(context).getStringSet(Key.SERVER_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS, new HashSet<>());
             if(permission == -1) return null;
             return new BroadcastChannelPermission(permission, excludeConnectedChannels);
+        }
+
+        public static void saveExcludeBroadcastChannelsLoaded(Context context){
+            getSharedPreferences(context).edit().putBoolean(Key.EXCLUDE_BROADCAST_CHANNELS_LOADED, true).apply();
+        }
+
+        public static boolean getExcludeBroadcastChannelsLoaded(Context context){
+            return getSharedPreferences(context).getBoolean(Key.EXCLUDE_BROADCAST_CHANNELS_LOADED, false);
+        }
+
+        public static void saveAppExcludeBroadcastChannels(Context context, Set<String> excludeBroadcastChannelIds){
+            getSharedPreferences(context)
+                    .edit()
+                    .putStringSet(Key.APP_EXCLUDE_BROADCAST_CHANNELS, excludeBroadcastChannelIds)
+                    .apply();
+        }
+
+        public static void saveServerExcludeBroadcastChannels(Context context, Set<String> excludeBroadcastChannelIds){
+            getSharedPreferences(context)
+                    .edit()
+                    .putStringSet(Key.SERVER_EXCLUDE_BROADCAST_CHANNELS, excludeBroadcastChannelIds)
+                    .apply();
+        }
+
+        public static Set<String> getAppExcludeBroadcastChannels(Context context){
+            return getSharedPreferences(context).getStringSet(Key.APP_EXCLUDE_BROADCAST_CHANNELS, new HashSet<>());
+        }
+
+        public static Set<String> getServerExcludeBroadcastChannels(Context context){
+            return getSharedPreferences(context).getStringSet(Key.SERVER_EXCLUDE_BROADCAST_CHANNELS, new HashSet<>());
         }
 
     }

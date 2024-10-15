@@ -16,12 +16,17 @@ import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 
+import java.util.Set;
+
 /**
  * Created by LONG on 2024/10/16 at 上午5:18.
  */
 public class ExcludeBroadcastChannelLinearLayoutViews extends LinearLayoutViews<ExcludeBroadcastChannelLinearLayoutViews.ItemData> {
-    public ExcludeBroadcastChannelLinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView) {
+    private Set<String> excludeBroadcastChannelIds;
+
+    public ExcludeBroadcastChannelLinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView, Set<String> excludeBroadcastChannelIds) {
         super(activity, linearLayout, nestedScrollView);
+        this.excludeBroadcastChannelIds = excludeBroadcastChannelIds;
     }
 
     public static class ItemData{
@@ -68,6 +73,9 @@ public class ExcludeBroadcastChannelLinearLayoutViews extends LinearLayoutViews<
             }
         }
         binding.name.setText(itemData.channel.getName());
+        if(excludeBroadcastChannelIds.contains(itemData.channel.getIchatId())){
+            binding.checkBox.setChecked(true);
+        }
         setupYiers(binding, itemData, activity);
         return binding.getRoot();
     }
@@ -77,7 +85,15 @@ public class ExcludeBroadcastChannelLinearLayoutViews extends LinearLayoutViews<
             binding.checkBox.setChecked(!binding.checkBox.isChecked());
         });
         binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
+            if(isChecked){
+                excludeBroadcastChannelIds.add(itemData.channel.getIchatId());
+            }else {
+                excludeBroadcastChannelIds.remove(itemData.channel.getIchatId());
+            }
         });
+    }
+
+    public Set<String> getExcludeBroadcastChannelIds() {
+        return excludeBroadcastChannelIds;
     }
 }
