@@ -107,7 +107,7 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
                 showConnectedChannels();
             }
             int currentCheckedPermission = getCurrentCheckedPermission();
-            SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(this, new BroadcastChannelPermission(currentCheckedPermission, null));
+            SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(this, new BroadcastChannelPermission(currentCheckedPermission, linearLayoutViews.getExcludeConnectedChannels()));
         };
         binding.layoutPublic.setOnClickListener(yier);
         binding.layoutPrivate.setOnClickListener(yier);
@@ -146,19 +146,19 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
         BroadcastChannelPermission appBroadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getAppBroadcastChannelPermission(this);
         if(appBroadcastChannelPermission != null &&
                 appBroadcastChannelPermission.getPermission() == currentCheckedPermission &&
-                CollectionUtil.equals(appBroadcastChannelPermission.getExcludeConnectedChannels(), null)) { //TODO null
+                CollectionUtil.equals(appBroadcastChannelPermission.getExcludeConnectedChannels(), linearLayoutViews.getExcludeConnectedChannels())) {
             return;
         }
         BroadcastChannelPermission serverBroadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getServerBroadcastChannelPermission(this);
-        ChangeBroadcastChannelPermissionPostBody postBody = new ChangeBroadcastChannelPermissionPostBody(currentCheckedPermission, null);
+        ChangeBroadcastChannelPermissionPostBody postBody = new ChangeBroadcastChannelPermissionPostBody(currentCheckedPermission, linearLayoutViews.getExcludeConnectedChannels());
         PermissionApiCaller.changeBroadcastChannelPermission(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(this.getApplicationContext()){
 
             @Override
             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(BroadcastChannelPermissionActivity.this, new int[]{}, () -> {
-                    SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, new BroadcastChannelPermission(currentCheckedPermission, null));
-                    SharedPreferencesAccessor.BroadcastPref.saveServerBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, new BroadcastChannelPermission(currentCheckedPermission, null));
+                    SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, new BroadcastChannelPermission(currentCheckedPermission, linearLayoutViews.getExcludeConnectedChannels()));
+                    SharedPreferencesAccessor.BroadcastPref.saveServerBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, new BroadcastChannelPermission(currentCheckedPermission, linearLayoutViews.getExcludeConnectedChannels()));
                 });
             }
 

@@ -115,6 +115,16 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
             });
             fastLocateDialog.forShow();
         });
+        binding.excludeCheckYes.setOnClickListener(v -> {
+            binding.excludeCheckYes.setVisibility(View.GONE);
+            binding.excludeCheckNo.setVisibility(View.VISIBLE);
+            excludeConnectedChannels.remove(itemData.channel.getIchatId());
+        });
+        binding.excludeCheckNo.setOnClickListener(v -> {
+            binding.excludeCheckYes.setVisibility(View.VISIBLE);
+            binding.excludeCheckNo.setVisibility(View.GONE);
+            excludeConnectedChannels.add(itemData.channel.getIchatId());
+        });
     }
 
     private String[] getExistTexts(){
@@ -124,5 +134,9 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
         }
         result[result.length - 1] = ".";
         return result;
+    }
+
+    public Set<String> getExcludeConnectedChannels() {
+        return excludeConnectedChannels;
     }
 }
