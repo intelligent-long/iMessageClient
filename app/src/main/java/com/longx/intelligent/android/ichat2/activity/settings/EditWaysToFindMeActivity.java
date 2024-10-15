@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
@@ -130,12 +131,13 @@ public class EditWaysToFindMeActivity extends BaseActivity {
             if(serverWaysToFindMe != null && serverWaysToFindMe.isByIchatIdUser() == findMeByIchatIdChecked && serverWaysToFindMe.isByEmail() == findMeByEmailChecked){
                 return;
             }
+            FragmentActivity fragmentActivity = requireActivity();
             ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(findMeByIchatIdChecked, findMeByEmailChecked);
             PermissionApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
-                    data.commonHandleResult((AppCompatActivity) requireActivity(), new int[]{}, () -> {
+                    data.commonHandleResult(fragmentActivity, new int[]{}, () -> {
                         SharedPreferencesAccessor.UserProfilePref.saveServerWaysToFindMe(applicationContext,
                                 new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
                         SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,

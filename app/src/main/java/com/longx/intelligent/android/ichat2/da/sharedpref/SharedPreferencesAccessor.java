@@ -724,7 +724,7 @@ public class SharedPreferencesAccessor {
         public static BroadcastChannelPermission getAppBroadcastChannelPermission(Context context) {
             int permission = getSharedPreferences(context).getInt(Key.APP_BROADCAST_CHANNEL_PERMISSION, -1);
             Set<String> excludeConnectedChannels = getSharedPreferences(context).getStringSet(Key.APP_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS, null);
-            if(permission == -1 || excludeConnectedChannels == null) return null;
+            if(permission == -1) return null;
             return new BroadcastChannelPermission(permission, excludeConnectedChannels);
         }
 
@@ -740,7 +740,7 @@ public class SharedPreferencesAccessor {
         public static BroadcastChannelPermission getServerBroadcastChannelPermission(Context context) {
             int permission = getSharedPreferences(context).getInt(Key.SERVER_BROADCAST_CHANNEL_PERMISSION, -1);
             Set<String> excludeConnectedChannels = getSharedPreferences(context).getStringSet(Key.SERVER_BROADCAST_CHANNEL_PERMISSION_EXCLUDE_CONNECTED_CHANNELS, null);
-            if(permission == -1 || excludeConnectedChannels == null) return null;
+            if(permission == -1) return null;
             return new BroadcastChannelPermission(permission, excludeConnectedChannels);
         }
 
