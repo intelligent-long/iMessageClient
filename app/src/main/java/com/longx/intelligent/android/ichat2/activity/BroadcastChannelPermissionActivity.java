@@ -16,7 +16,6 @@ import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastChannelP
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastChannelPermissionBinding;
-import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsFooterBroadcastChannelPermissionBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
@@ -34,7 +33,6 @@ import retrofit2.Response;
 public class BroadcastChannelPermissionActivity extends BaseActivity {
     private ActivityBroadcastChannelPermissionBinding binding;
     private BroadcastChannelPermissionLinearLayoutViews linearLayoutViews;
-    private LinearLayoutViewsFooterBroadcastChannelPermissionBinding footerBinding;
     private BroadcastChannelPermission broadcastChannelPermission;
 
     @Override
@@ -49,14 +47,16 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
         }else {
             showRadioButtonChecks(broadcastChannelPermission);
             init();
+            showContent();
             setupYiers();
         }
     }
 
     private void init() {
         linearLayoutViews = new BroadcastChannelPermissionLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView, new HashSet<>(broadcastChannelPermission.getExcludeConnectedChannels()));
-        footerBinding = LinearLayoutViewsFooterBroadcastChannelPermissionBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
-        linearLayoutViews.setFooter(footerBinding.getRoot());
+    }
+
+    private void showContent() {
         List<ChannelAssociation> associations = ChannelDatabaseManager.getInstance().findAllAssociations();
         List<BroadcastChannelPermissionLinearLayoutViews.ItemData> itemDataList = new ArrayList<>();
         associations.forEach(association -> {

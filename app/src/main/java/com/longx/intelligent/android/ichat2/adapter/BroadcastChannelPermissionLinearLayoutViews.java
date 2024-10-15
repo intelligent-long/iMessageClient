@@ -37,7 +37,7 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
 
     public static class ItemData{
         private Character indexChar;
-        private Channel channel;
+        private final Channel channel;
 
         public ItemData(Channel channel) {
             indexChar = PinyinUtil.getPinyin(channel.getName()).toUpperCase().charAt(0);

@@ -8,6 +8,7 @@ import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastChannelPermissionActivity;
+import com.longx.intelligent.android.ichat2.activity.ExcludeBroadcastChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityPrivacySettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
@@ -80,7 +81,7 @@ public class PrivacySettingsActivity extends BaseActivity {
             }else if(preference.equals(preferenceBroadcastChannelPermission)){
                 startActivity(new Intent(requireContext(), BroadcastChannelPermissionActivity.class));
             }else if(preference.equals(preferenceDoNotSeeBroadcastChannel)){
-
+                startActivity(new Intent(requireActivity(), ExcludeBroadcastChannelActivity.class));
             }
             return true;
         }

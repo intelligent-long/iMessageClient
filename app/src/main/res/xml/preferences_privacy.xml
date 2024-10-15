@@ -23,7 +23,7 @@
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
             app:key="@string/preference_key_do_not_see_broadcast_channel"
-            app:title="不看 TA 的广播" />
+            app:title="@string/title_exclude_broadcast_channel" />
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
 
 </PreferenceScreen>
