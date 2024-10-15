@@ -148,6 +148,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                 });
                 adapter.addItemsAndShow(itemDataList);
+                calculateAndChangeRecyclerViewHeight();
             }
             String headerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.HEADER_ERROR_TEXT);
             if(headerErrorText != null){
@@ -158,6 +159,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             if(footerErrorText != null){
                 footerBinding.loadFailedView.setVisibility(View.VISIBLE);
                 footerBinding.loadFailedText.setText(footerErrorText);
+            }
+            boolean headerNoBroadcast = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.HEADER_NO_BROADCAST);
+            if(headerNoBroadcast){
+                headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
             }
         }else {
             loadHistoryBroadcastsData();
@@ -199,6 +204,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             outState.putString(InstanceStateKeys.BroadcastFragment.FOOTER_ERROR_TEXT, footerBinding.loadFailedText.getText().toString());
         }else {
             outState.putString(InstanceStateKeys.BroadcastFragment.FOOTER_ERROR_TEXT, null);
+        }
+        if(headerBinding.noBroadcastView.getVisibility() == View.VISIBLE){
+            outState.putBoolean(InstanceStateKeys.BroadcastFragment.HEADER_NO_BROADCAST, true);
         }
     }
 
@@ -353,6 +361,19 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         UiUtil.setViewHeight(headerBinding.noBroadcastView, headerItemHeight);
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
+        calculateAndChangeRecyclerViewHeight();
+    }
+
+    private void calculateAndChangeRecyclerViewHeight() {
+        binding.recyclerView.post(() -> {
+            int contentHeight = binding.recyclerView.computeVerticalScrollRange();
+            int recyclerViewHeight = binding.recyclerView.getHeight();
+            if (contentHeight < recyclerViewHeight) {
+                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
+            } else {
+                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.MATCH_PARENT);
+            }
+        });
     }
 
     private void setupBadge() {
@@ -370,6 +391,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
         });
         adapter.addItemsAndShow(itemDataList);
+        calculateAndChangeRecyclerViewHeight();
     }
 
     private void saveHistoryBroadcastsData(List<Broadcast> broadcasts, boolean clearHistory){
@@ -440,6 +462,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     });
                     adapter.clearAndShow();
                     adapter.addItemsAndShow(itemDataList);
+                    calculateAndChangeRecyclerViewHeight();
                     SharedPreferencesAccessor.BroadcastPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                 }, new OperationStatus.HandleResult(-102, () -> {
@@ -521,6 +544,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                         itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                     });
                     adapter.addItemsAndShow(itemDataList);
+                    calculateAndChangeRecyclerViewHeight();
                 }, new OperationStatus.HandleResult(-102, () -> {
                     footerBinding.loadFailedView.setVisibility(View.GONE);
                     footerBinding.loadFailedText.setText(null);
@@ -549,6 +573,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     @Override
     public void onBroadcastDeleted(String broadcastId) {
         adapter.removeItemAndShow(broadcastId);
+        calculateAndChangeRecyclerViewHeight();
         SharedPreferencesAccessor.ApiJson.Broadcasts.deleteRecord(requireContext(), broadcastId);
     }
 
@@ -601,6 +626,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                         itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
                     });
                     adapter.addItemsToStartAndShow(itemDataList);
+                    calculateAndChangeRecyclerViewHeight();
                     SharedPreferencesAccessor.BroadcastPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                     if(raw.body().hasMore()){
@@ -616,7 +642,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     @Override
     public void updateOneBroadcast(Broadcast newBroadcast) {
-        if(adapter != null) adapter.updateOneBroadcast(newBroadcast, true);
+        if(adapter != null) {
+            adapter.updateOneBroadcast(newBroadcast, true);
+            calculateAndChangeRecyclerViewHeight();
+        }
         SharedPreferencesAccessor.ApiJson.Broadcasts.updateRecord(requireContext(), newBroadcast);
     }
 
