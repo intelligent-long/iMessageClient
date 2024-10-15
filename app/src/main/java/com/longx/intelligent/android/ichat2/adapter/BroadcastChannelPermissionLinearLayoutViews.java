@@ -17,16 +17,22 @@ import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 
+import java.util.Set;
+
 /**
  * Created by LONG on 2024/10/14 at 上午2:22.
  */
 public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutViews<BroadcastChannelPermissionLinearLayoutViews.ItemData> {
-    public BroadcastChannelPermissionLinearLayoutViews(BroadcastChannelPermissionActivity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView) {
+    private final Set<String> excludeConnectedChannels;
+
+    public BroadcastChannelPermissionLinearLayoutViews(BroadcastChannelPermissionActivity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView, Set<String> excludeConnectedChannels) {
         super(activity, linearLayout, nestedScrollView);
+        this.excludeConnectedChannels = excludeConnectedChannels;
     }
 
-    public BroadcastChannelPermissionLinearLayoutViews(BroadcastChannelPermissionActivity activity, LinearLayout linearLayout, ScrollView scrollView) {
+    public BroadcastChannelPermissionLinearLayoutViews(BroadcastChannelPermissionActivity activity, LinearLayout linearLayout, ScrollView scrollView, Set<String> excludeConnectedChannels) {
         super(activity, linearLayout, scrollView);
+        this.excludeConnectedChannels = excludeConnectedChannels;
     }
 
     public static class ItemData{
@@ -73,6 +79,13 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
             }
         }
         binding.name.setText(itemData.channel.getName());
+        if(excludeConnectedChannels.contains(itemData.channel.getIchatId())){
+            binding.excludeCheckYes.setVisibility(View.VISIBLE);
+            binding.excludeCheckNo.setVisibility(View.GONE);
+        }else {
+            binding.excludeCheckYes.setVisibility(View.GONE);
+            binding.excludeCheckNo.setVisibility(View.VISIBLE);
+        }
         setupYiers(binding, itemData, activity);
         return binding.getRoot();
     }

@@ -33,6 +33,7 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
     private ActivityBroadcastChannelPermissionBinding binding;
     private BroadcastChannelPermissionLinearLayoutViews linearLayoutViews;
     private LinearLayoutViewsFooterBroadcastChannelPermissionBinding footerBinding;
+    private BroadcastChannelPermission broadcastChannelPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +41,18 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
         binding = ActivityBroadcastChannelPermissionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        init();
-        showContent();
-        setupYiers();
+        broadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getAppBroadcastChannelPermission(this);
+        if(broadcastChannelPermission == null){
+            UiUtil.setViewGroupEnabled(binding.scrollView, false, true);
+        }else {
+            showRadioButtonChecks(broadcastChannelPermission);
+            init();
+            setupYiers();
+        }
     }
 
     private void init() {
-        linearLayoutViews = new BroadcastChannelPermissionLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView);
+        linearLayoutViews = new BroadcastChannelPermissionLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView, broadcastChannelPermission.getExcludeConnectedChannels());
         footerBinding = LinearLayoutViewsFooterBroadcastChannelPermissionBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
         linearLayoutViews.setFooter(footerBinding.getRoot());
         List<ChannelAssociation> associations = ChannelDatabaseManager.getInstance().findAllAssociations();
@@ -60,28 +66,6 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
             return Character.compare(o1.getIndexChar(), o2.getIndexChar());
         });
         linearLayoutViews.addItemsAndShow(itemDataList);
-    }
-
-    private void showContent() {
-        BroadcastChannelPermission broadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getAppBroadcastChannelPermission(this);
-        if(broadcastChannelPermission == null){
-            UiUtil.setViewGroupEnabled(binding.scrollView, false, true);
-            PermissionApiCaller.fetchBroadcastChannelPermission(this, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
-                @Override
-                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                    super.ok(data, raw, call);
-                    data.commonHandleResult(BroadcastChannelPermissionActivity.this, new int[]{}, () -> {
-                        BroadcastChannelPermission broadcastChannelPermissionFetched = data.getData(BroadcastChannelPermission.class);
-                        UiUtil.setViewGroupEnabled(binding.scrollView, true, true);
-                        showRadioButtonChecks(broadcastChannelPermissionFetched);
-                        SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, broadcastChannelPermissionFetched);
-                        SharedPreferencesAccessor.BroadcastPref.saveServerBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, broadcastChannelPermissionFetched);
-                    });
-                }
-            });
-        }else {
-            showRadioButtonChecks(broadcastChannelPermission);
-        }
     }
 
     private void showRadioButtonChecks(BroadcastChannelPermission broadcastChannelPermission) {

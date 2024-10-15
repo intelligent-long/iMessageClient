@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="12dp"
-        android:background="@drawable/ripple_round_selectable_background"
+        android:background="@drawable/ripple_round_selectable_background_20r"
         android:src="@drawable/notifications_outline_24px"
         app:tint="?attr/colorControlNormal"
         android:tooltipText="互动通知"/>

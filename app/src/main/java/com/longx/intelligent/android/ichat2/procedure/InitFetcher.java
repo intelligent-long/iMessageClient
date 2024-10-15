@@ -21,7 +21,9 @@ public class InitFetcher {
 
     private static void checkAndFetchAndStoreBroadcastChannelPermission(Context context){
         BroadcastChannelPermission broadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getAppBroadcastChannelPermission(context);
-        if(broadcastChannelPermission == null) {
+        if(broadcastChannelPermission == null ||
+                (broadcastChannelPermission.getPermission() != BroadcastChannelPermission.PUBLIC && broadcastChannelPermission.getPermission() != BroadcastChannelPermission.PRIVATE && broadcastChannelPermission.getPermission() != BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE) ||
+                broadcastChannelPermission.getExcludeConnectedChannels() == null) {
             PermissionApiCaller.fetchBroadcastChannelPermission(null, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(null) {
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {

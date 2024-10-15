@@ -19,20 +19,46 @@
         tools:ignore="RtlSymmetry" />
 
     <RelativeLayout
-        android:id="@+id/click_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:paddingHorizontal="19dp"
+        android:paddingHorizontal="23dp"
         android:paddingVertical="10dp">
+
+        <FrameLayout
+            android:id="@+id/exclude_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_centerVertical="true">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/exclude_check_no"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:tint="?attr/colorOutline"
+                android:src="@drawable/do_not_disturb_on_outline_24px"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_round_selectable_background_23r" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/exclude_check_yes"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:tint="?attr/colorPrimary"
+                android:src="@drawable/do_not_disturb_on_outline_24px"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_round_selectable_background_23r" />
+        </FrameLayout>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginStart="27.3dp"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/exclude_check"
             app:shapeAppearanceOverlay="@style/CircleImageAppearance"/>
 
         <TextView
