@@ -6,8 +6,11 @@ import android.view.View;
 
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastChannelPermissionLinearLayoutViews;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
+import com.longx.intelligent.android.ichat2.data.Channel;
+import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastChannelPermissionPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
@@ -18,6 +21,10 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCal
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -42,6 +49,17 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
         linearLayoutViews = new BroadcastChannelPermissionLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView);
         footerBinding = LinearLayoutViewsFooterBroadcastChannelPermissionBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
         linearLayoutViews.setFooter(footerBinding.getRoot());
+        List<ChannelAssociation> associations = ChannelDatabaseManager.getInstance().findAllAssociations();
+        List<BroadcastChannelPermissionLinearLayoutViews.ItemData> itemDataList = new ArrayList<>();
+        associations.forEach(association -> {
+            itemDataList.add(new BroadcastChannelPermissionLinearLayoutViews.ItemData(association.getChannel()));
+        });
+        itemDataList.sort((o1, o2) -> {
+            if (o1.getIndexChar() == '#') return 1;
+            if (o2.getIndexChar() == '#') return -1;
+            return Character.compare(o1.getIndexChar(), o2.getIndexChar());
+        });
+        linearLayoutViews.addItemsAndShow(itemDataList);
     }
 
     private void showContent() {
@@ -70,14 +88,17 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
         switch (broadcastChannelPermission.getPermission()){
             case BroadcastChannelPermission.PUBLIC:{
                 binding.radioPublic.setChecked(true);
+                hideConnectedChannels();
                 break;
             }
             case BroadcastChannelPermission.PRIVATE:{
                 binding.radioPrivate.setChecked(true);
+                hideConnectedChannels();
                 break;
             }
             case BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE:{
                 binding.radioConnectedChannelCircle.setChecked(true);
+                showConnectedChannels();
                 break;
             }
         }
@@ -89,14 +110,17 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
                 binding.radioPublic.setChecked(true);
                 binding.radioPrivate.setChecked(false);
                 binding.radioConnectedChannelCircle.setChecked(false);
+                hideConnectedChannels();
             }else if(v.equals(binding.layoutPrivate)){
                 binding.radioPublic.setChecked(false);
                 binding.radioPrivate.setChecked(true);
                 binding.radioConnectedChannelCircle.setChecked(false);
+                hideConnectedChannels();
             }else if(v.equals(binding.layoutConnectedChannelCircle)){
                 binding.radioPublic.setChecked(false);
                 binding.radioPrivate.setChecked(false);
                 binding.radioConnectedChannelCircle.setChecked(true);
+                showConnectedChannels();
             }
             int currentCheckedPermission = getCurrentCheckedPermission();
             SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(this, new BroadcastChannelPermission(currentCheckedPermission, null));
@@ -116,6 +140,14 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
             permission = BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE;
         }
         return permission;
+    }
+
+    private void showConnectedChannels(){
+        binding.linearLayoutViews.setVisibility(View.VISIBLE);
+    }
+
+    private void hideConnectedChannels(){
+        binding.linearLayoutViews.setVisibility(View.GONE);
     }
 
     @Override
@@ -158,5 +190,9 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
                 SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, serverBroadcastChannelPermission);
             }
         });
+    }
+
+    public ActivityBroadcastChannelPermissionBinding getBinding() {
+        return binding;
     }
 }

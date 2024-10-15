@@ -107,7 +107,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
             getOnItemClickYier().onItemClick(position, itemData);
         });
         holder.binding.indexBar.setOnClickListener(v -> {
-            FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_CHANNEL, getExistTexts());
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_FRAGMENT_CHANNEL, getExistTexts());
             fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
                 int locatePosition = -1;
                 if(textSelect.equals(".")){

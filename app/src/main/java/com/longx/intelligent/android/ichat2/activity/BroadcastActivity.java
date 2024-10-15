@@ -1,10 +1,12 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
@@ -708,10 +710,17 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
     private void startLocateComment(BroadcastComment broadcastComment){
         onCommentsNextPageYier = results -> {
-            boolean scrollSuccess = commentsLinearLayoutViews.scrollTo(broadcastComment, true, null);
-            if(!scrollSuccess){
-                commentNextPage();
-            }
+            binding.scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @SuppressLint("ClickableViewAccessibility")
+                @Override
+                public void onGlobalLayout() {
+                    binding.scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    boolean scrollSuccess = commentsLinearLayoutViews.scrollTo(broadcastComment, true, null);
+                    if (!scrollSuccess) {
+                        commentNextPage();
+                    }
+                }
+            });
         };
     }
 }

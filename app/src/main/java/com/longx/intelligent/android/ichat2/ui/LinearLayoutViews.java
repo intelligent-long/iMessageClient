@@ -133,51 +133,59 @@ public abstract class LinearLayoutViews<T> {
         cancelHighLight(allItems.indexOf(item));
     }
 
+    public boolean scrollTo(T item, boolean smooth){
+        int index = allItems.indexOf(item);
+        return scrollTo(index, smooth, false, null);
+    }
+
     public boolean scrollTo(T item, boolean smooth, View.OnTouchListener sourceOnTouchYier){
         int index = allItems.indexOf(item);
-        if(index == -1) return false;
+        return scrollTo(index, smooth, true, sourceOnTouchYier);
+    }
+
+    public boolean scrollTo(int index, boolean smooth){
+        return scrollTo(index, smooth, false, null);
+    }
+
+    public boolean scrollTo(int index, boolean smooth, View.OnTouchListener sourceOnTouchYier){
+        return scrollTo(index, smooth, true, sourceOnTouchYier);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private boolean scrollTo(int index, boolean smooth, boolean highLight, View.OnTouchListener sourceOnTouchYier){
+        if(index < 0) return false;
         View childAt = linearLayout.getChildAt(index);
         if(childAt == null) return false;
         if(scrollView != null) {
-            scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @SuppressLint("ClickableViewAccessibility")
-                @Override
-                public void onGlobalLayout() {
-                    scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int bottom = childAt.getBottom();
-                    if (smooth) {
-                        scrollView.smoothScrollTo(0, bottom);
-                    } else {
-                        scrollView.scrollTo(0, bottom);
-                    }
-                    highLight(index);
-                    scrollView.setOnTouchListener((v, event) -> {
-                        cancelHighLight(index);
-                        scrollView.setOnTouchListener(sourceOnTouchYier);
-                        return true;
-                    });
-                }
-            });
+            int bottom = childAt.getBottom();
+            if (smooth) {
+                scrollView.smoothScrollTo(0, bottom);
+            } else {
+                scrollView.scrollTo(0, bottom);
+            }
+            if(highLight) {
+                highLight(index);
+                scrollView.setOnTouchListener((v, event) -> {
+                    cancelHighLight(index);
+                    scrollView.setOnTouchListener(sourceOnTouchYier);
+                    return true;
+                });
+            }
         }else if(nestedScrollView != null){
-            nestedScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @SuppressLint("ClickableViewAccessibility")
-                @Override
-                public void onGlobalLayout() {
-                    nestedScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int bottom = childAt.getBottom();
-                    if (smooth) {
-                        nestedScrollView.smoothScrollTo(0, bottom);
-                    } else {
-                        nestedScrollView.scrollTo(0, bottom);
-                    }
-                    highLight(index);
-                    nestedScrollView.setOnTouchListener((v, event) -> {
-                        cancelHighLight(index);
-                        nestedScrollView.setOnTouchListener(sourceOnTouchYier);
-                        return true;
-                    });
-                }
-            });
+            int bottom = childAt.getBottom();
+            if (smooth) {
+                nestedScrollView.smoothScrollTo(0, bottom);
+            } else {
+                nestedScrollView.scrollTo(0, bottom);
+            }
+            if(highLight) {
+                highLight(index);
+                nestedScrollView.setOnTouchListener((v, event) -> {
+                    cancelHighLight(index);
+                    nestedScrollView.setOnTouchListener(sourceOnTouchYier);
+                    return true;
+                });
+            }
         }
         return true;
     }

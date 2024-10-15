@@ -148,7 +148,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
                     .forShow();
         });
         holder.binding.indexBar.setOnClickListener(v -> {
-            FastLocateDialog fastLocateDialog = new FastLocateDialog(tagChannelActivity, FastLocateDialog.LOCATE_TAG_CHANNEL, getExistTexts());
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(tagChannelActivity, FastLocateDialog.LOCATE_CHANNEL, getExistTexts());
             fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
                 int locatePosition = -1;
                 for (int i = 0; i < itemDataList.size(); i++) {
