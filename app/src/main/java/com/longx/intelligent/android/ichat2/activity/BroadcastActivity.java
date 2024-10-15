@@ -98,7 +98,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
                             binding.scrollView.setVisibility(View.VISIBLE);
                             broadcast = data.getData(Broadcast.class);
                             initDo();
@@ -373,7 +373,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
+                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102, -103}, () -> {
                             broadcast = data.getData(Broadcast.class);
                             showContent();
                             setupYiers();
@@ -388,7 +388,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
+                        data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102, -103}, () -> {
                             broadcast = data.getData(Broadcast.class);
                             showContent();
                             setupYiers();
@@ -437,7 +437,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
-                    data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                    data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
                         UiUtil.hideKeyboard(binding.commentInput);
                         binding.commentInput.setText(null);
                         binding.sendCommentBar.setVisibility(View.GONE);
@@ -574,7 +574,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             @Override
             public void ok(PaginatedOperationData<BroadcastLike> data, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
                 super.ok(data, raw, call);
-                data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
                     List<BroadcastLike> broadcastLikeList = data.getData();
                     broadcastLikeList.sort((o1, o2) -> - o1.getLikeTime().compareTo(o2.getLikeTime()));
                     broadcastLikeList.forEach(broadcastLike -> {
@@ -601,7 +601,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         intent.putExtra(ExtraKeys.BROADCAST, broadcast);
                         startActivity(intent);
                     });
-                }, new OperationStatus.HandleResult(-102, () -> {
+                }, new OperationStatus.HandleResult(-103, () -> {
                     binding.layoutLike.setVisibility(View.GONE);
                 }));
             }
@@ -685,13 +685,13 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             @Override
             public void ok(PaginatedOperationData<BroadcastComment> data, Response<PaginatedOperationData<BroadcastComment>> raw, Call<PaginatedOperationData<BroadcastComment>> call) {
                 super.ok(data, raw, call);
-                data.commonHandleResult(BroadcastActivity.this, new int[]{-101}, () -> {
+                data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
                     if (breakFetchNextPage(call)) return;
                     stopFetchNextPage = !raw.body().hasMore();
                     List<BroadcastComment> broadcastCommentList = data.getData();
                     commentsLinearLayoutViews.addItemsAndShow(broadcastCommentList);
                     if(onCommentsNextPageYier != null) onCommentsNextPageYier.onResults();
-                }, new OperationStatus.HandleResult(-102, () -> {
+                }, new OperationStatus.HandleResult(-103, () -> {
                     binding.layoutComment.setVisibility(View.GONE);
                 }));
             }

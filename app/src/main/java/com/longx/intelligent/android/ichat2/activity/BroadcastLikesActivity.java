@@ -130,12 +130,12 @@ public class BroadcastLikesActivity extends BaseActivity {
             @Override
             public void ok(PaginatedOperationData<BroadcastLike> data, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
                 super.ok(data, raw, call);
-                data.commonHandleResult(BroadcastLikesActivity.this, new int[]{-101}, () -> {
+                data.commonHandleResult(BroadcastLikesActivity.this, new int[]{-101, -102}, () -> {
                     if (breakFetchNextPage(call)) return;
                     stopFetchNextPage = !raw.body().hasMore();
                     List<BroadcastLike> broadcastLikeList = data.getData();
                     adapter.addItemsToEndAndShow(broadcastLikeList);
-                }, new OperationStatus.HandleResult(-102, () -> {
+                }, new OperationStatus.HandleResult(-103, () -> {
                     footerBinding.loadFailedView.setVisibility(View.GONE);
                     footerBinding.loadFailedText.setText(null);
                     footerBinding.loadIndicator.setVisibility(View.GONE);

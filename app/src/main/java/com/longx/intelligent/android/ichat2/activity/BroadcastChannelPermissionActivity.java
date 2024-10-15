@@ -20,10 +20,12 @@ import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsFooterB
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,7 +54,7 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
     }
 
     private void init() {
-        linearLayoutViews = new BroadcastChannelPermissionLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView, broadcastChannelPermission.getExcludeConnectedChannels());
+        linearLayoutViews = new BroadcastChannelPermissionLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView, new HashSet<>(broadcastChannelPermission.getExcludeConnectedChannels()));
         footerBinding = LinearLayoutViewsFooterBroadcastChannelPermissionBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
         linearLayoutViews.setFooter(footerBinding.getRoot());
         List<ChannelAssociation> associations = ChannelDatabaseManager.getInstance().findAllAssociations();
@@ -106,8 +108,6 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
                 binding.radioConnectedChannelCircle.setChecked(true);
                 showConnectedChannels();
             }
-            int currentCheckedPermission = getCurrentCheckedPermission();
-            SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(this, new BroadcastChannelPermission(currentCheckedPermission, linearLayoutViews.getExcludeConnectedChannels()));
         };
         binding.layoutPublic.setOnClickListener(yier);
         binding.layoutPrivate.setOnClickListener(yier);

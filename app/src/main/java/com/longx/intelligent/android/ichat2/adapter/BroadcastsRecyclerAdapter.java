@@ -462,7 +462,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
+                        data.commonHandleResult(activity, new int[]{-101, -102, -103}, () -> {
                             Broadcast broadcast = data.getData(Broadcast.class);
                             updateOneBroadcast(broadcast, false);
                             holder.binding.like.setImageResource(R.drawable.favorite_fill_broadcast_liked_24px);
@@ -493,7 +493,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
+                        data.commonHandleResult(activity, new int[]{-101, -102, -103}, () -> {
                             Broadcast broadcast = data.getData(Broadcast.class);
                             updateOneBroadcast(broadcast, false);
                             holder.binding.like.setImageResource(R.drawable.favorite_outline_24px);

@@ -109,7 +109,7 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                             @Override
                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                 super.ok(data, raw, call);
-                                data.commonHandleResult(broadcastActivity, new int[]{-101, -102}, () -> {
+                                data.commonHandleResult(broadcastActivity, new int[]{-101, -102, -103}, () -> {
                                     Broadcast broadcast = data.getData(Broadcast.class);
                                     removeView(broadcastComment);
                                     GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
