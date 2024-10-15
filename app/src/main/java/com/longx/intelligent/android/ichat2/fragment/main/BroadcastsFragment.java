@@ -468,7 +468,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 }, new OperationStatus.HandleResult(-102, () -> {
                     SharedPreferencesAccessor.ApiJson.Broadcasts.clearRecords(requireContext());
                     adapter.clearAndShow();
-                    calculateAndChangeRecyclerViewHeight();
+                    UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
                     SharedPreferencesAccessor.BroadcastPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                     headerBinding.loadFailedView.setVisibility(View.GONE);
