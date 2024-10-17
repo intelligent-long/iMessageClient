@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.EditBroadcastMediasRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.data.BroadcastPermission;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddBroadcastMediaBottomSheet;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
@@ -41,6 +43,7 @@ import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecora
 import com.longx.intelligent.android.lib.recyclerview.dragsort.DragSortItemTouchCallback;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,6 +57,8 @@ public class SendBroadcastActivity extends BaseActivity {
     private ArrayList<MediaInfo> mediaInfoList = new ArrayList<>();
     private EditBroadcastMediasRecyclerAdapter adapter;
     private final SpaceGridDecorationSetter spaceGridDecorationSetter = new SpaceGridDecorationSetter();
+    private BroadcastPermission broadcastPermission = new BroadcastPermission(null, BroadcastPermission.PUBLIC, new HashSet<>());
+    private ActivityResultLauncher<Intent> permissionResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +120,12 @@ public class SendBroadcastActivity extends BaseActivity {
                     }
                 }
         );
+        permissionResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+
+                }
+        );
     }
 
     private void initUi() {
@@ -146,10 +157,10 @@ public class SendBroadcastActivity extends BaseActivity {
                 MessageDisplayer.autoShow(this, "没有内容", MessageDisplayer.Duration.SHORT);
                 return;
             };
-            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions);
-            BroadcastApiCaller.sendBroadcast(null, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationStatus>(this, false, true) {
+            SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions, broadcastPermission);
+            BroadcastApiCaller.sendBroadcast(null, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true) {
                 @Override
-                public void start(Call<OperationStatus> call) {
+                public void start(Call<OperationData> call) {
                     super.start(call);
                     binding.sendBroadcastButton.setVisibility(View.GONE);
                     binding.sendIndicator.setVisibility(View.VISIBLE);
@@ -158,9 +169,9 @@ public class SendBroadcastActivity extends BaseActivity {
                 }
 
                 @Override
-                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
-                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102, -103, -104}, () -> {
+                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102, -103, -104, -105}, () -> {
                         MessageDisplayer.showToast(getContext(), "已发送", Toast.LENGTH_SHORT);
                         GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
                             broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
@@ -171,7 +182,7 @@ public class SendBroadcastActivity extends BaseActivity {
                 }
 
                 @Override
-                public void complete(Call<OperationStatus> call) {
+                public void complete(Call<OperationData> call) {
                     super.complete(call);
                     binding.sendBroadcastButton.setVisibility(View.VISIBLE);
                     binding.sendIndicator.setVisibility(View.GONE);
@@ -267,6 +278,12 @@ public class SendBroadcastActivity extends BaseActivity {
             mediaInfoList = new ArrayList<>(adapter.getMediaInfoList());
         });
         new ItemTouchHelper(dragSortItemTouchCallback).attachToRecyclerView(binding.recyclerViewMedias);
+
+        binding.clickViewBroadcastPermission.setOnClickListener(v -> {
+            Intent intent = new Intent(this, BroadcastPermissionActivity.class);
+            intent.putExtra(ExtraKeys.BROADCAST_PERMISSION, broadcastPermission);
+            permissionResultLauncher.launch(intent);
+        });
     }
 
     private void onMediaInfosChosen(List<MediaInfo> mediaInfos, boolean remove) {

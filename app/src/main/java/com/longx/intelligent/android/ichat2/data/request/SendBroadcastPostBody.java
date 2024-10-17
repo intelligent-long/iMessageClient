@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.ichat2.data.request;
 
+import com.longx.intelligent.android.ichat2.data.BroadcastPermission;
+
 import java.util.List;
 
 /**
@@ -13,13 +15,16 @@ public class SendBroadcastPostBody {
 
     private List<String> mediaExtensions;
 
+    private BroadcastPermission broadcastPermission;
+
     public SendBroadcastPostBody() {
     }
 
-    public SendBroadcastPostBody(String text, List<Integer> mediaTypes, List<String> mediaExtensions) {
+    public SendBroadcastPostBody(String text, List<Integer> mediaTypes, List<String> mediaExtensions, BroadcastPermission broadcastPermission) {
         this.text = text;
         this.mediaTypes = mediaTypes;
         this.mediaExtensions = mediaExtensions;
+        this.broadcastPermission = broadcastPermission;
     }
 
     public String getText() {
@@ -32,5 +37,9 @@ public class SendBroadcastPostBody {
 
     public List<String> getMediaExtensions() {
         return mediaExtensions;
+    }
+
+    public BroadcastPermission getBroadcastPermission() {
+        return broadcastPermission;
     }
 }

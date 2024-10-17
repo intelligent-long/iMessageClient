@@ -9,12 +9,15 @@ import androidx.core.widget.NestedScrollView;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastChannelPermissionActivity;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsBroadcastChannelPermissionBinding;
 import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 
 import java.util.Set;
@@ -115,15 +118,17 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
             });
             fastLocateDialog.forShow();
         });
-        binding.excludeCheckYes.setOnClickListener(v -> {
-            binding.excludeCheckYes.setVisibility(View.GONE);
-            binding.excludeCheckNo.setVisibility(View.VISIBLE);
-            excludeConnectedChannels.remove(itemData.channel.getIchatId());
-        });
-        binding.excludeCheckNo.setOnClickListener(v -> {
-            binding.excludeCheckYes.setVisibility(View.VISIBLE);
-            binding.excludeCheckNo.setVisibility(View.GONE);
-            excludeConnectedChannels.add(itemData.channel.getIchatId());
+        binding.excludeCheck.setOnClickListener(v -> {
+            if(binding.excludeCheckYes.getVisibility() == View.VISIBLE && binding.excludeCheckNo.getVisibility() == View.GONE) {
+                binding.excludeCheckYes.setVisibility(View.GONE);
+                binding.excludeCheckNo.setVisibility(View.VISIBLE);
+                excludeConnectedChannels.remove(itemData.channel.getIchatId());
+            }else if(binding.excludeCheckYes.getVisibility() == View.GONE && binding.excludeCheckNo.getVisibility() == View.VISIBLE) {
+                binding.excludeCheckYes.setVisibility(View.VISIBLE);
+                binding.excludeCheckNo.setVisibility(View.GONE);
+                excludeConnectedChannels.add(itemData.channel.getIchatId());
+            }
+            SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(activity, new BroadcastChannelPermission(BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE, excludeConnectedChannels));
         });
     }
 

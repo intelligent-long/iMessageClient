@@ -45,7 +45,6 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
         if(broadcastChannelPermission == null){
             UiUtil.setViewGroupEnabled(binding.scrollView, false, true);
         }else {
-            showRadioButtonChecks(broadcastChannelPermission);
             init();
             showContent();
             setupYiers();
@@ -57,6 +56,7 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
     }
 
     private void showContent() {
+        showRadioButtonChecks(broadcastChannelPermission);
         List<ChannelAssociation> associations = ChannelDatabaseManager.getInstance().findAllAssociations();
         List<BroadcastChannelPermissionLinearLayoutViews.ItemData> itemDataList = new ArrayList<>();
         associations.forEach(association -> {
@@ -92,22 +92,27 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
 
     private void setupYiers() {
         View.OnClickListener yier = v -> {
+            int permission = -1;
             if(v.equals(binding.layoutPublic)){
+                permission = BroadcastChannelPermission.PUBLIC;
                 binding.radioPublic.setChecked(true);
                 binding.radioPrivate.setChecked(false);
                 binding.radioConnectedChannelCircle.setChecked(false);
                 hideConnectedChannels();
             }else if(v.equals(binding.layoutPrivate)){
+                permission = BroadcastChannelPermission.PRIVATE;
                 binding.radioPublic.setChecked(false);
                 binding.radioPrivate.setChecked(true);
                 binding.radioConnectedChannelCircle.setChecked(false);
                 hideConnectedChannels();
             }else if(v.equals(binding.layoutConnectedChannelCircle)){
+                permission = BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE;
                 binding.radioPublic.setChecked(false);
                 binding.radioPrivate.setChecked(false);
                 binding.radioConnectedChannelCircle.setChecked(true);
                 showConnectedChannels();
             }
+            SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(BroadcastChannelPermissionActivity.this, new BroadcastChannelPermission(permission, linearLayoutViews.getExcludeConnectedChannels()));
         };
         binding.layoutPublic.setOnClickListener(yier);
         binding.layoutPrivate.setOnClickListener(yier);
@@ -143,13 +148,12 @@ public class BroadcastChannelPermissionActivity extends BaseActivity {
     private void updateServerData() {
         if(!binding.scrollView.isEnabled()) return;
         int currentCheckedPermission = getCurrentCheckedPermission();
-        BroadcastChannelPermission appBroadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getAppBroadcastChannelPermission(this);
-        if(appBroadcastChannelPermission != null &&
-                appBroadcastChannelPermission.getPermission() == currentCheckedPermission &&
-                CollectionUtil.equals(appBroadcastChannelPermission.getExcludeConnectedChannels(), linearLayoutViews.getExcludeConnectedChannels())) {
+        BroadcastChannelPermission serverBroadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getServerBroadcastChannelPermission(this);
+        if(serverBroadcastChannelPermission != null &&
+                serverBroadcastChannelPermission.getPermission() == currentCheckedPermission &&
+                CollectionUtil.equals(serverBroadcastChannelPermission.getExcludeConnectedChannels(), linearLayoutViews.getExcludeConnectedChannels())) {
             return;
         }
-        BroadcastChannelPermission serverBroadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getServerBroadcastChannelPermission(this);
         ChangeBroadcastChannelPermissionPostBody postBody = new ChangeBroadcastChannelPermissionPostBody(currentCheckedPermission, linearLayoutViews.getExcludeConnectedChannels());
         PermissionApiCaller.changeBroadcastChannelPermission(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(this.getApplicationContext()){
 

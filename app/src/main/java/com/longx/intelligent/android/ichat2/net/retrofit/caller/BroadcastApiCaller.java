@@ -61,9 +61,9 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
         return getApiImplementation(RetrofitCreator.customTimeout(context, connectTimeout, readTimeout, writeTimeout), BroadcastApi.class);
     }
 
-    public static CompletableCall<OperationStatus> sendBroadcast(LifecycleOwner lifecycleOwner, Context context,
+    public static CompletableCall<OperationData> sendBroadcast(LifecycleOwner lifecycleOwner, Context context,
                                                                  SendBroadcastPostBody postBody, List<Uri> mediaUris,
-                                                                 BaseYier<OperationStatus> yier, MultiProgressYier multiProgressYier){
+                                                                 BaseYier<OperationData> yier, MultiProgressYier multiProgressYier){
         RequestBody bodyPart = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
         int count = 1 + (mediaUris != null ? mediaUris.size() : 0);
         final int[] index = {0};
@@ -115,7 +115,7 @@ public class BroadcastApiCaller extends RetrofitApiCaller{
             };
             mediaPart.add(MultipartBody.Part.createFormData("medias", fileName, progressRequestBody));
         });
-        CompletableCall<OperationStatus> call = getApiImplementation(context, SEND_BROADCAST_CONNECT_TIMEOUT, SEND_BROADCAST_READ_TIMEOUT, SEND_BROADCAST_WRITE_TIMEOUT).sendBroadcast(progressBodyPart, mediaPart);
+        CompletableCall<OperationData> call = getApiImplementation(context, SEND_BROADCAST_CONNECT_TIMEOUT, SEND_BROADCAST_READ_TIMEOUT, SEND_BROADCAST_WRITE_TIMEOUT).sendBroadcast(progressBodyPart, mediaPart);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

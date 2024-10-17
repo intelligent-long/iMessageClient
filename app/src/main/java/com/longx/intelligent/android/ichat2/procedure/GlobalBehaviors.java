@@ -90,6 +90,7 @@ public class GlobalBehaviors {
         SharedPreferencesAccessor.NetPref.saveLoginState(context, true);
         reloadWhenAccountSwitched(context, userInfo);
         ServerMessageService.work((Application) context.getApplicationContext());
+        InitFetcher.doAll(context);
         ActivityOperator.switchToMain(context);
     }
 

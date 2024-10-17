@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:paddingVertical="15dp"
+        android:paddingHorizontal="19dp"
         android:background="?attr/colorErrorContainer"
         android:visibility="gone">
 

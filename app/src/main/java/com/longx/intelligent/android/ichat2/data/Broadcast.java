@@ -23,11 +23,12 @@ public class Broadcast implements Parcelable {
     private int likeCount;
     private boolean commented;
     private int commentCount;
+    private BroadcastPermission broadcastPermission;
 
     public Broadcast() {
     }
 
-    public Broadcast(String broadcastId, String ichatId, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount, boolean commented, int commentCount) {
+    public Broadcast(String broadcastId, String ichatId, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount, boolean commented, int commentCount, BroadcastPermission broadcastPermission) {
         this.broadcastId = broadcastId;
         this.ichatId = ichatId;
         this.time = time;
@@ -38,6 +39,7 @@ public class Broadcast implements Parcelable {
         this.likeCount = likeCount;
         this.commented = commented;
         this.commentCount = commentCount;
+        this.broadcastPermission = broadcastPermission;
     }
 
     public String getBroadcastId() {
@@ -80,6 +82,10 @@ public class Broadcast implements Parcelable {
         return commentCount;
     }
 
+    public BroadcastPermission getBroadcastPermission() {
+        return broadcastPermission;
+    }
+
     public static final Creator<Broadcast> CREATOR = new Creator<Broadcast>() {
         @Override
         public Broadcast createFromParcel(Parcel in) {
@@ -109,6 +115,7 @@ public class Broadcast implements Parcelable {
         likeCount = in.readInt();
         commented = in.readInt() == 1;
         commentCount = in.readInt();
+        broadcastPermission = in.readParcelable(getClass().getClassLoader());
     }
 
     @Override
@@ -123,6 +130,7 @@ public class Broadcast implements Parcelable {
         dest.writeInt(likeCount);
         dest.writeInt(commented ? 1 : 0);
         dest.writeInt(commentCount);
+        dest.writeParcelable(broadcastPermission, 0);
     }
 
     @Override

@@ -8,6 +8,7 @@
         android:id="@+id/load_failed_text"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:paddingHorizontal="19dp"
         android:gravity="center"
         android:background="?attr/colorErrorContainer"
         android:textColor="?attr/colorOnErrorContainer"
