@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.net.retrofit.api;
 
 import com.longx.intelligent.android.ichat2.data.request.ChangeAllowChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastChannelPermissionPostBody;
+import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastPermissionPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeExcludeBroadcastChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostBody;
@@ -38,4 +39,7 @@ public interface PermissionApi {
 
     @POST("permission/broadcast/exclude_channel/change")
     CompletableCall<OperationStatus> changeExcludeBroadcastChannels(@Body ChangeExcludeBroadcastChannelPostBody postBody);
+
+    @POST("permission/broadcast/permission/change")
+    CompletableCall<OperationData> changeBroadcastPermission(@Body ChangeBroadcastPermissionPostBody postBody);
 }

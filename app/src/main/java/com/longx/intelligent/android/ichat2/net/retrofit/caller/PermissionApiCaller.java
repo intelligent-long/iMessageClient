@@ -4,6 +4,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.data.request.ChangeAllowChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastChannelPermissionPostBody;
+import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastPermissionPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeExcludeBroadcastChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUserProfileVisibilityPostBody;
 import com.longx.intelligent.android.ichat2.data.request.ChangeWaysToFindMePostBody;
@@ -58,6 +59,12 @@ public class PermissionApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> changeExcludeBroadcastChannels(LifecycleOwner lifecycleOwner, ChangeExcludeBroadcastChannelPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().changeExcludeBroadcastChannels(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> changeBroadcastPermission(LifecycleOwner lifecycleOwner, ChangeBroadcastPermissionPostBody postBody, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().changeBroadcastPermission(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

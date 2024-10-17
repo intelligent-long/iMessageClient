@@ -16,27 +16,43 @@ import com.longx.intelligent.android.ichat2.adapter.BroadcastChannelPermissionLi
 import com.longx.intelligent.android.ichat2.adapter.BroadcastPermissionLinearLayoutViews;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.data.BroadcastPermission;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
+import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastPermissionPostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastPermissionBinding;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class BroadcastPermissionActivity extends BaseActivity {
     private ActivityBroadcastPermissionBinding binding;
     private BroadcastPermission broadcastPermission;
     private BroadcastPermissionLinearLayoutViews linearLayoutViews;
+    private boolean isChangePermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityBroadcastPermissionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setupCloseBackNavigation(binding.toolbar);
         intentData();
+        if(isChangePermission){
+            setupDefaultBackNavigation(binding.toolbar);
+        }else {
+            setupCloseBackNavigation(binding.toolbar);
+        }
         init();
         showContent();
         setupYiers();
@@ -48,9 +64,15 @@ public class BroadcastPermissionActivity extends BaseActivity {
 
     private void intentData() {
         broadcastPermission = getIntent().getParcelableExtra(ExtraKeys.BROADCAST_PERMISSION);
+        isChangePermission = getIntent().getBooleanExtra(ExtraKeys.CHANGE_PERMISSION, false);
     }
 
     private void showContent() {
+        if(isChangePermission){
+            binding.layoutChangeButton.setVisibility(View.VISIBLE);
+        }else {
+            binding.layoutChangeButton.setVisibility(View.GONE);
+        }
         showRadioButtonChecks(broadcastPermission);
         List<ChannelAssociation> associations = ChannelDatabaseManager.getInstance().findAllAssociations();
         List<BroadcastPermissionLinearLayoutViews.ItemData> itemDataList = new ArrayList<>();
@@ -91,6 +113,21 @@ public class BroadcastPermissionActivity extends BaseActivity {
         binding.layoutPublic.setOnClickListener(yier);
         binding.layoutPrivate.setOnClickListener(yier);
         binding.layoutConnectedChannelCircle.setOnClickListener(yier);
+        binding.changeButton.setOnClickListener(v -> {
+            PermissionApiCaller.changeBroadcastPermission(this, new ChangeBroadcastPermissionPostBody(broadcastPermission), new RetrofitApiCaller.CommonYier<OperationData>(this){
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleResult(BroadcastPermissionActivity.this, new int[]{-101}, () -> {
+                        Broadcast broadcast = data.getData(Broadcast.class);
+                        GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                            broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
+                        });
+                        finish();
+                    });
+                }
+            });
+        });
     }
     private void showRadioButtonChecks(BroadcastPermission broadcastPermission) {
         switch (broadcastPermission.getPermission()){

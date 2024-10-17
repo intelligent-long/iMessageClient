@@ -360,6 +360,12 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 intent.putExtra(ExtraKeys.BROADCAST, broadcast);
                 startActivity(intent);
             });
+            moreOperationBottomSheet.setChangePermissionClickYier(v -> {
+                Intent intent = new Intent(this, BroadcastPermissionActivity.class);
+                intent.putExtra(ExtraKeys.BROADCAST_PERMISSION, broadcast.getBroadcastPermission());
+                intent.putExtra(ExtraKeys.CHANGE_PERMISSION, true);
+                startActivity(intent);
+            });
         }else {
 
         }

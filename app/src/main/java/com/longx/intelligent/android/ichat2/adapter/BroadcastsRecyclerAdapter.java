@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
+import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.EditBroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
@@ -449,6 +450,12 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             moreOperationBottomSheet.setEditClickYier(v -> {
                 Intent intent = new Intent(activity, EditBroadcastActivity.class);
                 intent.putExtra(ExtraKeys.BROADCAST, itemData.broadcast);
+                activity.startActivity(intent);
+            });
+            moreOperationBottomSheet.setChangePermissionClickYier(v -> {
+                Intent intent = new Intent(activity, BroadcastPermissionActivity.class);
+                intent.putExtra(ExtraKeys.BROADCAST_PERMISSION, itemData.broadcast.getBroadcastPermission());
+                intent.putExtra(ExtraKeys.CHANGE_PERMISSION, true);
                 activity.startActivity(intent);
             });
         }else {
