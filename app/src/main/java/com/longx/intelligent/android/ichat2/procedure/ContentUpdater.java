@@ -23,6 +23,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
@@ -87,6 +88,7 @@ public class ContentUpdater {
         @Override
         public void failure(Throwable t, Call<T> call) {
             super.failure(t, call);
+            ErrorLogger.log(t);
             MessageDisplayer.autoShow(context, "数据更新出错 (" + updateId + ")  >  " + t.getClass().getName(), MessageDisplayer.Duration.LONG);
         }
 

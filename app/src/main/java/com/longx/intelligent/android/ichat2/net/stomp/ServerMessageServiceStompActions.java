@@ -12,6 +12,7 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.ichat2.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.ChatMessageUpdateYier;
