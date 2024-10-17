@@ -25,6 +25,41 @@ public class Broadcast implements Parcelable {
     private int commentCount;
     private BroadcastPermission broadcastPermission;
 
+    public enum BroadcastVisibility{ALL, PARTIAL, NONE}
+
+    public static BroadcastVisibility determineBroadcastVisibility(BroadcastChannelPermission broadcastChannelPermission, BroadcastPermission broadcastPermission){
+        switch (broadcastChannelPermission.getPermission()){
+            case BroadcastChannelPermission.PRIVATE:{
+                return BroadcastVisibility.NONE;
+            }
+            case BroadcastChannelPermission.PUBLIC:{
+                switch (broadcastPermission.getPermission()){
+                    case BroadcastPermission.PRIVATE:{
+                        return BroadcastVisibility.NONE;
+                    }
+                    case BroadcastPermission.PUBLIC:{
+                        return BroadcastVisibility.ALL;
+                    }
+                    case BroadcastPermission.CONNECTED_CHANNEL_CIRCLE:{
+                        return BroadcastVisibility.PARTIAL;
+                    }
+                }
+            }
+            case BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE:{
+                switch (broadcastPermission.getPermission()){
+                    case BroadcastPermission.PRIVATE:{
+                        return BroadcastVisibility.NONE;
+                    }
+                    case BroadcastPermission.PUBLIC:
+                    case BroadcastPermission.CONNECTED_CHANNEL_CIRCLE:{
+                        return BroadcastVisibility.PARTIAL;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public Broadcast() {
     }
 

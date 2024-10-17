@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastCommentsLinearLayoutViews;
+import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -297,6 +298,28 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             binding.comment.setImageResource(R.drawable.mode_comment_outline_24px);
         }
         binding.commentCount.setText(String.valueOf(broadcast.getCommentCount()));
+
+        if(currentUserProfile.getIchatId().equals(broadcast.getIchatId())) {
+            binding.visibilityIcon.setVisibility(View.VISIBLE);
+            BroadcastChannelPermission broadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getServerBroadcastChannelPermission(this);
+            Broadcast.BroadcastVisibility broadcastVisibility = Broadcast.determineBroadcastVisibility(broadcastChannelPermission, broadcast.getBroadcastPermission());
+            switch (broadcastVisibility) {
+                case ALL: {
+                    binding.visibilityIcon.setImageResource(R.drawable.arrow_forward_24px);
+                    break;
+                }
+                case NONE: {
+                    binding.visibilityIcon.setImageResource(R.drawable.arrow_upward_24px);
+                    break;
+                }
+                case PARTIAL: {
+                    binding.visibilityIcon.setImageResource(R.drawable.arrow_outward_24px);
+                    break;
+                }
+            }
+        }else {
+            binding.visibilityIcon.setVisibility(View.GONE);
+        }
     }
 
     private void setupYiers() {

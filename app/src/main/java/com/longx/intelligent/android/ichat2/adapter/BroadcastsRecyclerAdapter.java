@@ -23,6 +23,7 @@ import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.EditBroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -265,6 +266,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.medias.setVisibility(View.GONE);
             holder.binding.medias2To4.setVisibility(View.GONE);
             holder.binding.mediaSingle.setVisibility(View.GONE);
+            holder.binding.videoDurationSingle.setVisibility(View.GONE);
         }
 
         if(itemData.broadcast.isLiked()){
@@ -292,6 +294,29 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }else {
             holder.binding.commentCount.setVisibility(View.GONE);
         }
+
+        if(currentUserProfile.getIchatId().equals(itemData.broadcast.getIchatId())) {
+            holder.binding.visibilityIcon.setVisibility(View.VISIBLE);
+            BroadcastChannelPermission broadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getServerBroadcastChannelPermission(activity);
+            Broadcast.BroadcastVisibility broadcastVisibility = Broadcast.determineBroadcastVisibility(broadcastChannelPermission, itemData.broadcast.getBroadcastPermission());
+            switch (broadcastVisibility) {
+                case ALL: {
+                    holder.binding.visibilityIcon.setImageResource(R.drawable.arrow_forward_24px);
+                    break;
+                }
+                case NONE: {
+                    holder.binding.visibilityIcon.setImageResource(R.drawable.arrow_upward_24px);
+                    break;
+                }
+                case PARTIAL: {
+                    holder.binding.visibilityIcon.setImageResource(R.drawable.arrow_outward_24px);
+                    break;
+                }
+            }
+        }else {
+            holder.binding.visibilityIcon.setVisibility(View.GONE);
+        }
+
         setupYiers(holder, position);
     }
 
