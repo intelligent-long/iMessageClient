@@ -186,7 +186,8 @@
                     android:layout_height="66dp"
                     android:src="@drawable/arrow_forward_24px"
                     android:layout_alignParentEnd="true"
-                    app:tint="#CCCCCC" />
+                    app:tint="?attr/colorControlActivated"
+                    android:alpha="0.3"/>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
