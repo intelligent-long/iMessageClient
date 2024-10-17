@@ -23,8 +23,8 @@ public class BroadcastPermission implements Parcelable {
         return stability;
     }
 
-    public static final int PRIVATE = 0;
-    public static final int PUBLIC = 1;
+    public static final int PUBLIC = 0;
+    public static final int PRIVATE = 1;
     public static final int CONNECTED_CHANNEL_CIRCLE = 2;
 
     private String broadcastId;

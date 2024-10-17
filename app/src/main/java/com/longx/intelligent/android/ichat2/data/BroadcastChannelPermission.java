@@ -6,8 +6,8 @@ import java.util.Set;
  * Created by LONG on 2024/10/14 at 2:48 AM.
  */
 public class BroadcastChannelPermission {
-    public static final int PRIVATE = 0;
-    public static final int PUBLIC = 1;
+    public static final int PUBLIC = 0;
+    public static final int PRIVATE = 1;
     public static final int CONNECTED_CHANNEL_CIRCLE = 2;
 
     private int permission;
