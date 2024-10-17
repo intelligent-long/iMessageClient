@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +16,13 @@ import java.util.Set;
  * Created by LONG on 2024/10/17 at 4:21 PM.
  */
 public class BroadcastPermission implements Parcelable {
+    @JsonIgnore
+    private String stability;
+
+    public String getStability() {
+        return stability;
+    }
+
     public static final int PRIVATE = 0;
     public static final int PUBLIC = 1;
     public static final int CONNECTED_CHANNEL_CIRCLE = 2;
