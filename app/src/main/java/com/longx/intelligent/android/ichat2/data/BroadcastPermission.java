@@ -55,6 +55,18 @@ public class BroadcastPermission implements Parcelable {
         return excludeConnectedChannels;
     }
 
+    public void setBroadcastId(String broadcastId) {
+        this.broadcastId = broadcastId;
+    }
+
+    public void setPermission(int permission) {
+        this.permission = permission;
+    }
+
+    public void setExcludeConnectedChannels(Set<String> excludeConnectedChannels) {
+        this.excludeConnectedChannels = excludeConnectedChannels;
+    }
+
     @Override
     public int describeContents() {
         return 0;

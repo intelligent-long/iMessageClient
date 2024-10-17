@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.ichat2.activity;
 
-import android.app.KeyguardManager;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,21 +8,16 @@ import com.longx.intelligent.android.ichat2.adapter.BroadcastChannelPermissionLi
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
-import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
-import com.longx.intelligent.android.ichat2.data.UserInfo;
 import com.longx.intelligent.android.ichat2.data.request.ChangeBroadcastChannelPermissionPostBody;
-import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityBroadcastChannelPermissionBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.CollectionUtil;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 

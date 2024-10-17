@@ -8,11 +8,12 @@ import android.widget.ScrollView;
 import androidx.core.widget.NestedScrollView;
 
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.activity.BroadcastChannelPermissionActivity;
+import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsBroadcastChannelPermissionBinding;
+import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsBroadcastPermissionBinding;
 import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
@@ -24,15 +25,15 @@ import java.util.Set;
 /**
  * Created by LONG on 2024/10/14 at 上午2:22.
  */
-public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutViews<BroadcastChannelPermissionLinearLayoutViews.ItemData> {
+public class BroadcastPermissionLinearLayoutViews extends LinearLayoutViews<BroadcastPermissionLinearLayoutViews.ItemData> {
     private final Set<String> excludeConnectedChannels;
 
-    public BroadcastChannelPermissionLinearLayoutViews(BroadcastChannelPermissionActivity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView, Set<String> excludeConnectedChannels) {
+    public BroadcastPermissionLinearLayoutViews(BroadcastPermissionActivity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView, Set<String> excludeConnectedChannels) {
         super(activity, linearLayout, nestedScrollView);
         this.excludeConnectedChannels = excludeConnectedChannels;
     }
 
-    public BroadcastChannelPermissionLinearLayoutViews(BroadcastChannelPermissionActivity activity, LinearLayout linearLayout, ScrollView scrollView, Set<String> excludeConnectedChannels) {
+    public BroadcastPermissionLinearLayoutViews(BroadcastPermissionActivity activity, LinearLayout linearLayout, ScrollView scrollView, Set<String> excludeConnectedChannels) {
         super(activity, linearLayout, scrollView);
         this.excludeConnectedChannels = excludeConnectedChannels;
     }
@@ -60,7 +61,7 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
 
     @Override
     public View getView(ItemData itemData, Activity activity) {
-        LinearLayoutViewsBroadcastChannelPermissionBinding binding = LinearLayoutViewsBroadcastChannelPermissionBinding.inflate(activity.getLayoutInflater());
+        LinearLayoutViewsBroadcastPermissionBinding binding = LinearLayoutViewsBroadcastPermissionBinding.inflate(activity.getLayoutInflater());
         String avatarHash = itemData.channel.getAvatar() == null ? null : itemData.channel.getAvatar().getHash();
         if (avatarHash == null) {
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, binding.avatar);
@@ -92,12 +93,12 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
         return binding.getRoot();
     }
 
-    private void setupYiers(LinearLayoutViewsBroadcastChannelPermissionBinding binding, ItemData itemData, Activity activity) {
+    private void setupYiers(LinearLayoutViewsBroadcastPermissionBinding binding, ItemData itemData, Activity activity) {
         binding.indexBar.setOnClickListener(v -> {
             FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_HEADER_CHANNEL, getExistTexts());
             fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
                 if(textSelect.equals(".")){
-                    ((BroadcastChannelPermissionActivity) activity).getBinding().appbar.setExpanded(true);
+                    ((BroadcastPermissionActivity) activity).getBinding().appbar.setExpanded(true);
                     getNestedScrollView().smoothScrollTo(0, 0);
                 }else {
                     int locatePosition = -1;
@@ -109,7 +110,7 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
                         }
                     }
                     if (locatePosition != -1) {
-                        ((BroadcastChannelPermissionActivity) activity).getBinding().appbar.setExpanded(false);
+                        ((BroadcastPermissionActivity) activity).getBinding().appbar.setExpanded(false);
                         scrollTo(locatePosition, true);
                     }
                 }
@@ -127,7 +128,8 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
                 binding.excludeCheckNo.setVisibility(View.GONE);
                 excludeConnectedChannels.add(itemData.channel.getIchatId());
             }
-            SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(activity, new BroadcastChannelPermission(BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE, excludeConnectedChannels));
+            ((BroadcastPermissionActivity) activity).getBroadcastPermission().setExcludeConnectedChannels(excludeConnectedChannels);
+            ((BroadcastPermissionActivity) activity).setResult();
         });
     }
 

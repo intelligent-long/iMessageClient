@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/index_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="16sp"
+        android:gravity="center_vertical"
+        android:paddingStart="19dp"
+        android:textColor="?attr/colorControlNormal"
+        android:textFontWeight="@integer/font_weight_medium"
+        android:background="@color/transparent"
+        tools:ignore="RtlSymmetry" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="23dp"
+        android:paddingVertical="10dp">
+
+        <FrameLayout
+            android:id="@+id/exclude_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_round_selectable_background_23r">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/exclude_check_no"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                app:tint="?attr/colorOutline"
+                android:src="@drawable/do_not_disturb_on_outline_24px" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/exclude_check_yes"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                app:tint="?attr/colorPrimary"
+                android:src="@drawable/do_not_disturb_on_fill_24px" />
+        </FrameLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="27.3dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/exclude_check"
+            app:shapeAppearanceOverlay="@style/CircleImageAppearance"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:textSize="21sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/avatar"/>
+    </RelativeLayout>
+</LinearLayout>
