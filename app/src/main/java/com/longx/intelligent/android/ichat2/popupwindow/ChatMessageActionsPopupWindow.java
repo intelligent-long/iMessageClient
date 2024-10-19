@@ -1,11 +1,14 @@
 package com.longx.intelligent.android.ichat2.popupwindow;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.ForwardMessageActivity;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -88,6 +91,12 @@ public class ChatMessageActionsPopupWindow {
                         onDeletedYier.onDeleted();
                     })
                     .forShow();
+        });
+        binding.clickViewForward.setOnClickListener(v -> {
+            popupWindow.dismiss();
+            Intent intent = new Intent(activity, ForwardMessageActivity.class);
+            intent.putExtra(ExtraKeys.CHAT_MESSAGE, chatMessage);
+            activity.startActivity(intent);
         });
     }
 

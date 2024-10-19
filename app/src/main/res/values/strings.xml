@@ -69,6 +69,9 @@
     <string name="title_exclude_broadcast_channel">不看 TA 的广播</string>
     <string name="title_broadcast_permission">广播权限</string>
     <string name="title_change">修改</string>
+    <string name="title_forward_message">转发消息</string>
+    <string name="forward_message_messages">消息</string>
+    <string name="forward_message_channels">频道</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>

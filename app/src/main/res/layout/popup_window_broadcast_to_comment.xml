@@ -7,20 +7,20 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1.3dp"
+        android:layout_height="1.5dp"
         android:elevation="1000dp"
         android:background="?attr/colorSurfaceDim"
         app:layout_constraintTop_toTopOf="@id/content"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1.3dp"
+        android:layout_height="1.5dp"
         android:elevation="1000dp"
         android:background="?attr/colorSurfaceDim"
         app:layout_constraintBottom_toBottomOf="@id/content"/>
 
     <View
-        android:layout_width="1.3dp"
+        android:layout_width="1.5dp"
         android:layout_height="wrap_content"
         android:elevation="1000dp"
         android:background="?attr/colorSurfaceDim"
@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="@id/content"/>
 
     <View
-        android:layout_width="1.3dp"
+        android:layout_width="1.5dp"
         android:layout_height="wrap_content"
         android:elevation="1000dp"
         android:background="?attr/colorSurfaceDim"

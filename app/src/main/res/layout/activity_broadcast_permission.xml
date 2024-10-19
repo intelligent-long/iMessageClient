@@ -45,7 +45,7 @@
                     android:text="@string/title_change"
                     android:textSize="14sp"
                     app:icon="@drawable/edit_outline_24px"
-                    app:iconSize="20dp"
+                    app:iconSize="19dp"
                     android:layout_marginEnd="10dp"/>
             </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>

@@ -1,0 +1,218 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            style="?attr/collapsingToolbarLayoutLargeStyle"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:collapsedTitleTextAppearance="@style/CollapsedTitleTextStyle"
+            app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
+            app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
+            app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
+            app:title="@string/title_forward_message">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="13dp"
+            android:layout_marginHorizontal="23dp">
+
+            <LinearLayout
+                android:id="@+id/layout_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/chat_message_min_size">
+
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bubble"
+                    android:backgroundTint="?attr/colorSurfaceContainerLow"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    android:textColor="@color/chat_message_common_text"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/chat_message_min_size"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:id="@+id/layout_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/chat_message_min_size">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bubble"
+                    android:backgroundTint="?attr/colorSurfaceContainerLowest"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    tools:ignore="UselessParent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/file_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="-5dp"
+                        android:src="@drawable/draft_fill_24px"
+                        app:tint="?attr/colorSurfaceContainer"
+                        android:layout_marginEnd="10dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp">
+
+                        <TextView
+                            android:id="@+id/file_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/file_size"
+                            android:textSize="17sp"
+                            android:textColor="@color/chat_message_common_text"/>
+
+                        <TextView
+                            android:id="@+id/file_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:textColor="?attr/colorOutline"
+                            android:textSize="13sp"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/video_thumbnail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:minHeight="@dimen/chat_message_min_size" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/play_circle_outline_lighter_24px"
+                    app:tint="@color/white"
+                    android:background="@drawable/shape_visible_shadow_background"/>
+
+                <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                    android:id="@+id/video_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="9dp"
+                    android:layout_gravity="start|bottom"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"/>
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_voice"
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/chat_message_min_size"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bubble"
+                    android:backgroundTint="?attr/colorSurfaceContainerLow"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/voice_icon"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/graphic_eq_24px"
+                        app:tint="?attr/colorControlNormal" />
+
+                    <TextView
+                        android:id="@+id/voice_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:textColor="@color/chat_message_common_text"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="6dp"
+            app:tabRippleColor="@null"
+            app:tabIndicator="@drawable/tab_indicator"
+            app:tabIndicatorHeight="44dp"
+            app:tabIndicatorGravity="center"
+            app:tabIndicatorColor="?attr/colorSurfaceContainer"
+            app:tabIndicatorAnimationMode="linear"
+            android:background="@null"
+            app:tabTextAppearance="@style/TabTextAppearance"
+            app:tabTextColor="?attr/colorControlNormal"
+            app:tabSelectedTextColor="?attr/colorControlActivated"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -380,6 +380,7 @@ public class ChatMessage implements Parcelable {
         }else if(type == TYPE_VOICE){
             byte tmpVoiceListened = in.readByte();
             voiceListened = tmpVoiceListened == 0 ? null : tmpVoiceListened == 1;
+            voiceFilePath = in.readString();
         }
     }
 
@@ -426,6 +427,7 @@ public class ChatMessage implements Parcelable {
             dest.writeLong(videoDuration);
         }else if(type == TYPE_VOICE){
             dest.writeByte((byte) (voiceListened == null ? 0 : voiceListened ? 1 : 2));
+            dest.writeString(voiceFilePath);
         }
     }
 
