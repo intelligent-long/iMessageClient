@@ -24,7 +24,7 @@ import java.util.Set;
  * Created by LONG on 2024/10/19 at 上午9:56.
  */
 public class ForwardMessageMessagesLinearLayoutViews extends LinearLayoutViews<OpenedChat> {
-    private Set<String> checkedChannelIds = new HashSet<>();
+    private final Set<String> checkedChannelIds = new HashSet<>();
 
     public ForwardMessageMessagesLinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView) {
         super(activity, linearLayout, nestedScrollView);

@@ -51,6 +51,11 @@ public class ForwardMessageChannelsFragment extends Fragment {
             binding.noContent.setVisibility(View.VISIBLE);
             binding.linearLayoutViews.setVisibility(View.GONE);
         }else {
+            itemDataList.sort((o1, o2) -> {
+                if (o1.getIndexChar() == '#') return 1;
+                if (o2.getIndexChar() == '#') return -1;
+                return Character.compare(o1.getIndexChar(), o2.getIndexChar());
+            });
             linearLayoutViews.addItemsAndShow(itemDataList);
         }
     }

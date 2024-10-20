@@ -7,13 +7,17 @@ import android.widget.LinearLayout;
 import androidx.core.widget.NestedScrollView;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity;
+import com.longx.intelligent.android.ichat2.activity.ForwardMessageActivity;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsForwardMessageChannelBinding;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsForwardMessageMessageBinding;
+import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 
 import java.util.HashSet;
@@ -23,7 +27,7 @@ import java.util.Set;
  * Created by LONG on 2024/10/19 at 上午9:56.
  */
 public class ForwardMessageChannelsLinearLayoutViews extends LinearLayoutViews<ForwardMessageChannelsLinearLayoutViews.ItemData> {
-    private Set<String> checkedChannelIds = new HashSet<>();
+    private final Set<String> checkedChannelIds = new HashSet<>();
 
     public ForwardMessageChannelsLinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView) {
         super(activity, linearLayout, nestedScrollView);
@@ -78,6 +82,32 @@ public class ForwardMessageChannelsLinearLayoutViews extends LinearLayoutViews<F
     }
 
     private void setupYiers(LinearLayoutViewsForwardMessageChannelBinding binding, ItemData itemData, Activity activity) {
+        binding.indexBar.setOnClickListener(v -> {
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_HEADER_CHANNEL, getExistTexts());
+            fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
+                if(textSelect.equals(".")){
+                    ((ForwardMessageActivity) activity).getBinding().appbar.setExpanded(true);
+                    getNestedScrollView().smoothScrollTo(0, 0);
+                }else {
+                    int locatePosition = -1;
+                    for (int i = 0; i < getAllItems().size(); i++) {
+                        ItemData data = getAllItems().get(i);
+                        if (String.valueOf(data.indexChar).equals(textSelect)) {
+                            locatePosition = i - 1;
+                            break;
+                        }
+                    }
+                    if (locatePosition != -1) {
+                        ((ForwardMessageActivity) activity).getBinding().appbar.setExpanded(false);
+                        scrollTo(locatePosition, true);
+                    }else {
+                        getNestedScrollView().smoothScrollTo(0, 0);
+                    }
+                }
+                fastLocateDialog.dismiss();
+            });
+            fastLocateDialog.create().show();
+        });
         binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 checkedChannelIds.add(itemData.channel.getIchatId());
@@ -85,6 +115,15 @@ public class ForwardMessageChannelsLinearLayoutViews extends LinearLayoutViews<F
                 checkedChannelIds.remove(itemData.channel.getIchatId());
             }
         });
+    }
+
+    private String[] getExistTexts(){
+        String[] result = new String[getAllItems().size() + 1];
+        for (int i = 0; i < getAllItems().size(); i++) {
+            result[i] = String.valueOf(getAllItems().get(i).indexChar);
+        }
+        result[result.length - 1] = ".";
+        return result;
     }
 
     public Set<String> getCheckedChannelIds() {

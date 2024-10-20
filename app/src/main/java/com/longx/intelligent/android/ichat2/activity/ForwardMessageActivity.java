@@ -19,8 +19,10 @@ import com.longx.intelligent.android.ichat2.adapter.ForwardMessagePagerAdapter;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
+import com.longx.intelligent.android.ichat2.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendVideoChatMessagePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityForwardMessageBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -51,6 +53,7 @@ public class ForwardMessageActivity extends BaseActivity {
     private ChatMessage chatMessage;
     private static String[] PAGER_TITLES;
     private ForwardMessagePagerAdapter pagerAdapter;
+    private ForwardMessagesProcessingDialog processingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +178,7 @@ public class ForwardMessageActivity extends BaseActivity {
             new ConfirmDialog(this, "是否转发？")
                     .setNegativeButton(null)
                     .setPositiveButton((dialog, which) -> {
-                        ForwardMessagesProcessingDialog processingDialog = new ForwardMessagesProcessingDialog(this);
+                        processingDialog = new ForwardMessagesProcessingDialog(this);
                         processingDialog.create().show();
                         new Thread(() -> {
                             AtomicInteger index = new AtomicInteger();
@@ -255,6 +258,70 @@ public class ForwardMessageActivity extends BaseActivity {
                                                 processingDialog.updateProgressIndicator(current, total);
                                             });
                                         });
+                                        break;
+                                    }
+                                    case ChatMessage.TYPE_VIDEO:{
+                                        SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(toForwardIchatId, chatMessage.getFileName());
+                                        ChatApiCaller.sendVideoChatMessage(this, this, Uri.fromFile(new File(chatMessage.getVideoFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+
+                                            @Override
+                                            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                                                super.ok(data, raw, call);
+                                                countDownLatch.countDown();
+                                                data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101, -102}, () -> {
+                                                    ChatMessage chatMessage = data.getData(ChatMessage.class);
+                                                    chatMessage.setViewed(true);
+                                                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                                                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                                                        });
+                                                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                                                newContentBadgeDisplayYier.autoShowNewContentBadge(ForwardMessageActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            }
+
+                                        }, (current, total) -> {
+                                            runOnUiThread(() -> {
+                                                processingDialog.updateProgressIndicator(current, total);
+                                            });
+                                        });
+                                        break;
+                                    }
+                                    case ChatMessage.TYPE_FILE:{
+                                        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(toForwardIchatId, chatMessage.getFileName());
+                                        ChatApiCaller.sendFileChatMessage(this, this, Uri.fromFile(new File(chatMessage.getFileFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+
+                                            @Override
+                                            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                                                super.ok(data, raw, call);
+                                                countDownLatch.countDown();
+                                                data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101, -102}, () -> {
+                                                    ChatMessage chatMessage = data.getData(ChatMessage.class);
+                                                    chatMessage.setViewed(true);
+                                                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                        OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                                                        GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                                            openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                                                        });
+                                                        GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                                            newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                                                newContentBadgeDisplayYier.autoShowNewContentBadge(ForwardMessageActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            }
+                                        }, (current, total) -> {
+                                            runOnUiThread(() -> {
+                                                processingDialog.updateProgressIndicator(current, total);
+                                            });
+                                        });
+                                        break;
                                     }
                                 }
                                 try {
@@ -273,5 +340,15 @@ public class ForwardMessageActivity extends BaseActivity {
                     .create()
                     .show();
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(processingDialog != null) processingDialog.dismiss();
+    }
+
+    public ActivityForwardMessageBinding getBinding() {
+        return binding;
     }
 }
