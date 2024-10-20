@@ -470,7 +470,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                         }
                     });
                 });
-                confirmDialog.forShow();
+                confirmDialog.create().show();
             });
             moreOperationBottomSheet.setEditClickYier(v -> {
                 Intent intent = new Intent(activity, EditBroadcastActivity.class);

@@ -47,7 +47,7 @@ public class ChannelMoreOperationBottomSheet extends AbstractBottomSheet{
                     .setPositiveButton((dialog, which) -> {
                         deleteChannel();
                     })
-                    .forShow();
+                    .create().show();
         });
     }
 

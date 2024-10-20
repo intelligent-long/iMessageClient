@@ -127,7 +127,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
                 }
                 fastLocateDialog.dismiss();
             });
-            fastLocateDialog.forShow();
+            fastLocateDialog.create().show();
         });
     }
 

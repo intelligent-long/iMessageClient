@@ -40,7 +40,7 @@ public class ChangeEmailActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeEmailActivity.this, new int[]{-101, -102, -103}, () -> {
-                            new MessageDialog(ChangeEmailActivity.this, "修改成功").forShow();
+                            new MessageDialog(ChangeEmailActivity.this, "修改成功").create().show();
                         });
                     }
                 });

@@ -115,7 +115,7 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
                 }
                 fastLocateDialog.dismiss();
             });
-            fastLocateDialog.forShow();
+            fastLocateDialog.create().show();
         });
         binding.excludeCheck.setOnClickListener(v -> {
             if(binding.excludeCheckYes.getVisibility() == View.VISIBLE && binding.excludeCheckNo.getVisibility() == View.GONE) {

@@ -1,16 +1,12 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -20,17 +16,32 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.ForwardMessagePagerAdapter;
+import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.data.OpenedChat;
+import com.longx.intelligent.android.ichat2.data.request.SendImageChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.request.SendTextChatMessagePostBody;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityForwardMessageBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.AudioUtil;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
+import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ForwardMessageActivity extends BaseActivity {
     private ActivityForwardMessageBinding binding;
@@ -123,13 +134,13 @@ public class ForwardMessageActivity extends BaseActivity {
                 break;
             }
             case ChatMessage.TYPE_VOICE: {
-                binding.layoutText.setVisibility(View.GONE);
+                binding.layoutText.setVisibility(View.VISIBLE);
                 binding.image.setVisibility(View.GONE);
                 binding.layoutFile.setVisibility(View.GONE);
                 binding.layoutVideo.setVisibility(View.GONE);
-                binding.layoutVoice.setVisibility(View.VISIBLE);
+                binding.layoutVoice.setVisibility(View.GONE);
                 long duration = AudioUtil.getDuration(this, chatMessage.getVoiceFilePath());
-                binding.voiceTime.setText(TimeUtil.formatMillisecondsToMinSec(duration));
+                binding.text.setText("[语音 " + TimeUtil.formatMillisecondsToMinSec(duration) + "]");
             }
         }
     }
@@ -152,6 +163,84 @@ public class ForwardMessageActivity extends BaseActivity {
     }
 
     private void setupYiers() {
+        binding.forwardButton.setOnClickListener(v -> {
+            Set<String> checkedChannelIds = pagerAdapter.getCheckedChannelIds();
+            if(checkedChannelIds.isEmpty()){
+                MessageDisplayer.autoShow(this, "请选择要转发的频道", MessageDisplayer.Duration.SHORT);
+                return;
+            }
+            new ConfirmDialog(this, "是否转发？")
+                    .setNegativeButton(null)
+                    .setPositiveButton((dialog, which) -> {
+                        checkedChannelIds.forEach(toForwardIchatId -> {
+                            switch (chatMessage.getType()){
+                                case ChatMessage.TYPE_VOICE:
+                                case ChatMessage.TYPE_TEXT:{
+                                    String message = null;
+                                    if(chatMessage.getType() == ChatMessage.TYPE_TEXT) message = chatMessage.getText();
+                                    if(chatMessage.getType() == ChatMessage.TYPE_VOICE) {
+                                        long duration = AudioUtil.getDuration(this, chatMessage.getVoiceFilePath());
+                                        message = "[语音 " + TimeUtil.formatMillisecondsToMinSec(duration) + "]";
+                                    }
+                                    SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(toForwardIchatId, message);
+                                    ChatApiCaller.sendTextChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
 
+                                        @Override
+                                        public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                                            super.ok(data, raw, call);
+                                            data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101}, () -> {
+                                                ChatMessage chatMessage = data.getData(ChatMessage.class);
+                                                chatMessage.setViewed(true);
+                                                ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                    OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                                                    GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                                        openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                                                    });
+                                                    GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                                        newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                                            newContentBadgeDisplayYier.autoShowNewContentBadge(ForwardMessageActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        }
+                                    });
+                                    break;
+                                }
+                                case ChatMessage.TYPE_IMAGE:{
+                                    SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(toForwardIchatId, new File(chatMessage.getImageFilePath()).getName());
+                                    ChatApiCaller.sendImageChatMessage(this, this, Uri.fromFile(new File(chatMessage.getImageFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+
+                                        @Override
+                                        public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                                            super.ok(data, raw, call);
+                                            data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101, -102}, () -> {
+                                                ChatMessage chatMessage = data.getData(ChatMessage.class);
+                                                chatMessage.setViewed(true);
+                                                ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                    OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
+                                                    GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                                        openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                                                    });
+                                                    GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                                        newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                                            newContentBadgeDisplayYier.autoShowNewContentBadge(ForwardMessageActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        }
+                                    }, (current, total) -> {
+                                        runOnUiThread(() -> {
+
+                                        });
+                                    });
+                                }
+                            }
+                        });
+                    })
+                    .create()
+                    .show();
+        });
     }
 }

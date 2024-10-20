@@ -139,7 +139,7 @@ public class OperationStatus {
             }
             String failureMessage = buildFailureMessage(messageCodes, excludeCodes);
             if(failureMessage != null) {
-                new MessageDialog(activity, failureMessage).forShow();
+                new MessageDialog(activity, failureMessage).create().show();
             }
         }
         //处理其他结果

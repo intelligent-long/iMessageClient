@@ -137,7 +137,7 @@ public class GlobalBehaviors {
                             .setNegativeButton((dialog, which) -> {
                                 if (resultsYier != null) resultsYier.onResults(false, call, false);
                             })
-                            .forShow();
+                            .create().show();
                 }
             }
 
@@ -164,7 +164,7 @@ public class GlobalBehaviors {
                 super.ok(data, raw, call);
                 data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                     String notice = data.getDetails().get("notice").get(0);
-                    new MessageDialog(activity, notice).forShow();
+                    new MessageDialog(activity, notice).create().show();
                 });
             }
         });

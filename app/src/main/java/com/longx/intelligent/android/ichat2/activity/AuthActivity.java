@@ -274,7 +274,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                                 toEmailLoginWay(true);
                                 showLogin();
                             })
-                            .forShow();
+                            .create().show();
                 });
             }
         });
@@ -292,7 +292,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(AuthActivity.this, new int[]{-101, -102}, () -> {
-                        new MessageDialog(AuthActivity.this, "修改成功").forShow();
+                        new MessageDialog(AuthActivity.this, "修改成功").create().show();
                     });
                 }
             });
@@ -303,7 +303,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(AuthActivity.this, new int[]{-101, -102}, () -> {
-                        new MessageDialog(AuthActivity.this, "修改成功").forShow();
+                        new MessageDialog(AuthActivity.this, "修改成功").create().show();
                     });
                 }
             });
@@ -382,7 +382,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
         });
         needShowOfflineDetails.sort(Comparator.comparing(OfflineDetail::getTime));
         needShowOfflineDetails.forEach(needShowOfflineDetail -> {
-            new MessageDialog(this, "登陆会话已失效", needShowOfflineDetail.getDesc()).forShow();
+            new MessageDialog(this, "登陆会话已失效", needShowOfflineDetail.getDesc()).create().show();
             SharedPreferencesAccessor.AuthPref.saveShowedOfflineDetailTime(this, needShowOfflineDetail.getTime());
         });
     }

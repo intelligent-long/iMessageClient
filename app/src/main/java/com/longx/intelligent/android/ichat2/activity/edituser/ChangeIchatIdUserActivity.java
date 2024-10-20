@@ -63,7 +63,7 @@ public class ChangeIchatIdUserActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeIchatIdUserActivity.this, new int[]{-101, -102, -103, -104}, () -> {
-                            new MessageDialog(ChangeIchatIdUserActivity.this, "修改成功").forShow();
+                            new MessageDialog(ChangeIchatIdUserActivity.this, "修改成功").create().show();
                         });
                     }
                 });

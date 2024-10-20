@@ -46,7 +46,7 @@ public class SettingChannelNoteActivity extends BaseActivity {
                     data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101, -102}, () -> {
                         binding.noteInput.setText(inputtedNote);
                         binding.deleteButton.setVisibility(View.VISIBLE);
-                        new MessageDialog(SettingChannelNoteActivity.this, "设置成功").forShow();
+                        new MessageDialog(SettingChannelNoteActivity.this, "设置成功").create().show();
                     });
                 }
             });
@@ -62,12 +62,12 @@ public class SettingChannelNoteActivity extends BaseActivity {
                                 data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101}, () -> {
                                     binding.noteInput.setText(null);
                                     binding.deleteButton.setVisibility(View.GONE);
-                                    new MessageDialog(SettingChannelNoteActivity.this, "已删除").forShow();
+                                    new MessageDialog(SettingChannelNoteActivity.this, "已删除").create().show();
                                 });
                             }
                         });
                     })
-                    .forShow();
+                    .create().show();
         });
     }
 }

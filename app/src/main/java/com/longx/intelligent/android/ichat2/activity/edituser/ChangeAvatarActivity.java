@@ -41,7 +41,7 @@ public class ChangeAvatarActivity extends BaseActivity {
             }else if(item.getItemId() == R.id.change){
                 new Thread(() -> {
                     OperatingDialog operatingDialog = new OperatingDialog(this);
-                    operatingDialog.forShow();
+                    operatingDialog.create().show();
                     Bitmap croppedImage = binding.cropImageView.getCroppedImage();
                     if(croppedImage == null){
                         operatingDialog.dismiss();
@@ -82,7 +82,7 @@ public class ChangeAvatarActivity extends BaseActivity {
                 super.ok(data, raw, call);
                 data.commonHandleResult(ChangeAvatarActivity.this, new int[]{-101, -102}, () -> {
                     new MessageDialog(ChangeAvatarActivity.this, "修改成功")
-                            .forShow();
+                            .create().show();
                 });
             }
         });

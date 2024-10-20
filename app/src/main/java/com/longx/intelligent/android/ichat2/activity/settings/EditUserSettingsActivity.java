@@ -166,7 +166,7 @@ public class EditUserSettingsActivity extends BaseActivity{
                                         });
                                     }
                                 });
-                            }).forShow();
+                            }).create().show();
                 }).show();
             }else if(preference.equals(preferenceChangeIchatIdUser)){
                 startActivity(new Intent(getContext(), ChangeIchatIdUserActivity.class));

@@ -209,7 +209,7 @@ public class RootSettingsActivity extends BaseActivity {
                         .setPositiveButton((dialogInterface, i) -> {
                             GlobalBehaviors.doLogout(SettingsFragment.this.getActivity(), null, null);
                         })
-                        .forShow();
+                        .create().show();
             }else if(preference.equals(preferenceEmail)){
                 startActivity(new Intent(getContext(), ChangeEmailActivity.class));
             }else if(preference.equals(preferenceResetPassword)){
@@ -219,7 +219,7 @@ public class RootSettingsActivity extends BaseActivity {
             }else if(preference.equals(preferenceUseDynamicColor)){
                 ActivityOperator.recreateAll();
             }else if(preference.equals(preferenceServerSetting)){
-                new ServerSettingDialog((AppCompatActivity) getActivity()).forShow();
+                new ServerSettingDialog((AppCompatActivity) getActivity()).create().show();
             }else if(preference.equals(preferenceOtherAppSettings)){
                 startActivity(new Intent(getContext(), OtherAppSettingsSettingsActivity.class));
             }else if(preference.equals(preferenceVersion)){

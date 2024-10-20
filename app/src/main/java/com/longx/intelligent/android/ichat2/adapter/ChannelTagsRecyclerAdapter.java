@@ -100,7 +100,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             }
                         });
                     })
-                    .forShow();
+                    .create().show();
         });
     }
 

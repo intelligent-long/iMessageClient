@@ -72,6 +72,7 @@
     <string name="title_forward_message">转发消息</string>
     <string name="forward_message_messages">消息</string>
     <string name="forward_message_channels">频道</string>
+    <string name="title_forward">转发</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>

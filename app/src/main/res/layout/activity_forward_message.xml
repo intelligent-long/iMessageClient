@@ -29,6 +29,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"/>
+
+            <LinearLayout
+                android:id="@+id/layout_forward_button"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="end"
+                app:layout_collapseMode="pin">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/forward_button"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:text="@string/title_forward"
+                    android:textSize="14sp"
+                    app:icon="@drawable/share_windows_24px"
+                    app:iconSize="21dp"
+                    android:layout_marginEnd="10dp"/>
+            </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

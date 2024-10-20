@@ -376,7 +376,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         }
                     });
                 });
-                confirmDialog.forShow();
+                confirmDialog.create().show();
             });
             moreOperationBottomSheet.setEditClickYier(v -> {
                 Intent intent = new Intent(this, EditBroadcastActivity.class);
@@ -393,7 +393,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
         }
         binding.text.setOnLongClickListener(v -> {
-            new CopyTextDialog(this, broadcast.getText()).forShow();
+            new CopyTextDialog(this, broadcast.getText()).create().show();
             return false;
         });
         binding.like.setOnClickListener(v -> {
@@ -535,7 +535,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 case BroadcastMedia.TYPE_IMAGE:
                     new Thread(() -> {
                         OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
-                        operatingDialog.forShow();
+                        operatingDialog.create().show();
                         try {
                             PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity.getInstance(), broadcast, currentItem);
                             operatingDialog.dismiss();

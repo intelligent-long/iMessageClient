@@ -23,7 +23,6 @@ public abstract class AbstractDialog {
     private final MaterialAlertDialogBuilder dialogBuilder;
     private AlertDialog dialog;
     private final ContextThemeWrapper dialogContext;
-    private boolean passDirectShow;
 
     public AbstractDialog(Activity activity) {
         this(activity, false);
@@ -53,8 +52,7 @@ public abstract class AbstractDialog {
 
     protected abstract AlertDialog create(MaterialAlertDialogBuilder builder);
 
-    public void forShow(){
-        activity.runOnUiThread(() -> {
+    public AbstractDialog create(){
             View view = createView(activity.getLayoutInflater().cloneInContext(dialogContext));
             if(view != null){
                 dialogBuilder.setView(view);
@@ -64,10 +62,7 @@ public abstract class AbstractDialog {
                 setAutoCancelInput(view);
             }
             onDialogCreated();
-            if(!passDirectShow) {
-                show();
-            }
-        });
+            return this;
     }
 
     public void show() {
@@ -126,9 +121,5 @@ public abstract class AbstractDialog {
 
     public AlertDialog getDialog() {
         return dialog;
-    }
-
-    public void setPassDirectShow(boolean passDirectShow) {
-        this.passDirectShow = passDirectShow;
     }
 }

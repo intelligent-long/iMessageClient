@@ -6,13 +6,9 @@ import android.widget.PopupWindow;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
-import com.longx.intelligent.android.ichat2.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastComment;
-import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.PopupWindowBroadcastCommentActionsBinding;
-import com.longx.intelligent.android.ichat2.databinding.PopupWindowChatMessageActionsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.CopyTextDialog;
 import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
@@ -49,11 +45,11 @@ public class BroadcastCommentActionsPopupWindow {
         binding.clickViewTime.setOnClickListener(v -> {
             popupWindow.dismiss();
             String timeText = TimeUtil.formatDetailedRelativeTime(broadcastComment.getCommentTime());
-            new CustomViewMessageDialog(activity, timeText).forShow();
+            new CustomViewMessageDialog(activity, timeText).create().show();
         });
         binding.clickViewCopy.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new CopyTextDialog(activity, broadcastComment.getText()).forShow();
+            new CopyTextDialog(activity, broadcastComment.getText()).create().show();
         });
         binding.clickViewDelete.setOnClickListener(v -> {
             if(deleteYier == null) return;
@@ -63,7 +59,7 @@ public class BroadcastCommentActionsPopupWindow {
                         popupWindow.dismiss();
                         deleteYier.onClick(v);
                     })
-                    .forShow();
+                    .create().show();
         });
         binding.clickViewViewToComment.setOnClickListener(v -> {
             if(viewToCommentYier == null) return;

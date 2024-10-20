@@ -17,7 +17,9 @@ import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.databinding.FragmentForwardMessageChannelsBinding;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by LONG on 2024/10/19 at 上午10:05.
@@ -51,5 +53,10 @@ public class ForwardMessageChannelsFragment extends Fragment {
         }else {
             linearLayoutViews.addItemsAndShow(itemDataList);
         }
+    }
+
+    public Set<String> getCheckedChannelIds() {
+        if(linearLayoutViews == null) return new HashSet<>();
+        return linearLayoutViews.getCheckedChannelIds();
     }
 }

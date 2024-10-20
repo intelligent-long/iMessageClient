@@ -42,7 +42,7 @@ public class ChangeSexActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeSexActivity.this, new int[]{-101}, () -> {
-                            new MessageDialog(ChangeSexActivity.this, "修改成功").forShow();
+                            new MessageDialog(ChangeSexActivity.this, "修改成功").create().show();
                         });
                     }
                 });

@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import androidx.core.widget.NestedScrollView;
@@ -16,10 +17,15 @@ import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by LONG on 2024/10/19 at 上午9:56.
  */
 public class ForwardMessageMessagesLinearLayoutViews extends LinearLayoutViews<OpenedChat> {
+    private Set<String> checkedChannelIds = new HashSet<>();
+
     public ForwardMessageMessagesLinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView) {
         super(activity, linearLayout, nestedScrollView);
     }
@@ -65,6 +71,21 @@ public class ForwardMessageMessagesLinearLayoutViews extends LinearLayoutViews<O
                 break;
         }
         binding.time.setText(TimeUtil.formatSimpleRelativeTime(newestChatMessage.getTime()));
+        setupYiers(binding, openedChat, activity);
         return binding.getRoot();
+    }
+
+    private void setupYiers(LinearLayoutViewsForwardMessageMessageBinding binding, OpenedChat openedChat, Activity activity) {
+        binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked){
+                checkedChannelIds.add(openedChat.getChannelIchatId());
+            }else {
+                checkedChannelIds.remove(openedChat.getChannelIchatId());
+            }
+        });
+    }
+
+    public Set<String> getCheckedChannelIds() {
+        return checkedChannelIds;
     }
 }

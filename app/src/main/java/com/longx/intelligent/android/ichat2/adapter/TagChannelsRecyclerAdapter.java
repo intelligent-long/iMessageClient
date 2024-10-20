@@ -145,7 +145,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
                             }
                         });
                     })
-                    .forShow();
+                    .create().show();
         });
         holder.binding.indexBar.setOnClickListener(v -> {
             FastLocateDialog fastLocateDialog = new FastLocateDialog(tagChannelActivity, FastLocateDialog.LOCATE_CHANNEL, getExistTexts());
@@ -164,7 +164,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
                 }
                 fastLocateDialog.dismiss();
             });
-            fastLocateDialog.forShow();
+            fastLocateDialog.create().show();
         });
     }
 

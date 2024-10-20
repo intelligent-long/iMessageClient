@@ -87,7 +87,7 @@ public class OtherAppSettingsSettingsActivity extends BaseActivity {
                         .setPositiveButton((dialog, which) -> {
                             AppUtil.restartApp(requireContext());
                         })
-                        .forShow();
+                        .create().show();
             }
             return true;
         }

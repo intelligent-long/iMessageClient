@@ -542,7 +542,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 case ChatMessage.TYPE_IMAGE:{
                     new Thread(() -> {
                         OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
-                        operatingDialog.forShow();
+                        operatingDialog.create().show();
                         try {
                             PublicFileAccessor.ChatMedia.saveImage(chatMessage);
                             operatingDialog.dismiss();
@@ -557,7 +557,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 case ChatMessage.TYPE_VIDEO:{
                     new Thread(() -> {
                         OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
-                        operatingDialog.forShow();
+                        operatingDialog.create().show();
                         try {
                             PublicFileAccessor.ChatMedia.saveVideo(chatMessage);
                             operatingDialog.dismiss();

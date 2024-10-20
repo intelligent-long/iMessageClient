@@ -36,7 +36,7 @@ public class OfflineDetailsActivity extends BaseActivity {
                             SharedPreferencesAccessor.ApiJson.OfflineDetails.clearRecords(this);
                             showContent();
                         })
-                        .forShow();
+                        .create().show();
             }
             return true;
         });

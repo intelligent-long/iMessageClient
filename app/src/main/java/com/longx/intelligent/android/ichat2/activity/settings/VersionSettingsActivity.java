@@ -83,7 +83,7 @@ public class VersionSettingsActivity extends BaseActivity {
             if(preference.equals(preferenceOpenSourceLicenses)){
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
             }else if(preference.equals(preferenceUserGuide)){
-                new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).forShow();
+                new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).create().show();
             }
             return true;
         }

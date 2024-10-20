@@ -56,11 +56,11 @@ public class ChatMessageActionsPopupWindow {
         binding.clickViewTime.setOnClickListener(v -> {
             popupWindow.dismiss();
             String timeText = TimeUtil.formatDetailedRelativeTime(chatMessage.getTime());
-            new CustomViewMessageDialog(activity, timeText).forShow();
+            new CustomViewMessageDialog(activity, timeText).create().show();
         });
         binding.clickViewCopy.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new CopyTextDialog(activity, chatMessage.getText()).forShow();
+            new CopyTextDialog(activity, chatMessage.getText()).create().show();
         });
         binding.clickViewDelete.setOnClickListener(v -> {
             new ConfirmDialog(activity, "是否继续？")
@@ -90,7 +90,7 @@ public class ChatMessageActionsPopupWindow {
                         }
                         onDeletedYier.onDeleted();
                     })
-                    .forShow();
+                    .create().show();
         });
         binding.clickViewForward.setOnClickListener(v -> {
             popupWindow.dismiss();

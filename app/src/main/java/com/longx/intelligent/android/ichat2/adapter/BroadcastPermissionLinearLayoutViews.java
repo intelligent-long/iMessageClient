@@ -9,10 +9,7 @@ import androidx.core.widget.NestedScrollView;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity;
-import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.data.Channel;
-import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsBroadcastChannelPermissionBinding;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsBroadcastPermissionBinding;
 import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
@@ -116,7 +113,7 @@ public class BroadcastPermissionLinearLayoutViews extends LinearLayoutViews<Broa
                 }
                 fastLocateDialog.dismiss();
             });
-            fastLocateDialog.forShow();
+            fastLocateDialog.create().show();
         });
         binding.excludeCheck.setOnClickListener(v -> {
             if(binding.excludeCheckYes.getVisibility() == View.VISIBLE && binding.excludeCheckNo.getVisibility() == View.GONE) {
