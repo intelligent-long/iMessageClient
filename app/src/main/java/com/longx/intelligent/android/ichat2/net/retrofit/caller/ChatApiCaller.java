@@ -23,6 +23,7 @@ import com.longx.intelligent.android.ichat2.yier.ProgressYier;
 import com.xcheng.retrofit.CompletableCall;
 import com.xcheng.retrofit.ProgressRequestBody;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -65,7 +66,7 @@ public class ChatApiCaller extends RetrofitApiCaller{
     }
 
     public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri imageUri,
-                                                                      SendImageChatMessagePostBody postBody,
+                                                                      SendImageChatMessagePostBody postBody, String fileName,
                                                                       BaseCommonYier<OperationData> yier, ProgressYier progressYier){
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
@@ -78,8 +79,13 @@ public class ChatApiCaller extends RetrofitApiCaller{
             ErrorLogger.log(e);
             return null;
         }
-        String fileName = FileHelper.getFileNameFromUri(context, imageUri);
-        String mimeType = FileHelper.getMimeType(context, imageUri);
+        String mimeType;
+        if(fileName == null) {
+            fileName = FileHelper.getFileNameFromUri(context, imageUri);
+            mimeType = FileHelper.getMimeType(context, imageUri);
+        }else {
+            mimeType = FileHelper.getMimeType(fileName);
+        }
         RequestBody requestBody = new RequestBody() {
             @Override
             public MediaType contentType() {

@@ -642,7 +642,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         MediaInfo mediaInfo = mediaInfos.get(index.get());
         String fileName = FileHelper.getFileNameFromUri(this, mediaInfo.getUri());
         SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), fileName);
-        ChatApiCaller.sendImageChatMessage(this, this, mediaInfo.getUri(), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+        ChatApiCaller.sendImageChatMessage(this, this, mediaInfo.getUri(), postBody, null, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
