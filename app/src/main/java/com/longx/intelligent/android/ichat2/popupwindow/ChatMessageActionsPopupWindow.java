@@ -26,9 +26,12 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.ichat2.yier.OpenedChatsUpdateYier;
+
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -60,6 +63,9 @@ public class ChatMessageActionsPopupWindow {
         }
         if(!chatMessage.getFrom().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())){
             binding.clickViewDelete.setVisibility(View.GONE);
+            binding.clickViewUnsend.setVisibility(View.GONE);
+        }
+        if(TimeUtil.isDateAfter(chatMessage.getTime().getTime(), new Date().getTime(), Constants.MAX_ALLOW_UNSEND_MINUTES * 60 * 1000)){
             binding.clickViewUnsend.setVisibility(View.GONE);
         }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
@@ -121,7 +127,7 @@ public class ChatMessageActionsPopupWindow {
                             @Override
                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                 super.ok(data, raw, call);
-                                data.commonHandleResult(activity, new int[]{-101}, () -> {
+                                data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                                     ChatMessage unsendChatMessage = data.getData(ChatMessage.class);
                                     unsendChatMessage.setViewed(true);
                                     ChatMessage toUnsendMessage = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, unsendChatMessage.getTo()).findOne(unsendChatMessage.getUnsendMessageUuid());
