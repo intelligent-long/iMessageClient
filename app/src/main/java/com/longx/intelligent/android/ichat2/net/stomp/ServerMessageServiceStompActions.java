@@ -6,6 +6,7 @@ import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.HoldableActivity;
+import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -78,6 +79,7 @@ public class ServerMessageServiceStompActions {
     public static void updateChatMessages(Context context){
         ContentUpdater.updateChatMessages(context, results -> {
             List<ChatMessage> chatMessages = (List<ChatMessage>) results[0];
+            List<ChatMessage> toUnsendChatMessages = (List<ChatMessage>) results[1];
             chatMessages.forEach(chatMessage -> {
                 if (ActivityOperator.getActivityList().isEmpty()) {
                     Notifications.notifyChatMessage(context, chatMessage);
@@ -101,6 +103,7 @@ public class ServerMessageServiceStompActions {
             GlobalYiersHolder.getYiers(ChatMessageUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
                 chatMessageUpdateYiers.forEach(chatMessageUpdateYier -> {
                     chatMessageUpdateYier.onNewChatMessage(chatMessages);
+                    chatMessageUpdateYier.onUnsendChatMessage(toUnsendChatMessages);
                 });
             });
         });

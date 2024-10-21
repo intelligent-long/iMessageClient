@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface ChatMessageUpdateYier {
     void onNewChatMessage(List<ChatMessage> newChatMessages);
+    void onUnsendChatMessage(List<ChatMessage> unsendChatMessages);
 }

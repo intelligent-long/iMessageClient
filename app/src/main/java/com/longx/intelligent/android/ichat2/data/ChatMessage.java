@@ -16,6 +16,7 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.media.helper.MediaHelper;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.IOException;
@@ -144,6 +145,9 @@ public class ChatMessage implements Parcelable {
         String other = chatMessage.getOther(context);
         ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
         chatMessageDatabaseManager.insertOrIgnore(chatMessage);
+        if(chatMessage.type == TYPE_UNSEND){
+            chatMessageDatabaseManager.delete(chatMessage.unsendMessageUuid);
+        }
     }
 
     public static final int TYPE_TEXT = 0;
@@ -152,6 +156,7 @@ public class ChatMessage implements Parcelable {
     public static final int TYPE_VIDEO = 3;
     public static final int TYPE_FILE = 4;
     public static final int TYPE_NOTICE = 5;
+    public static final int TYPE_UNSEND = 6;
     private int type;
     private String uuid;
     private String from;
@@ -163,6 +168,7 @@ public class ChatMessage implements Parcelable {
     private String fileId;
     private String videoId;
     private String voiceId;
+    private String unsendMessageUuid;
 
     @JsonIgnore
     private Boolean showTime;
@@ -189,7 +195,7 @@ public class ChatMessage implements Parcelable {
     }
 
     public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String fileName,
-                       String imageId, String fileId, String videoId, String voiceId) {
+                       String imageId, String fileId, String videoId, String voiceId, String unsendMessageUuid) {
         this.type = type;
         this.uuid = uuid;
         this.from = from;
@@ -201,6 +207,7 @@ public class ChatMessage implements Parcelable {
         this.fileId = fileId;
         this.videoId = videoId;
         this.voiceId = voiceId;
+        this.unsendMessageUuid = unsendMessageUuid;
     }
 
     public int getType() {
@@ -245,6 +252,10 @@ public class ChatMessage implements Parcelable {
 
     public String getVoiceId() {
         return voiceId;
+    }
+
+    public String getUnsendMessageUuid() {
+        return unsendMessageUuid;
     }
 
     public boolean isSelfSender(Context context){
@@ -381,6 +392,8 @@ public class ChatMessage implements Parcelable {
             byte tmpVoiceListened = in.readByte();
             voiceListened = tmpVoiceListened == 0 ? null : tmpVoiceListened == 1;
             voiceFilePath = in.readString();
+        }else if(type == TYPE_UNSEND){
+            unsendMessageUuid = in.readString();
         }
     }
 
@@ -428,6 +441,8 @@ public class ChatMessage implements Parcelable {
         }else if(type == TYPE_VOICE){
             dest.writeByte((byte) (voiceListened == null ? 0 : voiceListened ? 1 : 2));
             dest.writeString(voiceFilePath);
+        }else if(type == TYPE_UNSEND){
+            dest.writeString(unsendMessageUuid);
         }
     }
 
@@ -445,6 +460,7 @@ public class ChatMessage implements Parcelable {
                 ", fileId='" + fileId + '\'' +
                 ", videoId='" + videoId + '\'' +
                 ", voiceId='" + voiceId + '\'' +
+                ", unsendMessageUuid='" + unsendMessageUuid + '\'' +
                 ", showTime=" + showTime +
                 ", viewed=" + viewed +
                 ", imageFilePath='" + imageFilePath + '\'' +
@@ -452,6 +468,7 @@ public class ChatMessage implements Parcelable {
                 ", fileFilePath='" + fileFilePath + '\'' +
                 ", videoFilePath='" + videoFilePath + '\'' +
                 ", videoSize=" + videoSize +
+                ", videoDuration=" + videoDuration +
                 ", voiceFilePath='" + voiceFilePath + '\'' +
                 ", voiceListened=" + voiceListened +
                 '}';

@@ -197,6 +197,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     break;
             }
             //头像
+            holder.binding.avatarSend.setVisibility(View.VISIBLE);
             holder.binding.avatarSend.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, ChannelActivity.class);
                 intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
@@ -217,6 +218,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
                     holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     holder.binding.textSend.setText(itemData.chatMessage.getText());
                     break;
                 }
@@ -226,6 +229,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
                     holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.imageSend, itemData.chatMessage.getImageSize());
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
@@ -241,6 +246,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileSend.setVisibility(View.VISIBLE);
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
                     holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     holder.binding.fileNameSend.setText(itemData.chatMessage.getFileName());
                     holder.binding.fileSizeSend.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
@@ -251,6 +258,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.VISIBLE);
                     holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.videoThumbnailSend, itemData.chatMessage.getVideoSize());
                     GlideApp
                             .with(activity.getApplicationContext())
@@ -269,6 +278,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileSend.setVisibility(View.GONE);
                     holder.binding.layoutVideoSend.setVisibility(View.GONE);
                     holder.binding.layoutVoiceSend.setVisibility(View.VISIBLE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
                     holder.binding.voiceTimeSend.setText(TimeUtil.formatMillisecondsToMinSec(duration));
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
@@ -300,11 +311,23 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     }
                     break;
                 }
+                case ChatMessage.TYPE_UNSEND:{
+                    holder.binding.layoutTextSend.setVisibility(View.GONE);
+                    holder.binding.imageSend.setVisibility(View.GONE);
+                    holder.binding.layoutFileSend.setVisibility(View.GONE);
+                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.VISIBLE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
+                    holder.binding.avatarSend.setVisibility(View.GONE);
+                    break;
+                }
             }
         }else {
             holder.binding.layoutReceive.setVisibility(View.VISIBLE);
             holder.binding.layoutSend.setVisibility(View.GONE);
             //头像
+            holder.binding.avatarReceive.setVisibility(View.VISIBLE);
             holder.binding.avatarReceive.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, ChannelActivity.class);
                 intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
@@ -325,6 +348,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     holder.binding.textReceive.setText(itemData.chatMessage.getText());
                     break;
                 }
@@ -334,6 +359,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.imageReceive, itemData.chatMessage.getImageSize());
                     String imageFilePath = itemData.chatMessage.getImageFilePath();
                     GlideApp.with(activity.getApplicationContext())
@@ -349,6 +376,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileReceive.setVisibility(View.VISIBLE);
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     holder.binding.fileNameReceive.setText(itemData.chatMessage.getFileName());
                     holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
                     break;
@@ -359,6 +388,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.VISIBLE);
                     holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     setupImageViewSize(holder.binding.videoThumbnailReceive, itemData.chatMessage.getVideoSize());
                     GlideApp
                             .with(activity.getApplicationContext())
@@ -377,6 +408,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.layoutFileReceive.setVisibility(View.GONE);
                     holder.binding.layoutVideoReceive.setVisibility(View.GONE);
                     holder.binding.layoutVoiceReceive.setVisibility(View.VISIBLE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.GONE);
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
                     holder.binding.voiceTimeReceive.setText(TimeUtil.formatMillisecondsToMinSec(duration));
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
@@ -413,6 +446,17 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     }
                     break;
                 }
+                case ChatMessage.TYPE_UNSEND:{
+                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                    holder.binding.imageReceive.setVisibility(View.GONE);
+                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                    holder.binding.unsendSelf.setVisibility(View.GONE);
+                    holder.binding.unsendOther.setVisibility(View.VISIBLE);
+                    holder.binding.avatarReceive.setVisibility(View.GONE);
+                    break;
+                }
             }
         }
     }
@@ -447,6 +491,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                 openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
             });
+        });
+        popupWindow.setOnMessageUnsentYier((unsendChatMessage, toUnsendMessage) -> {
+            addItemAndShow(unsendChatMessage);
+            removeItemAndShow(toUnsendMessage);
         });
         View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
             UiUtil.hideKeyboard(activity);
@@ -622,6 +670,15 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }
         determineAndUpdateShowTime();
         recyclerView.scrollToEnd(true);
+    }
+
+    public synchronized void removeItemAndShow(ChatMessage chatMessage){
+        if(itemDataList.isEmpty()) return;
+        if(!itemDataList.contains(new ItemData(chatMessage))) return;
+        ItemData itemData = new ItemData(chatMessage);
+        int index = itemDataList.indexOf(itemData);
+        itemDataList.remove(index);
+        notifyItemRemoved(index);
     }
 
     public synchronized void addAllToStartAndShow(List<ChatMessage> chatMessages){

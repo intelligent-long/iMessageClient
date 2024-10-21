@@ -471,4 +471,36 @@
             android:scaleType="centerCrop"
             android:layout_alignParentEnd="true"/>
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/unsend_self"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/time">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="你撤回了一条消息"
+            android:paddingVertical="10dp"
+            android:textColor="?attr/colorOutline"
+            android:textSize="12.6sp"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/unsend_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/time">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="对方撤回了一条消息"
+            android:paddingVertical="10dp"
+            android:textColor="?attr/colorOutline"
+            android:textSize="12.6sp"/>
+    </FrameLayout>
 </RelativeLayout>

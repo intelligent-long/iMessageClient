@@ -186,12 +186,17 @@ public class ContentUpdater {
                     chatMessages.sort(Comparator.comparing(ChatMessage::getTime));
                     Map<String, List<ChatMessage>> chatMessageMap = new HashMap<>();
                     AtomicInteger doneCount = new AtomicInteger();
+                    List<ChatMessage> toUnsendChatMessages = new ArrayList<>();
                     chatMessages.forEach(chatMessage -> {
                         doneCount.getAndIncrement();
                         String other = chatMessage.getOther(context);
                         ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
                         if (chatMessageDatabaseManager.existsByUuid(chatMessage.getUuid())) return;
                         chatMessage.setViewed(false);
+                        if(chatMessage.getType() == ChatMessage.TYPE_UNSEND){
+                            ChatMessage toUnsendMessage = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, chatMessage.getFrom()).findOne(chatMessage.getUnsendMessageUuid());
+                            toUnsendChatMessages.add(toUnsendMessage);
+                        }
                         ChatMessage.mainDoOnNewChatMessage(chatMessage, context, results -> {
                             String key = chatMessage.getOther(context);
                             List<ChatMessage> chatMessageList;
@@ -206,7 +211,7 @@ public class ContentUpdater {
                                 chatMessageMap.forEach((s, list) -> {
                                     OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, list.size(), true));
                                 });
-                                resultsYier.onResults(chatMessages);
+                                resultsYier.onResults(chatMessages, toUnsendChatMessages);
                             }
                         });
                     });

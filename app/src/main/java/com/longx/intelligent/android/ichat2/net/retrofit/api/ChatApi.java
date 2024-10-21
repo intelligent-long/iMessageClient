@@ -73,4 +73,7 @@ public interface ChatApi {
     @GET("chat/message/voice/new/{voiceId}")
     @Headers("LogLevel:HEADERS")
     CompletableCall<ResponseBody> fetchChatMessageVoice(@Path("voiceId") String voiceId);
+
+    @POST("chat/message/unsend/{receiver}/{chatMessageUuid}")
+    CompletableCall<OperationData> unsendChatMessage(@Path("receiver") String receiver, @Path("chatMessageUuid") String chatMessageUuid);
 }

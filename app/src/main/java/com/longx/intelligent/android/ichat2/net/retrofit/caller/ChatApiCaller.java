@@ -32,6 +32,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
+import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2024/5/15 at 4:09 AM.
@@ -306,6 +307,12 @@ public class ChatApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<ResponseBody> fetchChatMessageVoice(LifecycleOwner lifecycleOwner, String voiceId, BaseYier<ResponseBody> yier){
         CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageVoice(voiceId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> unsendChatMessage(LifecycleOwner lifecycleOwner, String receiver, String chatMessageId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().unsendChatMessage(receiver, chatMessageId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

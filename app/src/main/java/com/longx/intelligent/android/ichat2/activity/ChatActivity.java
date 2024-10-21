@@ -40,6 +40,7 @@ import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -153,6 +154,23 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             synchronized (this) {
                 thisChannelNewMessages.forEach(thisChannelNewMessage -> {
                     if (adapter != null) adapter.addItemAndShow(thisChannelNewMessage);
+                });
+            }
+        }
+    }
+
+    @Override
+    public void onUnsendChatMessage(List<ChatMessage> unsendChatMessages) {
+        List<ChatMessage> thisChannelUnsendMessages = new ArrayList<>();
+        unsendChatMessages.forEach(unsendMessage -> {
+            if(unsendMessage.getOther(this).equals(channel.getIchatId())){
+                thisChannelUnsendMessages.add(unsendMessage);
+            }
+        });
+        if(!unsendChatMessages.isEmpty()){
+            synchronized (this) {
+                thisChannelUnsendMessages.forEach(thisChannelUnsendMessage -> {
+                    if (adapter != null) adapter.removeItemAndShow(thisChannelUnsendMessage);
                 });
             }
         }
