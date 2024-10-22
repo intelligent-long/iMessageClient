@@ -54,6 +54,7 @@
                 android:id="@+id/matching_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="16.3sp"
                 android:letterSpacing="0.007"
                 android:lineSpacingMultiplier="1.3"
                 android:layout_marginTop="2dp"/>

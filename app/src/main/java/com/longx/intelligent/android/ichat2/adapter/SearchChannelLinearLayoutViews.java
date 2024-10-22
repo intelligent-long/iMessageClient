@@ -95,21 +95,21 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
         String searchStr = getActivity().getSearchStr();
         SpannableStringBuilder matchingInText = new SpannableStringBuilder();
         if(itemData.channel.getIchatIdUser() != null && Utils.containsIgnoreCase(itemData.channel.getIchatIdUser(), searchStr)){
-            appendMatchingText(matchingInText, "iChat ID: ", itemData.channel.getIchatIdUser(), searchStr);
+            appendMatchingText(matchingInText, "iChat ID  ", itemData.channel.getIchatIdUser(), searchStr);
         }
         if(itemData.channel.getUsername() != null && Utils.containsIgnoreCase(itemData.channel.getUsername(), searchStr)){
-            appendMatchingText(matchingInText, "用户名: ", itemData.channel.getUsername(), searchStr);
+            appendMatchingText(matchingInText, "用户名  ", itemData.channel.getUsername(), searchStr);
         }
         if(itemData.channel.getNote() != null && Utils.containsIgnoreCase(itemData.channel.getNote(), searchStr)){
-            appendMatchingText(matchingInText, "备注: ", itemData.channel.getNote(), searchStr);
+            appendMatchingText(matchingInText, "备注  ", itemData.channel.getNote(), searchStr);
         }
         if(itemData.channel.getEmail() != null && Utils.containsIgnoreCase(itemData.channel.getEmail(), searchStr)){
-            appendMatchingText(matchingInText, "邮箱: ", itemData.channel.getEmail(), searchStr);
+            appendMatchingText(matchingInText, "邮箱  ", itemData.channel.getEmail(), searchStr);
         }
-        if((itemData.channel.getFirstRegion() != null && Utils.containsIgnoreCase(itemData.channel.getFirstRegion().getName(), searchStr)) ||
+        if ((itemData.channel.getFirstRegion() != null && Utils.containsIgnoreCase(itemData.channel.getFirstRegion().getName(), searchStr)) ||
                 (itemData.channel.getSecondRegion() != null && Utils.containsIgnoreCase(itemData.channel.getSecondRegion().getName(), searchStr)) ||
-                (itemData.channel.getThirdRegion() != null && Utils.containsIgnoreCase(itemData.channel.getThirdRegion().getName(), searchStr))){
-            appendMatchingText(matchingInText, "地区: ", itemData.channel.buildRegionDesc(), searchStr);
+                (itemData.channel.getThirdRegion() != null && Utils.containsIgnoreCase(itemData.channel.getThirdRegion().getName(), searchStr))) {
+            appendMatchingText(matchingInText, "地区  ", itemData.channel.buildRegionDesc(), searchStr);
         }
         binding.matchingIn.setText(matchingInText);
     }
