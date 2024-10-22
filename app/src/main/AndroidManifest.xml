@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="DiscouragedApi">
+    tools:ignore="DiscouragedApi" >
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -39,7 +39,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IChat2Client"
         tools:ignore="LockedOrientationActivity"
-        tools:targetApi="34">
+        tools:targetApi="34" >
+        <activity
+            android:name=".activity.SearchChannelActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.ForwardMessageActivity"
             android:exported="false" />
@@ -173,7 +176,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SearchChannelActivity"
+            android:name=".activity.ExploreChannelActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -244,7 +247,7 @@
             android:name=".activity.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MainActivity">
+            android:theme="@style/Theme.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -255,8 +258,8 @@
         <receiver
             android:name=".broadcast.BootReceiver"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter android:priority="1000">
+            android:exported="true" >
+            <intent-filter android:priority="1000" >
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
@@ -266,7 +269,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />

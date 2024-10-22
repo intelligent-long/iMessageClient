@@ -445,4 +445,48 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         return recentBroadcastMedias;
     }
 
+    public List<Channel> search(String str){
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS +
+                        " WHERE " +
+                        ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER + " LIKE \"%" + str + "%\" OR " +
+                        ChannelDatabaseHelper.TableChannelsColumns.USERNAME + " LIKE \"%" + str + "%\" OR " +
+                        ChannelDatabaseHelper.TableChannelsColumns.NOTE + " LIKE \"%" + str + "%\" OR " +
+                        ChannelDatabaseHelper.TableChannelsColumns.EMAIL + " LIKE \"%" + str + "%\" OR " +
+                        ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_NAME + " LIKE \"%" + str + "%\" OR " +
+                        ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_NAME + " LIKE \"%" + str + "%\" OR " +
+                        ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME + " LIKE \"%" + str + "%\"",
+                null)) {
+            List<Channel> results = new ArrayList<>();
+            while (cursor.moveToNext()){
+                String channelTableIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID);
+                String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);
+                String channelTableEmail = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.EMAIL);
+                String channelTableUsername = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.USERNAME);
+                String channelTableNote = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.NOTE);
+                String channelTableAvatarHash = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH);
+                String channelTableAvatarIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID);
+                String channelTableAvatarExtension = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION);
+                Date channelTableAvatarTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME);
+                Integer channelTableSex = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.SEX);
+                Integer channelTableFirstRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_ADCODE);
+                String channelTableFirstRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_NAME);
+                Integer channelTableSecondRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_ADCODE);
+                String channelTableSecondRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_NAME);
+                Integer channelTableThirdRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE);
+                String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
+                Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
+                results.add(new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+                        channelTableSex,
+                        channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
+                        channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
+                        channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
+                        Boolean.TRUE.equals(channelTableAssociated)));
+            }
+            return results;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
 }

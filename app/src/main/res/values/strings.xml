@@ -34,7 +34,7 @@
     <string name="title_avatar">头像</string>
     <string name="title_offline_detail">离线信息</string>
     <string name="title_open_source_licenses">开放源代码许可</string>
-    <string name="title_search_channel">搜索频道</string>
+    <string name="title_explore_channel">搜台</string>
     <string name="title_edit_broadcast">编辑广播</string>
     <string name="title_send_broadcast">发送广播</string>
     <string name="title_request_add_channel">请求添加频道</string>
@@ -73,6 +73,7 @@
     <string name="forward_message_messages">消息</string>
     <string name="forward_message_channels">频道</string>
     <string name="title_forward">转发</string>
+    <string name="title_search_channel">搜索频道</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">开始聊天</string>

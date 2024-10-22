@@ -93,15 +93,13 @@ public class ForwardMessageChannelsLinearLayoutViews extends LinearLayoutViews<F
                     for (int i = 0; i < getAllItems().size(); i++) {
                         ItemData data = getAllItems().get(i);
                         if (String.valueOf(data.indexChar).equals(textSelect)) {
-                            locatePosition = i - 1;
+                            locatePosition = i;
                             break;
                         }
                     }
                     if (locatePosition != -1) {
                         ((ForwardMessageActivity) activity).getBinding().appbar.setExpanded(false);
                         scrollTo(locatePosition, true);
-                    }else {
-                        getNestedScrollView().smoothScrollTo(0, 0);
                     }
                 }
                 fastLocateDialog.dismiss();

@@ -12,14 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelAdditionsActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
+import com.longx.intelligent.android.ichat2.activity.ExploreChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.SearchChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.TagActivity;
 import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
@@ -172,13 +175,19 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
             }
         });
         binding.addChannelFab.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), SearchChannelActivity.class));
+            startActivity(new Intent(requireContext(), ExploreChannelActivity.class));
         });
         headerViewBinding.layoutNewChannel.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), ChannelAdditionsActivity.class));
         });
         headerViewBinding.layoutTag.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), TagActivity.class));
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.search){
+                startActivity(new Intent(requireContext(), SearchChannelActivity.class));
+            }
+            return false;
         });
     }
 

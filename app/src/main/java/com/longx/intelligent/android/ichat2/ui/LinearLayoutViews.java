@@ -28,21 +28,24 @@ public abstract class LinearLayoutViews<T> {
     private final ScrollView scrollView;
     private final List<T> allItems = new ArrayList<>();
     private View footerView;
+    private View[] parentViews;
 
     private int currentHighLightIndex;
 
-    public LinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView) {
+    public LinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView nestedScrollView, View... parentViews) {
         this.activity = activity;
         this.linearLayout = linearLayout;
         this.nestedScrollView = nestedScrollView;
         this.scrollView = null;
+        this.parentViews = parentViews;
     }
 
-    public LinearLayoutViews(Activity activity, LinearLayout linearLayout, ScrollView scrollView) {
+    public LinearLayoutViews(Activity activity, LinearLayout linearLayout, ScrollView scrollView, View... parentViews) {
         this.activity = activity;
         this.linearLayout = linearLayout;
         this.scrollView = scrollView;
         this.nestedScrollView = null;
+        this.parentViews = parentViews;
     }
 
     public synchronized void addItemsAndShow(List<T> items){
@@ -151,17 +154,25 @@ public abstract class LinearLayoutViews<T> {
         return scrollTo(index, smooth, true, sourceOnTouchYier);
     }
 
+    private int getTopViewsHeight(){
+        int topViewsHeight = linearLayout.getTop();
+        for (View parentView : parentViews) {
+            topViewsHeight += parentView.getTop();
+        }
+        return topViewsHeight;
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private boolean scrollTo(int index, boolean smooth, boolean highLight, View.OnTouchListener sourceOnTouchYier){
         if(index < 0) return false;
         View childAt = linearLayout.getChildAt(index);
         if(childAt == null) return false;
         if(scrollView != null) {
-            int bottom = childAt.getBottom();
+            int top = childAt.getTop() + getTopViewsHeight();
             if (smooth) {
-                scrollView.smoothScrollTo(0, bottom);
+                scrollView.smoothScrollTo(0, top);
             } else {
-                scrollView.scrollTo(0, bottom);
+                scrollView.scrollTo(0, top);
             }
             if(highLight) {
                 highLight(index);
@@ -172,11 +183,11 @@ public abstract class LinearLayoutViews<T> {
                 });
             }
         }else if(nestedScrollView != null){
-            int bottom = childAt.getBottom();
+            int top = childAt.getTop() + getTopViewsHeight();
             if (smooth) {
-                nestedScrollView.smoothScrollTo(0, bottom);
+                nestedScrollView.smoothScrollTo(0, top);
             } else {
-                nestedScrollView.scrollTo(0, bottom);
+                nestedScrollView.scrollTo(0, top);
             }
             if(highLight) {
                 highLight(index);
