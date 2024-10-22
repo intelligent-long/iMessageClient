@@ -132,4 +132,21 @@ public class Channel extends UserInfo implements Parcelable {
         dest.writeParcelable(thirdRegion, flags);
         dest.writeInt(associated ? 1 : 0);
     }
+
+    @Override
+    public String toString() {
+        return "Channel{" +
+                "ichatId='" + ichatId + '\'' +
+                ", ichatIdUser='" + ichatIdUser + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", note='" + note + '\'' +
+                ", avatar=" + avatar +
+                ", sex=" + sex +
+                ", firstRegion=" + firstRegion +
+                ", secondRegion=" + secondRegion +
+                ", thirdRegion=" + thirdRegion +
+                ", associated=" + associated +
+                '}';
+    }
 }

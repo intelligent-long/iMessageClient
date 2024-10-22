@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.fragment.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,11 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
+import com.longx.intelligent.android.ichat2.activity.SearchChatMessageActivity;
 import com.longx.intelligent.android.ichat2.adapter.OpenedChatsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
@@ -121,6 +125,12 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
             }
         });
         binding.startChatFab.setOnClickListener((View.OnClickListener) getActivity());
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.search){
+                startActivity(new Intent(requireContext(), SearchChatMessageActivity.class));
+            }
+            return false;
+        });
     }
 
     private void setupRecyclerView() {

@@ -89,7 +89,7 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
             }
-            holder.binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
+            holder.binding.name.setText(channel.getName());
         }
         switch (newestChatMessage.getType()){
             case ChatMessage.TYPE_TEXT:
