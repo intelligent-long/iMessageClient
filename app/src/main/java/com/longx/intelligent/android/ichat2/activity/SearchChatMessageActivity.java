@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChannelAssociation;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySearchChatMessageBinding;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class SearchChatMessageActivity extends BaseActivity {
 
     private void init(){
         linearLayoutViews = new SearchChatMessageLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView);
+        binding.searchInput.postDelayed(() -> UiUtil.openKeyboard(binding.searchEdit), 240);
     }
 
     private void setupYiers() {

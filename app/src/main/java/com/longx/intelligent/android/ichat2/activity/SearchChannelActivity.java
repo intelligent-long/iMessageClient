@@ -1,6 +1,8 @@
 package com.longx.intelligent.android.ichat2.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,8 @@ import com.longx.intelligent.android.ichat2.adapter.SearchChannelLinearLayoutVie
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.databinding.ActivitySearchChannelBinding;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 
 import java.util.ArrayList;
@@ -36,6 +40,7 @@ public class SearchChannelActivity extends BaseActivity {
 
     private void init(){
         linearLayoutViews = new SearchChannelLinearLayoutViews(this, binding.linearLayoutViews, binding.scrollView);
+        binding.searchInput.postDelayed(() -> UiUtil.openKeyboard(binding.searchEdit), 240);
     }
 
     private void setupYiers() {

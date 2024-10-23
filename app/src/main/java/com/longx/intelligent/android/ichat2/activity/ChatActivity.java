@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,6 +84,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     private boolean isFabScaledUp;
     private VoiceChatMessageBehaviours voiceChatMessageBehaviours;
     private ChannelDatabaseManager channelDatabaseManager;
+    private ChatMessage locateChatMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,14 +93,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         setContentView(binding.getRoot());
         setAutoCancelInput(false);
         setupBackNavigation(binding.toolbar, ColorUtil.getColor(this, R.color.ichat));
-        channel = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.CHANNEL));
-        chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
-        openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
-        openedChatDatabaseManager.updateShow(channel.getIchatId(), true);
-        channelDatabaseManager = ChannelDatabaseManager.getInstance();
+        intentData();
         GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
         init();
+        checkAndLocateMessage();
         showContent();
+        checkAndIndicateMessageLocation();
         setupYiers();
         registerResultLauncher();
     }
@@ -110,20 +110,46 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(adapter != null) adapter.onActivityDestroy();
     }
 
+    private void intentData(){
+        channel = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.CHANNEL));
+        locateChatMessage = getIntent().getParcelableExtra(ExtraKeys.CHAT_MESSAGE);
+    }
+
     private void init(){
         changeHoldToTalkToNormal();
         changeCancelSendTalkFabToNormal();
         voiceChatMessageBehaviours = new VoiceChatMessageBehaviours(this);
+        chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
+        openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
+        openedChatDatabaseManager.updateShow(channel.getIchatId(), true);
+        channelDatabaseManager = ChannelDatabaseManager.getInstance();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.recyclerView.setLayoutManager(layoutManager);
+        adapter = new ChatMessagesRecyclerAdapter(this, binding.recyclerView);
+        binding.recyclerView.setAdapter(adapter);
+    }
+
+    private void checkAndLocateMessage() {
+        if(locateChatMessage != null) {
+            int selectPosition = chatMessageDatabaseManager.findPosition(locateChatMessage.getUuid());
+            if(selectPosition != -1){
+                int count = chatMessageDatabaseManager.count();
+                previousPn = (count - (selectPosition + 1)) / PS;
+                nextPn = previousPn - 1;
+                int topRestItems = Math.max(count - (previousPn + 1) * PS, 0);
+                int recyclerViewPosition = Math.max(selectPosition - topRestItems, 0);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    layoutManager.scrollToPositionWithOffset(recyclerViewPosition, 500);
+                }
+            }
+        }
     }
 
     private void showContent(){
         binding.toolbar.setTitle(channel.getNote() == null ? channel.getUsername() : channel.getNote());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.recyclerView.setLayoutManager(layoutManager);
         synchronized (this) {
             initialChatMessageCount = chatMessageDatabaseManager.count();
-            adapter = new ChatMessagesRecyclerAdapter(this, binding.recyclerView);
-            binding.recyclerView.setAdapter(adapter);
             showChatMessages();
         }
         if(openedChatDatabaseManager.findNotViewedCount(channel.getIchatId()) > 0) {
@@ -137,7 +163,15 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
 
     private void showChatMessages() {
         previousPage();
-        binding.recyclerView.scrollToEnd(false);
+        if(locateChatMessage == null){
+            binding.recyclerView.scrollToEnd(false);
+        }
+    }
+
+    private void checkAndIndicateMessageLocation() {
+        if(locateChatMessage != null){
+            adapter.indicateLocation(locateChatMessage.getUuid());
+        }
     }
 
     @Override
@@ -432,6 +466,10 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
                     }
                     break;
             }
+            return false;
+        });
+        binding.recyclerView.setOnTouchListener((v, event) -> {
+            adapter.cancelIndicateLocation();
             return false;
         });
     }

@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
@@ -39,6 +40,7 @@ import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupW
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.AudioUtil;
+import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
@@ -66,6 +68,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private final List<ItemData> itemDataList = new ArrayList<>();
     private final RequestOptions requestOptions;
     private final ChatVoicePlayer chatVoicePlayer;
+    private String indicateLocationUuid;
 
     public ChatMessagesRecyclerAdapter(ChatActivity activity, com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView) {
         this.activity = activity;
@@ -467,6 +470,11 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 }
             }
         }
+        if(itemData.chatMessage.getUuid().equals(indicateLocationUuid)){
+            holder.binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorSurfaceContainer));
+        }else {
+            holder.binding.getRoot().setBackgroundColor(ColorUtil.getColor(activity, R.color.transparent));
+        }
     }
 
     private void setupImageViewSize(@NonNull View imageView, Size size) {
@@ -709,6 +717,28 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     public void onActivityDestroy(){
         ChatVoicePlayer.State state = chatVoicePlayer.release();
         if(state != null) SharedPreferencesAccessor.ChatPref.saveChatVoicePlayerState(activity, state);
+    }
+
+    public void indicateLocation(String locatedUuid) {
+        for (int i = 0; i < itemDataList.size(); i++) {
+            if(itemDataList.get(i).chatMessage.getUuid().equals(locatedUuid)){
+                indicateLocationUuid = locatedUuid;
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    public void cancelIndicateLocation() {
+        if (indicateLocationUuid != null) {
+            for (int i = 0; i < itemDataList.size(); i++) {
+                if(itemDataList.get(i).chatMessage.getUuid().equals(indicateLocationUuid)){
+                    notifyItemChanged(i);
+                    break;
+                }
+            }
+            indicateLocationUuid = null;
+        }
     }
 
 }

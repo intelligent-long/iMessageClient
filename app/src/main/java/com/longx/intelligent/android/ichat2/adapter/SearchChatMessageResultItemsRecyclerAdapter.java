@@ -108,9 +108,11 @@ public class SearchChatMessageResultItemsRecyclerAdapter extends WrappableRecycl
     }
 
     private void setupYiers(ViewHolder holder, int position, Channel channel) {
+        ChatMessage chatMessage = itemDataList.get(position).chatMessage;
         holder.binding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChatActivity.class);
             intent.putExtra(ExtraKeys.CHANNEL, channel);
+            intent.putExtra(ExtraKeys.CHAT_MESSAGE, chatMessage);
             activity.startActivity(intent);
         });
     }

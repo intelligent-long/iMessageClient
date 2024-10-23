@@ -357,4 +357,20 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
     }
+
+    @SuppressLint("Range")
+    public int findPosition(String uuid){
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().rawQuery("SELECT row_number FROM (" +
+                " SELECT *, (SELECT COUNT(*) FROM " + ((ChatMessageDatabaseHelper)getHelper()).getTableName() + " b where a." + ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME + " >= b." + ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME + ") as row_number" +
+                " FROM " + ((ChatMessageDatabaseHelper)getHelper()).getTableName() + " a)" +
+                " WHERE " + ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + " = \"" + uuid + "\"", null)) {
+            if (cursor.moveToNext()) {
+                return cursor.getInt(cursor.getColumnIndex("row_number")) - 1;
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return -1;
+    }
 }
