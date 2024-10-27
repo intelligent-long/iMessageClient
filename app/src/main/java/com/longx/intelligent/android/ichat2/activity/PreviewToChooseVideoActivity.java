@@ -142,7 +142,7 @@ public class PreviewToChooseVideoActivity extends BaseActivity {
             long duration = player.getDuration();
             int position = (int) ((currentPosition / (double) duration) * SEEKBAR_MAX);
             binding.seekbar.setProgress(position);
-            binding.timePlay.setText(TimeUtil.formatTime(currentPosition) + " / " + TimeUtil.formatTime(duration));
+            binding.timePlay.setText(TimeUtil.formatTimeToHHMMSS(currentPosition) + " / " + TimeUtil.formatTimeToHHMMSS(duration));
             handler.postDelayed(updateProgressAction, 1);
         }
     }

@@ -1,20 +1,10 @@
 package com.longx.intelligent.android.ichat2.util;
 
-import android.annotation.SuppressLint;
-import android.text.format.DateUtils;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * Created by LONG on 2023/4/20 at 10:42 AM.
+ * Created by LONG on 2024/4/4 at 1:50 AM.
  */
 public class TimeUtil {
     private static final String TIME_FORMAT_PATTERN_TODAY_SIMPLE = "a h:mm";
@@ -53,32 +43,74 @@ public class TimeUtil {
     private static final String TIME_FORMAT_PATTERN_MONTH_DETAILED = "M 月 d 日 EEEE a h:mm:ss";
     private static final String TIME_FORMAT_PATTERN_YEAR_DETAILED = "y 年 M 月 d 日 EEEE a h:mm:ss";
 
-    public static boolean isToday(Date date){
-        return DateUtils.isToday(date.getTime());
+    public static boolean isToday(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        Calendar today = Calendar.getInstance();
+        return calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR);
     }
 
     public static boolean isYesterday(Date date) {
-        return DateUtils.isToday(date.getTime() + DateUtils.DAY_IN_MILLIS);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        return isToday(calendar.getTime());
     }
 
     public static boolean isTomorrow(Date date) {
-        return DateUtils.isToday(date.getTime() - DateUtils.DAY_IN_MILLIS);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        return isToday(calendar.getTime());
     }
 
-    public static boolean isTheDayBeforeYesterday(Date date){
-        return DateUtils.isToday(date.getTime() + DateUtils.DAY_IN_MILLIS * 2);
+    public static boolean isTheDayBeforeYesterday(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        return isToday(calendar.getTime());
     }
 
-    public static boolean isTheDayAfterTomorrow(Date date){
-        return DateUtils.isToday(date.getTime() - DateUtils.DAY_IN_MILLIS * 2);
+    public static boolean isTheDayAfterTomorrow(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.add(Calendar.DAY_OF_YEAR, -2);
+        return isToday(calendar.getTime());
     }
 
-    public static boolean isThisWeek(Date date){
-        return (System.currentTimeMillis() - date.getTime()) <= DateUtils.WEEK_IN_MILLIS;
+    public static boolean isThisWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        Calendar startOfWeek = Calendar.getInstance();
+        startOfWeek.set(Calendar.DAY_OF_WEEK, startOfWeek.getFirstDayOfWeek());
+        startOfWeek.set(Calendar.HOUR_OF_DAY, 0);
+        startOfWeek.set(Calendar.MINUTE, 0);
+        startOfWeek.set(Calendar.SECOND, 0);
+        startOfWeek.set(Calendar.MILLISECOND, 0);
+
+        return calendar.after(startOfWeek);
     }
 
-    public static boolean isThisYear(Date date){
-        return (System.currentTimeMillis() - date.getTime()) <= DateUtils.YEAR_IN_MILLIS;
+    public static boolean isThisYear(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        Calendar startOfYear = Calendar.getInstance();
+        startOfYear.set(Calendar.MONTH, Calendar.JANUARY);
+        startOfYear.set(Calendar.DAY_OF_MONTH, 1);
+        startOfYear.set(Calendar.HOUR_OF_DAY, 0);
+        startOfYear.set(Calendar.MINUTE, 0);
+        startOfYear.set(Calendar.SECOND, 0);
+        startOfYear.set(Calendar.MILLISECOND, 0);
+
+        return calendar.after(startOfYear);
     }
 
     public static String formatSimpleRelativeTime(Date date){
@@ -169,6 +201,13 @@ public class TimeUtil {
         return simpleDateFormat.format(date);
     }
 
+    public static Date addDays(Date startDate, int daysToAdd){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.DAY_OF_YEAR, daysToAdd);
+        return calendar.getTime();
+    }
+
     public static boolean isDateAfter(long less, long greater, long thresholdMillis) {
         return isDateAfter(new Date(less), new Date(greater), thresholdMillis);
     }
@@ -230,8 +269,7 @@ public class TimeUtil {
                 cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
     }
 
-    @SuppressLint("DefaultLocale")
-    public static String formatTime(long timeInMillis) {
+    public static String formatTimeToHHMMSS(long timeInMillis) {
         long seconds = timeInMillis / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
@@ -246,8 +284,7 @@ public class TimeUtil {
         return sb.toString();
     }
 
-    @SuppressLint("DefaultLocale")
-    public static String formatMillisecondsToMinSec(long milliseconds) {
+    public static String formatTimeToMinutesSeconds(long milliseconds) {
         long totalSeconds = Math.round(milliseconds / 1000.0);
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;

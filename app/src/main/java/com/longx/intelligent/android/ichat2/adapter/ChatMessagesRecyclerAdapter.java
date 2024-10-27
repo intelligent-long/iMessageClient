@@ -274,7 +274,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailSend);
                     if(itemData.chatMessage.getVideoDuration() != null) {
-                        holder.binding.videoDurationSend.setText(TimeUtil.formatTime(itemData.chatMessage.getVideoDuration()));
+                        holder.binding.videoDurationSend.setText(TimeUtil.formatTimeToHHMMSS(itemData.chatMessage.getVideoDuration()));
                     }
                     break;
                 }
@@ -288,7 +288,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.unsendOther.setVisibility(View.GONE);
                     holder.binding.avatarSend.setVisibility(View.VISIBLE);
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
-                    holder.binding.voiceTimeSend.setText(TimeUtil.formatMillisecondsToMinSec(duration));
+                    holder.binding.voiceTimeSend.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
                         if(chatVoicePlayer.isPaused()){
                             holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
@@ -408,7 +408,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .into(holder.binding.videoThumbnailReceive);
                     if(itemData.chatMessage.getVideoDuration() != null) {
-                        holder.binding.videoDurationReceive.setText(TimeUtil.formatTime(itemData.chatMessage.getVideoDuration()));
+                        holder.binding.videoDurationReceive.setText(TimeUtil.formatTimeToHHMMSS(itemData.chatMessage.getVideoDuration()));
                     }
                     break;
                 }
@@ -422,7 +422,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     holder.binding.unsendOther.setVisibility(View.GONE);
                     holder.binding.avatarReceive.setVisibility(View.VISIBLE);
                     long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
-                    holder.binding.voiceTimeReceive.setText(TimeUtil.formatMillisecondsToMinSec(duration));
+                    holder.binding.voiceTimeReceive.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
                     if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
                         if(chatVoicePlayer.isPaused()){
                             holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);

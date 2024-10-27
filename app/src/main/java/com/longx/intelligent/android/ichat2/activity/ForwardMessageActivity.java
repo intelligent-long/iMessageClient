@@ -135,7 +135,7 @@ public class ForwardMessageActivity extends BaseActivity {
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(binding.videoThumbnail);
                 if (chatMessage.getVideoDuration() != null) {
-                    binding.videoDuration.setText(TimeUtil.formatTime(chatMessage.getVideoDuration()));
+                    binding.videoDuration.setText(TimeUtil.formatTimeToHHMMSS(chatMessage.getVideoDuration()));
                 }
                 break;
             }
@@ -146,7 +146,7 @@ public class ForwardMessageActivity extends BaseActivity {
                 binding.layoutVideo.setVisibility(View.GONE);
                 binding.layoutVoice.setVisibility(View.GONE);
                 long duration = AudioUtil.getDuration(this, chatMessage.getVoiceFilePath());
-                binding.text.setText("[语音 " + TimeUtil.formatMillisecondsToMinSec(duration) + "]");
+                binding.text.setText("[语音 " + TimeUtil.formatTimeToMinutesSeconds(duration) + "]");
             }
         }
     }
@@ -198,7 +198,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                         if(chatMessage.getType() == ChatMessage.TYPE_TEXT) message = chatMessage.getText();
                                         if(chatMessage.getType() == ChatMessage.TYPE_VOICE) {
                                             long duration = AudioUtil.getDuration(this, chatMessage.getVoiceFilePath());
-                                            message = "[语音 " + TimeUtil.formatMillisecondsToMinSec(duration) + "]";
+                                            message = "[语音 " + TimeUtil.formatTimeToMinutesSeconds(duration) + "]";
                                         }
                                         SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(toForwardIchatId, message);
                                         ChatApiCaller.sendTextChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){

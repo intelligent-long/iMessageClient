@@ -164,7 +164,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
             case VIDEO:{
                 changeTopCoverHeight(holder, true);
                 holder.binding.topShadowCover.bringToFront();
-                holder.binding.timePlay.setText(TimeUtil.formatTime(0) + " / " + TimeUtil.formatTime(0));
+                holder.binding.timePlay.setText(TimeUtil.formatTimeToHHMMSS(0) + " / " + TimeUtil.formatTimeToHHMMSS(0));
                 holder.binding.playControl.bringToFront();
                 initializePlayer(holder.binding, position);
                 initializeSeekBar(holder.binding, position);
@@ -352,7 +352,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
                 long duration = player.getDuration();
                 int progress = (int) ((currentPosition / (double) duration) * SEEKBAR_MAX);
                 binding.seekbar.setProgress(progress);
-                binding.timePlay.setText(TimeUtil.formatTime(currentPosition) + " / " + TimeUtil.formatTime(duration));
+                binding.timePlay.setText(TimeUtil.formatTimeToHHMMSS(currentPosition) + " / " + TimeUtil.formatTimeToHHMMSS(duration));
                 new Handler().postDelayed(itemDataList.get(position1[0]).updateProgressAction, 1);
             }
         }catch (Exception e){

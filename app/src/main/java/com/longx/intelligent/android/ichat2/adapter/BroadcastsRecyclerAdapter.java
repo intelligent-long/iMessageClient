@@ -218,7 +218,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                     holder.binding.videoDurationSingle.setVisibility(View.VISIBLE);
                     holder.binding.videoDurationSingle.bringToFront();
                     if (broadcastMedia.getVideoDuration() != null) {
-                        holder.binding.videoDurationSingle.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                        holder.binding.videoDurationSingle.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
                     } else {
                         holder.binding.videoDurationSingle.setText("video");
                     }
@@ -394,7 +394,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             videoDurationViews[i].setVisibility(View.VISIBLE);
             videoDurationViews[i].bringToFront();
             if(broadcastMedia.getVideoDuration() != null) {
-                videoDurationViews[i].setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                videoDurationViews[i].setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
             }else {
                 videoDurationViews[i].setText("video");
             }

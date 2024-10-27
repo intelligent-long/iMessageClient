@@ -206,7 +206,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                             videoDuration.setVisibility(View.VISIBLE);
                             videoDuration.bringToFront();
                             if(broadcastMedia.getVideoDuration() != null) {
-                                videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                                videoDuration.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
                             }else {
                                 videoDuration.setText("video");
                             }
@@ -243,7 +243,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                             videoDuration.setVisibility(View.VISIBLE);
                             videoDuration.bringToFront();
                             if(broadcastMedia.getVideoDuration() != null) {
-                                videoDuration.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                                videoDuration.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
                             }else {
                                 videoDuration.setText("video");
                             }
@@ -272,7 +272,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         binding.videoDurationSingle.setVisibility(View.VISIBLE);
                         binding.videoDurationSingle.bringToFront();
                         if (broadcastMedia.getVideoDuration() != null) {
-                            binding.videoDurationSingle.setText(TimeUtil.formatTime(broadcastMedia.getVideoDuration()));
+                            binding.videoDurationSingle.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
                         } else {
                             binding.videoDurationSingle.setText("video");
                         }

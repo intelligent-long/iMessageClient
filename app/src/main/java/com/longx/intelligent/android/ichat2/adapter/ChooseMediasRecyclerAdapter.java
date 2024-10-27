@@ -237,7 +237,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.binding.imageView);
         holder.binding.videoDuration.setVisibility(View.VISIBLE);
-        holder.binding.videoDuration.setText(TimeUtil.formatTime(mediaInfo.getVideoDuration()));
+        holder.binding.videoDuration.setText(TimeUtil.formatTimeToHHMMSS(mediaInfo.getVideoDuration()));
         holder.binding.videoDuration.bringToFront();
     }
 
