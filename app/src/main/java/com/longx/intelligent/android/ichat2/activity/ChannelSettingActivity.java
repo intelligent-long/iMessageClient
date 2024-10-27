@@ -96,12 +96,14 @@ public class ChannelSettingActivity extends BaseActivity {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                new ConfirmDialog(ChannelSettingActivity.this, "是否继续？")
-                                        .setNegativeButton(null)
-                                        .setPositiveButton((dialog1, which1) -> {
-                                            deleteChannel();
-                                        })
-                                        .create().show();
+                                runOnUiThread(() -> {
+                                    new ConfirmDialog(ChannelSettingActivity.this, "是否继续？")
+                                            .setNegativeButton(null)
+                                            .setPositiveButton((dialog1, which1) -> {
+                                                deleteChannel();
+                                            })
+                                            .create().show();
+                                });
                             }
                         }, 150);
                     })
