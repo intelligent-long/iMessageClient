@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by LONG on 2024/1/16 at 11:43 PM.
+ * Created by LONG on 2024/10/29 at 上午2:22.
  */
-public class ConfirmDialog extends AbstractDialog{
+public class ChoiceDialog extends AbstractDialog{
     private final Integer iconId;
     private final String message;
     private final String uuid = UUID.randomUUID().toString();
@@ -27,15 +27,15 @@ public class ConfirmDialog extends AbstractDialog{
     private ButtonInfo negativeButtonInfo;
     private ButtonInfo neutralButtonInfo;
 
-    public ConfirmDialog(Activity activity){
-        this(activity, "是否继续？");
+    public ChoiceDialog(Activity activity){
+        this(activity, "请选择");
     }
 
-    public ConfirmDialog(Activity activity, String message) {
+    public ChoiceDialog(Activity activity, String message) {
         this(activity, null, message);
     }
 
-    public ConfirmDialog(Activity activity, Integer iconId, String message) {
+    public ChoiceDialog(Activity activity, Integer iconId, String message) {
         super(activity, R.style.TitleLargeMaterialAlertDialog);
         this.iconId = iconId;
         this.message = message;
@@ -46,7 +46,7 @@ public class ConfirmDialog extends AbstractDialog{
         builder
                 .setTitle(uuid);
         if(iconId == null){
-            builder.setIcon(R.drawable.question_mark_24px_primary_tint);
+//            builder.setIcon(R.drawable.radio_button_unchecked_24px_primary_tint);
         }else {
             builder.setIcon(iconId);
         }
@@ -98,32 +98,32 @@ public class ConfirmDialog extends AbstractDialog{
         }
     }
 
-    public ConfirmDialog setPositiveButton(DialogInterface.OnClickListener yier){
+    public ChoiceDialog setPositiveButton(DialogInterface.OnClickListener yier){
         positiveButtonInfo = new ButtonInfo(null, yier);
         return this;
     }
 
-    public ConfirmDialog setNegativeButton(DialogInterface.OnClickListener yier){
+    public ChoiceDialog setNegativeButton(DialogInterface.OnClickListener yier){
         negativeButtonInfo = new ButtonInfo(null, yier);
         return this;
     }
 
-    public ConfirmDialog setNeutralButton(DialogInterface.OnClickListener yier){
+    public ChoiceDialog setNeutralButton(DialogInterface.OnClickListener yier){
         neutralButtonInfo = new ButtonInfo(null, yier);
         return this;
     }
 
-    public ConfirmDialog setPositiveButton(String text, DialogInterface.OnClickListener yier){
+    public ChoiceDialog setPositiveButton(String text, DialogInterface.OnClickListener yier){
         positiveButtonInfo = new ButtonInfo(text, yier);
         return this;
     }
 
-    public ConfirmDialog setNegativeButton(String text, DialogInterface.OnClickListener yier){
+    public ChoiceDialog setNegativeButton(String text, DialogInterface.OnClickListener yier){
         negativeButtonInfo = new ButtonInfo(text, yier);
         return this;
     }
 
-    public ConfirmDialog setNeutralButton(String text, DialogInterface.OnClickListener yier){
+    public ChoiceDialog setNeutralButton(String text, DialogInterface.OnClickListener yier){
         neutralButtonInfo = new ButtonInfo(text, yier);
         return this;
     }

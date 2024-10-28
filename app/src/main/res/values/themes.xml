@@ -54,11 +54,11 @@
         <item name="android:textSize">21sp</item>
     </style>
 
-    <style name="ConfirmMaterialAlertDialog" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered">
-        <item name="materialAlertDialogTitleTextStyle">@style/ConfirmMaterialAlertDialogTitle</item>
+    <style name="TitleLargeMaterialAlertDialog" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered">
+        <item name="materialAlertDialogTitleTextStyle">@style/TitleLargeMaterialAlertDialogTitle</item>
     </style>
 
-    <style name="ConfirmMaterialAlertDialogTitle" parent="@style/MaterialAlertDialog.Material3.Title.Text.CenterStacked">
+    <style name="TitleLargeMaterialAlertDialogTitle" parent="@style/MaterialAlertDialog.Material3.Title.Text.CenterStacked">
         <item name="android:textAppearance">@style/TextAppearance.Material3.TitleLarge</item>
     </style>
 

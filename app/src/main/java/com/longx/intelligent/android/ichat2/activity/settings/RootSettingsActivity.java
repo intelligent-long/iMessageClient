@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,6 +18,10 @@ import com.longx.intelligent.android.ichat2.activity.InstanceStateKeys;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeEmailActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.dialog.ChoiceDialog;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.LinkApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.procedure.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -27,12 +32,16 @@ import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.ServerSettingDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
+import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class RootSettingsActivity extends BaseActivity {
     private ActivityRootSettingsBinding binding;
@@ -154,6 +163,7 @@ public class RootSettingsActivity extends BaseActivity {
             preferenceVersion.setOnPreferenceClickListener(this);
             preferenceUi.setOnPreferenceClickListener(this);
             preferencePrivacy.setOnPreferenceClickListener(this);
+            preferenceShare.setOnPreferenceClickListener(this);
         }
 
         private void updateNightModeSummary(String newValue){
@@ -204,7 +214,7 @@ public class RootSettingsActivity extends BaseActivity {
             if(preference.equals(preferenceEditUser)){
                 startActivity(new Intent(getActivity(), EditUserSettingsActivity.class));
             }else if(preference.equals(preferenceLogout)) {
-                new ConfirmDialog((AppCompatActivity) SettingsFragment.this.getActivity(), "是否继续？")
+                new ConfirmDialog(SettingsFragment.this.getActivity(), "是否继续？")
                         .setNegativeButton(null)
                         .setPositiveButton((dialogInterface, i) -> {
                             GlobalBehaviors.doLogout(SettingsFragment.this.getActivity(), null, null);
@@ -219,7 +229,7 @@ public class RootSettingsActivity extends BaseActivity {
             }else if(preference.equals(preferenceUseDynamicColor)){
                 ActivityOperator.recreateAll();
             }else if(preference.equals(preferenceServerSetting)){
-                new ServerSettingDialog((AppCompatActivity) getActivity()).create().show();
+                new ServerSettingDialog(getActivity()).create().show();
             }else if(preference.equals(preferenceOtherAppSettings)){
                 startActivity(new Intent(getContext(), OtherAppSettingsSettingsActivity.class));
             }else if(preference.equals(preferenceVersion)){
@@ -228,8 +238,37 @@ public class RootSettingsActivity extends BaseActivity {
                 startActivity(new Intent(getContext(), UiSettingsActivity.class));
             }else if(preference.equals(preferencePrivacy)){
                 startActivity(new Intent(requireContext(), PrivacySettingsActivity.class));
+            }else if(preference.equals(preferenceShare)){
+                shareApp();
             }
             return true;
+        }
+
+        private void shareApp() {
+            LinkApiCaller.fetchIchatWebHomeUrl(requireActivity(), new RetrofitApiCaller.CommonYier<OperationData>(requireActivity()){
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleResult(requireActivity(), new int[]{}, () -> {
+                        String ichatWebHomeUrl = data.getData(String.class);
+                        Utils.copyTextToClipboard(requireContext(), ichatWebHomeUrl, ichatWebHomeUrl);
+                        new ChoiceDialog(requireActivity(), "已将 iChat 网站地址复制到剪贴板。")
+                                .setPositiveButton("确定", null)
+                                .setNeutralButton("直接分享", (dialog, which) -> {
+                                    String shareStr = "[iChat] 分享给你一款聊天软件, 地址 " + ichatWebHomeUrl;
+                                    Intent sendIntent = new Intent();
+                                    sendIntent.setAction(Intent.ACTION_SEND);
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareStr);
+                                    sendIntent.putExtra(Intent.EXTRA_TITLE, "分享 iChat");
+                                    sendIntent.setType("text/plain");
+                                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                                    startActivity(shareIntent);
+                                })
+                                .create()
+                                .show();
+                    });
+                }
+            });
         }
 
         @Override
