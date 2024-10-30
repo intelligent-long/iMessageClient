@@ -1,11 +1,9 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.preference.Preference;
 
@@ -22,8 +20,8 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.dialog.ChoiceDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.LinkApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.ichat2.procedure.GlobalBehaviors;
-import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlobalBehaviors;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.data.Self;

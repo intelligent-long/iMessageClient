@@ -1,6 +1,6 @@
 package com.longx.intelligent.android.ichat2;
 
-import com.longx.intelligent.android.ichat2.procedure.InitFetcher;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.InitFetcher;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.net.CookieJar;

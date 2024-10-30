@@ -1,16 +1,14 @@
-package com.longx.intelligent.android.ichat2.procedure;
+package com.longx.intelligent.android.ichat2.behaviorcomponents;
 
 import android.content.Context;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
-import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 
-import java.util.List;
 import java.util.Set;
 
 import retrofit2.Call;

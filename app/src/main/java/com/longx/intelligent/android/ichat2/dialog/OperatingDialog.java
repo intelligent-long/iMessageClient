@@ -18,9 +18,6 @@ public class OperatingDialog extends AbstractDialog{
     public interface OnCancelOperationYier{
         void onCancelOperation();
     }
-
-    private static final int PROGRESS_MAX = 100000;
-    private DialogOperatingBinding binding;
     private final OnCancelOperationYier onCancelOperationYier;
 
     public OperatingDialog(Activity activity) {
@@ -34,7 +31,7 @@ public class OperatingDialog extends AbstractDialog{
 
     @Override
     protected View createView(LayoutInflater layoutInflater) {
-        binding = DialogOperatingBinding.inflate(layoutInflater);
+        DialogOperatingBinding binding = DialogOperatingBinding.inflate(layoutInflater);
         return binding.getRoot();
     }
 
@@ -49,17 +46,5 @@ public class OperatingDialog extends AbstractDialog{
                 .create();
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
-    }
-
-    public void updateProgress(long current, long total){
-        getActivity().runOnUiThread(() -> {
-            binding.progressBar.setIndeterminate(false);
-            binding.progressBar.setMax(PROGRESS_MAX);
-            int progress = (int) ((current / (double) total) * PROGRESS_MAX);
-            progress = Math.min(progress, PROGRESS_MAX);
-            progress = Math.max(progress, 0);
-            binding.progressBar.setProgressCompat(progress, true);
-            ErrorLogger.log(progress);
-        });
     }
 }

@@ -2,7 +2,6 @@ package com.longx.intelligent.android.ichat2.adapter;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import androidx.core.widget.NestedScrollView;
@@ -13,7 +12,7 @@ import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsForwardMessageMessageBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 

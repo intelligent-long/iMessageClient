@@ -12,7 +12,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.PresettingTagChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.adapter.PresettingTagNewChannelTagsRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.AddSettingChannelTagBottomSheet;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;

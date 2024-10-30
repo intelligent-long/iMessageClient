@@ -15,7 +15,7 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsSearchChatMessageBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 
 import java.util.ArrayList;

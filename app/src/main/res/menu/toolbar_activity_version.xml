@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/link"
+        android:title="链接"
+        android:icon="@drawable/link_24px"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always"
+        android:enabled="false"/>
+
+</menu>

@@ -8,18 +8,17 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.ichat2.databinding.DialogProgressOperatingBinding;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 /**
  * Created by LONG on 2024/8/14 at 上午3:22.
  */
 public class ProgressOperatingDialog extends AbstractDialog{
-    private static final int MAX = 10000;
     private DialogProgressOperatingBinding binding;
 
     public interface OnCancelOperationYier{
         void onCancelOperation();
     }
-
     private final OnCancelOperationYier onCancelOperationYier;
 
     public ProgressOperatingDialog(Activity activity) {
@@ -34,7 +33,6 @@ public class ProgressOperatingDialog extends AbstractDialog{
     @Override
     protected View createView(LayoutInflater layoutInflater) {
         binding = DialogProgressOperatingBinding.inflate(layoutInflater);
-        binding.indicator.setMax(MAX);
         return binding.getRoot();
     }
 
@@ -51,8 +49,22 @@ public class ProgressOperatingDialog extends AbstractDialog{
         return dialog;
     }
 
-    public void setProgress(long current, long total){
-        int progress = (int) ((current / (double) total) * MAX);
-        binding.indicator.setProgress(progress);
+    public void updateText(String text){
+        getActivity().runOnUiThread(() -> {
+            binding.text.setText(text);
+        });
+    }
+
+    public void updateProgress(long current, long total){
+        getActivity().runOnUiThread(() -> {
+            int progress = (int) ((current / (double) total) * binding.indicator.getMax());
+            progress = Math.min(progress, binding.indicator.getMax());
+            progress = Math.max(progress, 0);
+            binding.indicator.setProgressCompat(progress, true);
+        });
+    }
+
+    public DialogProgressOperatingBinding getBinding() {
+        return binding;
     }
 }

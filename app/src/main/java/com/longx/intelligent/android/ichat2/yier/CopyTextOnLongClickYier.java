@@ -3,7 +3,7 @@ package com.longx.intelligent.android.ichat2.yier;
 import android.content.Context;
 import android.view.View;
 
-import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.util.Utils;
 
 /**

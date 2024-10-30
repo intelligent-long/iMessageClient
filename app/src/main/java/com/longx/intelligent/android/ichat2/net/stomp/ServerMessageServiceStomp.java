@@ -2,7 +2,7 @@ package com.longx.intelligent.android.ichat2.net.stomp;
 
 import android.content.Context;
 
-import com.longx.intelligent.android.ichat2.procedure.GlobalBehaviors;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.ServerSetting;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
@@ -45,7 +45,7 @@ public class ServerMessageServiceStomp {
                     return null;
                 })
                 .heatbeat(HEARTBEAT_INTERVAL_SECONDS, 0);
-        stomp =  Stomp.over(wHttpTask)
+        stomp = Stomp.over(wHttpTask)
                 .setOnConnected(stomp -> {
                     ErrorLogger.log(ServerMessageServiceStomp.class, "Stomp connected");
                     serverMessageService.onGetOnline();
@@ -61,7 +61,12 @@ public class ServerMessageServiceStomp {
                         GlobalBehaviors.onOtherOnline(serverMessageService.getContext());
                     } else if (close.getCode() == 4001) {
                         serverMessageService.cancelBackingOnline();
-                        GlobalBehaviors.onOtherOnline(serverMessageService.getContext());
+                        //TODO
+
+                    }else if (close.getCode() == 4002) {
+                        serverMessageService.cancelBackingOnline();
+                        //TODO
+
                     } else {
                         serverMessageService.onGetDisconnected();
                     }

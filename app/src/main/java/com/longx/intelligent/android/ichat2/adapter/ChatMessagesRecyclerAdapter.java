@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.ichat2.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
@@ -21,9 +20,9 @@ import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatFileActivity;
 import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
-import com.longx.intelligent.android.ichat2.procedure.ChatVoicePlayer;
-import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
-import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.ChatVoicePlayer;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;

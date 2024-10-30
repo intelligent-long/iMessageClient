@@ -1,0 +1,273 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            style="?attr/collapsingToolbarLayoutLargeStyle"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:collapsedTitleTextAppearance="@style/CollapsedTitleTextStyle"
+            app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
+            app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
+            app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
+            app:title="@string/title_version">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:menu="@menu/toolbar_activity_version"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="21dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/infos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_card_background_radius_28"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="14dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/this_version_name"
+                        style="@style/TextAppearance.Material3.TitleLarge"
+                        android:textSize="19sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="Theme.AppTheme.MaterialPreference.Summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1.5dp"
+                        android:textFontWeight="@integer/font_weight_medium"
+                        android:text="版本"/>
+                </LinearLayout>
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    style="@style/WindowBackgroundColorDividerColor"/>
+
+                <LinearLayout
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="14dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/this_version_code"
+                        style="@style/TextAppearance.Material3.TitleLarge"
+                        android:textSize="19sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="Theme.AppTheme.MaterialPreference.Summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1.5dp"
+                        android:textFontWeight="@integer/font_weight_medium"
+                        android:text="版本号"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/updatable_version_loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="25dp"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/updatable_version_load_failed_text"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginVertical="25dp"
+                android:gravity="center"
+                android:background="?attr/colorErrorContainer"
+                android:textColor="?attr/colorOnErrorContainer"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/updatable_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="25dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_card_background_radius_28"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="14dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/updatable_version"
+                            style="@style/TextAppearance.Material3.TitleLarge"
+                            android:textSize="19sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            style="Theme.AppTheme.MaterialPreference.Summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1.5dp"
+                            android:textFontWeight="@integer/font_weight_medium"
+                            android:text="可更新版本"/>
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        style="@style/WindowBackgroundColorDividerColor"/>
+
+                    <LinearLayout
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="14dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/updatable_version_code"
+                            style="@style/TextAppearance.Material3.TitleLarge"
+                            android:textSize="19sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            style="Theme.AppTheme.MaterialPreference.Summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1.5dp"
+                            android:textFontWeight="@integer/font_weight_medium"
+                            android:text="可更新版本号"/>
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        style="@style/WindowBackgroundColorDividerColor"/>
+
+                    <LinearLayout
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="14dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/release_time"
+                            style="@style/TextAppearance.Material3.TitleLarge"
+                            android:textSize="19sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            style="Theme.AppTheme.MaterialPreference.Summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1.5dp"
+                            android:textFontWeight="@integer/font_weight_medium"
+                            android:text="发布时间"/>
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        style="@style/WindowBackgroundColorDividerColor"/>
+
+                    <LinearLayout
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="14dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/update_notes"
+                            style="@style/TextAppearance.Material3.TitleLarge"
+                            android:textSize="19sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            style="Theme.AppTheme.MaterialPreference.Summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1.5dp"
+                            android:textFontWeight="@integer/font_weight_medium"
+                            android:text="更新说明"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/link_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="15dp"
+                    style="@style/Widget.Material3.Button.IconButton.Outlined"
+                    app:icon="@drawable/link_24px"
+                    app:iconGravity="textStart"
+                    app:iconPadding="10dp"
+                    android:text="链接"
+                    android:textSize="17sp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/update_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="15dp"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                    app:icon="@drawable/upgrade_24px"
+                    app:iconGravity="textStart"
+                    app:iconPadding="10dp"
+                    android:text="更新"
+                    android:textSize="17sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

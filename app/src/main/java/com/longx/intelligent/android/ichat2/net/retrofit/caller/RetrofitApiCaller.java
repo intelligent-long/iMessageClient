@@ -6,10 +6,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.ProgressCallback;
 import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
+import com.longx.intelligent.android.ichat2.dialog.ProgressOperatingDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
@@ -296,7 +297,7 @@ public abstract class RetrofitApiCaller {
         private final String saveTo;
         private final ProgressCallback progressCallback;
         private final boolean[] cancel = new boolean[1];
-        private OperatingDialog progressOperatingDialog;
+        private ProgressOperatingDialog progressOperatingDialog;
         private final boolean showProgressDialog;
         private final ResultsYier resultsYier;
 
@@ -316,7 +317,7 @@ public abstract class RetrofitApiCaller {
         public void start(Call<ResponseBody> call) {
             super.start(call);
             if(getActivity() != null && showProgressDialog) {
-                progressOperatingDialog = new OperatingDialog(getActivity(), () -> {
+                progressOperatingDialog = new ProgressOperatingDialog(getActivity(), () -> {
                     setBeCanceled(true);
                     call.cancel();
                     onCancel();

@@ -2,7 +2,7 @@ package com.longx.intelligent.android.ichat2.bottomsheet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.data.ChannelTag;
 import com.longx.intelligent.android.ichat2.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;

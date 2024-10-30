@@ -2,7 +2,7 @@ package com.longx.intelligent.android.ichat2.yier;
 
 import android.content.Context;
 
-import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 
 import java.util.ArrayList;

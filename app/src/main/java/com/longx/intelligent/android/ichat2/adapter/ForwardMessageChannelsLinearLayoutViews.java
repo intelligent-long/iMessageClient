@@ -7,17 +7,13 @@ import android.widget.LinearLayout;
 import androidx.core.widget.NestedScrollView;
 
 import com.longx.intelligent.android.ichat2.R;
-import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity;
 import com.longx.intelligent.android.ichat2.activity.ForwardMessageActivity;
 import com.longx.intelligent.android.ichat2.data.Channel;
-import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsForwardMessageChannelBinding;
-import com.longx.intelligent.android.ichat2.databinding.LinearLayoutViewsForwardMessageMessageBinding;
 import com.longx.intelligent.android.ichat2.dialog.FastLocateDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
-import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 
 import java.util.HashSet;

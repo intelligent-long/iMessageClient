@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.ichat2.adapter.AddChannelToTagRecyclerAdapter;
-import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;

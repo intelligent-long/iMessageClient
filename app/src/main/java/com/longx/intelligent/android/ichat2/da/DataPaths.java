@@ -32,6 +32,12 @@ public class DataPaths {
                     File.separator + "voice_temp" +
                     File.separator + "voice_temp.aac";
         }
+
+        public static String getAppUpdateCacheFilePath(Context context){
+            return getCacheFileRootPath(context) +
+                    File.separator + "app-update" +
+                    File.separator + "app-release.apk";
+        }
     }
 
     public static class PrivateFile {

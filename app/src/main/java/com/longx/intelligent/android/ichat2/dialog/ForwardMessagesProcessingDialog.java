@@ -12,7 +12,7 @@ import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseM
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.databinding.DialogForwardMessagesProcessingBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.procedure.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
 
 /**
  * Created by LONG on 2024/10/20 at 下午11:55.

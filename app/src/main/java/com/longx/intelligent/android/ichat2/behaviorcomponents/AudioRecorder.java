@@ -1,4 +1,4 @@
-package com.longx.intelligent.android.ichat2.procedure;
+package com.longx.intelligent.android.ichat2.behaviorcomponents;
 
 import android.app.Activity;
 import android.media.MediaRecorder;

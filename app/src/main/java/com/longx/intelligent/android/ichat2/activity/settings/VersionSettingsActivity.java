@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.OpenSourceLicensesActivity;
+import com.longx.intelligent.android.ichat2.activity.VersionActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityVersionSettingsBinding;
 import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
@@ -71,6 +72,8 @@ public class VersionSettingsActivity extends BaseActivity {
         protected void setupYiers() {
             preferenceOpenSourceLicenses.setOnPreferenceClickListener(this);
             preferenceUserGuide.setOnPreferenceClickListener(this);
+            preferenceVersionName.setOnPreferenceClickListener(this);
+            preferenceVersionCode.setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -84,6 +87,8 @@ public class VersionSettingsActivity extends BaseActivity {
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
             }else if(preference.equals(preferenceUserGuide)){
                 new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).create().show();
+            }else if(preference.equals(preferenceVersionCode) || preference.equals(preferenceVersionName)){
+                startActivity(new Intent(requireContext(), VersionActivity.class));
             }
             return true;
         }

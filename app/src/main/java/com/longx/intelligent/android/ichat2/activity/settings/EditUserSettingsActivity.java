@@ -20,8 +20,8 @@ import com.longx.intelligent.android.ichat2.activity.edituser.ChangeRegionActivi
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeSexActivity;
 import com.longx.intelligent.android.ichat2.activity.edituser.ChangeUsernameActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
-import com.longx.intelligent.android.ichat2.procedure.MessageDisplayer;
-import com.longx.intelligent.android.ichat2.procedure.ContentUpdater;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.ichat2.bottomsheet.EditAvatarBottomSheet;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.Self;

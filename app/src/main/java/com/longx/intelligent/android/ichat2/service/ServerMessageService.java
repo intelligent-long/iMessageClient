@@ -51,10 +51,10 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
         if(ServerMessageService.instance == null){
             throw new RuntimeException("Server Message Service is not started.");
         }
-        Optional<ServerMessageService> cloudServiceOptional = ServerMessageService.getInstance();
-        cloudServiceOptional.ifPresent(cloudService -> {
-            cloudService.onStop();
-            cloudService.onWorking();
+        Optional<ServerMessageService> serverMessageServiceOptional = ServerMessageService.getInstance();
+        serverMessageServiceOptional.ifPresent(serverMessageService -> {
+            serverMessageService.onStop();
+            serverMessageService.onWorking();
         });
     }
 
@@ -62,8 +62,8 @@ public class ServerMessageService implements KeepLiveService, ServerEventYier, O
         if(ServerMessageService.instance == null){
             throw new RuntimeException("Server Message Service is not started.");
         }
-        Optional<ServerMessageService> cloudServiceOptional = ServerMessageService.getInstance();
-        cloudServiceOptional.ifPresent(ServerMessageService::onStop);
+        Optional<ServerMessageService> serverMessageServiceOptional = ServerMessageService.getInstance();
+        serverMessageServiceOptional.ifPresent(ServerMessageService::onStop);
     }
 
     public static synchronized Optional<ServerMessageService> getInstance() {

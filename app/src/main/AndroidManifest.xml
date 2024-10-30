@@ -24,6 +24,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
 
     <application
         android:name=".Application"
@@ -40,6 +42,10 @@
         android:theme="@style/Theme.IChat2Client"
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
+        <activity
+            android:name=".activity.VersionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SearchChatMessageResultItemsActivity"
             android:exported="false"

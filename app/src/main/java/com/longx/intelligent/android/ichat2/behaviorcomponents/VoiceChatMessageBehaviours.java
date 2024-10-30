@@ -1,4 +1,4 @@
-package com.longx.intelligent.android.ichat2.procedure;
+package com.longx.intelligent.android.ichat2.behaviorcomponents;
 
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -9,6 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.da.DataPaths;
+import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.data.OpenedChat;
@@ -52,10 +53,7 @@ public class VoiceChatMessageBehaviours {
         sendVoiceStopped = false;
         new Thread(() -> {
             try {
-                String voiceTempFilePath = DataPaths.Cache.getChatVoiceTempFilePath(chatActivity, chatActivity.getChannel().getIchatId());
-                File file = new File(voiceTempFilePath);
-                file.getParentFile().mkdirs();
-                file.delete();
+                String voiceTempFilePath = CacheFilesAccessor.ChatMessage.prepareChatVoiceTempFile(chatActivity, chatActivity.getChannel().getIchatId());
                 audioRecorder.record(voiceTempFilePath, 200, new AudioRecorder.AudioRecordYier() {
                     @Override
                     public void onRecordPrepared() {
