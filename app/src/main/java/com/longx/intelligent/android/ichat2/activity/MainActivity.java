@@ -88,7 +88,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
         setContentView(binding.getRoot());
         setupNavigation();
-        startServerMessageService();
         setupYier();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
@@ -96,12 +95,15 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
         animateNavIconVisibility(navHostFragment);
-        runOnUiThread(() -> {
-            setupUi();
-            showNavHeaderInfo();
-            requestPermissions();
-            GlobalBehaviors.checkAndNotifySoftwareUpdate(this);
-        });
+        new Thread(() -> {
+            runOnUiThread(() -> {
+                startServerMessageService();
+                setupUi();
+                showNavHeaderInfo();
+                requestPermissions();
+                GlobalBehaviors.checkAndNotifySoftwareUpdate(this);
+            });
+        }).start();
     }
 
     @Override
