@@ -178,14 +178,14 @@ public class GlobalBehaviors {
                 super.ok(data, raw, call);
                 data.commonHandleResult(null, new int[]{}, () -> {
                     OfflineDetail offlineDetail = data.getData(OfflineDetail.class);
-                    if (ActivityOperator.getActivityList().isEmpty()) {
-                        Notifications.notifyGoOfflineBecauseOfOtherOnline(context, offlineDetail);
-                    }
                     SharedPreferencesAccessor.ApiJson.OfflineDetails.addRecord(context, offlineDetail);
                     SharedPreferencesAccessor.AuthPref.saveOfflineDetailNeedFetch(context, false);
                     GlobalYiersHolder.getYiers(OfflineDetailShowYier.class).ifPresent(offlineDetailShowYiers -> {
                         offlineDetailShowYiers.forEach(OfflineDetailShowYier::showOfflineDetail);
                     });
+                    if (ActivityOperator.getActivityList().isEmpty()) {
+                        Notifications.notifyGoOfflineBecauseOfOtherOnline(context, offlineDetail);
+                    }
                 }, new OperationStatus.HandleResult(-101, () -> {
                     ErrorLogger.log("获取离线详情 Code: " + data.getCode() + ", Message: " + data.getMessage());
                 }), new OperationStatus.HandleResult(-200, () -> {

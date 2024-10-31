@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.activity.OfflineDetailsActivity;
+import com.longx.intelligent.android.ichat2.activity.VersionActivity;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAuthMoreOperationBinding;
 import com.longx.intelligent.android.ichat2.dialog.ServerSettingDialog;
 
@@ -33,7 +34,7 @@ public class AuthMoreOperationBottomSheet extends AbstractBottomSheet{
         });
         binding.softwareUpdate.setOnClickListener(v -> {
             dismiss();
-            //TODO
+            getActivity().startActivity(new Intent(getActivity(), VersionActivity.class));
         });
         binding.offlineDetail.setOnClickListener(v -> {
             dismiss();
