@@ -146,6 +146,9 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 toRequestPermissionsList.add(ToRequestPermissionsItems.writeAndReadExternalStorage);
             }
         }
+        new PermissionOperator(this, toRequestPermissionsList,
+                new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
+                .startRequestPermissions(this);
         if (!SpecialPermissionOperator.isExternalStorageManager()) {
             MessageDisplayer.showToast(this, "请允许本应用的所有文件访问权限", Toast.LENGTH_LONG);
             boolean success = SpecialPermissionOperator.requestManageExternalStorage(this);
@@ -153,9 +156,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.LONG);
             }
         }
-        new PermissionOperator(this, toRequestPermissionsList,
-                new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
-                .startRequestPermissions(this);
     }
 
     private void startServerMessageService() {
