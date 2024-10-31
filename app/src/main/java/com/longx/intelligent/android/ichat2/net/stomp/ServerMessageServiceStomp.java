@@ -33,7 +33,7 @@ public class ServerMessageServiceStomp {
     private static synchronized void connect(ServerMessageService serverMessageService) {
         ServerMessageServiceNotRunningNotifier.recordAndNotify(serverMessageService.getContext(), System.currentTimeMillis());
         ServerSetting serverSetting = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(serverMessageService.getContext());
-        String wsUrl = "ws://" + serverSetting.getHost() + ":" + serverSetting.getPort() + "/ws";
+        String wsUrl = "ws://" + serverSetting.getHost() + ":" + serverSetting.getPort() + WebsocketConsts.WEBSOCKET_ENDPOINT;
         WHttpTask wHttpTask = HTTP.builder()
                 .config(builder1 -> builder1.cookieJar(CookieJar.get()).pingInterval(10, TimeUnit.SECONDS))
                 .build()
@@ -56,19 +56,26 @@ public class ServerMessageServiceStomp {
                         serverMessageService.cancelBackingOnline();
                         return;
                     }
-                    if (close.getCode() == 4000) {
-                        serverMessageService.cancelBackingOnline();
-                        GlobalBehaviors.onOtherOnline(serverMessageService.getContext());
-                    } else if (close.getCode() == 4001) {
-                        serverMessageService.cancelBackingOnline();
-                        //TODO
+                    switch (close.getCode()) {
+                        //主动下线
+                        case WebsocketConsts.CLOSE_CODE_SERVER_ACTIVE_CLOSE:
+                            serverMessageService.cancelBackingOnline();
+                            GlobalBehaviors.onOtherOnline(serverMessageService.getContext());
+                            break;
+                        //有新版本
+                        case WebsocketConsts.CLOSE_CODE_CLOSE_FOR_CLIENT_UPDATE:
+                            serverMessageService.cancelBackingOnline();
+                            //TODO
 
-                    }else if (close.getCode() == 4002) {
-                        serverMessageService.cancelBackingOnline();
-                        //TODO
+                            break;
+                        //版本过高
+                        case WebsocketConsts.CLOSE_CODE_CLOSE_FOR_CLIENT_VERSION_HIGHER:
+                            serverMessageService.cancelBackingOnline();
+                            //TODO
 
-                    } else {
-                        serverMessageService.onGetDisconnected();
+                            break;
+                        default:
+                            serverMessageService.onGetDisconnected();
                     }
                 })
                 .setOnError(message -> {
