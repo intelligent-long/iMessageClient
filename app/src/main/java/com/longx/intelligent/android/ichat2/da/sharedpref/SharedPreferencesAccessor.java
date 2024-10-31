@@ -15,10 +15,10 @@ import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.data.ChannelAddition;
 import com.longx.intelligent.android.ichat2.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.ichat2.data.OfflineDetail;
-import com.longx.intelligent.android.ichat2.data.ServerSetting;
+import com.longx.intelligent.android.ichat2.net.ServerConfig;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.UserInfo;
-import com.longx.intelligent.android.ichat2.net.ServerProperties;
+import com.longx.intelligent.android.ichat2.net.ServerValues;
 import com.longx.intelligent.android.ichat2.util.JsonUtil;
 
 import java.util.ArrayList;
@@ -160,44 +160,74 @@ public class SharedPreferencesAccessor {
 
     }
 
-    public static class ServerSettingPref{
-        public static final String NAME = "server_setting";
+    public static class ServerPref {
+        public static final String NAME = "server_config";
         private static class Key {
             public static final String USE_CENTRAL = "use_central";
-            public static final String HOST = "host";
-            public static final String PORT = "port";
-            public static final String DATA_FOLDER = "data_folder";
+            public static final String CUSTOM_HOST = "custom_host";
+            public static final String CUSTOM_PORT = "custom_port";
+            public static final String CUSTOM_DATA_FOLDER = "custom_data_folder";
+            public static final String CENTRAL_HOST = "central_host";
+            public static final String CENTRAL_PORT = "central_port";
+            public static final String CENTRAL_BASE_URL = "central_base_url";
         }
 
         private static SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         }
 
-        public static void saveServerSetting(Context context, ServerSetting serverSetting) {
+        public static void saveUseCentral(Context context, boolean useCentral){
             getSharedPreferences(context)
                     .edit()
-                    .putBoolean(Key.USE_CENTRAL, serverSetting.isUseCentral())
-                    .putString(Key.HOST, serverSetting.getHost())
-                    .putInt(Key.PORT, serverSetting.getPort())
-                    .putString(Key.DATA_FOLDER, serverSetting.getDataFolder())
+                    .putBoolean(Key.USE_CENTRAL, useCentral)
                     .apply();
         }
 
-        public static ServerSetting getServerSetting(Context context){
+        public static boolean isUseCentral(Context context){
+            return getSharedPreferences(context)
+                    .getBoolean(Key.USE_CENTRAL, ServerValues.DEFAULT_USE_CENTRAL);
+        }
+
+        public static void saveCustomServerConfig(Context context, ServerConfig serverConfig) {
+            getSharedPreferences(context)
+                    .edit()
+                    .putString(Key.CUSTOM_HOST, serverConfig.getHost())
+                    .putInt(Key.CUSTOM_PORT, serverConfig.getPort())
+                    .putString(Key.CUSTOM_DATA_FOLDER, serverConfig.getDataFolder())
+                    .apply();
+        }
+
+        public static ServerConfig getCustomServerConfig(Context context){
             SharedPreferences sharedPreferences = getSharedPreferences(context);
-            boolean useCentral = sharedPreferences.getBoolean(Key.USE_CENTRAL, ServerProperties.DEFAULT_USE_CENTRAL);
-            String host = sharedPreferences.getString(Key.HOST, null);
-            int port = sharedPreferences.getInt(Key.PORT, -1);
-            String dataFolder = sharedPreferences.getString(Key.DATA_FOLDER, null);
-            if(host == null || port == -1 || dataFolder == null) {
-                dataFolder = ServerSetting.buildDataFolderWithoutSuffix(ServerProperties.DEFAULT_HOST, String.valueOf(ServerProperties.DEFAULT_PORT));
-                saveServerSetting(context, new ServerSetting(useCentral, ServerProperties.DEFAULT_HOST, ServerProperties.DEFAULT_PORT, dataFolder, true));
-                useCentral = sharedPreferences.getBoolean(Key.USE_CENTRAL, ServerProperties.DEFAULT_USE_CENTRAL);
-                host = sharedPreferences.getString(Key.HOST, null);
-                port = sharedPreferences.getInt(Key.PORT, -1);
-                dataFolder = sharedPreferences.getString(Key.DATA_FOLDER, null);
+            String customHost = sharedPreferences.getString(Key.CUSTOM_HOST, null);
+            int customPort = sharedPreferences.getInt(Key.CUSTOM_PORT, -1);
+            String customDataFolder = sharedPreferences.getString(Key.CUSTOM_DATA_FOLDER, null);
+            if(customHost == null || customPort == -1 || customDataFolder == null) {
+                customDataFolder = ServerConfig.buildDataFolderWithoutSuffix(ServerValues.CUSTOM_DEFAULT_HOST, String.valueOf(ServerValues.CUSTOM_DEFAULT_PORT));
+                saveCustomServerConfig(context, new ServerConfig(ServerValues.CUSTOM_DEFAULT_HOST, ServerValues.CUSTOM_DEFAULT_PORT, null, customDataFolder, true));
+                customHost = sharedPreferences.getString(Key.CUSTOM_HOST, null);
+                customPort = sharedPreferences.getInt(Key.CUSTOM_PORT, -1);
+                customDataFolder = sharedPreferences.getString(Key.CUSTOM_DATA_FOLDER, null);
             }
-            return new ServerSetting(useCentral, host, port, dataFolder, false);
+            return new ServerConfig(customHost, customPort, null, customDataFolder, true);
+        }
+
+        public static void saveCentralServerConfig(Context context, ServerConfig serverConfig){
+            getSharedPreferences(context)
+                    .edit()
+                    .putString(Key.CENTRAL_HOST, serverConfig == null ? null : serverConfig.getHost())
+                    .putInt(Key.CENTRAL_PORT, serverConfig == null ? -1 : serverConfig.getPort())
+                    .putString(Key.CENTRAL_BASE_URL, serverConfig == null ? null : serverConfig.getBaseUrl())
+                    .apply();
+        }
+
+        public static ServerConfig getCentralServerConfig(Context context){
+            SharedPreferences sharedPreferences = getSharedPreferences(context);
+            String centralHost = sharedPreferences.getString(Key.CENTRAL_HOST, null);
+            int centralPort = sharedPreferences.getInt(Key.CENTRAL_PORT, -1);
+            String centralBaseUrl = sharedPreferences.getString(Key.CENTRAL_BASE_URL, null);
+            if((centralHost == null || centralPort == -1) && centralBaseUrl == null) return null;
+            return new ServerConfig(centralHost, centralPort, centralBaseUrl, ServerValues.CENTRAL_DATA_FOLDER, false);
         }
     }
 

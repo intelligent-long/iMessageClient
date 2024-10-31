@@ -23,7 +23,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.behaviorcomponents.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ServerSetting;
+import com.longx.intelligent.android.ichat2.net.ServerConfig;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityRootSettingsBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
@@ -197,8 +197,8 @@ public class RootSettingsActivity extends BaseActivity {
         }
 
         private void updateServerSettingSummary(){
-            ServerSetting serverSetting = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(requireContext());
-            String serverSettingSummary = serverSetting.getHost() + ":" + serverSetting.getPort();
+            ServerConfig serverConfig = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(requireContext());
+            String serverSettingSummary = serverConfig.getHost() + ":" + serverConfig.getPort();
             preferenceServerSetting.setSummary(serverSettingSummary);
         }
 

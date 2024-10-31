@@ -7,6 +7,7 @@ import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAcces
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.net.ServerConfig;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -17,7 +18,12 @@ import java.util.Date;
  */
 public class DataPaths {
     public static String getServerFolder(Context context){
-        return SharedPreferencesAccessor.ServerSettingPref.getServerSetting(context).getDataFolder();
+        if(SharedPreferencesAccessor.ServerPref.isUseCentral(context)){
+            ServerConfig centralServerConfig = SharedPreferencesAccessor.ServerPref.getCentralServerConfig(context);
+            return centralServerConfig == null ? null : centralServerConfig.getDataFolder();
+        }else {
+            return SharedPreferencesAccessor.ServerPref.getCustomServerConfig(context).getDataFolder();
+        }
     }
 
     public static class Cache {

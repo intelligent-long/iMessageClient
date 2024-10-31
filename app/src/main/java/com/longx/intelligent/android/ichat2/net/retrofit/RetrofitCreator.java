@@ -2,8 +2,8 @@ package com.longx.intelligent.android.ichat2.net.retrofit;
 
 import android.content.Context;
 
-import com.longx.intelligent.android.ichat2.net.OkHttpClientCreator;
-import com.longx.intelligent.android.ichat2.net.ServerProperties;
+import com.longx.intelligent.android.ichat2.net.BaseUrlProvider;
+import com.longx.intelligent.android.ichat2.net.okhttp.OkHttpClientCreator;
 import com.xcheng.retrofit.CompletableCallAdapterFactory;
 
 import retrofit2.Retrofit;
@@ -15,10 +15,10 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class RetrofitCreator {
     public static Retrofit retrofit;
 
-    public static void create(Context context){
-        String baseUrl = ServerProperties.getBaseUrl(context);
+    public static void create(Context context) {
+        String baseUrl = BaseUrlProvider.getHttpBaseUrl(context, true);
         retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(baseUrl == null ? "http://." : baseUrl)
                 .client(OkHttpClientCreator.client)
                 .addCallAdapterFactory(CompletableCallAdapterFactory.INSTANCE)
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -34,8 +34,9 @@ public class RetrofitCreator {
                 .build();
     }
 
-    public static Retrofit customTimeout(Context context, long connectTimeout, long readTimeout, long writeTimeout){
-        String baseUrl = ServerProperties.getBaseUrl(context);
+    public static Retrofit customTimeout(Context context, long connectTimeout, long readTimeout, long writeTimeout, boolean fetchServerLocationAndStoreCentralServerConfig) throws Exception {
+        String baseUrl = BaseUrlProvider.getHttpBaseUrl(context, fetchServerLocationAndStoreCentralServerConfig);
+        if(baseUrl == null) throw new Exception("无法获取到基础 URL");
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(OkHttpClientCreator.customTimeout(connectTimeout, readTimeout, writeTimeout))

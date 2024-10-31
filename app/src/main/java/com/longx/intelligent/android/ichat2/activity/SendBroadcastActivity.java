@@ -30,6 +30,7 @@ import com.longx.intelligent.android.ichat2.media.data.MediaInfo;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
@@ -162,48 +163,53 @@ public class SendBroadcastActivity extends BaseActivity {
                 return;
             };
             SendBroadcastPostBody postBody = new SendBroadcastPostBody(broadcastText, broadcastMediaTypes, broadcastMediaExtensions, broadcastPermission);
-            BroadcastApiCaller.sendBroadcast(null, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true) {
-                @Override
-                public void start(Call<OperationData> call) {
-                    super.start(call);
-                    binding.sendBroadcastButton.setVisibility(View.GONE);
-                    binding.sendIndicator.setVisibility(View.VISIBLE);
-                    binding.sendItemCountIndicator.setVisibility(View.VISIBLE);
-                    UiUtil.setViewGroupEnabled(binding.content, false, true);
-                }
-
-                @Override
-                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                    super.ok(data, raw, call);
-                    data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102, -103, -104, -105}, () -> {
-                        MessageDisplayer.showToast(getContext(), "已发送", Toast.LENGTH_SHORT);
-                        GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
-                            broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
-                        });
-                        ServerMessageServiceStompActions.updateRecentBroadcastMedias(getContext(), SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(getContext()).getIchatId());
-                        finish();
-                    });
-                }
-
-                @Override
-                public void complete(Call<OperationData> call) {
-                    super.complete(call);
-                    binding.sendBroadcastButton.setVisibility(View.VISIBLE);
-                    binding.sendIndicator.setVisibility(View.GONE);
-                    binding.sendItemCountIndicator.setVisibility(View.GONE);
-                    UiUtil.setViewGroupEnabled(binding.content, true, true);
-                }
-            }, (current, total, index, count) -> {
-                runOnUiThread(() -> {
-                    int progress = (int)((current / (double) total) * binding.sendIndicator.getMax());
-                    binding.sendIndicator.setProgress(progress, false);
-                    if(index + 1 == count && progress == binding.sendIndicator.getMax()) {
-                        binding.sendItemCountIndicator.setText("等待中");
-                    }else {
-                        binding.sendItemCountIndicator.setText(String.valueOf(index + 1));
+            try {
+                BroadcastApiCaller.sendBroadcast(null, this, postBody, mediaUris, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true) {
+                    @Override
+                    public void start(Call<OperationData> call) {
+                        super.start(call);
+                        binding.sendBroadcastButton.setVisibility(View.GONE);
+                        binding.sendIndicator.setVisibility(View.VISIBLE);
+                        binding.sendItemCountIndicator.setVisibility(View.VISIBLE);
+                        UiUtil.setViewGroupEnabled(binding.content, false, true);
                     }
+
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(SendBroadcastActivity.this, new int[]{-101, -102, -103, -104, -105}, () -> {
+                            MessageDisplayer.showToast(getContext(), "已发送", Toast.LENGTH_SHORT);
+                            GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
+                                broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
+                            });
+                            ServerMessageServiceStompActions.updateRecentBroadcastMedias(getContext(), SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(getContext()).getIchatId());
+                            finish();
+                        });
+                    }
+
+                    @Override
+                    public void complete(Call<OperationData> call) {
+                        super.complete(call);
+                        binding.sendBroadcastButton.setVisibility(View.VISIBLE);
+                        binding.sendIndicator.setVisibility(View.GONE);
+                        binding.sendItemCountIndicator.setVisibility(View.GONE);
+                        UiUtil.setViewGroupEnabled(binding.content, true, true);
+                    }
+                }, (current, total, index, count) -> {
+                    runOnUiThread(() -> {
+                        int progress = (int)((current / (double) total) * binding.sendIndicator.getMax());
+                        binding.sendIndicator.setProgress(progress, false);
+                        if(index + 1 == count && progress == binding.sendIndicator.getMax()) {
+                            binding.sendItemCountIndicator.setText("等待中");
+                        }else {
+                            binding.sendItemCountIndicator.setText(String.valueOf(index + 1));
+                        }
+                    });
                 });
-            });
+            } catch (Exception e) {
+                ErrorLogger.log(e);
+                MessageDisplayer.autoShow(this, "出错了 > " + e.getMessage(), MessageDisplayer.Duration.SHORT);
+            }
         });
         binding.addMediaFab.setOnClickListener(v -> {
             AddBroadcastMediaBottomSheet bottomSheet = new AddBroadcastMediaBottomSheet(this);

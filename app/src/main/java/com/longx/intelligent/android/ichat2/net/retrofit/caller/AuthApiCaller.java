@@ -25,10 +25,7 @@ public class AuthApiCaller extends RetrofitApiCaller{
         return getApiImplementation(AuthApi.class);
     }
 
-    public static AuthApi getApiImplementation(String baseUrl){
-        if(baseUrl == null){
-            return getApiImplementation();
-        }
+    public static AuthApi getCustomBaseUrlApiImplementation(String baseUrl){
         Retrofit retrofit = RetrofitCreator.customBaseUrl(baseUrl);
         return getApiImplementation(retrofit, AuthApi.class);
     }
@@ -76,7 +73,13 @@ public class AuthApiCaller extends RetrofitApiCaller{
     }
 
     public static CompletableCall<OperationStatus> logout(LifecycleOwner lifecycleOwner, String baseUrl, String cookie, BaseYier<OperationStatus> yier){
-        CompletableCall<OperationStatus> call = getApiImplementation(baseUrl).logout(cookie);
+        AuthApi authApi;
+        if(baseUrl == null){
+            authApi = getApiImplementation();
+        }else {
+            authApi = getCustomBaseUrlApiImplementation(baseUrl);
+        }
+        CompletableCall<OperationStatus> call = authApi.logout(cookie);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.longx.intelligent.android.ichat2.behaviorcomponents.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.data.ServerSetting;
+import com.longx.intelligent.android.ichat2.net.BaseUrlProvider;
+import com.longx.intelligent.android.ichat2.net.ServerConfig;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
+import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.service.ServerMessageServiceNotRunningNotifier;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
@@ -26,16 +28,17 @@ public class ServerMessageServiceStomp {
 
     public static synchronized void launchWith(ServerMessageService serverMessageService){
         disconnect();
+        RetrofitCreator.create(serverMessageService.getContext());
         connect(serverMessageService);
         subscribe(serverMessageService.getContext());
     }
 
     private static synchronized void connect(ServerMessageService serverMessageService) {
         ServerMessageServiceNotRunningNotifier.recordAndNotify(serverMessageService.getContext(), System.currentTimeMillis());
-        ServerSetting serverSetting = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(serverMessageService.getContext());
-        String wsUrl = "ws://" + serverSetting.getHost() + ":" + serverSetting.getPort() + WebsocketConsts.WEBSOCKET_ENDPOINT;
+        String websocketBaseUrl = BaseUrlProvider.getWebsocketBaseUrl(serverMessageService.getContext(), true);
+        String wsUrl = websocketBaseUrl + WebsocketConsts.WEBSOCKET_ENDPOINT;
         WHttpTask wHttpTask = HTTP.builder()
-                .config(builder1 -> builder1.cookieJar(CookieJar.get()).pingInterval(10, TimeUnit.SECONDS))
+                .config(builder1 -> builder1.cookieJar(CookieJar.get()).pingInterval(10, TimeUnit.MINUTES))
                 .build()
                 .webSocket(wsUrl)
                 .addHeader("Client-Version", String.valueOf(AppUtil.getVersionCode(serverMessageService.getContext())))

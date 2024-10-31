@@ -18,8 +18,8 @@ import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.databinding.DialogServerSettingBinding;
-import com.longx.intelligent.android.ichat2.data.ServerSetting;
-import com.longx.intelligent.android.ichat2.net.OkHttpClientCreator;
+import com.longx.intelligent.android.ichat2.net.ServerConfig;
+import com.longx.intelligent.android.ichat2.net.okhttp.OkHttpClientCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
@@ -52,7 +52,7 @@ public class ServerSettingDialog extends AbstractDialog{
     }
 
     private void setupServerTypeAutoCompleteTextView() {
-        boolean useCentral = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(getActivity()).isUseCentral();
+        boolean useCentral = SharedPreferencesAccessor.ServerPref.isUseCentral(getActivity());
         if(useCentral){
             binding.serverTypeAutoCompleteTextView.setText(serverTypeNames[0]);
             changeUiToCentralServerType();
@@ -86,10 +86,10 @@ public class ServerSettingDialog extends AbstractDialog{
     }
 
     private void setupCustomServerTypeViews() {
-        ServerSetting serverSetting = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(getActivity());
-        String host = serverSetting.getHost();
-        int port = serverSetting.getPort();
-        String dataFolderWithoutSuffix = serverSetting.getDataFolderWithoutSuffix();
+        ServerConfig serverConfig = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(getActivity());
+        String host = serverConfig.getHost();
+        int port = serverConfig.getPort();
+        String dataFolderWithoutSuffix = serverConfig.getDataFolderWithoutSuffix();
         if(host != null) binding.hostInput.setText(host);
         if(port != -1) binding.portInput.setText(String.valueOf(port));
         if(dataFolderWithoutSuffix != null) binding.dataFolderInput.setText(dataFolderWithoutSuffix);
@@ -101,7 +101,7 @@ public class ServerSettingDialog extends AbstractDialog{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String dataFolderWithoutSuffix = ServerSetting.buildDataFolderWithoutSuffix(
+                String dataFolderWithoutSuffix = ServerConfig.buildDataFolderWithoutSuffix(
                         UiUtil.getEditTextString(binding.hostInput), UiUtil.getEditTextString(binding.portInput));
                 binding.dataFolderInput.setText(dataFolderWithoutSuffix);
             }
@@ -151,58 +151,90 @@ public class ServerSettingDialog extends AbstractDialog{
                             GlobalBehaviors.doLogout(getActivity(), baseUrlTemporary, results -> {
                                 Boolean success = (Boolean) results[0];
                                 if(success) {
-                                    onChangeServerSetting();
+                                    changeServerConfig();
                                 }
                             });
                         })
                         .setNegativeButton()
                         .create().show();
             } else {
-                onChangeServerSetting();
+                changeServerConfig();
             }
         });
     }
 
-    private void onChangeServerSetting() {
-        ServerSetting previousServerSetting = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(getActivity());
-        boolean saved = saveServerSetting();
-        if(saved) {
-            boolean allSettingValid = true;
+    private void changeServerConfig() {
+        boolean previousUseCentral = SharedPreferencesAccessor.ServerPref.isUseCentral(getActivity());
+        if(saveServerConfig()) {
+            OperatingDialog operatingDialog = new OperatingDialog(getActivity());
+            operatingDialog.create().show();
+            new Thread(() -> {
+                onServerConfigChanged(previousUseCentral);
+                getActivity().runOnUiThread(operatingDialog::dismiss);
+            }).start();
+
+        }
+    }
+
+    private void onServerConfigChanged(boolean previousUseCentral) {
+        boolean useCentral = SharedPreferencesAccessor.ServerPref.isUseCentral(getActivity());
+        boolean allSuccess = true;
+        ServerConfig previousServerConfig;
+        if(useCentral) {
+            previousServerConfig = SharedPreferencesAccessor.ServerPref.getCentralServerConfig(getActivity());
+        }else {
+            previousServerConfig = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(getActivity());
+        }
+        try {
+            OkHttpClientCreator.create();
+            RetrofitCreator.create(getActivity());
+        } catch (Exception e) {
+            allSuccess = false;
+            ErrorLogger.log(getClass(), e);
+            getActivity().runOnUiThread(() -> MessageDisplayer.showSnackbar(getActivity(), "服务器设置不合法", Snackbar.LENGTH_LONG));
+        }
+        String dataFolderName = null;
+        if(useCentral){
+            try {
+                dataFolderName = SharedPreferencesAccessor.ServerPref.getCentralServerConfig(getActivity()).getDataFolder();
+            } catch (Exception e) {
+                allSuccess = false;
+                ErrorLogger.log(getClass(), e);
+                getActivity().runOnUiThread(() -> MessageDisplayer.showSnackbar(getActivity(), "服务器设置不合法", Snackbar.LENGTH_LONG));
+            }
+        }else {
+            dataFolderName = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(getActivity()).getDataFolder();
+        }
+        try {
+            File dataFolder = new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity()));
+            dataFolder.mkdirs();
+            boolean dataFolderExist = FileUtil.dirContainsFile(Objects.requireNonNull(dataFolder.getParentFile()), dataFolderName);
+            if(!dataFolderExist) throw new Exception("数据文件夹创建失败");
+        } catch (Exception e) {
+            allSuccess = false;
+            ErrorLogger.log(getClass(), e);
+            getActivity().runOnUiThread(() -> MessageDisplayer.showSnackbar(getActivity(), "数据文件夹不合法", Snackbar.LENGTH_LONG));
+        }
+        if (!allSuccess) {
+            SharedPreferencesAccessor.ServerPref.saveUseCentral(getActivity(), previousUseCentral);
+            if(useCentral){
+                SharedPreferencesAccessor.ServerPref.saveCentralServerConfig(getActivity(), previousServerConfig);
+            }else {
+                SharedPreferencesAccessor.ServerPref.saveCustomServerConfig(getActivity(), previousServerConfig);
+            }
             try {
                 OkHttpClientCreator.create();
                 RetrofitCreator.create(getActivity());
+                new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity())).mkdirs();
             } catch (Exception e) {
-                allSettingValid = false;
                 ErrorLogger.log(getClass(), e);
-                MessageDisplayer.showSnackbar(getActivity(), "服务器设置不合法", Snackbar.LENGTH_SHORT);
-            }
-            try {
-                File dataFolder = new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity()));
-                dataFolder.mkdirs();
-                String dataFolderName = SharedPreferencesAccessor.ServerSettingPref.getServerSetting(getActivity()).getDataFolder();
-                boolean dataFolderExist = FileUtil.dirContainsFile(Objects.requireNonNull(dataFolder.getParentFile()), dataFolderName);
-                if(!dataFolderExist) throw  new Exception("数据文件夹创建失败");
-            } catch (Exception e) {
-                allSettingValid = false;
-                ErrorLogger.log(getClass(), e);
-                MessageDisplayer.showSnackbar(getActivity(), "数据文件夹不合法", Snackbar.LENGTH_SHORT);
-            }
-            if (!allSettingValid) {
-                SharedPreferencesAccessor.ServerSettingPref.saveServerSetting(getActivity(), previousServerSetting);
-                try {
-                    OkHttpClientCreator.create();
-                    RetrofitCreator.create(getActivity());
-                    new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity())).mkdirs();
-                } catch (Exception e) {
-                    ErrorLogger.log(getClass(), e);
-                    MessageDisplayer.showSnackbar(getActivity(), "出错了", Snackbar.LENGTH_LONG);
-                }
+                getActivity().runOnUiThread(() -> MessageDisplayer.showSnackbar(getActivity(), "出错了", Snackbar.LENGTH_LONG));
             }
         }
         dismiss();
     }
 
-    private boolean saveServerSetting() {
+    private boolean saveServerConfig() {
         String serverTypeName = UiUtil.getEditTextString(binding.serverTypeAutoCompleteTextView);
         String host = UiUtil.getEditTextString(binding.hostInput);
         if(host == null || host.isEmpty()){
@@ -224,8 +256,10 @@ public class ServerSettingDialog extends AbstractDialog{
             MessageDisplayer.showSnackbar(getActivity(), "数据文件夹不合法", Snackbar.LENGTH_SHORT);
             return false;
         }
-        SharedPreferencesAccessor.ServerSettingPref.saveServerSetting(getActivity(),
-                new ServerSetting(Objects.equals(serverTypeName, serverTypeNames[0]), host, portInt, dataFolder, true));
+        boolean equals = Objects.equals(serverTypeName, serverTypeNames[0]);
+        SharedPreferencesAccessor.ServerPref.saveUseCentral(getActivity(), equals);
+        SharedPreferencesAccessor.ServerPref.saveCustomServerConfig(getActivity(),
+                new ServerConfig(host, portInt, null, dataFolder, !equals));
         return true;
     }
 }

@@ -15,14 +15,9 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.module.AppGlideModule;
 import com.bumptech.glide.request.RequestOptions;
-import com.longx.intelligent.android.ichat2.net.CookieJar;
-import com.longx.intelligent.android.ichat2.net.OkHttpClientCreator;
-import com.xcheng.retrofit.LogInterceptor;
+import com.longx.intelligent.android.ichat2.net.okhttp.OkHttpClientCreator;
 
 import java.io.InputStream;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by LONG on 2023/6/14 at 12:33 AM.

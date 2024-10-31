@@ -4,7 +4,7 @@ import com.longx.intelligent.android.ichat2.behaviorcomponents.InitFetcher;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
-import com.longx.intelligent.android.ichat2.net.OkHttpClientCreator;
+import com.longx.intelligent.android.ichat2.net.okhttp.OkHttpClientCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 
@@ -27,7 +27,7 @@ public class Application extends android.app.Application {
     private void init(){
         CookieJar.create(this);
         OkHttpClientCreator.create();
-        RetrofitCreator.create(this);
+        new Thread(() -> RetrofitCreator.create(this)).start();
         DatabaseInitiator.initAll(this);
         boolean loginState = SharedPreferencesAccessor.NetPref.getLoginState(this);
         if(loginState) {
