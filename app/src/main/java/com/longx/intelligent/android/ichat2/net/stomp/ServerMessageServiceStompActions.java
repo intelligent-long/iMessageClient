@@ -3,6 +3,8 @@ package com.longx.intelligent.android.ichat2.net.stomp;
 import android.content.Context;
 
 import com.longx.intelligent.android.ichat2.Application;
+import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.BroadcastInteractionsActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
@@ -47,8 +49,7 @@ public class ServerMessageServiceStompActions {
                 if (!Application.foreground) {
                     Notifications.notifyChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
                 } else {
-                    HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);
-                    if (!(topActivity instanceof MainActivity)) {
+                    if (!(ActivityOperator.getTopActivity() instanceof MainActivity)) {
                         Notifications.notifyChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
                     }
                 }
@@ -83,7 +84,7 @@ public class ServerMessageServiceStompActions {
                 if (!Application.foreground) {
                     Notifications.notifyChatMessage(context, chatMessage);
                 } else {
-                    HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);
+                    HoldableActivity topActivity = ActivityOperator.getTopActivity();
                     if (!(topActivity instanceof MainActivity)) {
                         if (!(topActivity instanceof ChatActivity && ((ChatActivity) topActivity).getChannel().getIchatId().equals(chatMessage.getOther(context)))) {
                             Notifications.notifyChatMessage(context, chatMessage);
@@ -149,8 +150,8 @@ public class ServerMessageServiceStompActions {
     public static void updateNewBroadcastLikesCount(Context context){
         ContentUpdater.updateNewBroadcastLikesCount(context, results -> {
             int newsCount = (int) results[0];
-            if(newsCount > 0){
-                //TODO：通知
+            if(newsCount > 0 && ! (ActivityOperator.getTopActivity() instanceof BroadcastInteractionsActivity)){
+                Notifications.notifyBroadcastInteractionNewsContent(context, "广播互动", newsCount + " 个新的广播喜欢", R.drawable.favorite_fill_24px);
             }
             GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
                 newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
@@ -163,8 +164,8 @@ public class ServerMessageServiceStompActions {
     public static void updateNewBroadcastCommentsCount(Context context){
         ContentUpdater.updateNewBroadcastCommentsCount(context, results -> {
             int newsCount = (int) results[0];
-            if(newsCount > 0){
-                //TODO：通知
+            if(newsCount > 0 && ! (ActivityOperator.getTopActivity() instanceof BroadcastInteractionsActivity)){
+                Notifications.notifyBroadcastInteractionNewsContent(context, "广播互动", newsCount + " 个新的广播评论", R.drawable.mode_comment_fill_24px);
             }
             GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
                 newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
@@ -177,8 +178,8 @@ public class ServerMessageServiceStompActions {
     public static void updateNewBroadcastRepliesCount(Context context){
         ContentUpdater.updateNewBroadcastRepliesCount(context, results -> {
             int newsCount = (int) results[0];
-            if(newsCount > 0){
-                //TODO：通知
+            if(newsCount > 0 && ! (ActivityOperator.getTopActivity() instanceof BroadcastInteractionsActivity)){
+                Notifications.notifyBroadcastInteractionNewsContent(context, "广播互动", newsCount + " 个新的广播回复", R.drawable.mode_comment_fill_24px);
             }
             GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
                 newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {

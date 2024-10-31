@@ -29,4 +29,9 @@ public class NotificationChannels {
         static final String ID_VERSION_COMPATIBILITY_OFFLINE = "VERSION_COMPATIBILITY_OFFLINE";
         static final String NAME_VERSION_COMPATIBILITY_OFFLINE = "版本不兼容下线";
     }
+
+    public static class BroadcastInteraction{
+        static final String ID_BROADCAST_INTERACTION = "BROADCAST_INTERACTION";
+        static final String NAME_BROADCAST_INTERACTION = "广播互动";
+    }
 }

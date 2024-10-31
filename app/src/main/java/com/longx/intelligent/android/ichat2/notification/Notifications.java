@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.AuthActivity;
+import com.longx.intelligent.android.ichat2.activity.BroadcastInteractionsActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelAdditionsActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
@@ -50,6 +51,7 @@ public class Notifications {
                 .text(context.getString(R.string.notification_message_server_message_service_not_running))
                 .smallIcon(R.drawable.error_fill_24px)
                 .importance(NotificationManager.IMPORTANCE_HIGH)
+                .autoCancel(false)
                 .build()
                 .show();
     }
@@ -81,7 +83,6 @@ public class Notifications {
                             .title(channel1.getUsername())
                             .text(finalText)
                             .smallIcon(R.drawable.chat_fill_24px)
-                            .autoCancel(true)
                             .build()
                             .show();
             });
@@ -96,7 +97,6 @@ public class Notifications {
                     .title(channel.getUsername())
                     .text(text)
                     .smallIcon(R.drawable.chat_fill_24px)
-                    .autoCancel(true)
                     .build()
                     .show();
         }
@@ -125,7 +125,6 @@ public class Notifications {
                 .title("新的频道")
                 .text(text)
                 .smallIcon(R.drawable.person_add_fill_24px)
-                .autoCancel(true)
                 .build()
                 .show();
     }
@@ -140,7 +139,6 @@ public class Notifications {
                 .title("登陆会话已失效")
                 .text(offlineDetail.getDesc())
                 .smallIcon(R.drawable.no_accounts_fill_24px)
-                .autoCancel(true)
                 .build()
                 .show();
     }
@@ -156,7 +154,20 @@ public class Notifications {
                 .title(title)
                 .text(message)
                 .smallIcon(R.drawable.hide_source_24px)
-                .autoCancel(true)
+                .build()
+                .show();
+    }
+
+    public static void notifyBroadcastInteractionNewsContent(Context context, String title, String message, int iconRes){
+        Intent intent = new Intent(context, BroadcastInteractionsActivity.class);
+        new Notification.Builder(context,
+                NotificationChannels.BroadcastInteraction.ID_BROADCAST_INTERACTION,
+                NotificationChannels.BroadcastInteraction.NAME_BROADCAST_INTERACTION)
+                .intent(intent)
+                .importance(NotificationManager.IMPORTANCE_HIGH)
+                .title(title)
+                .text(message)
+                .smallIcon(iconRes)
                 .build()
                 .show();
     }

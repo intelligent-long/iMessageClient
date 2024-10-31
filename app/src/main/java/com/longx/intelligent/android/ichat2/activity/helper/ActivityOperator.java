@@ -73,4 +73,8 @@ public class ActivityOperator extends ActivityHolder{
     public static List<HoldableActivity> getActivityList(){
         return ActivityHolder.getActivityList();
     }
+
+    public static HoldableActivity getTopActivity(){
+        return getActivityList().get(getActivityList().size() - 1);
+    }
 }

@@ -19,7 +19,7 @@ public class Notification {
     private Intent intent;
     private Integer id = Utils.getRandomNumberInRange(1000, Integer.MAX_VALUE), smallIcon, importance = NotificationManager.IMPORTANCE_DEFAULT;
     private String channelId, channelName, title, text;
-    private Boolean ongoing, autoCancel;
+    private Boolean ongoing, autoCancel = true;
     private NotificationCompat.Style style = new NotificationCompat.BigTextStyle();
 
     public static class Builder{
