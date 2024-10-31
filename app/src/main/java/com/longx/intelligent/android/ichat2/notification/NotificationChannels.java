@@ -24,4 +24,9 @@ public class NotificationChannels {
         static final String ID_OTHER_ONLINE = "OTHER_ONLINE";
         static final String NAME_OTHER_ONLINE = "登陆会话失效";
     }
+
+    public static class VersionCompatibilityOffline{
+        static final String ID_VERSION_COMPATIBILITY_OFFLINE = "VERSION_COMPATIBILITY_OFFLINE";
+        static final String NAME_VERSION_COMPATIBILITY_OFFLINE = "版本不兼容下线";
+    }
 }

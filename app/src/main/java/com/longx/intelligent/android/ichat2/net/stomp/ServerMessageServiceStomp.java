@@ -63,10 +63,9 @@ public class ServerMessageServiceStomp {
                             GlobalBehaviors.onOtherOnline(serverMessageService.getContext());
                             break;
                         //有新版本
-                        case WebsocketConsts.CLOSE_CODE_CLOSE_FOR_CLIENT_UPDATE:
+                        case WebsocketConsts.CLOSE_CODE_CLOSE_FOR_CLIENT_NEED_UPDATE:
                             serverMessageService.cancelBackingOnline();
-                            //TODO
-
+                            GlobalBehaviors.onAppNeedUpdate(serverMessageService.getContext());
                             break;
                         //版本过高
                         case WebsocketConsts.CLOSE_CODE_CLOSE_FOR_CLIENT_VERSION_HIGHER:

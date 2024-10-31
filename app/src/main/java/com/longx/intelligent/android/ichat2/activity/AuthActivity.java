@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityAuthBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -42,6 +43,8 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
     private ActivityAuthBinding binding;
     private String[] loginWayNames;
     private GlobalBehaviors.LoginWay currentLoginWay;
+    private String title;
+    private String message;
 
     private enum AuthAction{LOGIN, REGISTER, RESET_PASSWORD}
     private AuthAction currentAuthAction;
@@ -55,6 +58,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
                 getString(R.string.login_way_verify_code)};
         binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        intentData();
         setupToolbar();
         onCreateSetupLoginWayAutoCompleteTextView();
         setupYiers();
@@ -69,6 +73,11 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
         GlobalYiersHolder.removeYier(this, OfflineDetailShowYier.class, this);
     }
 
+    private void intentData() {
+        title = getIntent().getStringExtra(ExtraKeys.TITLE);
+        message = getIntent().getStringExtra(ExtraKeys.MESSAGE);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -77,6 +86,11 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
             onResumeSetupLoginWayAutoCompleteTextView();
             showOfflineDetail();
             checkAndFetchAndShowOfflineDetail();
+            if(message != null){
+                showMessage();
+                message = null;
+                title = null;
+            }
         }
     }
 
@@ -382,8 +396,12 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
         });
         needShowOfflineDetails.sort(Comparator.comparing(OfflineDetail::getTime));
         needShowOfflineDetails.forEach(needShowOfflineDetail -> {
-            new MessageDialog(this, "登陆会话已失效", needShowOfflineDetail.getDesc()).create().show();
+            new CustomViewMessageDialog(this, "登陆会话已失效", needShowOfflineDetail.getDesc()).create().show();
             SharedPreferencesAccessor.AuthPref.saveShowedOfflineDetailTime(this, needShowOfflineDetail.getTime());
         });
+    }
+
+    public void showMessage(){
+        new CustomViewMessageDialog(this, title, message).create().show();
     }
 }

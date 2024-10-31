@@ -25,16 +25,11 @@ import java.util.Set;
  * Created by LONG on 2024/4/6 at 5:51 PM.
  */
 public class Notifications {
-    public enum NotificationId{
-        SERVER_MESSAGE_SERVICE_NOT_RUNNING,
-        CHAT_MESSAGE,
-        CHANNEL_ADDITION_ACTIVITY,
-        OTHER_ONLINE
-    }
-    private static final Map<NotificationId, List<Runnable>> pendingNotificationMap = new HashMap<>();
+    public enum PendingNotificationId {CHAT_MESSAGE}
+    private static final Map<PendingNotificationId, List<Runnable>> pendingNotificationMap = new HashMap<>();
 
-    public synchronized static void notifyPendingNotifications(NotificationId notificationId){
-        List<Runnable> runnables = pendingNotificationMap.get(notificationId);
+    public synchronized static void notifyPendingNotifications(PendingNotificationId pendingNotificationId){
+        List<Runnable> runnables = pendingNotificationMap.get(pendingNotificationId);
         Set<Runnable> runnableSet = new HashSet<>();
         if(runnables != null){
             runnables.forEach(runnable -> {
@@ -71,9 +66,9 @@ public class Notifications {
         }
         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(chatMessage.getOther(context));
         if(channel == null){
-            pendingNotificationMap.computeIfAbsent(NotificationId.CHAT_MESSAGE, k -> new ArrayList<>());
+            pendingNotificationMap.computeIfAbsent(PendingNotificationId.CHAT_MESSAGE, k -> new ArrayList<>());
             String finalText = text;
-            pendingNotificationMap.get(NotificationId.CHAT_MESSAGE).add(() -> {
+            pendingNotificationMap.get(PendingNotificationId.CHAT_MESSAGE).add(() -> {
                     Channel channel1 = ChannelDatabaseManager.getInstance().findOneChannel(chatMessage.getOther(context));
                     if(channel1 == null) return;
                     Intent intent = new Intent(context, ChatActivity.class);
@@ -148,5 +143,22 @@ public class Notifications {
                 .autoCancel(true)
                 .build()
                 .show();
+    }
+
+    public static void notifyVersionCompatibilityOffline(Context context, String title, String message){
+        Intent intent = new Intent(context, AuthActivity.class);
+        intent.putExtra(ExtraKeys.MESSAGE, message);
+        new Notification.Builder(context,
+                NotificationChannels.VersionCompatibilityOffline.ID_VERSION_COMPATIBILITY_OFFLINE,
+                NotificationChannels.VersionCompatibilityOffline.NAME_VERSION_COMPATIBILITY_OFFLINE)
+                .intent(intent)
+                .importance(NotificationManager.IMPORTANCE_HIGH)
+                .title(title)
+                .text(message)
+                .smallIcon(R.drawable.hide_source_24px)
+                .autoCancel(true)
+                .build()
+                .show();
+
     }
 }

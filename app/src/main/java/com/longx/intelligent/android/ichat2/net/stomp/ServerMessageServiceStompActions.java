@@ -2,6 +2,7 @@ package com.longx.intelligent.android.ichat2.net.stomp;
 
 import android.content.Context;
 
+import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.MainActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
@@ -43,7 +44,7 @@ public class ServerMessageServiceStompActions {
         ContentUpdater.updateChannelAdditionNotViewCount(context, results -> {
             ChannelAdditionNotViewedCount notViewedCount = (ChannelAdditionNotViewedCount) results[0];
             if(notViewedCount != null) {
-                if (ActivityOperator.getActivityList().isEmpty()) {
+                if (!Application.foreground) {
                     Notifications.notifyChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
                 } else {
                     HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);
@@ -70,7 +71,7 @@ public class ServerMessageServiceStompActions {
                     newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.MESSAGES);
                 });
             });
-            Notifications.notifyPendingNotifications(Notifications.NotificationId.CHAT_MESSAGE);
+            Notifications.notifyPendingNotifications(Notifications.PendingNotificationId.CHAT_MESSAGE);
         });
     }
 
@@ -79,7 +80,7 @@ public class ServerMessageServiceStompActions {
             List<ChatMessage> chatMessages = (List<ChatMessage>) results[0];
             List<ChatMessage> toUnsendChatMessages = (List<ChatMessage>) results[1];
             chatMessages.forEach(chatMessage -> {
-                if (ActivityOperator.getActivityList().isEmpty()) {
+                if (!Application.foreground) {
                     Notifications.notifyChatMessage(context, chatMessage);
                 } else {
                     HoldableActivity topActivity = ActivityOperator.getActivityList().get(ActivityOperator.getActivityList().size() - 1);

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.color.DynamicColors;
+import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
@@ -31,6 +32,7 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Application.foreground = true;
         this.savedInstanceState = savedInstanceState;
         checkAndSetNightMode();
         super.onCreate(savedInstanceState);
@@ -108,6 +110,7 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
     }
 
     public void onHome() {
+        Application.foreground = false;
     }
 
     public boolean isUiShowing() {

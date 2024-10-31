@@ -1,10 +1,13 @@
 package com.longx.intelligent.android.ichat2.behaviorcomponents;
 
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.Application;
+import com.longx.intelligent.android.ichat2.activity.AuthActivity;
+import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
@@ -183,7 +186,7 @@ public class GlobalBehaviors {
                     GlobalYiersHolder.getYiers(OfflineDetailShowYier.class).ifPresent(offlineDetailShowYiers -> {
                         offlineDetailShowYiers.forEach(OfflineDetailShowYier::showOfflineDetail);
                     });
-                    if (ActivityOperator.getActivityList().isEmpty()) {
+                    if (!Application.foreground) {
                         Notifications.notifyGoOfflineBecauseOfOtherOnline(context, offlineDetail);
                     }
                 }, new OperationStatus.HandleResult(-101, () -> {
@@ -198,5 +201,21 @@ public class GlobalBehaviors {
             ServerMessageService.stop();
         }catch (Exception ignore){}
         ActivityOperator.switchToAuth(context);
+    }
+
+    public static void onAppNeedUpdate(Context context){
+        try {
+            ServerMessageService.stop();
+        }catch (Exception ignore){}
+        String title = "软件有新版本";
+        String message = "你已下线，软件有新的版本，请更新软件。";
+        Intent intent = new Intent(context, AuthActivity.class);
+        intent.putExtra(ExtraKeys.TITLE, title);
+        intent.putExtra(ExtraKeys.MESSAGE, message);
+        ActivityOperator.switchTo(context, intent, true);
+        if (!Application.foreground) {
+            Notifications.notifyVersionCompatibilityOffline(context, title, message);
+        }
+        SharedPreferencesAccessor.NetPref.saveLoginState(context, false);
     }
 }

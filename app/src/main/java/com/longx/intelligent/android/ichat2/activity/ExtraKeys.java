@@ -46,4 +46,6 @@ public class ExtraKeys {
     public static final String BROADCAST_COMMENT = "broadcast_comment";
     public static final String BROADCAST_PERMISSION = "broadcast_permission";
     public static final String CHANGE_PERMISSION = "change_permission";
+    public static final String TITLE = "title";
+    public static final String MESSAGE = "message";
 }

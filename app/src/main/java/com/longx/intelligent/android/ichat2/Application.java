@@ -16,6 +16,7 @@ public class Application extends android.app.Application {
     {
         application = this;
     }
+    public static boolean foreground;
 
     @Override
     public void onCreate() {
