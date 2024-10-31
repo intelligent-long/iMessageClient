@@ -54,7 +54,7 @@ public class BroadcastCommentActionsPopupWindow {
         binding.clickViewDelete.setOnClickListener(v -> {
             if(deleteYier == null) return;
             new ConfirmDialog(activity)
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         popupWindow.dismiss();
                         deleteYier.onClick(v);

@@ -1,17 +1,23 @@
 package com.longx.intelligent.android.ichat2.behaviorcomponents;
 
+import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.ichat2.Application;
 import com.longx.intelligent.android.ichat2.activity.AuthActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.VersionActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.OfflineDetail;
+import com.longx.intelligent.android.ichat2.data.Release;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.request.EmailLoginPostBody;
 import com.longx.intelligent.android.ichat2.data.request.IchatIdUserLoginPostBody;
@@ -19,19 +25,29 @@ import com.longx.intelligent.android.ichat2.data.request.SendVerifyCodePostBody;
 import com.longx.intelligent.android.ichat2.data.request.VerifyCodeLoginPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
+import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.fragment.main.BroadcastsFragment;
 import com.longx.intelligent.android.ichat2.net.CookieJar;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.IchatWebApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.LinkApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
+import com.longx.intelligent.android.ichat2.util.AppUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OfflineDetailShowYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
+
+import org.apache.tika.utils.StringUtils;
+
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -233,5 +249,54 @@ public class GlobalBehaviors {
             Notifications.notifyVersionCompatibilityOffline(context, title, message);
         }
         SharedPreferencesAccessor.NetPref.saveLoginState(context, false);
+    }
+
+    public static void checkAndNotifySoftwareUpdate(AppCompatActivity activity){
+        Date lastCheckSoftwareUpdatableTime = SharedPreferencesAccessor.DefaultPref.getLastCheckSoftwareUpdatableTime(activity);
+        if(lastCheckSoftwareUpdatableTime != null) {
+            if (!TimeUtil.isDateAfter(lastCheckSoftwareUpdatableTime, new Date(), Constants.MIN_CHECK_SOFTWARE_UPDATABLE_INTERVAL_MILLI_SEC)) {
+                return;
+            }
+        }
+        LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(activity, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleResult(activity, new int[]{}, () -> {
+                    String updatableReleaseUrl = data.getData(String.class);
+                    IchatWebApiCaller.fetchUpdatableReleaseData(activity, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity) {
+                        @Override
+                        public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                            data.commonHandleResult(activity, new int[]{}, () -> {
+                                Release updatableRelease = data.getData(Release.class);
+                                if(SharedPreferencesAccessor.DefaultPref.getIgnoreUpdateVersionCode(activity) == updatableRelease.getVersionCode()) {
+                                    return;
+                                }
+                                if (AppUtil.getVersionCode(activity) >= updatableRelease.getVersionCode()) {
+                                    return;
+                                }
+                                String message = "有新的软件版本可更新。\n新版本: " + updatableRelease.getVersionName()
+                                        + "\n新版本号: " + updatableRelease.getVersionCode()
+                                        + "\n是否更新？";
+                                ConfirmDialog updateDialog = new ConfirmDialog(activity, "软件更新", message, false);
+                                updateDialog
+                                        .setNegativeButton("下次提醒", (dialog, which) -> SharedPreferencesAccessor.DefaultPref.saveLastCheckSoftwareUpdatableTime(activity, new Date()))
+                                        .setPositiveButton((dialog, which) -> activity.startActivity(new Intent(activity, VersionActivity.class)))
+                                        .setNeutralButton("忽略此版本", v -> {
+                                            new ConfirmDialog(activity)
+                                                    .setNegativeButton()
+                                                    .setPositiveButton((dialog1, which1) -> {
+                                                        updateDialog.dismiss();
+                                                        SharedPreferencesAccessor.DefaultPref.saveIgnoreUpdateVersionCode(activity, updatableRelease.getVersionCode());
+                                                    })
+                                                    .create().show();
+                                        })
+                                        .create().show();
+                            });
+                        }
+                    });
+                });
+            }
+        });
     }
 }

@@ -359,7 +359,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
             moreOperationBottomSheet.setDeleteClickYier(v -> {
                 ConfirmDialog confirmDialog = new ConfirmDialog(this);
-                confirmDialog.setNegativeButton(null);
+                confirmDialog.setNegativeButton();
                 confirmDialog.setPositiveButton((dialog, which) -> {
                     BroadcastApiCaller.deleteBroadcast(this, broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
                         @Override

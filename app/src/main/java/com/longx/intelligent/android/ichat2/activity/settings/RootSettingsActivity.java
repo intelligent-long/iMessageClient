@@ -213,7 +213,7 @@ public class RootSettingsActivity extends BaseActivity {
                 startActivity(new Intent(getActivity(), EditUserSettingsActivity.class));
             }else if(preference.equals(preferenceLogout)) {
                 new ConfirmDialog(SettingsFragment.this.getActivity(), "是否继续？")
-                        .setNegativeButton(null)
+                        .setNegativeButton()
                         .setPositiveButton((dialogInterface, i) -> {
                             GlobalBehaviors.doLogout(SettingsFragment.this.getActivity(), null, null);
                         })

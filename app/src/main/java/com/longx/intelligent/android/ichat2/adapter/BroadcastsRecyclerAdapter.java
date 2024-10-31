@@ -454,7 +454,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
             moreOperationBottomSheet.setDeleteClickYier(v -> {
                 ConfirmDialog confirmDialog = new ConfirmDialog(activity);
-                confirmDialog.setNegativeButton(null);
+                confirmDialog.setNegativeButton();
                 confirmDialog.setPositiveButton((dialog, which) -> {
                     BroadcastApiCaller.deleteBroadcast(activity, itemData.broadcast.getBroadcastId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
                         @Override

@@ -155,7 +155,7 @@ public class EditUserSettingsActivity extends BaseActivity{
                     imageChosenActivityResultLauncher.launch(intent);
                 }, v -> {
                     new ConfirmDialog((AppCompatActivity) getActivity(), "是否继续？")
-                            .setNegativeButton(null)
+                            .setNegativeButton()
                             .setPositiveButton((dialog, which) -> {
                                 UserApiCaller.removeAvatar(getActivity(), new RetrofitApiCaller.CommonYier<OperationStatus>((AppCompatActivity) getActivity()) {
                                     @Override

@@ -42,6 +42,8 @@ public class SharedPreferencesAccessor {
         private static class Key {
             private static final String IGNORE_REQUEST_IGNORE_BATTERY_OPTIMIZE = "ignore_request_ignore_battery_optimize";
             private static final String SEARCH_CHANNEL_BY = "search_channel_by";
+            private static final String LAST_CHECK_SOFTWARE_UPDATABLE_TIME = "last_check_software_updatable_time";
+            private static final String IGNORE_UPDATE_VERSION_CODE = "ignore_update_version_code";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return PreferenceManager.getDefaultSharedPreferences(context);
@@ -94,6 +96,33 @@ public class SharedPreferencesAccessor {
             return getSharedPreferences(context)
                     .getString(Key.SEARCH_CHANNEL_BY, null);
         }
+
+        public static void saveLastCheckSoftwareUpdatableTime(Context context, Date time){
+            getSharedPreferences(context)
+                    .edit()
+                    .putLong(Key.LAST_CHECK_SOFTWARE_UPDATABLE_TIME, time.getTime())
+                    .apply();
+        }
+
+        public static Date getLastCheckSoftwareUpdatableTime(Context context){
+            long timeLong = getSharedPreferences(context)
+                    .getLong(Key.LAST_CHECK_SOFTWARE_UPDATABLE_TIME, -1);
+            if(timeLong == -1) return null;
+            return new Date(timeLong);
+        }
+
+        public static void saveIgnoreUpdateVersionCode(Context context, int versionCode){
+            getSharedPreferences(context)
+                    .edit()
+                    .putInt(Key.IGNORE_UPDATE_VERSION_CODE, versionCode)
+                    .apply();
+        }
+
+        public static int getIgnoreUpdateVersionCode(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.IGNORE_UPDATE_VERSION_CODE, -1);
+        }
+
     }
 
     public static class NetPref {

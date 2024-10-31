@@ -72,7 +72,7 @@ public class RequestAddChannelActivity extends BaseActivity {
     private void setupYiers() {
         binding.sendRequestButton.setOnClickListener(v -> {
             new ConfirmDialog(this, "是否发送添加频道请求？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
                         String inputtedNote = UiUtil.getEditTextString(binding.noteInput);

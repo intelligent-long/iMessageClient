@@ -655,7 +655,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 itemData.chatMessage.setShowTime(true);
                 if(!showTime) notifyItemChanged(i);
             }else {
-                if(TimeUtil.isDateAfter(previousShowTime, itemData.chatMessage.getTime(), Constants.CHAT_MESSAGE_SHOW_TIME_INTERVAL)){
+                if(TimeUtil.isDateAfter(previousShowTime, itemData.chatMessage.getTime(), Constants.CHAT_MESSAGE_SHOW_TIME_INTERVAL_MILLI_SEC)){
                     previousShowTime = itemData.chatMessage.getTime();
                     itemData.chatMessage.setShowTime(true);
                     if(!showTime) notifyItemChanged(i);

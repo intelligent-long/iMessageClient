@@ -23,9 +23,9 @@ public class ChoiceDialog extends AbstractDialog{
     private final Integer iconId;
     private final String message;
     private final String uuid = UUID.randomUUID().toString();
-    private ButtonInfo positiveButtonInfo;
-    private ButtonInfo negativeButtonInfo;
-    private ButtonInfo neutralButtonInfo;
+    private DialogButtonInfo positiveButtonInfo;
+    private DialogButtonInfo negativeDialogButtonInfo;
+    private DialogButtonInfo neutralButtonInfo;
 
     public ChoiceDialog(Activity activity){
         this(activity, "请选择");
@@ -53,8 +53,8 @@ public class ChoiceDialog extends AbstractDialog{
         if(positiveButtonInfo != null){
             builder.setPositiveButton(positiveButtonInfo.getText() == null ? "确定" : positiveButtonInfo.getText(), positiveButtonInfo.getYier());
         }
-        if(negativeButtonInfo != null){
-            builder.setNegativeButton(negativeButtonInfo.getText() == null ? "取消" : negativeButtonInfo.getText(), negativeButtonInfo.getYier());
+        if(negativeDialogButtonInfo != null){
+            builder.setNegativeButton(negativeDialogButtonInfo.getText() == null ? "取消" : negativeDialogButtonInfo.getText(), negativeDialogButtonInfo.getYier());
         }
         if(neutralButtonInfo != null){
             builder.setNeutralButton(neutralButtonInfo.getText() == null ? "其他选项" : neutralButtonInfo.getText(), neutralButtonInfo.getYier());
@@ -99,32 +99,32 @@ public class ChoiceDialog extends AbstractDialog{
     }
 
     public ChoiceDialog setPositiveButton(DialogInterface.OnClickListener yier){
-        positiveButtonInfo = new ButtonInfo(null, yier);
+        positiveButtonInfo = new DialogButtonInfo(null, yier);
         return this;
     }
 
     public ChoiceDialog setNegativeButton(DialogInterface.OnClickListener yier){
-        negativeButtonInfo = new ButtonInfo(null, yier);
+        negativeDialogButtonInfo = new DialogButtonInfo(null, yier);
         return this;
     }
 
     public ChoiceDialog setNeutralButton(DialogInterface.OnClickListener yier){
-        neutralButtonInfo = new ButtonInfo(null, yier);
+        neutralButtonInfo = new DialogButtonInfo(null, yier);
         return this;
     }
 
     public ChoiceDialog setPositiveButton(String text, DialogInterface.OnClickListener yier){
-        positiveButtonInfo = new ButtonInfo(text, yier);
+        positiveButtonInfo = new DialogButtonInfo(text, yier);
         return this;
     }
 
     public ChoiceDialog setNegativeButton(String text, DialogInterface.OnClickListener yier){
-        negativeButtonInfo = new ButtonInfo(text, yier);
+        negativeDialogButtonInfo = new DialogButtonInfo(text, yier);
         return this;
     }
 
     public ChoiceDialog setNeutralButton(String text, DialogInterface.OnClickListener yier){
-        neutralButtonInfo = new ButtonInfo(text, yier);
+        neutralButtonInfo = new DialogButtonInfo(text, yier);
         return this;
     }
 }

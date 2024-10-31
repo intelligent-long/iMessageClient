@@ -155,7 +155,7 @@ public class ServerSettingDialog extends AbstractDialog{
                                 }
                             });
                         })
-                        .setNegativeButton(null)
+                        .setNegativeButton()
                         .create().show();
             } else {
                 onChangeServerSetting();

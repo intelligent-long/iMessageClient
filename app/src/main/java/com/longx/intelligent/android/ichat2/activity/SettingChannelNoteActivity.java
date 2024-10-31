@@ -53,7 +53,7 @@ public class SettingChannelNoteActivity extends BaseActivity {
         });
         binding.deleteButton.setOnClickListener(v -> {
             new ConfirmDialog(this, "是否继续？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         ChannelApiCaller.deleteNoteOfAssociatedChannel(this, channel.getIchatId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override

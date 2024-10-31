@@ -33,6 +33,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.activity.settings.RootSettingsActivity;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.ichat2.da.database.manager.ChannelDatabaseManager;
@@ -89,15 +90,18 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         setupNavigation();
         startServerMessageService();
         setupYier();
-        setupUi();
-        showNavHeaderInfo();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
         animateNavIconVisibility(navHostFragment);
-        requestPermissions();
+        runOnUiThread(() -> {
+            setupUi();
+            showNavHeaderInfo();
+            requestPermissions();
+            GlobalBehaviors.checkAndNotifySoftwareUpdate(this);
+        });
     }
 
     @Override
@@ -108,6 +112,22 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
         GlobalYiersHolder.removeYier(this, BroadcastFetchNewsYier.class, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 
     private void requestPermissions(){
@@ -163,22 +183,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         if(loginState) {
             ServerMessageService.work((Application) getApplicationContext());
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    binding.drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
-                }
-            }
-        });
     }
 
     public ActivityMainBinding getViewBinding(){

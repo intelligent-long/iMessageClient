@@ -176,7 +176,7 @@ public class ForwardMessageActivity extends BaseActivity {
                 return;
             }
             new ConfirmDialog(this, "是否转发？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         processingDialog = new ForwardMessagesProcessingDialog(this);
                         processingDialog.create().show();

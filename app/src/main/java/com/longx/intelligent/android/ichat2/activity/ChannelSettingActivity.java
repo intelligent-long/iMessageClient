@@ -91,14 +91,14 @@ public class ChannelSettingActivity extends BaseActivity {
         });
         binding.deleteChannel.setOnClickListener(v -> {
             new ConfirmDialog(this, "是否继续？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
                                 runOnUiThread(() -> {
                                     new ConfirmDialog(ChannelSettingActivity.this, "是否继续？")
-                                            .setNegativeButton(null)
+                                            .setNegativeButton()
                                             .setPositiveButton((dialog1, which1) -> {
                                                 deleteChannel();
                                             })

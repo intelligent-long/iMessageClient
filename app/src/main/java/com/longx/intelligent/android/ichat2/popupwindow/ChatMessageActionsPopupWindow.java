@@ -84,7 +84,7 @@ public class ChatMessageActionsPopupWindow {
         });
         binding.clickViewDelete.setOnClickListener(v -> {
             new ConfirmDialog(activity, "是否继续？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         popupWindow.dismiss();
                         String other = chatMessage.getOther(activity);
@@ -120,7 +120,7 @@ public class ChatMessageActionsPopupWindow {
         });
         binding.clickViewUnsend.setOnClickListener(v -> {
             new ConfirmDialog(activity, "是否继续？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         popupWindow.dismiss();
                         ChatApiCaller.unsendChatMessage(activity, chatMessage.getTo(), chatMessage.getUuid(), new RetrofitApiCaller.CommonYier<OperationData>(activity){

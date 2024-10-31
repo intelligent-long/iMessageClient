@@ -88,7 +88,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         });
         holder.binding.clickViewDelete.setOnClickListener(v -> {
             new ConfirmDialog(activity, "是否继续？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         ChannelApiCaller.deleteChannelTag(activity, channelTag.getTagId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
                             @Override

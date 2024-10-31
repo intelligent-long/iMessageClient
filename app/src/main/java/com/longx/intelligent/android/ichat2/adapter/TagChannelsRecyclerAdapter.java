@@ -130,7 +130,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
         });
         holder.binding.clickViewRemove.setOnClickListener(v -> {
             new ConfirmDialog(tagChannelActivity, "是否继续？")
-                    .setNegativeButton(null)
+                    .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         List<String> channelIchatIdList = new ArrayList<>();
                         channelIchatIdList.add(itemData.channel.getIchatId());
