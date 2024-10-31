@@ -70,8 +70,7 @@ public class ServerMessageServiceStomp {
                         //版本过高
                         case WebsocketConsts.CLOSE_CODE_CLOSE_FOR_CLIENT_VERSION_HIGHER:
                             serverMessageService.cancelBackingOnline();
-                            //TODO
-
+                            GlobalBehaviors.onAppVersionHigher(serverMessageService.getContext());
                             break;
                         default:
                             serverMessageService.onGetDisconnected();

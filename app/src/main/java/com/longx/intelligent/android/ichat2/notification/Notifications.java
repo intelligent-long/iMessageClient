@@ -159,6 +159,5 @@ public class Notifications {
                 .autoCancel(true)
                 .build()
                 .show();
-
     }
 }

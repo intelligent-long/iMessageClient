@@ -218,4 +218,20 @@ public class GlobalBehaviors {
         }
         SharedPreferencesAccessor.NetPref.saveLoginState(context, false);
     }
+
+    public static void onAppVersionHigher(Context context){
+        try {
+            ServerMessageService.stop();
+        }catch (Exception ignore){}
+        String title = "软件版本过高";
+        String message = "你已下线，软件版本过高，请使用和服务端兼容的版本。";
+        Intent intent = new Intent(context, AuthActivity.class);
+        intent.putExtra(ExtraKeys.TITLE, title);
+        intent.putExtra(ExtraKeys.MESSAGE, message);
+        ActivityOperator.switchTo(context, intent, true);
+        if (!Application.foreground) {
+            Notifications.notifyVersionCompatibilityOffline(context, title, message);
+        }
+        SharedPreferencesAccessor.NetPref.saveLoginState(context, false);
+    }
 }
