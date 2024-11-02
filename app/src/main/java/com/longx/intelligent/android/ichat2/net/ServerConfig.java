@@ -8,7 +8,7 @@ public class ServerConfig {
     private final int port;
     private final String baseUrl;
     private final String dataFolder;
-    private static final String DATA_FOLDER_SUFFIX = "#";
+    public static final String DATA_FOLDER_SUFFIX = "#";
 
     public static String buildDataFolderWithoutSuffix(String host, String port){
         if(port == null || port.isEmpty()){
@@ -18,15 +18,11 @@ public class ServerConfig {
         }
     }
 
-    public ServerConfig(String host, int port, String baseUrl, String dataFolder, boolean dataFolderWithSuffix) {
+    public ServerConfig(String host, int port, String baseUrl, String dataFolder) {
         this.host = host;
         this.port = port;
         this.baseUrl = baseUrl;
-        if(dataFolderWithSuffix) {
-            this.dataFolder = dataFolder + DATA_FOLDER_SUFFIX;
-        }else {
-            this.dataFolder = dataFolder;
-        }
+        this.dataFolder = dataFolder;
     }
 
     public String getHost() {

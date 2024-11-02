@@ -32,7 +32,7 @@ public class BaseUrlProvider {
 
             @Override
             public void ok(ServerLocation serverLocation, Response response) {
-                ServerConfig serverConfig = new ServerConfig(serverLocation.getHost(), serverLocation.getPort(), serverLocation.getBaseUrl(), ServerValues.CENTRAL_DATA_FOLDER, false);
+                ServerConfig serverConfig = new ServerConfig(serverLocation.getHost(), serverLocation.getPort(), serverLocation.getBaseUrl(), ServerValues.CENTRAL_DATA_FOLDER);
                 SharedPreferencesAccessor.ServerPref.saveCentralServerConfig(context, serverConfig);
                 countDownLatch.countDown();
             }

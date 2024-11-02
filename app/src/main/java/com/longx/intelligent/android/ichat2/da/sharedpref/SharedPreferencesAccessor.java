@@ -204,12 +204,12 @@ public class SharedPreferencesAccessor {
             String customDataFolder = sharedPreferences.getString(Key.CUSTOM_DATA_FOLDER, null);
             if(customHost == null || customPort == -1 || customDataFolder == null) {
                 customDataFolder = ServerConfig.buildDataFolderWithoutSuffix(ServerValues.CUSTOM_DEFAULT_HOST, String.valueOf(ServerValues.CUSTOM_DEFAULT_PORT));
-                saveCustomServerConfig(context, new ServerConfig(ServerValues.CUSTOM_DEFAULT_HOST, ServerValues.CUSTOM_DEFAULT_PORT, null, customDataFolder, true));
+                saveCustomServerConfig(context, new ServerConfig(ServerValues.CUSTOM_DEFAULT_HOST, ServerValues.CUSTOM_DEFAULT_PORT, null, customDataFolder + ServerConfig.DATA_FOLDER_SUFFIX));
                 customHost = sharedPreferences.getString(Key.CUSTOM_HOST, null);
                 customPort = sharedPreferences.getInt(Key.CUSTOM_PORT, -1);
                 customDataFolder = sharedPreferences.getString(Key.CUSTOM_DATA_FOLDER, null);
             }
-            return new ServerConfig(customHost, customPort, null, customDataFolder, true);
+            return new ServerConfig(customHost, customPort, null, customDataFolder);
         }
 
         public static void saveCentralServerConfig(Context context, ServerConfig serverConfig){
@@ -227,7 +227,7 @@ public class SharedPreferencesAccessor {
             int centralPort = sharedPreferences.getInt(Key.CENTRAL_PORT, -1);
             String centralBaseUrl = sharedPreferences.getString(Key.CENTRAL_BASE_URL, null);
             if((centralHost == null || centralPort == -1) && centralBaseUrl == null) return null;
-            return new ServerConfig(centralHost, centralPort, centralBaseUrl, ServerValues.CENTRAL_DATA_FOLDER, false);
+            return new ServerConfig(centralHost, centralPort, centralBaseUrl, ServerValues.CENTRAL_DATA_FOLDER);
         }
     }
 

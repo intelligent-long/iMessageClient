@@ -176,6 +176,35 @@ public class ServerSettingDialog extends AbstractDialog{
         }
     }
 
+    private boolean saveServerConfig() {
+        String serverTypeName = UiUtil.getEditTextString(binding.serverTypeAutoCompleteTextView);
+        String host = UiUtil.getEditTextString(binding.hostInput);
+        if(host == null || host.isEmpty()){
+            MessageDisplayer.showSnackbar(getActivity(), "主机不合法", Snackbar.LENGTH_SHORT);
+            return false;
+        }
+        String port = UiUtil.getEditTextString(binding.portInput);
+        int portInt;
+        try {
+            portInt = Integer.parseInt(Objects.requireNonNull(port));
+            if(!NetworkUtil.isPortValid(portInt)) throw new Exception("端口值不在合法范围");
+        }catch (Exception e){
+            ErrorLogger.log(getClass(), e);
+            MessageDisplayer.showSnackbar(getActivity(), "端口不合法", Snackbar.LENGTH_SHORT);
+            return false;
+        }
+        String dataFolder = UiUtil.getEditTextString(binding.dataFolderInput);
+        if(dataFolder == null || dataFolder.isEmpty()){
+            MessageDisplayer.showSnackbar(getActivity(), "数据文件夹不合法", Snackbar.LENGTH_SHORT);
+            return false;
+        }
+        boolean equals = Objects.equals(serverTypeName, serverTypeNames[0]);
+        SharedPreferencesAccessor.ServerPref.saveUseCentral(getActivity(), equals);
+        SharedPreferencesAccessor.ServerPref.saveCustomServerConfig(getActivity(),
+                new ServerConfig(host, portInt, null, dataFolder + ServerConfig.DATA_FOLDER_SUFFIX));
+        return true;
+    }
+
     private void onServerConfigChanged(boolean previousUseCentral) {
         boolean useCentral = SharedPreferencesAccessor.ServerPref.isUseCentral(getActivity());
         boolean allSuccess = true;
@@ -232,34 +261,5 @@ public class ServerSettingDialog extends AbstractDialog{
             }
         }
         dismiss();
-    }
-
-    private boolean saveServerConfig() {
-        String serverTypeName = UiUtil.getEditTextString(binding.serverTypeAutoCompleteTextView);
-        String host = UiUtil.getEditTextString(binding.hostInput);
-        if(host == null || host.isEmpty()){
-            MessageDisplayer.showSnackbar(getActivity(), "主机不合法", Snackbar.LENGTH_SHORT);
-            return false;
-        }
-        String port = UiUtil.getEditTextString(binding.portInput);
-        int portInt;
-        try {
-            portInt = Integer.parseInt(Objects.requireNonNull(port));
-            if(!NetworkUtil.isPortValid(portInt)) throw new Exception("端口值不在合法范围");
-        }catch (Exception e){
-            ErrorLogger.log(getClass(), e);
-            MessageDisplayer.showSnackbar(getActivity(), "端口不合法", Snackbar.LENGTH_SHORT);
-            return false;
-        }
-        String dataFolder = UiUtil.getEditTextString(binding.dataFolderInput);
-        if(dataFolder == null || dataFolder.isEmpty()){
-            MessageDisplayer.showSnackbar(getActivity(), "数据文件夹不合法", Snackbar.LENGTH_SHORT);
-            return false;
-        }
-        boolean equals = Objects.equals(serverTypeName, serverTypeNames[0]);
-        SharedPreferencesAccessor.ServerPref.saveUseCentral(getActivity(), equals);
-        SharedPreferencesAccessor.ServerPref.saveCustomServerConfig(getActivity(),
-                new ServerConfig(host, portInt, null, dataFolder, !equals));
-        return true;
     }
 }
