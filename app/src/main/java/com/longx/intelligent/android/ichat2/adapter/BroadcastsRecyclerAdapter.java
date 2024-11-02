@@ -22,7 +22,9 @@ import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.EditBroadcastActivity;
+import com.longx.intelligent.android.ichat2.activity.ExcludeBroadcastChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.bottomsheet.OtherBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
@@ -33,12 +35,14 @@ import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.Size;
+import com.longx.intelligent.android.ichat2.data.request.ChangeExcludeBroadcastChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemBroadcastBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
@@ -50,10 +54,13 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -484,7 +491,53 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 activity.startActivity(intent);
             });
         }else {
-            holder.binding.more.setOnClickListener(null);
+            OtherBroadcastMoreOperationBottomSheet moreOperationBottomSheet = new OtherBroadcastMoreOperationBottomSheet(activity);
+            holder.binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
+            moreOperationBottomSheet.setExcludeBroadcastChannelClickYier(v -> {
+                ConfirmDialog confirmDialog = new ConfirmDialog(activity);
+                confirmDialog.setNegativeButton();
+                confirmDialog.setPositiveButton((dialog, which) -> {
+                    Set<String> serverExcludeBroadcastChannels = SharedPreferencesAccessor.BroadcastPref.getServerExcludeBroadcastChannels(activity);
+                    Set<String> nowServerExcludeBroadcastChannels = new HashSet<>(serverExcludeBroadcastChannels);
+                    nowServerExcludeBroadcastChannels.add(itemData.broadcast.getIchatId());
+                    ChangeExcludeBroadcastChannelPostBody postBody = new ChangeExcludeBroadcastChannelPostBody(nowServerExcludeBroadcastChannels);
+                    PermissionApiCaller.changeExcludeBroadcastChannels(null, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
+                        @Override
+                        public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                            super.ok(data, raw, call);
+                            data.commonHandleResult(activity, new int[]{}, () -> {
+                                SharedPreferencesAccessor.BroadcastPref.saveAppExcludeBroadcastChannels(activity, nowServerExcludeBroadcastChannels);
+                                SharedPreferencesAccessor.BroadcastPref.saveServerExcludeBroadcastChannels(activity, nowServerExcludeBroadcastChannels);
+                                int scrollTo;
+                                ItemData itemDataScrollTo = null;
+                                for (int i = position; i >= 0; i--) {
+                                    ItemData itemData1 = itemDataList.get(i);
+                                    if(!itemData1.broadcast.getIchatId().equals(itemData.broadcast.getIchatId())){
+                                        itemDataScrollTo = itemData1;
+                                        break;
+                                    }
+                                }
+                                List<ItemData> nowItemDataList = new ArrayList<>();
+                                List<String> removeBroadcastIds = new ArrayList<>();
+                                for (int i = 0; i < itemDataList.size(); i++) {
+                                    ItemData itemData1 = itemDataList.get(i);
+                                    if(!itemData1.broadcast.getIchatId().equals(itemData.broadcast.getIchatId())){
+                                        nowItemDataList.add(itemData1);
+                                    }else {
+                                        removeBroadcastIds.add(itemData1.broadcast.getBroadcastId());
+                                    }
+                                }
+                                scrollTo = nowItemDataList.indexOf(itemDataScrollTo);
+                                removeBroadcastIds.forEach(removeBroadcastId -> {
+                                    removeItemAndShow(removeBroadcastId);
+                                });
+                                recyclerView.smoothScrollToPosition(scrollTo);
+                            });
+                        }
+                    });
+                });
+                confirmDialog.create().show();
+            });
         }
         UiUtil.setViewEnabled(holder.binding.like, true, false);
         holder.binding.like.setOnClickListener(v -> {

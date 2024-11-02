@@ -3,13 +3,13 @@ package com.longx.intelligent.android.ichat2.bottomsheet;
 import android.app.Activity;
 import android.view.View;
 
-import com.longx.intelligent.android.ichat2.databinding.BottomSheetBroadcastMoreOperationBinding;
+import com.longx.intelligent.android.ichat2.databinding.BottomSheetSelfBroadcastMoreOperationBinding;
 
 /**
  * Created by LONG on 2024/8/14 at 上午12:24.
  */
 public class SelfBroadcastMoreOperationBottomSheet extends AbstractBottomSheet{
-    private BottomSheetBroadcastMoreOperationBinding binding;
+    private BottomSheetSelfBroadcastMoreOperationBinding binding;
     private View.OnClickListener deleteClickYier;
     private View.OnClickListener editClickYier;
     private View.OnClickListener changePermissionClickYier;
@@ -21,7 +21,7 @@ public class SelfBroadcastMoreOperationBottomSheet extends AbstractBottomSheet{
 
     @Override
     protected void onCreate() {
-        binding = BottomSheetBroadcastMoreOperationBinding.inflate(getActivity().getLayoutInflater());
+        binding = BottomSheetSelfBroadcastMoreOperationBinding.inflate(getActivity().getLayoutInflater());
         setContentView(binding.getRoot());
         setupYiers();
     }
