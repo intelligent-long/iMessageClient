@@ -21,6 +21,7 @@ import android.hardware.SensorManager;
 import android.view.HapticFeedbackConstants;
 
 import com.longx.intelligent.android.ichat2.activity.ChatActivity;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 public class ChatVoicePlayer {
     private MediaPlayer mediaPlayer;
@@ -235,7 +236,6 @@ public class ChatVoicePlayer {
     private void setupYiers() {
         mediaPlayer.setOnCompletionListener(mp -> {
             audioManager.abandonAudioFocusRequest(audioFocusRequest);
-            mediaPlayer.seekTo(getDuration());
             if (onPlayStateChangeYier != null) {
                 onPlayStateChangeYier.onStop(id, true);
                 if(earpieceNow) {
@@ -246,7 +246,7 @@ public class ChatVoicePlayer {
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        ErrorLogger.log(e);
                     }
                     chatActivity.getBinding().holdToTalkButton.performHapticFeedback(
                             HapticFeedbackConstants.CONTEXT_CLICK,

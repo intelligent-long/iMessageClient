@@ -35,6 +35,10 @@ import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
+import com.longx.intelligent.android.ichat2.permission.PermissionRequirementChecker;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
+import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.ichat2.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
@@ -558,6 +562,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.layoutFileSend.setOnClickListener(onFileMessageClickYier);
         holder.binding.layoutFileReceive.setOnClickListener(onFileMessageClickYier);
         View.OnClickListener onVoiceMessageClickYier = v -> {
+            if(checkAndRequestBluetoothConnectPermission()) return;
             chatVoicePlayer.init(Uri.fromFile(new File(currentItemData.chatMessage.getVoiceFilePath())), currentItemData.chatMessage.getUuid());
             chatVoicePlayer.play();
         };
@@ -569,6 +574,26 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.continueVoicePlaybackSend.setOnClickListener(onVoiceContinue);
         holder.binding.pauseVoicePlaybackReceive.setOnClickListener(onVoicePause);
         holder.binding.continueVoicePlaybackReceive.setOnClickListener(onVoiceContinue);
+    }
+
+    private boolean checkAndRequestBluetoothConnectPermission() {
+        if(!PermissionRequirementChecker.needBluetoothConnectPermission()){
+            return false;
+        }
+        if(!PermissionOperator.hasPermissions(activity, ToRequestPermissionsItems.bluetoothConnect)){
+            List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
+            toRequestPermissionsList.add(ToRequestPermissionsItems.bluetoothConnect);
+            new PermissionOperator(activity, toRequestPermissionsList,
+                    new PermissionOperator.ShowCommonMessagePermissionResultCallback(activity){
+                        @Override
+                        public void onPermissionGranted(int requestCode) {
+                            super.onPermissionGranted(requestCode);
+                        }
+                    })
+                    .startRequestPermissions(activity);
+            return true;
+        }
+        return false;
     }
 
     private void setupAndStartMediaActivity(ItemData currentItemData) {

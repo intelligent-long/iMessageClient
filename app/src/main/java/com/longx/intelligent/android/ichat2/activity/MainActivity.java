@@ -48,7 +48,7 @@ import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
-import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
+import com.longx.intelligent.android.ichat2.permission.PermissionRequirementChecker;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
@@ -154,16 +154,16 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
             }
         }
         List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
-        if (PermissionUtil.needNotificationPermission()) {
+        if (PermissionRequirementChecker.needNotificationPermission()) {
             if(!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.showNotification)){
                 toRequestPermissionsList.add(ToRequestPermissionsItems.showNotification);
             }
         }
-        if (PermissionUtil.needReadMediaImageAndVideoPermission()) {
+        if (PermissionRequirementChecker.needReadMediaImageAndVideoPermission()) {
             if(!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.readMediaImagesAndVideos)){
                 toRequestPermissionsList.add(ToRequestPermissionsItems.readMediaImagesAndVideos);
             }
-        } else if(PermissionUtil.needExternalStoragePermission()) {
+        } else if(PermissionRequirementChecker.needExternalStoragePermission()) {
             if (!PermissionOperator.hasPermissions(this, ToRequestPermissionsItems.writeAndReadExternalStorage)) {
                 toRequestPermissionsList.add(ToRequestPermissionsItems.writeAndReadExternalStorage);
             }

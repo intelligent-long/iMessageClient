@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.longx.intelligent.android.ichat2.media.MediaType;
-import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
-import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.io.IOException;

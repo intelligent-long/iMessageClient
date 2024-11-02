@@ -26,4 +26,14 @@
         app:key="@string/preference_key_read_media_images_and_videos"
         app:title="照片和视频"
         app:summary="访问设备照片和视频媒体资源"/>
+
+    <com.longx.intelligent.android.ichat2.preference.PermissionPreference
+        app:key="@string/preference_key_record_audio"
+        app:title="录制音频"
+        app:summary="录制语音消息和通话"/>
+
+    <com.longx.intelligent.android.ichat2.preference.PermissionPreference
+        app:key="@string/preference_key_bluetooth_connect"
+        app:title="蓝牙连接"
+        app:summary="连接蓝牙设备进行配对和传输"/>
 </PreferenceScreen>

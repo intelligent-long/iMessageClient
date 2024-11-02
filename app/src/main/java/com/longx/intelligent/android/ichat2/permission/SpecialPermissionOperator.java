@@ -5,12 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.Settings;
-
-import androidx.annotation.RequiresApi;
 
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
@@ -44,7 +41,7 @@ public class SpecialPermissionOperator {
     }
 
     public static boolean isExternalStorageManager(){
-        if (PermissionUtil.needManageExternalStoragePermission()) {
+        if (PermissionRequirementChecker.needManageExternalStoragePermission()) {
             return Environment.isExternalStorageManager();
         }else {
             return false;

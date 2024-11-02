@@ -24,4 +24,7 @@ public class ToRequestPermissionsItems {
     public static ToRequestPermissions recordAudio = new ToRequestPermissions(103,
             new String[]{Manifest.permission.RECORD_AUDIO});
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static ToRequestPermissions bluetoothConnect = new ToRequestPermissions(104,
+            new String[]{Manifest.permission.BLUETOOTH_CONNECT});
 }

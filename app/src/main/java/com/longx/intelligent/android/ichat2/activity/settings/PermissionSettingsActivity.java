@@ -17,7 +17,7 @@ import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFrag
 import com.longx.intelligent.android.ichat2.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
-import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
+import com.longx.intelligent.android.ichat2.permission.PermissionRequirementChecker;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.preference.PermissionPreference;
@@ -67,6 +67,8 @@ public class PermissionSettingsActivity extends BaseActivity {
         private PermissionPreference preferenceStorage;
         private PermissionPreference preferenceReadMediaImagesAndVideos;
         private PermissionPreference preferenceManageExternalStorage;
+        private PermissionPreference preferenceRecordAudio;
+        private PermissionPreference preferenceBluetoothConnect;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
@@ -81,6 +83,8 @@ public class PermissionSettingsActivity extends BaseActivity {
             preferenceStorage = findPreference(getString(R.string.preference_key_storage));
             preferenceReadMediaImagesAndVideos = findPreference(getString(R.string.preference_key_read_media_images_and_videos));
             preferenceManageExternalStorage = findPreference(getString(R.string.preference_key_manage_storage));
+            preferenceRecordAudio = findPreference(getString(R.string.preference_key_record_audio));
+            preferenceBluetoothConnect = findPreference(getString(R.string.preference_key_bluetooth_connect));
         }
 
         @Override
@@ -92,10 +96,12 @@ public class PermissionSettingsActivity extends BaseActivity {
         @Override
         protected void showInfo() {
             showBatteryRestriction();
-            showNotification();
+            showNotificationPermission();
             showStoragePermission();
             showReadMediaImagesAndVideosPermission();
             showManageExternalStoragePermission();
+            showRecordAudioPermission();
+            showBluetoothConnectPermission();
         }
 
         private void showBatteryRestriction() {
@@ -103,8 +109,8 @@ public class PermissionSettingsActivity extends BaseActivity {
             preferenceBatteryRestriction.setChecked(ignoringBatteryOptimizations);
         }
 
-        private void showNotification() {
-            if(PermissionUtil.needNotificationPermission()){
+        private void showNotificationPermission() {
+            if(PermissionRequirementChecker.needNotificationPermission()){
                 boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.showNotification);
                 preferenceNotification.setChecked(hasPermissions);
             }else {
@@ -113,7 +119,7 @@ public class PermissionSettingsActivity extends BaseActivity {
         }
 
         private void showStoragePermission() {
-            if(PermissionUtil.needExternalStoragePermission()) {
+            if(PermissionRequirementChecker.needExternalStoragePermission()) {
                 boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.writeAndReadExternalStorage);
                 preferenceStorage.setChecked(hasPermissions);
             }else {
@@ -122,7 +128,7 @@ public class PermissionSettingsActivity extends BaseActivity {
         }
 
         private void showReadMediaImagesAndVideosPermission() {
-            if(PermissionUtil.needReadMediaImageAndVideoPermission()) {
+            if(PermissionRequirementChecker.needReadMediaImageAndVideoPermission()) {
                 boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.readMediaImagesAndVideos);
                 preferenceReadMediaImagesAndVideos.setChecked(hasPermissions);
             }else {
@@ -131,11 +137,25 @@ public class PermissionSettingsActivity extends BaseActivity {
         }
 
         private void showManageExternalStoragePermission(){
-            if(PermissionUtil.needManageExternalStoragePermission()){
+            if(PermissionRequirementChecker.needManageExternalStoragePermission()){
                 boolean externalStorageManager = SpecialPermissionOperator.isExternalStorageManager();
                 preferenceManageExternalStorage.setChecked(externalStorageManager);
             }else {
                 preferenceManageExternalStorage.setVisible(false);
+            }
+        }
+
+        private void showRecordAudioPermission() {
+            boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.recordAudio);
+            preferenceRecordAudio.setChecked(hasPermissions);
+        }
+
+        private void showBluetoothConnectPermission() {
+            if(PermissionRequirementChecker.needBluetoothConnectPermission()){
+                boolean hasPermissions = PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.bluetoothConnect);
+                preferenceBluetoothConnect.setChecked(hasPermissions);
+            }else {
+                preferenceBluetoothConnect.setVisible(false);
             }
         }
 
@@ -146,6 +166,8 @@ public class PermissionSettingsActivity extends BaseActivity {
             preferenceStorage.setOnPreferenceClickListener(this);
             preferenceReadMediaImagesAndVideos.setOnPreferenceClickListener(this);
             preferenceManageExternalStorage.setOnPreferenceClickListener(this);
+            preferenceRecordAudio.setOnPreferenceClickListener(this);
+            preferenceBluetoothConnect.setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -175,7 +197,7 @@ public class PermissionSettingsActivity extends BaseActivity {
                             }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
                 }
             }else if(preference.equals(preferenceReadMediaImagesAndVideos)){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (PermissionRequirementChecker.needReadMediaImageAndVideoPermission()) {
                     if(PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.readMediaImagesAndVideos)){
                         showPermissionGrantedMessage();
                     }else {
@@ -192,7 +214,7 @@ public class PermissionSettingsActivity extends BaseActivity {
                     }
                 }
             }else if(preference.equals(preferenceNotification)){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (PermissionRequirementChecker.needNotificationPermission()) {
                     if(PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.showNotification)){
                         showPermissionGrantedMessage();
                     }else {
@@ -203,7 +225,7 @@ public class PermissionSettingsActivity extends BaseActivity {
                                     @Override
                                     public void onPermissionGranted(int requestCode) {
                                         super.onPermissionGranted(requestCode);
-                                        showNotification();
+                                        showNotificationPermission();
                                     }
                                 }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
                     }
@@ -215,6 +237,39 @@ public class PermissionSettingsActivity extends BaseActivity {
                     boolean success = SpecialPermissionOperator.requestManageExternalStorage(requireActivity());
                     if(!success){
                         MessageDisplayer.autoShow(requireActivity(), "错误", MessageDisplayer.Duration.LONG);
+                    }
+                }
+            }else if(preference.equals(preferenceRecordAudio)){
+                if(PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.recordAudio)){
+                    showPermissionGrantedMessage();
+                }else {
+                    List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
+                    toRequestPermissionsList.add(ToRequestPermissionsItems.recordAudio);
+                    new PermissionOperator(requireActivity(), toRequestPermissionsList,
+                            new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()){
+                                @Override
+                                public void onPermissionGranted(int requestCode) {
+                                    super.onPermissionGranted(requestCode);
+                                    showRecordAudioPermission();
+                                }
+                            }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
+
+                }
+            }else if(preference.equals(preferenceBluetoothConnect)){
+                if(PermissionRequirementChecker.needBluetoothConnectPermission()){
+                    if(PermissionOperator.hasPermissions(requireActivity(), ToRequestPermissionsItems.bluetoothConnect)){
+                        showPermissionGrantedMessage();
+                    }else {
+                        List<ToRequestPermissions> toRequestPermissionsList = new ArrayList<>();
+                        toRequestPermissionsList.add(ToRequestPermissionsItems.bluetoothConnect);
+                        new PermissionOperator(requireActivity(), toRequestPermissionsList,
+                                new PermissionOperator.ShowCommonMessagePermissionResultCallback(requireActivity()) {
+                                    @Override
+                                    public void onPermissionGranted(int requestCode) {
+                                        super.onPermissionGranted(requestCode);
+                                        showBluetoothConnectPermission();
+                                    }
+                                }).startRequestPermissions((LinkPermissionOperatorActivity) requireActivity());
                     }
                 }
             }

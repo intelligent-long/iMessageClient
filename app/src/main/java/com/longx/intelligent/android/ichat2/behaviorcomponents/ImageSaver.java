@@ -10,7 +10,7 @@ import androidx.core.content.FileProvider;
 
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.permission.PermissionOperator;
-import com.longx.intelligent.android.ichat2.permission.PermissionUtil;
+import com.longx.intelligent.android.ichat2.permission.PermissionRequirementChecker;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissions;
 import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
@@ -42,7 +42,7 @@ public class ImageSaver {
     }
 
     public static void saveImageToDcim(Context context, File sourceImageFile, String saveFileName, String dcimRelativePath, ResultsYier yier){
-        if(context instanceof BaseActivity && PermissionUtil.needExternalStoragePermission()) {
+        if(context instanceof BaseActivity && PermissionRequirementChecker.needExternalStoragePermission()) {
             BaseActivity baseActivity = (BaseActivity) context;
             if(PermissionOperator.hasPermissions(baseActivity, ToRequestPermissionsItems.writeAndReadExternalStorage)){
                 Uri uri = doSaveImageToDcim(context, sourceImageFile, saveFileName, dcimRelativePath);
@@ -70,7 +70,7 @@ public class ImageSaver {
             return null;
         }
 
-        if (!PermissionUtil.needExternalStoragePermission()) {
+        if (!PermissionRequirementChecker.needExternalStoragePermission()) {
             return saveImageForApiQAndAbove(context, sourceImageFile, saveFileName, dcimRelativePath);
         } else {
             return saveImageForBelowApiQ(context, sourceImageFile, saveFileName, dcimRelativePath);
