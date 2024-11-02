@@ -327,7 +327,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.visibilityIcon.setVisibility(View.GONE);
         }
 
-        if (!itemData.broadcast.getIchatId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())
+        if (!itemData.broadcast.getIchatId().equals(currentUserProfile.getIchatId())
                 && ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) == null) {
             holder.binding.spaceMore.setVisibility(View.GONE);
             holder.binding.layoutMore.setVisibility(View.GONE);

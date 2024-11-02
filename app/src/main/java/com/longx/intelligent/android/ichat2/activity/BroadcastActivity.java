@@ -332,6 +332,15 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         }else {
             binding.visibilityIcon.setVisibility(View.GONE);
         }
+
+        if (!broadcast.getIchatId().equals(currentUserProfile.getIchatId())
+                && ChannelDatabaseManager.getInstance().findOneChannel(broadcast.getIchatId()) == null) {
+            binding.spaceMore.setVisibility(View.GONE);
+            binding.layoutMore.setVisibility(View.GONE);
+        } else {
+            binding.spaceMore.setVisibility(View.VISIBLE);
+            binding.layoutMore.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupYiers() {
