@@ -123,8 +123,8 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ItemData itemData = itemDataList.get(position);
-        String name = null;
-        String avatarHash = null;
+        String name;
+        String avatarHash;
         if(currentUserProfile.getIchatId().equals(itemData.broadcast.getIchatId())){
             name = currentUserProfile.getUsername();
             avatarHash = currentUserProfile.getAvatar() == null ? null : currentUserProfile.getAvatar().getHash();
@@ -133,6 +133,9 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             if(channel != null) {
                 name = channel.getName();
                 avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
+            }else {
+                name = itemData.broadcast.getChannelName();
+                avatarHash = itemData.broadcast.getChannelAvatarHash();
             }
         }
         holder.binding.name.setText(name);
@@ -326,8 +329,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
 
         if (!itemData.broadcast.getIchatId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())
                 && ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) == null) {
+            holder.binding.spaceMore.setVisibility(View.GONE);
             holder.binding.layoutMore.setVisibility(View.GONE);
         } else {
+            holder.binding.spaceMore.setVisibility(View.VISIBLE);
             holder.binding.layoutMore.setVisibility(View.VISIBLE);
         }
 

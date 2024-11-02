@@ -145,8 +145,8 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     }
 
     private void showContent() {
-        String name = null;
-        String avatarHash = null;
+        String name;
+        String avatarHash;
         Self currentUserProfile = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         if(currentUserProfile.getIchatId().equals(broadcast.getIchatId())){
             name = currentUserProfile.getUsername();
@@ -156,6 +156,9 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             if(channel != null) {
                 name = channel.getName();
                 avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
+            }else {
+                name = broadcast.getChannelName();
+                avatarHash = broadcast.getChannelAvatarHash();
             }
         }
         binding.name.setText(name);

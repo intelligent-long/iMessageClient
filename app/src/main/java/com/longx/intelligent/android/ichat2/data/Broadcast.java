@@ -15,6 +15,8 @@ import java.util.List;
 public class Broadcast implements Parcelable {
     private String broadcastId;
     private String ichatId;
+    private String channelName;
+    private String channelAvatarHash;
     private Date time;
     private Date lastEditTime;
     private String text;
@@ -63,9 +65,11 @@ public class Broadcast implements Parcelable {
     public Broadcast() {
     }
 
-    public Broadcast(String broadcastId, String ichatId, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount, boolean commented, int commentCount, BroadcastPermission broadcastPermission) {
+    public Broadcast(String broadcastId, String ichatId, String channelName, String channelAvatarHash, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount, boolean commented, int commentCount, BroadcastPermission broadcastPermission) {
         this.broadcastId = broadcastId;
         this.ichatId = ichatId;
+        this.channelName = channelName;
+        this.channelAvatarHash = channelAvatarHash;
         this.time = time;
         this.lastEditTime = lastEditTime;
         this.text = text;
@@ -83,6 +87,14 @@ public class Broadcast implements Parcelable {
 
     public String getIchatId() {
         return ichatId;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public String getChannelAvatarHash() {
+        return channelAvatarHash;
     }
 
     public Date getTime() {
@@ -141,6 +153,8 @@ public class Broadcast implements Parcelable {
     protected Broadcast(Parcel in) {
         broadcastId = in.readString();
         ichatId = in.readString();
+        channelName = in.readString();
+        channelAvatarHash = in.readString();
         time = new Date(in.readLong());
         long l = in.readLong();
         lastEditTime = l == -1 ? null : new Date(l);
@@ -157,6 +171,8 @@ public class Broadcast implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(broadcastId);
         dest.writeString(ichatId);
+        dest.writeString(channelName);
+        dest.writeString(channelAvatarHash);
         dest.writeLong(time.getTime());
         dest.writeLong(lastEditTime == null ? -1 : lastEditTime.getTime());
         dest.writeString(text);
@@ -173,6 +189,8 @@ public class Broadcast implements Parcelable {
         return "Broadcast{" +
                 "broadcastId='" + broadcastId + '\'' +
                 ", ichatId='" + ichatId + '\'' +
+                ", channelName='" + channelName + '\'' +
+                ", channelAvatarHash='" + channelAvatarHash + '\'' +
                 ", time=" + time +
                 ", lastEditTime=" + lastEditTime +
                 ", text='" + text + '\'' +
@@ -181,6 +199,7 @@ public class Broadcast implements Parcelable {
                 ", likeCount=" + likeCount +
                 ", commented=" + commented +
                 ", commentCount=" + commentCount +
+                ", broadcastPermission=" + broadcastPermission +
                 '}';
     }
 }
