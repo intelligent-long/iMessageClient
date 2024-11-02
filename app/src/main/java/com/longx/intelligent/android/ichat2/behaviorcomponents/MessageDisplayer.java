@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -54,7 +56,7 @@ public class MessageDisplayer {
             }else {
                 snackbarDuration = Snackbar.LENGTH_SHORT;
             }
-            showSnackbar((Activity) context, message, snackbarDuration);
+            ((Activity)context).runOnUiThread(() ->  showSnackbar((Activity) context, message, snackbarDuration));
         }else {
             int toastDuration;
             if(duration.equals(Duration.LONG)){
@@ -62,7 +64,7 @@ public class MessageDisplayer {
             }else {
                 toastDuration = Toast.LENGTH_SHORT;
             }
-            showToast(context, message, toastDuration);
+            new Handler(Looper.getMainLooper()).post(() -> showToast(context, message, toastDuration));
         }
     }
 

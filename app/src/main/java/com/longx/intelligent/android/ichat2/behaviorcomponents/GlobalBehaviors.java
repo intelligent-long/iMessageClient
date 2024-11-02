@@ -258,7 +258,7 @@ public class GlobalBehaviors {
                 return;
             }
         }
-        LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(activity, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity){
+        LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(activity, new RetrofitApiCaller.BaseYier<OperationData>(){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);

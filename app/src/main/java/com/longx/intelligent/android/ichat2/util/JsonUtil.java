@@ -10,12 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * @date 2022/12/2 3:52 PM
- */
 public class JsonUtil {
 
-    private static ObjectMapper mapper;
+    private static final ObjectMapper mapper;
 
     static {
         mapper = new ObjectMapper();
@@ -34,6 +31,12 @@ public class JsonUtil {
         mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
     }
 
+    public static class JsonException extends RuntimeException {
+        public JsonException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
     public static <T> String toJson(T obj) {
         return toJson(obj, false);
     }
@@ -46,7 +49,7 @@ public class JsonUtil {
         try {
             return format ? mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj) : mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            throw new JsonException(" Parse Object to String log ", e);
+            throw new JsonException("序列化为 Json 字符串出错", e);
         }
     }
 
@@ -54,7 +57,7 @@ public class JsonUtil {
         try {
             return mapper.readValue(json, clazz);
         } catch (IOException e) {
-            throw new JsonException(" Parse String to Object log ", e);
+            throw new JsonException("反序列化为 Java 对象出错", e);
         }
     }
 
@@ -63,7 +66,7 @@ public class JsonUtil {
         try {
             return mapper.readValue(json, javaType);
         } catch (IOException e) {
-            throw new JsonException(" Parse String to Array log ", e);
+            throw new JsonException("反序列化为 Java 对象列表出错", e);
         }
     }
 
@@ -75,17 +78,11 @@ public class JsonUtil {
         return mapper.convertValue(object, toValueTypeRefz);
     }
 
-    public static class JsonException extends RuntimeException {
-        public JsonException() {
-            super();
-        }
-
-        public JsonException(String message) {
-            super(message);
-        }
-
-        public JsonException(String message, Throwable cause) {
-            super(message, cause);
+    public static String format(String json){
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readTree(json));
+        } catch (JsonProcessingException e) {
+            throw new JsonException("格式化 Json 字符串出错", e);
         }
     }
 }

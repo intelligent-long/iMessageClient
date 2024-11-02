@@ -3,7 +3,12 @@ package com.longx.intelligent.android.ichat2.net;
 import android.content.Context;
 
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.ichat2.net.okhttp.ServerApiCaller;
+import com.longx.intelligent.android.ichat2.net.okhttp.caller.ApiCaller;
+import com.longx.intelligent.android.ichat2.net.okhttp.caller.ServerApiCaller;
+
+import java.util.concurrent.CountDownLatch;
+
+import okhttp3.Response;
 
 /**
  * Created by LONG on 2024/10/31 at 下午10:59.
@@ -11,9 +16,32 @@ import com.longx.intelligent.android.ichat2.net.okhttp.ServerApiCaller;
 public class BaseUrlProvider {
 
     private static void fetchServerLocationAndStoreCentralServerConfig(Context context){
-        ServerLocation serverLocation = ServerApiCaller.fetchCentralServerLocation();
-        ServerConfig serverConfig = new ServerConfig(serverLocation.getHost(), serverLocation.getPort(), serverLocation.getBaseUrl(), ServerValues.CENTRAL_DATA_FOLDER, false);
-        SharedPreferencesAccessor.ServerPref.saveCentralServerConfig(context, serverConfig);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        ServerApiCaller.fetchCentralServerLocation(new ApiCaller.BaseCallYier<ServerLocation>(context) {
+            @Override
+            public void failure(Exception e) {
+                super.failure(e);
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void notOk(int code, Response response) {
+                super.notOk(code, response);
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void ok(ServerLocation serverLocation, Response response) {
+                ServerConfig serverConfig = new ServerConfig(serverLocation.getHost(), serverLocation.getPort(), serverLocation.getBaseUrl(), ServerValues.CENTRAL_DATA_FOLDER, false);
+                SharedPreferencesAccessor.ServerPref.saveCentralServerConfig(context, serverConfig);
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getHttpBaseUrl(Context context, boolean fetchServerLocationAndStoreCentralServerConfig){
