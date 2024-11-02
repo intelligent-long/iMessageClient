@@ -99,6 +99,12 @@ public abstract class RetrofitApiCaller {
         }
     }
 
+    public static class FailureResponseCodeException extends Exception{
+        public FailureResponseCodeException(String message) {
+            super(message);
+        }
+    }
+
     public static class BaseCommonYier<T> extends BaseYier<T> {
         private Context context;
         private boolean showErrorInfo = true;
@@ -124,6 +130,7 @@ public abstract class RetrofitApiCaller {
 
         @Override
         public void notOk(int code, String message, Response<T> raw, Call<T> call) {
+            ErrorLogger.log(getClass(), new FailureResponseCodeException("HTTP 状态码异常  >  " + code));
             if(showErrorInfo) {
                 if (context != null) {
                     String showMessage = "HTTP 状态码异常  >  " + code;
@@ -351,7 +358,7 @@ public abstract class RetrofitApiCaller {
         public void onCancel() {
             super.onCancel();
             cancel[0] = isCanceled();
-            resultsYier.onResults((Object) null, saveTo);
+            resultsYier.onResults(null, saveTo);
         }
     }
 }

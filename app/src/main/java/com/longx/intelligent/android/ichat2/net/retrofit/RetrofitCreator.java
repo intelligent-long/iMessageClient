@@ -18,7 +18,7 @@ public class RetrofitCreator {
     public static void create(Context context) {
         String baseUrl = BaseUrlProvider.getHttpBaseUrl(context, true);
         retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl == null ? "http://." : baseUrl)
+                .baseUrl(baseUrl == null ? "http://http" : baseUrl)
                 .client(OkHttpClientCreator.client)
                 .addCallAdapterFactory(CompletableCallAdapterFactory.INSTANCE)
                 .addConverterFactory(JacksonConverterFactory.create())
