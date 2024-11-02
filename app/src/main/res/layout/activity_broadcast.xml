@@ -1210,7 +1210,8 @@
                     android:layout_marginHorizontal="19dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="5dp"
-                    app:flChildSpacing="9dp"/>
+                    app:flChildSpacing="9dp"
+                    app:flRowSpacing="9dp"/>
 
                 <View
                     android:id="@+id/divider4"
