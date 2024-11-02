@@ -10,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.longx.intelligent.android.ichat2.adapter.BroadcastCommentsInteractionRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastRepliesInteractionRecyclerAdapter;
 import com.longx.intelligent.android.ichat2.data.BroadcastComment;
-import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.request.MakeBroadcastReplyCommentsToOldPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
@@ -38,7 +36,7 @@ public class BroadcastRepliesInteractionFragment extends Fragment {
     private BroadcastRepliesInteractionRecyclerAdapter adapter;
     private CountDownLatch NEXT_PAGE_LATCH;
     private boolean stopFetchNextPage;
-    private List<BroadcastComment> makedToOldBroadcastReplies = new ArrayList<>();
+    private final List<BroadcastComment> madeToOldBroadcastReplies = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +44,7 @@ public class BroadcastRepliesInteractionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentBroadcastRepliesInteractionBinding.inflate(inflater, container, false);
         footerBinding = RecyclerFooterBroadcastRepliesInteractionBinding.inflate(inflater, binding.getRoot(), false);
         init();
@@ -177,9 +175,9 @@ public class BroadcastRepliesInteractionFragment extends Fragment {
             try {
                 BroadcastComment broadcastReplyComment = adapter.getItemDataList().get(i).getBroadcastReplyComment();
                 if (broadcastReplyComment.isNew()) {
-                    if (!makedToOldBroadcastReplies.contains(broadcastReplyComment)) {
+                    if (!madeToOldBroadcastReplies.contains(broadcastReplyComment)) {
                         toMakeToOldBroadcastReplyCommentIds.add(broadcastReplyComment.getCommentId());
-                        makedToOldBroadcastReplies.add(broadcastReplyComment);
+                        madeToOldBroadcastReplies.add(broadcastReplyComment);
                     }
                 }
             } catch (IndexOutOfBoundsException e) {

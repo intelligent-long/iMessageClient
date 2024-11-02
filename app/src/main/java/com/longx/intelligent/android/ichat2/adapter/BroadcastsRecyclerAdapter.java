@@ -22,7 +22,6 @@ import com.longx.intelligent.android.ichat2.activity.BroadcastActivity;
 import com.longx.intelligent.android.ichat2.activity.BroadcastPermissionActivity;
 import com.longx.intelligent.android.ichat2.activity.ChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.EditBroadcastActivity;
-import com.longx.intelligent.android.ichat2.activity.ExcludeBroadcastChannelActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.bottomsheet.OtherBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
@@ -52,6 +51,7 @@ import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OnSetChannelBroadcastExcludeYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -324,6 +324,13 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.visibilityIcon.setVisibility(View.GONE);
         }
 
+        if (!itemData.broadcast.getIchatId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())
+                && ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) == null) {
+            holder.binding.layoutMore.setVisibility(View.GONE);
+        } else {
+            holder.binding.layoutMore.setVisibility(View.VISIBLE);
+        }
+
         setupYiers(holder, position);
     }
 
@@ -449,6 +456,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         holder.binding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(activity, BroadcastActivity.class);
             intent.putExtra(ExtraKeys.BROADCAST, itemDataList.get(position).broadcast);
+            intent.putExtra(ExtraKeys.POSITION, position);
             activity.startActivity(intent);
         });
         holder.binding.avatar.setOnClickListener(v -> {
@@ -490,7 +498,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 intent.putExtra(ExtraKeys.CHANGE_PERMISSION, true);
                 activity.startActivity(intent);
             });
-        }else {
+        }else if(ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) != null){
             OtherBroadcastMoreOperationBottomSheet moreOperationBottomSheet = new OtherBroadcastMoreOperationBottomSheet(activity);
             holder.binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
             moreOperationBottomSheet.setExcludeBroadcastChannelClickYier(v -> {
@@ -508,30 +516,9 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                             data.commonHandleResult(activity, new int[]{}, () -> {
                                 SharedPreferencesAccessor.BroadcastPref.saveAppExcludeBroadcastChannels(activity, nowServerExcludeBroadcastChannels);
                                 SharedPreferencesAccessor.BroadcastPref.saveServerExcludeBroadcastChannels(activity, nowServerExcludeBroadcastChannels);
-                                int scrollTo;
-                                ItemData itemDataScrollTo = null;
-                                for (int i = position; i >= 0; i--) {
-                                    ItemData itemData1 = itemDataList.get(i);
-                                    if(!itemData1.broadcast.getIchatId().equals(itemData.broadcast.getIchatId())){
-                                        itemDataScrollTo = itemData1;
-                                        break;
-                                    }
-                                }
-                                List<ItemData> nowItemDataList = new ArrayList<>();
-                                List<String> removeBroadcastIds = new ArrayList<>();
-                                for (int i = 0; i < itemDataList.size(); i++) {
-                                    ItemData itemData1 = itemDataList.get(i);
-                                    if(!itemData1.broadcast.getIchatId().equals(itemData.broadcast.getIchatId())){
-                                        nowItemDataList.add(itemData1);
-                                    }else {
-                                        removeBroadcastIds.add(itemData1.broadcast.getBroadcastId());
-                                    }
-                                }
-                                scrollTo = nowItemDataList.indexOf(itemDataScrollTo);
-                                removeBroadcastIds.forEach(removeBroadcastId -> {
-                                    removeItemAndShow(removeBroadcastId);
+                                GlobalYiersHolder.getYiers(OnSetChannelBroadcastExcludeYier.class).ifPresent(onSetChannelBroadcastExcludeYiers -> {
+                                    onSetChannelBroadcastExcludeYiers.forEach(onSetChannelBroadcastExcludeYier -> onSetChannelBroadcastExcludeYier.onSetChannelBroadcastExclude(position, itemData.broadcast.getIchatId()));
                                 });
-                                recyclerView.smoothScrollToPosition(scrollTo);
                             });
                         }
                     });
@@ -610,8 +597,36 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             Intent intent = new Intent(activity, BroadcastActivity.class);
             intent.putExtra(ExtraKeys.BROADCAST, itemData.broadcast);
             intent.putExtra(ExtraKeys.DO_THAT_THING, true);
+            intent.putExtra(ExtraKeys.POSITION, position);
             activity.startActivity(intent);
         });
+    }
+
+    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelIchatId) {
+        List<ItemData> nowItemDataList = new ArrayList<>();
+        List<String> removeBroadcastIds = new ArrayList<>();
+        for (int i = 0; i < itemDataList.size(); i++) {
+            ItemData itemData1 = itemDataList.get(i);
+            if(!itemData1.broadcast.getIchatId().equals(excludeChannelIchatId)){
+                nowItemDataList.add(itemData1);
+            }else {
+                removeBroadcastIds.add(itemData1.broadcast.getBroadcastId());
+            }
+        }
+        removeBroadcastIds.forEach(this::removeItemAndShow);
+        try {
+            int scrollTo;
+            ItemData itemDataScrollTo = null;
+            for (int i = selectedPosition; i >= 0; i--) {
+                ItemData itemData1 = itemDataList.get(i);
+                if (!itemData1.broadcast.getIchatId().equals(excludeChannelIchatId)) {
+                    itemDataScrollTo = itemData1;
+                    break;
+                }
+            }
+            scrollTo = nowItemDataList.indexOf(itemDataScrollTo);
+            recyclerView.smoothScrollToPosition(scrollTo);
+        }catch (Exception ignore){};
     }
 
     private void sortItemDataList(List<ItemData> itemDataList){

@@ -485,6 +485,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 break;
             case BROADCAST_LIKES:
             case BROADCAST_COMMENTS:
+            case BROADCAST_REPLIES:
                 if(newContentCount > 0){
                     showNavigationBroadcastBadge();
                 }else {

@@ -635,6 +635,7 @@
             android:layout_weight="1"/>
 
         <LinearLayout
+            android:id="@+id/layout_more"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:gravity="end|center_vertical">

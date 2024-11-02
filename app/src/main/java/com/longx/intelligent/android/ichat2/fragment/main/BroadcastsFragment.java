@@ -47,6 +47,7 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.NewContentBadgeDisplayYier;
+import com.longx.intelligent.android.ichat2.yier.OnSetChannelBroadcastExcludeYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ import q.rorbin.badgeview.Badge;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastUpdateYier, NewContentBadgeDisplayYier {
+public class BroadcastsFragment extends BaseMainFragment implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastUpdateYier, NewContentBadgeDisplayYier, OnSetChannelBroadcastExcludeYier {
     private FragmentBroadcastsBinding binding;
     private BroadcastsRecyclerAdapter adapter;
     private RecyclerHeaderBroadcastBinding headerBinding;
@@ -93,6 +94,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.holdYier(requireContext(), BroadcastUpdateYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_COMMENTS);
+        GlobalYiersHolder.holdYier(requireContext(), OnSetChannelBroadcastExcludeYier.class, this);
         if(needInitFetchBroadcast) {
             fetchAndRefreshBroadcasts(true);
         }else if(needReFetchBroadcast) {
@@ -111,6 +113,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.removeYier(requireContext(), BroadcastUpdateYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
         GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_COMMENTS);
+        GlobalYiersHolder.removeYier(requireContext(), OnSetChannelBroadcastExcludeYier.class, this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -659,5 +662,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         if(id.equals(ID.BROADCAST_LIKES) || id.equals(ID.BROADCAST_COMMENTS) || id.equals((ID.BROADCAST_REPLIES))){
             newInteractionsBadge.setBadgeNumber(newContentCount);
         }
+    }
+
+    @Override
+    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelIchatId) {
+        adapter.onSetChannelBroadcastExclude(selectedPosition, excludeChannelIchatId);
     }
 }

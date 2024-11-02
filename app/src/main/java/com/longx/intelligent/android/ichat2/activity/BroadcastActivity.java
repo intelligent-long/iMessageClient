@@ -14,6 +14,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastCommentsLinearLayoutViews;
+import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
+import com.longx.intelligent.android.ichat2.bottomsheet.OtherBroadcastMoreOperationBottomSheet;
 import com.longx.intelligent.android.ichat2.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.SelfBroadcastMoreOperationBottomSheet;
@@ -26,6 +28,7 @@ import com.longx.intelligent.android.ichat2.data.BroadcastLike;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.Self;
+import com.longx.intelligent.android.ichat2.data.request.ChangeExcludeBroadcastChannelPostBody;
 import com.longx.intelligent.android.ichat2.data.request.CommentBroadcastPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -41,6 +44,7 @@ import com.longx.intelligent.android.ichat2.media.MediaType;
 import com.longx.intelligent.android.ichat2.media.data.Media;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.PermissionApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.ichat2.ui.NoPaddingTextView;
@@ -54,12 +58,15 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastDeletedYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.KeyboardVisibilityYier;
+import com.longx.intelligent.android.ichat2.yier.OnSetChannelBroadcastExcludeYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import retrofit2.Call;
@@ -76,6 +83,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     private BroadcastComment replyToBroadcastComment;
     private ResultsYier endReplyYier;
     private ResultsYier onCommentsNextPageYier;
+    private int positionInRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +92,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         setAutoCancelInput(false);
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
+        positionInRecyclerView = getIntent().getIntExtra(ExtraKeys.POSITION, -1);
         BroadcastComment broadcastComment = getIntent().getParcelableExtra(ExtraKeys.BROADCAST_COMMENT);
         if(broadcastComment != null) startLocateComment(broadcastComment);
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
@@ -389,8 +398,34 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 intent.putExtra(ExtraKeys.CHANGE_PERMISSION, true);
                 startActivity(intent);
             });
-        }else {
-
+        }else if(ChannelDatabaseManager.getInstance().findOneChannel(broadcast.getIchatId()) != null){
+            OtherBroadcastMoreOperationBottomSheet moreOperationBottomSheet = new OtherBroadcastMoreOperationBottomSheet(this);
+            binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
+            moreOperationBottomSheet.setExcludeBroadcastChannelClickYier(v -> {
+                ConfirmDialog confirmDialog = new ConfirmDialog(this);
+                confirmDialog.setNegativeButton();
+                confirmDialog.setPositiveButton((dialog, which) -> {
+                    Set<String> serverExcludeBroadcastChannels = SharedPreferencesAccessor.BroadcastPref.getServerExcludeBroadcastChannels(this);
+                    Set<String> nowServerExcludeBroadcastChannels = new HashSet<>(serverExcludeBroadcastChannels);
+                    nowServerExcludeBroadcastChannels.add(broadcast.getIchatId());
+                    ChangeExcludeBroadcastChannelPostBody postBody = new ChangeExcludeBroadcastChannelPostBody(nowServerExcludeBroadcastChannels);
+                    PermissionApiCaller.changeExcludeBroadcastChannels(null, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                        @Override
+                        public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                            super.ok(data, raw, call);
+                            data.commonHandleResult(BroadcastActivity.this, new int[]{}, () -> {
+                                SharedPreferencesAccessor.BroadcastPref.saveAppExcludeBroadcastChannels(BroadcastActivity.this, nowServerExcludeBroadcastChannels);
+                                SharedPreferencesAccessor.BroadcastPref.saveServerExcludeBroadcastChannels(BroadcastActivity.this, nowServerExcludeBroadcastChannels);
+                                GlobalYiersHolder.getYiers(OnSetChannelBroadcastExcludeYier.class).ifPresent(onSetChannelBroadcastExcludeYiers -> {
+                                    onSetChannelBroadcastExcludeYiers.forEach(onSetChannelBroadcastExcludeYier -> onSetChannelBroadcastExcludeYier.onSetChannelBroadcastExclude(positionInRecyclerView, broadcast.getIchatId()));
+                                });
+                                finish();
+                            });
+                        }
+                    });
+                });
+                confirmDialog.create().show();
+            });
         }
         binding.text.setOnLongClickListener(v -> {
             new CopyTextDialog(this, broadcast.getText()).create().show();
