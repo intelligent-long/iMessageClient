@@ -8,6 +8,6 @@
         <item name="android:navigationBarDividerColor">@color/transparent</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
-        <item name="fontFamily">@font/long_android_font_ncjk_gs_sc</item>
+        <item name="fontFamily">@font/google_sans_noto_sans_sc</item>
     </style>
 </resources>

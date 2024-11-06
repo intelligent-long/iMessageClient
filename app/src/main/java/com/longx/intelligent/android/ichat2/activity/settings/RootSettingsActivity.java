@@ -253,7 +253,7 @@ public class RootSettingsActivity extends BaseActivity {
                         new ChoiceDialog(requireActivity(), "已将 iChat 网站地址复制到剪贴板。")
                                 .setPositiveButton("确定", null)
                                 .setNeutralButton("直接分享", (dialog, which) -> {
-                                    String shareStr = "[iChat] 分享给你一款聊天软件, 地址 " + ichatWebHomeUrl;
+                                    String shareStr = "[iChat] 分享给你一个聊天软件, 地址 " + ichatWebHomeUrl;
                                     Intent sendIntent = new Intent();
                                     sendIntent.setAction(Intent.ACTION_SEND);
                                     sendIntent.putExtra(Intent.EXTRA_TEXT, shareStr);

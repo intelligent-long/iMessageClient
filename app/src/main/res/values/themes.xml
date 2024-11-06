@@ -5,7 +5,7 @@
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
-        <item name="fontFamily">@font/long_android_font_ncjk_gs_sc</item>
+        <item name="fontFamily">@font/google_sans_noto_sans_sc</item>
     </style>
 
     <style name="Theme.MainActivity" parent="Theme.IChat2Client">
@@ -27,7 +27,7 @@
     </style>
 
     <style name="CollapsedTitleTextStyle" parent="">
-        <item name="android:fontFamily">@font/long_android_font_ncjk_gs_sc_regular</item>
+        <item name="android:fontFamily">@font/product_sans_noto_sans_sc_regular</item>
         <item name="android:textSize">22.2sp</item>
     </style>
 
@@ -111,7 +111,7 @@
     </style>
 
     <style name="BottomNavTextAppearanceInactive" parent="TextAppearance.AppCompat">
-        <item name="android:fontFamily">@font/long_android_font_ncjk_gs_sc_regular</item>
+        <item name="android:fontFamily">@font/product_sans_noto_sans_sc_regular</item>
         <item name="android:textSize">12.5sp</item>
     </style>
 </resources>

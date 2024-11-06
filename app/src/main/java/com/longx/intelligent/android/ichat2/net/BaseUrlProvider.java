@@ -17,7 +17,7 @@ public class BaseUrlProvider {
 
     private static void fetchServerLocationAndStoreCentralServerConfig(Context context){
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        ServerApiCaller.fetchCentralServerLocation(new ApiCaller.BaseCallYier<ServerLocation>(context) {
+        ServerApiCaller.fetchCentralServerLocation(new ApiCaller.BaseCallYier<ServerLocation>(context, false) {
             @Override
             public void failure(Exception e) {
                 super.failure(e);
