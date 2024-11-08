@@ -35,6 +35,7 @@ public class BroadcastToCommentPopupWindow {
     private final PopupWindowBroadcastToCommentBinding binding;
     private final BroadcastComment toComment;
     private View.OnClickListener onContentClickYier;
+    private boolean skipContentClick;
 
     public BroadcastToCommentPopupWindow(AppCompatActivity activity, BroadcastComment toComment) {
         this.activity = activity;
@@ -71,9 +72,10 @@ public class BroadcastToCommentPopupWindow {
             ClickableSpan userMentionClickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-//                    Intent intent = new Intent(activity, ChannelActivity.class);
-//                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
-//                    activity.startActivity(intent);
+                    skipContentClick = true;
+                    Intent intent = new Intent(activity, ChannelActivity.class);
+                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
+                    activity.startActivity(intent);
                 }
 
                 @Override
@@ -92,9 +94,17 @@ public class BroadcastToCommentPopupWindow {
 
     private void setupYiers() {
         binding.text.setOnClickListener(v -> {
+            if(skipContentClick){
+                skipContentClick = false;
+                return;
+            }
             if(onContentClickYier != null) onContentClickYier.onClick(v);
         });
         getPopupWindow().getContentView().setOnClickListener(v -> {
+            if(skipContentClick){
+                skipContentClick = false;
+                return;
+            }
             if(onContentClickYier != null) onContentClickYier.onClick(v);
         });
     }
