@@ -70,45 +70,47 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
-        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingBottom="10dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <TextView
-            android:id="@+id/text_counter"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:textColor="?attr/colorOutline"/>
+            android:layout_above="@id/layout_broadcast_permission">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/text_counter"
-            android:layout_above="@+id/layout_broadcast_permission">
+            <TextView
+                android:id="@+id/text_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:textColor="?attr/colorOutline"/>
 
-            <RelativeLayout
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_counter"
+                android:background="@drawable/shape_card_background_low_radius_28"
+                android:paddingHorizontal="26dp"
+                android:paddingVertical="26dp"
+                android:layout_marginHorizontal="15.8dp"
+                android:elevation="5dp"
+                android:theme="@style/ThemeOverlay.LighterZShadow11"
+                android:layout_marginBottom="15.8dp">
 
                 <LinearLayout
                     android:id="@+id/layout_broadcast_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/shape_card_background_low_radius_28"
-                    android:paddingHorizontal="26dp"
-                    android:paddingVertical="26dp"
-                    android:layout_marginHorizontal="15.8dp"
-                    android:elevation="5dp"
-                    android:theme="@style/ThemeOverlay.LighterZShadow11">
+                    android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/text_input"
@@ -127,15 +129,15 @@
                         android:layout_marginTop="30dp"
                         android:visibility="gone"/>
                 </LinearLayout>
-            </RelativeLayout>
-        </androidx.core.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
+        </RelativeLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_media_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/fab_margin_end"
-            android:layout_marginBottom="1dp"
+            android:layout_marginBottom="16.8dp"
             android:contentDescription="选择图片或视频"
             app:fabCustomSize="59dp"
             app:srcCompat="@drawable/add_photo_alternate_outline_24px"
@@ -149,7 +151,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_card_background_low_radius_28"
             android:layout_marginHorizontal="15.8dp"
-            android:layout_marginTop="15.8dp"
             android:layout_alignParentBottom="true"
             android:clipToOutline="true">
 

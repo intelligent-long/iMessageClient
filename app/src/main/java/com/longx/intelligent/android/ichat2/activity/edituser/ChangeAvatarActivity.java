@@ -41,14 +41,14 @@ public class ChangeAvatarActivity extends BaseActivity {
             }else if(item.getItemId() == R.id.change){
                 new Thread(() -> {
                     OperatingDialog operatingDialog = new OperatingDialog(this);
-                    operatingDialog.create().show();
+                    runOnUiThread(() -> operatingDialog.create().show());
                     Bitmap croppedImage = binding.cropImageView.getCroppedImage();
                     if(croppedImage == null){
-                        operatingDialog.dismiss();
+                        runOnUiThread(operatingDialog::dismiss);
                         MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.SHORT);
                     }else {
                         byte[] avatar = Utils.encodeBitmapToBytes(croppedImage, Bitmap.CompressFormat.PNG, 100);
-                        operatingDialog.dismiss();
+                        runOnUiThread(operatingDialog::dismiss);
                         onImageCropped(avatar);
                     }
                 }).start();

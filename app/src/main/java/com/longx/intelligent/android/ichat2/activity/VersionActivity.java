@@ -57,7 +57,7 @@ public class VersionActivity extends BaseActivity {
                 });
             }
         });
-        LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(this, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+        LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(this, new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
