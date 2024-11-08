@@ -126,7 +126,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     }
 
     private void init(){
-        commentsLinearLayoutViews = new BroadcastCommentsLinearLayoutViews(this, binding.commentView, binding.scrollView);
+        commentsLinearLayoutViews = new BroadcastCommentsLinearLayoutViews(this, binding.commentView, binding.scrollView, binding.layoutComment);
         footerBinding = RecyclerFooterBroadcastCommentsBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
         commentsLinearLayoutViews.setFooter(footerBinding.getRoot());
     }

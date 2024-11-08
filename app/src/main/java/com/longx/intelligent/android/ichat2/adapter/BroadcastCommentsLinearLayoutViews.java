@@ -43,8 +43,8 @@ import retrofit2.Response;
 public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<BroadcastComment> {
     private int lastReplyIndex = -1;
 
-    public BroadcastCommentsLinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView scrollView) {
-        super(activity, linearLayout, scrollView);
+    public BroadcastCommentsLinearLayoutViews(Activity activity, LinearLayout linearLayout, NestedScrollView scrollView, View... parentViews) {
+        super(activity, linearLayout, scrollView, parentViews);
     }
 
     @Override
@@ -125,6 +125,10 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                         BroadcastToCommentPopupWindow popupWindow = new BroadcastToCommentPopupWindow(broadcastActivity, broadcastComment.getToComment());
                         popupWindow.getPopupWindow().setOnDismissListener(() -> {
                             cancelHighLight(broadcastComment);
+                        });
+                        popupWindow.setOnContentClickYier(v2 -> {
+                            popupWindow.dismiss();
+                            scrollTo(broadcastComment.getToComment(), true, null);
                         });
                         popupWindow.show(binding.getRoot());
                         highLight(broadcastComment);

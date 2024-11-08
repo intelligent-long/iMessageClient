@@ -34,6 +34,7 @@ public class BroadcastToCommentPopupWindow {
     private final PopupWindow popupWindow;
     private final PopupWindowBroadcastToCommentBinding binding;
     private final BroadcastComment toComment;
+    private View.OnClickListener onContentClickYier;
 
     public BroadcastToCommentPopupWindow(AppCompatActivity activity, BroadcastComment toComment) {
         this.activity = activity;
@@ -62,7 +63,6 @@ public class BroadcastToCommentPopupWindow {
     }
 
     private void showText(BroadcastComment broadcastComment, PopupWindowBroadcastToCommentBinding binding, Activity activity) {
-        ErrorLogger.log(broadcastComment.getToCommentId());
         if(broadcastComment.getToCommentId() == null) {
             binding.text.setText(broadcastComment.getText());
         }else {
@@ -71,9 +71,9 @@ public class BroadcastToCommentPopupWindow {
             ClickableSpan userMentionClickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    Intent intent = new Intent(activity, ChannelActivity.class);
-                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
-                    activity.startActivity(intent);
+//                    Intent intent = new Intent(activity, ChannelActivity.class);
+//                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
+//                    activity.startActivity(intent);
                 }
 
                 @Override
@@ -91,7 +91,12 @@ public class BroadcastToCommentPopupWindow {
     }
 
     private void setupYiers() {
-
+        binding.text.setOnClickListener(v -> {
+            if(onContentClickYier != null) onContentClickYier.onClick(v);
+        });
+        getPopupWindow().getContentView().setOnClickListener(v -> {
+            if(onContentClickYier != null) onContentClickYier.onClick(v);
+        });
     }
 
     public void show(View anchorView) {
@@ -102,7 +107,15 @@ public class BroadcastToCommentPopupWindow {
         popupWindow.showAsDropDown(anchorView, xOffset, 0);
     }
 
+    public void dismiss(){
+        popupWindow.dismiss();
+    }
+
     public PopupWindow getPopupWindow() {
         return popupWindow;
+    }
+
+    public void setOnContentClickYier(View.OnClickListener onContentClickYier) {
+        this.onContentClickYier = onContentClickYier;
     }
 }
