@@ -27,7 +27,7 @@
     </style>
 
     <style name="CollapsedTitleTextStyle" parent="">
-        <item name="android:fontFamily">@font/product_sans_noto_sans_sc_regular</item>
+        <item name="android:fontWeight">@integer/font_weight_medium</item>
         <item name="android:textSize">22.2sp</item>
     </style>
 
@@ -111,7 +111,7 @@
     </style>
 
     <style name="BottomNavTextAppearanceInactive" parent="TextAppearance.AppCompat">
-        <item name="android:fontFamily">@font/product_sans_noto_sans_sc_regular</item>
+        <item name="android:fontWeight">@integer/font_weight_regular</item>
         <item name="android:textSize">12.5sp</item>
     </style>
 </resources>

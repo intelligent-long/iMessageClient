@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -44,6 +45,8 @@ import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.fragment.main.BroadcastsFragment;
+import com.longx.intelligent.android.ichat2.fragment.main.ChannelsFragment;
+import com.longx.intelligent.android.ichat2.fragment.main.MessagesFragment;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.ichat2.permission.LinkPermissionOperatorActivity;
@@ -54,6 +57,7 @@ import com.longx.intelligent.android.ichat2.permission.ToRequestPermissionsItems
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
 import com.longx.intelligent.android.ichat2.ui.BadgeDisplayer;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
@@ -87,7 +91,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
         setContentView(binding.getRoot());
-        setupNavigation();
+        setupNavigationKeepInMemory();
         setupYier();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
@@ -247,6 +251,69 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private void setupNavigation() {
         NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            if (lastBottomNavSelectedItem != null && lastBottomNavSelectedItem.getItemId() == item.getItemId()
+                    && item.getItemId() == R.id.navigation_broadcast) {
+                if (navHostFragment != null) {
+                    FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
+                    Fragment fragment = fragmentManager.getFragments().get(0);
+                    if (fragment instanceof BroadcastsFragment) {
+                        ((BroadcastsFragment) fragment).toStart();
+                    }
+                    return true;
+                }
+            }
+            lastBottomNavSelectedItem = item;
+            return NavigationUI.onNavDestinationSelected(item, navController);
+        });
+    }
+
+    private void setupNavigationKeepInMemory() {
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            Fragment currentFragment = null;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            for (Fragment fragment : fragmentManager.getFragments()) {
+                if (fragment != null && fragment.isVisible()) {
+                    currentFragment = fragment;
+                    break;
+                }
+            }
+            Fragment targetFragment = null;
+            if (item.getItemId() == R.id.navigation_message) {
+                targetFragment = getSupportFragmentManager().findFragmentByTag(MessagesFragment.class.getSimpleName());
+                if (targetFragment == null) {
+                    targetFragment = new MessagesFragment();
+                    transaction.add(R.id.fragment_container_view, targetFragment, MessagesFragment.class.getSimpleName());
+                }
+            } else if (item.getItemId() == R.id.navigation_channel) {
+                targetFragment = getSupportFragmentManager().findFragmentByTag(ChannelsFragment.class.getSimpleName());
+                if (targetFragment == null) {
+                    targetFragment = new ChannelsFragment();
+                    transaction.add(R.id.fragment_container_view, targetFragment, ChannelsFragment.class.getSimpleName());
+                }
+            } else if (item.getItemId() == R.id.navigation_broadcast) {
+                targetFragment = getSupportFragmentManager().findFragmentByTag(BroadcastsFragment.class.getSimpleName());
+                if (targetFragment == null) {
+                    targetFragment = new BroadcastsFragment();
+                    transaction.add(R.id.fragment_container_view, targetFragment, BroadcastsFragment.class.getSimpleName());
+                }
+            }
+            if(currentFragment == targetFragment && currentFragment instanceof BroadcastsFragment){
+                ((BroadcastsFragment) currentFragment).toStart();
+            }else if (currentFragment != null && currentFragment != targetFragment) {
+                transaction.setCustomAnimations(
+                        R.anim.fragment_fade_in,
+                        R.anim.fragment_fade_out,
+                        R.anim.fragment_fade_in,
+                        R.anim.fragment_fade_out
+                );
+                transaction.hide(currentFragment);
+                transaction.show(targetFragment);
+                transaction.commit();
+            }
+            return true;
+        });
     }
 
     protected void animateNavIconVisibility(NavHostFragment navHostFragment){
@@ -312,22 +379,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 intent.putExtra(ExtraKeys.AVATAR_EXTENSION, self.getAvatar().getExtension());
                 startActivity(intent);
             }
-        });
-        binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
-            NavController navController = navHostFragment.getNavController();
-            if (lastBottomNavSelectedItem != null && lastBottomNavSelectedItem.getItemId() == item.getItemId()
-                    && item.getItemId() == R.id.navigation_broadcast) {
-                if (navHostFragment != null) {
-                    FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
-                    Fragment fragment = fragmentManager.getFragments().get(0);
-                    if (fragment instanceof BroadcastsFragment) {
-                        ((BroadcastsFragment) fragment).toStart();
-                    }
-                    return true;
-                }
-            }
-            lastBottomNavSelectedItem = item;
-            return NavigationUI.onNavDestinationSelected(item, navController);
         });
     }
 

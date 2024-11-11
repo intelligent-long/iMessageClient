@@ -47,7 +47,7 @@ public class VersionActivity extends BaseActivity {
     }
 
     private void fetchAndShowData() {
-        LinkApiCaller.fetchIchatWebReleaseUrl(this, AppUtil.getVersionCode(this), new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+        LinkApiCaller.fetchIchatWebReleaseUrl(this, AppUtil.getVersionCode(this), new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);

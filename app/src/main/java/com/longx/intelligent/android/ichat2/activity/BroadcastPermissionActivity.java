@@ -2,10 +2,13 @@ package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -69,9 +72,7 @@ public class BroadcastPermissionActivity extends BaseActivity {
 
     private void showContent() {
         if(isChangePermission){
-            binding.layoutChangeButton.setVisibility(View.VISIBLE);
-        }else {
-            binding.layoutChangeButton.setVisibility(View.GONE);
+            binding.toolbar.inflateMenu(R.menu.toolbar_activity_change_broadcast_permission);
         }
         showRadioButtonChecks(broadcastPermission);
         List<ChannelAssociation> associations = ChannelDatabaseManager.getInstance().findAllAssociations();
@@ -113,20 +114,23 @@ public class BroadcastPermissionActivity extends BaseActivity {
         binding.layoutPublic.setOnClickListener(yier);
         binding.layoutPrivate.setOnClickListener(yier);
         binding.layoutConnectedChannelCircle.setOnClickListener(yier);
-        binding.changeButton.setOnClickListener(v -> {
-            PermissionApiCaller.changeBroadcastPermission(this, new ChangeBroadcastPermissionPostBody(broadcastPermission), new RetrofitApiCaller.CommonYier<OperationData>(this){
-                @Override
-                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                    super.ok(data, raw, call);
-                    data.commonHandleResult(BroadcastPermissionActivity.this, new int[]{-101}, () -> {
-                        Broadcast broadcast = data.getData(Broadcast.class);
-                        GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
-                            broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.change){
+                PermissionApiCaller.changeBroadcastPermission(this, new ChangeBroadcastPermissionPostBody(broadcastPermission), new RetrofitApiCaller.CommonYier<OperationData>(this){
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(BroadcastPermissionActivity.this, new int[]{-101}, () -> {
+                            Broadcast broadcast = data.getData(Broadcast.class);
+                            GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
+                                broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(broadcast));
+                            });
+                            finish();
                         });
-                        finish();
-                    });
-                }
-            });
+                    }
+                });
+            }
+            return false;
         });
     }
     private void showRadioButtonChecks(BroadcastPermission broadcastPermission) {
