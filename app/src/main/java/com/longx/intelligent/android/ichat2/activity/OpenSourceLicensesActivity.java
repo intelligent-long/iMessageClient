@@ -49,9 +49,24 @@ public class OpenSourceLicensesActivity extends BaseActivity {
     }
 
     private String buildHtml() {
-        return getText(R.string.html_text_prefix).toString()
-                + getText(R.string.androidx)
-                + getText(R.string.material_components_android)
-                + getText(R.string.html_text_suffix);
+        return new StringBuilder()
+                .append(getText(R.string.html_text_prefix))
+                .append(getText(R.string.androidx))
+                .append(getText(R.string.material_components_android))
+                .append(getText(R.string.glide))
+                .append(getText(R.string.subsampling_scale_image_view))
+                .append(getText(R.string.retrofit))
+                .append(getText(R.string.retrofit_helper))
+                .append(getText(R.string.persistent_cookie_jar))
+                .append(getText(R.string.okhttps_stomp))
+                .append(getText(R.string.badge_view))
+                .append(getText(R.string.android_image_cropper))
+                .append(getText(R.string.apache_commons))
+                .append(getText(R.string.hutool))
+                .append(getText(R.string.tika))
+                .append(getText(R.string.exo_player))
+                .append(getText(R.string.flow_layout))
+                .append(getText(R.string.html_text_suffix))
+                .toString();
     }
 }

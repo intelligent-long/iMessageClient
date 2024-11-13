@@ -1,7 +1,7 @@
 package com.longx.intelligent.android.ichat2.net.okhttp;
 
 import com.longx.intelligent.android.ichat2.net.CookieJar;
-import com.longx.intelligent.android.ichat2.net.LogInterceptor;
+import com.xcheng.retrofit.LogInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
