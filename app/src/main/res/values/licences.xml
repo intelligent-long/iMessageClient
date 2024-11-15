@@ -1737,7 +1737,7 @@
     <string name="flow_layout">
         <![CDATA[
         <br>
-        FlowLayout<br>
+        Flow Layout<br>
         <a href="https://github.com/nex3z/FlowLayout">https://github.com/nex3z/FlowLayout</a><br>
         <br>
         Apache License<br>

@@ -2,6 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+<!--    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference-->
+<!--        app:key="@string/preference_key_use_system_font"-->
+<!--        app:title="系统字体"-->
+<!--        android:summary="禁用内置字体"/>-->
+
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
         app:key="@string/preference_key_chat_bubble_color"
         app:title="聊天气泡颜色"
@@ -18,12 +23,8 @@
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
         app:key="@string/preference_key_main_activity_fragment_switch_mode"
-        android:title="主界面切换"
+        android:title="主画面切换模式"
         android:entries="@array/main_activity_fragment_switch_mode_entries"
         android:entryValues="@array/main_activity_fragment_switch_mode_values"
         android:defaultValue="0"/>
-
-    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
-        app:key="@string/preference_key_use_system_font"
-        app:title="系统字体"/>
 </PreferenceScreen>
