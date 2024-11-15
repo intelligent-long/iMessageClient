@@ -82,6 +82,9 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private Badge channelNavBadge;
     private Badge broadcastNavBadge;
     private MenuItem lastBottomNavSelectedItem;
+    private boolean showNavIconAnimation = true;
+    private ValueAnimator navIconVisibilityPlusAnimator;
+    private ValueAnimator navIconVisibilityMinusAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,14 +92,18 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         if (checkAndSwitchToAuth()) return;
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setupNavigationKeepInMemory();
+        int mainActivityFragmentSwitchMode = SharedPreferencesAccessor.DefaultPref.getMainActivityFragmentSwitchMode(this);
+        if (mainActivityFragmentSwitchMode == 1) {
+            setupNavigation();
+        } else {
+            setupNavigationKeepInMemory();
+        }
         setupYier();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
-        animateNavIconVisibility();
         new Thread(() -> {
             runOnUiThread(() -> {
                 startServerMessageService();
@@ -111,6 +118,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        navIconVisibilityPlusAnimator.cancel();
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
@@ -132,6 +140,17 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 }
             }
         });
+        if(showNavIconAnimation) {
+            animateNavIconVisibility();
+            showNavIconAnimation = false;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        navIconVisibilityPlusAnimator.cancel();
+        navIconVisibilityMinusAnimator.cancel();
     }
 
     private void requestPermissions(){
@@ -247,24 +266,37 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     private void setupNavigation() {
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
-        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
-        navController.setGraph(R.navigation.main_navigation);
-        NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-        binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
-            if (lastBottomNavSelectedItem != null
-                    && lastBottomNavSelectedItem.getItemId() == item.getItemId()
-                    && item.getItemId() == R.id.navigation_broadcast
-            ) {
-                Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
-                if (fragment instanceof BroadcastsFragment) {
-                    ((BroadcastsFragment) fragment).toStart();
-                }
-                return true;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        NavHostFragment navHostFragment;
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if(fragment instanceof NavHostFragment){
+                navHostFragment = (NavHostFragment) fragment;
+                transaction.show(navHostFragment);
+            }else {
+                transaction.remove(fragment);
             }
-            lastBottomNavSelectedItem = item;
-            return NavigationUI.onNavDestinationSelected(item, navController);
+        }
+        transaction.runOnCommit(() -> {
+            NavHostFragment navHostFragment1 = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
+            NavController navController = Objects.requireNonNull(navHostFragment1).getNavController();
+            navController.setGraph(R.navigation.main_navigation);
+            NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
+            binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+                if (lastBottomNavSelectedItem != null
+                        && lastBottomNavSelectedItem.getItemId() == item.getItemId()
+                        && item.getItemId() == R.id.navigation_broadcast
+                ) {
+                    Fragment fragment = navHostFragment1.getChildFragmentManager().getFragments().get(0);
+                    if (fragment instanceof BroadcastsFragment) {
+                        ((BroadcastsFragment) fragment).toStart();
+                    }
+                    return true;
+                }
+                lastBottomNavSelectedItem = item;
+                return NavigationUI.onNavDestinationSelected(item, navController);
+            });
         });
+        transaction.commit();
     }
 
     private void setupNavigationKeepInMemory() {
@@ -328,37 +360,40 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     protected void animateNavIconVisibility(){
-        final Drawable[] navIcon = {ContextCompat.getDrawable(this, R.drawable.menu_24px)};
-        if(navIcon[0] == null) return;
-        navIcon[0].setAlpha(0);
-        ValueAnimator animator = ValueAnimator.ofInt(navIcon[0].getAlpha(), 30);
-        animator.setDuration(700);
-        animator.addUpdateListener(animation -> {
+        final Drawable[] navIcon = new Drawable[1];
+        navIconVisibilityPlusAnimator = ValueAnimator.ofInt(0, 30);
+        navIconVisibilityPlusAnimator.setDuration(700);
+        navIconVisibilityPlusAnimator.addUpdateListener(animation -> {
             navIcon[0].setAlpha((Integer) animation.getAnimatedValue());
             changeMainFragmentsNavIcon(navIcon[0]);
         });
-        animator.addListener(new AnimatorListenerAdapter() {
+        navIconVisibilityPlusAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                navIcon[0] = ContextCompat.getDrawable(MainActivity.this, R.drawable.menu_24px);
+                navIcon[0].setAlpha(0);
+            }
+
             @Override
             public void onAnimationEnd(Animator showAnim) {
-                if (navIcon[0] == null) return;
                 navIcon[0].setAlpha(navIcon[0].getAlpha());
-                ValueAnimator animator = ValueAnimator.ofInt(navIcon[0].getAlpha(), 0);
-                animator.setDuration(800);
-                animator.addUpdateListener(hideAnim -> {
+                navIconVisibilityMinusAnimator = ValueAnimator.ofInt(navIcon[0].getAlpha(), 0);
+                navIconVisibilityMinusAnimator.setDuration(800);
+                navIconVisibilityMinusAnimator.addUpdateListener(hideAnim -> {
                     navIcon[0].setAlpha((Integer) hideAnim.getAnimatedValue());
                     changeMainFragmentsNavIcon(navIcon[0]);
                 });
-                animator.addListener(new AnimatorListenerAdapter() {
+                navIconVisibilityMinusAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        navIcon[0] = null;
                         changeMainFragmentsNavIcon(null);
                     }
                 });
-                animator.start();
+                navIconVisibilityMinusAnimator.start();
             }
         });
-        animator.start();
+        navIconVisibilityPlusAnimator.start();
     }
 
     private void changeMainFragmentsNavIcon(Drawable navIcon) {

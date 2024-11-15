@@ -15,4 +15,11 @@
         app:entries="@array/bottom_navigation_view_label_visibility_mode_entries"
         app:entryValues="@array/bottom_navigation_view_label_visibility_mode_values"
         app:defaultValue="0" />
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
+        app:key="@string/preference_key_main_activity_fragment_switch_mode"
+        android:title="主界面切换模式"
+        android:entries="@array/main_activity_fragment_switch_mode_entries"
+        android:entryValues="@array/main_activity_fragment_switch_mode_values"
+        android:defaultValue="0"/>
 </PreferenceScreen>

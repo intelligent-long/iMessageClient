@@ -1,11 +1,14 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.activity.MainActivity;
+import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.databinding.ActivityUiSettingsBinding;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
@@ -33,9 +36,10 @@ public class UiSettingsActivity extends BaseActivity {
                     .commit();
         }
     }
-    public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+    public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
         private Material3ListPreference preferenceChatBubbleColor;
         private Material3ListPreference preferenceBottomNavigationViewLabelVisibilityMode;
+        private Material3ListPreference preferenceMainActivityFragmentSwitchMode;
 
         public SettingsFragment() {
             super();
@@ -51,12 +55,14 @@ public class UiSettingsActivity extends BaseActivity {
         protected void bindPreferences() {
             preferenceChatBubbleColor = findPreference(getString(R.string.preference_key_chat_bubble_color));
             preferenceBottomNavigationViewLabelVisibilityMode = findPreference(getString(R.string.preference_key_bottom_navigation_view_label_visibility_mode));
+            preferenceMainActivityFragmentSwitchMode = findPreference(getString(R.string.preference_key_main_activity_fragment_switch_mode));
         }
 
         @Override
         protected void showInfo() {
             updateChatBubbleColorSummary(null);
             updateBottomNavigationViewLabelVisibilityMode(null);
+            updateMainActivityFragmentSwitchMode(null);
         }
 
         private void updateChatBubbleColorSummary(String newValue){
@@ -81,11 +87,22 @@ public class UiSettingsActivity extends BaseActivity {
             }
         }
 
+        private void updateMainActivityFragmentSwitchMode(String newValue){
+            if(newValue == null){
+                newValue = preferenceMainActivityFragmentSwitchMode.getValue();
+            }
+            int index = preferenceMainActivityFragmentSwitchMode.findIndexOfValue(newValue);
+            if(index != -1){
+                String entry = getResources().getStringArray(R.array.main_activity_fragment_switch_mode_entries)[index];
+                preferenceMainActivityFragmentSwitchMode.setSummary(entry);
+            }
+        }
 
         @Override
         protected void setupYiers() {
             preferenceChatBubbleColor.setOnPreferenceChangeListener(this);
             preferenceBottomNavigationViewLabelVisibilityMode.setOnPreferenceChangeListener(this);
+            preferenceMainActivityFragmentSwitchMode.setOnPreferenceChangeListener(this);
         }
 
         @Override
@@ -94,12 +111,10 @@ public class UiSettingsActivity extends BaseActivity {
                 updateChatBubbleColorSummary((String) newValue);
             }else if(preference.equals(preferenceBottomNavigationViewLabelVisibilityMode)){
                 updateBottomNavigationViewLabelVisibilityMode((String) newValue);
+            }else if(preference.equals(preferenceMainActivityFragmentSwitchMode)){
+                updateMainActivityFragmentSwitchMode((String) newValue);
+                ActivityOperator.getActivitiesOf(MainActivity.class).forEach(Activity::recreate);
             }
-            return true;
-        }
-
-        @Override
-        public boolean onPreferenceClick(@NonNull Preference preference) {
             return true;
         }
     }

@@ -132,4 +132,5 @@
     <string name="preference_key_do_not_see_broadcast_channel">do_not_see_broadcast_channel</string>
     <string name="preference_key_record_audio">record_audio</string>
     <string name="preference_key_bluetooth_connect">bluetooth_connect</string>
+    <string name="preference_key_main_activity_fragment_switch_mode">main_activity_fragment_switch_mode</string>
 </resources>

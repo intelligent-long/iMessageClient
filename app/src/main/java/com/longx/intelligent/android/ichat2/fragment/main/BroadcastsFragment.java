@@ -94,6 +94,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.holdYier(requireContext(), BroadcastUpdateYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_COMMENTS);
+        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_REPLIES);
         GlobalYiersHolder.holdYier(requireContext(), OnSetChannelBroadcastExcludeYier.class, this);
         if(needInitFetchBroadcast) {
             fetchAndRefreshBroadcasts(true);
@@ -113,6 +114,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.removeYier(requireContext(), BroadcastUpdateYier.class, this);
         GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_LIKES);
         GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_COMMENTS);
+        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_REPLIES);
         GlobalYiersHolder.removeYier(requireContext(), OnSetChannelBroadcastExcludeYier.class, this);
     }
 
@@ -660,7 +662,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     @Override
     public void showNewContentBadge(ID id, int newContentCount) {
         if(id.equals(ID.BROADCAST_LIKES) || id.equals(ID.BROADCAST_COMMENTS) || id.equals((ID.BROADCAST_REPLIES))){
-            newInteractionsBadge.setBadgeNumber(newContentCount);
+            if(newInteractionsBadge != null) newInteractionsBadge.setBadgeNumber(newContentCount);
         }
     }
 

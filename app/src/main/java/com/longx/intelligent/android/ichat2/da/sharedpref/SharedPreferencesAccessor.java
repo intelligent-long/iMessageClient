@@ -65,6 +65,10 @@ public class SharedPreferencesAccessor {
             return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_bottom_navigation_view_label_visibility_mode), "-1"));
         }
 
+        public static int getMainActivityFragmentSwitchMode(Context context){
+            return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_main_activity_fragment_switch_mode), "-1"));
+        }
+
         public static void enableRequestIgnoreBatteryOptimize(Context context){
             saveRequestIgnoreBatteryOptimize(context, true);
         }
