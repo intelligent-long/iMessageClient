@@ -78,7 +78,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         ServerMessageService.OnOnlineStateChangeYier, View.OnClickListener, NewContentBadgeDisplayYier,
         LinkPermissionOperatorActivity, BroadcastFetchNewsYier {
     private ActivityMainBinding binding;
-    private NavHostFragment navHostFragment;
     private Badge messageNavBadge;
     private Badge channelNavBadge;
     private Badge broadcastNavBadge;
@@ -89,7 +88,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         super.onCreate(savedInstanceState);
         if (checkAndSwitchToAuth()) return;
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
         setContentView(binding.getRoot());
         setupNavigationKeepInMemory();
         setupYier();
@@ -98,7 +96,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
-        animateNavIconVisibility(navHostFragment);
+        animateNavIconVisibility();
         new Thread(() -> {
             runOnUiThread(() -> {
                 startServerMessageService();
@@ -249,19 +247,20 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     private void setupNavigation() {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_view);
         NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
+        navController.setGraph(R.navigation.main_navigation);
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
         binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
-            if (lastBottomNavSelectedItem != null && lastBottomNavSelectedItem.getItemId() == item.getItemId()
-                    && item.getItemId() == R.id.navigation_broadcast) {
-                if (navHostFragment != null) {
-                    FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
-                    Fragment fragment = fragmentManager.getFragments().get(0);
-                    if (fragment instanceof BroadcastsFragment) {
-                        ((BroadcastsFragment) fragment).toStart();
-                    }
-                    return true;
+            if (lastBottomNavSelectedItem != null
+                    && lastBottomNavSelectedItem.getItemId() == item.getItemId()
+                    && item.getItemId() == R.id.navigation_broadcast
+            ) {
+                Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+                if (fragment instanceof BroadcastsFragment) {
+                    ((BroadcastsFragment) fragment).toStart();
                 }
+                return true;
             }
             lastBottomNavSelectedItem = item;
             return NavigationUI.onNavDestinationSelected(item, navController);
@@ -269,54 +268,66 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     private void setupNavigationKeepInMemory() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if(fragments.size() == 1 && fragments.get(0) instanceof NavHostFragment){
+            transaction.hide(fragments.get(0));
+        }
+        Fragment messageFragment = getSupportFragmentManager().findFragmentByTag(MessagesFragment.class.getSimpleName());
+        if (messageFragment == null) {
+            transaction.add(R.id.fragment_container_view, new MessagesFragment(), MessagesFragment.class.getSimpleName());
+        }
+        transaction.commit();
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
             Fragment currentFragment = null;
             FragmentManager fragmentManager = getSupportFragmentManager();
             for (Fragment fragment : fragmentManager.getFragments()) {
-                if (fragment != null && fragment.isVisible()) {
+                if(fragment instanceof NavHostFragment){
+                    transaction1.hide(fragment);
+                }else if (fragment != null && fragment.isVisible()) {
                     currentFragment = fragment;
                     break;
                 }
             }
-            Fragment targetFragment = null;
+            Fragment targetFragment1 = null;
             if (item.getItemId() == R.id.navigation_message) {
-                targetFragment = getSupportFragmentManager().findFragmentByTag(MessagesFragment.class.getSimpleName());
-                if (targetFragment == null) {
-                    targetFragment = new MessagesFragment();
-                    transaction.add(R.id.fragment_container_view, targetFragment, MessagesFragment.class.getSimpleName());
+                targetFragment1 = getSupportFragmentManager().findFragmentByTag(MessagesFragment.class.getSimpleName());
+                if (targetFragment1 == null) {
+                    targetFragment1 = new MessagesFragment();
+                    transaction1.add(R.id.fragment_container_view, targetFragment1, MessagesFragment.class.getSimpleName());
                 }
             } else if (item.getItemId() == R.id.navigation_channel) {
-                targetFragment = getSupportFragmentManager().findFragmentByTag(ChannelsFragment.class.getSimpleName());
-                if (targetFragment == null) {
-                    targetFragment = new ChannelsFragment();
-                    transaction.add(R.id.fragment_container_view, targetFragment, ChannelsFragment.class.getSimpleName());
+                targetFragment1 = getSupportFragmentManager().findFragmentByTag(ChannelsFragment.class.getSimpleName());
+                if (targetFragment1 == null) {
+                    targetFragment1 = new ChannelsFragment();
+                    transaction1.add(R.id.fragment_container_view, targetFragment1, ChannelsFragment.class.getSimpleName());
                 }
             } else if (item.getItemId() == R.id.navigation_broadcast) {
-                targetFragment = getSupportFragmentManager().findFragmentByTag(BroadcastsFragment.class.getSimpleName());
-                if (targetFragment == null) {
-                    targetFragment = new BroadcastsFragment();
-                    transaction.add(R.id.fragment_container_view, targetFragment, BroadcastsFragment.class.getSimpleName());
+                targetFragment1 = getSupportFragmentManager().findFragmentByTag(BroadcastsFragment.class.getSimpleName());
+                if (targetFragment1 == null) {
+                    targetFragment1 = new BroadcastsFragment();
+                    transaction1.add(R.id.fragment_container_view, targetFragment1, BroadcastsFragment.class.getSimpleName());
                 }
             }
-            if(currentFragment == targetFragment && currentFragment instanceof BroadcastsFragment){
+            if(currentFragment == targetFragment1 && currentFragment instanceof BroadcastsFragment){
                 ((BroadcastsFragment) currentFragment).toStart();
-            }else if (currentFragment != null && currentFragment != targetFragment) {
-                transaction.setCustomAnimations(
+            }else if (currentFragment != targetFragment1) {
+                transaction1.setCustomAnimations(
                         R.anim.fragment_fade_in,
                         R.anim.fragment_fade_out,
                         R.anim.fragment_fade_in,
                         R.anim.fragment_fade_out
                 );
-                transaction.hide(currentFragment);
-                transaction.show(targetFragment);
-                transaction.commit();
+                if(currentFragment != null) transaction1.hide(currentFragment);
+                transaction1.show(targetFragment1);
+                transaction1.commit();
             }
             return true;
         });
     }
 
-    protected void animateNavIconVisibility(NavHostFragment navHostFragment){
+    protected void animateNavIconVisibility(){
         final Drawable[] navIcon = {ContextCompat.getDrawable(this, R.drawable.menu_24px)};
         if(navIcon[0] == null) return;
         navIcon[0].setAlpha(0);
@@ -324,7 +335,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         animator.setDuration(700);
         animator.addUpdateListener(animation -> {
             navIcon[0].setAlpha((Integer) animation.getAnimatedValue());
-            changeMainFragmentsNavIcon(navHostFragment, navIcon[0]);
+            changeMainFragmentsNavIcon(navIcon[0]);
         });
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -335,13 +346,13 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 animator.setDuration(800);
                 animator.addUpdateListener(hideAnim -> {
                     navIcon[0].setAlpha((Integer) hideAnim.getAnimatedValue());
-                    changeMainFragmentsNavIcon(navHostFragment, navIcon[0]);
+                    changeMainFragmentsNavIcon(navIcon[0]);
                 });
                 animator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         navIcon[0] = null;
-                        changeMainFragmentsNavIcon(navHostFragment, null);
+                        changeMainFragmentsNavIcon(null);
                     }
                 });
                 animator.start();
@@ -350,9 +361,12 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         animator.start();
     }
 
-    private void changeMainFragmentsNavIcon(NavHostFragment navHostFragment, Drawable navIcon) {
-        if (!navHostFragment.isAdded()) return;
-        navHostFragment.getChildFragmentManager().getFragments().forEach(fragment -> {
+    private void changeMainFragmentsNavIcon(Drawable navIcon) {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if(fragments.size() == 1 && fragments.get(0) instanceof NavHostFragment){
+            fragments = fragments.get(0).getChildFragmentManager().getFragments();
+        }
+        fragments.forEach(fragment -> {
             if (fragment instanceof ChangeUiYier) {
                 runOnUiThread(() -> ((ChangeUiYier) fragment).changeUi(ChangeUiYier.ID_HIDE_NAV_ICON, navIcon));
             }
@@ -548,8 +562,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     @Override
     public void fetchNews(String ichatId) {
-        FragmentManager fragmentManager = navHostFragment.getChildFragmentManager();
-        Fragment fragment = fragmentManager.getFragments().get(0);
+        Fragment fragment = getSupportFragmentManager().getFragments().get(0);
         if (fragment instanceof BroadcastsFragment) {
             BroadcastsFragment.needFetchNewBroadcasts = false;
             ((BroadcastsFragment) fragment).fetchNews();
