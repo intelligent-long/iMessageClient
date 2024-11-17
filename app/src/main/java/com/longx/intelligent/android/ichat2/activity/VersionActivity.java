@@ -17,6 +17,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCalle
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
 import com.longx.intelligent.android.ichat2.util.TimeUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 
 import org.apache.tika.utils.StringUtils;
@@ -36,6 +37,7 @@ public class VersionActivity extends BaseActivity {
         binding = ActivityVersionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
+        UiUtil.setViewEnabled(binding.linkButton, false, true);
         showContent();
         fetchAndShowData();
         setupYiers();
@@ -47,16 +49,6 @@ public class VersionActivity extends BaseActivity {
     }
 
     private void fetchAndShowData() {
-        LinkApiCaller.fetchIchatWebReleaseUrl(this, AppUtil.getVersionCode(this), new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
-            @Override
-            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                super.ok(data, raw, call);
-                data.commonHandleResult(VersionActivity.this, new int[]{}, () -> {
-                    currentReleaseUrl = data.getData(String.class);
-                    binding.toolbar.getMenu().findItem(R.id.link).setEnabled(true);
-                });
-            }
-        });
         LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(this, new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
             @Override
             public void start(Call<OperationData> call) {
@@ -89,9 +81,19 @@ public class VersionActivity extends BaseActivity {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
+                LinkApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, AppUtil.getVersionCode(VersionActivity.this), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(VersionActivity.this, new int[]{}, () -> {
+                            currentReleaseUrl = data.getData(String.class);
+                            binding.toolbar.getMenu().findItem(R.id.link).setEnabled(true);
+                        });
+                    }
+                });
                 data.commonHandleResult(VersionActivity.this, new int[]{}, () -> {
                     String updatableReleaseUrl = data.getData(String.class);
-                    IchatWebApiCaller.fetchUpdatableReleaseData(VersionActivity.this, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
+                    IchatWebApiCaller.fetchUpdatableReleaseData(VersionActivity.this, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this, false){
                         @Override
                         public void start(Call<OperationData> call) {
                             super.start(call);
@@ -134,39 +136,12 @@ public class VersionActivity extends BaseActivity {
                                     binding.updateNotes.setText(StringUtils.isEmpty(updatableRelease.getNotes()) ? "-" : updatableRelease.getNotes());
                                     LinkApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, updatableRelease.getVersionCode(), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
                                         @Override
-                                        public void start(Call<OperationData> call) {
-                                            super.start(call);
-                                            binding.updatableVersionLoadingIndicator.setVisibility(View.VISIBLE);
-                                        }
-
-                                        @Override
-                                        public void notOk(int code, String message, Response<OperationData> raw, Call<OperationData> call) {
-                                            super.notOk(code, message, raw, call);
-                                            binding.updatableVersionLoadingIndicator.setVisibility(View.GONE);
-                                            binding.updatableVersionLoadFailedText.setVisibility(View.VISIBLE);
-                                            binding.updatableVersionLoadFailedText.setText("HTTP 状态码异常 > " + code);
-                                        }
-
-                                        @Override
-                                        public void failure(Throwable t, Call<OperationData> call) {
-                                            super.failure(t, call);
-                                            binding.updatableVersionLoadingIndicator.setVisibility(View.GONE);
-                                            binding.updatableVersionLoadFailedText.setVisibility(View.VISIBLE);
-                                            binding.updatableVersionLoadFailedText.setText("出错了 > " + t.getClass().getName());
-                                        }
-
-                                        @Override
-                                        public void complete(Call<OperationData> call) {
-                                            super.complete(call);
-                                            binding.updatableVersionLoadingIndicator.setVisibility(View.GONE);
-                                        }
-
-                                        @Override
                                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                             super.ok(data, raw, call);
                                             data.commonHandleResult(VersionActivity.this, new int[]{}, () -> {
                                                 String releaseUrl = data.getData(String.class);
                                                 binding.linkButton.setTag(releaseUrl);
+                                                UiUtil.setViewEnabled(binding.linkButton, true, true);
                                             });
                                         }
                                     });
