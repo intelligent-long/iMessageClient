@@ -193,75 +193,83 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 binding.medias.setVisibility(View.VISIBLE);
                 binding.medias2To4.setVisibility(View.GONE);
                 binding.mediaSingle.setVisibility(View.GONE);
-                int forTimes = Math.min(30, broadcastMedias.size());
-                for (int i = 0; i < forTimes; i++) {
-                    BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                for (int i = 0; i < 30; i++) {
                     int imageResId = ResourceUtil.getResId("media_" + (i + 1), R.id.class);
                     AppCompatImageView imageView = binding.medias.findViewById(imageResId);
-                    imageView.setVisibility(View.VISIBLE);
-                    switch (broadcastMedia.getType()) {
-                        case BroadcastMedia.TYPE_IMAGE: {
-                            GlideApp
-                                    .with(getApplicationContext())
-                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                    .centerCrop()
-                                    .into(imageView);
-                            break;
-                        }
-                        case BroadcastMedia.TYPE_VIDEO: {
-                            GlideApp
-                                    .with(getApplicationContext())
-                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                    .centerCrop()
-                                    .into(imageView);
-                            int videoDurationResId = ResourceUtil.getResId("video_duration_" + (i + 1), R.id.class);
-                            NoPaddingTextView videoDuration = binding.medias.findViewById(videoDurationResId);
-                            videoDuration.setVisibility(View.VISIBLE);
-                            videoDuration.bringToFront();
-                            if(broadcastMedia.getVideoDuration() != null) {
-                                videoDuration.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
-                            }else {
-                                videoDuration.setText("video");
+                    if (i < broadcastMedias.size()) {
+                        BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                        imageView.setVisibility(View.VISIBLE);
+                        switch (broadcastMedia.getType()) {
+                            case BroadcastMedia.TYPE_IMAGE: {
+                                GlideApp
+                                        .with(getApplicationContext())
+                                        .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                        .centerCrop()
+                                        .into(imageView);
+                                break;
                             }
-                            break;
+                            case BroadcastMedia.TYPE_VIDEO: {
+                                GlideApp
+                                        .with(getApplicationContext())
+                                        .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                        .centerCrop()
+                                        .into(imageView);
+                                int videoDurationResId = ResourceUtil.getResId("video_duration_" + (i + 1), R.id.class);
+                                NoPaddingTextView videoDuration = binding.medias.findViewById(videoDurationResId);
+                                videoDuration.setVisibility(View.VISIBLE);
+                                videoDuration.bringToFront();
+                                if (broadcastMedia.getVideoDuration() != null) {
+                                    videoDuration.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
+                                } else {
+                                    videoDuration.setText("video");
+                                }
+                                break;
+                            }
                         }
+                    }else {
+                        imageView.setVisibility(View.GONE);
                     }
                 }
+
             }else if(broadcastMedias.size() > 1){
                 binding.medias.setVisibility(View.GONE);
                 binding.medias2To4.setVisibility(View.VISIBLE);
                 binding.mediaSingle.setVisibility(View.GONE);
-                for (int i = 0; i < broadcastMedias.size(); i++) {
-                    BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                for (int i = 0; i < 4; i++) {
                     int imageResId = ResourceUtil.getResId("media_2_to_4_" + (i + 1), R.id.class);
                     AppCompatImageView imageView = binding.medias2To4.findViewById(imageResId);
-                    imageView.setVisibility(View.VISIBLE);
-                    switch (broadcastMedia.getType()) {
-                        case BroadcastMedia.TYPE_IMAGE: {
-                            GlideApp
-                                    .with(getApplicationContext())
-                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                    .centerCrop()
-                                    .into(imageView);
-                            break;
-                        }
-                        case BroadcastMedia.TYPE_VIDEO: {
-                            GlideApp
-                                    .with(getApplicationContext())
-                                    .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
-                                    .centerCrop()
-                                    .into(imageView);
-                            int videoDurationResId = ResourceUtil.getResId("video_duration_2_to_4_" + (i + 1), R.id.class);
-                            NoPaddingTextView videoDuration = binding.medias2To4.findViewById(videoDurationResId);
-                            videoDuration.setVisibility(View.VISIBLE);
-                            videoDuration.bringToFront();
-                            if(broadcastMedia.getVideoDuration() != null) {
-                                videoDuration.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
-                            }else {
-                                videoDuration.setText("video");
+                    if (i < broadcastMedias.size()) {
+                        BroadcastMedia broadcastMedia = broadcastMedias.get(i);
+                        imageView.setVisibility(View.VISIBLE);
+                        switch (broadcastMedia.getType()) {
+                            case BroadcastMedia.TYPE_IMAGE: {
+                                GlideApp
+                                        .with(getApplicationContext())
+                                        .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                        .centerCrop()
+                                        .into(imageView);
+                                break;
                             }
-                            break;
+                            case BroadcastMedia.TYPE_VIDEO: {
+                                GlideApp
+                                        .with(getApplicationContext())
+                                        .load(NetDataUrls.getBroadcastMediaDataUrl(this, broadcastMedia.getMediaId()))
+                                        .centerCrop()
+                                        .into(imageView);
+                                int videoDurationResId = ResourceUtil.getResId("video_duration_2_to_4_" + (i + 1), R.id.class);
+                                NoPaddingTextView videoDuration = binding.medias2To4.findViewById(videoDurationResId);
+                                videoDuration.setVisibility(View.VISIBLE);
+                                videoDuration.bringToFront();
+                                if (broadcastMedia.getVideoDuration() != null) {
+                                    videoDuration.setText(TimeUtil.formatTimeToHHMMSS(broadcastMedia.getVideoDuration()));
+                                } else {
+                                    videoDuration.setText("video");
+                                }
+                                break;
+                            }
                         }
+                    }else {
+                        imageView.setVisibility(View.GONE);
                     }
                 }
             }else {
