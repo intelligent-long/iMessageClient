@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.OperationCanceledException;
 
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -112,18 +113,24 @@ public class PublicFileAccessor {
             CountDownLatch countDownLatch = new CountDownLatch(1);
             String savePath = DataPaths.PublicFile.getBroadcastFilePath(broadcast, mediaIndex);
             final IOException[] ioException = new IOException[1];
+            final OperationCanceledException[] operationCanceledException = new OperationCanceledException[1];
             BroadcastApiCaller.downloadMediaData(activity, broadcast.getBroadcastMedias().get(mediaIndex).getMediaId(),
                     new RetrofitApiCaller.DownloadCommonYier(activity, savePath, true, results -> {
                         Boolean success = (Boolean) results[0];
                         String saveTo = (String) results[1];
-                        if(success != null && !success.equals(Boolean.FALSE)) {
-                            MediaStoreHelper.notifyMediaStore(activity, saveTo);
+                        if(success != null) {
+                            if (success.equals(Boolean.TRUE)) {
+                                MediaStoreHelper.notifyMediaStore(activity, saveTo);
+                            } else {
+                                ioException[0] = new IOException("保存广播视频失败");
+                            }
                         }else {
-                            ioException[0] = new IOException("保存广播视频失败");
+                            operationCanceledException[0] = new OperationCanceledException("用户取消了视频保存");
                         }
                         countDownLatch.countDown();
                     }));
             countDownLatch.await();
+            if(operationCanceledException[0] != null) throw operationCanceledException[0];
             if(ioException[0] != null) throw ioException[0];
             return savePath;
         }

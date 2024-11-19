@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.os.OperationCanceledException;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
@@ -598,6 +599,8 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         try {
                             PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity.getInstance(), broadcast, currentItem);
                             MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                        } catch (OperationCanceledException e){
+                            ErrorLogger.log(e);
                         } catch (InterruptedException | IOException e) {
                             ErrorLogger.log(e);
                             MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
