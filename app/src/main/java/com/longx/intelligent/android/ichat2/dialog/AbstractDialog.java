@@ -15,6 +15,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * Created by LONG on 2024/1/8 at 9:20 PM.
  */
@@ -53,6 +55,8 @@ public abstract class AbstractDialog {
     protected abstract AlertDialog create(MaterialAlertDialogBuilder builder);
 
     public AbstractDialog create(){
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        activity.runOnUiThread(() -> {
             View view = createView(activity.getLayoutInflater().cloneInContext(dialogContext));
             if(view != null){
                 dialogBuilder.setView(view);
@@ -62,7 +66,14 @@ public abstract class AbstractDialog {
                 setAutoCancelInput(view);
             }
             onDialogCreated();
-            return this;
+            countDownLatch.countDown();
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return this;
     }
 
     public void show() {

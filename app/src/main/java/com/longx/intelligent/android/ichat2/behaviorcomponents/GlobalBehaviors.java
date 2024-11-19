@@ -1,11 +1,7 @@
 package com.longx.intelligent.android.ichat2.behaviorcomponents;
 
-import android.app.Activity;
-import android.app.KeyguardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +21,6 @@ import com.longx.intelligent.android.ichat2.data.request.SendVerifyCodePostBody;
 import com.longx.intelligent.android.ichat2.data.request.VerifyCodeLoginPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
-import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.fragment.main.BroadcastsFragment;
@@ -33,7 +28,7 @@ import com.longx.intelligent.android.ichat2.net.CookieJar;
 import com.longx.intelligent.android.ichat2.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.AuthApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.IchatWebApiCaller;
-import com.longx.intelligent.android.ichat2.net.retrofit.caller.LinkApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.UrlMapApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.service.ServerMessageService;
@@ -44,8 +39,6 @@ import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.ichat2.yier.OfflineDetailShowYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
-
-import org.apache.tika.utils.StringUtils;
 
 import java.util.Date;
 
@@ -258,7 +251,7 @@ public class GlobalBehaviors {
                 return;
             }
         }
-        LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(activity, new RetrofitApiCaller.BaseYier<OperationData>(){
+        UrlMapApiCaller.fetchIchatWebUpdatableReleaseDataUrl(activity, new RetrofitApiCaller.BaseYier<OperationData>(){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);

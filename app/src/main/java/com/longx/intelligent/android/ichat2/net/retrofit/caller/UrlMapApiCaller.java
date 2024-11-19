@@ -3,17 +3,15 @@ package com.longx.intelligent.android.ichat2.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
-import com.longx.intelligent.android.ichat2.net.retrofit.api.LinkApi;
+import com.longx.intelligent.android.ichat2.net.retrofit.api.UrlMapApi;
 import com.xcheng.retrofit.CompletableCall;
-
-import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2024/10/29 at 上午1:45.
  */
-public class LinkApiCaller extends RetrofitApiCaller{
-    public static LinkApi getApiImplementation(){
-        return getApiImplementation(LinkApi.class);
+public class UrlMapApiCaller extends RetrofitApiCaller{
+    public static UrlMapApi getApiImplementation(){
+        return getApiImplementation(UrlMapApi.class);
     }
 
     public static CompletableCall<OperationData> fetchIchatWebHomeUrl(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){

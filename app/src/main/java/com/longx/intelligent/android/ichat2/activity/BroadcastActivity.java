@@ -595,15 +595,13 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                     break;
                 case BroadcastMedia.TYPE_VIDEO:
                     new Thread(() -> {
-                        PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity.getInstance(), broadcast, currentItem, results -> {
-                            if(results[0] != null){
-                                if(results[0] == Boolean.TRUE){
-                                    MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
-                                }else if(results[0] == Boolean.FALSE){
-                                    MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.LONG);
-                                }
-                            }
-                        });
+                        try {
+                            PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity.getInstance(), broadcast, currentItem);
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                        } catch (InterruptedException | IOException e) {
+                            ErrorLogger.log(e);
+                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                        }
                     }).start();
                     break;
             }

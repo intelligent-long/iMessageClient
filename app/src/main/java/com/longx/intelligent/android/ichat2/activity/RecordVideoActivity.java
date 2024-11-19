@@ -109,7 +109,7 @@ public class RecordVideoActivity extends BaseActivity {
     }
 
     private File createVideoFile() throws IOException {
-        return PublicFileAccessor.CapturedMedia.createVideoFile();
+        return PublicFileAccessor.CapturedMedia.createVideoFile(this);
     }
 
     private void setupYiers() {

@@ -18,7 +18,7 @@ import com.longx.intelligent.android.ichat2.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.dialog.ChoiceDialog;
-import com.longx.intelligent.android.ichat2.net.retrofit.caller.LinkApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.UrlMapApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.GlobalBehaviors;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.ContentUpdater;
@@ -243,7 +243,7 @@ public class RootSettingsActivity extends BaseActivity {
         }
 
         private void shareApp() {
-            LinkApiCaller.fetchIchatWebHomeUrl(requireActivity(), new RetrofitApiCaller.CommonYier<OperationData>(requireActivity()){
+            UrlMapApiCaller.fetchIchatWebHomeUrl(requireActivity(), new RetrofitApiCaller.CommonYier<OperationData>(requireActivity()){
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);

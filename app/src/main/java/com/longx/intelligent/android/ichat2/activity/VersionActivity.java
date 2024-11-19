@@ -12,7 +12,7 @@ import com.longx.intelligent.android.ichat2.data.ReleaseFile;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.databinding.ActivityVersionBinding;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.IchatWebApiCaller;
-import com.longx.intelligent.android.ichat2.net.retrofit.caller.LinkApiCaller;
+import com.longx.intelligent.android.ichat2.net.retrofit.caller.UrlMapApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
@@ -49,7 +49,7 @@ public class VersionActivity extends BaseActivity {
     }
 
     private void fetchAndShowData() {
-        LinkApiCaller.fetchIchatWebUpdatableReleaseDataUrl(this, new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
+        UrlMapApiCaller.fetchIchatWebUpdatableReleaseDataUrl(this, new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
@@ -81,7 +81,7 @@ public class VersionActivity extends BaseActivity {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
-                LinkApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, AppUtil.getVersionCode(VersionActivity.this), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
+                UrlMapApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, AppUtil.getVersionCode(VersionActivity.this), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
@@ -134,7 +134,7 @@ public class VersionActivity extends BaseActivity {
                                     binding.updatableVersionCode.setText(String.valueOf(updatableRelease.getVersionCode()));
                                     binding.releaseTime.setText(TimeUtil.formatRelativeTime(updatableRelease.getReleaseTime()));
                                     binding.updateNotes.setText(StringUtils.isEmpty(updatableRelease.getNotes()) ? "-" : updatableRelease.getNotes());
-                                    LinkApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, updatableRelease.getVersionCode(), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
+                                    UrlMapApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, updatableRelease.getVersionCode(), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
                                         @Override
                                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                             super.ok(data, raw, call);
@@ -169,7 +169,7 @@ public class VersionActivity extends BaseActivity {
         binding.updateButton.setOnClickListener(v -> {
             Release updatableRelease = (Release) v.getTag();
             if(updatableRelease == null) return;
-            LinkApiCaller.fetchIchatWebAllDownloadFilesUrl(this, updatableRelease.getVersionCode(), new RetrofitApiCaller.CommonYier<OperationData>(this){
+            UrlMapApiCaller.fetchIchatWebAllDownloadFilesUrl(this, updatableRelease.getVersionCode(), new RetrofitApiCaller.CommonYier<OperationData>(this){
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
@@ -193,7 +193,7 @@ public class VersionActivity extends BaseActivity {
                                         MessageDisplayer.autoShow(VersionActivity.this, "未找到下载文件", MessageDisplayer.Duration.LONG);
                                         return;
                                     }
-                                    LinkApiCaller.fetchIchatWebDownloadFileUrl(VersionActivity.this, fileId, new RetrofitApiCaller.CommonYier<OperationData>(VersionActivity.this){
+                                    UrlMapApiCaller.fetchIchatWebDownloadFileUrl(VersionActivity.this, fileId, new RetrofitApiCaller.CommonYier<OperationData>(VersionActivity.this){
                                         @Override
                                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                             super.ok(data, raw, call);

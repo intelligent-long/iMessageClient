@@ -14,6 +14,7 @@ import com.longx.intelligent.android.ichat2.da.DataPaths;
 import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
+import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
@@ -26,32 +27,44 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
+
 /**
  * Created by LONG on 2024/5/29 at 3:19 PM.
  */
 public class PublicFileAccessor {
 
     public static class ChatMedia {
-        public static String saveImage(ChatMessage chatMessage) throws IOException {
+        public static String saveImage(Context context, ChatMessage chatMessage) throws IOException {
             String savePath = DataPaths.PublicFile.getChatFilePath(chatMessage);
-            return FileHelper.save(FileHelper.streamOf(chatMessage.getImageFilePath()), savePath);
+            String saved = FileHelper.save(FileHelper.streamOf(chatMessage.getImageFilePath()), savePath);
+            MediaStoreHelper.notifyMediaStore(context, savePath);
+            return saved;
         }
 
-        public static String saveVideo(ChatMessage chatMessage) throws IOException {
+        public static String saveVideo(Context context, ChatMessage chatMessage) throws IOException {
             String savePath = DataPaths.PublicFile.getChatFilePath(chatMessage);
-            return FileHelper.save(FileHelper.streamOf(chatMessage.getVideoFilePath()), savePath);
+            String saved = FileHelper.save(FileHelper.streamOf(chatMessage.getVideoFilePath()), savePath);
+            MediaStoreHelper.notifyMediaStore(context, savePath);
+            return saved;
         }
     }
 
     public static class CapturedMedia{
-        public static File createPhotoFile() throws IOException {
+        public static File createPhotoFile(Context context) throws IOException {
             String filePath = DataPaths.PublicFile.getCapturedMediaFilePath();
-            return FileHelper.createFile(filePath);
+            File file = FileHelper.createFile(filePath);
+            MediaStoreHelper.notifyMediaStore(context, filePath);
+            return file;
         }
 
-        public static File createVideoFile() throws IOException {
+        public static File createVideoFile(Context context) throws IOException {
             String filePath = DataPaths.PublicFile.getCapturedMediaFilePath();
-            return FileHelper.createFile(filePath);
+            File file = FileHelper.createFile(filePath);
+            MediaStoreHelper.notifyMediaStore(context, filePath);
+            return file;
         }
     }
 
@@ -91,13 +104,27 @@ public class PublicFileAccessor {
             }, true);
             countDownLatch.await();
             if(ioException[0] != null) throw ioException[0];
+            MediaStoreHelper.notifyMediaStore(context, savedPath[0]);
             return savedPath[0];
         }
 
-        public static String saveVideo(AppCompatActivity activity, Broadcast broadcast, int mediaIndex, ResultsYier resultsYier) {
+        public static String saveVideo(AppCompatActivity activity, Broadcast broadcast, int mediaIndex) throws InterruptedException, IOException {
+            CountDownLatch countDownLatch = new CountDownLatch(1);
             String savePath = DataPaths.PublicFile.getBroadcastFilePath(broadcast, mediaIndex);
+            final IOException[] ioException = new IOException[1];
             BroadcastApiCaller.downloadMediaData(activity, broadcast.getBroadcastMedias().get(mediaIndex).getMediaId(),
-                    new RetrofitApiCaller.DownloadCommonYier(activity, savePath, true, resultsYier));
+                    new RetrofitApiCaller.DownloadCommonYier(activity, savePath, true, results -> {
+                        Boolean success = (Boolean) results[0];
+                        String saveTo = (String) results[1];
+                        if(success != null && !success.equals(Boolean.FALSE)) {
+                            MediaStoreHelper.notifyMediaStore(activity, saveTo);
+                        }else {
+                            ioException[0] = new IOException("保存广播视频失败");
+                        }
+                        countDownLatch.countDown();
+                    }));
+            countDownLatch.await();
+            if(ioException[0] != null) throw ioException[0];
             return savePath;
         }
     }

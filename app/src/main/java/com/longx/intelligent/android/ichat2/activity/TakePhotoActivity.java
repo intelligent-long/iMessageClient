@@ -101,7 +101,7 @@ public class TakePhotoActivity extends BaseActivity {
     }
 
     private File createPhotoFile() throws IOException {
-        return PublicFileAccessor.CapturedMedia.createPhotoFile();
+        return PublicFileAccessor.CapturedMedia.createPhotoFile(this);
     }
 
     private void showContent() {

@@ -329,14 +329,16 @@ public abstract class RetrofitApiCaller {
                     call.cancel();
                     onCancel();
                 });
-                progressOperatingDialog.create().show();
+                progressOperatingDialog.create();
+                progressOperatingDialog.updateText("下载中...");
+                progressOperatingDialog.show();
             }
         }
 
         @Override
         public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
             new Thread(() -> {
-                try (InputStream inputStream = data.byteStream()) {
+                try (InputStream inputStream = data.source().inputStream()) {
                     long contentLength = data.contentLength();
                     if (progressCallback != null) {
                         FileHelper.save(inputStream, saveTo, contentLength, progressCallback, cancel);
