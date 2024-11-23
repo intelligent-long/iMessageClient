@@ -552,10 +552,10 @@ public class SharedPreferencesAccessor {
         public static class ChannelAdditionActivities{
             private static final int MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE = 500;
 
-            public static void addRecord(Context context, ChannelAddition channelAddition){
-                String json = JsonUtil.toJson(channelAddition);
+            public static synchronized void addRecord(Context context, ChannelAddition channelAddition){
                 Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
-                if(paginatedJsonSet.size() > MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
+                if(paginatedJsonSet.size() + 1 > MAX_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
+                String json = JsonUtil.toJson(channelAddition);
                 int index = paginatedJsonSet.size();
                 IndexedApiJson indexedApiJson = new IndexedApiJson(index, json);
                 String paginatedJson = JsonUtil.toJson(indexedApiJson);
@@ -567,14 +567,14 @@ public class SharedPreferencesAccessor {
                         .apply();
             }
 
-            public static void clearRecords(Context context){
+            public static synchronized void clearRecords(Context context){
                 getSharedPreferences(context)
                         .edit()
                         .remove(Key.CHANNEL_ADDITION_ACTIVITIES)
                         .apply();
             }
 
-            public static List<ChannelAddition> getAllRecords(Context context){
+            public static synchronized List<ChannelAddition> getAllRecords(Context context){
                 List<ChannelAddition> result = new ArrayList<>();
                 Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
                 List<IndexedApiJson> indexedApiJsonList = new ArrayList<>();
@@ -591,26 +591,39 @@ public class SharedPreferencesAccessor {
         }
 
         public static class OfflineDetails{
-            public static void addRecord(Context context, OfflineDetail offlineDetail){
+            private static final int MAX_OFFLINE_DETAILS_SIZE = 1000;
+
+            public static synchronized void addRecord(Context context, OfflineDetail offlineDetail){
                 if(offlineDetail == null) return;
-                String json = JsonUtil.toJson(offlineDetail);
                 Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.OFFLINE_DETAILS, new HashSet<>());
                 HashSet<String> jsonSetCopy = new HashSet<>(jsonSet);
-                jsonSetCopy.add(json);
+                if(jsonSetCopy.size() + 1 > MAX_OFFLINE_DETAILS_SIZE){
+                    List<OfflineDetail> offlineDetails = new ArrayList<>();
+                    for (String s : jsonSetCopy) {
+                        offlineDetails.add(JsonUtil.toObject(s, OfflineDetail.class));
+                    }
+                    offlineDetails.sort(Comparator.comparing(OfflineDetail::getTime));
+                    offlineDetails = offlineDetails.subList(offlineDetails.size() - (MAX_OFFLINE_DETAILS_SIZE - 1), offlineDetails.size());
+                    jsonSetCopy = new HashSet<>();
+                    for (OfflineDetail offlineDetail1 : offlineDetails) {
+                        jsonSetCopy.add(JsonUtil.toJson(offlineDetail1));
+                    }
+                }
+                jsonSetCopy.add(JsonUtil.toJson(offlineDetail));
                 getSharedPreferences(context)
                         .edit()
                         .putStringSet(Key.OFFLINE_DETAILS, jsonSetCopy)
                         .apply();
             }
 
-            public static void clearRecords(Context context){
+            public static synchronized void clearRecords(Context context){
                 getSharedPreferences(context)
                         .edit()
                         .remove(Key.OFFLINE_DETAILS)
                         .apply();
             }
 
-            public static List<OfflineDetail> getAllRecords(Context context){
+            public static synchronized List<OfflineDetail> getAllRecords(Context context){
                 Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.OFFLINE_DETAILS, new HashSet<>());
                 List<OfflineDetail> offlineDetails = new ArrayList<>();
                 jsonSet.forEach(s -> {
@@ -623,12 +636,21 @@ public class SharedPreferencesAccessor {
         }
 
         public static class Broadcasts{
-            public static void addRecords(Context context, List<Broadcast> broadcasts){
+            private static final int MAX_BROADCASTS_SIZE = 500;
+
+            public static synchronized void addRecords(Context context, List<Broadcast> broadcasts){
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
+                if(jsonSet.size() >= MAX_BROADCASTS_SIZE) {
+                    return;
+                }else if(jsonSet.size() + broadcasts.size() > MAX_BROADCASTS_SIZE){
+                    int allowToAddSize = MAX_BROADCASTS_SIZE - jsonSet.size();
+                    broadcasts.sort(Comparator.comparing(Broadcast::getTime));
+                    broadcasts = broadcasts.subList(0, allowToAddSize);
+                }
                 List<String> jsonsToAdd = new ArrayList<>();
                 broadcasts.forEach(broadcast -> {
                     jsonsToAdd.add(JsonUtil.toJson(broadcast));
                 });
-                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
                 HashSet<String> jsonSetCopy = new HashSet<>(jsonSet);
                 jsonSetCopy.addAll(jsonsToAdd);
                 getSharedPreferences(context)
@@ -637,14 +659,14 @@ public class SharedPreferencesAccessor {
                         .apply();
             }
 
-            public static void clearRecords(Context context){
+            public static synchronized void clearRecords(Context context){
                 getSharedPreferences(context)
                         .edit()
                         .remove(Key.BROADCASTS)
                         .apply();
             }
 
-            public static List<Broadcast> getAllRecords(Context context){
+            public static synchronized List<Broadcast> getAllRecords(Context context){
                 Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
                 List<Broadcast> broadcasts = new ArrayList<>();
                 jsonSet.forEach(s -> {
@@ -655,7 +677,7 @@ public class SharedPreferencesAccessor {
                 return broadcasts;
             }
 
-            public static void deleteRecord(Context context, String broadcastId){
+            public static synchronized void deleteRecord(Context context, String broadcastId){
                 Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
                 List<Broadcast> broadcasts = new ArrayList<>();
                 jsonSet.forEach(s -> {
@@ -667,7 +689,7 @@ public class SharedPreferencesAccessor {
                 addRecords(context, broadcasts);
             }
 
-            public static void updateRecord(Context context, Broadcast broadcast){
+            public static synchronized void updateRecord(Context context, Broadcast broadcast){
                 Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.BROADCASTS, new HashSet<>());
                 List<Broadcast> broadcasts = new ArrayList<>();
                 jsonSet.forEach(s -> {

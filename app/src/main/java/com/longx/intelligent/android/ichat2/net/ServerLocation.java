@@ -1,8 +1,11 @@
 package com.longx.intelligent.android.ichat2.net;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by LONG on 2024/10/28 at 6:37 AM.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerLocation {
     private String host;
     private Integer port;

@@ -25,7 +25,7 @@ public class ApiCaller {
     }
 
     public static class BaseCallYier<T> implements CallYier<T>{
-        private Context context;
+        private final Context context;
         private boolean showErrorInfo = true;
 
         public BaseCallYier(Context context) {

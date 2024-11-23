@@ -54,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import q.rorbin.badgeview.Badge;
 import retrofit2.Call;
@@ -69,6 +71,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
     private boolean willToStart;
     private Badge newInteractionsBadge;
+    private ExecutorService saveBroadcastsHistoryThreadPool = Executors.newCachedThreadPool();
 
     public static boolean needInitFetchBroadcast = true;
     public static boolean needFetchNewBroadcasts;
@@ -403,7 +406,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         if(clearHistory){
             SharedPreferencesAccessor.ApiJson.Broadcasts.clearRecords(requireContext());
         }
-        SharedPreferencesAccessor.ApiJson.Broadcasts.addRecords(requireContext(), broadcasts);
+        saveBroadcastsHistoryThreadPool.submit(() -> {
+            SharedPreferencesAccessor.ApiJson.Broadcasts.addRecords(requireContext(), broadcasts);
+        });
     }
 
     private void fetchAndRefreshBroadcasts(boolean init){

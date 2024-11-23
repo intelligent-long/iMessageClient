@@ -51,6 +51,7 @@ public class OpenSourceLicensesActivity extends BaseActivity {
     private String buildHtml() {
         return new StringBuilder()
                 .append(getText(R.string.html_text_prefix))
+                .append(getText(R.string.all_list))
                 .append(getText(R.string.androidx))
                 .append(getText(R.string.material_components_android))
                 .append(getText(R.string.glide))
