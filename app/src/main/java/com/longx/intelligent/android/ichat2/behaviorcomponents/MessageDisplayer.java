@@ -12,6 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 /**
@@ -25,16 +28,29 @@ public class MessageDisplayer {
     }
 
     public static Snackbar showSnackbar(Activity activity, String message, int duration){
-        return showSnackbar(activity.getWindow().getDecorView(), message, duration, true);
+        return showSnackbar(activity, activity.getWindow().getDecorView(), message, duration, true);
     }
 
-    public static Snackbar showSnackbar(View view, String message, int duration){
-        return showSnackbar(view, message, duration, false);
+    public static Snackbar showSnackbar(Activity activity, View view, String message, int duration){
+        return showSnackbar(activity, view, message, duration, false);
     }
 
-    public static Snackbar showSnackbar(View view, String message, int duration, boolean setBottomMargin){
+    public static Snackbar showSnackbar(Activity activity, View view, String message, int duration, boolean setBottomMargin){
         try {
             Snackbar snackbar = Snackbar.make(view, message, duration);
+            int snackbarAppearance = SharedPreferencesAccessor.DefaultPref.getSnackbarAppearance(activity);
+            switch (snackbarAppearance){
+                case 0:
+                    break;
+                case 1:
+                    snackbar.setBackgroundTint(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorOnSurfaceInverse));
+                    snackbar.setTextColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorOnBackground));
+                    break;
+                case 2:
+                    snackbar.setBackgroundTint(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorTertiaryContainer));
+                    snackbar.setTextColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorOnBackground));
+                    break;
+            }
             TextView snackbarTextView = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
             snackbarTextView.setMaxLines(Integer.MAX_VALUE);
             if(setBottomMargin){

@@ -40,6 +40,7 @@ public class UiSettingsActivity extends BaseActivity {
         private Material3ListPreference preferenceChatBubbleColor;
         private Material3ListPreference preferenceBottomNavigationViewLabelVisibilityMode;
         private Material3ListPreference preferenceMainActivityFragmentSwitchMode;
+        private Material3ListPreference preferenceSnackbarAppearance;
 
         public SettingsFragment() {
             super();
@@ -56,6 +57,7 @@ public class UiSettingsActivity extends BaseActivity {
             preferenceChatBubbleColor = findPreference(getString(R.string.preference_key_chat_bubble_color));
             preferenceBottomNavigationViewLabelVisibilityMode = findPreference(getString(R.string.preference_key_bottom_navigation_view_label_visibility_mode));
             preferenceMainActivityFragmentSwitchMode = findPreference(getString(R.string.preference_key_main_activity_fragment_switch_mode));
+            preferenceSnackbarAppearance = findPreference(getString(R.string.preference_key_snackbar_appearance));
         }
 
         @Override
@@ -63,6 +65,7 @@ public class UiSettingsActivity extends BaseActivity {
             updateChatBubbleColorSummary(null);
             updateBottomNavigationViewLabelVisibilityMode(null);
             updateMainActivityFragmentSwitchMode(null);
+            updateSnackbarAppearance(null);
         }
 
         private void updateChatBubbleColorSummary(String newValue){
@@ -98,11 +101,23 @@ public class UiSettingsActivity extends BaseActivity {
             }
         }
 
+        private void updateSnackbarAppearance(String newValue){
+            if(newValue == null){
+                newValue = preferenceSnackbarAppearance.getValue();
+            }
+            int index = preferenceSnackbarAppearance.findIndexOfValue(newValue);
+            if(index != -1){
+                String entry = getResources().getStringArray(R.array.snackbar_appearance_entries)[index];
+                preferenceSnackbarAppearance.setSummary(entry);
+            }
+        }
+
         @Override
         protected void setupYiers() {
             preferenceChatBubbleColor.setOnPreferenceChangeListener(this);
             preferenceBottomNavigationViewLabelVisibilityMode.setOnPreferenceChangeListener(this);
             preferenceMainActivityFragmentSwitchMode.setOnPreferenceChangeListener(this);
+            preferenceSnackbarAppearance.setOnPreferenceChangeListener(this);
         }
 
         @Override
@@ -114,6 +129,8 @@ public class UiSettingsActivity extends BaseActivity {
             }else if(preference.equals(preferenceMainActivityFragmentSwitchMode)){
                 updateMainActivityFragmentSwitchMode((String) newValue);
                 ActivityOperator.getActivitiesOf(MainActivity.class).forEach(Activity::recreate);
+            }else if(preference.equals(preferenceSnackbarAppearance)){
+                updateSnackbarAppearance((String) newValue);
             }
             return true;
         }

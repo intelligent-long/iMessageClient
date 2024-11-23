@@ -69,6 +69,10 @@ public class SharedPreferencesAccessor {
             return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_main_activity_fragment_switch_mode), "-1"));
         }
 
+        public static int getSnackbarAppearance(Context context){
+            return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_snackbar_appearance), "-1"));
+        }
+
         public static void enableRequestIgnoreBatteryOptimize(Context context){
             saveRequestIgnoreBatteryOptimize(context, true);
         }

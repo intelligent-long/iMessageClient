@@ -134,4 +134,5 @@
     <string name="preference_key_bluetooth_connect">bluetooth_connect</string>
     <string name="preference_key_main_activity_fragment_switch_mode">main_activity_fragment_switch_mode</string>
     <string name="preference_key_use_system_font">use_system_font</string>
+    <string name="preference_key_snackbar_appearance">snackbar_appearance</string>
 </resources>
