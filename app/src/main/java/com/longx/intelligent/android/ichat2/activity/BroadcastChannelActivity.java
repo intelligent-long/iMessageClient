@@ -34,6 +34,7 @@ import com.longx.intelligent.android.ichat2.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastReloadYier;
 import com.longx.intelligent.android.ichat2.yier.BroadcastUpdateYier;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.ichat2.yier.OnSetChannelBroadcastExcludeYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastFetchNewsYier, BroadcastUpdateYier {
+public class BroadcastChannelActivity extends BaseActivity implements BroadcastReloadYier, BroadcastDeletedYier, BroadcastFetchNewsYier, BroadcastUpdateYier, OnSetChannelBroadcastExcludeYier {
     private ActivityBroadcastChannelBinding binding;
     private RecyclerHeaderBroadcastBinding headerBinding;
     private RecyclerFooterBroadcastBinding footerBinding;
@@ -76,6 +77,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         GlobalYiersHolder.holdYier(this, BroadcastDeletedYier.class, this);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
         GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(this, OnSetChannelBroadcastExcludeYier.class, this);
     }
 
     @Override
@@ -85,6 +87,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         GlobalYiersHolder.removeYier(this, BroadcastDeletedYier.class, this);
         GlobalYiersHolder.removeYier(this, BroadcastFetchNewsYier.class, this);
         GlobalYiersHolder.removeYier(this, BroadcastUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(this, OnSetChannelBroadcastExcludeYier.class, this);
     }
 
     private void intentData() {
@@ -446,5 +449,12 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     @Override
     public void updateOneBroadcast(Broadcast newBroadcast) {
         if(adapter != null) adapter.updateOneBroadcast(newBroadcast, true);
+    }
+
+    @Override
+    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelIchatId) {
+        if(excludeChannelIchatId.equals(channel.getIchatId())){
+            adapter.refreshAll();
+        }
     }
 }

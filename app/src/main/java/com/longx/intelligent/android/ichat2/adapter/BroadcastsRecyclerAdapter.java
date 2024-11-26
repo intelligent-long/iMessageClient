@@ -107,7 +107,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemBroadcastBinding binding = RecyclerItemBroadcastBinding.inflate(activity.getLayoutInflater());
+        RecyclerItemBroadcastBinding binding = RecyclerItemBroadcastBinding.inflate(activity.getLayoutInflater(), parent, false);
         return new ViewHolder(binding);
     }
 
@@ -327,8 +327,11 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.visibilityIcon.setVisibility(View.GONE);
         }
 
-        if (!itemData.broadcast.getIchatId().equals(currentUserProfile.getIchatId())
-                && ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) == null) {
+        if ((
+                !itemData.broadcast.getIchatId().equals(currentUserProfile.getIchatId())
+                        && ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) == null
+            )
+                || SharedPreferencesAccessor.BroadcastPref.getServerExcludeBroadcastChannels(activity).contains(itemData.broadcast.getIchatId())) {
             holder.binding.spaceMore.setVisibility(View.GONE);
             holder.binding.layoutMore.setVisibility(View.GONE);
         } else {
@@ -678,4 +681,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             }
         }
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void refreshAll() {
+        notifyDataSetChanged();
+    }
+
 }

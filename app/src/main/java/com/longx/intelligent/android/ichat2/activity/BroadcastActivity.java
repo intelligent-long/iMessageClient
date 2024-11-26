@@ -73,7 +73,7 @@ import java.util.concurrent.CountDownLatch;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYier {
+public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYier, OnSetChannelBroadcastExcludeYier {
     private ActivityBroadcastBinding binding;
     private Broadcast broadcast;
     private boolean onComment;
@@ -99,6 +99,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
         init();
         GlobalYiersHolder.holdYier(this, BroadcastUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(this, OnSetChannelBroadcastExcludeYier.class, this);
         if(broadcast != null) {
             initDo();
         }else {
@@ -143,6 +144,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     protected void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, BroadcastUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(this, OnSetChannelBroadcastExcludeYier.class, this);
     }
 
     private void showContent() {
@@ -342,8 +344,15 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             binding.visibilityIcon.setVisibility(View.GONE);
         }
 
-        if (!broadcast.getIchatId().equals(currentUserProfile.getIchatId())
-                && ChannelDatabaseManager.getInstance().findOneChannel(broadcast.getIchatId()) == null) {
+        checkAndShowMoreIcon(currentUserProfile);
+    }
+
+    private void checkAndShowMoreIcon(Self currentUserProfile) {
+        if ((
+                !broadcast.getIchatId().equals(currentUserProfile.getIchatId())
+                && ChannelDatabaseManager.getInstance().findOneChannel(broadcast.getIchatId()) == null
+            )
+                || SharedPreferencesAccessor.BroadcastPref.getServerExcludeBroadcastChannels(this).contains(broadcast.getIchatId())) {
             binding.spaceMore.setVisibility(View.GONE);
             binding.layoutMore.setVisibility(View.GONE);
         } else {
@@ -807,5 +816,13 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                 }
             });
         };
+    }
+
+    @Override
+    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelIchatId) {
+        if(excludeChannelIchatId.equals(broadcast.getIchatId())){
+            Self currentUserProfile = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
+            checkAndShowMoreIcon(currentUserProfile);
+        }
     }
 }
