@@ -15,7 +15,7 @@ import java.util.Objects;
 public abstract class BaseDatabaseHelper extends SQLiteOpenHelper {
 
     public BaseDatabaseHelper(Context context, String databaseFileName, SQLiteDatabase.CursorFactory factory, int version, String ichatId) {
-        super(context, DataPaths.PrivateFile.getDatabaseFilePath(context, ichatId, databaseFileName), factory, version);
-        Objects.requireNonNull(new File(DataPaths.PrivateFile.getDatabaseFilePath(context, ichatId, databaseFileName)).getParentFile()).mkdirs();
+        super(context, DataPaths.PrivateFile.databaseFilePath(context, ichatId, databaseFileName), factory, version);
+        Objects.requireNonNull(new File(DataPaths.PrivateFile.databaseFilePath(context, ichatId, databaseFileName)).getParentFile()).mkdirs();
     }
 }

@@ -16,7 +16,7 @@ public class PrivateFilesAccessor {
     public static class ChatImage{
         public static String save(Context context, ChatMessage chatMessage, byte[] imageBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
-            String imageFilePath = DataPaths.PrivateFile.getChatImageFilePath(context, other, chatMessage.getUuid());
+            String imageFilePath = DataPaths.PrivateFile.chatImageFilePath(context, other, chatMessage.getUuid());
             return FileHelper.save(imageBytes, imageFilePath);
         }
 
@@ -32,7 +32,7 @@ public class PrivateFilesAccessor {
     public static class ChatFile{
         public static String save(Context context, ChatMessage chatMessage, byte[] fileBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
-            String chatFileFilePath = DataPaths.PrivateFile.getChatFileFilePath(context, other, chatMessage.getFileName());
+            String chatFileFilePath = DataPaths.PrivateFile.chatFileFilePath(context, other, chatMessage.getFileName());
             return FileHelper.save(fileBytes, chatFileFilePath);
         }
 
@@ -48,7 +48,7 @@ public class PrivateFilesAccessor {
     public static class ChatVideo{
         public static String save(Context context, ChatMessage chatMessage, byte[] videoBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
-            String chatVideoFilePath = DataPaths.PrivateFile.getChatVideoFilePath(context, other, chatMessage.getFileName());
+            String chatVideoFilePath = DataPaths.PrivateFile.chatVideoFilePath(context, other, chatMessage.getFileName());
             return FileHelper.save(videoBytes, chatVideoFilePath);
         }
 
@@ -64,7 +64,7 @@ public class PrivateFilesAccessor {
     public static class ChatVoice{
         public static String save(Context context, ChatMessage chatMessage, byte[] voiceBytes) throws IOException {
             String other = chatMessage.isSelfSender(context) ? chatMessage.getTo() : chatMessage.getFrom();
-            String chatVoiceFilePath = DataPaths.PrivateFile.getChatVoiceFilePath(context, other, chatMessage.getUuid());
+            String chatVoiceFilePath = DataPaths.PrivateFile.chatVoiceFilePath(context, other, chatMessage.getUuid());
             return FileHelper.save(voiceBytes, chatVoiceFilePath);
         }
 

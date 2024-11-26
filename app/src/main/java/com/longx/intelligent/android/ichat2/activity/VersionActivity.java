@@ -37,10 +37,14 @@ public class VersionActivity extends BaseActivity {
         binding = ActivityVersionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        UiUtil.setViewEnabled(binding.linkButton, false, true);
+        init();
         showContent();
         fetchAndShowData();
         setupYiers();
+    }
+
+    private void init() {
+        UiUtil.setViewEnabled(binding.linkButton, false, true);
     }
 
     private void showContent() {

@@ -235,7 +235,7 @@ public class ServerSettingDialog extends AbstractDialog{
             dataFolderName = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(getActivity()).getDataFolder();
         }
         try {
-            File dataFolder = new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity()));
+            File dataFolder = new File(DataPaths.PrivateFile.privateFileRootPath(getActivity()));
             dataFolder.mkdirs();
             boolean dataFolderExist = FileUtil.dirContainsFile(Objects.requireNonNull(dataFolder.getParentFile()), dataFolderName);
             if(!dataFolderExist) throw new Exception("数据文件夹创建失败");
@@ -254,7 +254,7 @@ public class ServerSettingDialog extends AbstractDialog{
             try {
                 OkHttpClientCreator.create();
                 RetrofitCreator.create(getActivity());
-                new File(DataPaths.PrivateFile.getPrivateFileRootPath(getActivity())).mkdirs();
+                new File(DataPaths.PrivateFile.privateFileRootPath(getActivity())).mkdirs();
             } catch (Exception e) {
                 ErrorLogger.log(getClass(), e);
                 getActivity().runOnUiThread(() -> MessageDisplayer.showSnackbar(getActivity(), "出错了", Snackbar.LENGTH_LONG));
