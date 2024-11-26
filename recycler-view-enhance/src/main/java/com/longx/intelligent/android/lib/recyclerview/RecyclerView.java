@@ -350,7 +350,7 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         addOnScrollListener(approachEdgeYierTrigger);
     }
 
-    public void removeApproachEdgeYier(OnApproachEdgeYier onApproachEdgeYier){
+    public void removeOnApproachEdgeYier(OnApproachEdgeYier onApproachEdgeYier){
         for (ApproachEdgeYierTrigger approachEdgeYierTrigger : approachEdgeYierTriggers) {
             if(approachEdgeYierTrigger.onApproachEdgeYier.equals(onApproachEdgeYier)){
                 removeOnScrollListener(approachEdgeYierTrigger);

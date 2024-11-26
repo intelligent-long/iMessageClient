@@ -71,11 +71,18 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private Call<PaginatedOperationData<Broadcast>> nextPageCall;
     private boolean willToStart;
     private Badge newInteractionsBadge;
-    private ExecutorService saveBroadcastsHistoryThreadPool = Executors.newCachedThreadPool();
+    private final ExecutorService saveBroadcastsHistoryThreadPool = Executors.newCachedThreadPool();
+    private boolean savedInstanceStateIsNull;
 
     public static boolean needInitFetchBroadcast = true;
     public static boolean needFetchNewBroadcasts;
     public static boolean needReFetchBroadcast;
+
+    private androidx.recyclerview.widget.RecyclerView.OnScrollListener onRecyclerViewScrollListener1;
+    private RecyclerView.OnApproachEdgeYier onApproachEdgeYier;
+    private RecyclerView.OnThresholdScrollUpDownYier onThresholdScrollUpDownYier;
+    private androidx.recyclerview.widget.RecyclerView.OnScrollListener onRecyclerViewScrollListener2;
+    private AppBarLayout.OnOffsetChangedListener onOffsetChangedListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,8 +96,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         footerBinding = RecyclerFooterBroadcastBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
-        restoreState(savedInstanceState);
-        showOrHideBroadcastReloadedTime();
+        this.savedInstanceStateIsNull = savedInstanceState == null;
+        if (!savedInstanceStateIsNull) {
+            restoreState(savedInstanceState);
+            showOrHideBroadcastReloadedTime();
+        }
         setupBadge();
         GlobalYiersHolder.holdYier(requireContext(), BroadcastReloadYier.class, this);
         GlobalYiersHolder.holdYier(requireContext(), BroadcastDeletedYier.class, this);
@@ -99,13 +109,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_COMMENTS);
         GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.BROADCAST_REPLIES);
         GlobalYiersHolder.holdYier(requireContext(), OnSetChannelBroadcastExcludeYier.class, this);
-        if(needInitFetchBroadcast) {
-            fetchAndRefreshBroadcasts(true);
-        }else if(needReFetchBroadcast) {
-            fetchAndRefreshBroadcasts(false);
-        }else if(needFetchNewBroadcasts) {
-            fetchNews();
-        }
         return binding.getRoot();
     }
 
@@ -121,59 +124,81 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         GlobalYiersHolder.removeYier(requireContext(), OnSetChannelBroadcastExcludeYier.class, this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        new Thread(() -> {
+            if (savedInstanceStateIsNull) {
+                savedInstanceStateIsNull = false;
+                loadHistoryBroadcastsData();
+                showOrHideBroadcastReloadedTime();
+            }
+            if (needInitFetchBroadcast) {
+                fetchAndRefreshBroadcasts(true);
+            } else if (needReFetchBroadcast) {
+                fetchAndRefreshBroadcasts(false);
+            } else if (needFetchNewBroadcasts) {
+                fetchNews();
+            }
+            requireActivity().runOnUiThread(this::setupYiers);
+        }).start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeYiers();
+    }
+
     private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            int appBarVerticalOffset = savedInstanceState.getInt(InstanceStateKeys.BroadcastFragment.APP_BAR_LAYOUT_STATE, 0);
-            binding.appbar.post(() -> {
-                binding.appbar.setExpanded(appBarVerticalOffset == 0, false);
-                if(appBarVerticalOffset != 0){
-                    binding.sendBroadcastFab.show();
-                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
-                    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 0), layoutParams.bottomMargin);
-                    binding.toolbar.requestLayout();
-                }else {
-                    binding.sendBroadcastFab.hide();
-                }
-            });
-            boolean isSendBroadcastFabExpanded = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.SEND_BROADCAST_FAB_EXPANDED_STATE, true);
-            if (isSendBroadcastFabExpanded) {
-                binding.sendBroadcastFab.extend();
-            } else {
-                binding.sendBroadcastFab.shrink();
-            }
-            boolean isToStartFabShown = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.TO_START_FAB_VISIBILITY_STATE, false);
-            if(isToStartFabShown){
-                binding.toStartFab.show();
+        int appBarVerticalOffset = savedInstanceState.getInt(InstanceStateKeys.BroadcastFragment.APP_BAR_LAYOUT_STATE, 0);
+        binding.appbar.post(() -> {
+            binding.appbar.setExpanded(appBarVerticalOffset == 0, false);
+            if(appBarVerticalOffset != 0){
+                binding.sendBroadcastFab.show();
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.toolbar.getLayoutParams();
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 0), layoutParams.bottomMargin);
+                binding.toolbar.requestLayout();
             }else {
-                binding.toStartFab.hide();
+                binding.sendBroadcastFab.hide();
             }
-            stopFetchNextPage = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, false);
-            ArrayList<Parcelable> parcelableArrayList = savedInstanceState.getParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA);
-            if(parcelableArrayList != null) {
-                ArrayList<Broadcast> broadcasts = Utils.parseParcelableArray(parcelableArrayList);
-                List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-                broadcasts.forEach(broadcast -> {
-                    itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
-                });
-                adapter.addItemsAndShow(itemDataList);
-                calculateAndChangeRecyclerViewHeight();
-            }
-            String headerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.HEADER_ERROR_TEXT);
-            if(headerErrorText != null){
-                headerBinding.loadFailedView.setVisibility(View.VISIBLE);
-                headerBinding.loadFailedText.setText(headerErrorText);
-            }
-            String footerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.FOOTER_ERROR_TEXT);
-            if(footerErrorText != null){
-                footerBinding.loadFailedView.setVisibility(View.VISIBLE);
-                footerBinding.loadFailedText.setText(footerErrorText);
-            }
-            boolean headerNoBroadcast = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.HEADER_NO_BROADCAST);
-            if(headerNoBroadcast){
-                headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
-            }
+        });
+        boolean isSendBroadcastFabExpanded = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.SEND_BROADCAST_FAB_EXPANDED_STATE, true);
+        if (isSendBroadcastFabExpanded) {
+            binding.sendBroadcastFab.extend();
+        } else {
+            binding.sendBroadcastFab.shrink();
+        }
+        boolean isToStartFabShown = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.TO_START_FAB_VISIBILITY_STATE, false);
+        if(isToStartFabShown){
+            binding.toStartFab.show();
         }else {
-            loadHistoryBroadcastsData();
+            binding.toStartFab.hide();
+        }
+        stopFetchNextPage = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, false);
+        ArrayList<Parcelable> parcelableArrayList = savedInstanceState.getParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA);
+        if(parcelableArrayList != null) {
+            ArrayList<Broadcast> broadcasts = Utils.parseParcelableArray(parcelableArrayList);
+            List<BroadcastsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
+            broadcasts.forEach(broadcast -> {
+                itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
+            });
+            adapter.addItemsAndShow(itemDataList);
+            calculateAndChangeRecyclerViewHeight();
+        }
+        String headerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.HEADER_ERROR_TEXT);
+        if(headerErrorText != null){
+            headerBinding.loadFailedView.setVisibility(View.VISIBLE);
+            headerBinding.loadFailedText.setText(headerErrorText);
+        }
+        String footerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.FOOTER_ERROR_TEXT);
+        if(footerErrorText != null){
+            footerBinding.loadFailedView.setVisibility(View.VISIBLE);
+            footerBinding.loadFailedText.setText(footerErrorText);
+        }
+        boolean headerNoBroadcast = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.HEADER_NO_BROADCAST);
+        if(headerNoBroadcast){
+            headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -223,14 +248,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         return binding == null ? null : binding.toolbar;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setupYiers();
-    }
-
     private void setupYiers() {
-        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        onRecyclerViewScrollListener1 = new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -249,8 +268,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     GlideApp.with(requireContext()).resumeRequests();
                 }
             }
-        });
-        binding.recyclerView.addOnApproachEdgeYier(7, new RecyclerView.OnApproachEdgeYier() {
+        };
+        binding.recyclerView.addOnScrollListener(onRecyclerViewScrollListener1);
+        onApproachEdgeYier = new RecyclerView.OnApproachEdgeYier() {
             @Override
             public void onApproachStart() {
 
@@ -264,8 +284,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     }
                 }
             }
-        });
-        binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50){
+        };
+        binding.recyclerView.addOnApproachEdgeYier(7, onApproachEdgeYier);
+        onThresholdScrollUpDownYier = new RecyclerView.OnThresholdScrollUpDownYier(50){
             @Override
             public void onScrollUp() {
                 if(!binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.extend();
@@ -276,7 +297,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 if(binding.sendBroadcastFab.isExtended()) binding.sendBroadcastFab.shrink();
                 if(!binding.recyclerView.isApproachEnd(5)) binding.appbar.setExpanded(false);
             }
-        });
+        };
+        binding.recyclerView.addOnThresholdScrollUpDownYier(onThresholdScrollUpDownYier);
         binding.sendBroadcastFab.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
         });
@@ -286,7 +308,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         headerBinding.load.setOnClickListener(v -> {
             fetchAndRefreshBroadcasts(false);
         });
-        binding.recyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        onRecyclerViewScrollListener2 = new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -297,8 +319,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     }
                 }
             }
-        });
-        binding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+        };
+        binding.recyclerView.addOnScrollListener(onRecyclerViewScrollListener2);
+        onOffsetChangedListener = (appBarLayout, verticalOffset) -> {
             if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
                 binding.sendBroadcastFab.show();
 //                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(false);
@@ -321,7 +344,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, UiUtil.dpToPx(requireContext(), 148.5F), layoutParams.bottomMargin);
                 binding.toStartFab.hide();
             }
-        });
+        };
+        binding.appbar.addOnOffsetChangedListener(onOffsetChangedListener);
 //        binding.toolbar.setOnMenuItemClickListener(item -> {
 //            if(item.getItemId() == R.id.send_broadcast){
 //                startActivity(new Intent(requireContext(), SendBroadcastActivity.class));
@@ -336,6 +360,22 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             actionView.findViewById(R.id.image_button).setOnClickListener(v -> {
                 startActivity(new Intent(requireContext(), BroadcastInteractionsActivity.class));
             });
+        }
+    }
+
+    private void removeYiers(){
+        if(onRecyclerViewScrollListener1 != null) binding.recyclerView.removeOnScrollListener(onRecyclerViewScrollListener1);
+        if(onApproachEdgeYier != null) binding.recyclerView.removeOnApproachEdgeYier(onApproachEdgeYier);
+        if(onThresholdScrollUpDownYier != null) binding.recyclerView.removeOnThresholdScrollUpDownYier(onThresholdScrollUpDownYier);
+        binding.sendBroadcastFab.setOnClickListener(null);
+        binding.toStartFab.setOnClickListener(null);
+        headerBinding.load.setOnClickListener(null);
+        if(onRecyclerViewScrollListener2 != null) binding.recyclerView.removeOnScrollListener(onRecyclerViewScrollListener2);
+        if(onOffsetChangedListener != null) binding.appbar.removeOnOffsetChangedListener(onOffsetChangedListener);
+        binding.sendBroadcastButton.setOnClickListener(null);
+        View actionView = binding.toolbar.getMenu().findItem(R.id.interaction_notification).getActionView();
+        if(actionView != null){
+            actionView.findViewById(R.id.image_button).setOnClickListener(null);
         }
     }
 
@@ -398,7 +438,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         broadcasts.forEach(broadcast -> {
             itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
         });
-        adapter.addItemsAndShow(itemDataList);
+        requireActivity().runOnUiThread(() -> {
+            adapter.addItemsAndShow(itemDataList);
+        });
         calculateAndChangeRecyclerViewHeight();
     }
 
@@ -411,7 +453,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         });
     }
 
-    private void fetchAndRefreshBroadcasts(boolean init){
+    private synchronized void fetchAndRefreshBroadcasts(boolean init){
         stopFetchNextPage = true;
         if(nextPageCall != null) {
             breakFetchNextPage(nextPageCall);
@@ -476,6 +518,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     SharedPreferencesAccessor.BroadcastPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                 }, new OperationStatus.HandleResult(-102, () -> {
+                    stopFetchNextPage = true;
                     SharedPreferencesAccessor.ApiJson.Broadcasts.clearRecords(requireContext());
                     adapter.clearAndShow();
                     UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -492,15 +535,20 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
 
     private void showOrHideBroadcastReloadedTime() {
         Date broadcastReloadedTime = SharedPreferencesAccessor.BroadcastPref.getBroadcastReloadedTime(requireContext());
-        if(broadcastReloadedTime == null){
-            headerBinding.reloadTime.setVisibility(View.GONE);
-        }else {
-            headerBinding.reloadTime.setVisibility(View.VISIBLE);
-            headerBinding.reloadTime.setText("更新时间 " + TimeUtil.formatRelativeTime(broadcastReloadedTime));
-        }
+        requireActivity().runOnUiThread(() -> {
+            if (broadcastReloadedTime == null) {
+                headerBinding.reloadTime.setVisibility(View.GONE);
+            } else {
+                headerBinding.reloadTime.setVisibility(View.VISIBLE);
+                headerBinding.reloadTime.setText("更新时间 " + TimeUtil.formatRelativeTime(broadcastReloadedTime));
+            }
+        });
     }
 
     private synchronized void nextPage() {
+        if(stopFetchNextPage) {
+            return;
+        }
         NEXT_PAGE_LATCH = new CountDownLatch(1);
         String lastBroadcastId = adapter.getItemDataList().get(adapter.getItemCount() - 1).getBroadcast().getBroadcastId();
         BroadcastApiCaller.fetchBroadcastsLimit(this, lastBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, true, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
@@ -561,6 +609,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     adapter.addItemsAndShow(itemDataList);
                     calculateAndChangeRecyclerViewHeight();
                 }, new OperationStatus.HandleResult(-102, () -> {
+                    stopFetchNextPage = true;
                     footerBinding.loadFailedView.setVisibility(View.GONE);
                     footerBinding.loadFailedText.setText(null);
                     footerBinding.loadIndicator.setVisibility(View.GONE);
