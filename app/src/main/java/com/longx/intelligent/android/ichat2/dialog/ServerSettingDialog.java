@@ -25,6 +25,7 @@ import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 import com.longx.intelligent.android.ichat2.util.NetworkUtil;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 
 import java.io.File;
 import java.util.Objects;
@@ -63,12 +64,7 @@ public class ServerSettingDialog extends AbstractDialog{
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 R.layout.layout_auto_complete_text_view_text, serverTypeNames);
         binding.serverTypeAutoCompleteTextView.setAdapter(adapter);
-        binding.serverTypeAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+        binding.serverTypeAutoCompleteTextView.addTextChangedListener(new TextChangedYier() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.toString().equals(serverTypeNames[0])){
@@ -76,11 +72,6 @@ public class ServerSettingDialog extends AbstractDialog{
                 }else if(s.toString().equals(serverTypeNames[1])){
                     changeUiToCustomServerType();
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
     }
@@ -93,22 +84,12 @@ public class ServerSettingDialog extends AbstractDialog{
         if(host != null) binding.hostInput.setText(host);
         if(port != -1) binding.portInput.setText(String.valueOf(port));
         if(dataFolderWithoutSuffix != null) binding.dataFolderInput.setText(dataFolderWithoutSuffix);
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+        TextWatcher textWatcher = new TextChangedYier() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String dataFolderWithoutSuffix = ServerConfig.buildDataFolderWithoutSuffix(
                         UiUtil.getEditTextString(binding.hostInput), UiUtil.getEditTextString(binding.portInput));
                 binding.dataFolderInput.setText(dataFolderWithoutSuffix);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         };
         binding.hostInput.addTextChangedListener(textWatcher);
@@ -172,7 +153,6 @@ public class ServerSettingDialog extends AbstractDialog{
                 onServerConfigChanged(previousUseCentral);
                 getActivity().runOnUiThread(operatingDialog::dismiss);
             }).start();
-
         }
     }
 

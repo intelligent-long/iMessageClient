@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        navIconVisibilityPlusAnimator.cancel();
+        if(navIconVisibilityPlusAnimator != null) navIconVisibilityPlusAnimator.cancel();
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);

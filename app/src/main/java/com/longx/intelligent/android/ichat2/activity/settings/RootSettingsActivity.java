@@ -54,7 +54,7 @@ public class RootSettingsActivity extends BaseActivity {
         setupPreferenceFragment(savedInstanceState);
         boolean needRestoreInstanceState = getIntent().getBooleanExtra(ExtraKeys.NEED_RESTORE_INSTANCE_STATE, true);
         if(needRestoreInstanceState){
-            onRestoreInstanceState();
+            restoreInstanceState();
         }
     }
 
@@ -62,10 +62,10 @@ public class RootSettingsActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         getIntent().putExtra(ExtraKeys.NEED_RESTORE_INSTANCE_STATE, true);
-        onSaveInstanceState();
+        saveInstanceState();
     }
 
-    public void onSaveInstanceState() {
+    public void saveInstanceState() {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appbar.getLayoutParams();
         AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
         if (behavior != null) {
@@ -74,7 +74,7 @@ public class RootSettingsActivity extends BaseActivity {
         }
     }
 
-    protected void onRestoreInstanceState() {
+    protected void restoreInstanceState() {
         int appBarVerticalOffset = instanceState.getInt(InstanceStateKeys.RootSettingsActivity.APP_BAR_LAYOUT_STATE, 0);
         binding.appbar.setExpanded(appBarVerticalOffset == 0, false);
     }
@@ -197,8 +197,18 @@ public class RootSettingsActivity extends BaseActivity {
         }
 
         private void updateServerSettingSummary(){
-            ServerConfig serverConfig = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(requireContext());
-            String serverSettingSummary = serverConfig.getHost() + ":" + serverConfig.getPort();
+            ServerConfig serverConfig;
+            if(SharedPreferencesAccessor.ServerPref.isUseCentral(requireContext())){
+                serverConfig = SharedPreferencesAccessor.ServerPref.getCentralServerConfig(requireContext());
+            }else {
+                serverConfig = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(requireContext());
+            }
+            String serverSettingSummary;
+            if(serverConfig.getPort() != 80) {
+                serverSettingSummary = serverConfig.getHost() + ":" + serverConfig.getPort();
+            }else {
+                serverSettingSummary = serverConfig.getHost();
+            }
             preferenceServerSetting.setSummary(serverSettingSummary);
         }
 
@@ -253,7 +263,7 @@ public class RootSettingsActivity extends BaseActivity {
                         new ChoiceDialog(requireActivity(), "已将 iChat 网站地址复制到剪贴板。")
                                 .setPositiveButton("确定", null)
                                 .setNeutralButton("直接分享", (dialog, which) -> {
-                                    String shareStr = "[iChat] 分享给你一个聊天软件, 地址 " + ichatWebHomeUrl;
+                                    String shareStr = "[iChat] 我正在使用 iChat，非常不错的通讯应用，你也试试吧\n地址： " + ichatWebHomeUrl;
                                     Intent sendIntent = new Intent();
                                     sendIntent.setAction(Intent.ACTION_SEND);
                                     sendIntent.putExtra(Intent.EXTRA_TEXT, shareStr);

@@ -130,7 +130,7 @@ public abstract class RetrofitApiCaller {
 
         @Override
         public void notOk(int code, String message, Response<T> raw, Call<T> call) {
-            ErrorLogger.log(getClass(), new FailureResponseCodeException("HTTP 状态码异常  >  " + code));
+            ErrorLogger.log(getClass(), new FailureResponseCodeException("HTTP 状态码异常 [" + raw.raw().request().url() +"]  >  " + code));
             if(showErrorInfo) {
                 if (context != null) {
                     String showMessage = "HTTP 状态码异常  >  " + code;

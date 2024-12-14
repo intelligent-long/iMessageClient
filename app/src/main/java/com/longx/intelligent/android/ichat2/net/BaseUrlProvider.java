@@ -15,7 +15,7 @@ import okhttp3.Response;
  */
 public class BaseUrlProvider {
 
-    private static void fetchServerLocationAndStoreCentralServerConfig(Context context){
+    private static void fetchCentralServerLocationAndStoreCentralServerConfig(Context context){
         CountDownLatch countDownLatch = new CountDownLatch(1);
         ServerApiCaller.fetchCentralServerLocation(new ApiCaller.BaseCallYier<ServerLocation>(context, false) {
             @Override
@@ -50,7 +50,7 @@ public class BaseUrlProvider {
             return  "http://" + customServerConfig.getHost() + ":" + customServerConfig.getPort() + "/";
         }else {
             if(fetchServerLocationAndStoreCentralServerConfig) {
-                fetchServerLocationAndStoreCentralServerConfig(context);
+                fetchCentralServerLocationAndStoreCentralServerConfig(context);
             }
             ServerConfig centralServerConfig = SharedPreferencesAccessor.ServerPref.getCentralServerConfig(context);
             if(centralServerConfig != null){
@@ -70,7 +70,7 @@ public class BaseUrlProvider {
             return  "ws://" + customServerConfig.getHost() + ":" + customServerConfig.getPort() + "/";
         }else {
             if(fetchServerLocationAndStoreCentralServerConfig) {
-                fetchServerLocationAndStoreCentralServerConfig(context);
+                fetchCentralServerLocationAndStoreCentralServerConfig(context);
             }
             ServerConfig centralServerConfig = SharedPreferencesAccessor.ServerPref.getCentralServerConfig(context);
             if(centralServerConfig != null){
