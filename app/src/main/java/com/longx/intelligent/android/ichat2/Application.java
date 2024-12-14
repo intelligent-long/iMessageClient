@@ -27,12 +27,16 @@ public class Application extends android.app.Application {
     private void init(){
         CookieJar.create(this);
         OkHttpClientCreator.create();
-        new Thread(() -> RetrofitCreator.create(this)).start();
         DatabaseInitiator.initAll(this);
         boolean loginState = SharedPreferencesAccessor.NetPref.getLoginState(this);
         if(loginState) {
             ServerMessageService.work(this);
-            InitFetcher.doAll(this);
         }
+        new Thread(() -> {
+            RetrofitCreator.create(this);
+            if(loginState) {
+                InitFetcher.doAll(this);
+            }
+        }).start();
     }
 }

@@ -75,6 +75,7 @@ public class ActivityOperator extends ActivityHolder{
     }
 
     public static HoldableActivity getTopActivity(){
+        if(getActivityList().isEmpty()) return null;
         return getActivityList().get(getActivityList().size() - 1);
     }
 }
