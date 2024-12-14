@@ -418,8 +418,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             int recyclerViewHeight = binding.recyclerView.getHeight();
             if (contentHeight < recyclerViewHeight) {
                 UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
+                binding.recyclerView.setVerticalScrollBarEnabled(false);
             } else {
                 UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.MATCH_PARENT);
+                binding.recyclerView.setVerticalScrollBarEnabled(true);
             }
         });
     }
@@ -443,6 +445,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 stopFetchNextPage = true;
                 adapter.clearAndShow();
                 UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
+                binding.recyclerView.setVerticalScrollBarEnabled(false);
                 headerBinding.loadFailedView.setVisibility(View.GONE);
                 headerBinding.loadFailedText.setText(null);
                 headerBinding.loadIndicator.setVisibility(View.GONE);
@@ -532,6 +535,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     SharedPreferencesAccessor.ApiJson.Broadcasts.clearRecords(requireContext());
                     adapter.clearAndShow();
                     UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    binding.recyclerView.setVerticalScrollBarEnabled(false);
                     SharedPreferencesAccessor.BroadcastPref.saveBroadcastReloadedTime(requireContext(), new Date());
                     showOrHideBroadcastReloadedTime();
                     headerBinding.loadFailedView.setVisibility(View.GONE);
