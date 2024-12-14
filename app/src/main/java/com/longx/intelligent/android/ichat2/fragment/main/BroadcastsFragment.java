@@ -439,9 +439,19 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             itemDataList.add(new BroadcastsRecyclerAdapter.ItemData(broadcast));
         });
         requireActivity().runOnUiThread(() -> {
-            adapter.addItemsAndShow(itemDataList);
+            if(itemDataList.isEmpty()){
+                stopFetchNextPage = true;
+                adapter.clearAndShow();
+                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
+                headerBinding.loadFailedView.setVisibility(View.GONE);
+                headerBinding.loadFailedText.setText(null);
+                headerBinding.loadIndicator.setVisibility(View.GONE);
+                headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+            }else {
+                adapter.addItemsAndShow(itemDataList);
+                calculateAndChangeRecyclerViewHeight();
+            }
         });
-        calculateAndChangeRecyclerViewHeight();
     }
 
     private void saveHistoryBroadcastsData(List<Broadcast> broadcasts, boolean clearHistory){
@@ -546,7 +556,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     }
 
     private synchronized void nextPage() {
-        if(stopFetchNextPage) {
+        if(stopFetchNextPage || adapter.getItemDataList().isEmpty()) {
             return;
         }
         NEXT_PAGE_LATCH = new CountDownLatch(1);
