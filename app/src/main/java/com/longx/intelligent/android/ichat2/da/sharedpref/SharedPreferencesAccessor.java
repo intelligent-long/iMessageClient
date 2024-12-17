@@ -44,6 +44,7 @@ public class SharedPreferencesAccessor {
             private static final String SEARCH_CHANNEL_BY = "search_channel_by";
             private static final String LAST_CHECK_SOFTWARE_UPDATABLE_TIME = "last_check_software_updatable_time";
             private static final String IGNORE_UPDATE_VERSION_CODE = "ignore_update_version_code";
+            private static final String USER_GUIDE_SHOWED = "user_guide_showed";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return PreferenceManager.getDefaultSharedPreferences(context);
@@ -129,6 +130,18 @@ public class SharedPreferencesAccessor {
         public static int getIgnoreUpdateVersionCode(Context context){
             return getSharedPreferences(context)
                     .getInt(Key.IGNORE_UPDATE_VERSION_CODE, -1);
+        }
+
+        public static void saveUserGuideShowed(Context context, boolean showed){
+            getSharedPreferences(context)
+                    .edit()
+                    .putBoolean(Key.USER_GUIDE_SHOWED, showed)
+                    .apply();
+        }
+
+        public static boolean getUserGuideShowed(Context context){
+            return getSharedPreferences(context)
+                    .getBoolean(Key.USER_GUIDE_SHOWED, false);
         }
 
     }

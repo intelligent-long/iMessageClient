@@ -245,6 +245,7 @@ public class GlobalBehaviors {
     }
 
     public static void checkAndNotifySoftwareUpdate(AppCompatActivity activity){
+        if(RetrofitCreator.retrofit == null) return;
         Date lastCheckSoftwareUpdatableTime = SharedPreferencesAccessor.DefaultPref.getLastCheckSoftwareUpdatableTime(activity);
         if(lastCheckSoftwareUpdatableTime != null) {
             if (!TimeUtil.isDateAfter(lastCheckSoftwareUpdatableTime, new Date(), Constants.MIN_CHECK_SOFTWARE_UPDATABLE_INTERVAL_MILLI_SEC)) {

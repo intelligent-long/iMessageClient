@@ -113,6 +113,12 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
             intent.putExtra(ExtraKeys.BUTTON_TEXT, "移除");
             MediaActivity.setActionButtonYier(v1 -> {
                 int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
+                int nextItem = Math.max(currentItem - 1, 0);
+                MediaActivity.getInstance().getBinding().viewPager.setCurrentItem(nextItem);
+                MediaPagerAdapter adapter = MediaActivity.getInstance().getAdapter();
+                if(adapter.getItemCount() > 0) adapter.startPlayer(nextItem);
+                if(adapter.getItemCount() != 0) adapter.pausePlayer(currentItem);
+                if(adapter.getItemCount() != 0) adapter.releasePlayer(currentItem);
                 ArrayList<Media> medias = MediaActivity.getInstance().getMediaList();
                 medias.remove(currentItem);
                 Intent intent1 = new Intent();
@@ -120,7 +126,7 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
                 MediaActivity.getInstance().setResult(RESULT_OK, intent1);
                 if(medias.isEmpty()) MediaActivity.getInstance().finish();
                 MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
-                MediaActivity.getInstance().getAdapter().removeItem(currentItem);
+                adapter.removeItem(currentItem);
             });
             returnFromPreviewToSendMediaResultLauncher.launch(intent);
         });

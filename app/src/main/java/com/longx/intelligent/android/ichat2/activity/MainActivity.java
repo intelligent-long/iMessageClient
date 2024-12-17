@@ -1,6 +1,8 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
@@ -44,6 +46,7 @@ import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.databinding.ActivityMainBinding;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
+import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.ichat2.fragment.main.BroadcastsFragment;
 import com.longx.intelligent.android.ichat2.fragment.main.ChannelsFragment;
 import com.longx.intelligent.android.ichat2.fragment.main.MessagesFragment;
@@ -167,9 +170,11 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                             }
                         })
                         .setNegativeButton("下次提醒", (dialog, which) -> {
+                            showUserGuide();
                         })
                         .setNeutralButton("忽略", (dialog, which) -> {
                             SharedPreferencesAccessor.DefaultPref.disableRequestIgnoreBatteryOptimize(this);
+                            showUserGuide();
                         })
                         .create().show();
             }
@@ -198,6 +203,21 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
             if(!success){
                 MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.LONG);
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == SpecialPermissionOperator.IGNORE_BATTERY_OPTIMIZATIONS_REQUEST_CODE){
+            showUserGuide();
+        }
+    }
+
+    private void showUserGuide() {
+        if(!SharedPreferencesAccessor.DefaultPref.getUserGuideShowed(this)) {
+            new CustomViewMessageDialog(this, getString(R.string.user_guide_info)).create().show();
+            SharedPreferencesAccessor.DefaultPref.saveUserGuideShowed(this, true);
         }
     }
 

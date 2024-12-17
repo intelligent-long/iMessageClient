@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -73,6 +74,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private Badge newInteractionsBadge;
     private final ExecutorService saveBroadcastsHistoryThreadPool = Executors.newCachedThreadPool();
     private boolean savedInstanceStateIsNull;
+    private int recyclerViewHeight;
 
     public static boolean needInitFetchBroadcast = true;
     public static boolean needFetchNewBroadcasts;
@@ -409,21 +411,11 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         UiUtil.setViewHeight(headerBinding.noBroadcastView, headerItemHeight);
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
-        calculateAndChangeRecyclerViewHeight();
+        binding.recyclerView.post(() -> ErrorLogger.log(headerBinding.getRoot().getHeight()));
+        binding.recyclerView.post(() -> recyclerViewHeight = binding.recyclerView.getHeight());
     }
 
     private void calculateAndChangeRecyclerViewHeight() {
-        binding.recyclerView.post(() -> {
-            int contentHeight = binding.recyclerView.computeVerticalScrollRange();
-            int recyclerViewHeight = binding.recyclerView.getHeight();
-            if (contentHeight < recyclerViewHeight) {
-                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
-                binding.recyclerView.setVerticalScrollBarEnabled(false);
-            } else {
-                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.MATCH_PARENT);
-                binding.recyclerView.setVerticalScrollBarEnabled(true);
-            }
-        });
     }
 
     private void setupBadge() {
@@ -518,6 +510,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(requireActivity(), new int[]{-101}, () -> {
+                    UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.MATCH_PARENT);
                     stopFetchNextPage = !raw.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     saveHistoryBroadcastsData(broadcastList, true);
@@ -653,6 +646,14 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         adapter.removeItemAndShow(broadcastId);
         calculateAndChangeRecyclerViewHeight();
         SharedPreferencesAccessor.ApiJson.Broadcasts.deleteRecord(requireContext(), broadcastId);
+        if(adapter.getItemCount() == 0) {
+            UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
+            binding.recyclerView.setVerticalScrollBarEnabled(false);
+            headerBinding.loadFailedView.setVisibility(View.GONE);
+            headerBinding.loadFailedText.setText(null);
+            headerBinding.loadIndicator.setVisibility(View.GONE);
+            headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+        }
     }
 
     public void fetchNews() {
