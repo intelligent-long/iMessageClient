@@ -23,10 +23,12 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.ui.DisableExpandAppBarBehavior;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.dragsort.DragSortRecycler;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,16 +67,11 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
             toNoContent();
         }else {
             toContent();
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-            binding.recyclerView.setLayoutManager(layoutManager);
-            adapter = new ChannelTagsRecyclerAdapter(this, allChannelTags);
-            binding.recyclerView.setAdapter(adapter);
-            if(scrollToEnd) {
-                binding.appBar.setExpanded(false, true);
-                binding.recyclerView.scrollToEnd(true);
-                scrollToEnd = false;
-            }
         }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.recyclerView.setLayoutManager(layoutManager);
+        adapter = new ChannelTagsRecyclerAdapter(this, allChannelTags);
+        binding.recyclerView.setAdapter(adapter);
     }
 
     private void toNoContent(){
@@ -82,6 +79,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
                 .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
         binding.noContentLayout.setVisibility(View.VISIBLE);
         binding.recyclerView.setVisibility(View.GONE);
+        binding.toolbar.getMenu().findItem(R.id.sort).setEnabled(false);
     }
 
     private void toContent(){
@@ -91,6 +89,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         binding.noContentLayout.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.VISIBLE);
+        binding.toolbar.getMenu().findItem(R.id.sort).setEnabled(true);
     }
 
     private void setUpYiers() {

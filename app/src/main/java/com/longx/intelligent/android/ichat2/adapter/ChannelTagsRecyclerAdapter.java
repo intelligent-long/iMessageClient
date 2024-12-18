@@ -41,7 +41,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     public ChannelTagsRecyclerAdapter(AppCompatActivity activity, List<ChannelTag> channelTags) {
         this.activity = activity;
         this.channelTags = channelTags;
-        channelTags.sort(Comparator.comparingInt(ChannelTag::getOrder));
+        channelTags.sort(Comparator.comparingInt(ChannelTag::getOrder).reversed());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
