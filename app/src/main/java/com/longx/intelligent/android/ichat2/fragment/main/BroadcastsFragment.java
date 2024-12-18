@@ -324,7 +324,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         };
         binding.recyclerView.addOnScrollListener(onRecyclerViewScrollListener2);
         onOffsetChangedListener = (appBarLayout, verticalOffset) -> {
-            if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+            if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange() && verticalOffset != 0) {
                 binding.sendBroadcastFab.show();
 //                binding.toolbar.getMenu().findItem(R.id.send_broadcast).setVisible(false);
                 binding.sendBroadcastButton.setVisibility(View.GONE);
@@ -411,7 +411,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         UiUtil.setViewHeight(headerBinding.noBroadcastView, headerItemHeight);
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
-        binding.recyclerView.post(() -> ErrorLogger.log(headerBinding.getRoot().getHeight()));
         binding.recyclerView.post(() -> recyclerViewHeight = binding.recyclerView.getHeight());
     }
 
@@ -511,6 +510,10 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 super.ok(data, raw, call);
                 data.commonHandleResult(requireActivity(), new int[]{-101}, () -> {
                     UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.MATCH_PARENT);
+                    ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                            .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                    | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                                    | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
                     stopFetchNextPage = !raw.body().hasMore();
                     List<Broadcast> broadcastList = data.getData();
                     saveHistoryBroadcastsData(broadcastList, true);
@@ -535,6 +538,8 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                     headerBinding.loadFailedText.setText(null);
                     headerBinding.loadIndicator.setVisibility(View.GONE);
                     headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+                    ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                            .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
                 }));
             }
         });
