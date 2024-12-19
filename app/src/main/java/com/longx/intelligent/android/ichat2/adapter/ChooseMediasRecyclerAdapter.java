@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.MediaActivity;
+import com.longx.intelligent.android.ichat2.activity.MediaActivity2;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemChooseMediasBinding;
 import com.longx.intelligent.android.ichat2.media.MediaType;
@@ -126,7 +127,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         ItemData itemData = itemDataList.get(position);
         holder.binding.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         holder.binding.getRoot().setOnClickListener(v -> {
-            Intent intent = new Intent(activity, MediaActivity.class);
+            Intent intent = new Intent(activity, MediaActivity2.class);
             int current = 49;
             int startPosition = position - 49;
             int endPosition = position + 50;

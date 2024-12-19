@@ -135,12 +135,12 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
             Integer position = integerViewHolderEntry.getKey();
             MediaPagerAdapter.ViewHolder viewHolder = integerViewHolderEntry.getValue();
             if(pureContent) {
-                UiUtil.setViewVisibility(viewHolder.getBinding().topShadowCover, View.GONE);
+                UiUtil.setViewVisibility(viewHolder.getBinding().topTranslucentOverlayWrap, View.GONE);
                 if(adapter.getItemDataList().get(position).getMedia().getMediaType() == MediaType.VIDEO) {
                     UiUtil.setViewVisibility(viewHolder.getBinding().playControl, View.GONE);
                 }
             }else {
-                UiUtil.setViewVisibility(viewHolder.getBinding().topShadowCover, View.VISIBLE);
+                UiUtil.setViewVisibility(viewHolder.getBinding().topTranslucentOverlayWrap, View.VISIBLE);
                 if(adapter.getItemDataList().get(position).getMedia().getMediaType() == MediaType.VIDEO) {
                     UiUtil.setViewVisibility(viewHolder.getBinding().playControl, View.VISIBLE);
                 }

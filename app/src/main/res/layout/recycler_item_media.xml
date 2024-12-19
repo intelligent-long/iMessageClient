@@ -4,11 +4,23 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/top_shadow_cover"
-        android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:background="@drawable/shape_photo_top_bar_background"/>
+    <FrameLayout
+        android:id="@+id/top_translucent_overlay_wrap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/top_translucent_overlay_image"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="@drawable/shape_photo_top_bar_background"/>
+
+        <View
+            android:id="@+id/top_translucent_overlay_video"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/shape_photo_top_bar_background"/>
+    </FrameLayout>
 
     <com.longx.intelligent.android.ichat2.ui.SubsamplingScalePhotoView
         android:visibility="gone"

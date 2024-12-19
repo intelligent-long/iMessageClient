@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.longx.intelligent.android.ichat2.ui.SubsamplingScalePhotoView
+        android:visibility="gone"
+        android:id="@+id/photo_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/load_failed_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/load_failed_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载失败"
+            android:theme="@style/Theme.Material3.Dark"
+            android:textSize="16sp"
+            android:padding="50dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/shape_visible_shadow_background"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/spare_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <com.google.android.exoplayer2.ui.StyledPlayerView
+        android:visibility="gone"
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:use_controller="false"/>
+</FrameLayout>

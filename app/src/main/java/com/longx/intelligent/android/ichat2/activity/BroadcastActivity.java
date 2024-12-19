@@ -575,7 +575,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
     }
 
     private void setupAndStartMediaActivity(int position){
-        Intent intent = new Intent(this, MediaActivity.class);
+        Intent intent = new Intent(this, MediaActivity2.class);
         intent.putExtra(ExtraKeys.POSITION, position);
         ArrayList<Media> mediaList = new ArrayList<>();
         List<BroadcastMedia> broadcastMedias = broadcast.getBroadcastMedias();
@@ -592,40 +592,73 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
         intent.putExtra(ExtraKeys.BUTTON_TEXT, "保存");
         intent.putExtra(ExtraKeys.GLIDE_LOAD, true);
-        MediaActivity.setActionButtonYier(v -> {
-            int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
+//        MediaActivity.setActionButtonYier(v -> {
+//            int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
+//            if(currentItem == -1) return;
+//            BroadcastMedia broadcastMedia = broadcastMedias.get(currentItem);
+//            switch (broadcastMedia.getType()){
+//                case BroadcastMedia.TYPE_IMAGE:
+//                    new Thread(() -> {
+//                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
+//                        operatingDialog.create().show();
+//                        try {
+//                            PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity.getInstance(), broadcast, currentItem);
+//                            operatingDialog.dismiss();
+//                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+//                        }catch (IOException | InterruptedException e){
+//                            ErrorLogger.log(e);
+//                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+//                        }
+//                    }).start();
+//                    break;
+//                case BroadcastMedia.TYPE_VIDEO:
+//                    new Thread(() -> {
+//                        try {
+//                            PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity.getInstance(), broadcast, currentItem);
+//                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+//                        } catch (OperationCanceledException e){
+//                            ErrorLogger.log(e);
+//                        } catch (InterruptedException | IOException e) {
+//                            ErrorLogger.log(e);
+//                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+//                        }
+//                    }).start();
+//                    break;
+//            }
+//        });
+        MediaActivity2.setActionButtonYier(v -> {
+            int currentItem = MediaActivity2.getInstance().getCurrentItemIndex();
             if(currentItem == -1) return;
             BroadcastMedia broadcastMedia = broadcastMedias.get(currentItem);
             switch (broadcastMedia.getType()){
                 case BroadcastMedia.TYPE_IMAGE:
                     new Thread(() -> {
-                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
+                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity2.getInstance());
                         operatingDialog.create().show();
                         try {
-                            PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity.getInstance(), broadcast, currentItem);
+                            PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity2.getInstance(), broadcast, currentItem);
                             operatingDialog.dismiss();
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException | InterruptedException e){
                             ErrorLogger.log(e);
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
                     }).start();
                     break;
                 case BroadcastMedia.TYPE_VIDEO:
                     new Thread(() -> {
                         try {
-                            PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity.getInstance(), broadcast, currentItem);
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                            PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity2.getInstance(), broadcast, currentItem);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         } catch (OperationCanceledException e){
                             ErrorLogger.log(e);
                         } catch (InterruptedException | IOException e) {
                             ErrorLogger.log(e);
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
                     }).start();
                     break;
             }
-
         });
         startActivity(intent);
     }

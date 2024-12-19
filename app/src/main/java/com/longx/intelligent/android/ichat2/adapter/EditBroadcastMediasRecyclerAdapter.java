@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
 import com.longx.intelligent.android.ichat2.activity.MediaActivity;
+import com.longx.intelligent.android.ichat2.activity.MediaActivity2;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemEditBroadcastMediasBinding;
 import com.longx.intelligent.android.ichat2.databinding.RecyclerItemSendBroadcastMediasBinding;
 import com.longx.intelligent.android.ichat2.media.data.Media;
@@ -104,28 +105,45 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
 
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.imageView.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, MediaActivity.class);
+            Intent intent = new Intent(activity, MediaActivity2.class);
             ArrayList<Media> mediaList = new ArrayList<>();
             intent.putExtra(ExtraKeys.GLIDE_LOAD, mediaActivityGlideLoad);
             mediaInfoList.forEach(mediaInfo -> mediaList.add(new Media(mediaInfo.getMediaType(), mediaInfo.getUri())));
             intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
             intent.putExtra(ExtraKeys.POSITION, position);
             intent.putExtra(ExtraKeys.BUTTON_TEXT, "移除");
-            MediaActivity.setActionButtonYier(v1 -> {
-                int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
+//            MediaActivity.setActionButtonYier(v1 -> {
+//                int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
+//                int nextItem = currentItem + 1 >= MediaActivity.getInstance().getMediaList().size() ? currentItem - 1 : currentItem;
+//                MediaActivity.getInstance().getBinding().viewPager.setCurrentItem(nextItem);
+//                MediaPagerAdapter adapter = MediaActivity.getInstance().getAdapter();
+//                if(adapter.getItemCount() > 0) adapter.startPlayer(nextItem);
+//                if(adapter.getItemCount() != 0) adapter.pausePlayer(currentItem);
+//                if(adapter.getItemCount() != 0) adapter.releasePlayer(currentItem);
+//                ArrayList<Media> medias = MediaActivity.getInstance().getMediaList();
+//                medias.remove(currentItem);
+//                Intent intent1 = new Intent();
+//                intent1.putParcelableArrayListExtra(ExtraKeys.MEDIAS, medias);
+//                MediaActivity.getInstance().setResult(RESULT_OK, intent1);
+//                if(medias.isEmpty()) MediaActivity.getInstance().finish();
+//                MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
+//                adapter.removeItem(currentItem);
+//            });
+            MediaActivity2.setActionButtonYier(v1 -> {
+                int currentItem = MediaActivity2.getInstance().getCurrentItemIndex();
                 int nextItem = Math.max(currentItem - 1, 0);
-                MediaActivity.getInstance().getBinding().viewPager.setCurrentItem(nextItem);
-                MediaPagerAdapter adapter = MediaActivity.getInstance().getAdapter();
-                if(adapter.getItemCount() > 0) adapter.startPlayer(nextItem);
-                if(adapter.getItemCount() != 0) adapter.pausePlayer(currentItem);
-                if(adapter.getItemCount() != 0) adapter.releasePlayer(currentItem);
-                ArrayList<Media> medias = MediaActivity.getInstance().getMediaList();
+                MediaActivity2.getInstance().getBinding().viewPager.setCurrentItem(nextItem);
+                MediaPagerAdapter2 adapter = MediaActivity2.getInstance().getAdapter();
+//                if(adapter.getItemCount() > 0) adapter.startPlayer(nextItem);
+//                if(adapter.getItemCount() != 0) adapter.pausePlayer(currentItem);
+//                if(adapter.getItemCount() != 0) adapter.releasePlayer(currentItem);
+                ArrayList<Media> medias = MediaActivity2.getInstance().getMediaList();
                 medias.remove(currentItem);
                 Intent intent1 = new Intent();
                 intent1.putParcelableArrayListExtra(ExtraKeys.MEDIAS, medias);
-                MediaActivity.getInstance().setResult(RESULT_OK, intent1);
-                if(medias.isEmpty()) MediaActivity.getInstance().finish();
-                MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
+                MediaActivity2.getInstance().setResult(RESULT_OK, intent1);
+                if(medias.isEmpty()) MediaActivity2.getInstance().finish();
+                MediaActivity2.getInstance().getBinding().toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
                 adapter.removeItem(currentItem);
             });
             returnFromPreviewToSendMediaResultLauncher.launch(intent);

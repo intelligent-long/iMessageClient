@@ -106,19 +106,20 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         resetView(holder);
         if(activity.isPureContent()){
-            UiUtil.setViewVisibility(holder.binding.topShadowCover, View.GONE);
+            UiUtil.setViewVisibility(holder.binding.topTranslucentOverlayWrap, View.GONE);
             if(itemDataList.get(position).media.getMediaType() == MediaType.VIDEO) {
                 UiUtil.setViewVisibility(holder.binding.playControl, View.GONE);
             }
         }else {
-            UiUtil.setViewVisibility(holder.binding.topShadowCover, View.VISIBLE);
+            UiUtil.setViewVisibility(holder.binding.topTranslucentOverlayWrap, View.VISIBLE);
         }
         viewHolderMap.put(position, holder);
         Media media = itemDataList.get(position).media;
         switch (media.getMediaType()){
             case IMAGE:{
-                changeTopCoverHeight(holder, false);
-                holder.binding.topShadowCover.bringToFront();
+                holder.binding.topTranslucentOverlayImage.setVisibility(View.VISIBLE);
+                holder.binding.topTranslucentOverlayImage.bringToFront();
+                holder.binding.topTranslucentOverlayVideo.setVisibility(View.GONE);
                 holder.binding.photoView.setVisibility(View.VISIBLE);
                 Uri imageUri = media.getUri();
                 holder.binding.photoView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener(){
@@ -162,8 +163,9 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
                 break;
             }
             case VIDEO:{
-                changeTopCoverHeight(holder, true);
-                holder.binding.topShadowCover.bringToFront();
+                holder.binding.topTranslucentOverlayVideo.setVisibility(View.VISIBLE);
+                holder.binding.topTranslucentOverlayVideo.bringToFront();
+                holder.binding.topTranslucentOverlayImage.setVisibility(View.GONE);
                 holder.binding.timePlay.setText(TimeUtil.formatTimeToHHMMSS(0) + " / " + TimeUtil.formatTimeToHHMMSS(0));
                 holder.binding.playControl.bringToFront();
                 initializePlayer(holder.binding, position);
@@ -401,16 +403,6 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
 
     public List<ItemData> getItemDataList() {
         return itemDataList;
-    }
-
-    public void changeTopCoverHeight(ViewHolder holder, boolean big){
-        int height;
-        if(big){
-            height = UiUtil.dpToPx(activity, 150);
-        }else {
-            height = UiUtil.dpToPx(activity, 110);
-        }
-        UiUtil.setViewHeight(holder.binding.topShadowCover, height);
     }
 
     public void removeItem(int position){

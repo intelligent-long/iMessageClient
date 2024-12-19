@@ -20,6 +20,7 @@ import com.longx.intelligent.android.ichat2.activity.ChatActivity;
 import com.longx.intelligent.android.ichat2.activity.ChatFileActivity;
 import com.longx.intelligent.android.ichat2.activity.MediaActivity;
 import com.longx.intelligent.android.ichat2.activity.ExtraKeys;
+import com.longx.intelligent.android.ichat2.activity.MediaActivity2;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.ChatVoicePlayer;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
@@ -597,7 +598,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     private void setupAndStartMediaActivity(ItemData currentItemData) {
-        Intent intent = new Intent(activity, MediaActivity.class);
+        Intent intent = new Intent(activity, MediaActivity2.class);
         ArrayList<ChatMessage> chatMessages = new ArrayList<>();
         itemDataList.forEach(itemData -> {
             ChatMessage chatMessage = itemData.chatMessage;
