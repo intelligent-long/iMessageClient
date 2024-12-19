@@ -74,7 +74,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     private Badge newInteractionsBadge;
     private final ExecutorService saveBroadcastsHistoryThreadPool = Executors.newCachedThreadPool();
     private boolean savedInstanceStateIsNull;
-    private int recyclerViewHeight;
 
     public static boolean needInitFetchBroadcast = true;
     public static boolean needFetchNewBroadcasts;
@@ -98,7 +97,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         footerBinding = RecyclerFooterBroadcastBinding.inflate(inflater, container, false);
         setupFab();
         setupRecyclerView();
-        this.savedInstanceStateIsNull = savedInstanceState == null;
+        savedInstanceStateIsNull = savedInstanceState == null;
         if (!savedInstanceStateIsNull) {
             restoreState(savedInstanceState);
             showOrHideBroadcastReloadedTime();
@@ -141,6 +140,9 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 fetchAndRefreshBroadcasts(false);
             } else if (needFetchNewBroadcasts) {
                 fetchNews();
+                stopFetchNextPage = true;
+            } else {
+                stopFetchNextPage = true;
             }
             requireActivity().runOnUiThread(this::setupYiers);
         }).start();
@@ -178,6 +180,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             binding.toStartFab.hide();
         }
         stopFetchNextPage = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, false);
+        ErrorLogger.log("stopFetchNextPage: " + stopFetchNextPage);
         ArrayList<Parcelable> parcelableArrayList = savedInstanceState.getParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA);
         if(parcelableArrayList != null) {
             ArrayList<Broadcast> broadcasts = Utils.parseParcelableArray(parcelableArrayList);
@@ -411,7 +414,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         UiUtil.setViewHeight(headerBinding.noBroadcastView, headerItemHeight);
         binding.recyclerView.setHeaderView(headerBinding.getRoot());
         binding.recyclerView.setFooterView(footerBinding.getRoot());
-        binding.recyclerView.post(() -> recyclerViewHeight = binding.recyclerView.getHeight());
     }
 
     private void calculateAndChangeRecyclerViewHeight() {
@@ -433,7 +435,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
         });
         requireActivity().runOnUiThread(() -> {
             if(itemDataList.isEmpty()){
-                stopFetchNextPage = true;
                 adapter.clearAndShow();
                 UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
                 binding.recyclerView.setVerticalScrollBarEnabled(false);
