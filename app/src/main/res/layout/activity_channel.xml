@@ -33,6 +33,21 @@
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/do_not_find_channel_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/do_not_find_channel"
+            android:textSize="21sp"
+            android:textColor="?attr/colorOutline"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/content_view"
         android:layout_width="match_parent"

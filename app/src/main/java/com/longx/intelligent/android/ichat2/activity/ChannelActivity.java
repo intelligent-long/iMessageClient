@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.ichat2.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -23,6 +24,7 @@ import com.longx.intelligent.android.ichat2.data.Channel;
 import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChannelBinding;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -69,9 +71,18 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void getUserInfoAndShow() {
-        ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
-        channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
-        networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
+        Uri uri = getIntent().getData();
+        if(uri != null){
+            String path = uri.getPath();
+            if (path != null) {
+                ichatId = path.substring(1);
+            }
+        }
+        if(ichatId == null) {
+            ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
+            channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
+            networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
+        }
         self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         isSelf = (ichatId == null && channel == null)
                 || (ichatId != null && ichatId.equals(self.getIchatId())
@@ -100,24 +111,30 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                     super.start(call);
                     binding.contentView.setVisibility(View.GONE);
                     binding.loadingView.setVisibility(View.VISIBLE);
+                    binding.doNotFindChannelView.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
-                    data.commonHandleResult(ChannelActivity.this, new int[]{-101}, () -> {
+                    data.commonHandleResult(ChannelActivity.this, new int[]{}, () -> {
                         channel = data.getData(Channel.class);
                         if(channel != null){
                             showContent();
+                            binding.contentView.setVisibility(View.VISIBLE);
+                            binding.loadingView.setVisibility(View.GONE);
+                            binding.doNotFindChannelView.setVisibility(View.GONE);
                         }
-                    });
+                    }, new OperationStatus.HandleResult(-101, () -> {
+                        binding.contentView.setVisibility(View.GONE);
+                        binding.loadingView.setVisibility(View.GONE);
+                        binding.doNotFindChannelView.setVisibility(View.VISIBLE);
+                    }));
                 }
 
                 @Override
                 public void complete(Call<OperationData> call) {
                     super.complete(call);
-                    binding.contentView.setVisibility(View.VISIBLE);
-                    binding.loadingView.setVisibility(View.GONE);
                 }
             });
         }
