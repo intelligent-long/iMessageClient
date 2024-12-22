@@ -664,6 +664,13 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             headerBinding.loadFailedText.setText(null);
             headerBinding.loadIndicator.setVisibility(View.GONE);
             headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+            ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                    .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
+        }else {
+            ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                    .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                            | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                            | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         }
     }
 
