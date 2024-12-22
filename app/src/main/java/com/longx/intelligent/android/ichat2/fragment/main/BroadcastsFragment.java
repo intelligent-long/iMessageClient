@@ -180,7 +180,6 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             binding.toStartFab.hide();
         }
         stopFetchNextPage = savedInstanceState.getBoolean(InstanceStateKeys.BroadcastFragment.STOP_FETCH_NEXT_PAGE, false);
-        ErrorLogger.log("stopFetchNextPage: " + stopFetchNextPage);
         ArrayList<Parcelable> parcelableArrayList = savedInstanceState.getParcelableArrayList(InstanceStateKeys.BroadcastFragment.HISTORY_BROADCASTS_DATA);
         if(parcelableArrayList != null) {
             ArrayList<Broadcast> broadcasts = Utils.parseParcelableArray(parcelableArrayList);
@@ -442,9 +441,15 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 headerBinding.loadFailedText.setText(null);
                 headerBinding.loadIndicator.setVisibility(View.GONE);
                 headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+                ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                        .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
             }else {
                 adapter.addItemsAndShow(itemDataList);
                 calculateAndChangeRecyclerViewHeight();
+                ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                        .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
             }
         });
     }
