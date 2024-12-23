@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.adapter.BroadcastsRecyclerAdapter;
@@ -218,7 +219,6 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         }
     }
 
-
     private void fetchAndRefreshBroadcasts(){
         stopFetchNextPage = true;
         if(nextPageCall != null) {
@@ -373,6 +373,13 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     @Override
     public void onBroadcastDeleted(String broadcastId) {
         adapter.removeItemAndShow(broadcastId);
+        ErrorLogger.log(adapter.getItemCount());
+        if(adapter.getItemCount() == 0) {
+            headerBinding.loadFailedView.setVisibility(View.GONE);
+            headerBinding.loadFailedText.setText(null);
+            headerBinding.loadIndicator.setVisibility(View.GONE);
+            headerBinding.noBroadcastView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
