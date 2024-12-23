@@ -373,7 +373,6 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     @Override
     public void onBroadcastDeleted(String broadcastId) {
         adapter.removeItemAndShow(broadcastId);
-        ErrorLogger.log(adapter.getItemCount());
         if(adapter.getItemCount() == 0) {
             headerBinding.loadFailedView.setVisibility(View.GONE);
             headerBinding.loadFailedText.setText(null);

@@ -17,6 +17,7 @@ import com.longx.intelligent.android.ichat2.data.OpenedChat;
 import com.longx.intelligent.android.ichat2.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.Self;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
+import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.data.response.PaginatedOperationData;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller;
@@ -242,7 +243,7 @@ public class ContentUpdater {
                     @Override
                     public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleSuccessResult(() -> {
+                        data.commonHandleResult(null, new int[]{}, () -> {
                             List<Broadcast> broadcastList = data.getData();
                             List<RecentBroadcastMedia> recentBroadcastMedias = new ArrayList<>();
                             int index = 0;
@@ -265,7 +266,10 @@ public class ContentUpdater {
                             }
                             ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(recentBroadcastMedias, ichatId);
                             resultsYier.onResults();
-                        });
+                        }, new OperationStatus.HandleResult(-102, () -> {
+                            ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(new ArrayList<>(), ichatId);
+                            resultsYier.onResults();
+                        }));
                     }
                 });
     }
