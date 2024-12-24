@@ -21,7 +21,7 @@ import com.longx.intelligent.android.ichat2.net.retrofit.caller.ChannelApiCaller
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
-import com.longx.intelligent.android.ichat2.value.Variables;
+import com.longx.intelligent.android.ichat2.value.Mutables;
 import com.longx.intelligent.android.ichat2.yier.TextChangedYier;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class RequestAddChannelActivity extends BaseActivity {
     }
 
     private void showContent() {
-        binding.messageInput.setText(Variables.getRequestAddChannelDefaultMessage(currentUserInfo.getUsername()));
+        binding.messageInput.setText(Mutables.getRequestAddChannelDefaultMessage(currentUserInfo.getUsername()));
         binding.noteInput.setText(channel.getNote());
     }
 

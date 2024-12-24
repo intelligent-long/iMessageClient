@@ -33,7 +33,7 @@ import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
 import com.longx.intelligent.android.ichat2.util.WindowAndSystemUiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
-import com.longx.intelligent.android.ichat2.value.Variables;
+import com.longx.intelligent.android.ichat2.value.Mutables;
 import com.longx.intelligent.android.ichat2.yier.AutoCompleteTextViewAutoSelectOnItemClickYier;
 import com.longx.intelligent.android.lib.recyclerview.decoration.SpaceGridDecorationSetter;
 
@@ -323,7 +323,7 @@ public class ChooseMediasActivity extends BaseActivity{
     private void updateTimeRange(ChooseMediasRecyclerAdapter.ItemData firstItem, ChooseMediasRecyclerAdapter.ItemData lastItem){
         long firstCompletelyVisibleItemTime = firstItem.getMediaInfo().getAddedTime() * 1000;
         long lastCompletelyVisibleItemTime = lastItem.getMediaInfo().getAddedTime() * 1000;
-        binding.time.setText(Variables.getTimeRangeStr(firstCompletelyVisibleItemTime, lastCompletelyVisibleItemTime));
+        binding.time.setText(Mutables.getTimeRangeStr(firstCompletelyVisibleItemTime, lastCompletelyVisibleItemTime));
     }
 
     private void updateLocation(ChooseMediasRecyclerAdapter.ItemData firstItem, ChooseMediasRecyclerAdapter.ItemData lastItem){
