@@ -206,18 +206,18 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
     }
 
+    private void showUserGuide() {
+        if(!SharedPreferencesAccessor.DefaultPref.getUserGuideShowed(this)) {
+            new CustomViewMessageDialog(this, getString(R.string.user_guide_info)).create().show();
+            SharedPreferencesAccessor.DefaultPref.saveUserGuideShowed(this, true);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == SpecialPermissionOperator.IGNORE_BATTERY_OPTIMIZATIONS_REQUEST_CODE){
             showUserGuide();
-        }
-    }
-
-    private void showUserGuide() {
-        if(!SharedPreferencesAccessor.DefaultPref.getUserGuideShowed(this)) {
-            new CustomViewMessageDialog(this, getString(R.string.user_guide_info)).create().show();
-            SharedPreferencesAccessor.DefaultPref.saveUserGuideShowed(this, true);
         }
     }
 
