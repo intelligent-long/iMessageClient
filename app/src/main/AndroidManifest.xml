@@ -123,15 +123,18 @@
         <activity
             android:name=".activity.settings.EditWaysToFindMeActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
         <activity
             android:name=".activity.settings.PrivacySettingsActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
         <activity
             android:name=".activity.settings.EditUserProfileVisibilitySettingsActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
         <activity
             android:name=".activity.TakePhotoActivity"
             android:exported="false"
@@ -218,7 +221,8 @@
         <activity
             android:name=".activity.settings.PermissionSettingsActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
         <activity
             android:name=".activity.AvatarActivity"
             android:exported="false"
@@ -251,7 +255,7 @@
         <activity
             android:name=".activity.edituser.ChangeIchatIdUserActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"  />
         <activity
             android:name=".activity.settings.EditUserSettingsActivity"
             android:exported="false"
