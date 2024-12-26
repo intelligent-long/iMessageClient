@@ -102,9 +102,8 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     }
 
     private void setupFab() {
-        float smallFabMarginTop;
+        float smallFabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(this) + WindowAndSystemUiUtil.getActionBarHeight(this);
         float fabMarginEnd = getResources().getDimension(R.dimen.fab_margin_end);
-        smallFabMarginTop = WindowAndSystemUiUtil.getStatusBarHeight(this) + WindowAndSystemUiUtil.getActionBarHeight(this);
         UiUtil.setViewMargin(binding.toStartFab, 0, (int) smallFabMarginTop, (int) fabMarginEnd, 0);
         binding.toStartFab.setVisibility(View.GONE);
     }
