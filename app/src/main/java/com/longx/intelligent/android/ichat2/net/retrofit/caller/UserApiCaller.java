@@ -37,9 +37,9 @@ public class UserApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationStatus> changeAvatar(LifecycleOwner lifecycleOwner, byte[] avatar, String fileName, BaseYier<OperationStatus> yier){
+    public static CompletableCall<OperationStatus> changeAvatar(LifecycleOwner lifecycleOwner, byte[] avatar, BaseYier<OperationStatus> yier){
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), avatar);
-        MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", fileName, requestBody);
+        MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", "avatar", requestBody);
         CompletableCall<OperationStatus> call = getApiImplementation().changeAvatar(avatarPart);
         call.enqueue(lifecycleOwner, yier);
         return call;

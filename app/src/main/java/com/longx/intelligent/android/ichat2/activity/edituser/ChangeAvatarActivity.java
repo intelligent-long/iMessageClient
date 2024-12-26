@@ -76,7 +76,7 @@ public class ChangeAvatarActivity extends BaseActivity {
     }
 
     private void onImageCropped(byte[] avatar){
-        UserApiCaller.changeAvatar(this, avatar, ".png", new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+        UserApiCaller.changeAvatar(this, avatar, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
             @Override
             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                 super.ok(data, raw, call);

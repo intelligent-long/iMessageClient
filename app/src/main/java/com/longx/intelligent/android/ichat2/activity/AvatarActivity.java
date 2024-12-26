@@ -56,16 +56,12 @@ public class AvatarActivity extends BaseActivity {
                 new CustomTarget<File>() {
                     @Override
                     public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                        ImageSaver.saveImageToDcim(AvatarActivity.this, resource, ichatId + "_" + System.currentTimeMillis() + avatarExtension, "iChat" + File.separator + "Avatar",
+                        ImageSaver.saveImageToDcim(AvatarActivity.this, resource,
+                                ichatId + "_" + avatarHash + "_" + System.currentTimeMillis() + avatarExtension,
+                                "iChat" + File.separator + "Avatar",
                                 results -> {
                                     Uri uri = (Uri) results[0];
-                                    String displayMessage;
-                                    if(uri != null){
-                                        displayMessage = "保存成功";
-                                    }else {
-                                        displayMessage = "保存失败";
-                                    }
-                                    MessageDisplayer.autoShow(AvatarActivity.this, displayMessage, MessageDisplayer.Duration.LONG);
+                                    MessageDisplayer.autoShow(AvatarActivity.this, uri == null ? "保存失败" : "保存成功", MessageDisplayer.Duration.LONG);
                                 });
                     }
 
