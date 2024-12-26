@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/profile_visibility"
-        android:title="资料可见性"
-        android:icon="@drawable/visibility_outline_24px"
+        android:id="@+id/more"
+        android:title="更多"
+        android:icon="@drawable/more_horiz_24px"
         app:iconTint="?attr/colorControlNormal"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 </menu>

@@ -65,7 +65,7 @@ public class EditUserSettingsActivity extends BaseActivity{
 
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.profile_visibility){
+            if(item.getItemId() == R.id.more){
                 startActivity(new Intent(EditUserSettingsActivity.this, EditUserProfileVisibilitySettingsActivity.class));
             }
             return false;
