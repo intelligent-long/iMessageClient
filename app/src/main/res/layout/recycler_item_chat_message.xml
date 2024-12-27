@@ -274,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/chat_bubble"
-                    android:backgroundTint="@color/chat_message_send_background_green"
+                    android:backgroundTint="@color/chat_bubble_background_send_green"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
                     android:textColor="@color/chat_message_send_text"
@@ -422,7 +422,7 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/Theme.Material3.Light"
                     android:background="@drawable/chat_bubble"
-                    android:backgroundTint="@color/chat_message_send_background_green"
+                    android:backgroundTint="@color/chat_bubble_background_send_green"
                     android:orientation="horizontal"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp">

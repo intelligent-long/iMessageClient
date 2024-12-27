@@ -42,12 +42,12 @@ import okio.BufferedSink;
  * Created by LONG on 2024/7/28 at 上午2:49.
  */
 public class BroadcastApiCaller extends RetrofitApiCaller{
-    private static final long SEND_BROADCAST_CONNECT_TIMEOUT = 60;
-    private static final long SEND_BROADCAST_READ_TIMEOUT = 60 * 10;
-    private static final long SEND_BROADCAST_WRITE_TIMEOUT = 60;
-    private static final long EDIT_BROADCAST_CONNECT_TIMEOUT = 60;
-    private static final long EDIT_BROADCAST_READ_TIMEOUT = 60 * 10;
-    private static final long EDIT_BROADCAST_WRITE_TIMEOUT = 60;
+    private static final long SEND_BROADCAST_CONNECT_TIMEOUT = 100;
+    private static final long SEND_BROADCAST_READ_TIMEOUT = 100 * 10;
+    private static final long SEND_BROADCAST_WRITE_TIMEOUT = 100;
+    private static final long EDIT_BROADCAST_CONNECT_TIMEOUT = 100;
+    private static final long EDIT_BROADCAST_READ_TIMEOUT = 100 * 10;
+    private static final long EDIT_BROADCAST_WRITE_TIMEOUT = 100;
 
     public static BroadcastApi getApiImplementation(){
         return getApiImplementation(BroadcastApi.class);
