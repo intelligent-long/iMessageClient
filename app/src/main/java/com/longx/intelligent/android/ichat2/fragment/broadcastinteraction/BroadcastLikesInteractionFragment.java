@@ -172,11 +172,13 @@ public class BroadcastLikesInteractionFragment extends Fragment {
         List<String> toMakeToOldBroadcastLikeIds = new ArrayList<>();
         for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
             try {
-                BroadcastLike broadcastLike = adapter.getItemDataList().get(i).getBroadcastLike();
-                if (broadcastLike.isNew()) {
-                    if (!makedToOldBroadcastLikes.contains(broadcastLike)) {
-                        toMakeToOldBroadcastLikeIds.add(broadcastLike.getLikeId());
-                        makedToOldBroadcastLikes.add(broadcastLike);
+                if(!adapter.getItemDataList().isEmpty()) {
+                    BroadcastLike broadcastLike = adapter.getItemDataList().get(i).getBroadcastLike();
+                    if (broadcastLike.isNew()) {
+                        if (!makedToOldBroadcastLikes.contains(broadcastLike)) {
+                            toMakeToOldBroadcastLikeIds.add(broadcastLike.getLikeId());
+                            makedToOldBroadcastLikes.add(broadcastLike);
+                        }
                     }
                 }
             } catch (IndexOutOfBoundsException e) {

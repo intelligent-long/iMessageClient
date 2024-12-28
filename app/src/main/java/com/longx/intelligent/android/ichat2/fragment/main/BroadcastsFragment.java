@@ -189,6 +189,17 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
             });
             adapter.addItemsAndShow(itemDataList);
             calculateAndChangeRecyclerViewHeight();
+            if(broadcasts.isEmpty()){
+                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                        .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
+            }else {
+                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.MATCH_PARENT);
+                ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                        .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+            }
         }
         String headerErrorText = savedInstanceState.getString(InstanceStateKeys.BroadcastFragment.HEADER_ERROR_TEXT);
         if(headerErrorText != null){
@@ -444,12 +455,14 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
                 ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
                         .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
             }else {
+                UiUtil.setViewHeight(binding.recyclerView, ViewGroup.LayoutParams.MATCH_PARENT);
                 adapter.addItemsAndShow(itemDataList);
                 calculateAndChangeRecyclerViewHeight();
                 ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
                         .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                                 | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
                                 | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+                binding.recyclerView.post(this::toStart);
             }
         });
     }

@@ -172,11 +172,13 @@ public class BroadcastCommentsInteractionFragment extends Fragment {
         List<String> toMakeToOldBroadcastCommentIds = new ArrayList<>();
         for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
             try {
-                BroadcastComment broadcastComment = adapter.getItemDataList().get(i).getBroadcastComment();
-                if (broadcastComment.isNew()) {
-                    if (!makedToOldBroadcastComments.contains(broadcastComment)) {
-                        toMakeToOldBroadcastCommentIds.add(broadcastComment.getCommentId());
-                        makedToOldBroadcastComments.add(broadcastComment);
+                if(!adapter.getItemDataList().isEmpty()) {
+                    BroadcastComment broadcastComment = adapter.getItemDataList().get(i).getBroadcastComment();
+                    if (broadcastComment.isNew()) {
+                        if (!makedToOldBroadcastComments.contains(broadcastComment)) {
+                            toMakeToOldBroadcastCommentIds.add(broadcastComment.getCommentId());
+                            makedToOldBroadcastComments.add(broadcastComment);
+                        }
                     }
                 }
             } catch (IndexOutOfBoundsException e) {
