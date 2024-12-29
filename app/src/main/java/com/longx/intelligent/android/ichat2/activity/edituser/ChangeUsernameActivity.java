@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.request.ChangeUsernamePostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
 import com.longx.intelligent.android.ichat2.databinding.ActivityChangeUsernameBinding;
@@ -24,7 +25,13 @@ public class ChangeUsernameActivity extends BaseActivity {
         binding = ActivityChangeUsernameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
+        setDefaultValue();
         setupToolbar();
+    }
+
+    private void setDefaultValue() {
+        String username = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getUsername();
+        binding.usernameInput.setText(username);
     }
 
     private void setupToolbar() {

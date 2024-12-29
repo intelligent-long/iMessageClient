@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.data.request.ChangeIchatIdUserPostBody;
 import com.longx.intelligent.android.ichat2.data.response.OperationData;
 import com.longx.intelligent.android.ichat2.data.response.OperationStatus;
@@ -26,8 +27,14 @@ public class ChangeIchatIdUserActivity extends BaseActivity {
         binding = ActivityChangeIchatIdUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
+        setDefaultValue();
         checkNowCanChange();
         setupToolbar();
+    }
+
+    private void setDefaultValue() {
+        String ichatIdUser = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getIchatIdUser();
+        binding.ichatIdUserInput.setText(ichatIdUser);
     }
 
     private void checkNowCanChange() {
