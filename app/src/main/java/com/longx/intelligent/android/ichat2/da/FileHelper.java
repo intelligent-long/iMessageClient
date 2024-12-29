@@ -4,13 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.webkit.MimeTypeMap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.media.helper.MediaStoreHelper;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
 import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 import com.longx.intelligent.android.ichat2.util.FileUtil;
 
@@ -20,37 +28,47 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by LONG on 2024/1/21 at 9:23 PM.
  */
 public class FileHelper {
-    public static File createFile(String path) throws IOException {
+    public static File createFile(String path) throws IOException{
+        return createFile(path, false);
+    }
+
+    public static File createFile(String path, boolean ignore) throws IOException {
         File file = new File(path);
-        int number = 1;
-        String fileName = file.getName();
-        int lastIndexOf = fileName.lastIndexOf('.');
-        String dirPath = file.getParentFile().getAbsolutePath();
-        while (file.exists()){
-            if(lastIndexOf != -1) {
-                String fileNameWithoutExtension = fileName.substring(0, lastIndexOf);
-                String extension = fileName.substring(lastIndexOf);
-                file = new File(dirPath + File.separator + fileNameWithoutExtension + " (" + number + ")" + extension);
-            }else {
-                file = new File(dirPath + File.separator + fileName + " (" + number + ")");
+        if(!(file.exists() && ignore)) {
+            int number = 1;
+            String fileName = file.getName();
+            int lastIndexOf = fileName.lastIndexOf('.');
+            String dirPath = file.getParentFile().getAbsolutePath();
+            while (file.exists()) {
+                if (lastIndexOf != -1) {
+                    String fileNameWithoutExtension = fileName.substring(0, lastIndexOf);
+                    String extension = fileName.substring(lastIndexOf);
+                    file = new File(dirPath + File.separator + fileNameWithoutExtension + " (" + number + ")" + extension);
+                } else {
+                    file = new File(dirPath + File.separator + fileName + " (" + number + ")");
+                }
+                number++;
             }
-            number++;
+            Objects.requireNonNull(file.getParentFile()).mkdirs();
+            file.createNewFile();
         }
-        Objects.requireNonNull(file.getParentFile()).mkdirs();
-        file.createNewFile();
         return file;
     }
 
@@ -243,5 +261,60 @@ public class FileHelper {
 
     public static String readUriToBase64(Uri uri, Context context){
         return Base64.encodeBase64String(readUriToBytes(uri, context));
+    }
+
+    public static void appendToFile(String filePath, String textToAppend) {
+        File file = new File(filePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.append(textToAppend);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String saveNetImage(Context context, String url, String savePath) throws IOException, InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        ErrorLogger.log(savePath);
+        new File(savePath).getParentFile().mkdirs();
+        final String[] savedPath = new String[1];
+        final IOException[] ioException = new IOException[1];
+        GlideApp
+                .with(context)
+                .downloadOnly()
+                .override(Target.SIZE_ORIGINAL)
+                .load(url)
+                .into(new CustomTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                        InputStream inputStream = null;
+                        try {
+                            inputStream = Files.newInputStream(resource.toPath());
+                            savedPath[0] = FileHelper.save(inputStream, savePath);
+                            countDownLatch.countDown();
+                        } catch (IOException e) {
+                            ErrorLogger.log(e);
+                            ioException[0] = e;
+                            countDownLatch.countDown();
+                        }finally {
+                            try {
+                                if (inputStream != null) {
+                                    inputStream.close();
+                                }
+                            } catch (IOException e) {
+                                ErrorLogger.log(e);
+                                ioException[0] = e;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+        countDownLatch.await();
+        if(ioException[0] != null) throw ioException[0];
+        MediaStoreHelper.notifyMediaStore(context, savedPath[0]);
+        return savedPath[0];
     }
 }

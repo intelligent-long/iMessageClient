@@ -111,5 +111,11 @@ public class DataPaths {
             String fileName = yyyyMMddHHmmss.format(new Date());
             return publicFileRootPath() + File.separator + "Captured" + File.separator + fileName;
         }
+
+        public static String avatarFilePath(String avatarHash, String ichatId, String avatarExtension){
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(new Date()) + "_" + ichatId + "_" + avatarHash + "." + avatarExtension;
+            return publicFileRootPath() + File.separator + "Avatar" + File.separator + fileName;
+        }
     }
 }

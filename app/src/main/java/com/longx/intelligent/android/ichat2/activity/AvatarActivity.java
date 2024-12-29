@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -16,11 +15,13 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.ichat2.databinding.ActivityAvatarBinding;
+import com.longx.intelligent.android.ichat2.dialog.OperatingDialog;
 import com.longx.intelligent.android.ichat2.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.ichat2.behaviorcomponents.ImageSaver;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 public class AvatarActivity extends BaseActivity {
@@ -45,31 +46,25 @@ public class AvatarActivity extends BaseActivity {
     private void setupToolbar() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.save_avatar){
-                saveAvatarToDcim();
+                saveAvatar();
             }
             return true;
         });
     }
 
-    private void saveAvatarToDcim() {
-        GlideBehaviours.loadToFile(getApplicationContext(), NetDataUrls.getAvatarUrl(this, avatarHash),
-                new CustomTarget<File>() {
-                    @Override
-                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                        ImageSaver.saveImageToDcim(AvatarActivity.this, resource,
-                                ichatId + "_" + avatarHash + "_" + System.currentTimeMillis() + avatarExtension,
-                                "iChat" + File.separator + "Avatar",
-                                results -> {
-                                    Uri uri = (Uri) results[0];
-                                    MessageDisplayer.autoShow(AvatarActivity.this, uri == null ? "保存失败" : "保存成功", MessageDisplayer.Duration.LONG);
-                                });
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                }, true);
+    private void saveAvatar() {
+        new Thread(() -> {
+            OperatingDialog operatingDialog = new OperatingDialog(this);
+            operatingDialog.create().show();
+            try {
+                PublicFileAccessor.User.saveAvatar(this, ichatId, avatarHash, avatarExtension);
+                operatingDialog.dismiss();
+                MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
+            } catch (IOException | InterruptedException e) {
+                ErrorLogger.log(e);
+                MessageDisplayer.autoShow(this, "保存失败", MessageDisplayer.Duration.SHORT);
+            }
+        }).start();
     }
 
     private void showAvatar() {

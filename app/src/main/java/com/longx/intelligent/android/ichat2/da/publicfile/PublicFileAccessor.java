@@ -130,4 +130,12 @@ public class PublicFileAccessor {
             return savePath;
         }
     }
+
+    public static class User{
+        public static String saveAvatar(Context context, String userId, String avatarHash, String avatarExtension) throws IOException, InterruptedException {
+            String avatarUrl = NetDataUrls.getAvatarUrl(context, avatarHash);
+            String avatarPath = DataPaths.PublicFile.avatarFilePath(avatarHash, userId, avatarExtension);
+            return FileHelper.saveNetImage(context, avatarUrl, avatarPath);
+        }
+    }
 }

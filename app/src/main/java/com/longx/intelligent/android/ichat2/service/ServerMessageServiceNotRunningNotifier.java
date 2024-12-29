@@ -1,10 +1,17 @@
 package com.longx.intelligent.android.ichat2.service;
 
 import android.content.Context;
+import android.os.Environment;
 
+import com.longx.intelligent.android.ichat2.da.FileHelper;
 import com.longx.intelligent.android.ichat2.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.ichat2.notification.Notifications;
 import com.longx.intelligent.android.ichat2.util.DeviceUtil;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.FileUtil;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by LONG on 2024/4/6 at 5:24 PM.

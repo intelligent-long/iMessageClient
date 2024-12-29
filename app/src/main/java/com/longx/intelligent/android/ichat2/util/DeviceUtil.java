@@ -8,6 +8,6 @@ import android.os.SystemClock;
 public class DeviceUtil {
 
     public static long getBootTime(){
-        return System.currentTimeMillis() - SystemClock.elapsedRealtimeNanos();
+        return System.currentTimeMillis() - SystemClock.elapsedRealtime();
     }
 }
