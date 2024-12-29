@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,7 +12,9 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.OpenSourceLicensesActivity;
 import com.longx.intelligent.android.ichat2.activity.VersionActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.bottomsheet.AuthorAccountsBottomSheet;
 import com.longx.intelligent.android.ichat2.databinding.ActivityVersionSettingsBinding;
+import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
@@ -70,6 +73,7 @@ public class VersionSettingsActivity extends BaseActivity {
 
         @Override
         protected void setupYiers() {
+            preferenceAuthor.setOnPreferenceClickListener(this);
             preferenceOpenSourceLicenses.setOnPreferenceClickListener(this);
             preferenceUserGuide.setOnPreferenceClickListener(this);
             preferenceVersionName.setOnPreferenceClickListener(this);
@@ -83,7 +87,15 @@ public class VersionSettingsActivity extends BaseActivity {
 
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
-            if(preference.equals(preferenceOpenSourceLicenses)){
+            if(preference.equals(preferenceAuthor)){
+                new ConfirmDialog(getActivity(), R.drawable.default_avatar, null, "作者: LONG", true)
+                        .setNeutralButton("账号", (dialog, which) -> {
+                            new AuthorAccountsBottomSheet(getActivity()).show();
+                        })
+                        .setPositiveButton()
+                        .create()
+                        .show();
+            } else if(preference.equals(preferenceOpenSourceLicenses)){
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
             }else if(preference.equals(preferenceUserGuide)){
                 new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).create().show();
