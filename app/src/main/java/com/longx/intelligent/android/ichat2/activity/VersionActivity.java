@@ -45,6 +45,7 @@ public class VersionActivity extends BaseActivity {
 
     private void init() {
         UiUtil.setViewEnabled(binding.linkButton, false, true);
+        UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.link), false);
     }
 
     private void showContent() {
@@ -91,7 +92,7 @@ public class VersionActivity extends BaseActivity {
                         super.ok(data, raw, call);
                         data.commonHandleResult(VersionActivity.this, new int[]{}, () -> {
                             currentReleaseUrl = data.getData(String.class);
-                            binding.toolbar.getMenu().findItem(R.id.link).setEnabled(true);
+                            UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.link), true);
                         });
                     }
                 });

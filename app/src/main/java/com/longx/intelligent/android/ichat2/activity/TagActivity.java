@@ -79,7 +79,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
                 .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
         binding.noContentLayout.setVisibility(View.VISIBLE);
         binding.recyclerView.setVisibility(View.GONE);
-        binding.toolbar.getMenu().findItem(R.id.sort).setEnabled(false);
+        UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.sort), false);
     }
 
     private void toContent(){
@@ -89,7 +89,7 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         binding.noContentLayout.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.VISIBLE);
-        binding.toolbar.getMenu().findItem(R.id.sort).setEnabled(true);
+        UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.sort), true);
     }
 
     private void setUpYiers() {

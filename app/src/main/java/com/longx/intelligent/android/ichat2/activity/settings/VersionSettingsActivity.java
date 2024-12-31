@@ -88,7 +88,7 @@ public class VersionSettingsActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
             if(preference.equals(preferenceAuthor)){
-                new ConfirmDialog(getActivity(), R.drawable.default_avatar, null, "作者: LONG", true)
+                new ConfirmDialog(getActivity(), R.drawable.default_avatar, null, "作者: " + Constants.AUTHOR, true)
                         .setNeutralButton("账号", (dialog, which) -> {
                             new AuthorAccountsBottomSheet(getActivity()).show();
                         })

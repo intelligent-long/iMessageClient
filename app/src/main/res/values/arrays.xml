@@ -49,8 +49,8 @@
     </string-array>
 
     <string-array name="snackbar_appearance_entries">
-        <item>"深"</item>
-        <item>"浅"</item>
+        <item>"原色"</item>
+        <item>"表面色"</item>
         <item>"第三色"</item>
     </string-array>
 

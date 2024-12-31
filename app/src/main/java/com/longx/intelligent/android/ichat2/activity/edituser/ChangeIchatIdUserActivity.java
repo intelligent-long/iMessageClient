@@ -35,6 +35,7 @@ public class ChangeIchatIdUserActivity extends BaseActivity {
     private void setDefaultValue() {
         String ichatIdUser = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getIchatIdUser();
         binding.ichatIdUserInput.setText(ichatIdUser);
+        UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.change), false);
     }
 
     private void checkNowCanChange() {
@@ -47,7 +48,7 @@ public class ChangeIchatIdUserActivity extends BaseActivity {
                             String desc = data.getMessage();
                             binding.desc.setText(desc);
                             binding.content.setVisibility(View.VISIBLE);
-                            binding.toolbar.getMenu().findItem(R.id.change).setEnabled(true);
+                            UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.change), true);
                         }),
                         new OperationStatus.HandleResult(102, () -> {
                             String desc = data.getMessage();

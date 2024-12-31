@@ -18,6 +18,7 @@ import com.longx.intelligent.android.ichat2.databinding.ActivityChangeRegionBind
 import com.longx.intelligent.android.ichat2.dialog.MessageDialog;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.ichat2.net.retrofit.caller.UserApiCaller;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.yier.AutoCompleteTextViewAutoSelectOnItemClickYier;
 import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
@@ -261,6 +262,6 @@ public class ChangeRegionActivity extends BaseActivity {
         binding.firstRegionLayout.setEnabled(enable);
         binding.secondRegionLayout.setEnabled(enable);
         binding.thirdRegionLayout.setEnabled(enable);
-        binding.toolbar.getMenu().findItem(R.id.change).setEnabled(enable);
+        UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.change), enable);
     }
 }
