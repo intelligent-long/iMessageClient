@@ -38,7 +38,7 @@
                     android:id="@+id/send_broadcast_button"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="55dp"
+                    android:layout_height="55.1dp"
                     android:paddingHorizontal="24.1dp"
                     android:layout_gravity="end|center_vertical"
                     android:text="@string/title_send_broadcast"
