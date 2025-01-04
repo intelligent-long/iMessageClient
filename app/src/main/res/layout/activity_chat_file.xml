@@ -73,17 +73,18 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/open"
                 style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="?attr/colorSurfaceContainer"
                 android:text="打开"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/save"
                 style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginStart="11dp"
-                app:backgroundTint="?attr/colorPrimaryInverse"
+                android:backgroundTint="?attr/colorPrimaryContainer"
                 android:text="保存"/>
         </LinearLayout>
     </LinearLayout>
