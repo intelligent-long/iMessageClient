@@ -42,9 +42,9 @@
                     android:paddingHorizontal="24.1dp"
                     android:layout_gravity="end|center_vertical"
                     android:text="@string/title_send_broadcast"
-                    android:textSize="14.08sp"
+                    android:textSize="14.01sp"
                     app:icon="@drawable/wifi_tethering_24px"
-                    app:iconSize="22.14dp"
+                    app:iconSize="22.018dp"
                     android:layout_marginEnd="10dp"/>
 
                 <TextView
