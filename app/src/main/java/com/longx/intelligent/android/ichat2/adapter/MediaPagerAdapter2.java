@@ -151,6 +151,7 @@ public class MediaPagerAdapter2 extends PagerAdapter {
         switch (media.getMediaType()){
             case IMAGE:{
                 activity.getBinding().topTranslucentOverlayImage.setVisibility(View.VISIBLE);
+                activity.getBinding().playControl.setVisibility(View.GONE);
                 activity.getBinding().topTranslucentOverlayVideo.setVisibility(View.GONE);
                 activity.getBinding().topTranslucentOverlayWrap.bringToFront();
                 binding.photoView.setVisibility(View.VISIBLE);
@@ -200,6 +201,7 @@ public class MediaPagerAdapter2 extends PagerAdapter {
             case VIDEO:{
                 activity.getBinding().topTranslucentOverlayVideo.setVisibility(View.VISIBLE);
                 activity.getBinding().topTranslucentOverlayImage.setVisibility(View.GONE);
+                activity.getBinding().playControl.setVisibility(View.VISIBLE);
                 activity.getBinding().topTranslucentOverlayWrap.bringToFront();
                 activity.getBinding().timePlay.setText(TimeUtil.formatTimeToHHMMSS(0) + " / " + TimeUtil.formatTimeToHHMMSS(0));
                 activity.getBinding().playControl.bringToFront();
