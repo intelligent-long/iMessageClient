@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.ichat2.util.UiUtil;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -76,14 +77,20 @@ public abstract class AbstractDialog {
         return this;
     }
 
-    public void show() {
+    public AbstractDialog show(){
+        return show(null);
+    }
+
+    public AbstractDialog show(ResultsYier yier) {
         activity.runOnUiThread(() -> {
             try {
                 dialog.show();
             }catch (WindowManager.BadTokenException ignore){}
             adjustDialogSize();
             onDialogShowed();
+            if(yier != null) yier.onResults();
         });
+        return this;
     }
 
     protected void onDialogCreated() {

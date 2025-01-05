@@ -70,22 +70,40 @@
             android:layout_marginTop="21dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/open"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="?attr/colorSurfaceContainer"
-                android:text="打开"/>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Round"
+                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:strokeWidth="0dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/save"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="11dp"
-                android:backgroundTint="?attr/colorPrimaryContainer"
-                android:text="保存"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:textSize="16sp"
+                    android:text="保存"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="50dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Round"
+                app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                app:strokeWidth="0dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/open"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:textSize="16sp"
+                    android:text="打开"/>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

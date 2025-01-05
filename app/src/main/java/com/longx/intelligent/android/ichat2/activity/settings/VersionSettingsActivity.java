@@ -1,24 +1,34 @@
 package com.longx.intelligent.android.ichat2.activity.settings;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.activity.OpenSourceLicensesActivity;
 import com.longx.intelligent.android.ichat2.activity.VersionActivity;
 import com.longx.intelligent.android.ichat2.activity.helper.BaseActivity;
+import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.bottomsheet.AuthorAccountsBottomSheet;
 import com.longx.intelligent.android.ichat2.databinding.ActivityVersionSettingsBinding;
+import com.longx.intelligent.android.ichat2.dialog.AbstractDialog;
 import com.longx.intelligent.android.ichat2.dialog.ConfirmDialog;
 import com.longx.intelligent.android.ichat2.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 import com.longx.intelligent.android.ichat2.value.Constants;
+import com.longx.intelligent.android.ichat2.yier.ResultsYier;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
 public class VersionSettingsActivity extends BaseActivity {
@@ -88,13 +98,31 @@ public class VersionSettingsActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
             if(preference.equals(preferenceAuthor)){
-                new ConfirmDialog(getActivity(), R.drawable.default_avatar, null, "作者: " + Constants.AUTHOR, true)
-                        .setNeutralButton("账号", (dialog, which) -> {
-                            new AuthorAccountsBottomSheet(getActivity()).show();
-                        })
-                        .setPositiveButton()
-                        .create()
-                        .show();
+//                AbstractDialog dialog = new ConfirmDialog(getActivity(), R.style.AuthorDialog, R.drawable.default_avatar, null, "作者 " + Constants.AUTHOR, true)
+//                        .setNeutralButton("账号", (d, which) -> {
+//                            new AuthorAccountsBottomSheet(getActivity()).show();
+//                        })
+//                        .setPositiveButton()
+//                        .create()
+//                        .show();
+//                ImageView iconView = dialog.getDialog().findViewById(android.R.id.icon);
+//                if (iconView != null) {
+//                    iconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//                        @Override
+//                        public boolean onPreDraw() {
+//                            int width = iconView.getWidth();
+//                            if (width > 0) {
+//                                ViewGroup.LayoutParams params = iconView.getLayoutParams();
+//                                params.height = width;
+//                                iconView.setLayoutParams(params);
+//                            }
+//                            iconView.getViewTreeObserver().removeOnPreDrawListener(this);
+//                            return false;
+//                        }
+//                    });
+//                }
+                Snackbar snackbar = MessageDisplayer.showSnackbar(getActivity(), "作者 " + Constants.AUTHOR, Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction("账号", v -> new AuthorAccountsBottomSheet(getActivity()).show());
             } else if(preference.equals(preferenceOpenSourceLicenses)){
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
             }else if(preference.equals(preferenceUserGuide)){

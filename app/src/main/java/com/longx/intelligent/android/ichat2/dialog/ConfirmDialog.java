@@ -39,27 +39,27 @@ public class ConfirmDialog extends AbstractDialog{
     }
 
     public ConfirmDialog(Activity activity, String message) {
-        this(activity, null, null, message, true);
+        this(activity, null, null, null, message, true);
     }
 
     public ConfirmDialog(Activity activity, String title, String message) {
-        this(activity, null, title, message, true);
+        this(activity, null, null, title, message, true);
     }
 
     public ConfirmDialog(Activity activity, boolean cancelable){
-        this(activity, "是否继续？", cancelable);
+        this(activity, null, "是否继续？", cancelable);
     }
 
     public ConfirmDialog(Activity activity, String message, boolean cancelable) {
-        this(activity, null, null, message, cancelable);
+        this(activity, null, null, null, message, cancelable);
     }
 
     public ConfirmDialog(Activity activity, String title, String message, boolean cancelable) {
-        this(activity, null, title, message, cancelable);
+        this(activity, null, null, title, message, cancelable);
     }
 
-    public ConfirmDialog(Activity activity, Integer iconId, String title, String message, boolean cancelable) {
-        super(activity, R.style.TitleLargeMaterialAlertDialog);
+    public ConfirmDialog(Activity activity, Integer style, Integer iconId, String title, String message, boolean cancelable) {
+        super(activity, style == null ? R.style.TitleLargeMaterialAlertDialog : style);
         this.iconId = iconId;
         this.title = title;
         this.message = message;
