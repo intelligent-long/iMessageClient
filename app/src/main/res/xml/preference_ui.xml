@@ -22,16 +22,16 @@
         app:defaultValue="0" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
-        app:key="@string/preference_key_snackbar_appearance"
-        android:title="Snackbar 外观"
-        android:entries="@array/snackbar_appearance_entries"
-        android:entryValues="@array/snackbar_appearance_values"
-        android:defaultValue="0"/>
-
-    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
         app:key="@string/preference_key_main_activity_fragment_switch_mode"
         android:title="主画面切换模式"
         android:entries="@array/main_activity_fragment_switch_mode_entries"
         android:entryValues="@array/main_activity_fragment_switch_mode_values"
+        android:defaultValue="0"/>
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
+        app:key="@string/preference_key_snackbar_appearance"
+        android:title="Snackbar 外观"
+        android:entries="@array/snackbar_appearance_entries"
+        android:entryValues="@array/snackbar_appearance_values"
         android:defaultValue="0"/>
 </PreferenceScreen>

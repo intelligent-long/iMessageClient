@@ -671,16 +671,19 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
     private void fetchAndShowLikesPreview() {
         binding.likeFlowLayout.removeAllViews();
-        BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastLike>>(this, false){
-            @Override
-            public void start(Call<PaginatedOperationData<BroadcastLike>> call) {
-                super.start(call);
+        BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10, new RetrofitApiCaller.DelayedActionCommonYier<PaginatedOperationData<BroadcastLike>>(this, false, results -> {
+            boolean state = (boolean) results[0];
+            if(state){
+                binding.layoutLike.setVisibility(View.VISIBLE);
                 binding.likeLoadingIndicator.setVisibility(View.VISIBLE);
+            }else {
+                binding.likeLoadingIndicator.setVisibility(View.GONE);
             }
-
+        }){
             @Override
             public void failure(Throwable t, Call<PaginatedOperationData<BroadcastLike>> call) {
                 super.failure(t, call);
+                binding.layoutLike.setVisibility(View.VISIBLE);
                 binding.likeLoadFailedText.setVisibility(View.VISIBLE);
                 binding.likeLoadFailedText.setText("出错了 > " + t.getClass().getName());
             }
@@ -688,20 +691,16 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
             @Override
             public void notOk(int code, String message, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
                 super.notOk(code, message, raw, call);
+                binding.layoutLike.setVisibility(View.VISIBLE);
                 binding.likeLoadFailedText.setVisibility(View.VISIBLE);
                 binding.likeLoadFailedText.setText("HTTP 状态码异常 > " + code);
-            }
-
-            @Override
-            public void complete(Call<PaginatedOperationData<BroadcastLike>> call) {
-                super.complete(call);
-                binding.likeLoadingIndicator.setVisibility(View.GONE);
             }
 
             @Override
             public void ok(PaginatedOperationData<BroadcastLike> data, Response<PaginatedOperationData<BroadcastLike>> raw, Call<PaginatedOperationData<BroadcastLike>> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(BroadcastActivity.this, new int[]{-101, -102}, () -> {
+                    binding.layoutLike.setVisibility(View.VISIBLE);
                     List<BroadcastLike> broadcastLikeList = data.getData();
                     broadcastLikeList.sort((o1, o2) -> - o1.getLikeTime().compareTo(o2.getLikeTime()));
                     broadcastLikeList.forEach(broadcastLike -> {
@@ -771,24 +770,20 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         if(!commentsLinearLayoutViews.getAllItems().isEmpty()){
             lastCommentId = commentsLinearLayoutViews.getAllItems().get(commentsLinearLayoutViews.getAllItems().size() - 1).getCommentId();
         }
-        BroadcastApiCaller.fetchCommentsOfBroadcast(this, broadcast.getBroadcastId(), lastCommentId, Constants.FETCH_BROADCAST_COMMENTS_PAGE_SIZE, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<BroadcastComment>>(){
-            @Override
-            public void start(Call<PaginatedOperationData<BroadcastComment>> call) {
-                super.start(call);
-                if (breakFetchNextPage(call)) return;
+        BroadcastApiCaller.fetchCommentsOfBroadcast(this, broadcast.getBroadcastId(), lastCommentId, Constants.FETCH_BROADCAST_COMMENTS_PAGE_SIZE, new RetrofitApiCaller.DelayedActionCommonYier<PaginatedOperationData<BroadcastComment>>(this, results -> {
+            boolean state = (boolean) results[0];
+            Call<PaginatedOperationData<BroadcastComment>> call = (Call<PaginatedOperationData<BroadcastComment>>) results[1];
+            if (breakFetchNextPage(call)) return;
+            if(state){
+                binding.layoutComment.setVisibility(View.VISIBLE);
                 footerBinding.loadFailedText.setVisibility(View.GONE);
                 footerBinding.loadFailedText.setText(null);
                 footerBinding.loadingIndicator.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void complete(Call<PaginatedOperationData<BroadcastComment>> call) {
-                super.complete(call);
-                if (breakFetchNextPage(call)) return;
+            }else {
                 footerBinding.loadingIndicator.setVisibility(View.GONE);
                 NEXT_PAGE_LATCH.countDown();
             }
-
+        }){
             @Override
             public void notOk(int code, String message, Response<PaginatedOperationData<BroadcastComment>> row, Call<PaginatedOperationData<BroadcastComment>> call) {
                 super.notOk(code, message, row, call);

@@ -192,12 +192,12 @@ public abstract class RetrofitApiCaller {
         public void start(Call<T> call) {
             if(showOperationDialog){
                 if(getActivity() != null) {
-                    showOperationDialog(call);
+                    runAction(call);
                 }
             }
         }
 
-        protected void showOperationDialog(Call<T> call) {
+        protected void runAction(Call<T> call) {
             getActivity().runOnUiThread(() -> {
                 operatingDialog = new OperatingDialog(getActivity(), () -> {
                     setBeCanceled(true);
@@ -260,11 +260,11 @@ public abstract class RetrofitApiCaller {
                 waitToShowOperationDialogTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        showOperationDialog(call);
+                        showOperatingDialog(call);
                     }
                 }, showOperationDialogDelay);
             } else {
-                showOperationDialog(call);
+                showOperatingDialog(call);
             }
         }
 
@@ -285,7 +285,7 @@ public abstract class RetrofitApiCaller {
             }
         }
 
-        protected void showOperationDialog(Call<T> call) {
+        protected void showOperatingDialog(Call<T> call) {
             getActivity().runOnUiThread(() -> {
                 synchronized (DelayedShowDialogCommonYier.this) {
                     if (!showOperationDialogCanceled) {
@@ -294,6 +294,71 @@ public abstract class RetrofitApiCaller {
                             call.cancel();
                         });
                         operatingDialog.create().show();
+                    }
+                }
+            });
+        }
+    }
+
+    public static class DelayedActionCommonYier<T> extends CommonYier<T> {
+        private final ResultsYier resultsYier;
+        private Timer waitToShowOperationDialogTimer;
+        private static long runActionDelay = 300L;
+        private boolean showOperationDialogCanceled;
+
+        public DelayedActionCommonYier(Activity activity, ResultsYier resultsYier) {
+            this(activity, runActionDelay, resultsYier);
+        }
+
+        public DelayedActionCommonYier(Activity activity, long runActionDelay, ResultsYier resultsYier) {
+            this(activity, runActionDelay, true, resultsYier);
+        }
+
+        public DelayedActionCommonYier(Activity activity, boolean showErrorInfo, ResultsYier resultsYier) {
+            this(activity, runActionDelay, showErrorInfo, resultsYier);
+        }
+
+        public DelayedActionCommonYier(Activity activity, long runActionDelay, boolean showErrorInfo, ResultsYier resultsYier) {
+            super(activity, true, showErrorInfo);
+            DelayedActionCommonYier.runActionDelay = runActionDelay;
+            this.resultsYier = resultsYier;
+        }
+
+        @Override
+        public synchronized void start(Call<T> call) {
+            if (runActionDelay > 0) {
+                waitToShowOperationDialogTimer = new Timer();
+                waitToShowOperationDialogTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runAction(call);
+                    }
+                }, runActionDelay);
+            } else {
+                runAction(call);
+            }
+        }
+
+        @Override
+        public synchronized void complete(Call<T> call) {
+            showOperationDialogCanceled = true;
+                if(getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        synchronized (DelayedActionCommonYier.this) {
+                            resultsYier.onResults(false, call);
+                            if(waitToShowOperationDialogTimer != null) {
+                                waitToShowOperationDialogTimer.cancel();
+                            }
+                        }
+                    });
+                }
+        }
+
+        protected void runAction(Call<T> call) {
+            getActivity().runOnUiThread(() -> {
+                synchronized (DelayedActionCommonYier.this) {
+                    if (!showOperationDialogCanceled) {
+                        resultsYier.onResults(true, call);
                     }
                 }
             });

@@ -45,10 +45,12 @@ public class MessageDisplayer {
                 case 1:
                     snackbar.setBackgroundTint(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorOnSurfaceInverse));
                     snackbar.setTextColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorOnBackground));
+                    snackbar.setActionTextColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorPrimary));
                     break;
                 case 2:
                     snackbar.setBackgroundTint(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorTertiaryContainer));
                     snackbar.setTextColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorOnBackground));
+                    snackbar.setActionTextColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorAccent));
                     break;
             }
             TextView snackbarTextView = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);

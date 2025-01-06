@@ -98,31 +98,31 @@ public class VersionSettingsActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
             if(preference.equals(preferenceAuthor)){
-//                AbstractDialog dialog = new ConfirmDialog(getActivity(), R.style.AuthorDialog, R.drawable.default_avatar, null, "作者 " + Constants.AUTHOR, true)
-//                        .setNeutralButton("账号", (d, which) -> {
-//                            new AuthorAccountsBottomSheet(getActivity()).show();
-//                        })
-//                        .setPositiveButton()
-//                        .create()
-//                        .show();
-//                ImageView iconView = dialog.getDialog().findViewById(android.R.id.icon);
-//                if (iconView != null) {
-//                    iconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//                        @Override
-//                        public boolean onPreDraw() {
-//                            int width = iconView.getWidth();
-//                            if (width > 0) {
-//                                ViewGroup.LayoutParams params = iconView.getLayoutParams();
-//                                params.height = width;
-//                                iconView.setLayoutParams(params);
-//                            }
-//                            iconView.getViewTreeObserver().removeOnPreDrawListener(this);
-//                            return false;
-//                        }
-//                    });
-//                }
-                Snackbar snackbar = MessageDisplayer.showSnackbar(getActivity(), "作者 " + Constants.AUTHOR, Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction("账号", v -> new AuthorAccountsBottomSheet(getActivity()).show());
+                AbstractDialog dialog = new ConfirmDialog(getActivity(), R.style.AuthorDialog, R.drawable.default_avatar, null, "作者 " + Constants.AUTHOR, true)
+                        .setNeutralButton("账号", (d, which) -> {
+                            new AuthorAccountsBottomSheet(getActivity()).show();
+                        })
+                        .setPositiveButton()
+                        .create()
+                        .show();
+                ImageView iconView = dialog.getDialog().findViewById(android.R.id.icon);
+                if (iconView != null) {
+                    iconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            int width = iconView.getWidth();
+                            if (width > 0) {
+                                ViewGroup.LayoutParams params = iconView.getLayoutParams();
+                                params.height = width;
+                                iconView.setLayoutParams(params);
+                            }
+                            iconView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            return false;
+                        }
+                    });
+                }
+//                Snackbar snackbar = MessageDisplayer.showSnackbar(getActivity(), "作者 " + Constants.AUTHOR, Snackbar.LENGTH_INDEFINITE);
+//                snackbar.setAction("账号", v -> new AuthorAccountsBottomSheet(getActivity()).show());
             } else if(preference.equals(preferenceOpenSourceLicenses)){
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
             }else if(preference.equals(preferenceUserGuide)){

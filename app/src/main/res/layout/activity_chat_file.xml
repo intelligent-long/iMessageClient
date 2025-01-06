@@ -90,7 +90,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="130dp"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Round"
                 app:cardBackgroundColor="?attr/colorPrimaryContainer"
                 app:strokeWidth="0dp">
