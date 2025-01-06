@@ -671,7 +671,8 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 
     private void fetchAndShowLikesPreview() {
         binding.likeFlowLayout.removeAllViews();
-        BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10, new RetrofitApiCaller.DelayedActionCommonYier<PaginatedOperationData<BroadcastLike>>(this, false, results -> {
+        BroadcastApiCaller.fetchLikesOfBroadcast(this, broadcast.getBroadcastId(), null, 10,
+                new RetrofitApiCaller.DelayedActionCommonYier<PaginatedOperationData<BroadcastLike>>(this, 500L, false, results -> {
             boolean state = (boolean) results[0];
             if(state){
                 binding.layoutLike.setVisibility(View.VISIBLE);
@@ -770,7 +771,8 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         if(!commentsLinearLayoutViews.getAllItems().isEmpty()){
             lastCommentId = commentsLinearLayoutViews.getAllItems().get(commentsLinearLayoutViews.getAllItems().size() - 1).getCommentId();
         }
-        BroadcastApiCaller.fetchCommentsOfBroadcast(this, broadcast.getBroadcastId(), lastCommentId, Constants.FETCH_BROADCAST_COMMENTS_PAGE_SIZE, new RetrofitApiCaller.DelayedActionCommonYier<PaginatedOperationData<BroadcastComment>>(this, results -> {
+        BroadcastApiCaller.fetchCommentsOfBroadcast(this, broadcast.getBroadcastId(), lastCommentId, Constants.FETCH_BROADCAST_COMMENTS_PAGE_SIZE,
+                new RetrofitApiCaller.DelayedActionCommonYier<PaginatedOperationData<BroadcastComment>>(this, 500L, results -> {
             boolean state = (boolean) results[0];
             Call<PaginatedOperationData<BroadcastComment>> call = (Call<PaginatedOperationData<BroadcastComment>>) results[1];
             if (breakFetchNextPage(call)) return;
