@@ -237,7 +237,7 @@ public abstract class RetrofitApiCaller {
     public static class DelayedShowDialogCommonYier<T> extends CommonYier<T> {
         private OperatingDialog operatingDialog;
         private Timer waitToShowOperationDialogTimer;
-        private long showOperationDialogDelay = 200L;
+        private long showOperationDialogDelay = 300L;
         private boolean showOperationDialogCanceled;
 
         public DelayedShowDialogCommonYier(Activity activity) {
