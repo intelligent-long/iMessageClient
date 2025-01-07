@@ -6,14 +6,7 @@ import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.da.cachefile.CacheFilesAccessor;
 import com.longx.intelligent.android.ichat2.dialog.ProgressOperatingDialog;
 import com.longx.intelligent.android.ichat2.net.download.Downloader;
-import com.longx.intelligent.android.ichat2.util.AppInstaller;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
-
-import java.io.File;
-import java.util.function.Consumer;
-
-import cn.zhxu.okhttps.Download;
-import cn.zhxu.okhttps.Process;
 
 /**
  * Created by LONG on 2024/10/30 at 上午7:13.

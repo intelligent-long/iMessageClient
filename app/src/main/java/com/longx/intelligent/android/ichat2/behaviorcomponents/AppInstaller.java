@@ -1,4 +1,4 @@
-package com.longx.intelligent.android.ichat2.util;
+package com.longx.intelligent.android.ichat2.behaviorcomponents;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.net.Uri;
 
 import androidx.core.content.FileProvider;
 
-import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
 
 import java.io.File;
 
