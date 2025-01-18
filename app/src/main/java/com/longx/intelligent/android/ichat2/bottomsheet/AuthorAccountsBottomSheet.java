@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.longx.intelligent.android.ichat2.R;
 import com.longx.intelligent.android.ichat2.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.ichat2.databinding.BottomSheetAuthorAccountBinding;
+import com.longx.intelligent.android.ichat2.value.Constants;
 
 /**
  * Created by LONG on 2024/12/29 at 下午10:59.
@@ -33,7 +35,7 @@ public class AuthorAccountsBottomSheet extends AbstractBottomSheet{
                 getActivity().startActivity(intent);
             }catch (Exception e){
                 e.printStackTrace();
-                MessageDisplayer.autoShow(getActivity(), "iChat ID: LONG", MessageDisplayer.Duration.LONG);
+                MessageDisplayer.autoShow(getActivity(), Constants.APP_NAME + " ID: LONG", MessageDisplayer.Duration.LONG);
             }
             dismiss();
         });

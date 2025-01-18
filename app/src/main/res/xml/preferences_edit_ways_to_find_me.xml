@@ -4,7 +4,7 @@
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
         app:key="@string/preference_key_change_can_find_me_by_ichat_id"
-        app:title="iChat ID" />
+        app:title="iMessage ID" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference
         app:key="@string/preference_key_change_can_find_me_by_email"

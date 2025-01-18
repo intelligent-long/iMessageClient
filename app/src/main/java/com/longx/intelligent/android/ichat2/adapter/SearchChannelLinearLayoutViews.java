@@ -24,6 +24,7 @@ import com.longx.intelligent.android.ichat2.ui.LinearLayoutViews;
 import com.longx.intelligent.android.ichat2.util.ColorUtil;
 import com.longx.intelligent.android.ichat2.util.PinyinUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
+import com.longx.intelligent.android.ichat2.value.Constants;
 
 /**
  * Created by LONG on 2024/10/22 at 上午6:26.
@@ -91,7 +92,7 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
         String searchStr = getActivity().getSearchStr();
         SpannableStringBuilder matchingInText = new SpannableStringBuilder();
         if(itemData.channel.getIchatIdUser() != null && Utils.containsIgnoreCase(itemData.channel.getIchatIdUser(), searchStr)){
-            appendMatchingText(matchingInText, "iChat ID  ", itemData.channel.getIchatIdUser(), searchStr);
+            appendMatchingText(matchingInText, Constants.APP_NAME + " ID  ", itemData.channel.getIchatIdUser(), searchStr);
         }
         if(itemData.channel.getUsername() != null && Utils.containsIgnoreCase(itemData.channel.getUsername(), searchStr)){
             appendMatchingText(matchingInText, "用户名  ", itemData.channel.getUsername(), searchStr);

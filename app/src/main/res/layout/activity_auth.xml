@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:padding="0dp"
-                    android:hint="iChat ID"
+                    android:hint="iMessage ID"
                     android:inputType="text"
                     android:maxLines="1"
                     android:selectAllOnFocus="true" />

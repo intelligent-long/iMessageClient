@@ -31,6 +31,7 @@ import com.longx.intelligent.android.ichat2.dialog.ServerSettingDialog;
 import com.longx.intelligent.android.ichat2.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.ichat2.util.AppUtil;
 import com.longx.intelligent.android.ichat2.util.Utils;
+import com.longx.intelligent.android.ichat2.value.Constants;
 import com.longx.intelligent.android.ichat2.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
@@ -260,14 +261,14 @@ public class RootSettingsActivity extends BaseActivity {
                     data.commonHandleResult(requireActivity(), new int[]{}, () -> {
                         String ichatWebHomeUrl = data.getData(String.class);
                         Utils.copyTextToClipboard(requireContext(), ichatWebHomeUrl, ichatWebHomeUrl);
-                        new ChoiceDialog(requireActivity(), "已将 iChat 网站地址复制到剪贴板。")
+                        new ChoiceDialog(requireActivity(), "已将 " + Constants.APP_NAME + " 网站地址复制到剪贴板。")
                                 .setPositiveButton("确定", null)
                                 .setNeutralButton("直接分享", (dialog, which) -> {
-                                    String shareStr = "[iChat] 我正在使用 iChat，非常不错的通讯应用，你也试试吧\n地址： " + ichatWebHomeUrl;
+                                    String shareStr = "[" + Constants.APP_NAME + "] 我正在使用 " + Constants.APP_NAME + "，非常不错的通讯应用，你也试试吧\n地址： " + ichatWebHomeUrl;
                                     Intent sendIntent = new Intent();
                                     sendIntent.setAction(Intent.ACTION_SEND);
                                     sendIntent.putExtra(Intent.EXTRA_TEXT, shareStr);
-                                    sendIntent.putExtra(Intent.EXTRA_TITLE, "分享 iChat");
+                                    sendIntent.putExtra(Intent.EXTRA_TITLE, "分享 " + Constants.APP_NAME);
                                     sendIntent.setType("text/plain");
                                     Intent shareIntent = Intent.createChooser(sendIntent, null);
                                     startActivity(shareIntent);

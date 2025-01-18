@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="iChat ID"
+                    android:text="iMessage ID"
                     android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
                     android:textFontWeight="@integer/font_weight_medium"/>

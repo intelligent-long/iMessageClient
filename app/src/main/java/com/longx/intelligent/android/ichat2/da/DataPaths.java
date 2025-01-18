@@ -8,6 +8,7 @@ import com.longx.intelligent.android.ichat2.data.Broadcast;
 import com.longx.intelligent.android.ichat2.data.BroadcastMedia;
 import com.longx.intelligent.android.ichat2.data.ChatMessage;
 import com.longx.intelligent.android.ichat2.net.ServerConfig;
+import com.longx.intelligent.android.ichat2.value.Constants;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -90,7 +91,7 @@ public class DataPaths {
 
     public static class PublicFile{
         public static String publicFileRootPath(){
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "iChat";
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Constants.APP_NAME;
         }
 
         public static String chatFilePath(ChatMessage chatMessage){

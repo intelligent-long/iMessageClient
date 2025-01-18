@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iChat 2</string>
+    <string name="app_name">iMessage</string>
     <string name="title_message">消息</string>
     <string name="title_channel">频道</string>
     <string name="title_broadcast">广播</string>
@@ -14,7 +14,7 @@
     <string name="server_type_central">中央服务器</string>
     <string name="server_type_custom">自定义服务器</string>
     <string name="server_setting_notice">如果你有自己可以连接的服务器，你可以自定义服务器的设置。应该为不同的服务器设置独立的数据存储文件夹。</string>
-    <string name="login_way_ichat_id">iChat ID 登录</string>
+    <string name="login_way_ichat_id">iMessage ID 登录</string>
     <string name="login_way_email">邮箱登录</string>
     <string name="login_way_verify_code">验证码登录</string>
     <string name="title_settings_root">设置</string>
@@ -25,7 +25,7 @@
     <string name="title_settings_ways_to_find_me">查找我的方式</string>
     <string name="title_settings_version">版本</string>
     <string name="title_settings_permission">权限</string>
-    <string name="title_change_ichat_id_user">更改 iChat ID</string>
+    <string name="title_change_ichat_id_user">更改 iMessage ID</string>
     <string name="title_change_username">更改用户名</string>
     <string name="title_change_email">更改邮箱</string>
     <string name="title_change_sex">更改性别</string>
@@ -52,7 +52,7 @@
     <string name="title_tag">标签</string>
     <string name="title_add_channel">添加频道</string>
     <string name="title_chat_file">聊天文件</string>
-    <string name="search_by_ichat_id_user">iChat ID</string>
+    <string name="search_by_ichat_id_user">iMessage ID</string>
     <string name="search_by_email">邮箱</string>
     <string name="channel_addition_activity_pending">待处理</string>
     <string name="channel_addition_activity_send">发出</string>
@@ -84,8 +84,8 @@
     <string name="fab_text_tag">标签</string>
     <string name="fab_text_send_broadcast">发送广播</string>
 
-    <string name="notification_title_server_message_service_foreground">iChat 前台服务通知</string>
-    <string name="notification_message_server_message_service_foreground">iChat 使用前台服务与服务器通信\n这条通知应该被关闭</string>
+    <string name="notification_title_server_message_service_foreground">iMessage 前台服务通知</string>
+    <string name="notification_message_server_message_service_foreground">iMessage 使用前台服务与服务器通信\n这条通知应该被关闭</string>
     <string name="notification_title_server_message_service_not_running">服务长时间未运行</string>
     <string name="notification_message_server_message_service_not_running">检测到前台服务可能长时间不在运行中，请在当前设备的后台、自启动以及电池优化等限制中移除本应用。</string>
 

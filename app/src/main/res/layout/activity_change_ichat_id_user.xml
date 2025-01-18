@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:padding="0dp"
-                android:hint="新 iChat ID"
+                android:hint="新 iMessage ID"
                 android:inputType="text"
                 android:maxLines="1"
                 android:selectAllOnFocus="true" />

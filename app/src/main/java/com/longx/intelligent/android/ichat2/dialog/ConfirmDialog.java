@@ -2,20 +2,31 @@ package com.longx.intelligent.android.ichat2.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.ichat2.R;
+import com.longx.intelligent.android.ichat2.ui.glide.GlideApp;
+import com.longx.intelligent.android.ichat2.util.ErrorLogger;
+import com.longx.intelligent.android.ichat2.util.UiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by LONG on 2024/1/16 at 11:43 PM.
@@ -76,8 +87,28 @@ public class ConfirmDialog extends AbstractDialog{
         }
         if(iconId == null){
             builder.setIcon(R.drawable.question_mark_24px_primary_tint);
-        }else {
-            builder.setIcon(iconId);
+        } else {
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            getActivity().runOnUiThread(() -> {
+                FutureTarget<Drawable> futureTarget = GlideApp.with(getActivity().getApplicationContext())
+                        .asDrawable()
+                        .load(iconId)
+                        .override(UiUtil.dpToPx(getActivity(), 24), UiUtil.dpToPx(getActivity(), 24))
+                        .submit();
+                new Thread(() -> {
+                    try {
+                        builder.setIcon(futureTarget.get());
+                        countDownLatch.countDown();
+                    } catch (ExecutionException | InterruptedException e) {
+                        ErrorLogger.log(e);
+                    }
+                }).start();
+            });
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                ErrorLogger.log(e);
+            }
         }
         if (positiveButtonInfo != null) {
             builder.setPositiveButton("确定", null);

@@ -11,7 +11,7 @@
 
         <com.longx.intelligent.android.ichat2.preference.ProfileItemPreference
             app:key="@string/preference_key_change_ichat_id_user"
-            app:summary="iChat ID" />
+            app:summary="iMessage ID" />
 
         <com.longx.intelligent.android.ichat2.preference.ProfileItemPreference
             app:key="@string/preference_key_change_username"
