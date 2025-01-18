@@ -475,7 +475,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             }
         }
         if(itemData.chatMessage.getUuid().equals(indicateLocationUuid)){
-            holder.binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorSurfaceContainer));
+            holder.binding.getRoot().setBackgroundColor(ColorUtil.getAttrColor(activity, com.google.android.material.R.attr.colorSurfaceContainerHigh));
         }else {
             holder.binding.getRoot().setBackgroundColor(ColorUtil.getColor(activity, R.color.transparent));
         }
