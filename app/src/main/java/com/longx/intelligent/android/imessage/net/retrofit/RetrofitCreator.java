@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.longx.intelligent.android.imessage.net.BaseUrlProvider;
 import com.longx.intelligent.android.imessage.net.okhttp.OkHttpClientCreator;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.xcheng.retrofit.CompletableCallAdapterFactory;
 
 import retrofit2.Retrofit;
@@ -18,7 +19,7 @@ public class RetrofitCreator {
     public static void create(Context context) {
         String baseUrl = BaseUrlProvider.getHttpBaseUrl(context, true);
         retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl == null ? "http://http" : baseUrl)
+                .baseUrl(baseUrl == null ? "http://imessage" : baseUrl)
                 .client(OkHttpClientCreator.client)
                 .addCallAdapterFactory(CompletableCallAdapterFactory.INSTANCE)
                 .addConverterFactory(JacksonConverterFactory.create())

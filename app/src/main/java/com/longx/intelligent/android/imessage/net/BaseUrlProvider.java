@@ -5,6 +5,7 @@ import android.content.Context;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.net.okhttp.caller.ApiCaller;
 import com.longx.intelligent.android.imessage.net.okhttp.caller.ServerApiCaller;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -21,12 +22,14 @@ public class BaseUrlProvider {
             @Override
             public void failure(Exception e) {
                 super.failure(e);
+                ErrorLogger.log(e);
                 countDownLatch.countDown();
             }
 
             @Override
             public void notOk(int code, Response response) {
                 super.notOk(code, response);
+                ErrorLogger.log("code = " + code);
                 countDownLatch.countDown();
             }
 

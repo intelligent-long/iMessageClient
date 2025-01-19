@@ -256,7 +256,7 @@ public class GlobalBehaviors {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
-                data.commonHandleResult(activity, new int[]{}, () -> {
+                data.commonHandleSuccessResult(() -> {
                     String updatableReleaseUrl = data.getData(String.class);
                     IchatWebApiCaller.fetchUpdatableReleaseData(activity, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity) {
                         @Override
