@@ -93,7 +93,7 @@
             app:layout_constraintTop_toBottomOf="@id/text"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+        <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
             android:id="@+id/video_duration_single"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                 app:layout_constraintEnd_toStartOf="@id/media_2_to_4_2"
                 app:layout_constraintBottom_toTopOf="@id/media_2_to_4_3"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_2_to_4_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/media_2_to_4_4"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_2_to_4_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_2_to_4_1"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_2_to_4_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -200,7 +200,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_2_to_4_2"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_2_to_4_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                 app:layout_constraintEnd_toStartOf="@id/media_2"
                 app:layout_constraintBottom_toTopOf="@id/media_4"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -259,7 +259,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/media_5"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -284,7 +284,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/media_6"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -309,7 +309,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_1"
                 app:layout_constraintBottom_toTopOf="@id/media_7"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -333,7 +333,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_2"
                 app:layout_constraintBottom_toTopOf="@id/media_8"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -358,7 +358,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_3"
                 app:layout_constraintBottom_toTopOf="@id/media_9"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -383,7 +383,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_4"
                 app:layout_constraintBottom_toTopOf="@id/media_10"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -408,7 +408,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_5"
                 app:layout_constraintBottom_toTopOf="@id/media_11"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -433,7 +433,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_6"
                 app:layout_constraintBottom_toTopOf="@id/media_12"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -458,7 +458,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_7"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -483,7 +483,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_8"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -508,7 +508,7 @@
                 app:layout_constraintTop_toBottomOf="@id/media_9"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+            <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                 android:id="@+id/video_duration_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

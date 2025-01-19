@@ -164,7 +164,7 @@
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
 
-                <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                     android:id="@+id/video_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

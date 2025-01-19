@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.longx.intelligent.android.ichat2.ui.PassThroughCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.longx.intelligent.android.imessage.ui.PassThroughCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -90,4 +90,4 @@
         app:bottom_init="true"
         app:bottom_init_behavior="always"
         android:layerType="hardware"/>
-</com.longx.intelligent.android.ichat2.ui.PassThroughCoordinatorLayout>
+</com.longx.intelligent.android.imessage.ui.PassThroughCoordinatorLayout>

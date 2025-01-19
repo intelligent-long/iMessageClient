@@ -22,7 +22,7 @@
             android:background="@drawable/shape_photo_top_bar_background"/>
     </FrameLayout>
 
-    <com.longx.intelligent.android.ichat2.ui.SubsamplingScalePhotoView
+    <com.longx.intelligent.android.imessage.ui.SubsamplingScalePhotoView
         android:visibility="gone"
         android:id="@+id/photo_view"
         android:layout_width="match_parent"

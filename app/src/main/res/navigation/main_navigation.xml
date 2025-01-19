@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_message"
-        android:name="com.longx.intelligent.android.ichat2.fragment.main.MessagesFragment"
+        android:name="com.longx.intelligent.android.imessage.fragment.main.MessagesFragment"
         android:label="@string/title_message"
         tools:layout="@layout/fragment_messages" />
 
     <fragment
         android:id="@+id/navigation_channel"
-        android:name="com.longx.intelligent.android.ichat2.fragment.main.ChannelsFragment"
+        android:name="com.longx.intelligent.android.imessage.fragment.main.ChannelsFragment"
         android:label="@string/title_channel"
         tools:layout="@layout/fragment_channels" />
 
     <fragment
         android:id="@+id/navigation_broadcast"
-        android:name="com.longx.intelligent.android.ichat2.fragment.main.BroadcastsFragment"
+        android:name="com.longx.intelligent.android.imessage.fragment.main.BroadcastsFragment"
         android:label="@string/title_broadcast"
         tools:layout="@layout/fragment_broadcasts" />
 </navigation>

@@ -20,7 +20,7 @@
             android:background="@color/transparent"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.longx.intelligent.android.ichat2.ui.SubsamplingScalePhotoView
+    <com.longx.intelligent.android.imessage.ui.SubsamplingScalePhotoView
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

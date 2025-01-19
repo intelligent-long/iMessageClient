@@ -147,7 +147,7 @@
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
 
-                <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                     android:id="@+id/video_duration_receive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                         android:src="@drawable/graphic_eq_24px"
                         app:tint="?attr/colorControlNormal"/>
 
-                    <com.longx.intelligent.android.ichat2.ui.SwitchingImageView
+                    <com.longx.intelligent.android.imessage.ui.SwitchingImageView
                         android:id="@+id/voice_receive_playing_switching_images"
                         android:visibility="gone"
                         android:layout_width="23dp"
@@ -372,7 +372,7 @@
                     app:tint="@color/white"
                     android:background="@drawable/shape_visible_shadow_background"/>
 
-                <com.longx.intelligent.android.ichat2.ui.NoPaddingTextView
+                <com.longx.intelligent.android.imessage.ui.NoPaddingTextView
                     android:id="@+id/video_duration_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -447,7 +447,7 @@
                         android:src="@drawable/graphic_eq_24px"
                         app:tint="?attr/colorControlNormal"/>
 
-                    <com.longx.intelligent.android.ichat2.ui.SwitchingImageView
+                    <com.longx.intelligent.android.imessage.ui.SwitchingImageView
                         android:id="@+id/voice_send_playing_switching_images"
                         android:visibility="gone"
                         android:layout_width="23dp"
