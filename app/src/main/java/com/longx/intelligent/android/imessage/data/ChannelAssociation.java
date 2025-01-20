@@ -10,8 +10,8 @@ import java.util.Objects;
  */
 public class ChannelAssociation {
     private String associationId;
-    private String ichatId;
-    private String channelIchatId;
+    private String imessageId;
+    private String channelImessageId;
     private boolean requester;
     private Date requestTime;
     private Date acceptTime;
@@ -24,10 +24,10 @@ public class ChannelAssociation {
     public ChannelAssociation() {
     }
 
-    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean requester, Date requestTime, Date acceptTime, boolean active, ChatMessageAllow chatMessageAllowToThem, ChatMessageAllow chatMessageAllowToMe) {
+    public ChannelAssociation(String associationId, String imessageId, String channelImessageId, boolean requester, Date requestTime, Date acceptTime, boolean active, ChatMessageAllow chatMessageAllowToThem, ChatMessageAllow chatMessageAllowToMe) {
         this.associationId = associationId;
-        this.ichatId = ichatId;
-        this.channelIchatId = channelIchatId;
+        this.imessageId = imessageId;
+        this.channelImessageId = channelImessageId;
         this.requester = requester;
         this.requestTime = requestTime;
         this.acceptTime = acceptTime;
@@ -36,8 +36,8 @@ public class ChannelAssociation {
         this.chatMessageAllowToMe = chatMessageAllowToMe;
     }
 
-    public ChannelAssociation(String associationId, String ichatId, String channelIchatId, boolean isRequester, Date requestTime, Date acceptTime, boolean active, Channel channel, ChatMessageAllow chatMessageAllowToThem, ChatMessageAllow chatMessageAllowToMe) {
-        this(associationId, ichatId, channelIchatId, isRequester, requestTime, acceptTime, active, chatMessageAllowToThem, chatMessageAllowToMe);
+    public ChannelAssociation(String associationId, String imessageId, String channelImessageId, boolean isRequester, Date requestTime, Date acceptTime, boolean active, Channel channel, ChatMessageAllow chatMessageAllowToThem, ChatMessageAllow chatMessageAllowToMe) {
+        this(associationId, imessageId, channelImessageId, isRequester, requestTime, acceptTime, active, chatMessageAllowToThem, chatMessageAllowToMe);
         this.channel = channel;
     }
 
@@ -45,12 +45,12 @@ public class ChannelAssociation {
         return associationId;
     }
 
-    public String getIchatId() {
-        return ichatId;
+    public String getImessageId() {
+        return imessageId;
     }
 
-    public String getChannelIchatId() {
-        return channelIchatId;
+    public String getChannelImessageId() {
+        return channelImessageId;
     }
 
     public boolean isRequester() {
@@ -86,11 +86,11 @@ public class ChannelAssociation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChannelAssociation that = (ChannelAssociation) o;
-        return requester == that.requester && active == that.active && Objects.equals(ichatId, that.ichatId) && Objects.equals(channelIchatId, that.channelIchatId);
+        return requester == that.requester && active == that.active && Objects.equals(imessageId, that.imessageId) && Objects.equals(channelImessageId, that.channelImessageId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ichatId, channelIchatId, requester, active);
+        return Objects.hash(imessageId, channelImessageId, requester, active);
     }
 }

@@ -129,8 +129,8 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         ArrayList<ChannelsRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
         Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
         Channel selfChannel = new Channel(
-                self.getIchatId(),
-                self.getIchatIdUser(),
+                self.getImessageId(),
+                self.getImessageIdUser(),
                 self.getEmail(),
                 self.getUsername(),
                 null,
@@ -156,7 +156,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     @Override
     public void onItemClick(int position, ChannelsRecyclerAdapter.ItemData data) {
         Intent intent = new Intent(requireContext(), ChannelActivity.class);
-        intent.putExtra(ExtraKeys.ICHAT_ID, data.getChannel().getIchatId());
+        intent.putExtra(ExtraKeys.IMESSAGE_ID, data.getChannel().getImessageId());
         intent.putExtra(ExtraKeys.CHANNEL, data.getChannel());
         startActivity(intent);
     }

@@ -77,9 +77,9 @@ public class ForwardMessageMessagesLinearLayoutViews extends LinearLayoutViews<O
     private void setupYiers(LinearLayoutViewsForwardMessageMessageBinding binding, OpenedChat openedChat, Activity activity) {
         binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
-                checkedChannelIds.add(openedChat.getChannelIchatId());
+                checkedChannelIds.add(openedChat.getChannelImessageId());
             }else {
-                checkedChannelIds.remove(openedChat.getChannelIchatId());
+                checkedChannelIds.remove(openedChat.getChannelImessageId());
             }
         });
     }

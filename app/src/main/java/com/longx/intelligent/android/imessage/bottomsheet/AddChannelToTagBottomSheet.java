@@ -52,9 +52,9 @@ public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
     private void setupYiers() {
         binding.addButton.setOnClickListener(v -> {
             List<Channel> checkedChannels = adapter.getCheckedChannels();
-            List<String> checkedChannelIchatIds = new ArrayList<>();
-            checkedChannels.forEach(channel -> checkedChannelIchatIds.add(channel.getIchatId()));
-            AddChannelsToTagPostBody postBody = new AddChannelsToTagPostBody(tagId, checkedChannelIchatIds);
+            List<String> checkedChannelImessageIds = new ArrayList<>();
+            checkedChannels.forEach(channel -> checkedChannelImessageIds.add(channel.getImessageId()));
+            AddChannelsToTagPostBody postBody = new AddChannelsToTagPostBody(tagId, checkedChannelImessageIds);
             ChannelApiCaller.addChannelsToTag((AppCompatActivity)getActivity(), postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {

@@ -20,13 +20,13 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_change_ichat_id_user">
+            app:title="@string/title_change_imessage_id_user">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:menu="@menu/toolbar_activity_change_ichat_id_user"
+                app:menu="@menu/toolbar_activity_change_imessage_id_user"
                 app:layout_collapseMode="pin"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -40,7 +40,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ichat_id_user_layout"
+            android:id="@+id/imessage_id_user_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             app:boxStrokeColor="@color/selector_text_input_layout_stroke">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ichat_id_user_input"
+                android:id="@+id/imessage_id_user_input"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:padding="0dp"

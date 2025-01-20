@@ -42,7 +42,7 @@ public class AuthApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> ichatIdUserLogin(LifecycleOwner lifecycleOwner, ImessageIdUserLoginPostBody postBody, BaseYier<OperationData> yier){
+    public static CompletableCall<OperationData> imessageIdUserLogin(LifecycleOwner lifecycleOwner, ImessageIdUserLoginPostBody postBody, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().imessageIdUserLogin(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;

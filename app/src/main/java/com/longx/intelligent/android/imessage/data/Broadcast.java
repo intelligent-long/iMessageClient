@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Broadcast implements Parcelable {
     private String broadcastId;
-    private String ichatId;
+    private String imessageId;
     private String channelName;
     private String channelAvatarHash;
     private Date time;
@@ -65,9 +65,9 @@ public class Broadcast implements Parcelable {
     public Broadcast() {
     }
 
-    public Broadcast(String broadcastId, String ichatId, String channelName, String channelAvatarHash, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount, boolean commented, int commentCount, BroadcastPermission broadcastPermission) {
+    public Broadcast(String broadcastId, String imessageId, String channelName, String channelAvatarHash, Date time, Date lastEditTime, String text, List<BroadcastMedia> broadcastMedias, boolean liked, int likeCount, boolean commented, int commentCount, BroadcastPermission broadcastPermission) {
         this.broadcastId = broadcastId;
-        this.ichatId = ichatId;
+        this.imessageId = imessageId;
         this.channelName = channelName;
         this.channelAvatarHash = channelAvatarHash;
         this.time = time;
@@ -85,8 +85,8 @@ public class Broadcast implements Parcelable {
         return broadcastId;
     }
 
-    public String getIchatId() {
-        return ichatId;
+    public String getImessageId() {
+        return imessageId;
     }
 
     public String getChannelName() {
@@ -152,7 +152,7 @@ public class Broadcast implements Parcelable {
 
     protected Broadcast(Parcel in) {
         broadcastId = in.readString();
-        ichatId = in.readString();
+        imessageId = in.readString();
         channelName = in.readString();
         channelAvatarHash = in.readString();
         time = new Date(in.readLong());
@@ -170,7 +170,7 @@ public class Broadcast implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(broadcastId);
-        dest.writeString(ichatId);
+        dest.writeString(imessageId);
         dest.writeString(channelName);
         dest.writeString(channelAvatarHash);
         dest.writeLong(time.getTime());
@@ -188,7 +188,7 @@ public class Broadcast implements Parcelable {
     public String toString() {
         return "Broadcast{" +
                 "broadcastId='" + broadcastId + '\'' +
-                ", ichatId='" + ichatId + '\'' +
+                ", imessageId='" + imessageId + '\'' +
                 ", channelName='" + channelName + '\'' +
                 ", channelAvatarHash='" + channelAvatarHash + '\'' +
                 ", time=" + time +

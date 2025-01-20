@@ -51,14 +51,14 @@ public class UserApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> ichatIdUserNowCanChange(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+    public static CompletableCall<OperationData> imessageIdUserNowCanChange(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().imessageIdUserNowCanChange();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationStatus> changeIchatIdUser(LifecycleOwner lifecycleOwner, ChangeImessageIdUserPostBody postBody, BaseYier<OperationStatus> yier){
-        CompletableCall<OperationStatus> call = getApiImplementation().changeIchatIdUser(postBody);
+    public static CompletableCall<OperationStatus> changeImessageIdUser(LifecycleOwner lifecycleOwner, ChangeImessageIdUserPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().changeImessageIdUser(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

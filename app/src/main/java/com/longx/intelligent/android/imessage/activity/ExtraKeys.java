@@ -6,7 +6,7 @@ package com.longx.intelligent.android.imessage.activity;
 public class ExtraKeys {
     public static final String CHANGE_PASSWORD_MODE = "change_password_mode";
     public static final String URI = "uri";
-    public static final String ICHAT_ID = "ichat_id";
+    public static final String IMESSAGE_ID = "imessage_id";
     public static final String CHANNEL = "channel_info";
     public static final String NETWORK_FETCH = "network_fetch";
     public static final String AVATAR_HASH = "avatar_hash";
@@ -23,7 +23,7 @@ public class ExtraKeys {
     public static final String FILE_NAMES = "file_names";
     public static final String CHAT_MESSAGE = "chat_message";
     public static final String CHAT_MESSAGES = "chat_messages";
-    public static final String ICHAT_IDS = "ichat_ids";
+    public static final String IMESSAGE_IDS = "imessage_ids";
     public static final String CHANNEL_TAG = "channel_tag";
     public static final String CHANNEL_TAGS = "channel_tags";
     public static final String CHANNEL_TAG_ID = "channel_tag_id";

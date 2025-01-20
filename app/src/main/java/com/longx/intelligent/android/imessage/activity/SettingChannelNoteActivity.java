@@ -28,8 +28,8 @@ public class SettingChannelNoteActivity extends BaseActivity {
         binding = ActivitySettingChannelNoteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        String channelIchatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
-        channel = ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId);
+        String channelImessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
+        channel = ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId);
         binding.noteInput.setText(channel.getNote());
         if (channel.getNote() == null) binding.deleteButton.setVisibility(View.GONE);
         setupYiers();
@@ -38,7 +38,7 @@ public class SettingChannelNoteActivity extends BaseActivity {
     private void setupYiers() {
         binding.doneButton.setOnClickListener(v -> {
             String inputtedNote = UiUtil.getEditTextString(binding.noteInput);
-            SetNoteToAssociatedChannelPostBody postBody = new SetNoteToAssociatedChannelPostBody(channel.getIchatId(), inputtedNote);
+            SetNoteToAssociatedChannelPostBody postBody = new SetNoteToAssociatedChannelPostBody(channel.getImessageId(), inputtedNote);
             ChannelApiCaller.setNoteToAssociatedChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
@@ -55,7 +55,7 @@ public class SettingChannelNoteActivity extends BaseActivity {
             new ConfirmDialog(this, "是否继续？")
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
-                        ChannelApiCaller.deleteNoteOfAssociatedChannel(this, channel.getIchatId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                        ChannelApiCaller.deleteNoteOfAssociatedChannel(this, channel.getImessageId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                 super.ok(data, raw, call);

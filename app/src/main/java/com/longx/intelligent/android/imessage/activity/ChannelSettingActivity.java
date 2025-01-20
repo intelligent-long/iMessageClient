@@ -40,7 +40,7 @@ public class ChannelSettingActivity extends BaseActivity {
     }
 
     private void showContent() {
-        ChatMessageAllow chatMessageAllowToMe = ChannelDatabaseManager.getInstance().findOneAssociations(channel.getIchatId()).getChatMessageAllowToMe();
+        ChatMessageAllow chatMessageAllowToMe = ChannelDatabaseManager.getInstance().findOneAssociations(channel.getImessageId()).getChatMessageAllowToMe();
         binding.switchVoiceMessage.setChecked(chatMessageAllowToMe.isAllowVoice());
         binding.switchNotice.setChecked(chatMessageAllowToMe.isAllowNotice());
     }
@@ -50,7 +50,7 @@ public class ChannelSettingActivity extends BaseActivity {
             UiUtil.setViewGroupEnabled(binding.clickViewVoiceMessage, false, true);
             boolean changeTo = !binding.switchVoiceMessage.isChecked();
             boolean switchNoticeChecked = binding.switchNotice.isChecked();
-            PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getIchatId(), new ChatMessageAllow(changeTo, switchNoticeChecked)),
+            PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getImessageId(), new ChatMessageAllow(changeTo, switchNoticeChecked)),
                     new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
                         @Override
                         public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
@@ -72,7 +72,7 @@ public class ChannelSettingActivity extends BaseActivity {
             UiUtil.setViewGroupEnabled(binding.clickViewNotice, false, true);
             boolean switchVoiceMessageChecked = binding.switchVoiceMessage.isChecked();
             boolean changeTo = !binding.switchNotice.isChecked();
-            PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getIchatId(), new ChatMessageAllow(switchVoiceMessageChecked, changeTo)),
+            PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getImessageId(), new ChatMessageAllow(switchVoiceMessageChecked, changeTo)),
                     new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
                         @Override
                         public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
@@ -111,30 +111,30 @@ public class ChannelSettingActivity extends BaseActivity {
         });
         binding.clickViewNote.setOnClickListener(v -> {
             Intent intent = new Intent(this, SettingChannelNoteActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, channel.getIchatId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, channel.getImessageId());
             startActivity(intent);
         });
         binding.clickViewTag.setOnClickListener(v -> {
             Intent intent = new Intent(this, SettingChannelTagActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, channel.getIchatId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, channel.getImessageId());
             startActivity(intent);
         });
     }
 
     private void deleteChannel() {
-        DeleteChannelAssociationPostBody postBody = new DeleteChannelAssociationPostBody(channel.getIchatId());
+        DeleteChannelAssociationPostBody postBody = new DeleteChannelAssociationPostBody(channel.getImessageId());
         ChannelApiCaller.deleteAssociatedChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
             @Override
             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(getActivity(), new int[]{}, () -> {
                     ActivityOperator.getActivitiesOf(ChatActivity.class).forEach(chatActivity -> {
-                        if(chatActivity.getChannel().getIchatId().equals(channel.getIchatId())){
+                        if(chatActivity.getChannel().getImessageId().equals(channel.getImessageId())){
                             chatActivity.finish();
                         }
                     });
                     ActivityOperator.getActivitiesOf(ChannelActivity.class).forEach(channelActivity -> {
-                        if(channelActivity.getChannel().getIchatId().equals(channel.getIchatId())){
+                        if(channelActivity.getChannel().getImessageId().equals(channel.getImessageId())){
                             channelActivity.finish();
                         }
                     });

@@ -13,20 +13,20 @@ import java.util.Objects;
  */
 public class ChannelTag implements Parcelable {
     private String tagId;
-    private String ichatId;
+    private String imessageId;
     private String name;
     private int order;
-    private List<String> channelIchatIdList;
+    private List<String> channelImessageIdList;
 
     public ChannelTag() {
     }
 
-    public ChannelTag(String tagId, String ichatId, String name, int order, List<String> channelIchatIdList) {
+    public ChannelTag(String tagId, String imessageId, String name, int order, List<String> channelImessageIdList) {
         this.tagId = tagId;
-        this.ichatId = ichatId;
+        this.imessageId = imessageId;
         this.name = name;
         this.order = order;
-        this.channelIchatIdList = channelIchatIdList;
+        this.channelImessageIdList = channelImessageIdList;
     }
 
     public static final Creator<ChannelTag> CREATOR = new Creator<ChannelTag>() {
@@ -45,8 +45,8 @@ public class ChannelTag implements Parcelable {
         return tagId;
     }
 
-    public String getIchatId() {
-        return ichatId;
+    public String getImessageId() {
+        return imessageId;
     }
 
     public String getName() {
@@ -61,12 +61,12 @@ public class ChannelTag implements Parcelable {
         this.order = order;
     }
 
-    public List<String> getChannelIchatIdList() {
-        return channelIchatIdList;
+    public List<String> getChannelImessageIdList() {
+        return channelImessageIdList;
     }
 
-    public void setChannelIchatIdList(List<String> channelIchatIdList) {
-        this.channelIchatIdList = channelIchatIdList;
+    public void setChannelImessageIdList(List<String> channelImessageIdList) {
+        this.channelImessageIdList = channelImessageIdList;
     }
 
     @Override
@@ -76,19 +76,19 @@ public class ChannelTag implements Parcelable {
 
     protected ChannelTag(Parcel in) {
         tagId = in.readString();
-        ichatId = in.readString();
+        imessageId = in.readString();
         name = in.readString();
         order = in.readInt();
-        channelIchatIdList = in.createStringArrayList();
+        channelImessageIdList = in.createStringArrayList();
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(tagId);
-        dest.writeString(ichatId);
+        dest.writeString(imessageId);
         dest.writeString(name);
         dest.writeInt(order);
-        dest.writeStringList(channelIchatIdList);
+        dest.writeStringList(channelImessageIdList);
     }
 
     @Override
@@ -96,11 +96,11 @@ public class ChannelTag implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChannelTag that = (ChannelTag) o;
-        return order == that.order && Objects.equals(tagId, that.tagId) && Objects.equals(ichatId, that.ichatId) && Objects.equals(name, that.name) && Objects.equals(channelIchatIdList, that.channelIchatIdList);
+        return order == that.order && Objects.equals(tagId, that.tagId) && Objects.equals(imessageId, that.imessageId) && Objects.equals(name, that.name) && Objects.equals(channelImessageIdList, that.channelImessageIdList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tagId, ichatId, name, order, channelIchatIdList);
+        return Objects.hash(tagId, imessageId, name, order, channelImessageIdList);
     }
 }

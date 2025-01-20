@@ -44,7 +44,7 @@ import retrofit2.Response;
 
 public class ChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, RecentBroadcastMediasUpdateYier {
     private ActivityChannelBinding binding;
-    private String ichatId;
+    private String imessageId;
     private Channel channel;
     private Self self;
     private boolean isSelf;
@@ -75,22 +75,22 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(uri != null){
             String path = uri.getPath();
             if (path != null) {
-                ichatId = path.substring(1);
+                imessageId = path.substring(1);
             }
         }
-        if(ichatId == null) {
-            ichatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
+        if(imessageId == null) {
+            imessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
             channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
             networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
         }
         self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
-        isSelf = (ichatId == null && channel == null)
-                || (ichatId != null && ichatId.equals(self.getIchatId())
-                || (channel != null && channel.getIchatId().equals(self.getIchatId())));
+        isSelf = (imessageId == null && channel == null)
+                || (imessageId != null && imessageId.equals(self.getImessageId())
+                || (channel != null && channel.getImessageId().equals(self.getImessageId())));
         if(isSelf || channel != null){
             showContent();
         }else {
-            showOrFetchAndShow(ichatId);
+            showOrFetchAndShow(imessageId);
         }
     }
 
@@ -98,13 +98,13 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(isSelf || networkFetch) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
     }
 
-    private void showOrFetchAndShow(String ichatId) {
-        channel = ChannelDatabaseManager.getInstance().findOneChannel(ichatId);
+    private void showOrFetchAndShow(String imessageId) {
+        channel = ChannelDatabaseManager.getInstance().findOneChannel(imessageId);
         if(channel != null){
             showContent();
         }else {
             networkFetch = true;
-            ChannelApiCaller.findChannelByIchatId(this, ichatId, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
+            ChannelApiCaller.findChannelByImessageId(this, imessageId, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
 
                 @Override
                 public void start(Call<OperationData> call) {
@@ -151,7 +151,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void showSelfContent() {
         binding.addChannelButton.setVisibility(View.GONE);
         binding.sendMessageButton.setVisibility(View.GONE);
-        showContent(self.getAvatar() == null ? null : self.getAvatar().getHash(), self.getUsername(), null, self.getSex(), self.getIchatId(), self.getIchatIdUser(), self.getEmail(), self.buildRegionDesc());
+        showContent(self.getAvatar() == null ? null : self.getAvatar().getHash(), self.getUsername(), null, self.getSex(), self.getImessageId(), self.getImessageIdUser(), self.getEmail(), self.buildRegionDesc());
     }
 
     private void showChannelContent() {
@@ -161,10 +161,10 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }else {
             binding.sendMessageButton.setVisibility(View.GONE);
         }
-        showContent(channel.getAvatar() == null ? null : channel.getAvatar().getHash(), channel.getUsername(), channel.getNote(), channel.getSex(), channel.getIchatId(), channel.getIchatIdUser(), channel.getEmail(), channel.buildRegionDesc());
+        showContent(channel.getAvatar() == null ? null : channel.getAvatar().getHash(), channel.getUsername(), channel.getNote(), channel.getSex(), channel.getImessageId(), channel.getImessageIdUser(), channel.getEmail(), channel.buildRegionDesc());
     }
 
-    private void showContent(String avatarHash, String username, String note, Integer sex, String ichatId, String ichatIdUser, String email, String regionDesc){
+    private void showContent(String avatarHash, String username, String note, Integer sex, String imessageId, String imessageIdUser, String email, String regionDesc){
         if (avatarHash == null) {
             GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, binding.avatar);
         } else {
@@ -190,7 +190,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                 binding.sexIcon.setImageResource(R.drawable.male_24px);
             }
         }
-        binding.ichatIdUser.setText(ichatIdUser);
+        binding.imessageIdUser.setText(imessageIdUser);
         if(email == null){
             binding.layoutEmail.setVisibility(View.GONE);
             binding.emailDivider.setVisibility(View.GONE);
@@ -217,7 +217,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void showRecentBroadcastMedias() {
-        List<RecentBroadcastMedia> recentBroadcastMedias = ChannelDatabaseManager.getInstance().findRecentBroadcastMedias(isSelf ? self.getIchatId() : getIchatId());
+        List<RecentBroadcastMedia> recentBroadcastMedias = ChannelDatabaseManager.getInstance().findRecentBroadcastMedias(isSelf ? self.getImessageId() : getImessageId());
         if(recentBroadcastMedias.isEmpty()){
             binding.layoutBroadcastWithMedias.setVisibility(View.GONE);
             binding.layoutBroadcastNoMedias.setVisibility(View.VISIBLE);
@@ -256,8 +256,8 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }
     }
 
-    private String getIchatId() {
-        return ichatId == null ? channel.getIchatId() : ichatId;
+    private String getImessageId() {
+        return imessageId == null ? channel.getImessageId() : imessageId;
     }
 
     private void setupYiers() {
@@ -266,7 +266,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             if(isSelf ? (self != null && self.getAvatar() != null && self.getAvatar().getHash() != null)
                     : (channel != null && channel.getAvatar() != null && channel.getAvatar().getHash() != null)) {
                     Intent intent = new Intent(this, AvatarActivity.class);
-                    intent.putExtra(ExtraKeys.ICHAT_ID, isSelf ? self.getIchatId() : channel.getIchatId());
+                    intent.putExtra(ExtraKeys.IMESSAGE_ID, isSelf ? self.getImessageId() : channel.getImessageId());
                     intent.putExtra(ExtraKeys.AVATAR_HASH, isSelf ? self.getAvatar().getHash() : channel.getAvatar().getHash());
                     intent.putExtra(ExtraKeys.AVATAR_EXTENSION, isSelf ? self.getAvatar().getExtension() : channel.getAvatar().getExtension());
                     startActivity(intent);
@@ -305,7 +305,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private void setLongClickCopyYiers() {
         binding.name.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.name.getText().toString()));
         binding.username.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.username.getText().toString()));
-        binding.ichatIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.ichatIdUser.getText().toString()));
+        binding.imessageIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.imessageIdUser.getText().toString()));
         binding.email.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.email.getText().toString()));
         binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.region.getText().toString()));
     }
@@ -323,7 +323,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             }
         }
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNELS)){
-            showOrFetchAndShow(getIchatId());
+            showOrFetchAndShow(getImessageId());
         }
     }
 
@@ -332,8 +332,8 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     @Override
-    public void onRecentBroadcastMediasUpdate(String ichatId) {
-        if(ichatId.equals(isSelf ? self.getIchatId() : this.ichatId)) {
+    public void onRecentBroadcastMediasUpdate(String imessageId) {
+        if(imessageId.equals(isSelf ? self.getImessageId() : this.imessageId)) {
             showRecentBroadcastMedias();
         }
     }

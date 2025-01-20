@@ -48,7 +48,7 @@ public class EditWaysToFindMeActivity extends BaseActivity {
     }
 
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceChangeListener, ContentUpdater.OnServerContentUpdateYier {
-        private Material3SwitchPreference preferenceChangeCanFindMeByIchatId;
+        private Material3SwitchPreference preferenceChangeCanFindMeByImessageId;
         private Material3SwitchPreference preferenceChangeCanFindMeByEmail;
 
         @Override
@@ -66,7 +66,7 @@ public class EditWaysToFindMeActivity extends BaseActivity {
 
         @Override
         protected void bindPreferences() {
-            preferenceChangeCanFindMeByIchatId = findPreference(getString(R.string.preference_key_change_can_find_me_by_ichat_id));
+            preferenceChangeCanFindMeByImessageId = findPreference(getString(R.string.preference_key_change_can_find_me_by_imessage_id));
             preferenceChangeCanFindMeByEmail = findPreference(getString(R.string.preference_key_change_can_find_me_by_email));
         }
 
@@ -74,31 +74,31 @@ public class EditWaysToFindMeActivity extends BaseActivity {
         protected void showInfo() {
             UserInfo.WaysToFindMe appWaysToFindMe = SharedPreferencesAccessor.UserProfilePref.getAppWaysToFindMe(requireContext());
             if(appWaysToFindMe == null){
-                preferenceChangeCanFindMeByIchatId.setEnabled(false);
+                preferenceChangeCanFindMeByImessageId.setEnabled(false);
                 preferenceChangeCanFindMeByEmail.setEnabled(false);
             }else {
-                preferenceChangeCanFindMeByIchatId.setChecked(appWaysToFindMe.isByIchatIdUser());
+                preferenceChangeCanFindMeByImessageId.setChecked(appWaysToFindMe.isByImessageIdUser());
                 preferenceChangeCanFindMeByEmail.setChecked(appWaysToFindMe.isByEmail());
             }
         }
 
         @Override
         protected void setupYiers() {
-            preferenceChangeCanFindMeByIchatId.setOnPreferenceChangeListener(this);
+            preferenceChangeCanFindMeByImessageId.setOnPreferenceChangeListener(this);
             preferenceChangeCanFindMeByEmail.setOnPreferenceChangeListener(this);
         }
 
         @Override
         public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-            boolean findMeByIchatId = preferenceChangeCanFindMeByIchatId.isChecked();
+            boolean findMeByImessageId = preferenceChangeCanFindMeByImessageId.isChecked();
             boolean findMeByEmail = preferenceChangeCanFindMeByEmail.isChecked();
-            if(preference.equals(preferenceChangeCanFindMeByIchatId)){
-                findMeByIchatId = (boolean) newValue;
+            if(preference.equals(preferenceChangeCanFindMeByImessageId)){
+                findMeByImessageId = (boolean) newValue;
             }else if(preference.equals(preferenceChangeCanFindMeByEmail)){
                 findMeByEmail = (boolean) newValue;
             }
             SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(requireContext(),
-                    new UserInfo.WaysToFindMe(findMeByIchatId, findMeByEmail));
+                    new UserInfo.WaysToFindMe(findMeByImessageId, findMeByEmail));
             return true;
         }
 
@@ -122,25 +122,25 @@ public class EditWaysToFindMeActivity extends BaseActivity {
 
         private void updateServerData() {
             Context applicationContext = requireContext().getApplicationContext();
-            if(!preferenceChangeCanFindMeByIchatId.isEnabled()) return;
+            if(!preferenceChangeCanFindMeByImessageId.isEnabled()) return;
             if(!preferenceChangeCanFindMeByEmail.isEnabled()) return;
-            boolean findMeByIchatIdChecked = preferenceChangeCanFindMeByIchatId.isChecked();
+            boolean findMeByImessageIdChecked = preferenceChangeCanFindMeByImessageId.isChecked();
             boolean findMeByEmailChecked = preferenceChangeCanFindMeByEmail.isChecked();
             UserInfo.WaysToFindMe serverWaysToFindMe = SharedPreferencesAccessor.UserProfilePref.getServerWaysToFindMe(applicationContext);
-            if(serverWaysToFindMe != null && serverWaysToFindMe.isByIchatIdUser() == findMeByIchatIdChecked && serverWaysToFindMe.isByEmail() == findMeByEmailChecked){
+            if(serverWaysToFindMe != null && serverWaysToFindMe.isByImessageIdUser() == findMeByImessageIdChecked && serverWaysToFindMe.isByEmail() == findMeByEmailChecked){
                 return;
             }
             FragmentActivity fragmentActivity = requireActivity();
-            ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(findMeByIchatIdChecked, findMeByEmailChecked);
+            ChangeWaysToFindMePostBody postBody = new ChangeWaysToFindMePostBody(findMeByImessageIdChecked, findMeByEmailChecked);
             PermissionApiCaller.changeWaysToFindMe(null, postBody, new RetrofitApiCaller.BaseCommonYier<OperationStatus>(applicationContext){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(fragmentActivity, new int[]{}, () -> {
                         SharedPreferencesAccessor.UserProfilePref.saveServerWaysToFindMe(applicationContext,
-                                new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
+                                new UserInfo.WaysToFindMe(findMeByImessageIdChecked, findMeByEmailChecked));
                         SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
-                                new UserInfo.WaysToFindMe(findMeByIchatIdChecked, findMeByEmailChecked));
+                                new UserInfo.WaysToFindMe(findMeByImessageIdChecked, findMeByEmailChecked));
                     });
                 }
 
@@ -149,7 +149,7 @@ public class EditWaysToFindMeActivity extends BaseActivity {
                     super.notOk(code, message, row, call);
                     if (serverWaysToFindMe != null) {
                         SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
-                                new UserInfo.WaysToFindMe(serverWaysToFindMe.isByIchatIdUser(), serverWaysToFindMe.isByEmail()));
+                                new UserInfo.WaysToFindMe(serverWaysToFindMe.isByImessageIdUser(), serverWaysToFindMe.isByEmail()));
                     }
                 }
 
@@ -158,7 +158,7 @@ public class EditWaysToFindMeActivity extends BaseActivity {
                     super.failure(t, call);
                     if (serverWaysToFindMe != null) {
                         SharedPreferencesAccessor.UserProfilePref.saveAppWaysToFindMe(applicationContext,
-                                new UserInfo.WaysToFindMe(serverWaysToFindMe.isByIchatIdUser(), serverWaysToFindMe.isByEmail()));
+                                new UserInfo.WaysToFindMe(serverWaysToFindMe.isByImessageIdUser(), serverWaysToFindMe.isByEmail()));
                     }
                 }
             });

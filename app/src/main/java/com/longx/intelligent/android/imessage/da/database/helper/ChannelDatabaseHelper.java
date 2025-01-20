@@ -20,8 +20,8 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
 
     public static class TableChannelAssociationsColumns {
         public static final String ASSOCIATION_ID = "association_id";
-        public static final String ICHAT_ID = "ichat_id";
-        public static final String CHANNEL_ICHAT_ID = "channel_ichat_id";
+        public static final String IMESSAGE_ID = "imessage_id";
+        public static final String CHANNEL_IMESSAGE_ID = "channel_imessage_id";
         public static final String IS_REQUESTER = "is_requester";
         public static final String REQUEST_TIME = "request_time";
         public static final String ACCEPT_TIME = "accept_time";
@@ -33,13 +33,13 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
     }
 
     public static class TableChannelsColumns {
-        public static final String ICHAT_ID = "ichat_id";
-        public static final String ICHAT_ID_USER = "ichat_id_user";
+        public static final String IMESSAGE_ID = "imessage_id";
+        public static final String IMESSAGE_ID_USER = "imessage_id_user";
         public static final String EMAIL = "email";
         public static final String USERNAME = "username";
         public static final String NOTE = "note";
         public static final String AVATAR_HASH = "avatar_hash";
-        public static final String AVATAR_ICHAT_ID = "avatar_ichat_id";
+        public static final String AVATAR_IMESSAGE_ID = "avatar_imessage_id";
         public static final String AVATAR_EXTENSION = "avatar_extension";
         public static final String AVATAR_TIME = "avatar_time";
         public static final String SEX = "sex";
@@ -54,7 +54,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
 
     public static class TableTagsColumns {
         public static final String ID = "id";
-        public static final String ICHAT_ID = "ichat_id";
+        public static final String IMESSAGE_ID = "imessage_id";
         public static final String NAME = "name";
         public static final String ORDER = "`order`";
         public static final String RAW_ORDER = "order";
@@ -62,12 +62,12 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
 
     public static class TableTagChannelsColumns {
         public static final String TAG_ID = "tag_id";
-        public static final String ICHAT_ID = "ichat_id";
+        public static final String IMESSAGE_ID = "imessage_id";
 
     }
 
     public static class TableRecentBroadcastMedias {
-        public static final String ICHAT_ID = "ichat_id";
+        public static final String IMESSAGE_ID = "imessage_id";
         public static final String BROADCAST_ID = "broadcast_id";
         public static final String MEDIA_ID = "media_id";
         public static final String TYPE = "type";
@@ -77,16 +77,16 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String RAW_INDEX = "index";
     }
 
-    public ChannelDatabaseHelper(Context context, String ichatId) {
-        super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, ichatId);
+    public ChannelDatabaseHelper(Context context, String imessageId) {
+        super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, imessageId);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String create_sql_1 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS + "("
                 + TableChannelAssociationsColumns.ASSOCIATION_ID + " VARCHAR,"
-                + TableChannelAssociationsColumns.ICHAT_ID + " VARCHAR,"
-                + TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " VARCHAR,"
+                + TableChannelAssociationsColumns.IMESSAGE_ID + " VARCHAR,"
+                + TableChannelAssociationsColumns.CHANNEL_IMESSAGE_ID + " VARCHAR,"
                 + TableChannelAssociationsColumns.IS_REQUESTER + " BOOLEAN,"
                 + TableChannelAssociationsColumns.REQUEST_TIME + " DATETIME,"
                 + TableChannelAssociationsColumns.ACCEPT_TIME + " DATETIME,"
@@ -101,13 +101,13 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + ");";
         db.execSQL(create_sql_1);
         String create_sql_2 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_CHANNELS + "("
-                + TableChannelsColumns.ICHAT_ID + " VARCHAR,"
-                + TableChannelsColumns.ICHAT_ID_USER + " VARCHAR,"
+                + TableChannelsColumns.IMESSAGE_ID + " VARCHAR,"
+                + TableChannelsColumns.IMESSAGE_ID_USER + " VARCHAR,"
                 + TableChannelsColumns.EMAIL + " VARCHAR,"
                 + TableChannelsColumns.USERNAME + " VARCHAR,"
                 + TableChannelsColumns.NOTE + " VARCHAR,"
                 + TableChannelsColumns.AVATAR_HASH + " VARCHAR,"
-                + TableChannelsColumns.AVATAR_ICHAT_ID + " VARCHAR,"
+                + TableChannelsColumns.AVATAR_IMESSAGE_ID + " VARCHAR,"
                 + TableChannelsColumns.AVATAR_EXTENSION + " VARCHAR,"
                 + TableChannelsColumns.AVATAR_TIME + " DATETIME,"
                 + TableChannelsColumns.SEX + " INTEGER,"
@@ -119,13 +119,13 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelsColumns.THIRD_REGION_NAME + " VARCHAR,"
                 + TableChannelsColumns.ASSOCIATED + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
-                + TableChannelAssociationsColumns.ICHAT_ID
+                + TableChannelAssociationsColumns.IMESSAGE_ID
                 +")"
                 + ");";
         db.execSQL(create_sql_2);
         String create_sql_3 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_TAGS + "("
                 + TableTagsColumns.ID + " VARCHAR,"
-                + TableTagsColumns.ICHAT_ID + " VARCHAR,"
+                + TableTagsColumns.IMESSAGE_ID + " VARCHAR,"
                 + TableTagsColumns.NAME + " VARCHAR,"
                 + TableTagsColumns.ORDER + " INTEGER,"
                 + " CONSTRAINT con_unique1 UNIQUE("
@@ -135,11 +135,11 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         db.execSQL(create_sql_3);
         String create_sql_4 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_TAG_CHANNELS + "("
                 + TableTagChannelsColumns.TAG_ID + " VARCHAR,"
-                + TableTagChannelsColumns.ICHAT_ID + " VARCHAR"
+                + TableTagChannelsColumns.IMESSAGE_ID + " VARCHAR"
                 + ");";
         db.execSQL(create_sql_4);
         String create_sql_5 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS + "("
-                + TableRecentBroadcastMedias.ICHAT_ID + " VARCHAR,"
+                + TableRecentBroadcastMedias.IMESSAGE_ID + " VARCHAR,"
                 + TableRecentBroadcastMedias.BROADCAST_ID + " VARCHAR,"
                 + TableRecentBroadcastMedias.MEDIA_ID + " VARCHAR,"
                 + TableRecentBroadcastMedias.TYPE + " INTEGER,"

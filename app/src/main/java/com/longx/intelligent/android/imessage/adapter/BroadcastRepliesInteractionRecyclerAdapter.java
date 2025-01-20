@@ -107,7 +107,7 @@ public class BroadcastRepliesInteractionRecyclerAdapter extends WrappableRecycle
         });
         holder.binding.avatar.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, broadcastReplyComment.getFromId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, broadcastReplyComment.getFromId());
             activity.startActivity(intent);
         });
     }

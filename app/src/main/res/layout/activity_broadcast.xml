@@ -1309,7 +1309,7 @@
                 android:scaleType="fitCenter"
                 android:background="@drawable/ripple_round_selectable_background_20r"
                 android:src="@drawable/send_fill_24px"
-                android:tint="@color/ichat" />
+                android:tint="@color/imessage" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/send_comment_indicator"

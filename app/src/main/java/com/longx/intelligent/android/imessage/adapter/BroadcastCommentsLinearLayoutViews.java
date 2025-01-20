@@ -78,7 +78,7 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                 @Override
                 public void onClick(@NonNull View widget) {
                     Intent intent = new Intent(activity, ChannelActivity.class);
-                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
+                    intent.putExtra(ExtraKeys.IMESSAGE_ID, broadcastComment.getToComment().getFromId());
                     activity.startActivity(intent);
                 }
 
@@ -86,7 +86,7 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
                 public void updateDrawState(@NonNull TextPaint ds) {
                     super.updateDrawState(ds);
                     ds.setUnderlineText(false);
-                    ds.setColor(activity.getColor(R.color.ichat));
+                    ds.setColor(activity.getColor(R.color.imessage));
                 }
             };
             spannableString.setSpan(userMentionClickableSpan, 0, toUserSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -98,7 +98,7 @@ public class BroadcastCommentsLinearLayoutViews extends LinearLayoutViews<Broadc
     private void setupYiers(RecyclerItemBroadcastCommentBinding binding, BroadcastComment broadcastComment, BroadcastActivity broadcastActivity) {
         binding.avatar.setOnClickListener(v -> {
             Intent intent = new Intent(broadcastActivity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getFromId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, broadcastComment.getFromId());
             broadcastActivity.startActivity(intent);
         });
         View.OnLongClickListener longClickYier = v -> {

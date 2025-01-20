@@ -162,8 +162,8 @@ public class MessagesFragment extends BaseMainFragment implements OpenedChatsUpd
             List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
             List<OpenedChat> toHideOpenedChats = new ArrayList<>();
             allShowOpenedChats.forEach(openedChat -> {
-                String channelIchatId = openedChat.getChannelIchatId();
-                if(ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId) == null){
+                String channelImessageId = openedChat.getChannelImessageId();
+                if(ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId) == null){
                     toHideOpenedChats.add(openedChat);
                 }
             });

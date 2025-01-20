@@ -34,7 +34,7 @@ public class BroadcastCommentActionsPopupWindow {
         if(broadcastComment.getToCommentId() == null){
             binding.clickViewViewToComment.setVisibility(View.GONE);
         }
-        if(!broadcastComment.getFromId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())){
+        if(!broadcastComment.getFromId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())){
             binding.clickViewDelete.setVisibility(View.GONE);
         }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);

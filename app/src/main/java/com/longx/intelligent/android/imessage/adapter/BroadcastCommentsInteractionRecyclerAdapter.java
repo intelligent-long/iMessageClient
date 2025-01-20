@@ -15,7 +15,6 @@ import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.data.BroadcastComment;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemBroadcastCommentsInteractionBinding;
-import com.longx.intelligent.android.imessage.databinding.RecyclerItemBroadcastLikesInteractionBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
@@ -108,7 +107,7 @@ public class BroadcastCommentsInteractionRecyclerAdapter extends WrappableRecycl
         });
         holder.binding.avatar.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getFromId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, broadcastComment.getFromId());
             activity.startActivity(intent);
         });
     }

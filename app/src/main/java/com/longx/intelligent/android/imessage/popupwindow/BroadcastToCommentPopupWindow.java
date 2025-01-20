@@ -20,7 +20,6 @@ import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.data.BroadcastComment;
 import com.longx.intelligent.android.imessage.databinding.PopupWindowBroadcastToCommentBinding;
-import com.longx.intelligent.android.imessage.databinding.RecyclerItemBroadcastCommentBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
@@ -73,7 +72,7 @@ public class BroadcastToCommentPopupWindow {
                 public void onClick(@NonNull View widget) {
                     skipContentClick = true;
                     Intent intent = new Intent(activity, ChannelActivity.class);
-                    intent.putExtra(ExtraKeys.ICHAT_ID, broadcastComment.getToComment().getFromId());
+                    intent.putExtra(ExtraKeys.IMESSAGE_ID, broadcastComment.getToComment().getFromId());
                     activity.startActivity(intent);
                 }
 
@@ -81,7 +80,7 @@ public class BroadcastToCommentPopupWindow {
                 public void updateDrawState(@NonNull TextPaint ds) {
                     super.updateDrawState(ds);
                     ds.setUnderlineText(false);
-                    ds.setColor(activity.getColor(R.color.ichat));
+                    ds.setColor(activity.getColor(R.color.imessage));
                 }
             };
             spannableString.setSpan(userMentionClickableSpan, 0, toUserSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -41,7 +41,7 @@ public interface UserApi {
     CompletableCall<OperationData> imessageIdUserNowCanChange();
 
     @POST("user/info/imessage_id_user/change")
-    CompletableCall<OperationStatus> changeIchatIdUser(@Body ChangeImessageIdUserPostBody postBody);
+    CompletableCall<OperationStatus> changeImessageIdUser(@Body ChangeImessageIdUserPostBody postBody);
 
     @POST("user/info/username/change")
     CompletableCall<OperationStatus> changeUsername(@Body ChangeUsernamePostBody postBody);

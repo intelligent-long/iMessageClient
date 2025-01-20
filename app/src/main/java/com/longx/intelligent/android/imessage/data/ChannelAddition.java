@@ -81,7 +81,7 @@ public class ChannelAddition implements Parcelable {
     }
 
     public boolean isRequester(Context context){
-        return requesterChannel.getIchatId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId());
+        return requesterChannel.getImessageId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getImessageId());
     }
 
     public static final Creator<ChannelAddition> CREATOR = new Creator<ChannelAddition>() {

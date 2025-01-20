@@ -16,7 +16,7 @@
         app:srcCompat="@drawable/shape_bottom_sheet_drag_handle_view" />
 
     <LinearLayout
-        android:id="@+id/ichat"
+        android:id="@+id/imessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"

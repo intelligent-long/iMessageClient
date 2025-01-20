@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by LONG on 2024/5/13 at 2:15 AM.
  */
 public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
-    private final String channelIchatId;
+    private final String channelImessageId;
     public static class DatabaseInfo{
         public static final String DATABASE_NAME = "chat_messages.db";
         public static final int FIRST_VERSION = 1;
@@ -38,14 +38,14 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String VOICE_LISTENED = "voice_listened";
     }
 
-    public ChatMessageDatabaseHelper(Context context, String channelIchatId, String ichatId) {
-        super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, ichatId);
-        this.channelIchatId = channelIchatId;
+    public ChatMessageDatabaseHelper(Context context, String channelImessageId, String imessageId) {
+        super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, imessageId);
+        this.channelImessageId = channelImessageId;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createSql = "CREATE TABLE IF NOT EXISTS " + channelIchatId + "("
+        String createSql = "CREATE TABLE IF NOT EXISTS " + channelImessageId + "("
                 + TableChannelChatMessagesColumns.TYPE + " INTEGER,"
                 + TableChannelChatMessagesColumns.UUID + " VARCHAR,"
                 + TableChannelChatMessagesColumns.FROM + " VARCHAR,"
@@ -73,8 +73,8 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 +")"
                 + ");";
         db.execSQL(createSql);
-        String createIndexSql = "CREATE INDEX IF NOT EXISTS " + channelIchatId +
-                "_index ON " + channelIchatId + "(" + TableChannelChatMessagesColumns.UUID + "," + TableChannelChatMessagesColumns.TIME + ");";
+        String createIndexSql = "CREATE INDEX IF NOT EXISTS " + channelImessageId +
+                "_index ON " + channelImessageId + "(" + TableChannelChatMessagesColumns.UUID + "," + TableChannelChatMessagesColumns.TIME + ");";
         db.execSQL(createIndexSql);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
@@ -94,6 +94,6 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
     }
 
     public String getTableName() {
-        return channelIchatId;
+        return channelImessageId;
     }
 }

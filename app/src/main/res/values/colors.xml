@@ -6,7 +6,7 @@
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="gray">#F0F0F0</color>
     <color name="badge_red">#F21339</color>
-    <color name="ichat">#65A9E0</color>
+    <color name="imessage">#65A9E0</color>
     <color name="chat_message_common_text">#171717</color>
     <color name="chat_message_send_text">#171717</color>
     <color name="chat_bubble_background_send_green">#87ED7B</color>

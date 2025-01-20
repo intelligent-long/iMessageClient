@@ -53,38 +53,38 @@ public class DataPaths {
                     java.io.File.separator + serverFolder(context);
         }
 
-        public static String databaseFilePath(Context context, String ichatId, String databaseFileName) {
+        public static String databaseFilePath(Context context, String imessageId, String databaseFileName) {
             return PrivateFile.privateFileRootPath(context) +
                     java.io.File.separator + "database" +
-                    java.io.File.separator + ichatId +
+                    java.io.File.separator + imessageId +
                     java.io.File.separator + databaseFileName;
         }
 
-        public static String chatImageFilePath(Context context, String ichatId, String imageFileName){
+        public static String chatImageFilePath(Context context, String imessageId, String imageFileName){
             return PrivateFile.privateFileRootPath(context) +
                     java.io.File.separator + "chat_image" +
-                    java.io.File.separator + ichatId +
+                    java.io.File.separator + imessageId +
                     java.io.File.separator + imageFileName;
         }
 
-        public static String chatFileFilePath(Context context, String ichatId, String fileName){
+        public static String chatFileFilePath(Context context, String imessageId, String fileName){
             return PrivateFile.privateFileRootPath(context) +
                     java.io.File.separator + "chat_file" +
-                    java.io.File.separator + ichatId +
+                    java.io.File.separator + imessageId +
                     java.io.File.separator + fileName;
         }
 
-        public static String chatVideoFilePath(Context context, String ichatId, String fileName){
+        public static String chatVideoFilePath(Context context, String imessageId, String fileName){
             return PrivateFile.privateFileRootPath(context) +
                     File.separator + "chat_video" +
-                    File.separator + ichatId +
+                    File.separator + imessageId +
                     File.separator + fileName;
         }
 
-        public static String chatVoiceFilePath(Context context, String ichatId, String fileName){
+        public static String chatVoiceFilePath(Context context, String imessageId, String fileName){
             return PrivateFile.privateFileRootPath(context) +
                     File.separator + "chat_voice" +
-                    File.separator + ichatId +
+                    File.separator + imessageId +
                     File.separator + fileName;
         }
     }
@@ -113,9 +113,9 @@ public class DataPaths {
             return publicFileRootPath() + File.separator + "Captured" + File.separator + fileName;
         }
 
-        public static String avatarFilePath(String avatarHash, String ichatId, String avatarExtension){
+        public static String avatarFilePath(String avatarHash, String imessageId, String avatarExtension){
             SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-            String fileName = yyyyMMddHHmmss.format(new Date()) + "_" + ichatId + "_" + avatarHash + "." + avatarExtension;
+            String fileName = yyyyMMddHHmmss.format(new Date()) + "_" + imessageId + "_" + avatarHash + "." + avatarExtension;
             return publicFileRootPath() + File.separator + "Avatar" + File.separator + fileName;
         }
     }

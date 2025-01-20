@@ -71,7 +71,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/login_ichat_id_user_layout"
+                android:id="@+id/login_imessage_id_user_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 app:boxStrokeColor="@color/selector_text_input_layout_stroke">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/login_ichat_id_user_input"
+                    android:id="@+id/login_imessage_id_user_input"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:padding="0dp"

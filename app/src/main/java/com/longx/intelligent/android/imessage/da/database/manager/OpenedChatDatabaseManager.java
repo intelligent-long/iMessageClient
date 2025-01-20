@@ -27,8 +27,8 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
     }
 
     public static void init(Context context){
-        String ichatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId();
-        OpenedChatDatabaseHelper helper = new OpenedChatDatabaseHelper(context, ichatId);
+        String imessageId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getImessageId();
+        OpenedChatDatabaseHelper helper = new OpenedChatDatabaseHelper(context, imessageId);
         OpenedChatDatabaseManager.InstanceHolder.instance = new OpenedChatDatabaseManager(helper);
     }
 
@@ -40,7 +40,7 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
         openDatabaseIfClosed();
         try {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID, openedChat.getChannelIchatId());
+            contentValues.put(OpenedChatDatabaseHelper.Columns.CHANNEL_IMESSAGE_ID, openedChat.getChannelImessageId());
             contentValues.put(OpenedChatDatabaseHelper.Columns.NOT_VIEWED_COUNT, openedChat.getNotViewedCount());
             contentValues.put(OpenedChatDatabaseHelper.Columns.SHOW, openedChat.isShow());
             long rowId = getDatabase().insertWithOnConflict(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
@@ -57,10 +57,10 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
                 new String[]{"1"}, null, null, null)){
             List<OpenedChat> result = new ArrayList<>();
             while (cursor.moveToNext()){
-                String channelIchatId = DatabaseUtil.getString(cursor, OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID);
+                String channelImessageId = DatabaseUtil.getString(cursor, OpenedChatDatabaseHelper.Columns.CHANNEL_IMESSAGE_ID);
                 Integer notViewedCount = DatabaseUtil.getInteger(cursor, OpenedChatDatabaseHelper.Columns.NOT_VIEWED_COUNT);
                 Boolean show = DatabaseUtil.getBoolean(cursor, OpenedChatDatabaseHelper.Columns.SHOW);
-                result.add(new OpenedChat(channelIchatId, notViewedCount == null ? -1 : notViewedCount, Boolean.TRUE.equals(show)));
+                result.add(new OpenedChat(channelImessageId, notViewedCount == null ? -1 : notViewedCount, Boolean.TRUE.equals(show)));
             }
             return result;
         }finally {
@@ -68,24 +68,24 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public boolean updateNotViewedCount(int notViewedCount, String channelIchatId){
+    public boolean updateNotViewedCount(int notViewedCount, String channelImessageId){
         openDatabaseIfClosed();
         try {
             ContentValues contentValues = new ContentValues();
             contentValues.put(OpenedChatDatabaseHelper.Columns.NOT_VIEWED_COUNT, notViewedCount);
             int update = getDatabase().update(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, contentValues,
-                    OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID + "=?", new String[]{channelIchatId});
+                    OpenedChatDatabaseHelper.Columns.CHANNEL_IMESSAGE_ID + "=?", new String[]{channelImessageId});
             return update == 1;
         }finally {
             releaseDatabaseIfUnused();
         }
     }
 
-    public int findNotViewedCount(String channelIchatId){
+    public int findNotViewedCount(String channelImessageId){
         openDatabaseIfClosed();
         try (Cursor cursor = getDatabase().query(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, null,
-                OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID + "=?",
-                new String[]{channelIchatId}, null, null, null)){
+                OpenedChatDatabaseHelper.Columns.CHANNEL_IMESSAGE_ID + "=?",
+                new String[]{channelImessageId}, null, null, null)){
             if(cursor.moveToNext()) {
                 Integer notViewedCount = DatabaseUtil.getInteger(cursor, OpenedChatDatabaseHelper.Columns.NOT_VIEWED_COUNT);
                 return notViewedCount == null ? 0 : notViewedCount;
@@ -97,13 +97,13 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public boolean updateShow(String channelIchatId, boolean show){
+    public boolean updateShow(String channelImessageId, boolean show){
         openDatabaseIfClosed();
         try {
             ContentValues contentValues = new ContentValues();
             contentValues.put(OpenedChatDatabaseHelper.Columns.SHOW, show);
             int rowNum = getDatabase().update(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, contentValues,
-                    OpenedChatDatabaseHelper.Columns.CHANNEL_ICHAT_ID + "=?", new String[]{channelIchatId});
+                    OpenedChatDatabaseHelper.Columns.CHANNEL_IMESSAGE_ID + "=?", new String[]{channelImessageId});
             return rowNum > 0;
         }finally {
             releaseDatabaseIfUnused();

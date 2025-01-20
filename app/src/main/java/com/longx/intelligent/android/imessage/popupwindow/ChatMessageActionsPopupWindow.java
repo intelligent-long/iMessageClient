@@ -59,7 +59,7 @@ public class ChatMessageActionsPopupWindow {
                 break;
             }
         }
-        if(!chatMessage.getFrom().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())){
+        if(!chatMessage.getFrom().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())){
             binding.clickViewDelete.setVisibility(View.GONE);
             binding.clickViewUnsend.setVisibility(View.GONE);
         }

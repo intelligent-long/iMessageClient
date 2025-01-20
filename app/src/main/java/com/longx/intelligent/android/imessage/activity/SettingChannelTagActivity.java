@@ -41,8 +41,8 @@ public class SettingChannelTagActivity extends BaseActivity implements ContentUp
         binding = ActivitySettingChannelTagBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        String channelIchatId = getIntent().getStringExtra(ExtraKeys.ICHAT_ID);
-        channel = ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId);
+        String channelImessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
+        channel = ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId);
         showContent();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
@@ -93,7 +93,7 @@ public class SettingChannelTagActivity extends BaseActivity implements ContentUp
             channelTagsAdapter.getToRemoveChannelTags().forEach(channelTag -> {
                 toRemoveTagIds.add(channelTag.getTagId());
             });
-            SetChannelTagsPostBody postBody = new SetChannelTagsPostBody(channel.getIchatId(), newTagNames, toAddTagIds, toRemoveTagIds);
+            SetChannelTagsPostBody postBody = new SetChannelTagsPostBody(channel.getImessageId(), newTagNames, toAddTagIds, toRemoveTagIds);
             ChannelApiCaller.setChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {

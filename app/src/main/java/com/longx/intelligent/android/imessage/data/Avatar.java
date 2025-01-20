@@ -12,22 +12,22 @@ import java.util.Date;
  */
 public class Avatar implements Parcelable {
     private String hash;
-    private String ichatId;
+    private String imessageId;
     private String extension;
     private Date time;
 
     public Avatar() {
     }
 
-    public Avatar(String hash, String ichatId, String extension, Date time) {
+    public Avatar(String hash, String imessageId, String extension, Date time) {
         this.hash = hash;
-        this.ichatId = ichatId;
+        this.imessageId = imessageId;
         this.extension = extension;
         this.time = time;
     }
 
-    public String getIchatId() {
-        return ichatId;
+    public String getImessageId() {
+        return imessageId;
     }
 
     public String getExtension() {
@@ -61,7 +61,7 @@ public class Avatar implements Parcelable {
 
     protected Avatar(Parcel in) {
         hash = in.readString();
-        ichatId = in.readString();
+        imessageId = in.readString();
         extension = in.readString();
         time = (Date) in.readValue(getClass().getClassLoader());
     }
@@ -69,7 +69,7 @@ public class Avatar implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(hash);
-        dest.writeString(ichatId);
+        dest.writeString(imessageId);
         dest.writeString(extension);
         dest.writeValue(time);
     }

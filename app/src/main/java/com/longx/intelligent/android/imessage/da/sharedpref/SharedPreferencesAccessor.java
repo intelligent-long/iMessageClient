@@ -34,8 +34,8 @@ import java.util.Set;
 public class SharedPreferencesAccessor {
 
     public static SharedPreferences getCurrentUserSharedPreferences(Context context, String name){
-        String currentUserIchatId = UserProfilePref.getCurrentUserProfile(context).getIchatId();
-        return context.getSharedPreferences(name + "_" + currentUserIchatId, Context.MODE_PRIVATE);
+        String currentUserImessageId = UserProfilePref.getCurrentUserProfile(context).getImessageId();
+        return context.getSharedPreferences(name + "_" + currentUserImessageId, Context.MODE_PRIVATE);
     }
 
     public static class DefaultPref {
@@ -255,13 +255,13 @@ public class SharedPreferencesAccessor {
     public static class UserProfilePref {
         private static final String NAME_USER_PROFILE = "user_profile";
         private static class Key{
-            private static final String ICHAT_ID = "ichat_id";
-            private static final String ICHAT_ID_USER = "ichat_id_user";
+            private static final String IMESSAGE_ID = "imessage_id";
+            private static final String IMESSAGE_ID_USER = "imessage_id_user";
             private static final String EMAIL = "email";
             private static final String REGISTER_TIME = "register_time";
             private static final String USERNAME = "username";
             private static final String AVATAR_HASH = "avatar_hash";
-            private static final String AVATAR_ICHAT_ID = "avatar_ichat_id";
+            private static final String AVATAR_IMESSAGE_ID = "avatar_imessage_id";
             private static final String AVATAR_EXTENSION = "avatar_extension";
             private static final String AVATAR_TIME = "avatar_time";
             private static final String SEX = "sex";
@@ -277,9 +277,9 @@ public class SharedPreferencesAccessor {
             private static final String APP_EMAIL_VISIBLE = "app_email_visible";
             private static final String APP_SEX_VISIBLE = "app_sex_visible";
             private static final String APP_REGION_VISIBLE = "app_region_visible";
-            private static final String SERVER_FIND_ME_BY_ICHAT_ID = "server_find_me_by_ichat_id";
+            private static final String SERVER_FIND_ME_BY_IMESSAGE_ID = "server_find_me_by_imessage_id";
             private static final String SERVER_FIND_ME_BY_EMAIL = "server_find_me_by_email";
-            private static final String APP_FIND_ME_BY_ICHAT_ID = "app_find_me_by_ichat_id";
+            private static final String APP_FIND_ME_BY_IMESSAGE_ID = "app_find_me_by_imessage_id";
             private static final String APP_FIND_ME_BY_EMAIL = "app_find_me_by_email";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
@@ -290,13 +290,13 @@ public class SharedPreferencesAccessor {
         public static void saveCurrentUserProfile(Context context, Self self){
             getSharedPreferences(context)
                     .edit()
-                    .putString(Key.ICHAT_ID, self.getIchatId())
-                    .putString(Key.ICHAT_ID_USER, self.getIchatIdUser())
+                    .putString(Key.IMESSAGE_ID, self.getImessageId())
+                    .putString(Key.IMESSAGE_ID_USER, self.getImessageIdUser())
                     .putString(Key.EMAIL, self.getEmail())
                     .putLong(Key.REGISTER_TIME, self.getRegisterTime().getTime())
                     .putString(Key.USERNAME, self.getUsername())
                     .putString(Key.AVATAR_HASH, self.getAvatar() == null ? null : self.getAvatar().getHash())
-                    .putString(Key.AVATAR_ICHAT_ID, self.getAvatar() == null ? null : self.getAvatar().getIchatId())
+                    .putString(Key.AVATAR_IMESSAGE_ID, self.getAvatar() == null ? null : self.getAvatar().getImessageId())
                     .putString(Key.AVATAR_EXTENSION, self.getAvatar() == null ? null : self.getAvatar().getExtension())
                     .putLong(Key.AVATAR_TIME, self.getAvatar() == null ? -1 : self.getAvatar().getTime().getTime())
                     .putInt(Key.SEX, self.getSex() == null ? -1 : self.getSex())
@@ -312,8 +312,8 @@ public class SharedPreferencesAccessor {
                     .putBoolean(Key.APP_SEX_VISIBLE, self.getUserProfileVisibility().isSexVisible())
                     .putBoolean(Key.SERVER_REGION_VISIBLE, self.getUserProfileVisibility().isRegionVisible())
                     .putBoolean(Key.APP_REGION_VISIBLE, self.getUserProfileVisibility().isRegionVisible())
-                    .putBoolean(Key.SERVER_FIND_ME_BY_ICHAT_ID, self.getWaysToFindMe().isByIchatIdUser())
-                    .putBoolean(Key.APP_FIND_ME_BY_ICHAT_ID, self.getWaysToFindMe().isByIchatIdUser())
+                    .putBoolean(Key.SERVER_FIND_ME_BY_IMESSAGE_ID, self.getWaysToFindMe().isByImessageIdUser())
+                    .putBoolean(Key.APP_FIND_ME_BY_IMESSAGE_ID, self.getWaysToFindMe().isByImessageIdUser())
                     .putBoolean(Key.SERVER_FIND_ME_BY_EMAIL, self.getWaysToFindMe().isByEmail())
                     .putBoolean(Key.APP_FIND_ME_BY_EMAIL, self.getWaysToFindMe().isByEmail())
                     .commit();
@@ -321,13 +321,13 @@ public class SharedPreferencesAccessor {
 
         public static Self getCurrentUserProfile(Context context){
             SharedPreferences sharedPreferences = getSharedPreferences(context);
-            String ichatId = sharedPreferences.getString(Key.ICHAT_ID, null);
-            String ichatIdUser = sharedPreferences.getString(Key.ICHAT_ID_USER, null);
+            String imessageId = sharedPreferences.getString(Key.IMESSAGE_ID, null);
+            String imessageIdUser = sharedPreferences.getString(Key.IMESSAGE_ID_USER, null);
             String email = sharedPreferences.getString(Key.EMAIL, null);
             long registerTimeLong = sharedPreferences.getLong(Key.REGISTER_TIME, -1);
             String username = sharedPreferences.getString(Key.USERNAME, null);
             String avatarHash = sharedPreferences.getString(Key.AVATAR_HASH, null);
-            String avatarIchatId = sharedPreferences.getString(Key.AVATAR_ICHAT_ID, null);
+            String avatarImessageId = sharedPreferences.getString(Key.AVATAR_IMESSAGE_ID, null);
             String avatarExtension = sharedPreferences.getString(Key.AVATAR_EXTENSION, null);
             long avatarTimeLong = sharedPreferences.getLong(Key.AVATAR_TIME, -1);
             Date registerTime = null;
@@ -348,16 +348,16 @@ public class SharedPreferencesAccessor {
             boolean emailVisible = sharedPreferences.getBoolean(Key.SERVER_EMAIL_VISIBLE, true);
             boolean sexVisible = sharedPreferences.getBoolean(Key.SERVER_SEX_VISIBLE, true);
             boolean regionVisible = sharedPreferences.getBoolean(Key.SERVER_REGION_VISIBLE, true);
-            boolean findMeByIchatId = sharedPreferences.getBoolean(Key.SERVER_FIND_ME_BY_ICHAT_ID, true);
+            boolean findMeByImessageId = sharedPreferences.getBoolean(Key.SERVER_FIND_ME_BY_IMESSAGE_ID, true);
             boolean findMeByEmail = sharedPreferences.getBoolean(Key.SERVER_FIND_ME_BY_EMAIL, true);
-            return new Self(ichatId, ichatIdUser, email, registerTime, username,
-                    new Avatar(avatarHash, avatarIchatId, avatarExtension, avatarTime),
+            return new Self(imessageId, imessageIdUser, email, registerTime, username,
+                    new Avatar(avatarHash, avatarImessageId, avatarExtension, avatarTime),
                     sex == -1 ? null : sex,
                     (firstRegionAdcode == -1 && firstRegionName == null) ? null : new UserInfo.Region(firstRegionAdcode, firstRegionName),
                     (secondRegionAdcode == -1 && secondRegionName == null) ? null : new UserInfo.Region(secondRegionAdcode, secondRegionName),
                     (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new UserInfo.Region(thirdRegionAdcode, thirdRegionName),
                     new UserInfo.UserProfileVisibility(emailVisible, sexVisible, regionVisible),
-                    new UserInfo.WaysToFindMe(findMeByIchatId, findMeByEmail));
+                    new UserInfo.WaysToFindMe(findMeByImessageId, findMeByEmail));
         }
 
         public static void saveServerUserProfileVisibility(Context context, UserInfo.UserProfileVisibility userProfileVisibility){
@@ -403,37 +403,37 @@ public class SharedPreferencesAccessor {
         public static void saveServerWaysToFindMe(Context context, UserInfo.WaysToFindMe waysToFindMe){
             getSharedPreferences(context)
                     .edit()
-                    .putBoolean(Key.SERVER_FIND_ME_BY_ICHAT_ID, waysToFindMe.isByIchatIdUser())
+                    .putBoolean(Key.SERVER_FIND_ME_BY_IMESSAGE_ID, waysToFindMe.isByImessageIdUser())
                     .putBoolean(Key.SERVER_FIND_ME_BY_EMAIL, waysToFindMe.isByEmail())
                     .apply();
         }
 
         public static UserInfo.WaysToFindMe getServerWaysToFindMe(Context context){
             SharedPreferences sharedPreferences = getSharedPreferences(context);
-            if(!(sharedPreferences.contains(Key.SERVER_FIND_ME_BY_ICHAT_ID) && sharedPreferences.contains(Key.SERVER_FIND_ME_BY_EMAIL))){
+            if(!(sharedPreferences.contains(Key.SERVER_FIND_ME_BY_IMESSAGE_ID) && sharedPreferences.contains(Key.SERVER_FIND_ME_BY_EMAIL))){
                 return null;
             }
-            boolean appFindMeByIchatId = sharedPreferences.getBoolean(Key.SERVER_FIND_ME_BY_ICHAT_ID, true);
+            boolean appFindMeByImessageId = sharedPreferences.getBoolean(Key.SERVER_FIND_ME_BY_IMESSAGE_ID, true);
             boolean appFindMeByEmail = sharedPreferences.getBoolean(Key.SERVER_FIND_ME_BY_EMAIL, true);
-            return new UserInfo.WaysToFindMe(appFindMeByIchatId, appFindMeByEmail);
+            return new UserInfo.WaysToFindMe(appFindMeByImessageId, appFindMeByEmail);
         }
 
         public static void saveAppWaysToFindMe(Context context, UserInfo.WaysToFindMe waysToFindMe){
             getSharedPreferences(context)
                     .edit()
-                    .putBoolean(Key.APP_FIND_ME_BY_ICHAT_ID, waysToFindMe.isByIchatIdUser())
+                    .putBoolean(Key.APP_FIND_ME_BY_IMESSAGE_ID, waysToFindMe.isByImessageIdUser())
                     .putBoolean(Key.APP_FIND_ME_BY_EMAIL, waysToFindMe.isByEmail())
                     .apply();
         }
 
         public static UserInfo.WaysToFindMe getAppWaysToFindMe(Context context){
             SharedPreferences sharedPreferences = getSharedPreferences(context);
-            if(!(sharedPreferences.contains(Key.APP_FIND_ME_BY_ICHAT_ID) && sharedPreferences.contains(Key.APP_FIND_ME_BY_EMAIL))){
+            if(!(sharedPreferences.contains(Key.APP_FIND_ME_BY_IMESSAGE_ID) && sharedPreferences.contains(Key.APP_FIND_ME_BY_EMAIL))){
                 return null;
             }
-            boolean appFindMeByIchatId = sharedPreferences.getBoolean(Key.APP_FIND_ME_BY_ICHAT_ID, true);
+            boolean appFindMeByImessageId = sharedPreferences.getBoolean(Key.APP_FIND_ME_BY_IMESSAGE_ID, true);
             boolean appFindMeByEmail = sharedPreferences.getBoolean(Key.APP_FIND_ME_BY_EMAIL, true);
-            return new UserInfo.WaysToFindMe(appFindMeByIchatId, appFindMeByEmail);
+            return new UserInfo.WaysToFindMe(appFindMeByImessageId, appFindMeByEmail);
         }
 
         @SuppressLint("ApplySharedPref")

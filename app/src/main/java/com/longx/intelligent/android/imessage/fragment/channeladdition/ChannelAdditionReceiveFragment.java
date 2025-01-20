@@ -104,7 +104,7 @@ public class ChannelAdditionReceiveFragment extends Fragment implements ChannelA
         Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
         channelAdditions.forEach(channelAdditionInfo -> {
             if ((channelAdditionInfo.getRespondTime() != null || channelAdditionInfo.isExpired())
-                    && channelAdditionInfo.getResponderChannel().getIchatId().equals(currentUserInfo.getIchatId()))
+                    && channelAdditionInfo.getResponderChannel().getImessageId().equals(currentUserInfo.getImessageId()))
                 sendChannelAdditions.add(channelAdditionInfo);
         });
         if (sendChannelAdditions.size() == 0) {

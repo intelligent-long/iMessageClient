@@ -111,7 +111,7 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     private void showItem(ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
-        boolean isCurrentUserRequester = currentUserInfo.getIchatId().equals(itemData.channelAddition.getRequesterChannel().getIchatId());
+        boolean isCurrentUserRequester = currentUserInfo.getImessageId().equals(itemData.channelAddition.getRequesterChannel().getImessageId());
         if(isCurrentUserRequester){
             Channel channel = itemData.channelAddition.getResponderChannel();
             String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();

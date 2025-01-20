@@ -36,8 +36,8 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
     }
 
     public static void init(Context context){
-        String ichatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId();
-        ChannelDatabaseHelper helper = new ChannelDatabaseHelper(context, ichatId);
+        String imessageId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getImessageId();
+        ChannelDatabaseHelper helper = new ChannelDatabaseHelper(context, imessageId);
         InstanceHolder.instance = new ChannelDatabaseManager(helper);
     }
 
@@ -52,8 +52,8 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             channelAssociations.forEach(channelAssociation -> {
                 ContentValues values = new ContentValues();
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ASSOCIATION_ID, channelAssociation.getAssociationId());
-                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ICHAT_ID, channelAssociation.getIchatId());
-                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID, channelAssociation.getChannelIchatId());
+                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.IMESSAGE_ID, channelAssociation.getImessageId());
+                values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_IMESSAGE_ID, channelAssociation.getChannelImessageId());
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.IS_REQUESTER, channelAssociation.isRequester());
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.REQUEST_TIME, channelAssociation.getRequestTime().getTime());
                 values.put(ChannelDatabaseHelper.TableChannelAssociationsColumns.ACCEPT_TIME, channelAssociation.getAcceptTime().getTime());
@@ -69,13 +69,13 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 }
                 ContentValues values1 = new ContentValues();
                 Channel channel = channelAssociation.getChannel();
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID, channel.getIchatId());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER, channel.getIchatIdUser());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID, channel.getImessageId());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID_USER, channel.getImessageIdUser());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.EMAIL, channel.getEmail());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.USERNAME, channel.getUsername());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.NOTE, channel.getNote());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH, channel.getAvatar() == null ? null : channel.getAvatar().getHash());
-                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID, channel.getAvatar() == null ? null : channel.getAvatar().getIchatId());
+                values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_IMESSAGE_ID, channel.getAvatar() == null ? null : channel.getAvatar().getImessageId());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION, channel.getAvatar() == null ? null : channel.getAvatar().getExtension());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME, channel.getAvatar() == null ? null : channel.getAvatar().getTime().getTime());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.SEX, channel.getSex());
@@ -103,18 +103,18 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
 
     public List<ChannelAssociation> findAllAssociations(){
         openDatabaseIfClosed();
-        String sql = "SELECT *, " + " ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.ICHAT_ID + " AS associationTableIchatId, "
-                + " c." + ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID + " AS channelTableIchatId "
+        String sql = "SELECT *, " + " ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.IMESSAGE_ID + " AS associationTableImessageId, "
+                + " c." + ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID + " AS channelTableImessageId "
                 + " FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS + " ca "
                 + " INNER JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS + " c ON " +
-                ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID;
+                ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_IMESSAGE_ID + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID;
         try(Cursor cursor = getDatabase().rawQuery(sql, null)) {
             List<ChannelAssociation> result = new ArrayList<>();
             while (cursor.moveToNext()){
                 String associationId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ASSOCIATION_ID);
-                String associationTableIchatId = DatabaseUtil.getString(cursor, "associationTableIchatId");
-                String channelTableIchatId = DatabaseUtil.getString(cursor, "channelTableIchatId");
-                String channelIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID);
+                String associationTableImessageId = DatabaseUtil.getString(cursor, "associationTableImessageId");
+                String channelTableImessageId = DatabaseUtil.getString(cursor, "channelTableImessageId");
+                String channelImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
                 Boolean isRequester = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.IS_REQUESTER);
                 Date requestTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.REQUEST_TIME);
                 Date acceptTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ACCEPT_TIME);
@@ -123,12 +123,12 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 Boolean allowNoticeChatMessageToThem = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_THEM);
                 Boolean allowVoiceChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_ME);
                 Boolean allowNoticeChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_ME);
-                String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);
+                String channelTableImessageIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID_USER);
                 String channelTableEmail = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.EMAIL);
                 String channelTableUsername = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.USERNAME);
                 String channelTableNote = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.NOTE);
                 String channelTableAvatarHash = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH);
-                String channelTableAvatarIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID);
+                String channelTableAvatarImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_IMESSAGE_ID);
                 String channelTableAvatarExtension = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION);
                 Date channelTableAvatarTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME);
                 Integer channelTableSex = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.SEX);
@@ -139,8 +139,8 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 Integer channelTableThirdRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE);
                 String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
                 Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
-                result.add(new ChannelAssociation(associationId, associationTableIchatId, channelIchatId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
-                        new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+                result.add(new ChannelAssociation(associationId, associationTableImessageId, channelImessageId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
+                        new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                                 channelTableSex,
                                 channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                                 channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
@@ -155,20 +155,20 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public ChannelAssociation findOneAssociations(String ichatId){
+    public ChannelAssociation findOneAssociations(String imessageId){
         openDatabaseIfClosed();
-        String sql = "SELECT *, " + " ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.ICHAT_ID + " AS associationTableIchatId, "
-                + " c." + ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID + " AS channelTableIchatId "
+        String sql = "SELECT *, " + " ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.IMESSAGE_ID + " AS associationTableImessageId, "
+                + " c." + ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID + " AS channelTableImessageId "
                 + " FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNEL_ASSOCIATIONS + " ca "
                 + " INNER JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS + " c ON "
-                + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID
-                + " WHERE ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID + " = \"" + ichatId + "\"";
+                + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_IMESSAGE_ID + " = " + " c." +  ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID
+                + " WHERE ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_IMESSAGE_ID + " = \"" + imessageId + "\"";
         try(Cursor cursor = getDatabase().rawQuery(sql, null)) {
             cursor.moveToNext();
             String associationId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ASSOCIATION_ID);
-            String associationTableIchatId = DatabaseUtil.getString(cursor, "associationTableIchatId");
-            String channelTableIchatId = DatabaseUtil.getString(cursor, "channelTableIchatId");
-            String channelIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_ICHAT_ID);
+            String associationTableImessageId = DatabaseUtil.getString(cursor, "associationTableImessageId");
+            String channelTableImessageId = DatabaseUtil.getString(cursor, "channelTableImessageId");
+            String channelImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
             Boolean isRequester = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.IS_REQUESTER);
             Date requestTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.REQUEST_TIME);
             Date acceptTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ACCEPT_TIME);
@@ -177,12 +177,12 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             Boolean allowNoticeChatMessageToThem = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_THEM);
             Boolean allowVoiceChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_VOICE_CHAT_MESSAGE_TO_ME);
             Boolean allowNoticeChatMessageToMe = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelAssociationsColumns.ALLOW_NOTICE_CHAT_MESSAGE_TO_ME);
-            String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);
+            String channelTableImessageIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID_USER);
             String channelTableEmail = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.EMAIL);
             String channelTableUsername = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.USERNAME);
             String channelTableNote = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.NOTE);
             String channelTableAvatarHash = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH);
-            String channelTableAvatarIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID);
+            String channelTableAvatarImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_IMESSAGE_ID);
             String channelTableAvatarExtension = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION);
             Date channelTableAvatarTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME);
             Integer channelTableSex = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.SEX);
@@ -193,8 +193,8 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             Integer channelTableThirdRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE);
             String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
             Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
-            return new ChannelAssociation(associationId, associationTableIchatId, channelIchatId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
-                    new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+            return new ChannelAssociation(associationId, associationTableImessageId, channelImessageId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
+                    new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                             channelTableSex,
                             channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                             channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
@@ -207,17 +207,17 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public Channel findOneChannel(String ichatId){
+    public Channel findOneChannel(String imessageId){
         openDatabaseIfClosed();
-        try (Cursor cursor = getDatabase().query(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID + " = \"" + ichatId + "\"", null, null, null, null)){
+        try (Cursor cursor = getDatabase().query(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null, ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID + " = \"" + imessageId + "\"", null, null, null, null)){
             cursor.moveToNext();
-            String channelTableIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID);
-            String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);
+            String channelTableImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID);
+            String channelTableImessageIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID_USER);
             String channelTableEmail = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.EMAIL);
             String channelTableUsername = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.USERNAME);
             String channelTableNote = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.NOTE);
             String channelTableAvatarHash = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH);
-            String channelTableAvatarIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID);
+            String channelTableAvatarImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_IMESSAGE_ID);
             String channelTableAvatarExtension = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION);
             Date channelTableAvatarTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME);
             Integer channelTableSex = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.SEX);
@@ -228,7 +228,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             Integer channelTableThirdRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE);
             String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
             Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
-            return new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+            return new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                     channelTableSex,
                     channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                     channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
@@ -269,7 +269,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             OUTER: for (ChannelTag channelTag : channelTags) {
                 ContentValues values = new ContentValues();
                 values.put(ChannelDatabaseHelper.TableTagsColumns.ID, channelTag.getTagId());
-                values.put(ChannelDatabaseHelper.TableTagsColumns.ICHAT_ID, channelTag.getIchatId());
+                values.put(ChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID, channelTag.getImessageId());
                 values.put(ChannelDatabaseHelper.TableTagsColumns.NAME, channelTag.getName());
                 values.put(ChannelDatabaseHelper.TableTagsColumns.ORDER, channelTag.getOrder());
                 long rowId = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, null,
@@ -278,10 +278,10 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                     result.set(false);
                     break;
                 }
-                for (String channelIchatId : channelTag.getChannelIchatIdList()) {
+                for (String channelImessageId : channelTag.getChannelImessageIdList()) {
                     ContentValues values1 = new ContentValues();
                     values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, channelTag.getTagId());
-                    values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.ICHAT_ID, channelIchatId);
+                    values1.put(ChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID, channelImessageId);
                     long rowId1 = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS, null,
                             values1, SQLiteDatabase.CONFLICT_REPLACE);
                     if (rowId1 == -1) {
@@ -309,30 +309,30 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             List<String> channelIds = null;
             while (cursor.moveToNext()){
                 String tagId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ID);
-                String ichatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ICHAT_ID);
+                String imessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID);
                 String name = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.NAME);
                 Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableTagsColumns.RAW_ORDER);
-                String channelIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagChannelsColumns.ICHAT_ID);
+                String channelImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID);
                 if (currentTagId == null) {
                     currentTagId = tagId;
                     channelIds = new ArrayList<>();
-                    if(channelIchatId != null) channelIds.add(channelIchatId);
-                    channelTag = new ChannelTag(tagId, ichatId, name, order == null ? -1 : order, null);
+                    if(channelImessageId != null) channelIds.add(channelImessageId);
+                    channelTag = new ChannelTag(tagId, imessageId, name, order == null ? -1 : order, null);
                 } else {
                     if (currentTagId.equals(tagId)) {
-                        if(channelIchatId != null) channelIds.add(channelIchatId);
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
                     } else {
-                        channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                        channelTag.setChannelImessageIdList(new ArrayList<>(channelIds));
                         result.add(channelTag);
                         channelIds = new ArrayList<>();
                         currentTagId = tagId;
-                        if(channelIchatId != null) channelIds.add(channelIchatId);
-                        channelTag = new ChannelTag(tagId, ichatId, name, order == null ? -1 : order, null);
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
+                        channelTag = new ChannelTag(tagId, imessageId, name, order == null ? -1 : order, null);
                     }
                 }
             }
             if(channelTag != null) {
-                channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                channelTag.setChannelImessageIdList(new ArrayList<>(channelIds));
                 result.add(channelTag);
             }
             return result;
@@ -353,30 +353,30 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             List<String> channelIds = null;
             while (cursor.moveToNext()){
                 String tagIdFound = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ID);
-                String ichatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.ICHAT_ID);
+                String imessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID);
                 String name = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagsColumns.NAME);
                 Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableTagsColumns.RAW_ORDER);
-                String channelIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagChannelsColumns.ICHAT_ID);
+                String channelImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID);
                 if (currentTagId == null) {
                     currentTagId = tagIdFound;
                     channelIds = new ArrayList<>();
-                    if(channelIchatId != null) channelIds.add(channelIchatId);
-                    channelTag = new ChannelTag(tagIdFound, ichatId, name, order == null ? -1 : order, null);
+                    if(channelImessageId != null) channelIds.add(channelImessageId);
+                    channelTag = new ChannelTag(tagIdFound, imessageId, name, order == null ? -1 : order, null);
                 } else {
                     if (currentTagId.equals(tagIdFound)) {
-                        if(channelIchatId != null) channelIds.add(channelIchatId);
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
                     } else {
-                        channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                        channelTag.setChannelImessageIdList(new ArrayList<>(channelIds));
                         result.add(channelTag);
                         channelIds = new ArrayList<>();
                         currentTagId = tagIdFound;
-                        if(channelIchatId != null) channelIds.add(channelIchatId);
-                        channelTag = new ChannelTag(tagIdFound, ichatId, name, order == null ? -1 : order, null);
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
+                        channelTag = new ChannelTag(tagIdFound, imessageId, name, order == null ? -1 : order, null);
                     }
                 }
             }
             if(channelTag != null) {
-                channelTag.setChannelIchatIdList(new ArrayList<>(channelIds));
+                channelTag.setChannelImessageIdList(new ArrayList<>(channelIds));
                 result.add(channelTag);
             }
             return result.get(0);
@@ -385,16 +385,16 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public boolean updateRecentBroadcastMedias(List<RecentBroadcastMedia> recentBroadcastMedias, String ichatId){
+    public boolean updateRecentBroadcastMedias(List<RecentBroadcastMedia> recentBroadcastMedias, String imessageId){
         AtomicBoolean result = new AtomicBoolean(true);
         openDatabaseIfClosed();
         getDatabase().delete(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS,
-                ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID + " = ?",
-                new String[]{ichatId});
+                ChannelDatabaseHelper.TableRecentBroadcastMedias.IMESSAGE_ID + " = ?",
+                new String[]{imessageId});
         try{
             recentBroadcastMedias.forEach(recentBroadcastMedia -> {
                 ContentValues values = new ContentValues();
-                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID, recentBroadcastMedia.getIchatId());
+                values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.IMESSAGE_ID, recentBroadcastMedia.getImessageId());
                 values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.BROADCAST_ID, recentBroadcastMedia.getBroadcastId());
                 values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.MEDIA_ID, recentBroadcastMedia.getMediaId());
                 values.put(ChannelDatabaseHelper.TableRecentBroadcastMedias.TYPE, recentBroadcastMedia.getType());
@@ -414,28 +414,28 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
     }
 
     @SuppressLint("Range")
-    public List<RecentBroadcastMedia> findRecentBroadcastMedias(String ichatId) {
+    public List<RecentBroadcastMedia> findRecentBroadcastMedias(String imessageId) {
         List<RecentBroadcastMedia> recentBroadcastMedias = new ArrayList<>();
         openDatabaseIfClosed();
         try(Cursor cursor = getDatabase().query(
                 ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_RECENT_BROADCAST_MEDIAS,
                 null,
-                ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID + " = ?",
-                new String[]{ichatId},
+                ChannelDatabaseHelper.TableRecentBroadcastMedias.IMESSAGE_ID + " = ?",
+                new String[]{imessageId},
                 null,
                 null,
                 ChannelDatabaseHelper.TableRecentBroadcastMedias.INDEX
         )) {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    String ichatId1 = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.ICHAT_ID));
+                    String imessageId1 = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.IMESSAGE_ID));
                     String broadcastId = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.BROADCAST_ID));
                     String mediaId = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.MEDIA_ID));
                     int type = cursor.getInt(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.TYPE));
                     String extension = cursor.getString(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.EXTENSION));
                     long videoDuration = cursor.getLong(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.VIDEO_DURATION));
                     int index = cursor.getInt(cursor.getColumnIndex(ChannelDatabaseHelper.TableRecentBroadcastMedias.RAW_INDEX));
-                    recentBroadcastMedias.add(new RecentBroadcastMedia(ichatId1, broadcastId, mediaId, type, extension, videoDuration, index));
+                    recentBroadcastMedias.add(new RecentBroadcastMedia(imessageId1, broadcastId, mediaId, type, extension, videoDuration, index));
                 } while (cursor.moveToNext());
             }
         } finally {
@@ -449,7 +449,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         openDatabaseIfClosed();
         try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS +
                         " WHERE " +
-                        ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER + " LIKE \"%" + str + "%\" OR " +
+                        ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID_USER + " LIKE \"%" + str + "%\" OR " +
                         ChannelDatabaseHelper.TableChannelsColumns.USERNAME + " LIKE \"%" + str + "%\" OR " +
                         ChannelDatabaseHelper.TableChannelsColumns.NOTE + " LIKE \"%" + str + "%\" OR " +
                         ChannelDatabaseHelper.TableChannelsColumns.EMAIL + " LIKE \"%" + str + "%\" OR " +
@@ -459,13 +459,13 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 null)) {
             List<Channel> results = new ArrayList<>();
             while (cursor.moveToNext()){
-                String channelTableIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID);
-                String channelTableIchatIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.ICHAT_ID_USER);
+                String channelTableImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID);
+                String channelTableImessageIdUser = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID_USER);
                 String channelTableEmail = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.EMAIL);
                 String channelTableUsername = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.USERNAME);
                 String channelTableNote = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.NOTE);
                 String channelTableAvatarHash = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH);
-                String channelTableAvatarIchatId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_ICHAT_ID);
+                String channelTableAvatarImessageId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_IMESSAGE_ID);
                 String channelTableAvatarExtension = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION);
                 Date channelTableAvatarTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME);
                 Integer channelTableSex = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.SEX);
@@ -476,7 +476,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 Integer channelTableThirdRegionAdcode = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE);
                 String channelTableThirdRegionName = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME);
                 Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
-                results.add(new Channel(channelTableIchatId, channelTableIchatIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarIchatId, channelTableAvatarExtension, channelTableAvatarTime),
+                results.add(new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                         channelTableSex,
                         channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
                         channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),

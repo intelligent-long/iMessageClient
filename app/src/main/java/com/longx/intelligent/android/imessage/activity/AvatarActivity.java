@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class AvatarActivity extends BaseActivity {
     private ActivityAvatarBinding binding;
-    private String ichatId;
+    private String imessageId;
     private String avatarExtension;
     private String avatarHash;
 
@@ -36,7 +36,7 @@ public class AvatarActivity extends BaseActivity {
         binding = ActivityAvatarBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        ichatId = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.ICHAT_ID));
+        imessageId = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID));
         avatarHash = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.AVATAR_HASH));
         avatarExtension = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.AVATAR_EXTENSION));
         setupToolbar();
@@ -57,7 +57,7 @@ public class AvatarActivity extends BaseActivity {
             OperatingDialog operatingDialog = new OperatingDialog(this);
             operatingDialog.create().show();
             try {
-                PublicFileAccessor.User.saveAvatar(this, ichatId, avatarHash, avatarExtension);
+                PublicFileAccessor.User.saveAvatar(this, imessageId, avatarHash, avatarExtension);
                 operatingDialog.dismiss();
                 MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
             } catch (IOException | InterruptedException e) {

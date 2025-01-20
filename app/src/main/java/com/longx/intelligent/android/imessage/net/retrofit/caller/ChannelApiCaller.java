@@ -25,14 +25,14 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         return getApiImplementation(ChannelApi.class);
     }
 
-    public static CompletableCall<OperationData> findChannelByIchatId(LifecycleOwner lifecycleOwner, String ichatId, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().findChannelByImessageId(ichatId);
+    public static CompletableCall<OperationData> findChannelByImessageId(LifecycleOwner lifecycleOwner, String imessageId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().findChannelByImessageId(imessageId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> findChannelByIchatIdUser(LifecycleOwner lifecycleOwner, String ichatIdUser, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().findChannelByImessageIdUser(ichatIdUser);
+    public static CompletableCall<OperationData> findChannelByImessageIdUser(LifecycleOwner lifecycleOwner, String imessageIdUser, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().findChannelByImessageIdUser(imessageIdUser);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
@@ -91,8 +91,8 @@ public class ChannelApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationStatus> deleteNoteOfAssociatedChannel(LifecycleOwner lifecycleOwner, String channelIchatId, BaseYier<OperationStatus> yier){
-        CompletableCall<OperationStatus> call = getApiImplementation().deleteNoteOfAssociatedChannel(channelIchatId);
+    public static CompletableCall<OperationStatus> deleteNoteOfAssociatedChannel(LifecycleOwner lifecycleOwner, String channelImessageId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().deleteNoteOfAssociatedChannel(channelImessageId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

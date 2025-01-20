@@ -90,7 +90,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setAutoCancelInput(false);
-        setupBackNavigation(binding.toolbar, ColorUtil.getColor(this, R.color.ichat));
+        setupBackNavigation(binding.toolbar, ColorUtil.getColor(this, R.color.imessage));
         intentData();
         GlobalYiersHolder.holdYier(this, ChatMessageUpdateYier.class, this);
         init();
@@ -117,9 +117,9 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         changeHoldToTalkToNormal();
         changeCancelSendTalkFabToNormal();
         voiceChatMessageBehaviours = new VoiceChatMessageBehaviours(this);
-        chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getIchatId());
+        chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getImessageId());
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
-        openedChatDatabaseManager.updateShow(channel.getIchatId(), true);
+        openedChatDatabaseManager.updateShow(channel.getImessageId(), true);
         channelDatabaseManager = ChannelDatabaseManager.getInstance();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
@@ -150,10 +150,10 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
             initialChatMessageCount = chatMessageDatabaseManager.count();
             showChatMessages();
         }
-        if(openedChatDatabaseManager.findNotViewedCount(channel.getIchatId()) > 0) {
+        if(openedChatDatabaseManager.findNotViewedCount(channel.getImessageId()) > 0) {
             viewAllNewChatMessages();
         }
-        ChatMessageAllow chatMessageAllow = channelDatabaseManager.findOneAssociations(channel.getIchatId()).getChatMessageAllowToThem();
+        ChatMessageAllow chatMessageAllow = channelDatabaseManager.findOneAssociations(channel.getImessageId()).getChatMessageAllowToThem();
         if(!chatMessageAllow.isAllowVoice()){
             UiUtil.setViewEnabled(binding.voiceButton, false, true);
         }
@@ -176,7 +176,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     public void onNewChatMessage(List<ChatMessage> newChatMessages) {
         List<ChatMessage> thisChannelNewMessages = new ArrayList<>();
         newChatMessages.forEach(newChatMessage -> {
-            if(newChatMessage.getOther(this).equals(channel.getIchatId())){
+            if(newChatMessage.getOther(this).equals(channel.getImessageId())){
                 thisChannelNewMessages.add(newChatMessage);
             }
         });
@@ -195,7 +195,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     public void onUnsendChatMessage(List<ChatMessage> unsendChatMessages) {
         List<ChatMessage> thisChannelUnsendMessages = new ArrayList<>();
         unsendChatMessages.forEach(unsendMessage -> {
-            if(unsendMessage.getOther(this).equals(channel.getIchatId())){
+            if(unsendMessage.getOther(this).equals(channel.getImessageId())){
                 thisChannelUnsendMessages.add(unsendMessage);
             }
         });
@@ -209,12 +209,12 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
     }
 
     private void viewAllNewChatMessages() {
-        ChatApiCaller.viewAllNewMessage(this, channel.getIchatId(), new RetrofitApiCaller.BaseCommonYier<OperationStatus>(this){
+        ChatApiCaller.viewAllNewMessage(this, channel.getImessageId(), new RetrofitApiCaller.BaseCommonYier<OperationStatus>(this){
             @Override
             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
-                    openedChatDatabaseManager.updateNotViewedCount(0, channel.getIchatId());
+                    openedChatDatabaseManager.updateNotViewedCount(0, channel.getImessageId());
                     chatMessageDatabaseManager.setAllToViewed();
                     GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                         openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -315,7 +315,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.sendButton.setOnClickListener(v -> {
             String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
             if(inputtedMessage == null || inputtedMessage.isEmpty()) return;
-            SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(channel.getIchatId(), inputtedMessage);
+            SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(channel.getImessageId(), inputtedMessage);
             ChatApiCaller.sendTextChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
                 @Override
                 public void start(Call<OperationData> call) {
@@ -540,7 +540,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         binding.holdToTalkButton.setBackgroundTintList(ColorStateList.valueOf(ColorUtil.getAttrColor(this, com.google.android.material.R.attr.colorSurfaceContainerHighest)));
         binding.holdToTalkButton.setText("松开 发送");
         binding.holdToTalkButton.setTextColor(ColorUtil.getAlphaAttrColor(this, com.google.android.material.R.attr.colorControlNormal, 230));
-        binding.holdToTalkButton.setIconTint(ColorStateList.valueOf(getColor(R.color.ichat)));
+        binding.holdToTalkButton.setIconTint(ColorStateList.valueOf(getColor(R.color.imessage)));
     }
 
     public void changeHoldToTalkToNormal(){
@@ -695,7 +695,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(index.get() == mediaInfos.size()) return;
         MediaInfo mediaInfo = mediaInfos.get(index.get());
         String fileName = FileHelper.getFileNameFromUri(this, mediaInfo.getUri());
-        SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getIchatId(), fileName);
+        SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(channel.getImessageId(), fileName);
         ChatApiCaller.sendImageChatMessage(this, this, mediaInfo.getUri(), postBody, null, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
             public void start(Call<OperationData> call) {
@@ -766,7 +766,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(index.get() == uriList.size()) return;
         Uri uri = uriList.get(index.get());
         String fileName = FileHelper.getFileNameFromUri(this, uri);
-        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getIchatId(), fileName);
+        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(channel.getImessageId(), fileName);
         ChatApiCaller.sendFileChatMessage(this, this, uri, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
             @Override
             public void start(Call<OperationData> call) {
@@ -837,7 +837,7 @@ public class ChatActivity extends BaseActivity implements ChatMessageUpdateYier 
         if(index.get() == mediaInfos.size()) return;
         MediaInfo mediaInfo = mediaInfos.get(index.get());
         String fileName = FileHelper.getFileNameFromUri(this, mediaInfo.getUri());
-        SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(channel.getIchatId(), fileName);
+        SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(channel.getImessageId(), fileName);
         ChatApiCaller.sendVideoChatMessage(this, this, mediaInfo.getUri(), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
             @Override
             public void start(Call<OperationData> call) {

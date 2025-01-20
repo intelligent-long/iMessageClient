@@ -182,9 +182,9 @@ public class ForwardMessageActivity extends BaseActivity {
                         processingDialog.create().show();
                         new Thread(() -> {
                             AtomicInteger index = new AtomicInteger();
-                            checkedChannelIds.forEach(toForwardIchatId -> {
+                            checkedChannelIds.forEach(toForwardImessageId -> {
                                 runOnUiThread(() -> {
-                                    processingDialog.updateChannelInfo(toForwardIchatId);
+                                    processingDialog.updateChannelInfo(toForwardImessageId);
                                     processingDialog.updateProgressText(index.get() + 1, checkedChannelIds.size());
                                 });
                                 CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -200,7 +200,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                             long duration = AudioUtil.getDuration(this, chatMessage.getVoiceFilePath());
                                             message = "[语音 " + TimeUtil.formatTimeToMinutesSeconds(duration) + "]";
                                         }
-                                        SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(toForwardIchatId, message);
+                                        SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(toForwardImessageId, message);
                                         ChatApiCaller.sendTextChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
 
                                             @Override
@@ -230,7 +230,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                         runOnUiThread(() -> {
                                             processingDialog.updateProgressIndicator(0, 0);
                                         });
-                                        SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(toForwardIchatId, chatMessage.getFileName());
+                                        SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(toForwardImessageId, chatMessage.getFileName());
                                         ChatApiCaller.sendImageChatMessage(this, this, Uri.fromFile(new File(chatMessage.getImageFilePath())), postBody, chatMessage.getFileName(), new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
 
                                             @Override
@@ -261,7 +261,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                         break;
                                     }
                                     case ChatMessage.TYPE_VIDEO:{
-                                        SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(toForwardIchatId, chatMessage.getFileName());
+                                        SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(toForwardImessageId, chatMessage.getFileName());
                                         ChatApiCaller.sendVideoChatMessage(this, this, Uri.fromFile(new File(chatMessage.getVideoFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
 
                                             @Override
@@ -293,7 +293,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                         break;
                                     }
                                     case ChatMessage.TYPE_FILE:{
-                                        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(toForwardIchatId, chatMessage.getFileName());
+                                        SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(toForwardImessageId, chatMessage.getFileName());
                                         ChatApiCaller.sendFileChatMessage(this, this, Uri.fromFile(new File(chatMessage.getFileFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
 
                                             @Override

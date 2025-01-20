@@ -33,8 +33,8 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         instanceMap.clear();
     }
 
-    private synchronized static void initInstance(Context context, String channelIchatId) {
-        ChatMessageDatabaseHelper chatMessageDatabaseHelper = new ChatMessageDatabaseHelper(context, channelIchatId, SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId());
+    private synchronized static void initInstance(Context context, String channelImessageId) {
+        ChatMessageDatabaseHelper chatMessageDatabaseHelper = new ChatMessageDatabaseHelper(context, channelImessageId, SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getImessageId());
         ChatMessageDatabaseManager messageDatabaseManager = new ChatMessageDatabaseManager(chatMessageDatabaseHelper);
         messageDatabaseManager.openDatabaseIfClosed();
         try {
@@ -42,20 +42,20 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         }finally {
             messageDatabaseManager.releaseDatabaseIfUnused();
         }
-        instanceMap.put(channelIchatId, messageDatabaseManager);
+        instanceMap.put(channelImessageId, messageDatabaseManager);
     }
 
-    private static void checkAndInitInstance(Context context, String channelIchatId) {
+    private static void checkAndInitInstance(Context context, String channelImessageId) {
         synchronized (ChatMessageDatabaseManager.class) {
-            if (instanceMap.get(channelIchatId) == null) {
-                ChatMessageDatabaseManager.initInstance(context, channelIchatId);
+            if (instanceMap.get(channelImessageId) == null) {
+                ChatMessageDatabaseManager.initInstance(context, channelImessageId);
             }
         }
     }
 
-    public static synchronized ChatMessageDatabaseManager getInstanceOrInitAndGet(Context context, String channelIchatId) {
-        checkAndInitInstance(context, channelIchatId);
-        return instanceMap.get(channelIchatId);
+    public static synchronized ChatMessageDatabaseManager getInstanceOrInitAndGet(Context context, String channelImessageId) {
+        checkAndInitInstance(context, channelImessageId);
+        return instanceMap.get(channelImessageId);
     }
 
     public boolean insertOrIgnore(ChatMessage chatMessage){

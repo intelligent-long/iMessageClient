@@ -53,7 +53,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginWayNames = new String[]{
-                getString(R.string.login_way_ichat_id),
+                getString(R.string.login_way_imessage_id),
                 getString(R.string.login_way_email),
                 getString(R.string.login_way_verify_code)};
         binding = ActivityAuthBinding.inflate(getLayoutInflater());
@@ -142,7 +142,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
             if (item.getItemId() == R.id.login) {
                 GlobalBehaviors.doLogin(
                         this,
-                        UiUtil.getEditTextString(binding.loginIchatIdUserInput),
+                        UiUtil.getEditTextString(binding.loginImessageIdUserInput),
                         UiUtil.getEditTextString(binding.loginEmailInput),
                         UiUtil.getEditTextString(binding.loginPasswordInput),
                         UiUtil.getEditTextString(binding.loginVerifyCodeInput),
@@ -158,17 +158,17 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
 
     private void onCreateSetupLoginWayAutoCompleteTextView() {
         if(getSavedInstanceState() == null) {
-            toIchatIdLoginWay(true);
+            toImessageIdLoginWay(true);
         }else {
-            currentLoginWay = GlobalBehaviors.LoginWay.valueOf(getSavedInstanceState().getString("CURRENT_LOGIN_WAY", GlobalBehaviors.LoginWay.ICHAT_ID.toString()));
+            currentLoginWay = GlobalBehaviors.LoginWay.valueOf(getSavedInstanceState().getString("CURRENT_LOGIN_WAY", GlobalBehaviors.LoginWay.IMESSAGE_ID.toString()));
             switchToCurrentLoginWay();
         }
     }
 
     private void switchToCurrentLoginWay() {
         switch (currentLoginWay){
-            case ICHAT_ID:
-                toIchatIdLoginWay(true);
+            case IMESSAGE_ID:
+                toImessageIdLoginWay(true);
                 break;
             case EMAIL:
                 toEmailLoginWay(true);
@@ -194,7 +194,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().equals(loginWayNames[0])) {
-                    toIchatIdLoginWay(false);
+                    toImessageIdLoginWay(false);
                 } else if (s.toString().equals(loginWayNames[1])) {
                     toEmailLoginWay(false);
                 } else if (s.toString().equals(loginWayNames[2])) {
@@ -204,10 +204,10 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
         });
     }
 
-    private void toIchatIdLoginWay(boolean changeAutoCompleteTextView){
-        currentLoginWay = GlobalBehaviors.LoginWay.ICHAT_ID;
+    private void toImessageIdLoginWay(boolean changeAutoCompleteTextView){
+        currentLoginWay = GlobalBehaviors.LoginWay.IMESSAGE_ID;
         if(changeAutoCompleteTextView) binding.loginWayAutoCompleteTextView.setText(loginWayNames[0]);
-        binding.loginIchatIdUserLayout.setVisibility(View.VISIBLE);
+        binding.loginImessageIdUserLayout.setVisibility(View.VISIBLE);
         binding.loginPasswordLayout.setVisibility(View.VISIBLE);
         binding.loginEmailLayout.setVisibility(View.GONE);
         binding.loginVerifyCodeLayout.setVisibility(View.GONE);
@@ -216,7 +216,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
     private void toEmailLoginWay(boolean changeAutoCompleteTextView){
         currentLoginWay = GlobalBehaviors.LoginWay.EMAIL;
         if(changeAutoCompleteTextView) binding.loginWayAutoCompleteTextView.setText(loginWayNames[1]);
-        binding.loginIchatIdUserLayout.setVisibility(View.GONE);
+        binding.loginImessageIdUserLayout.setVisibility(View.GONE);
         binding.loginPasswordLayout.setVisibility(View.VISIBLE);
         binding.loginEmailLayout.setVisibility(View.VISIBLE);
         binding.loginVerifyCodeLayout.setVisibility(View.GONE);
@@ -225,7 +225,7 @@ public class AuthActivity extends BaseActivity implements OfflineDetailShowYier 
     private void toVerifyCodeLoginWay(boolean changeAutoCompleteTextView){
         currentLoginWay = GlobalBehaviors.LoginWay.VERIFY_CODE;
         if(changeAutoCompleteTextView) binding.loginWayAutoCompleteTextView.setText(loginWayNames[2]);
-        binding.loginIchatIdUserLayout.setVisibility(View.GONE);
+        binding.loginImessageIdUserLayout.setVisibility(View.GONE);
         binding.loginPasswordLayout.setVisibility(View.GONE);
         binding.loginEmailLayout.setVisibility(View.VISIBLE);
         binding.loginVerifyCodeLayout.setVisibility(View.VISIBLE);

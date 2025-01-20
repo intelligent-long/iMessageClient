@@ -320,7 +320,7 @@ public class EditBroadcastActivity extends BaseActivity {
                             GlobalYiersHolder.getYiers(BroadcastUpdateYier.class).ifPresent(broadcastUpdateYiers -> {
                                 broadcastUpdateYiers.forEach(broadcastUpdateYier -> broadcastUpdateYier.updateOneBroadcast(editedBroadcast));
                             });
-                            ServerMessageServiceStompActions.updateRecentBroadcastMedias(EditBroadcastActivity.this, broadcast.getIchatId());
+                            ServerMessageServiceStompActions.updateRecentBroadcastMedias(EditBroadcastActivity.this, broadcast.getImessageId());
                         });
                     }
 

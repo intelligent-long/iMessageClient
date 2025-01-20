@@ -52,15 +52,15 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
 
     private void showContent() {
         binding.toolbar.setTitle(channelTag.getName());
-        if(channelTag.getChannelIchatIdList().isEmpty()){
+        if(channelTag.getChannelImessageIdList().isEmpty()){
             toNoContent();
         }else {
             toContent();
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            List<String> channelIchatIds = channelTag.getChannelIchatIdList();
+            List<String> channelImessageIds = channelTag.getChannelImessageIdList();
             List<Channel> channels = new ArrayList<>();
-            channelIchatIds.forEach(channelIchatId -> {
-                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId);
+            channelImessageIds.forEach(channelImessageId -> {
+                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId);
                 channels.add(channel);
             });
             adapter = new TagChannelsRecyclerAdapter(this, channelTag, channels);
@@ -70,7 +70,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
         canAddChannels = new ArrayList<>();
         allAssociations.forEach(association -> {
             Channel channel = association.getChannel();
-            if(!channelTag.getChannelIchatIdList().contains(channel.getIchatId())) {
+            if(!channelTag.getChannelImessageIdList().contains(channel.getImessageId())) {
                 canAddChannels.add(channel);
             }
         });

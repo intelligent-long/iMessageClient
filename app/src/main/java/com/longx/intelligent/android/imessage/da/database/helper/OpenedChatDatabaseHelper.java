@@ -15,23 +15,23 @@ public class OpenedChatDatabaseHelper extends BaseDatabaseHelper{
     }
 
     public static class Columns {
-        public static final String CHANNEL_ICHAT_ID = "channel_ichat_id";
+        public static final String CHANNEL_IMESSAGE_ID = "channel_imessage_id";
         public static final String NOT_VIEWED_COUNT = "not_viewed_count";
         public static final String SHOW = "show";
     }
 
-    public OpenedChatDatabaseHelper(Context context, String ichatId) {
-        super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, ichatId);
+    public OpenedChatDatabaseHelper(Context context, String imessageId) {
+        super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, imessageId);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createSql = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME + "("
-                + Columns.CHANNEL_ICHAT_ID + " VARCHAR,"
+                + Columns.CHANNEL_IMESSAGE_ID + " VARCHAR,"
                 + Columns.NOT_VIEWED_COUNT + " INTEGER,"
                 + Columns.SHOW + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
-                + Columns.CHANNEL_ICHAT_ID
+                + Columns.CHANNEL_IMESSAGE_ID
                 +")"
                 + ");";
         db.execSQL(createSql);

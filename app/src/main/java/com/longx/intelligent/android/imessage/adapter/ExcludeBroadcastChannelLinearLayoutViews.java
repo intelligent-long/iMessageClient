@@ -71,7 +71,7 @@ public class ExcludeBroadcastChannelLinearLayoutViews extends LinearLayoutViews<
             }
         }
         binding.name.setText(itemData.channel.getName());
-        if(excludeBroadcastChannelIds.contains(itemData.channel.getIchatId())){
+        if(excludeBroadcastChannelIds.contains(itemData.channel.getImessageId())){
             binding.checkBox.setChecked(true);
         }
         setupYiers(binding, itemData, activity);
@@ -84,9 +84,9 @@ public class ExcludeBroadcastChannelLinearLayoutViews extends LinearLayoutViews<
         });
         binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
-                excludeBroadcastChannelIds.add(itemData.channel.getIchatId());
+                excludeBroadcastChannelIds.add(itemData.channel.getImessageId());
             }else {
-                excludeBroadcastChannelIds.remove(itemData.channel.getIchatId());
+                excludeBroadcastChannelIds.remove(itemData.channel.getImessageId());
             }
         });
     }

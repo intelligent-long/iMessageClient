@@ -258,7 +258,7 @@ public class ChatMessage implements Parcelable {
     }
 
     public boolean isSelfSender(Context context){
-        return SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId().equals(from);
+        return SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getImessageId().equals(from);
     }
 
     public String getOther(Context context){

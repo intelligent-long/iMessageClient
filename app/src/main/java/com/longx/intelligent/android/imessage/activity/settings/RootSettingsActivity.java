@@ -254,17 +254,17 @@ public class RootSettingsActivity extends BaseActivity {
         }
 
         private void shareApp() {
-            UrlMapApiCaller.fetchIchatWebHomeUrl(requireActivity(), new RetrofitApiCaller.CommonYier<OperationData>(requireActivity()){
+            UrlMapApiCaller.fetchImessageWebHomeUrl(requireActivity(), new RetrofitApiCaller.CommonYier<OperationData>(requireActivity()){
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(requireActivity(), new int[]{}, () -> {
-                        String ichatWebHomeUrl = data.getData(String.class);
-                        Utils.copyTextToClipboard(requireContext(), ichatWebHomeUrl, ichatWebHomeUrl);
+                        String imessageWebHomeUrl = data.getData(String.class);
+                        Utils.copyTextToClipboard(requireContext(), imessageWebHomeUrl, imessageWebHomeUrl);
                         new ChoiceDialog(requireActivity(), "已将 " + Constants.APP_NAME + " 网站地址复制到剪贴板。")
                                 .setPositiveButton("确定", null)
                                 .setNeutralButton("直接分享", (dialog, which) -> {
-                                    String shareStr = "[" + Constants.APP_NAME + "] 我正在使用 " + Constants.APP_NAME + "，非常不错的通讯应用，你也试试吧\n地址： " + ichatWebHomeUrl;
+                                    String shareStr = "[" + Constants.APP_NAME + "] 我正在使用 " + Constants.APP_NAME + "，非常不错的通讯应用，你也试试吧\n地址： " + imessageWebHomeUrl;
                                     Intent sendIntent = new Intent();
                                     sendIntent.setAction(Intent.ACTION_SEND);
                                     sendIntent.putExtra(Intent.EXTRA_TEXT, shareStr);

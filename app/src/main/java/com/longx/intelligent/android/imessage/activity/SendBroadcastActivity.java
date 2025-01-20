@@ -182,7 +182,7 @@ public class SendBroadcastActivity extends BaseActivity {
                             GlobalYiersHolder.getYiers(BroadcastReloadYier.class).ifPresent(broadcastReloadYiers -> {
                                 broadcastReloadYiers.forEach(BroadcastReloadYier::reloadBroadcast);
                             });
-                            ServerMessageServiceStompActions.updateRecentBroadcastMedias(getContext(), SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(getContext()).getIchatId());
+                            ServerMessageServiceStompActions.updateRecentBroadcastMedias(getContext(), SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(getContext()).getImessageId());
                             finish();
                         });
                     }

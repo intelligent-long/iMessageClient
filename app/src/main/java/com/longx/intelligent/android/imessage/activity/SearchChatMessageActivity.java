@@ -2,7 +2,6 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.os.Bundle;
 
-import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.SearchChatMessageLinearLayoutViews;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
@@ -46,7 +45,7 @@ public class SearchChatMessageActivity extends BaseActivity {
                     List<List<ChatMessage>> searchedData = new ArrayList<>();
                     List<ChannelAssociation> allAssociations = ChannelDatabaseManager.getInstance().findAllAssociations();
                     allAssociations.forEach(association -> {
-                        ChatMessageDatabaseManager databaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(SearchChatMessageActivity.this, association.getChannelIchatId());
+                        ChatMessageDatabaseManager databaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(SearchChatMessageActivity.this, association.getChannelImessageId());
                         List<ChatMessage> searched = databaseManager.search(searchStr);
                         if(!searched.isEmpty()){
                             searchedData.add(searched);

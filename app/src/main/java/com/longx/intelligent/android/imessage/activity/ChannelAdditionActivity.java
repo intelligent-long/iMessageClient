@@ -74,7 +74,7 @@ public class ChannelAdditionActivity extends BaseActivity {
                 binding.sexIcon.setImageResource(R.drawable.male_24px);
             }
         }
-        binding.ichatIdUser.setText(channel.getIchatIdUser());
+        binding.imessageIdUser.setText(channel.getImessageIdUser());
         if(channel.getEmail() == null){
             binding.layoutEmail.setVisibility(View.GONE);
         }else {
@@ -133,7 +133,7 @@ public class ChannelAdditionActivity extends BaseActivity {
         binding.clickViewChannel.setOnClickListener(v -> {
             if(channel != null) {
                 Intent intent = new Intent(this, ChannelActivity.class);
-                intent.putExtra(ExtraKeys.ICHAT_ID, channel.getIchatId());
+                intent.putExtra(ExtraKeys.IMESSAGE_ID, channel.getImessageId());
                 startActivity(intent);
             }
         });

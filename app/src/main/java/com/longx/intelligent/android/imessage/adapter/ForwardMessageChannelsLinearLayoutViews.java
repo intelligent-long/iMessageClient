@@ -104,9 +104,9 @@ public class ForwardMessageChannelsLinearLayoutViews extends LinearLayoutViews<F
         });
         binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
-                checkedChannelIds.add(itemData.channel.getIchatId());
+                checkedChannelIds.add(itemData.channel.getImessageId());
             }else {
-                checkedChannelIds.remove(itemData.channel.getIchatId());
+                checkedChannelIds.remove(itemData.channel.getImessageId());
             }
         });
     }

@@ -115,7 +115,7 @@ public class BroadcastLikesInteractionRecyclerAdapter extends WrappableRecyclerV
         });
         holder.binding.avatar.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, broadcastLike.getFromId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, broadcastLike.getFromId());
             activity.startActivity(intent);
         });
     }

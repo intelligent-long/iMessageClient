@@ -12,8 +12,8 @@ import java.io.File;
 public class CacheFilesAccessor {
 
     public static class ChatMessage{
-        public static String prepareChatVoiceTempFile(Context context, String ichatId){
-            String voiceTempFilePath = DataPaths.Cache.chatVoiceTempFilePath(context, ichatId);
+        public static String prepareChatVoiceTempFile(Context context, String imessageId){
+            String voiceTempFilePath = DataPaths.Cache.chatVoiceTempFilePath(context, imessageId);
             File file = new File(voiceTempFilePath);
             file.getParentFile().mkdirs();
             file.delete();

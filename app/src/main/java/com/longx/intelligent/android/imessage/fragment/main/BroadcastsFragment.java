@@ -766,7 +766,7 @@ public class BroadcastsFragment extends BaseMainFragment implements BroadcastRel
     }
 
     @Override
-    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelIchatId) {
-        adapter.onSetChannelBroadcastExclude(selectedPosition, excludeChannelIchatId);
+    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelImessageId) {
+        adapter.onSetChannelBroadcastExclude(selectedPosition, excludeChannelImessageId);
     }
 }

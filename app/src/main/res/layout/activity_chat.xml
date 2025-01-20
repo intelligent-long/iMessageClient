@@ -77,7 +77,7 @@
                     android:padding="11dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/graphic_eq_24px"
-                    android:tint="@color/ichat"/>
+                    android:tint="@color/imessage"/>
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:visibility="gone"
@@ -88,7 +88,7 @@
                     android:padding="11dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/short_text_24px"
-                    android:tint="@color/ichat"/>
+                    android:tint="@color/imessage"/>
             </FrameLayout>
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -150,7 +150,7 @@
                         android:scaleType="fitCenter"
                         android:background="@drawable/ripple_round_selectable_background_20r"
                         android:src="@drawable/send_fill_24px"
-                        android:tint="@color/ichat" />
+                        android:tint="@color/imessage" />
 
                     <com.google.android.material.progressindicator.CircularProgressIndicator
                         android:id="@+id/send_indicator"
@@ -188,7 +188,7 @@
                     android:padding="11dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icf_more_vertical_circle"
-                    android:tint="@color/ichat"/>
+                    android:tint="@color/imessage"/>
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:visibility="gone"
@@ -199,7 +199,7 @@
                     android:padding="11dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/cancel_fill_24px"
-                    android:tint="@color/ichat"/>
+                    android:tint="@color/imessage"/>
             </FrameLayout>
         </RelativeLayout>
 

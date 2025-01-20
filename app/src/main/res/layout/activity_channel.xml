@@ -105,7 +105,7 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/ichat_id_user"
+                        android:id="@+id/imessage_id_user"
                         android:textSize="16sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />

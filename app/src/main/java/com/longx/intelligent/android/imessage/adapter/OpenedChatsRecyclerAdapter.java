@@ -136,7 +136,7 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
             activity.startActivity(intent);
         });
         holder.binding.clickViewHide.setOnClickListener(v -> {
-            OpenedChatDatabaseManager.getInstance().updateShow(channel.getIchatId(), false);
+            OpenedChatDatabaseManager.getInstance().updateShow(channel.getImessageId(), false);
             itemDataList.remove(position);
             notifyItemRemoved(position);
             if(openedChatsUpdateYier != null) openedChatsUpdateYier.onOpenedChatsUpdate();
@@ -147,11 +147,11 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
     public void changeAllItemsAndShow(List<OpenedChat> openedChats){
         itemDataList.clear();
         openedChats.forEach(openedChat -> {
-            ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, openedChat.getChannelIchatId());
+            ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, openedChat.getChannelImessageId());
             List<ChatMessage> limit = chatMessageDatabaseManager.findLimit(0, 1, true);
             if (limit.size() == 1) {
                 openedChat.setNewestChatMessage(limit.get(0));
-                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(openedChat.getChannelIchatId());
+                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(openedChat.getChannelImessageId());
                 openedChat.setChannel(channel);
                 itemDataList.add(new ItemData(openedChat));
             }

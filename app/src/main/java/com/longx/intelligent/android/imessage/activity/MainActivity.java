@@ -240,12 +240,12 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
             GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, self.getAvatar().getHash()), avatarImageView);
         }
         String username = self.getUsername();
-        String ichatIdUser = self.getIchatIdUser();
+        String imessageIdUser = self.getImessageIdUser();
         String email = self.getEmail();
         Integer sex = self.getSex();
         String regionDesc = self.buildRegionDesc();
         ((TextView)headerView1.findViewById(R.id.username)).setText(username);
-        ((TextView)headerView1.findViewById(R.id.ichat_id_user)).setText(ichatIdUser);
+        ((TextView)headerView1.findViewById(R.id.imessage_id_user)).setText(imessageIdUser);
         ((TextView)headerView1.findViewById(R.id.email)).setText(email);
         RelativeLayout sexLayout = headerView1.findViewById(R.id.layout_sex);
         ImageView sexImageView = headerView1.findViewById(R.id.sex);
@@ -269,7 +269,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
         headerView1.findViewById(R.id.user_info_page).setOnClickListener(v -> {
             Intent intent = new Intent(this, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, self.getIchatId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, self.getImessageId());
             startActivity(intent);
         });
     }
@@ -441,7 +441,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
             Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
             if(self.getAvatar() != null && self.getAvatar().getHash() != null) {
                 Intent intent = new Intent(this, AvatarActivity.class);
-                intent.putExtra(ExtraKeys.ICHAT_ID, self.getIchatId());
+                intent.putExtra(ExtraKeys.IMESSAGE_ID, self.getImessageId());
                 intent.putExtra(ExtraKeys.AVATAR_HASH, self.getAvatar().getHash());
                 intent.putExtra(ExtraKeys.AVATAR_EXTENSION, self.getAvatar().getExtension());
                 startActivity(intent);
@@ -583,7 +583,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
                 List<OpenedChat> showOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
                 showOpenedChats.forEach(showOpenedChat -> {
-                    if(ChannelDatabaseManager.getInstance().findOneChannel(showOpenedChat.getChannelIchatId()) != null) {
+                    if(ChannelDatabaseManager.getInstance().findOneChannel(showOpenedChat.getChannelImessageId()) != null) {
                         if (showOpenedChat.getNotViewedCount() > 0)
                             hideNavigationMessageBadge.set(false);
                     }
@@ -614,7 +614,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     @Override
-    public void fetchNews(String ichatId) {
+    public void fetchNews(String imessageId) {
         Fragment fragment = getSupportFragmentManager().getFragments().get(0);
         if (fragment instanceof BroadcastsFragment) {
             BroadcastsFragment.needFetchNewBroadcasts = false;

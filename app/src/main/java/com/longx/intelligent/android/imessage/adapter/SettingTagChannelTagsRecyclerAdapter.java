@@ -56,13 +56,13 @@ public class SettingTagChannelTagsRecyclerAdapter extends WrappableRecyclerViewA
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChannelTag channelTag = channelTags.get(position);
         holder.binding.tagName.setText(channelTag.getName());
-        holder.binding.checkBox.setChecked(channelTag.getChannelIchatIdList().contains(channel.getIchatId()));
+        holder.binding.checkBox.setChecked(channelTag.getChannelImessageIdList().contains(channel.getImessageId()));
         setUpYiers(holder, position);
     }
 
     private void setUpYiers(ViewHolder holder, int position) {
         ChannelTag channelTag = channelTags.get(position);
-        boolean isAdded = channelTag.getChannelIchatIdList().contains(channel.getIchatId());
+        boolean isAdded = channelTag.getChannelImessageIdList().contains(channel.getImessageId());
         holder.binding.content.setOnClickListener(v -> {
             holder.binding.checkBox.setChecked(!holder.binding.checkBox.isChecked());
             boolean nowChecked = holder.binding.checkBox.isChecked();

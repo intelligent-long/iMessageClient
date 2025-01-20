@@ -14,14 +14,14 @@ public interface UrlMapApi {
     CompletableCall<OperationData> fetchImessageWebHomeUrl();
 
     @GET("url/imessage_web/release_data/updatable")
-    CompletableCall<OperationData> fetchIchatWebUpdatableReleaseDataUrl();
+    CompletableCall<OperationData> fetchImessageWebUpdatableReleaseDataUrl();
 
     @GET("url/imessage_web/release/{versionCode}")
-    CompletableCall<OperationData> fetchIchatWebReleaseUrl(@Path("versionCode") int versionCode);
+    CompletableCall<OperationData> fetchImessageWebReleaseUrl(@Path("versionCode") int versionCode);
 
     @GET("url/imessage_web/download/file/all/{versionCode}")
-    CompletableCall<OperationData> fetchIchatWebAllDownloadFilesUrl(@Path("versionCode") int versionCode);
+    CompletableCall<OperationData> fetchImessageWebAllDownloadFilesUrl(@Path("versionCode") int versionCode);
 
     @GET("url/imessage_web/download/file/{fileId}")
-    CompletableCall<OperationData> fetchIchatWebDownloadFileUrl(@Path("fileId") String fileId);
+    CompletableCall<OperationData> fetchImessageWebDownloadFileUrl(@Path("fileId") String fileId);
 }

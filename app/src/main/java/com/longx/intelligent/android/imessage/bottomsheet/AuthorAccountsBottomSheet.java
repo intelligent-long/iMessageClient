@@ -28,9 +28,9 @@ public class AuthorAccountsBottomSheet extends AbstractBottomSheet{
     }
 
     private void setupListeners() {
-        binding.ichat.setOnClickListener(v -> {
+        binding.imessage.setOnClickListener(v -> {
             try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("ichat://channel/LONG"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("imessage://channel/LONG"));
                 getActivity().startActivity(intent);
             }catch (Exception e){
                 e.printStackTrace();

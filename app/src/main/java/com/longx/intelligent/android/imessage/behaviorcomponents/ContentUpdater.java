@@ -237,8 +237,8 @@ public class ContentUpdater {
         });
     }
 
-    public static void updateRecentBroadcastMedias(Context context, String ichatId, ResultsYier resultsYier){
-        BroadcastApiCaller.fetchChannelBroadcastsLimit(null, ichatId, null, 50, true,
+    public static void updateRecentBroadcastMedias(Context context, String imessageId, ResultsYier resultsYier){
+        BroadcastApiCaller.fetchChannelBroadcastsLimit(null, imessageId, null, 50, true,
                 new ContentUpdateApiYier<PaginatedOperationData<Broadcast>>(OnServerContentUpdateYier.ID_RECENT_BROADCAST_MEDIAS, context){
                     @Override
                     public void ok(PaginatedOperationData<Broadcast> data, Response<PaginatedOperationData<Broadcast>> raw, Call<PaginatedOperationData<Broadcast>> call) {
@@ -253,7 +253,7 @@ public class ContentUpdater {
                                     broadcastMedias.sort(Comparator.comparingInt(BroadcastMedia::getIndex));
                                     for (BroadcastMedia broadcastMedia : broadcastMedias) {
                                         recentBroadcastMedias.add(new RecentBroadcastMedia(
-                                                broadcast.getIchatId(),
+                                                broadcast.getImessageId(),
                                                 broadcastMedia.getBroadcastId(),
                                                 broadcastMedia.getMediaId(),
                                                 broadcastMedia.getType(),
@@ -264,10 +264,10 @@ public class ContentUpdater {
                                     }
                                 }
                             }
-                            ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(recentBroadcastMedias, ichatId);
+                            ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(recentBroadcastMedias, imessageId);
                             resultsYier.onResults();
                         }, new OperationStatus.HandleResult(-102, () -> {
-                            ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(new ArrayList<>(), ichatId);
+                            ChannelDatabaseManager.getInstance().updateRecentBroadcastMedias(new ArrayList<>(), imessageId);
                             resultsYier.onResults();
                         }));
                     }

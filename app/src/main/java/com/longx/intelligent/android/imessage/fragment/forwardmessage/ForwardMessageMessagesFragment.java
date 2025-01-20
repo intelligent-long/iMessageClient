@@ -47,18 +47,18 @@ public class ForwardMessageMessagesFragment extends Fragment {
         List<OpenedChat> allShowOpenedChats = OpenedChatDatabaseManager.getInstance().findAllShow();
         List<OpenedChat> toHideOpenedChats = new ArrayList<>();
         allShowOpenedChats.forEach(openedChat -> {
-            String channelIchatId = openedChat.getChannelIchatId();
-            if(ChannelDatabaseManager.getInstance().findOneChannel(channelIchatId) == null){
+            String channelImessageId = openedChat.getChannelImessageId();
+            if(ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId) == null){
                 toHideOpenedChats.add(openedChat);
             }
         });
         allShowOpenedChats.removeAll(toHideOpenedChats);
         allShowOpenedChats.forEach(openedChat -> {
-            ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(requireContext(), openedChat.getChannelIchatId());
+            ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(requireContext(), openedChat.getChannelImessageId());
             List<ChatMessage> limit = chatMessageDatabaseManager.findLimit(0, 1, true);
             if (limit.size() == 1) {
                 openedChat.setNewestChatMessage(limit.get(0));
-                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(openedChat.getChannelIchatId());
+                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(openedChat.getChannelImessageId());
                 openedChat.setChannel(channel);
             }
         });

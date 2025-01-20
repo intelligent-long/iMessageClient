@@ -119,7 +119,7 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
     private void showItem(ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
-        boolean isCurrentUserRequester = currentUserInfo.getIchatId().equals(itemData.channelAddition.getRequesterChannel().getIchatId());
+        boolean isCurrentUserRequester = currentUserInfo.getImessageId().equals(itemData.channelAddition.getRequesterChannel().getImessageId());
         Channel channel;
         if(isCurrentUserRequester){
             channel = itemData.channelAddition.getResponderChannel();

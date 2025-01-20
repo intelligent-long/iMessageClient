@@ -91,8 +91,8 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
     private void showMatchingIn(LinearLayoutViewsSearchChannelBinding binding, ItemData itemData, Activity activity) {
         String searchStr = getActivity().getSearchStr();
         SpannableStringBuilder matchingInText = new SpannableStringBuilder();
-        if(itemData.channel.getIchatIdUser() != null && Utils.containsIgnoreCase(itemData.channel.getIchatIdUser(), searchStr)){
-            appendMatchingText(matchingInText, Constants.APP_NAME + " ID  ", itemData.channel.getIchatIdUser(), searchStr);
+        if(itemData.channel.getImessageIdUser() != null && Utils.containsIgnoreCase(itemData.channel.getImessageIdUser(), searchStr)){
+            appendMatchingText(matchingInText, Constants.APP_NAME + " ID  ", itemData.channel.getImessageIdUser(), searchStr);
         }
         if(itemData.channel.getUsername() != null && Utils.containsIgnoreCase(itemData.channel.getUsername(), searchStr)){
             appendMatchingText(matchingInText, "用户名  ", itemData.channel.getUsername(), searchStr);
@@ -118,7 +118,7 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
         int end = start + searchStr.length();
         SpannableString spannableString = new SpannableString(fullText);
         if (start >= 0) {
-            spannableString.setSpan(new ForegroundColorSpan(ColorUtil.getColor(getActivity(), R.color.ichat)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new ForegroundColorSpan(ColorUtil.getColor(getActivity(), R.color.imessage)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         builder.append(spannableString);
     }
@@ -150,7 +150,7 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
         });
         binding.clickView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, itemData.getChannel().getIchatId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, itemData.getChannel().getImessageId());
             intent.putExtra(ExtraKeys.CHANNEL, itemData.getChannel());
             activity.startActivity(intent);
         });

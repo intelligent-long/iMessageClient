@@ -116,7 +116,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     if(thisChatMessage.getUuid().equals(id)){
                         if(complete){
                             thisChatMessage.setVoiceListened(true);
-                            ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, activity.getChannel().getIchatId()).update(thisChatMessage);
+                            ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, activity.getChannel().getImessageId()).update(thisChatMessage);
                         }
                         notifyItemChanged(i);
                         break;
@@ -206,7 +206,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             //头像
             holder.binding.avatarSend.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, ChannelActivity.class);
-                intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
+                intent.putExtra(ExtraKeys.IMESSAGE_ID, itemData.chatMessage.getFrom());
                 activity.startActivity(intent);
             });
             Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
@@ -340,7 +340,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             //头像
             holder.binding.avatarReceive.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, ChannelActivity.class);
-                intent.putExtra(ExtraKeys.ICHAT_ID, itemData.chatMessage.getFrom());
+                intent.putExtra(ExtraKeys.IMESSAGE_ID, itemData.chatMessage.getFrom());
                 activity.startActivity(intent);
             });
             Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(itemData.chatMessage.getFrom());

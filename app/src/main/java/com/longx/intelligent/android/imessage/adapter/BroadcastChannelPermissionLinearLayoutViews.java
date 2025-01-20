@@ -81,7 +81,7 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
             }
         }
         binding.name.setText(itemData.channel.getName());
-        if(excludeConnectedChannels.contains(itemData.channel.getIchatId())){
+        if(excludeConnectedChannels.contains(itemData.channel.getImessageId())){
             binding.excludeCheckYes.setVisibility(View.VISIBLE);
             binding.excludeCheckNo.setVisibility(View.GONE);
         }else {
@@ -121,11 +121,11 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
             if(binding.excludeCheckYes.getVisibility() == View.VISIBLE && binding.excludeCheckNo.getVisibility() == View.GONE) {
                 binding.excludeCheckYes.setVisibility(View.GONE);
                 binding.excludeCheckNo.setVisibility(View.VISIBLE);
-                excludeConnectedChannels.remove(itemData.channel.getIchatId());
+                excludeConnectedChannels.remove(itemData.channel.getImessageId());
             }else if(binding.excludeCheckYes.getVisibility() == View.GONE && binding.excludeCheckNo.getVisibility() == View.VISIBLE) {
                 binding.excludeCheckYes.setVisibility(View.VISIBLE);
                 binding.excludeCheckNo.setVisibility(View.GONE);
-                excludeConnectedChannels.add(itemData.channel.getIchatId());
+                excludeConnectedChannels.add(itemData.channel.getImessageId());
             }
             SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(activity, new BroadcastChannelPermission(BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE, excludeConnectedChannels));
         });

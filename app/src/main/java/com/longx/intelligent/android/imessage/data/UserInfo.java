@@ -93,19 +93,19 @@ public abstract class UserInfo {
     }
 
     public static class WaysToFindMe{
-        private boolean byIchatIdUser;
+        private boolean byImessageIdUser;
         private boolean byEmail;
 
         public WaysToFindMe() {
         }
 
-        public WaysToFindMe(boolean byIchatIdUser, boolean byEmail) {
-            this.byIchatIdUser = byIchatIdUser;
+        public WaysToFindMe(boolean byImessageIdUser, boolean byEmail) {
+            this.byImessageIdUser = byImessageIdUser;
             this.byEmail = byEmail;
         }
 
-        public boolean isByIchatIdUser() {
-            return byIchatIdUser;
+        public boolean isByImessageIdUser() {
+            return byImessageIdUser;
         }
 
         public boolean isByEmail() {

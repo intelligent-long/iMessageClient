@@ -95,9 +95,9 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     }
 
     private void setupToolbar() {
-        String currentUserIchatId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getIchatId();
+        String currentUserImessageId = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getImessageId();
         MenuItem menuItem = binding.toolbar.getMenu().findItem(R.id.send_broadcast);
-        menuItem.setVisible(currentUserIchatId.equals(channel.getIchatId()));
+        menuItem.setVisible(currentUserImessageId.equals(channel.getImessageId()));
     }
 
     private void setupFab() {
@@ -222,7 +222,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
         if(nextPageCall != null) {
             breakFetchNextPage(nextPageCall);
         }
-        BroadcastApiCaller.fetchChannelBroadcastsLimit(this, channel.getIchatId(), null, Constants.FETCH_BROADCAST_PAGE_SIZE, true, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
+        BroadcastApiCaller.fetchChannelBroadcastsLimit(this, channel.getImessageId(), null, Constants.FETCH_BROADCAST_PAGE_SIZE, true, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -288,7 +288,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     private synchronized void nextPage() {
         NEXT_PAGE_LATCH = new CountDownLatch(1);
         String lastBroadcastId = adapter.getItemDataList().get(adapter.getItemCount() - 1).getBroadcast().getBroadcastId();
-        BroadcastApiCaller.fetchChannelBroadcastsLimit(this, channel.getIchatId(), lastBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, true, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
+        BroadcastApiCaller.fetchChannelBroadcastsLimit(this, channel.getImessageId(), lastBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, true, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>() {
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -380,10 +380,10 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     }
 
     @Override
-    public void fetchNews(String ichatId) {
-        if(!ichatId.equals(channel.getIchatId())) return;
+    public void fetchNews(String imessageId) {
+        if(!imessageId.equals(channel.getImessageId())) return;
         String firstBroadcastId = adapter.getItemDataList().get(0).getBroadcast().getBroadcastId();
-        BroadcastApiCaller.fetchChannelBroadcastsLimit(this, channel.getIchatId(), firstBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, false, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
+        BroadcastApiCaller.fetchChannelBroadcastsLimit(this, channel.getImessageId(), firstBroadcastId, Constants.FETCH_BROADCAST_PAGE_SIZE, false, new RetrofitApiCaller.BaseCommonYier<PaginatedOperationData<Broadcast>>(){
 
             @Override
             public void start(Call<PaginatedOperationData<Broadcast>> call) {
@@ -431,7 +431,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
                     broadcastReloadedTime = new Date();
                     showOrHideBroadcastReloadedTime();
                     if(raw.body().hasMore()){
-                        fetchNews(ichatId);
+                        fetchNews(imessageId);
                     }
                 }, new OperationStatus.HandleResult(-102, () -> {
                     ErrorLogger.log("没有获取到新广播");
@@ -456,8 +456,8 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     }
 
     @Override
-    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelIchatId) {
-        if(excludeChannelIchatId.equals(channel.getIchatId())){
+    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelImessageId) {
+        if(excludeChannelImessageId.equals(channel.getImessageId())){
             adapter.refreshAll();
         }
     }

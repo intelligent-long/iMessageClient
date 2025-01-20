@@ -12,8 +12,8 @@ import java.util.Date;
  */
 @JsonAutoDetect(getterVisibility = NONE, fieldVisibility = ANY)
 public class Self extends UserInfo{
-    private final String ichatId;
-    private final String ichatIdUser;
+    private final String imessageId;
+    private final String imessageIdUser;
     private final String email;
     private final Date registerTime;
     private final String username;
@@ -29,9 +29,9 @@ public class Self extends UserInfo{
         this(null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public Self(String ichatId, String ichatIdUser, String email, Date registerTime, String username, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, UserProfileVisibility userProfileVisibility, WaysToFindMe waysToFindMe) {
-        this.ichatId = ichatId;
-        this.ichatIdUser = ichatIdUser;
+    public Self(String imessageId, String imessageIdUser, String email, Date registerTime, String username, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, UserProfileVisibility userProfileVisibility, WaysToFindMe waysToFindMe) {
+        this.imessageId = imessageId;
+        this.imessageIdUser = imessageIdUser;
         this.email = email;
         this.registerTime = registerTime;
         this.username = username;
@@ -44,12 +44,12 @@ public class Self extends UserInfo{
         this.waysToFindMe = waysToFindMe;
     }
 
-    public String getIchatId() {
-        return ichatId;
+    public String getImessageId() {
+        return imessageId;
     }
 
-    public String getIchatIdUser() {
-        return ichatIdUser;
+    public String getImessageIdUser() {
+        return imessageIdUser;
     }
 
     public String getEmail() {
@@ -93,6 +93,6 @@ public class Self extends UserInfo{
     }
 
     public Channel toChannel(){
-        return new Channel(ichatId, ichatIdUser, email, username, null, avatar, sex, firstRegion, secondRegion, thirdRegion, true);
+        return new Channel(imessageId, imessageIdUser, email, username, null, avatar, sex, firstRegion, secondRegion, thirdRegion, true);
     }
 }

@@ -15,7 +15,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeAvatarActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeEmailActivity;
-import com.longx.intelligent.android.imessage.activity.edituser.ChangeIchatIdUserActivity;
+import com.longx.intelligent.android.imessage.activity.edituser.ChangeImessageIdUserActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeRegionActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeSexActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeUsernameActivity;
@@ -74,7 +74,7 @@ public class EditUserSettingsActivity extends BaseActivity{
 
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, ContentUpdater.OnServerContentUpdateYier {
         private ChangeAvatarPreference preferenceChangeAvatar;
-        private ProfileItemPreference preferenceChangeIchatIdUser;
+        private ProfileItemPreference preferenceChangeImessageIdUser;
         private ProfileItemPreference preferenceChangeUsername;
         private ProfileItemPreference preferenceChangeEmail;
         private ProfileItemPreference preferenceChangeSex;
@@ -107,7 +107,7 @@ public class EditUserSettingsActivity extends BaseActivity{
         @Override
         protected void bindPreferences() {
             preferenceChangeAvatar = findPreference(getString(R.string.preference_key_change_avatar));
-            preferenceChangeIchatIdUser = findPreference(getString(R.string.preference_key_change_ichat_id_user));
+            preferenceChangeImessageIdUser = findPreference(getString(R.string.preference_key_change_imessage_id_user));
             preferenceChangeUsername = findPreference(getString(R.string.preference_key_change_username));
             preferenceChangeEmail = findPreference(getString(R.string.preference_key_change_email));
             preferenceChangeSex = findPreference(getString(R.string.preference_key_change_sex));
@@ -118,12 +118,12 @@ public class EditUserSettingsActivity extends BaseActivity{
         protected void showInfo() {
             Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
             String doNotSet = getString(R.string.do_not_set);
-            String ichatIdUser = self.getIchatIdUser();
+            String imessageIdUser = self.getImessageIdUser();
             String username = self.getUsername();
             String email = self.getEmail();
             Integer sex = self.getSex();
             String sexString = Self.sexValueToString(requireContext(), sex);
-            preferenceChangeIchatIdUser.setTitle(ichatIdUser == null ? doNotSet : ichatIdUser);
+            preferenceChangeImessageIdUser.setTitle(imessageIdUser == null ? doNotSet : imessageIdUser);
             preferenceChangeUsername.setTitle(username == null ? doNotSet : username);
             preferenceChangeEmail.setTitle(email == null ? doNotSet : email);
             preferenceChangeSex.setTitle(sexString);
@@ -139,7 +139,7 @@ public class EditUserSettingsActivity extends BaseActivity{
         @Override
         protected void setupYiers() {
             preferenceChangeAvatar.setOnPreferenceClickListener(this);
-            preferenceChangeIchatIdUser.setOnPreferenceClickListener(this);
+            preferenceChangeImessageIdUser.setOnPreferenceClickListener(this);
             preferenceChangeUsername.setOnPreferenceClickListener(this);
             preferenceChangeEmail.setOnPreferenceClickListener(this);
             preferenceChangeSex.setOnPreferenceClickListener(this);
@@ -168,8 +168,8 @@ public class EditUserSettingsActivity extends BaseActivity{
                                 });
                             }).create().show();
                 }).show();
-            }else if(preference.equals(preferenceChangeIchatIdUser)){
-                startActivity(new Intent(getContext(), ChangeIchatIdUserActivity.class));
+            }else if(preference.equals(preferenceChangeImessageIdUser)){
+                startActivity(new Intent(getContext(), ChangeImessageIdUserActivity.class));
             }else if(preference.equals(preferenceChangeUsername)){
                 startActivity(new Intent(getContext(), ChangeUsernameActivity.class));
             }else if(preference.equals(preferenceChangeEmail)){

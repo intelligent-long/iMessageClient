@@ -10,7 +10,7 @@
             app:summary="头像" />
 
         <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
-            app:key="@string/preference_key_change_ichat_id_user"
+            app:key="@string/preference_key_change_imessage_id_user"
             app:summary="iMessage ID" />
 
         <com.longx.intelligent.android.imessage.preference.ProfileItemPreference

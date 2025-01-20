@@ -31,7 +31,7 @@ public class ExploreChannelActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         searchByNames = new String[]{
-                getString(R.string.search_by_ichat_id_user),
+                getString(R.string.search_by_imessage_id_user),
                 getString(R.string.search_by_email)};
         binding = ActivityExploreChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -78,7 +78,7 @@ public class ExploreChannelActivity extends BaseActivity {
             }
             if(item.getItemId() == R.id.search_channel){
                 if(Objects.equals(UiUtil.getEditTextString(binding.searchByAutoComplete), searchByNames[0])){
-                    ChannelApiCaller.findChannelByIchatIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
+                    ChannelApiCaller.findChannelByImessageIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this){
                         @Override
                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                             super.ok(data, raw, call);

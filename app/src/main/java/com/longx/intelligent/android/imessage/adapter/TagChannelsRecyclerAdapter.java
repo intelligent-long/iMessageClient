@@ -124,7 +124,7 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
         ItemData itemData = itemDataList.get(position);
         holder.binding.clickView.setOnClickListener(v -> {
             Intent intent = new Intent(tagChannelActivity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, itemData.channel.getIchatId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, itemData.channel.getImessageId());
             intent.putExtra(ExtraKeys.CHANNEL, itemData.channel);
             tagChannelActivity.startActivity(intent);
         });
@@ -132,9 +132,9 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
             new ConfirmDialog(tagChannelActivity, "是否继续？")
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
-                        List<String> channelIchatIdList = new ArrayList<>();
-                        channelIchatIdList.add(itemData.channel.getIchatId());
-                        RemoveChannelsOfTagPostBody postBody = new RemoveChannelsOfTagPostBody(channelTag.getTagId(), channelIchatIdList);
+                        List<String> channelImessageIdList = new ArrayList<>();
+                        channelImessageIdList.add(itemData.channel.getImessageId());
+                        RemoveChannelsOfTagPostBody postBody = new RemoveChannelsOfTagPostBody(channelTag.getTagId(), channelImessageIdList);
                         ChannelApiCaller.removeChannelsOfTag(tagChannelActivity, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(tagChannelActivity){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {

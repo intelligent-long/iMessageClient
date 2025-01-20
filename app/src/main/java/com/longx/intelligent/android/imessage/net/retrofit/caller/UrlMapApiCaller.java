@@ -14,32 +14,32 @@ public class UrlMapApiCaller extends RetrofitApiCaller{
         return getApiImplementation(UrlMapApi.class);
     }
 
-    public static CompletableCall<OperationData> fetchIchatWebHomeUrl(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+    public static CompletableCall<OperationData> fetchImessageWebHomeUrl(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchImessageWebHomeUrl();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchIchatWebUpdatableReleaseDataUrl(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchIchatWebUpdatableReleaseDataUrl();
+    public static CompletableCall<OperationData> fetchImessageWebUpdatableReleaseDataUrl(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchImessageWebUpdatableReleaseDataUrl();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchIchatWebReleaseUrl(LifecycleOwner lifecycleOwner, int versionCode, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchIchatWebReleaseUrl(versionCode);
+    public static CompletableCall<OperationData> fetchImessageWebReleaseUrl(LifecycleOwner lifecycleOwner, int versionCode, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchImessageWebReleaseUrl(versionCode);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchIchatWebAllDownloadFilesUrl(LifecycleOwner lifecycleOwner, int versionCode, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchIchatWebAllDownloadFilesUrl(versionCode);
+    public static CompletableCall<OperationData> fetchImessageWebAllDownloadFilesUrl(LifecycleOwner lifecycleOwner, int versionCode, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchImessageWebAllDownloadFilesUrl(versionCode);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchIchatWebDownloadFileUrl(LifecycleOwner lifecycleOwner, String fileId, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchIchatWebDownloadFileUrl(fileId);
+    public static CompletableCall<OperationData> fetchImessageWebDownloadFileUrl(LifecycleOwner lifecycleOwner, String fileId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchImessageWebDownloadFileUrl(fileId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

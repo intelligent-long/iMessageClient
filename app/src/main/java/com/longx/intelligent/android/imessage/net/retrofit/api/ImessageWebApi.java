@@ -9,7 +9,7 @@ import retrofit2.http.Url;
 /**
  * Created by LONG on 2024/10/30 at 上午2:46.
  */
-public interface IchatWebApi {
+public interface ImessageWebApi {
 
     @GET
     CompletableCall<OperationData> fetchUpdatableReleaseData(@Url String updatableReleaseUrl);

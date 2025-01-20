@@ -27,7 +27,7 @@ import com.longx.intelligent.android.imessage.fragment.main.BroadcastsFragment;
 import com.longx.intelligent.android.imessage.net.CookieJar;
 import com.longx.intelligent.android.imessage.net.retrofit.RetrofitCreator;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.AuthApiCaller;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.IchatWebApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ImessageWebApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UrlMapApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.notification.Notifications;
@@ -49,13 +49,13 @@ import retrofit2.Response;
  * Created by LONG on 2024/3/30 at 3:49 PM.
  */
 public class GlobalBehaviors {
-    public enum LoginWay{ICHAT_ID, EMAIL, VERIFY_CODE}
+    public enum LoginWay{IMESSAGE_ID, EMAIL, VERIFY_CODE}
 
-    public static void doLogin(AppCompatActivity activity, String loginIchatIdUser, String loginEmail, String loginPassword, String loginVerifyCode, LoginWay loginWay) {
+    public static void doLogin(AppCompatActivity activity, String loginImessageIdUser, String loginEmail, String loginPassword, String loginVerifyCode, LoginWay loginWay) {
         switch (loginWay){
-            case ICHAT_ID:{
-                ImessageIdUserLoginPostBody postBody = new ImessageIdUserLoginPostBody(loginIchatIdUser, loginPassword);
-                AuthApiCaller.ichatIdUserLogin(activity, postBody, new RetrofitApiCaller.CommonYier<OperationData>(activity){
+            case IMESSAGE_ID:{
+                ImessageIdUserLoginPostBody postBody = new ImessageIdUserLoginPostBody(loginImessageIdUser, loginPassword);
+                AuthApiCaller.imessageIdUserLogin(activity, postBody, new RetrofitApiCaller.CommonYier<OperationData>(activity){
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
@@ -252,13 +252,13 @@ public class GlobalBehaviors {
                 return;
             }
         }
-        UrlMapApiCaller.fetchIchatWebUpdatableReleaseDataUrl(activity, new RetrofitApiCaller.BaseYier<OperationData>(){
+        UrlMapApiCaller.fetchImessageWebUpdatableReleaseDataUrl(activity, new RetrofitApiCaller.BaseYier<OperationData>(){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
                     String updatableReleaseUrl = data.getData(String.class);
-                    IchatWebApiCaller.fetchUpdatableReleaseData(activity, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity) {
+                    ImessageWebApiCaller.fetchUpdatableReleaseData(activity, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity) {
                         @Override
                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                             data.commonHandleResult(activity, new int[]{}, () -> {

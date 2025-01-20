@@ -4,20 +4,20 @@ package com.longx.intelligent.android.imessage.data;
  * Created by LONG on 2024/5/16 at 7:04 PM.
  */
 public class OpenedChat {
-    private final String channelIchatId;
+    private final String channelImessageId;
     private final int notViewedCount;
     private final boolean show;
     private ChatMessage newestChatMessage;
     private Channel channel;
 
-    public OpenedChat(String channelIchatId, int notViewedCount, boolean show) {
-        this.channelIchatId = channelIchatId;
+    public OpenedChat(String channelImessageId, int notViewedCount, boolean show) {
+        this.channelImessageId = channelImessageId;
         this.notViewedCount = notViewedCount;
         this.show = show;
     }
 
-    public String getChannelIchatId() {
-        return channelIchatId;
+    public String getChannelImessageId() {
+        return channelImessageId;
     }
 
     public int getNotViewedCount() {

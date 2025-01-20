@@ -11,7 +11,7 @@ import com.longx.intelligent.android.imessage.data.Release;
 import com.longx.intelligent.android.imessage.data.ReleaseFile;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.databinding.ActivityVersionBinding;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.IchatWebApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ImessageWebApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UrlMapApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
@@ -54,7 +54,7 @@ public class VersionActivity extends BaseActivity {
     }
 
     private void fetchAndShowData() {
-        UrlMapApiCaller.fetchIchatWebUpdatableReleaseDataUrl(this, new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
+        UrlMapApiCaller.fetchImessageWebUpdatableReleaseDataUrl(this, new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
             @Override
             public void start(Call<OperationData> call) {
                 super.start(call);
@@ -86,7 +86,7 @@ public class VersionActivity extends BaseActivity {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
-                UrlMapApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, AppUtil.getVersionCode(VersionActivity.this), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
+                UrlMapApiCaller.fetchImessageWebReleaseUrl(VersionActivity.this, AppUtil.getVersionCode(VersionActivity.this), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
@@ -98,7 +98,7 @@ public class VersionActivity extends BaseActivity {
                 });
                 data.commonHandleResult(VersionActivity.this, new int[]{}, () -> {
                     String updatableReleaseUrl = data.getData(String.class);
-                    IchatWebApiCaller.fetchUpdatableReleaseData(VersionActivity.this, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this, false){
+                    ImessageWebApiCaller.fetchUpdatableReleaseData(VersionActivity.this, updatableReleaseUrl, new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this, false){
                         @Override
                         public void start(Call<OperationData> call) {
                             super.start(call);
@@ -139,7 +139,7 @@ public class VersionActivity extends BaseActivity {
                                     binding.updatableVersionCode.setText(String.valueOf(updatableRelease.getVersionCode()));
                                     binding.releaseTime.setText(TimeUtil.formatRelativeTime(updatableRelease.getReleaseTime()));
                                     binding.updateNotes.setText(StringUtils.isEmpty(updatableRelease.getNotes()) ? "-" : updatableRelease.getNotes());
-                                    UrlMapApiCaller.fetchIchatWebReleaseUrl(VersionActivity.this, updatableRelease.getVersionCode(), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
+                                    UrlMapApiCaller.fetchImessageWebReleaseUrl(VersionActivity.this, updatableRelease.getVersionCode(), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
                                         @Override
                                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                             super.ok(data, raw, call);
@@ -174,13 +174,13 @@ public class VersionActivity extends BaseActivity {
         binding.updateButton.setOnClickListener(v -> {
             Release updatableRelease = (Release) v.getTag();
             if(updatableRelease == null) return;
-            UrlMapApiCaller.fetchIchatWebAllDownloadFilesUrl(this, updatableRelease.getVersionCode(), new RetrofitApiCaller.CommonYier<OperationData>(this){
+            UrlMapApiCaller.fetchImessageWebAllDownloadFilesUrl(this, updatableRelease.getVersionCode(), new RetrofitApiCaller.CommonYier<OperationData>(this){
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
                     data.commonHandleResult(VersionActivity.this, new int[]{}, () -> {
                         String allDownloadFilesUrl = data.getData(String.class);
-                        IchatWebApiCaller.fetchAllDownloadFiles(VersionActivity.this, allDownloadFilesUrl, new RetrofitApiCaller.CommonYier<OperationData>(VersionActivity.this){
+                        ImessageWebApiCaller.fetchAllDownloadFiles(VersionActivity.this, allDownloadFilesUrl, new RetrofitApiCaller.CommonYier<OperationData>(VersionActivity.this){
                             @Override
                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                 super.ok(data, raw, call);
@@ -198,7 +198,7 @@ public class VersionActivity extends BaseActivity {
                                         MessageDisplayer.autoShow(VersionActivity.this, "未找到下载文件", MessageDisplayer.Duration.LONG);
                                         return;
                                     }
-                                    UrlMapApiCaller.fetchIchatWebDownloadFileUrl(VersionActivity.this, fileId, new RetrofitApiCaller.CommonYier<OperationData>(VersionActivity.this){
+                                    UrlMapApiCaller.fetchImessageWebDownloadFileUrl(VersionActivity.this, fileId, new RetrofitApiCaller.CommonYier<OperationData>(VersionActivity.this){
                                         @Override
                                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                             super.ok(data, raw, call);

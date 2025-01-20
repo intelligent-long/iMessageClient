@@ -211,7 +211,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="ichat" android:host="channel" android:pathPrefix="/" />
+                <data android:scheme="imessage" android:host="channel" android:pathPrefix="/" />
             </intent-filter>
         </activity>
         <activity
@@ -253,7 +253,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.edituser.ChangeIchatIdUserActivity"
+            android:name=".activity.edituser.ChangeImessageIdUserActivity"
             android:exported="false"
             android:screenOrientation="portrait"  />
         <activity

@@ -86,7 +86,7 @@ public class ServerMessageServiceStompActions {
                 } else {
                     HoldableActivity topActivity = ActivityOperator.getTopActivity();
                     if (!(topActivity instanceof MainActivity)) {
-                        if (!(topActivity instanceof ChatActivity && ((ChatActivity) topActivity).getChannel().getIchatId().equals(chatMessage.getOther(context)))) {
+                        if (!(topActivity instanceof ChatActivity && ((ChatActivity) topActivity).getChannel().getImessageId().equals(chatMessage.getOther(context)))) {
                             Notifications.notifyChatMessage(context, chatMessage);
                         }
                     }
@@ -114,18 +114,18 @@ public class ServerMessageServiceStompActions {
         });
     }
 
-    public static void updateBroadcastsNews(Context context, String ichatId){
+    public static void updateBroadcastsNews(Context context, String imessageId){
         GlobalYiersHolder.getYiers(BroadcastFetchNewsYier.class).ifPresent(broadcastFetchNewsYiers -> {
-            broadcastFetchNewsYiers.forEach(broadcastFetchNewsYier -> broadcastFetchNewsYier.fetchNews(ichatId));
+            broadcastFetchNewsYiers.forEach(broadcastFetchNewsYier -> broadcastFetchNewsYier.fetchNews(imessageId));
         });
     }
 
-    public static void updateRecentBroadcastMedias(Context context, String ichatId){
-        if(ichatId == null || ichatId.isEmpty()){
+    public static void updateRecentBroadcastMedias(Context context, String imessageId){
+        if(imessageId == null || imessageId.isEmpty()){
             List<String> channelIds = new ArrayList<>();
-            channelIds.add(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getIchatId());
+            channelIds.add(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(context).getImessageId());
             ChannelDatabaseManager.getInstance().findAllAssociations().forEach(channelAssociation -> {
-                channelIds.add(channelAssociation.getChannelIchatId());
+                channelIds.add(channelAssociation.getChannelImessageId());
             });
             channelIds.forEach(channelId -> {
                 ContentUpdater.updateRecentBroadcastMedias(context, channelId, results -> {
@@ -137,10 +137,10 @@ public class ServerMessageServiceStompActions {
                 });
             });
         }else {
-            ContentUpdater.updateRecentBroadcastMedias(context, ichatId, results -> {
+            ContentUpdater.updateRecentBroadcastMedias(context, imessageId, results -> {
                 GlobalYiersHolder.getYiers(RecentBroadcastMediasUpdateYier.class).ifPresent(recentBroadcastMediasUpdateYiers -> {
                     recentBroadcastMediasUpdateYiers.forEach(recentBroadcastMediasUpdateYier -> {
-                        recentBroadcastMediasUpdateYier.onRecentBroadcastMediasUpdate(ichatId);
+                        recentBroadcastMediasUpdateYier.onRecentBroadcastMediasUpdate(imessageId);
                     });
                 });
             });

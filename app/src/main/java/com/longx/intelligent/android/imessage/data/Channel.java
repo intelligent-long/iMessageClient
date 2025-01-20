@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
  * Created by LONG on 2024/4/26 at 8:19 PM.
  */
 public class Channel extends UserInfo implements Parcelable {
-    private final String ichatId;
-    private final String ichatIdUser;
+    private final String imessageId;
+    private final String imessageIdUser;
     private final String email;
     private final String username;
     private final String note;
@@ -25,9 +25,9 @@ public class Channel extends UserInfo implements Parcelable {
         this(null, null, null, null, null, null, null, null, null, null, false);
     }
 
-    public Channel(String ichatId, String ichatIdUser, String email, String username, String note, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean associated) {
-        this.ichatId = ichatId;
-        this.ichatIdUser = ichatIdUser;
+    public Channel(String imessageId, String imessageIdUser, String email, String username, String note, Avatar avatar, Integer sex, Region firstRegion, Region secondRegion, Region thirdRegion, boolean associated) {
+        this.imessageId = imessageId;
+        this.imessageIdUser = imessageIdUser;
         this.email = email;
         this.username = username;
         this.note = note;
@@ -39,8 +39,8 @@ public class Channel extends UserInfo implements Parcelable {
         this.associated = associated;
     }
 
-    public String getIchatId() {
-        return ichatId;
+    public String getImessageId() {
+        return imessageId;
     }
 
     public String getUsername() {
@@ -55,8 +55,8 @@ public class Channel extends UserInfo implements Parcelable {
         return note == null ? username : note;
     }
 
-    public String getIchatIdUser() {
-        return ichatIdUser;
+    public String getImessageIdUser() {
+        return imessageIdUser;
     }
 
     public Integer getSex() {
@@ -105,8 +105,8 @@ public class Channel extends UserInfo implements Parcelable {
     }
 
     protected Channel(Parcel in) {
-        ichatId = in.readString();
-        ichatIdUser = in.readString();
+        imessageId = in.readString();
+        imessageIdUser = in.readString();
         email = in.readString();
         username = in.readString();
         note = in.readString();
@@ -120,8 +120,8 @@ public class Channel extends UserInfo implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(ichatId);
-        dest.writeString(ichatIdUser);
+        dest.writeString(imessageId);
+        dest.writeString(imessageIdUser);
         dest.writeString(email);
         dest.writeString(username);
         dest.writeString(note);
@@ -136,8 +136,8 @@ public class Channel extends UserInfo implements Parcelable {
     @Override
     public String toString() {
         return "Channel{" +
-                "ichatId='" + ichatId + '\'' +
-                ", ichatIdUser='" + ichatIdUser + '\'' +
+                "imessageId='" + imessageId + '\'' +
+                ", imessageIdUser='" + imessageIdUser + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", note='" + note + '\'' +

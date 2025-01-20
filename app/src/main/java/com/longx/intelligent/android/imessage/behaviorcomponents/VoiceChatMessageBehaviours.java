@@ -52,7 +52,7 @@ public class VoiceChatMessageBehaviours {
         sendVoiceStopped = false;
         new Thread(() -> {
             try {
-                String voiceTempFilePath = CacheFilesAccessor.ChatMessage.prepareChatVoiceTempFile(chatActivity, chatActivity.getChannel().getIchatId());
+                String voiceTempFilePath = CacheFilesAccessor.ChatMessage.prepareChatVoiceTempFile(chatActivity, chatActivity.getChannel().getImessageId());
                 audioRecorder.record(voiceTempFilePath, 200, new AudioRecorder.AudioRecordYier() {
                     @Override
                     public void onRecordPrepared() {
@@ -155,7 +155,7 @@ public class VoiceChatMessageBehaviours {
 
     private void doSendVoice(File recordedAudiofile){
         chatActivity.toSendingProgressState();
-        SendVoiceChatMessagePostBody postBody = new SendVoiceChatMessagePostBody(chatActivity.getChannel().getIchatId());
+        SendVoiceChatMessagePostBody postBody = new SendVoiceChatMessagePostBody(chatActivity.getChannel().getImessageId());
         ChatApiCaller.sendVoiceChatMessage(chatActivity, chatActivity, Uri.fromFile(recordedAudiofile), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(chatActivity) {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {

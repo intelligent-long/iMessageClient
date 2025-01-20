@@ -125,11 +125,11 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         ItemData itemData = itemDataList.get(position);
         String name;
         String avatarHash;
-        if(currentUserProfile.getIchatId().equals(itemData.broadcast.getIchatId())){
+        if(currentUserProfile.getImessageId().equals(itemData.broadcast.getImessageId())){
             name = currentUserProfile.getUsername();
             avatarHash = currentUserProfile.getAvatar() == null ? null : currentUserProfile.getAvatar().getHash();
         }else {
-            Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId());
+            Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getImessageId());
             if(channel != null) {
                 name = channel.getName();
                 avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
@@ -305,7 +305,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             holder.binding.commentCount.setVisibility(View.GONE);
         }
 
-        if(currentUserProfile.getIchatId().equals(itemData.broadcast.getIchatId())) {
+        if(currentUserProfile.getImessageId().equals(itemData.broadcast.getImessageId())) {
             holder.binding.visibilityIcon.setVisibility(View.VISIBLE);
             BroadcastChannelPermission broadcastChannelPermission = SharedPreferencesAccessor.BroadcastPref.getServerBroadcastChannelPermission(activity);
             Broadcast.BroadcastVisibility broadcastVisibility = Broadcast.determineBroadcastVisibility(broadcastChannelPermission, itemData.broadcast.getBroadcastPermission());
@@ -328,10 +328,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }
 
         if ((
-                !itemData.broadcast.getIchatId().equals(currentUserProfile.getIchatId())
-                        && ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) == null
+                !itemData.broadcast.getImessageId().equals(currentUserProfile.getImessageId())
+                        && ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getImessageId()) == null
             )
-                || SharedPreferencesAccessor.BroadcastPref.getServerExcludeBroadcastChannels(activity).contains(itemData.broadcast.getIchatId())) {
+                || SharedPreferencesAccessor.BroadcastPref.getServerExcludeBroadcastChannels(activity).contains(itemData.broadcast.getImessageId())) {
             holder.binding.spaceMore.setVisibility(View.GONE);
             holder.binding.layoutMore.setVisibility(View.GONE);
         } else {
@@ -469,10 +469,10 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         });
         holder.binding.avatar.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.ICHAT_ID, itemData.broadcast.getIchatId());
+            intent.putExtra(ExtraKeys.IMESSAGE_ID, itemData.broadcast.getImessageId());
             activity.startActivity(intent);
         });
-        if(itemData.broadcast.getIchatId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getIchatId())) {
+        if(itemData.broadcast.getImessageId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())) {
             SelfBroadcastMoreOperationBottomSheet moreOperationBottomSheet = new SelfBroadcastMoreOperationBottomSheet(activity);
             holder.binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
             moreOperationBottomSheet.setDeleteClickYier(v -> {
@@ -488,7 +488,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                                 GlobalYiersHolder.getYiers(BroadcastDeletedYier.class).ifPresent(broadcastDeletedYiers -> {
                                     broadcastDeletedYiers.forEach(broadcastDeletedYier -> broadcastDeletedYier.onBroadcastDeleted(itemData.broadcast.getBroadcastId()));
                                 });
-                                ServerMessageServiceStompActions.updateRecentBroadcastMedias(activity, itemData.broadcast.getIchatId());
+                                ServerMessageServiceStompActions.updateRecentBroadcastMedias(activity, itemData.broadcast.getImessageId());
                             });
                         }
                     });
@@ -506,7 +506,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 intent.putExtra(ExtraKeys.CHANGE_PERMISSION, true);
                 activity.startActivity(intent);
             });
-        }else if(ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getIchatId()) != null){
+        }else if(ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getImessageId()) != null){
             OtherBroadcastMoreOperationBottomSheet moreOperationBottomSheet = new OtherBroadcastMoreOperationBottomSheet(activity);
             holder.binding.more.setOnClickListener(v -> moreOperationBottomSheet.show());
             moreOperationBottomSheet.setExcludeBroadcastChannelClickYier(v -> {
@@ -515,7 +515,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                 confirmDialog.setPositiveButton((dialog, which) -> {
                     Set<String> serverExcludeBroadcastChannels = SharedPreferencesAccessor.BroadcastPref.getServerExcludeBroadcastChannels(activity);
                     Set<String> nowServerExcludeBroadcastChannels = new HashSet<>(serverExcludeBroadcastChannels);
-                    nowServerExcludeBroadcastChannels.add(itemData.broadcast.getIchatId());
+                    nowServerExcludeBroadcastChannels.add(itemData.broadcast.getImessageId());
                     ChangeExcludeBroadcastChannelPostBody postBody = new ChangeExcludeBroadcastChannelPostBody(nowServerExcludeBroadcastChannels);
                     PermissionApiCaller.changeExcludeBroadcastChannels(null, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
                         @Override
@@ -525,7 +525,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
                                 SharedPreferencesAccessor.BroadcastPref.saveAppExcludeBroadcastChannels(activity, nowServerExcludeBroadcastChannels);
                                 SharedPreferencesAccessor.BroadcastPref.saveServerExcludeBroadcastChannels(activity, nowServerExcludeBroadcastChannels);
                                 GlobalYiersHolder.getYiers(OnSetChannelBroadcastExcludeYier.class).ifPresent(onSetChannelBroadcastExcludeYiers -> {
-                                    onSetChannelBroadcastExcludeYiers.forEach(onSetChannelBroadcastExcludeYier -> onSetChannelBroadcastExcludeYier.onSetChannelBroadcastExclude(position, itemData.broadcast.getIchatId()));
+                                    onSetChannelBroadcastExcludeYiers.forEach(onSetChannelBroadcastExcludeYier -> onSetChannelBroadcastExcludeYier.onSetChannelBroadcastExclude(position, itemData.broadcast.getImessageId()));
                                 });
                             });
                         }
@@ -610,12 +610,12 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         });
     }
 
-    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelIchatId) {
+    public void onSetChannelBroadcastExclude(int selectedPosition, String excludeChannelImessageId) {
         List<ItemData> nowItemDataList = new ArrayList<>();
         List<String> removeBroadcastIds = new ArrayList<>();
         for (int i = 0; i < itemDataList.size(); i++) {
             ItemData itemData1 = itemDataList.get(i);
-            if(!itemData1.broadcast.getIchatId().equals(excludeChannelIchatId)){
+            if(!itemData1.broadcast.getImessageId().equals(excludeChannelImessageId)){
                 nowItemDataList.add(itemData1);
             }else {
                 removeBroadcastIds.add(itemData1.broadcast.getBroadcastId());
@@ -627,7 +627,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
             ItemData itemDataScrollTo = null;
             for (int i = selectedPosition; i >= 0; i--) {
                 ItemData itemData1 = itemDataList.get(i);
-                if (!itemData1.broadcast.getIchatId().equals(excludeChannelIchatId)) {
+                if (!itemData1.broadcast.getImessageId().equals(excludeChannelImessageId)) {
                     itemDataScrollTo = itemData1;
                     break;
                 }
