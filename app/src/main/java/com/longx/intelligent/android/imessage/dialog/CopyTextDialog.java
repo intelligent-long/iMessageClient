@@ -20,12 +20,12 @@ public class CopyTextDialog extends AbstractDialog{
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         return builder.create();
     }
 
     @Override
-    protected View createView(LayoutInflater layoutInflater) {
+    protected View onCreateView(LayoutInflater layoutInflater) {
         DialogCopyTextBinding binding = DialogCopyTextBinding.inflate(getActivity().getLayoutInflater());
         binding.editText.setText(text);
         return binding.getRoot();

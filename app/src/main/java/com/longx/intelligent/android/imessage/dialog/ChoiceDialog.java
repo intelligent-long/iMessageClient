@@ -19,8 +19,7 @@ import java.util.UUID;
 /**
  * Created by LONG on 2024/10/29 at 上午2:22.
  */
-public class ChoiceDialog extends AbstractDialog{
-    private final Integer iconId;
+public class ChoiceDialog extends AbstractDialog<ChoiceDialog>{
     private final String message;
     private final String uuid = UUID.randomUUID().toString();
     private DialogButtonInfo positiveButtonInfo;
@@ -32,24 +31,14 @@ public class ChoiceDialog extends AbstractDialog{
     }
 
     public ChoiceDialog(Activity activity, String message) {
-        this(activity, null, message);
-    }
-
-    public ChoiceDialog(Activity activity, Integer iconId, String message) {
         super(activity, R.style.TitleLargeMaterialAlertDialog);
-        this.iconId = iconId;
         this.message = message;
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         builder
                 .setTitle(uuid);
-        if(iconId == null){
-//            builder.setIcon(R.drawable.radio_button_unchecked_24px_primary_tint);
-        }else {
-            builder.setIcon(iconId);
-        }
         if(positiveButtonInfo != null){
             builder.setPositiveButton(positiveButtonInfo.getText() == null ? "确定" : positiveButtonInfo.getText(), positiveButtonInfo.getYier());
         }

@@ -44,7 +44,7 @@ public class ServerSettingDialog extends AbstractDialog{
     }
 
     @Override
-    protected View createView(LayoutInflater layoutInflater) {
+    protected View onCreateView(LayoutInflater layoutInflater) {
         binding = DialogServerSettingBinding.inflate(layoutInflater);
         setupServerTypeAutoCompleteTextView();
         setupCustomServerTypeViews();
@@ -108,7 +108,7 @@ public class ServerSettingDialog extends AbstractDialog{
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         return builder
                 .setTitle(getActivity().getString(R.string.server_setting))
                 .setIcon(R.drawable.cloud_outline_24px_primary_color)

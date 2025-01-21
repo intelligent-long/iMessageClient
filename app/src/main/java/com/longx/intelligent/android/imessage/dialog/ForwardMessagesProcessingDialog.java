@@ -25,12 +25,12 @@ public class ForwardMessagesProcessingDialog extends AbstractDialog{
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         return builder.create();
     }
 
     @Override
-    protected View createView(LayoutInflater layoutInflater) {
+    protected View onCreateView(LayoutInflater layoutInflater) {
         binding = DialogForwardMessagesProcessingBinding.inflate(layoutInflater);
         return binding.getRoot();
     }

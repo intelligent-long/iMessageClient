@@ -30,13 +30,13 @@ public class ProgressOperatingDialog extends AbstractDialog{
     }
 
     @Override
-    protected View createView(LayoutInflater layoutInflater) {
+    protected View onCreateView(LayoutInflater layoutInflater) {
         binding = DialogProgressOperatingBinding.inflate(layoutInflater);
         return binding.getRoot();
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         AlertDialog dialog = builder
                 .setOnDismissListener(dialogInterface -> {
                     if(onCancelOperationYier != null)

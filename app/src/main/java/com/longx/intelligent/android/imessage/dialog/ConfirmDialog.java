@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.FutureTarget;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.imessage.R;
@@ -27,8 +28,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by LONG on 2024/1/16 at 11:43 PM.
  */
-public class ConfirmDialog extends AbstractDialog{
-    private final Integer iconId;
+public class ConfirmDialog extends AbstractDialog<ConfirmDialog> {
     private final String title;
     private final String message;
     private final boolean cancelable;
@@ -46,11 +46,11 @@ public class ConfirmDialog extends AbstractDialog{
     }
 
     public ConfirmDialog(Activity activity, String message) {
-        this(activity, null, null, null, message, true);
+        this(activity, null, null, message, true);
     }
 
     public ConfirmDialog(Activity activity, String title, String message) {
-        this(activity, null, null, title, message, true);
+        this(activity, null, title, message, true);
     }
 
     public ConfirmDialog(Activity activity, boolean cancelable){
@@ -58,53 +58,28 @@ public class ConfirmDialog extends AbstractDialog{
     }
 
     public ConfirmDialog(Activity activity, String message, boolean cancelable) {
-        this(activity, null, null, null, message, cancelable);
+        this(activity, null, null, message, cancelable);
     }
 
     public ConfirmDialog(Activity activity, String title, String message, boolean cancelable) {
-        this(activity, null, null, title, message, cancelable);
+        this(activity, null, title, message, cancelable);
     }
 
-    public ConfirmDialog(Activity activity, Integer style, Integer iconId, String title, String message, boolean cancelable) {
+    public ConfirmDialog(Activity activity, Integer style, String title, String message, boolean cancelable) {
         super(activity, style == null ? R.style.TitleLargeMaterialAlertDialog : style);
-        this.iconId = iconId;
         this.title = title;
         this.message = message;
         this.cancelable = cancelable;
+        setDefaultIcon(R.drawable.question_mark_24px_primary_tint);
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         if(title == null) {
             builder.setTitle(titleUuid);
         }else {
             builder.setTitle(title);
             builder.setMessage(messageUuid);
-        }
-        if(iconId == null){
-            builder.setIcon(R.drawable.question_mark_24px_primary_tint);
-        } else {
-            CountDownLatch countDownLatch = new CountDownLatch(1);
-            getActivity().runOnUiThread(() -> {
-                FutureTarget<Drawable> futureTarget = GlideApp.with(getActivity().getApplicationContext())
-                        .asDrawable()
-                        .load(iconId)
-                        .override(UiUtil.dpToPx(getActivity(), 24), UiUtil.dpToPx(getActivity(), 24))
-                        .submit();
-                new Thread(() -> {
-                    try {
-                        builder.setIcon(futureTarget.get());
-                        countDownLatch.countDown();
-                    } catch (ExecutionException | InterruptedException e) {
-                        ErrorLogger.log(e);
-                    }
-                }).start();
-            });
-            try {
-                countDownLatch.await();
-            } catch (InterruptedException e) {
-                ErrorLogger.log(e);
-            }
         }
         if (positiveButtonInfo != null) {
             builder.setPositiveButton("确定", null);

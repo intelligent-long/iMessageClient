@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iMessage</string>
+    <string name="app_name">LMessage</string>
     <string name="title_message">消息</string>
     <string name="title_channel">频道</string>
     <string name="title_broadcast">广播</string>

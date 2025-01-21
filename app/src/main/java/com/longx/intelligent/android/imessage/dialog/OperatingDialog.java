@@ -28,13 +28,13 @@ public class OperatingDialog extends AbstractDialog{
     }
 
     @Override
-    protected View createView(LayoutInflater layoutInflater) {
+    protected View onCreateView(LayoutInflater layoutInflater) {
         DialogOperatingBinding binding = DialogOperatingBinding.inflate(layoutInflater);
         return binding.getRoot();
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         AlertDialog dialog = builder
                 .setOnDismissListener(dialogInterface -> {
                     if(onCancelOperationYier != null)

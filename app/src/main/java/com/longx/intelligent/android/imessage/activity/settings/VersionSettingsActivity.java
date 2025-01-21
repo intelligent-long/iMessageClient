@@ -5,24 +5,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.FutureTarget;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.OpenSourceLicensesActivity;
 import com.longx.intelligent.android.imessage.activity.VersionActivity;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.bottomsheet.AuthorAccountsBottomSheet;
 import com.longx.intelligent.android.imessage.databinding.ActivityVersionSettingsBinding;
-import com.longx.intelligent.android.imessage.dialog.AbstractDialog;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.AppUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.value.Constants;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class VersionSettingsActivity extends BaseActivity {
     private ActivityVersionSettingsBinding binding;
@@ -90,12 +99,33 @@ public class VersionSettingsActivity extends BaseActivity {
 
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
-            if(preference.equals(preferenceAuthor)){
-                AbstractDialog dialog = new ConfirmDialog(getActivity(), R.style.AuthorDialog, R.drawable.default_avatar, null, "作者 " + Constants.AUTHOR, true)
+            if (preference.equals(preferenceAuthor)) {
+                AtomicReference<Drawable> authorDrawable = new AtomicReference<>();
+                CountDownLatch countDownLatch = new CountDownLatch(1);
+                FutureTarget<Drawable> futureTarget = GlideApp.with(requireContext().getApplicationContext())
+                        .asDrawable()
+                        .load(R.drawable.default_avatar)
+                        .override(UiUtil.dpToPx(requireContext(), 27), UiUtil.dpToPx(requireContext(), 27))
+                        .submit();
+                new Thread(() -> {
+                    try {
+                        authorDrawable.set(futureTarget.get());
+                        countDownLatch.countDown();
+                    } catch (ExecutionException | InterruptedException e) {
+                        ErrorLogger.log(e);
+                    }
+                }).start();
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                    ErrorLogger.log(e);
+                }
+                ConfirmDialog dialog = new ConfirmDialog(getActivity(), R.style.AuthorDialog, null, "作者 " + Constants.AUTHOR, true)
                         .setNeutralButton("账号", (d, which) -> {
                             new AuthorAccountsBottomSheet(getActivity()).show();
                         })
                         .setPositiveButton()
+                        .setIcon(authorDrawable.get())
                         .create()
                         .show();
                 ImageView iconView = dialog.getDialog().findViewById(android.R.id.icon);
@@ -116,7 +146,7 @@ public class VersionSettingsActivity extends BaseActivity {
                 }
 //                Snackbar snackbar = MessageDisplayer.showSnackbar(getActivity(), "作者 " + Constants.AUTHOR, Snackbar.LENGTH_INDEFINITE);
 //                snackbar.setAction("账号", v -> new AuthorAccountsBottomSheet(getActivity()).show());
-            } else if(preference.equals(preferenceOpenSourceLicenses)){
+            } else if (preference.equals(preferenceOpenSourceLicenses)) {
                 startActivity(new Intent(requireContext(), OpenSourceLicensesActivity.class));
             }else if(preference.equals(preferenceUserGuide)){
                 new CustomViewMessageDialog((AppCompatActivity) requireActivity(), getString(R.string.user_guide_info)).create().show();

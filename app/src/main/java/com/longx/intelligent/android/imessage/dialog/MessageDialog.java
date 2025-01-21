@@ -9,7 +9,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 /**
  * Created by LONG on 2024/1/14 at 10:07 PM.
  */
-public class MessageDialog extends AbstractDialog{
+public class MessageDialog extends AbstractDialog<MessageDialog> {
     private final String title;
     private final String message;
 
@@ -24,7 +24,7 @@ public class MessageDialog extends AbstractDialog{
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         builder
                 .setMessage(message)
                 .setPositiveButton("确定", null);

@@ -599,7 +599,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
 //                case BroadcastMedia.TYPE_IMAGE:
 //                    new Thread(() -> {
 //                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
-//                        operatingDialog.create().show();
+//                        operatingDialog.onCreate().show();
 //                        try {
 //                            PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity.getInstance(), broadcast, currentItem);
 //                            operatingDialog.dismiss();

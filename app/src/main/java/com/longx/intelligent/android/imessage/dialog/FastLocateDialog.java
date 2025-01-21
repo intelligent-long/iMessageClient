@@ -37,12 +37,12 @@ public class FastLocateDialog extends AbstractDialog{
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         return builder.create();
     }
 
     @Override
-    protected View createView(LayoutInflater layoutInflater) {
+    protected View onCreateView(LayoutInflater layoutInflater) {
         DialogFastLocateBinding binding = DialogFastLocateBinding.inflate(layoutInflater);
         showContent(binding);
         return binding.getRoot();

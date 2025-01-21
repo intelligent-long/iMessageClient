@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.longx.intelligent.android.imessage.util.UiUtil;
@@ -21,11 +23,13 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Created by LONG on 2024/1/8 at 9:20 PM.
  */
-public abstract class AbstractDialog {
+public abstract class AbstractDialog<T extends AbstractDialog<T>> {
     private final Activity activity;
     private final MaterialAlertDialogBuilder dialogBuilder;
     private AlertDialog dialog;
     private final ContextThemeWrapper dialogContext;
+    private Drawable defaultIcon;
+    private Drawable icon;
 
     public AbstractDialog(Activity activity) {
         this(activity, false);
@@ -49,20 +53,29 @@ public abstract class AbstractDialog {
         this.dialogContext = new ContextThemeWrapper(getActivity(), style);
     }
 
-    protected View createView(LayoutInflater layoutInflater){
+    protected View onCreateView(LayoutInflater layoutInflater){
         return null;
     }
 
-    protected abstract AlertDialog create(MaterialAlertDialogBuilder builder);
+    protected void onSetupIcon(MaterialAlertDialogBuilder builder, Drawable defaultIcon, Drawable icon){
+        if(icon != null){
+            builder.setIcon(icon);
+        }else if(defaultIcon != null){
+            builder.setIcon(defaultIcon);
+        }
+    }
 
-    public AbstractDialog create(){
+    protected abstract AlertDialog onCreate(MaterialAlertDialogBuilder builder);
+
+    public T create(){
         CountDownLatch countDownLatch = new CountDownLatch(1);
         activity.runOnUiThread(() -> {
-            View view = createView(activity.getLayoutInflater().cloneInContext(dialogContext));
+            View view = onCreateView(activity.getLayoutInflater().cloneInContext(dialogContext));
             if(view != null){
                 dialogBuilder.setView(view);
             }
-            dialog = create(dialogBuilder);
+            onSetupIcon(dialogBuilder, defaultIcon, icon);
+            dialog = onCreate(dialogBuilder);
             if (view != null) {
                 setAutoCancelInput(view);
             }
@@ -74,14 +87,14 @@ public abstract class AbstractDialog {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        return this;
+        return (T) this;
     }
 
-    public AbstractDialog show(){
+    public T show(){
         return show(null);
     }
 
-    public AbstractDialog show(ResultsYier yier) {
+    public T show(ResultsYier yier) {
         activity.runOnUiThread(() -> {
             try {
                 dialog.show();
@@ -90,7 +103,7 @@ public abstract class AbstractDialog {
             onDialogShowed();
             if(yier != null) yier.onResults();
         });
-        return this;
+        return (T) this;
     }
 
     protected void onDialogCreated() {
@@ -100,6 +113,26 @@ public abstract class AbstractDialog {
     }
 
     protected void onDialogShowed(){
+    }
+
+    public T setDefaultIcon(Drawable defaultIcon){
+        this.defaultIcon = defaultIcon;
+        return (T) this;
+    }
+
+    public T setIcon(Drawable icon){
+        this.icon = icon;
+        return (T) this;
+    }
+
+    public T setDefaultIcon(int defaultIconId){
+        this.defaultIcon = AppCompatResources.getDrawable(activity, defaultIconId);
+        return (T) this;
+    }
+
+    public T setIcon(int iconId){
+        this.icon = AppCompatResources.getDrawable(activity, iconId);
+        return (T) this;
     }
 
     @SuppressLint("ClickableViewAccessibility")

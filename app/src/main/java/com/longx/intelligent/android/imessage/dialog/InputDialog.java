@@ -21,8 +21,7 @@ import java.util.UUID;
 /**
  * Created by LONG on 2024/4/28 at 1:56 AM.
  */
-public class InputDialog extends AbstractDialog{
-    private final Drawable icon;
+public class InputDialog extends AbstractDialog<InputDialog> {
     private final String message;
     private final String hint;
     private final Integer inputType;
@@ -30,24 +29,19 @@ public class InputDialog extends AbstractDialog{
     private final InputButtonInfo positiveButtonInfo;
 
     public InputDialog(AppCompatActivity activity, String message, InputButtonInfo positiveButtonInfo) {
-        this(activity, null, message, null, null, positiveButtonInfo);
+        this(activity, message, null, null, positiveButtonInfo);
     }
 
     public InputDialog(AppCompatActivity activity, String message, String hint, InputButtonInfo positiveButtonInfo) {
-        this(activity, null, message, hint, null, positiveButtonInfo);
+        this(activity, message, hint, null, positiveButtonInfo);
     }
 
     public InputDialog(AppCompatActivity activity, String message, Integer inputType, InputButtonInfo positiveButtonInfo) {
-        this(activity, null, message, null, inputType, positiveButtonInfo);
+        this(activity, message, null, inputType, positiveButtonInfo);
     }
 
     public InputDialog(AppCompatActivity activity, String message, String hint, Integer inputType, InputButtonInfo positiveButtonInfo) {
-        this(activity, null, message, hint, inputType, positiveButtonInfo);
-    }
-
-    public InputDialog(AppCompatActivity activity, Drawable icon, String message, String hint, Integer inputType, InputButtonInfo positiveButtonInfo) {
         super(activity, true);
-        this.icon = icon;
         this.message = message;
         this.hint = hint;
         this.inputType = inputType;
@@ -55,9 +49,8 @@ public class InputDialog extends AbstractDialog{
     }
 
     @Override
-    protected AlertDialog create(MaterialAlertDialogBuilder builder) {
+    protected AlertDialog onCreate(MaterialAlertDialogBuilder builder) {
         builder.setTitle(uuid);
-        if(icon != null) builder.setIcon(icon);
         DialogInputBinding binding = DialogInputBinding.inflate(getActivity().getLayoutInflater());
         if(hint != null) binding.textInputEditText.setHint(hint);
         if(inputType != null) binding.textInputEditText.setInputType(inputType);
