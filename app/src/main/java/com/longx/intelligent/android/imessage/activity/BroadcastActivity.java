@@ -122,7 +122,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         }
         boolean startComment = getIntent().getBooleanExtra(ExtraKeys.DO_THAT_THING, false);
         if(startComment){
-            binding.commentInput.postDelayed(this::startComment, 900);
+            binding.commentInput.postDelayed(this::startComment, 700);
         }
     }
 
