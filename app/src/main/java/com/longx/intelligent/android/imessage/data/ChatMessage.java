@@ -62,9 +62,7 @@ public class ChatMessage implements Parcelable {
                         super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
-                                ErrorLogger.log("data.bytes()");
                                 byte[] bytes = data.bytes();
-                                ErrorLogger.log(bytes.length);
                                 String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, newMessage, bytes);
                                 newMessage.setImageFilePath(imageFilePath);
                                 Size imageSize = MediaHelper.getImageSize(bytes);

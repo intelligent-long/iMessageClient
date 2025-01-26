@@ -136,6 +136,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             }
         });
     }
+
     private RecyclerViewScrollDisabler scrollDisabler;
 
     public static class ItemData{
@@ -654,12 +655,19 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         chatMessages.forEach(chatMessage -> {
             if(chatMessage.getType() == ChatMessage.TYPE_IMAGE){
                 MediaType mediaType = MediaType.IMAGE;
-                Uri uri = Uri.fromFile(new File(chatMessage.getImageFilePath()));
-                mediaList.add(new Media(mediaType, uri));
+                ErrorLogger.log(chatMessage);
+                String imageFilePath = chatMessage.getImageFilePath();
+                if(imageFilePath != null) {
+                    Uri uri = Uri.fromFile(new File(imageFilePath));
+                    mediaList.add(new Media(mediaType, uri));
+                }
             }else if(chatMessage.getType() == ChatMessage.TYPE_VIDEO){
                 MediaType mediaType = MediaType.VIDEO;
-                Uri uri = Uri.fromFile(new File(chatMessage.getVideoFilePath()));
-                mediaList.add(new Media(mediaType, uri));
+                String videoFilePath = chatMessage.getVideoFilePath();
+                if(videoFilePath != null) {
+                    Uri uri = Uri.fromFile(new File(videoFilePath));
+                    mediaList.add(new Media(mediaType, uri));
+                }
             }
         });
         intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
