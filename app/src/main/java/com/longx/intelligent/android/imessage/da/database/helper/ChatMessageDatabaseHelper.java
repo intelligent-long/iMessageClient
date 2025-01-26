@@ -36,6 +36,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String VIDEO_DURATION = "video_duration";
         public static final String VOICE_FILE_PATH = "voice_file_path";
         public static final String VOICE_LISTENED = "voice_listened";
+        public static final String FULL_CONTENT_GOT = "full_content_got";
     }
 
     public ChatMessageDatabaseHelper(Context context, String channelImessageId, String imessageId) {
@@ -53,6 +54,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.TEXT + " VARCHAR,"
                 + TableChannelChatMessagesColumns.TIME + " DATETIME,"
                 + TableChannelChatMessagesColumns.VIEWED + " BOOLEAN,"
+                + TableChannelChatMessagesColumns.FULL_CONTENT_GOT + " BOOLEAN,"
                 + TableChannelChatMessagesColumns.IMAGE_FILE_PATH + " VARCHAR,"
                 + TableChannelChatMessagesColumns.FILE_NAME + " VARCHAR,"
                 + TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID + " VARCHAR,"

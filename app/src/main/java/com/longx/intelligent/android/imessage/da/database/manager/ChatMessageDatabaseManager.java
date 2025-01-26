@@ -69,6 +69,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT, chatMessage.getText());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME, chatMessage.getTime().getTime());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED, chatMessage.isViewed());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FULL_CONTENT_GOT, chatMessage.isFullContentGot());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH, chatMessage.getImageFilePath());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME, chatMessage.getFileName());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID, chatMessage.getUnsendMessageUuid());
@@ -103,6 +104,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String text = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
                 Date time = DatabaseUtil.getTime(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME);
                 Boolean viewed = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED);
+                Boolean fullContentGot = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FULL_CONTENT_GOT);
                 String imageFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH);
                 String fileName = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME);
                 String unsendMessageUuid = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID);
@@ -118,6 +120,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, null, null, null, null, unsendMessageUuid);
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
+                chatMessage.setFullContentGot(fullContentGot);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
                 chatMessage.setFileFilePath(fileFilePath);
@@ -197,7 +200,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public ChatMessage findNextChatMessage(Date time){
+    public ChatMessage findNext(Date time){
         openDatabaseIfClosed();
         try(Cursor cursor = getDatabase().query(((ChatMessageDatabaseHelper) getHelper()).getTableName(), null,
                 ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME + ">" + time.getTime(), null,
@@ -210,6 +213,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String text = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
                 Date timeFound = DatabaseUtil.getTime(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME);
                 Boolean viewed = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED);
+                Boolean fullContentGot = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FULL_CONTENT_GOT);
                 String fileName = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME);
                 String unsendMessageUuid = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID);
                 String imageFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH);
@@ -227,6 +231,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
+                chatMessage.setFullContentGot(fullContentGot);
                 chatMessage.setFileFilePath(fileFilePath);
                 chatMessage.setVideoFilePath(videoFilePath);
                 chatMessage.setVideoSize(new Size(videoWidth == null ? 0 : videoWidth, videoHeight == null ? 0 : videoHeight));
@@ -252,6 +257,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT, chatMessage.getText());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME, chatMessage.getTime().getTime());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED, chatMessage.isViewed());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FULL_CONTENT_GOT, chatMessage.isFullContentGot());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH, chatMessage.getImageFilePath());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME, chatMessage.getFileName());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID, chatMessage.getUnsendMessageUuid());
@@ -283,6 +289,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String text = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
                 Date time = DatabaseUtil.getTime(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME);
                 Boolean viewed = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED);
+                Boolean fullContentGot = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FULL_CONTENT_GOT);
                 String imageFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH);
                 String fileName = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME);
                 String unsendMessageUuid = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID);
@@ -298,6 +305,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 chatMessage = new ChatMessage(type == null ? -1 : type, uuidFound, from, to, time, text, fileName, null, null, null, null, unsendMessageUuid);
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
+                chatMessage.setFullContentGot(fullContentGot);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
                 chatMessage.setFileFilePath(fileFilePath);
@@ -327,6 +335,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String text = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TEXT);
                 Date time = DatabaseUtil.getTime(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.TIME);
                 Boolean viewed = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIEWED);
+                Boolean fullContentGot = DatabaseUtil.getBoolean(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FULL_CONTENT_GOT);
                 String imageFilePath = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_FILE_PATH);
                 String fileName = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_NAME);
                 String unsendMessageUuid = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID);
@@ -342,6 +351,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuidFound, from, to, time, text, fileName, null, null, null, null, unsendMessageUuid);
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
+                chatMessage.setFullContentGot(fullContentGot);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
                 chatMessage.setFileFilePath(fileFilePath);

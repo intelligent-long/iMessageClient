@@ -10,16 +10,21 @@ import android.util.Size;
 import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.imessage.da.privatefile.PrivateFilesAccessor;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.media.helper.MediaHelper;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChatApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.yier.ChatMessagesUpdateYier;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.ResultsYier;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,29 +37,43 @@ import retrofit2.Response;
  * Created by LONG on 2024/5/13 at 12:08 AM.
  */
 public class ChatMessage implements Parcelable {
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(9);
-    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+//    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    public static void mainDoOnNewChatMessage(ChatMessage chatMessage, Context context, ResultsYier resultsYier){
-        switch (chatMessage.getType()){
+    public static void mainDoOnNewMessage(ChatMessage newMessage, Context context, ResultsYier resultsYier){
+        newMessage.setViewed(false);
+        ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, newMessage.getOther(context));
+        chatMessageDatabaseManager.insertOrIgnore(newMessage);
+        GlobalYiersHolder.getYiers(ChatMessagesUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
+            chatMessageUpdateYiers.forEach(chatMessagesUpdateYier -> {
+                chatMessagesUpdateYier.onNewChatMessages(List.of(newMessage));
+            });
+        });
+        resultsYier.onResults();
+        executorService.execute(() -> fillMessageContent(newMessage, context, chatMessageDatabaseManager));
+    }
+
+    private static void fillMessageContent(ChatMessage newMessage, Context context, ChatMessageDatabaseManager chatMessageDatabaseManager) {
+        switch (newMessage.getType()){
             case TYPE_IMAGE:{
-                ChatApiCaller.fetchChatMessageImage(null, chatMessage.imageId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                ChatApiCaller.fetchMessageImage(null, newMessage.imageId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
                         super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
+                                ErrorLogger.log("data.bytes()");
                                 byte[] bytes = data.bytes();
-                                String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, chatMessage, bytes);
-                                chatMessage.setImageFilePath(imageFilePath);
+                                ErrorLogger.log(bytes.length);
+                                String imageFilePath = PrivateFilesAccessor.ChatImage.save(context, newMessage, bytes);
+                                newMessage.setImageFilePath(imageFilePath);
                                 Size imageSize = MediaHelper.getImageSize(bytes);
-                                chatMessage.setImageSize(imageSize);
-                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                                mainHandler.post(resultsYier::onResults);
+                                newMessage.setImageSize(imageSize);
+                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
                             } catch (IOException e) {
-                                mainHandler.post(() -> {
-                                    throw new RuntimeException(e);
-                                });
+                                MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
+                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
+                                throw new RuntimeException(e);
                             }
                         });
                     }
@@ -62,21 +81,20 @@ public class ChatMessage implements Parcelable {
                 break;
             }
             case TYPE_FILE:{
-                ChatApiCaller.fetchChatMessageFile(null, chatMessage.fileId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
+                ChatApiCaller.fetchMessageFile(null, newMessage.fileId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
                         super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();
-                                String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, chatMessage, bytes);
-                                chatMessage.setFileFilePath(chatFileFilePath);
-                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                                mainHandler.post(resultsYier::onResults);
+                                String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, newMessage, bytes);
+                                newMessage.setFileFilePath(chatFileFilePath);
+                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
                             } catch (IOException e) {
-                                mainHandler.post(() -> {
-                                    throw new RuntimeException(e);
-                                });
+                                MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
+                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
+                                throw new RuntimeException(e);
                             }
                         });
                     }
@@ -84,25 +102,24 @@ public class ChatMessage implements Parcelable {
                 break;
             }
             case TYPE_VIDEO:{
-                ChatApiCaller.fetchChatMessageVideo(null, chatMessage.videoId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                ChatApiCaller.fetchMessageVideo(null, newMessage.videoId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
                         super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();
-                                String chatVideoFilePath = PrivateFilesAccessor.ChatVideo.save(context, chatMessage, bytes);
-                                chatMessage.setVideoFilePath(chatVideoFilePath);
+                                String chatVideoFilePath = PrivateFilesAccessor.ChatVideo.save(context, newMessage, bytes);
+                                newMessage.setVideoFilePath(chatVideoFilePath);
                                 Size videoSize = MediaHelper.getVideoSize(chatVideoFilePath);
-                                chatMessage.setVideoSize(videoSize);
+                                newMessage.setVideoSize(videoSize);
                                 long videoDuration = MediaHelper.getVideoDuration(chatVideoFilePath);
-                                chatMessage.setVideoDuration(videoDuration);
-                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                                mainHandler.post(resultsYier::onResults);
+                                newMessage.setVideoDuration(videoDuration);
+                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
                             } catch (IOException e) {
-                                mainHandler.post(() -> {
-                                    throw new RuntimeException(e);
-                                });
+                                MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
+                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
+                                throw new RuntimeException(e);
                             }
                         });
                     }
@@ -110,43 +127,55 @@ public class ChatMessage implements Parcelable {
                 break;
             }
             case TYPE_VOICE:{
-                chatMessage.setVoiceListened(false);
-                ChatApiCaller.fetchChatMessageVoice(null, chatMessage.voiceId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                newMessage.setVoiceListened(false);
+                ChatApiCaller.fetchMessageVoice(null, newMessage.voiceId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
                         super.ok(data, raw, call);
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();
-                                String chatVoiceFilePath = PrivateFilesAccessor.ChatVoice.save(context, chatMessage, bytes);
-                                chatMessage.setVoiceFilePath(chatVoiceFilePath);
-                                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                                mainHandler.post(resultsYier::onResults);
+                                String chatVoiceFilePath = PrivateFilesAccessor.ChatVoice.save(context, newMessage, bytes);
+                                newMessage.setVoiceFilePath(chatVoiceFilePath);
+                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
                             } catch (IOException e) {
-                                mainHandler.post(() -> {
-                                    throw new RuntimeException(e);
-                                });
+                                MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
+                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
+                                throw new RuntimeException(e);
                             }
                         });
                     }
                 });
                 break;
             }
+            case TYPE_UNSEND:{
+                executorService.execute(() -> {
+                    ChatMessage toUnsendMessage = chatMessageDatabaseManager.findOne(newMessage.unsendMessageUuid);
+                    chatMessageDatabaseManager.delete(newMessage.unsendMessageUuid);
+                    GlobalYiersHolder.getYiers(ChatMessagesUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
+                        chatMessageUpdateYiers.forEach(chatMessagesUpdateYier -> {
+                            chatMessagesUpdateYier.onUnsendChatMessages(List.of(newMessage), List.of(toUnsendMessage));
+                        });
+                    });
+                    onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
+                });
+                break;
+            }
             default:{
-                commonDoOfMainDoOnNewChatMessage(chatMessage, context);
-                resultsYier.onResults();
+                executorService.execute(() -> onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager));
                 break;
             }
         }
     }
 
-    private static synchronized void commonDoOfMainDoOnNewChatMessage(ChatMessage chatMessage, Context context) {
-        String other = chatMessage.getOther(context);
-        ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
-        chatMessageDatabaseManager.insertOrIgnore(chatMessage);
-        if(chatMessage.type == TYPE_UNSEND){
-            chatMessageDatabaseManager.delete(chatMessage.unsendMessageUuid);
-        }
+    private static synchronized void onMessageFullContentGot(boolean got, ChatMessage message, Context context, ChatMessageDatabaseManager chatMessageDatabaseManager) {
+        message.setFullContentGot(got);
+        chatMessageDatabaseManager.update(message);
+        GlobalYiersHolder.getYiers(ChatMessagesUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
+            chatMessageUpdateYiers.forEach(chatMessagesUpdateYier -> {
+                chatMessagesUpdateYier.onChatMessagesUpdated(List.of(message));
+            });
+        });
     }
 
     public static final int TYPE_TEXT = 0;
@@ -189,6 +218,8 @@ public class ChatMessage implements Parcelable {
     private String voiceFilePath;
     @JsonIgnore
     private Boolean voiceListened;
+    @JsonIgnore
+    private Boolean fullContentGot;
 
     public ChatMessage() {
     }
@@ -349,6 +380,14 @@ public class ChatMessage implements Parcelable {
         this.videoDuration = videoDuration;
     }
 
+    public Boolean isFullContentGot() {
+        return fullContentGot;
+    }
+
+    public void setFullContentGot(Boolean fullContentGot) {
+        this.fullContentGot = fullContentGot;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -378,6 +417,8 @@ public class ChatMessage implements Parcelable {
         showTime = tmpShowTime == 0 ? null : tmpShowTime == 1;
         byte tmpViewed = in.readByte();
         viewed = tmpViewed == 0 ? null : tmpViewed == 1;
+        byte tmpFullContentGot = in.readByte();
+        fullContentGot = tmpFullContentGot == 0 ? null : tmpFullContentGot == 1;
         if(type == TYPE_IMAGE) {
             imageFilePath = in.readString();
             imageSize = in.readSize();
@@ -428,6 +469,7 @@ public class ChatMessage implements Parcelable {
         dest.writeString(voiceId);
         dest.writeByte((byte) (showTime == null ? 0 : showTime ? 1 : 2));
         dest.writeByte((byte) (viewed == null ? 0 : viewed ? 1 : 2));
+        dest.writeByte((byte) (fullContentGot == null ? 0 : fullContentGot ? 1 : 2));
         if(type == TYPE_IMAGE) {
             dest.writeString(imageFilePath);
             dest.writeSize(imageSize);
@@ -470,6 +512,7 @@ public class ChatMessage implements Parcelable {
                 ", videoDuration=" + videoDuration +
                 ", voiceFilePath='" + voiceFilePath + '\'' +
                 ", voiceListened=" + voiceListened +
+                ", fullContentGot=" + fullContentGot +
                 '}';
     }
 }

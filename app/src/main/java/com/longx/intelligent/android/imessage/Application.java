@@ -12,7 +12,7 @@ import com.longx.intelligent.android.imessage.service.ServerMessageService;
  * Created by LONG on 2024/3/27 at 7:15 PM.
  */
 public class Application extends android.app.Application {
-    private static Application application;
+    public static Application application;
     {
         application = this;
     }

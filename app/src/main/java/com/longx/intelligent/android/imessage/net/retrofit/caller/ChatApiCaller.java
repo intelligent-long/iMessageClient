@@ -13,7 +13,6 @@ import com.longx.intelligent.android.imessage.data.request.SendTextChatMessagePo
 import com.longx.intelligent.android.imessage.data.request.SendVideoChatMessagePostBody;
 import com.longx.intelligent.android.imessage.data.request.SendVoiceChatMessagePostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
-import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.ChatApi;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.FileUtil;
@@ -39,33 +38,27 @@ public class ChatApiCaller extends RetrofitApiCaller{
         return getApiImplementation(ChatApi.class);
     }
 
-    public static CompletableCall<OperationData> fetchAllNewChatMessages(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchAllNewChatMessages();
+    public static CompletableCall<OperationData> fetchAllUnviewedMessages(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllUnviewedMessages();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> viewNewMessage(LifecycleOwner lifecycleOwner, String messageUuid, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().viewNewMessage(messageUuid);
+    public static CompletableCall<OperationData> viewMessage(LifecycleOwner lifecycleOwner, String messageUuid, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().viewMessage(messageUuid);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationStatus> viewAllNewMessage(LifecycleOwner lifecycleOwner, String other, BaseYier<OperationStatus> yier){
-        CompletableCall<OperationStatus> call = getApiImplementation().viewAllNewMessage(other);
+    public static CompletableCall<OperationData> sendTextMessage(LifecycleOwner lifecycleOwner, SendTextChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().sendTextMessage(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> sendTextChatMessage(LifecycleOwner lifecycleOwner, SendTextChatMessagePostBody postBody, BaseCommonYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().sendTextChatMessage(postBody);
-        call.enqueue(lifecycleOwner, yier);
-        return call;
-    }
-
-    public static CompletableCall<OperationData> sendImageChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri imageUri,
-                                                                      SendImageChatMessagePostBody postBody, String fileName,
-                                                                      BaseCommonYier<OperationData> yier, ProgressYier progressYier){
+    public static CompletableCall<OperationData> sendImageMessage(LifecycleOwner lifecycleOwner, Context context, Uri imageUri,
+                                                                  SendImageChatMessagePostBody postBody, String fileName,
+                                                                  BaseCommonYier<OperationData> yier, ProgressYier progressYier){
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
         try {
@@ -117,20 +110,20 @@ public class ChatApiCaller extends RetrofitApiCaller{
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", fileName, progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-        CompletableCall<OperationData> call = getApiImplementation().sendImageChatMessage(filePart, metadataRequestBody);
+        CompletableCall<OperationData> call = getApiImplementation().sendImageMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<ResponseBody> fetchChatMessageImage(LifecycleOwner lifecycleOwner, String imageId, BaseYier<ResponseBody> yier){
-        CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageImage(imageId);
+    public static CompletableCall<ResponseBody> fetchMessageImage(LifecycleOwner lifecycleOwner, String imageId, BaseYier<ResponseBody> yier){
+        CompletableCall<ResponseBody> call = getApiImplementation().fetchMessageImage(imageId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> sendFileChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri fileUri,
-                                                                     SendFileChatMessagePostBody postBody,
-                                                                     BaseCommonYier<OperationData> yier, ProgressYier progressYier) {
+    public static CompletableCall<OperationData> sendFileMessage(LifecycleOwner lifecycleOwner, Context context, Uri fileUri,
+                                                                 SendFileChatMessagePostBody postBody,
+                                                                 BaseCommonYier<OperationData> yier, ProgressYier progressYier) {
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
         try {
@@ -177,20 +170,20 @@ public class ChatApiCaller extends RetrofitApiCaller{
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", fileName, progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-        CompletableCall<OperationData> call = getApiImplementation().sendFileChatMessage(filePart, metadataRequestBody);
+        CompletableCall<OperationData> call = getApiImplementation().sendFileMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<ResponseBody> fetchChatMessageFile(LifecycleOwner lifecycleOwner, String fileId, BaseYier<ResponseBody> yier){
+    public static CompletableCall<ResponseBody> fetchMessageFile(LifecycleOwner lifecycleOwner, String fileId, BaseYier<ResponseBody> yier){
         CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageFile(fileId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> sendVideoChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri videoUri,
-                                                                     SendVideoChatMessagePostBody postBody,
-                                                                     BaseCommonYier<OperationData> yier, ProgressYier progressYier){
+    public static CompletableCall<OperationData> sendVideoMessage(LifecycleOwner lifecycleOwner, Context context, Uri videoUri,
+                                                                  SendVideoChatMessagePostBody postBody,
+                                                                  BaseCommonYier<OperationData> yier, ProgressYier progressYier){
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
         try {
@@ -237,20 +230,20 @@ public class ChatApiCaller extends RetrofitApiCaller{
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("video", fileName, progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-        CompletableCall<OperationData> call = getApiImplementation().sendVideoChatMessage(filePart, metadataRequestBody);
+        CompletableCall<OperationData> call = getApiImplementation().sendVideoMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<ResponseBody> fetchChatMessageVideo(LifecycleOwner lifecycleOwner, String videoId, BaseYier<ResponseBody> yier){
-        CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageVideo(videoId);
+    public static CompletableCall<ResponseBody> fetchMessageVideo(LifecycleOwner lifecycleOwner, String videoId, BaseYier<ResponseBody> yier){
+        CompletableCall<ResponseBody> call = getApiImplementation().fetchMessageVideo(videoId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> sendVoiceChatMessage(LifecycleOwner lifecycleOwner, Context context, Uri voiceUri,
-                                                                      SendVoiceChatMessagePostBody postBody,
-                                                                      BaseCommonYier<OperationData> yier, ProgressYier progressYier){
+    public static CompletableCall<OperationData> sendVoiceMessage(LifecycleOwner lifecycleOwner, Context context, Uri voiceUri,
+                                                                  SendVoiceChatMessagePostBody postBody,
+                                                                  BaseCommonYier<OperationData> yier, ProgressYier progressYier){
         ContentResolver contentResolver = context.getContentResolver();
         InputStream inputStream;
         try {
@@ -297,19 +290,19 @@ public class ChatApiCaller extends RetrofitApiCaller{
         };
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("voice", fileName, progressRequestBody);
         RequestBody metadataRequestBody = RequestBody.create(MediaType.parse("application/json"), JsonUtil.toJson(postBody));
-        CompletableCall<OperationData> call = getApiImplementation().sendVoiceChatMessage(filePart, metadataRequestBody);
+        CompletableCall<OperationData> call = getApiImplementation().sendVoiceMessage(filePart, metadataRequestBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<ResponseBody> fetchChatMessageVoice(LifecycleOwner lifecycleOwner, String voiceId, BaseYier<ResponseBody> yier){
-        CompletableCall<ResponseBody> call = getApiImplementation().fetchChatMessageVoice(voiceId);
+    public static CompletableCall<ResponseBody> fetchMessageVoice(LifecycleOwner lifecycleOwner, String voiceId, BaseYier<ResponseBody> yier){
+        CompletableCall<ResponseBody> call = getApiImplementation().fetchMessageVoice(voiceId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
 
-    public static CompletableCall<OperationData> unsendChatMessage(LifecycleOwner lifecycleOwner, String receiver, String chatMessageId, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().unsendChatMessage(receiver, chatMessageId);
+    public static CompletableCall<OperationData> unsendMessage(LifecycleOwner lifecycleOwner, String receiver, String chatMessageId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().unsendMessage(receiver, chatMessageId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

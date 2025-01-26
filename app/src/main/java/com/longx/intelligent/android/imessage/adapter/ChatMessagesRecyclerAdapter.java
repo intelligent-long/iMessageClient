@@ -157,6 +157,13 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         public int hashCode() {
             return Objects.hash(chatMessage);
         }
+
+        @Override
+        public String toString() {
+            return "ItemData{" +
+                    "chatMessage=" + chatMessage +
+                    '}';
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -177,7 +184,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        //Yier
+        //Yiers
         setupYiers(holder, position);
         //时间
         if(Boolean.TRUE.equals(itemData.chatMessage.isShowTime())) {
@@ -187,6 +194,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }else {
             holder.binding.time.setVisibility(View.GONE);
         }
+        Boolean fullContentGot = itemData.chatMessage.isFullContentGot();
         //发送还是接收
         if(itemData.chatMessage.isSelfSender(activity)){
             holder.binding.layoutReceive.setVisibility(View.GONE);
@@ -216,96 +224,120 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarSend);
             }
-            //不同消息类型
-            switch (itemData.chatMessage.getType()){
-                case ChatMessage.TYPE_TEXT:{
-                    holder.binding.layoutTextSend.setVisibility(View.VISIBLE);
-                    holder.binding.imageSend.setVisibility(View.GONE);
-                    holder.binding.layoutFileSend.setVisibility(View.GONE);
-                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarSend.setVisibility(View.VISIBLE);
-                    holder.binding.textSend.setText(itemData.chatMessage.getText());
-                    break;
-                }
-                case ChatMessage.TYPE_IMAGE:{
-                    holder.binding.layoutTextSend.setVisibility(View.GONE);
-                    holder.binding.imageSend.setVisibility(View.VISIBLE);
-                    holder.binding.layoutFileSend.setVisibility(View.GONE);
-                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarSend.setVisibility(View.VISIBLE);
-                    setupImageViewSize(holder.binding.imageSend, itemData.chatMessage.getImageSize());
-                    String imageFilePath = itemData.chatMessage.getImageFilePath();
-                    GlideApp.with(activity.getApplicationContext())
-                            .load(new File(imageFilePath))
-                            .apply(requestOptions)
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .into(holder.binding.imageSend);
-                    break;
-                }
-                case ChatMessage.TYPE_FILE:{
-                    holder.binding.layoutTextSend.setVisibility(View.GONE);
-                    holder.binding.imageSend.setVisibility(View.GONE);
-                    holder.binding.layoutFileSend.setVisibility(View.VISIBLE);
-                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarSend.setVisibility(View.VISIBLE);
-                    holder.binding.fileNameSend.setText(itemData.chatMessage.getFileName());
-                    holder.binding.fileSizeSend.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
-                    break;
-                }
-                case ChatMessage.TYPE_VIDEO:{
-                    holder.binding.layoutTextSend.setVisibility(View.GONE);
-                    holder.binding.imageSend.setVisibility(View.GONE);
-                    holder.binding.layoutFileSend.setVisibility(View.GONE);
-                    holder.binding.layoutVideoSend.setVisibility(View.VISIBLE);
-                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarSend.setVisibility(View.VISIBLE);
-                    setupImageViewSize(holder.binding.videoThumbnailSend, itemData.chatMessage.getVideoSize());
-                    GlideApp
-                            .with(activity.getApplicationContext())
-                            .load(itemData.chatMessage.getVideoFilePath())
-                            .apply(requestOptions)
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .into(holder.binding.videoThumbnailSend);
-                    if(itemData.chatMessage.getVideoDuration() != null) {
-                        holder.binding.videoDurationSend.setText(TimeUtil.formatTimeToHHMMSS(itemData.chatMessage.getVideoDuration()));
+            if(fullContentGot == null){
+                holder.binding.layoutMessageContentLoadSend.setVisibility(View.VISIBLE);
+                holder.binding.messageContentLoadingIndicatorSend.setVisibility(View.VISIBLE);
+                holder.binding.messageContentLoadFailedTextSend.setVisibility(View.GONE);
+                holder.binding.layoutMessageSend.setVisibility(View.GONE);
+                holder.binding.unsendSelf.setVisibility(View.GONE);
+                holder.binding.unsendOther.setVisibility(View.GONE);
+            }else if(!fullContentGot){
+                holder.binding.layoutMessageContentLoadSend.setVisibility(View.VISIBLE);
+                holder.binding.messageContentLoadingIndicatorSend.setVisibility(View.GONE);
+                holder.binding.messageContentLoadFailedTextSend.setVisibility(View.VISIBLE);
+                holder.binding.layoutMessageSend.setVisibility(View.GONE);
+                holder.binding.unsendSelf.setVisibility(View.GONE);
+                holder.binding.unsendOther.setVisibility(View.GONE);
+            }else {
+                //不同消息类型
+                holder.binding.layoutMessageContentLoadSend.setVisibility(View.GONE);
+                holder.binding.layoutMessageSend.setVisibility(View.VISIBLE);
+                switch (itemData.chatMessage.getType()) {
+                    case ChatMessage.TYPE_TEXT: {
+                        holder.binding.layoutTextSend.setVisibility(View.VISIBLE);
+                        holder.binding.imageSend.setVisibility(View.GONE);
+                        holder.binding.layoutFileSend.setVisibility(View.GONE);
+                        holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarSend.setVisibility(View.VISIBLE);
+                        holder.binding.textSend.setText(itemData.chatMessage.getText());
+                        break;
                     }
-                    break;
-                }
-                case ChatMessage.TYPE_VOICE:{
-                    holder.binding.layoutTextSend.setVisibility(View.GONE);
-                    holder.binding.imageSend.setVisibility(View.GONE);
-                    holder.binding.layoutFileSend.setVisibility(View.GONE);
-                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceSend.setVisibility(View.VISIBLE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarSend.setVisibility(View.VISIBLE);
-                    long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
-                    holder.binding.voiceTimeSend.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
-                    if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
-                        if(chatVoicePlayer.isPaused()){
-                            holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
-                            holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
-                            holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
-                            holder.binding.continueVoicePlaybackSend.setVisibility(View.VISIBLE);
-                            holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
-                        }else if (chatVoicePlayer.isPlaying()) {
-                            holder.binding.voiceSendIcon.setVisibility(View.GONE);
-                            holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.VISIBLE);
-                            holder.binding.voiceSendPlayingSwitchingImages.startAnimating();
-                            holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
-                            holder.binding.pauseVoicePlaybackSend.setVisibility(View.VISIBLE);
+                    case ChatMessage.TYPE_IMAGE: {
+                        holder.binding.layoutTextSend.setVisibility(View.GONE);
+                        holder.binding.imageSend.setVisibility(View.VISIBLE);
+                        holder.binding.layoutFileSend.setVisibility(View.GONE);
+                        holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarSend.setVisibility(View.VISIBLE);
+                        setupImageViewSize(holder.binding.imageSend, itemData.chatMessage.getImageSize());
+                        String imageFilePath = itemData.chatMessage.getImageFilePath();
+                        GlideApp.with(activity.getApplicationContext())
+                                .load(new File(imageFilePath))
+                                .apply(requestOptions)
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(holder.binding.imageSend);
+                        break;
+                    }
+                    case ChatMessage.TYPE_FILE: {
+                        holder.binding.layoutTextSend.setVisibility(View.GONE);
+                        holder.binding.imageSend.setVisibility(View.GONE);
+                        holder.binding.layoutFileSend.setVisibility(View.VISIBLE);
+                        holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarSend.setVisibility(View.VISIBLE);
+                        holder.binding.fileNameSend.setText(itemData.chatMessage.getFileName());
+                        holder.binding.fileSizeSend.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
+                        break;
+                    }
+                    case ChatMessage.TYPE_VIDEO: {
+                        holder.binding.layoutTextSend.setVisibility(View.GONE);
+                        holder.binding.imageSend.setVisibility(View.GONE);
+                        holder.binding.layoutFileSend.setVisibility(View.GONE);
+                        holder.binding.layoutVideoSend.setVisibility(View.VISIBLE);
+                        holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarSend.setVisibility(View.VISIBLE);
+                        setupImageViewSize(holder.binding.videoThumbnailSend, itemData.chatMessage.getVideoSize());
+                        GlideApp
+                                .with(activity.getApplicationContext())
+                                .load(itemData.chatMessage.getVideoFilePath())
+                                .apply(requestOptions)
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(holder.binding.videoThumbnailSend);
+                        if (itemData.chatMessage.getVideoDuration() != null) {
+                            holder.binding.videoDurationSend.setText(TimeUtil.formatTimeToHHMMSS(itemData.chatMessage.getVideoDuration()));
+                        }
+                        break;
+                    }
+                    case ChatMessage.TYPE_VOICE: {
+                        holder.binding.layoutTextSend.setVisibility(View.GONE);
+                        holder.binding.imageSend.setVisibility(View.GONE);
+                        holder.binding.layoutFileSend.setVisibility(View.GONE);
+                        holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceSend.setVisibility(View.VISIBLE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarSend.setVisibility(View.VISIBLE);
+                        long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
+                        holder.binding.voiceTimeSend.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
+                        if (Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
+                            if (chatVoicePlayer.isPaused()) {
+                                holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
+                                holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
+                                holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
+                                holder.binding.continueVoicePlaybackSend.setVisibility(View.VISIBLE);
+                                holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
+                            } else if (chatVoicePlayer.isPlaying()) {
+                                holder.binding.voiceSendIcon.setVisibility(View.GONE);
+                                holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.VISIBLE);
+                                holder.binding.voiceSendPlayingSwitchingImages.startAnimating();
+                                holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
+                                holder.binding.pauseVoicePlaybackSend.setVisibility(View.VISIBLE);
+                            } else {
+                                holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
+                                holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
+                                holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
+                                holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
+                                holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
+                            }
                         } else {
                             holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
                             holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
@@ -313,25 +345,20 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
                             holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
                         }
-                    }else {
-                        holder.binding.voiceSendIcon.setVisibility(View.VISIBLE);
-                        holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.GONE);
-                        holder.binding.voiceSendPlayingSwitchingImages.stopAnimating();
-                        holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
-                        holder.binding.pauseVoicePlaybackSend.setVisibility(View.GONE);
+                        break;
                     }
-                    break;
-                }
-                case ChatMessage.TYPE_UNSEND:{
-                    holder.binding.layoutTextSend.setVisibility(View.GONE);
-                    holder.binding.imageSend.setVisibility(View.GONE);
-                    holder.binding.layoutFileSend.setVisibility(View.GONE);
-                    holder.binding.layoutVideoSend.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceSend.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.VISIBLE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarSend.setVisibility(View.GONE);
-                    break;
+                    case ChatMessage.TYPE_UNSEND: {
+                        holder.binding.layoutTextSend.setVisibility(View.GONE);
+                        holder.binding.imageSend.setVisibility(View.GONE);
+                        holder.binding.layoutFileSend.setVisibility(View.GONE);
+                        holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.VISIBLE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarSend.setVisibility(View.GONE);
+                        holder.binding.layoutMessageContentLoadSend.setVisibility(View.GONE);
+                        break;
+                    }
                 }
             }
         }else {
@@ -350,96 +377,120 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarReceive);
             }
-            //不同消息类型
-            switch (itemData.chatMessage.getType()){
-                case ChatMessage.TYPE_TEXT:{
-                    holder.binding.layoutTextReceive.setVisibility(View.VISIBLE);
-                    holder.binding.imageReceive.setVisibility(View.GONE);
-                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarReceive.setVisibility(View.VISIBLE);
-                    holder.binding.textReceive.setText(itemData.chatMessage.getText());
-                    break;
-                }
-                case ChatMessage.TYPE_IMAGE:{
-                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
-                    holder.binding.imageReceive.setVisibility(View.VISIBLE);
-                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarReceive.setVisibility(View.VISIBLE);
-                    setupImageViewSize(holder.binding.imageReceive, itemData.chatMessage.getImageSize());
-                    String imageFilePath = itemData.chatMessage.getImageFilePath();
-                    GlideApp.with(activity.getApplicationContext())
-                            .load(new File(imageFilePath))
-                            .apply(requestOptions)
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .into(holder.binding.imageReceive);
-                    break;
-                }
-                case ChatMessage.TYPE_FILE:{
-                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
-                    holder.binding.imageReceive.setVisibility(View.GONE);
-                    holder.binding.layoutFileReceive.setVisibility(View.VISIBLE);
-                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarReceive.setVisibility(View.VISIBLE);
-                    holder.binding.fileNameReceive.setText(itemData.chatMessage.getFileName());
-                    holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
-                    break;
-                }
-                case ChatMessage.TYPE_VIDEO:{
-                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
-                    holder.binding.imageReceive.setVisibility(View.GONE);
-                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVideoReceive.setVisibility(View.VISIBLE);
-                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarReceive.setVisibility(View.VISIBLE);
-                    setupImageViewSize(holder.binding.videoThumbnailReceive, itemData.chatMessage.getVideoSize());
-                    GlideApp
-                            .with(activity.getApplicationContext())
-                            .load(itemData.chatMessage.getVideoFilePath())
-                            .apply(requestOptions)
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .into(holder.binding.videoThumbnailReceive);
-                    if(itemData.chatMessage.getVideoDuration() != null) {
-                        holder.binding.videoDurationReceive.setText(TimeUtil.formatTimeToHHMMSS(itemData.chatMessage.getVideoDuration()));
+            if(fullContentGot == null){
+                holder.binding.layoutMessageContentLoadReceive.setVisibility(View.VISIBLE);
+                holder.binding.messageContentLoadingIndicatorReceive.setVisibility(View.VISIBLE);
+                holder.binding.messageContentLoadFailedTextReceive.setVisibility(View.GONE);
+                holder.binding.layoutMessageReceive.setVisibility(View.GONE);
+                holder.binding.unsendSelf.setVisibility(View.GONE);
+                holder.binding.unsendOther.setVisibility(View.GONE);
+            }else if(!fullContentGot){
+                holder.binding.layoutMessageContentLoadReceive.setVisibility(View.VISIBLE);
+                holder.binding.messageContentLoadingIndicatorReceive.setVisibility(View.GONE);
+                holder.binding.messageContentLoadFailedTextReceive.setVisibility(View.VISIBLE);
+                holder.binding.layoutMessageReceive.setVisibility(View.GONE);
+                holder.binding.unsendSelf.setVisibility(View.GONE);
+                holder.binding.unsendOther.setVisibility(View.GONE);
+            }else {
+                //不同消息类型
+                holder.binding.layoutMessageContentLoadReceive.setVisibility(View.GONE);
+                holder.binding.layoutMessageReceive.setVisibility(View.VISIBLE);
+                switch (itemData.chatMessage.getType()) {
+                    case ChatMessage.TYPE_TEXT: {
+                        holder.binding.layoutTextReceive.setVisibility(View.VISIBLE);
+                        holder.binding.imageReceive.setVisibility(View.GONE);
+                        holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarReceive.setVisibility(View.VISIBLE);
+                        holder.binding.textReceive.setText(itemData.chatMessage.getText());
+                        break;
                     }
-                    break;
-                }
-                case ChatMessage.TYPE_VOICE:{
-                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
-                    holder.binding.imageReceive.setVisibility(View.GONE);
-                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceReceive.setVisibility(View.VISIBLE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.GONE);
-                    holder.binding.avatarReceive.setVisibility(View.VISIBLE);
-                    long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
-                    holder.binding.voiceTimeReceive.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
-                    if(Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
-                        if(chatVoicePlayer.isPaused()){
-                            holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
-                            holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
-                            holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
-                            holder.binding.continueVoicePlaybackReceive.setVisibility(View.VISIBLE);
-                            holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
-                        }else if (chatVoicePlayer.isPlaying()) {
-                            holder.binding.voiceReceiveIcon.setVisibility(View.GONE);
-                            holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.VISIBLE);
-                            holder.binding.voiceReceivePlayingSwitchingImages.startAnimating();
-                            holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
-                            holder.binding.pauseVoicePlaybackReceive.setVisibility(View.VISIBLE);
+                    case ChatMessage.TYPE_IMAGE: {
+                        holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                        holder.binding.imageReceive.setVisibility(View.VISIBLE);
+                        holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarReceive.setVisibility(View.VISIBLE);
+                        setupImageViewSize(holder.binding.imageReceive, itemData.chatMessage.getImageSize());
+                        String imageFilePath = itemData.chatMessage.getImageFilePath();
+                        GlideApp.with(activity.getApplicationContext())
+                                .load(new File(imageFilePath))
+                                .apply(requestOptions)
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(holder.binding.imageReceive);
+                        break;
+                    }
+                    case ChatMessage.TYPE_FILE: {
+                        holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                        holder.binding.imageReceive.setVisibility(View.GONE);
+                        holder.binding.layoutFileReceive.setVisibility(View.VISIBLE);
+                        holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarReceive.setVisibility(View.VISIBLE);
+                        holder.binding.fileNameReceive.setText(itemData.chatMessage.getFileName());
+                        holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
+                        break;
+                    }
+                    case ChatMessage.TYPE_VIDEO: {
+                        holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                        holder.binding.imageReceive.setVisibility(View.GONE);
+                        holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVideoReceive.setVisibility(View.VISIBLE);
+                        holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarReceive.setVisibility(View.VISIBLE);
+                        setupImageViewSize(holder.binding.videoThumbnailReceive, itemData.chatMessage.getVideoSize());
+                        GlideApp
+                                .with(activity.getApplicationContext())
+                                .load(itemData.chatMessage.getVideoFilePath())
+                                .apply(requestOptions)
+                                .transition(DrawableTransitionOptions.withCrossFade())
+                                .into(holder.binding.videoThumbnailReceive);
+                        if (itemData.chatMessage.getVideoDuration() != null) {
+                            holder.binding.videoDurationReceive.setText(TimeUtil.formatTimeToHHMMSS(itemData.chatMessage.getVideoDuration()));
+                        }
+                        break;
+                    }
+                    case ChatMessage.TYPE_VOICE: {
+                        holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                        holder.binding.imageReceive.setVisibility(View.GONE);
+                        holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceReceive.setVisibility(View.VISIBLE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.avatarReceive.setVisibility(View.VISIBLE);
+                        long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
+                        holder.binding.voiceTimeReceive.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
+                        if (Objects.equals(chatVoicePlayer.getId(), itemData.chatMessage.getUuid())) {
+                            if (chatVoicePlayer.isPaused()) {
+                                holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
+                                holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
+                                holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
+                                holder.binding.continueVoicePlaybackReceive.setVisibility(View.VISIBLE);
+                                holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
+                            } else if (chatVoicePlayer.isPlaying()) {
+                                holder.binding.voiceReceiveIcon.setVisibility(View.GONE);
+                                holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.VISIBLE);
+                                holder.binding.voiceReceivePlayingSwitchingImages.startAnimating();
+                                holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
+                                holder.binding.pauseVoicePlaybackReceive.setVisibility(View.VISIBLE);
+                            } else {
+                                holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
+                                holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
+                                holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
+                                holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
+                                holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
+                            }
                         } else {
                             holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
                             holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
@@ -447,30 +498,24 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
                             holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
                         }
-                    }else {
-                        holder.binding.voiceReceiveIcon.setVisibility(View.VISIBLE);
-                        holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.GONE);
-                        holder.binding.voiceReceivePlayingSwitchingImages.stopAnimating();
-                        holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
-                        holder.binding.pauseVoicePlaybackReceive.setVisibility(View.GONE);
+                        if (itemData.chatMessage.isVoiceListened() == null || itemData.chatMessage.isVoiceListened()) {
+                            holder.binding.voiceNotListenedBadge.setVisibility(View.GONE);
+                        } else {
+                            holder.binding.voiceNotListenedBadge.setVisibility(View.VISIBLE);
+                        }
+                        break;
                     }
-                    if (itemData.chatMessage.isVoiceListened() == null || itemData.chatMessage.isVoiceListened()) {
-                        holder.binding.voiceNotListenedBadge.setVisibility(View.GONE);
-                    } else {
-                        holder.binding.voiceNotListenedBadge.setVisibility(View.VISIBLE);
+                    case ChatMessage.TYPE_UNSEND: {
+                        holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                        holder.binding.imageReceive.setVisibility(View.GONE);
+                        holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.VISIBLE);
+                        holder.binding.avatarReceive.setVisibility(View.GONE);
+                        break;
                     }
-                    break;
-                }
-                case ChatMessage.TYPE_UNSEND:{
-                    holder.binding.layoutTextReceive.setVisibility(View.GONE);
-                    holder.binding.imageReceive.setVisibility(View.GONE);
-                    holder.binding.layoutFileReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVideoReceive.setVisibility(View.GONE);
-                    holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
-                    holder.binding.unsendSelf.setVisibility(View.GONE);
-                    holder.binding.unsendOther.setVisibility(View.VISIBLE);
-                    holder.binding.avatarReceive.setVisibility(View.GONE);
-                    break;
                 }
             }
         }
@@ -511,10 +556,6 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                 openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
             });
-        });
-        popupWindow.setOnMessageUnsentYier((unsendChatMessage, toUnsendMessage) -> {
-            addItemAndShow(unsendChatMessage);
-            removeItemAndShow(toUnsendMessage);
         });
         View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
             UiUtil.hideKeyboard(activity);
@@ -719,7 +760,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         ItemData itemData = new ItemData(chatMessage);
         int index = itemDataList.indexOf(itemData);
         itemDataList.remove(index);
-        notifyItemRemoved(index);
+        activity.runOnUiThread(() -> notifyItemRemoved(index));
     }
 
     public synchronized void addAllToStartAndShow(List<ChatMessage> chatMessages){
@@ -744,10 +785,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         if(state != null) SharedPreferencesAccessor.ChatPref.saveChatVoicePlayerState(activity, state);
     }
 
-    public void indicateLocation(String locatedUuid) {
+    public void indicateLocation(String locatedMessageUuid) {
         for (int i = 0; i < itemDataList.size(); i++) {
-            if(itemDataList.get(i).chatMessage.getUuid().equals(locatedUuid)){
-                indicateLocationUuid = locatedUuid;
+            if(itemDataList.get(i).chatMessage.getUuid().equals(locatedMessageUuid)){
+                indicateLocationUuid = locatedMessageUuid;
                 notifyItemChanged(i);
                 break;
             }
@@ -763,6 +804,16 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 }
             }
             indicateLocationUuid = null;
+        }
+    }
+
+    public void notifyItemChanged(ChatMessage chatMessage){
+        for (int i = 0; i < itemDataList.size(); i++) {
+            if(itemDataList.get(i).chatMessage.getUuid().equals(chatMessage.getUuid())){
+                itemDataList.set(i, new ItemData(chatMessage));
+                notifyItemChanged(i);
+                break;
+            }
         }
     }
 

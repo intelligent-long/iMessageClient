@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.longx.intelligent.android.imessage.Application;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.da.FileHelper;
 import com.longx.intelligent.android.imessage.da.ProgressCallback;
@@ -32,6 +33,9 @@ import retrofit2.Retrofit;
 public abstract class RetrofitApiCaller {
 
     protected static <T> T getApiImplementation(Class<T> clazz){
+        if(RetrofitCreator.retrofit == null){
+            RetrofitCreator.create(Application.application);
+        }
         return RetrofitCreator.retrofit.create(clazz);
     }
 

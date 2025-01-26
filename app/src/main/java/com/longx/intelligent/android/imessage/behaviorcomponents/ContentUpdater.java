@@ -177,42 +177,35 @@ public class ContentUpdater {
     }
 
     public static void updateChatMessages(Context context, ResultsYier resultsYier){
-        ChatApiCaller.fetchAllNewChatMessages(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHAT_MESSAGES, context){
+        ChatApiCaller.fetchAllUnviewedMessages(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_CHAT_MESSAGES, context){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
-                    List<ChatMessage> chatMessages = data.getData(new TypeReference<List<ChatMessage>>() {
+                    List<ChatMessage> allUnviewedMessages = data.getData(new TypeReference<List<ChatMessage>>() {
                     });
-                    chatMessages.sort(Comparator.comparing(ChatMessage::getTime));
-                    Map<String, List<ChatMessage>> chatMessageMap = new HashMap<>();
+                    allUnviewedMessages.sort(Comparator.comparing(ChatMessage::getTime));
+                    Map<String, List<ChatMessage>> messageMap = new HashMap<>();
                     AtomicInteger doneCount = new AtomicInteger();
-                    List<ChatMessage> toUnsendChatMessages = new ArrayList<>();
-                    chatMessages.forEach(chatMessage -> {
+                    allUnviewedMessages.forEach(unviewedMessage -> {
                         doneCount.getAndIncrement();
-                        String other = chatMessage.getOther(context);
+                        String other = unviewedMessage.getOther(context);
                         ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, other);
-                        if (chatMessageDatabaseManager.existsByUuid(chatMessage.getUuid())) return;
-                        chatMessage.setViewed(false);
-                        if(chatMessage.getType() == ChatMessage.TYPE_UNSEND){
-                            ChatMessage toUnsendMessage = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, chatMessage.getFrom()).findOne(chatMessage.getUnsendMessageUuid());
-                            toUnsendChatMessages.add(toUnsendMessage);
-                        }
-                        ChatMessage.mainDoOnNewChatMessage(chatMessage, context, results -> {
-                            String key = chatMessage.getOther(context);
-                            List<ChatMessage> chatMessageList;
-                            if (chatMessageMap.get(key) == null) {
-                                chatMessageList = new ArrayList<>();
-                                chatMessageMap.put(key, chatMessageList);
+                        if (chatMessageDatabaseManager.existsByUuid(unviewedMessage.getUuid())) return;
+                        ChatMessage.mainDoOnNewMessage(unviewedMessage, context, results -> {
+                            List<ChatMessage> messageList;
+                            if (messageMap.get(other) == null) {
+                                messageList = new ArrayList<>();
+                                messageMap.put(other, messageList);
                             } else {
-                                chatMessageList = chatMessageMap.get(key);
+                                messageList = messageMap.get(other);
                             }
-                            chatMessageList.add(chatMessage);
-                            if (doneCount.get() == chatMessages.size()) {
-                                chatMessageMap.forEach((s, list) -> {
-                                    OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(s, list.size(), true));
+                            messageList.add(unviewedMessage);
+                            if (doneCount.get() == allUnviewedMessages.size()) {
+                                messageMap.forEach((channelImessageId, list) -> {
+                                    OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(channelImessageId, list.size(), true));
                                 });
-                                resultsYier.onResults(chatMessages, toUnsendChatMessages);
+                                resultsYier.onResults(allUnviewedMessages);
                             }
                         });
                     });

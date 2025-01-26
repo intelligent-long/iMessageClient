@@ -201,7 +201,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                             message = "[语音 " + TimeUtil.formatTimeToMinutesSeconds(duration) + "]";
                                         }
                                         SendTextChatMessagePostBody postBody = new SendTextChatMessagePostBody(toForwardImessageId, message);
-                                        ChatApiCaller.sendTextChatMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+                                        ChatApiCaller.sendTextMessage(this, postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
 
                                             @Override
                                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
@@ -210,7 +210,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                                 data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101}, () -> {
                                                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                                                     chatMessage.setViewed(true);
-                                                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                    ChatMessage.mainDoOnNewMessage(chatMessage, ForwardMessageActivity.this, results -> {
                                                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                                                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                                                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -231,7 +231,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                             processingDialog.updateProgressIndicator(0, 0);
                                         });
                                         SendImageChatMessagePostBody postBody = new SendImageChatMessagePostBody(toForwardImessageId, chatMessage.getFileName());
-                                        ChatApiCaller.sendImageChatMessage(this, this, Uri.fromFile(new File(chatMessage.getImageFilePath())), postBody, chatMessage.getFileName(), new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+                                        ChatApiCaller.sendImageMessage(this, this, Uri.fromFile(new File(chatMessage.getImageFilePath())), postBody, chatMessage.getFileName(), new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
 
                                             @Override
                                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
@@ -240,7 +240,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                                 data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101, -102}, () -> {
                                                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                                                     chatMessage.setViewed(true);
-                                                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                    ChatMessage.mainDoOnNewMessage(chatMessage, ForwardMessageActivity.this, results -> {
                                                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                                                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                                                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -262,7 +262,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                     }
                                     case ChatMessage.TYPE_VIDEO:{
                                         SendVideoChatMessagePostBody postBody = new SendVideoChatMessagePostBody(toForwardImessageId, chatMessage.getFileName());
-                                        ChatApiCaller.sendVideoChatMessage(this, this, Uri.fromFile(new File(chatMessage.getVideoFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
+                                        ChatApiCaller.sendVideoMessage(this, this, Uri.fromFile(new File(chatMessage.getVideoFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this){
 
                                             @Override
                                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
@@ -271,7 +271,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                                 data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101, -102}, () -> {
                                                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                                                     chatMessage.setViewed(true);
-                                                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                    ChatMessage.mainDoOnNewMessage(chatMessage, ForwardMessageActivity.this, results -> {
                                                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                                                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                                                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -294,7 +294,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                     }
                                     case ChatMessage.TYPE_FILE:{
                                         SendFileChatMessagePostBody postBody = new SendFileChatMessagePostBody(toForwardImessageId, chatMessage.getFileName());
-                                        ChatApiCaller.sendFileChatMessage(this, this, Uri.fromFile(new File(chatMessage.getFileFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
+                                        ChatApiCaller.sendFileMessage(this, this, Uri.fromFile(new File(chatMessage.getFileFilePath())), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(this) {
 
                                             @Override
                                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
@@ -303,7 +303,7 @@ public class ForwardMessageActivity extends BaseActivity {
                                                 data.commonHandleResult(ForwardMessageActivity.this, new int[]{-101, -102}, () -> {
                                                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                                                     chatMessage.setViewed(true);
-                                                    ChatMessage.mainDoOnNewChatMessage(chatMessage, ForwardMessageActivity.this, results -> {
+                                                    ChatMessage.mainDoOnNewMessage(chatMessage, ForwardMessageActivity.this, results -> {
                                                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                                                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                                                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);

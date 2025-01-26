@@ -44,8 +44,6 @@ public class ChatMessageActionsPopupWindow {
     private final PopupWindowChatMessageActionsBinding binding;
     private final int HEIGHT_DP = 86;
     private OnDeletedYier onDeletedYier;
-    private OnMessageUnsentYier onMessageUnsentYier;
-
     public ChatMessageActionsPopupWindow(AppCompatActivity activity, ChatMessage chatMessage) {
         this.activity = activity;
         this.chatMessage = chatMessage;
@@ -121,7 +119,7 @@ public class ChatMessageActionsPopupWindow {
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         popupWindow.dismiss();
-                        ChatApiCaller.unsendChatMessage(activity, chatMessage.getTo(), chatMessage.getUuid(), new RetrofitApiCaller.CommonYier<OperationData>(activity){
+                        ChatApiCaller.unsendMessage(activity, chatMessage.getTo(), chatMessage.getUuid(), new RetrofitApiCaller.CommonYier<OperationData>(activity){
                             @Override
                             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                                 super.ok(data, raw, call);
@@ -129,8 +127,7 @@ public class ChatMessageActionsPopupWindow {
                                     ChatMessage unsendChatMessage = data.getData(ChatMessage.class);
                                     unsendChatMessage.setViewed(true);
                                     ChatMessage toUnsendMessage = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, unsendChatMessage.getTo()).findOne(unsendChatMessage.getUnsendMessageUuid());
-                                    ChatMessage.mainDoOnNewChatMessage(unsendChatMessage, activity, results -> {
-                                        onMessageUnsentYier.onUnsent(unsendChatMessage, toUnsendMessage);
+                                    ChatMessage.mainDoOnNewMessage(unsendChatMessage, activity, results -> {
                                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(unsendChatMessage.getTo(), 0, true));
                                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                                             openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
@@ -166,10 +163,6 @@ public class ChatMessageActionsPopupWindow {
 
     public void setOnDeletedYier(OnDeletedYier onDeletedYier) {
         this.onDeletedYier = onDeletedYier;
-    }
-
-    public void setOnMessageUnsentYier(OnMessageUnsentYier onMessageUnsentYier) {
-        this.onMessageUnsentYier = onMessageUnsentYier;
     }
 
     public interface OnDeletedYier{

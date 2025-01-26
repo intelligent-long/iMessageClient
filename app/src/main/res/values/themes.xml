@@ -5,7 +5,7 @@
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
-        <item name="fontFamily">@font/google_sans_noto_sans_sc</item>
+        <item name="fontFamily">@font/app_font</item>
     </style>
 
     <style name="Theme.MainActivity" parent="Theme.IChat2Client">
@@ -17,7 +17,7 @@
         <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
         <item name="fontFamily">@null</item>
-        <item name="android:fontFamily">@font/google_sans_noto_sans_sc</item>
+        <item name="android:fontFamily">@font/app_font</item>
     </style>
 
     <style name="DarkStatusBarActivity" parent="Theme.IChat2Client">

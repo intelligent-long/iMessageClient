@@ -156,14 +156,14 @@ public class VoiceChatMessageBehaviours {
     private void doSendVoice(File recordedAudiofile){
         chatActivity.toSendingProgressState();
         SendVoiceChatMessagePostBody postBody = new SendVoiceChatMessagePostBody(chatActivity.getChannel().getImessageId());
-        ChatApiCaller.sendVoiceChatMessage(chatActivity, chatActivity, Uri.fromFile(recordedAudiofile), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(chatActivity) {
+        ChatApiCaller.sendVoiceMessage(chatActivity, chatActivity, Uri.fromFile(recordedAudiofile), postBody, new RetrofitApiCaller.BaseCommonYier<OperationData>(chatActivity) {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(chatActivity, new int[]{-101, -102, -103, -199}, () -> {
                     ChatMessage chatMessage = data.getData(ChatMessage.class);
                     chatMessage.setViewed(true);
-                    ChatMessage.mainDoOnNewChatMessage(chatMessage, chatActivity, results -> {
+                    ChatMessage.mainDoOnNewMessage(chatMessage, chatActivity, results -> {
                         chatActivity.getAdapter().addItemAndShow(chatMessage);
                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(chatMessage.getTo(), 0, true));
                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {

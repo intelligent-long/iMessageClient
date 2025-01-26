@@ -17,7 +17,7 @@ import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.notification.Notifications;
 import com.longx.intelligent.android.imessage.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
-import com.longx.intelligent.android.imessage.yier.ChatMessageUpdateYier;
+import com.longx.intelligent.android.imessage.yier.ChatMessagesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.imessage.yier.OpenedChatsUpdateYier;
@@ -78,32 +78,25 @@ public class ServerMessageServiceStompActions {
 
     public static void updateChatMessages(Context context){
         ContentUpdater.updateChatMessages(context, results -> {
-            List<ChatMessage> chatMessages = (List<ChatMessage>) results[0];
-            List<ChatMessage> toUnsendChatMessages = (List<ChatMessage>) results[1];
-            chatMessages.forEach(chatMessage -> {
+            List<ChatMessage> messages = (List<ChatMessage>) results[0];
+            messages.forEach(message -> {
                 if (!Application.foreground) {
-                    Notifications.notifyChatMessage(context, chatMessage);
+                    Notifications.notifyChatMessage(context, message);
                 } else {
                     HoldableActivity topActivity = ActivityOperator.getTopActivity();
                     if (!(topActivity instanceof MainActivity)) {
-                        if (!(topActivity instanceof ChatActivity && ((ChatActivity) topActivity).getChannel().getImessageId().equals(chatMessage.getOther(context)))) {
-                            Notifications.notifyChatMessage(context, chatMessage);
+                        if (!(topActivity instanceof ChatActivity && ((ChatActivity) topActivity).getChannel().getImessageId().equals(message.getOther(context)))) {
+                            Notifications.notifyChatMessage(context, message);
                         }
                     }
                 }
             });
-            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
-                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatsUpdateYiers -> {
+                openedChatsUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
             });
             GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
                 newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
                     newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.MESSAGES);
-                });
-            });
-            GlobalYiersHolder.getYiers(ChatMessageUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
-                chatMessageUpdateYiers.forEach(chatMessageUpdateYier -> {
-                    chatMessageUpdateYier.onNewChatMessage(chatMessages);
-                    chatMessageUpdateYier.onUnsendChatMessage(toUnsendChatMessages);
                 });
             });
         });
