@@ -198,7 +198,12 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
         });
         synchronized (this){
             thisChannelUpdatedMessages.forEach(thisChannelUpdatedMessage -> {
-                if (adapter != null) runOnUiThread(() -> adapter.notifyItemChanged(thisChannelUpdatedMessage));
+                if (adapter != null) runOnUiThread(() -> {
+                    int updatedIndex = adapter.notifyItemChanged(thisChannelUpdatedMessage);
+                    if(updatedIndex == adapter.getItemCount() - 1){
+                        binding.recyclerView.scrollToEnd(true);
+                    }
+                });
             });
         }
     }

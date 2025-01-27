@@ -815,14 +815,15 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }
     }
 
-    public void notifyItemChanged(ChatMessage chatMessage){
+    public int notifyItemChanged(ChatMessage chatMessage){
         for (int i = 0; i < itemDataList.size(); i++) {
             if(itemDataList.get(i).chatMessage.getUuid().equals(chatMessage.getUuid())){
                 itemDataList.set(i, new ItemData(chatMessage));
                 notifyItemChanged(i);
-                break;
+                return i;
             }
         }
+        return -1;
     }
 
 }
