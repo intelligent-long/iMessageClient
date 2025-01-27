@@ -34,21 +34,38 @@
             android:scaleType="centerCrop"/>
 
         <FrameLayout
-            android:id="@+id/layout_message_content_load_receive"
+            android:id="@+id/layout_message_content_get_receive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@id/avatar_receive"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp">
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/message_content_loading_indicator_receive"
+            <com.longx.intelligent.android.imessage.ui.SwitchingImageView
+                android:id="@+id/message_content_getting_indicator_receive_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"/>
+                android:layout_marginEnd="31.7dp"
+                app:tint="?attr/colorOnSurfaceInverse"
+                app:images="@array/get_chat_message_content_switching_images"
+                app:interval="2000"
+                app:transition_duration="2000"
+                app:transition_enabled="true"/>
+
+            <com.longx.intelligent.android.imessage.ui.SwitchingImageView
+                android:id="@+id/message_content_getting_indicator_receive_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="31.7dp"
+                app:tint="?attr/colorOnSurfaceInverse"
+                app:images="@array/get_chat_message_content_switching_images"
+                app:interval="2000"
+                app:transition_duration="2000"
+                app:transition_enabled="true"/>
 
             <TextView
-                android:id="@+id/message_content_load_failed_text_receive"
+                android:id="@+id/message_content_get_failed_text_receive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="加载失败"/>
@@ -485,21 +502,38 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/layout_message_content_load_send"
+            android:id="@+id/layout_message_content_get_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@id/avatar_send"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp">
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/message_content_loading_indicator_send"
+            <com.longx.intelligent.android.imessage.ui.SwitchingImageView
+                android:id="@+id/message_content_getting_indicator_send_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"/>
+                android:layout_marginEnd="31.7dp"
+                app:tint="?attr/colorOnSurfaceInverse"
+                app:images="@array/get_chat_message_content_switching_images"
+                app:interval="2000"
+                app:transition_duration="2000"
+                app:transition_enabled="true"/>
+
+            <com.longx.intelligent.android.imessage.ui.SwitchingImageView
+                android:id="@+id/message_content_getting_indicator_send_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="31.7dp"
+                app:tint="?attr/colorOnSurfaceInverse"
+                app:images="@array/get_chat_message_content_switching_images"
+                app:interval="2000"
+                app:transition_duration="2000"
+                app:transition_enabled="true"/>
 
             <TextView
-                android:id="@+id/message_content_load_failed_text_send"
+                android:id="@+id/message_content_get_failed_text_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="加载失败"/>

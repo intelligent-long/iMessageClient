@@ -3,6 +3,7 @@ package com.longx.intelligent.android.imessage.adapter;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,7 +169,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemChatMessageBinding binding;
+        private final RecyclerItemChatMessageBinding binding;
         public ViewHolder(RecyclerItemChatMessageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -226,23 +227,33 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarSend);
             }
             if(fullContentGot == null){
-                holder.binding.layoutMessageContentLoadSend.setVisibility(View.VISIBLE);
-                holder.binding.messageContentLoadingIndicatorSend.setVisibility(View.VISIBLE);
-                holder.binding.messageContentLoadFailedTextSend.setVisibility(View.GONE);
+                holder.binding.layoutMessageContentGetSend.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorSend1.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorSend1.startAnimating();
+                new Handler().postDelayed(() -> {
+                    holder.binding.messageContentGettingIndicatorSend2.setVisibility(View.VISIBLE);
+                    holder.binding.messageContentGettingIndicatorSend2.startAnimating();
+                }, 1000);
+                holder.binding.messageContentGetFailedTextSend.setVisibility(View.GONE);
                 holder.binding.layoutMessageSend.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
             }else if(!fullContentGot){
-                holder.binding.layoutMessageContentLoadSend.setVisibility(View.VISIBLE);
-                holder.binding.messageContentLoadingIndicatorSend.setVisibility(View.GONE);
-                holder.binding.messageContentLoadFailedTextSend.setVisibility(View.VISIBLE);
+                holder.binding.layoutMessageContentGetSend.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorSend1.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorSend1.stopAnimating();
+                holder.binding.messageContentGettingIndicatorSend2.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorSend2.stopAnimating();
+                holder.binding.messageContentGetFailedTextSend.setVisibility(View.VISIBLE);
                 holder.binding.layoutMessageSend.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
             }else {
                 //不同消息类型
-                holder.binding.layoutMessageContentLoadSend.setVisibility(View.GONE);
+                holder.binding.layoutMessageContentGetSend.setVisibility(View.GONE);
                 holder.binding.layoutMessageSend.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorSend1.stopAnimating();
+                holder.binding.messageContentGettingIndicatorSend2.stopAnimating();
                 switch (itemData.chatMessage.getType()) {
                     case ChatMessage.TYPE_TEXT: {
                         holder.binding.layoutTextSend.setVisibility(View.VISIBLE);
@@ -357,7 +368,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.unsendSelf.setVisibility(View.VISIBLE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
                         holder.binding.avatarSend.setVisibility(View.GONE);
-                        holder.binding.layoutMessageContentLoadSend.setVisibility(View.GONE);
+                        holder.binding.layoutMessageContentGetSend.setVisibility(View.GONE);
                         break;
                     }
                 }
@@ -379,23 +390,33 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarReceive);
             }
             if(fullContentGot == null){
-                holder.binding.layoutMessageContentLoadReceive.setVisibility(View.VISIBLE);
-                holder.binding.messageContentLoadingIndicatorReceive.setVisibility(View.VISIBLE);
-                holder.binding.messageContentLoadFailedTextReceive.setVisibility(View.GONE);
+                holder.binding.layoutMessageContentGetReceive.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorReceive1.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorReceive1.startAnimating();
+                new Handler().postDelayed(() -> {
+                    holder.binding.messageContentGettingIndicatorReceive2.setVisibility(View.VISIBLE);
+                    holder.binding.messageContentGettingIndicatorReceive2.startAnimating();
+                }, 1000);
+                holder.binding.messageContentGetFailedTextReceive.setVisibility(View.GONE);
                 holder.binding.layoutMessageReceive.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
             }else if(!fullContentGot){
-                holder.binding.layoutMessageContentLoadReceive.setVisibility(View.VISIBLE);
-                holder.binding.messageContentLoadingIndicatorReceive.setVisibility(View.GONE);
-                holder.binding.messageContentLoadFailedTextReceive.setVisibility(View.VISIBLE);
+                holder.binding.layoutMessageContentGetReceive.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorReceive1.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorReceive1.stopAnimating();
+                holder.binding.messageContentGettingIndicatorReceive2.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorReceive2.stopAnimating();
+                holder.binding.messageContentGetFailedTextReceive.setVisibility(View.VISIBLE);
                 holder.binding.layoutMessageReceive.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
             }else {
                 //不同消息类型
-                holder.binding.layoutMessageContentLoadReceive.setVisibility(View.GONE);
+                holder.binding.layoutMessageContentGetReceive.setVisibility(View.GONE);
                 holder.binding.layoutMessageReceive.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorReceive1.stopAnimating();
+                holder.binding.messageContentGettingIndicatorReceive2.stopAnimating();
                 switch (itemData.chatMessage.getType()) {
                     case ChatMessage.TYPE_TEXT: {
                         holder.binding.layoutTextReceive.setVisibility(View.VISIBLE);

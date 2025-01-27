@@ -26,6 +26,10 @@
         <item>@drawable/blank_vector</item>
     </array>
 
+    <array name="get_chat_message_content_switching_images">
+        <item>@drawable/circle_fill_24px</item>
+    </array>
+
     <string-array name="bottom_navigation_view_label_visibility_mode_entries">
         <item>"显示"</item>
         <item>"隐藏"</item>
