@@ -14,7 +14,9 @@ import com.longx.intelligent.android.imessage.databinding.RecyclerItemMediaBindi
 import com.longx.intelligent.android.imessage.media.MediaType;
 import com.longx.intelligent.android.imessage.media.data.Media;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.UiUtil;
+import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.util.WindowAndSystemUiUtil;
 
 import java.util.ArrayList;
@@ -71,6 +73,13 @@ public class MediaActivity2 extends BaseActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 boolean thisPreviousPositionOffsetGreaterThanNow = previousPositionOffset > positionOffset;
                 previousPositionOffset = positionOffset;
+                if(Utils.approximatelyEqual(positionOffset, 0, 0.001F)) {
+                    if (adapter.getMediaList().get(MediaActivity2.this.position).getMediaType() == MediaType.IMAGE) {
+                        binding.playControl.setVisibility(View.GONE);
+                    } else if (adapter.getMediaList().get(MediaActivity2.this.position).getMediaType() == MediaType.VIDEO) {
+                        binding.playControl.setVisibility(View.VISIBLE);
+                    }
+                }
                 if(positionOffset == 0 || thisPreviousPositionOffsetGreaterThanNow != previousPositionOffsetGreaterThanNow){
                     int previousPosition = right ? MediaActivity2.this.position + 1 : MediaActivity2.this.position - 1;
                     if(previousPosition != -1 && !(previousPosition >= adapter.getCount())) {
