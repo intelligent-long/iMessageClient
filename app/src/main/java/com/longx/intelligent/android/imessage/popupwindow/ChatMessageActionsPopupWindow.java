@@ -48,21 +48,29 @@ public class ChatMessageActionsPopupWindow {
         this.activity = activity;
         this.chatMessage = chatMessage;
         binding = PopupWindowChatMessageActionsBinding.inflate(activity.getLayoutInflater());
-        switch (chatMessage.getType()){
-            case ChatMessage.TYPE_IMAGE:
-            case ChatMessage.TYPE_FILE:
-            case ChatMessage.TYPE_VIDEO:
-            case ChatMessage.TYPE_VOICE: {
+        if(ChatMessage.isInGetting(chatMessage.getUuid())){
+            binding.getRoot().setVisibility(View.GONE);
+        }else {
+            if (!chatMessage.isFullContentGot()) {
                 binding.clickViewCopy.setVisibility(View.GONE);
-                break;
+                binding.clickViewForward.setVisibility(View.GONE);
+            } else {
+                switch (chatMessage.getType()) {
+                    case ChatMessage.TYPE_IMAGE:
+                    case ChatMessage.TYPE_FILE:
+                    case ChatMessage.TYPE_VIDEO:
+                    case ChatMessage.TYPE_VOICE: {
+                        binding.clickViewCopy.setVisibility(View.GONE);
+                        break;
+                    }
+                }
             }
-        }
-        if(!chatMessage.getFrom().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())){
-            binding.clickViewDelete.setVisibility(View.GONE);
-            binding.clickViewUnsend.setVisibility(View.GONE);
-        }
-        if(TimeUtil.isDateAfter(chatMessage.getTime().getTime(), new Date().getTime(), Constants.MAX_ALLOW_UNSEND_MINUTES * 60 * 1000)){
-            binding.clickViewUnsend.setVisibility(View.GONE);
+            if (!chatMessage.getFrom().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())) {
+                binding.clickViewUnsend.setVisibility(View.GONE);
+            }
+            if (TimeUtil.isDateAfter(chatMessage.getTime().getTime(), new Date().getTime(), Constants.MAX_ALLOW_UNSEND_MINUTES * 60 * 1000)) {
+                binding.clickViewUnsend.setVisibility(View.GONE);
+            }
         }
         popupWindow = new PopupWindow(binding.getRoot(),  ViewGroup.LayoutParams.WRAP_CONTENT,  UiUtil.dpToPx(activity, HEIGHT_DP), true);
         setupYiers();
@@ -86,22 +94,24 @@ public class ChatMessageActionsPopupWindow {
                         String other = chatMessage.getOther(activity);
                         ChatMessageDatabaseManager databaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, other);
                         databaseManager.delete(chatMessage.getUuid());
-                        switch (chatMessage.getType()){
-                            case ChatMessage.TYPE_IMAGE:{
-                                PrivateFilesAccessor.ChatImage.delete(chatMessage);
-                                break;
-                            }
-                            case ChatMessage.TYPE_FILE:{
-                                PrivateFilesAccessor.ChatFile.delete(chatMessage);
-                                break;
-                            }
-                            case ChatMessage.TYPE_VIDEO:{
-                                PrivateFilesAccessor.ChatVideo.delete(chatMessage);
-                                break;
-                            }
-                            case ChatMessage.TYPE_VOICE:{
-                                PrivateFilesAccessor.ChatVoice.delete(chatMessage);
-                                break;
+                        if (chatMessage.isFullContentGot()) {
+                            switch (chatMessage.getType()) {
+                                case ChatMessage.TYPE_IMAGE: {
+                                    PrivateFilesAccessor.ChatImage.delete(chatMessage);
+                                    break;
+                                }
+                                case ChatMessage.TYPE_FILE: {
+                                    PrivateFilesAccessor.ChatFile.delete(chatMessage);
+                                    break;
+                                }
+                                case ChatMessage.TYPE_VIDEO: {
+                                    PrivateFilesAccessor.ChatVideo.delete(chatMessage);
+                                    break;
+                                }
+                                case ChatMessage.TYPE_VOICE: {
+                                    PrivateFilesAccessor.ChatVoice.delete(chatMessage);
+                                    break;
+                                }
                             }
                         }
                         onDeletedYier.onDeleted();
@@ -126,7 +136,7 @@ public class ChatMessageActionsPopupWindow {
                                 data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                                     ChatMessage unsendChatMessage = data.getData(ChatMessage.class);
                                     unsendChatMessage.setViewed(true);
-                                    ChatMessage toUnsendMessage = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, unsendChatMessage.getTo()).findOne(unsendChatMessage.getUnsendMessageUuid());
+//                                    ChatMessage toUnsendMessage = ChatMessageDatabaseManager.getInstanceOrInitAndGet(activity, unsendChatMessage.getTo()).findOne(unsendChatMessage.getUnsendMessageUuid());
                                     ChatMessage.mainDoOnNewMessage(unsendChatMessage, activity, results -> {
                                         OpenedChatDatabaseManager.getInstance().insertOrUpdate(new OpenedChat(unsendChatMessage.getTo(), 0, true));
                                         GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {

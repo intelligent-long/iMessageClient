@@ -24,8 +24,11 @@ import com.longx.intelligent.android.imessage.yier.ResultsYier;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,28 +41,34 @@ import retrofit2.Response;
  */
 public class ChatMessage implements Parcelable {
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
-//    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private static final Set<String> FULL_CONTENT_GETTING_MESSAGE_UUID_SET = new HashSet<>();
 
     public static void mainDoOnNewMessage(ChatMessage newMessage, Context context, ResultsYier resultsYier){
         newMessage.setViewed(false);
+        newMessage.setFullContentGot(false);
         ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, newMessage.getOther(context));
         chatMessageDatabaseManager.insertOrIgnore(newMessage);
+        FULL_CONTENT_GETTING_MESSAGE_UUID_SET.add(newMessage.uuid);
         GlobalYiersHolder.getYiers(ChatMessagesUpdateYier.class).ifPresent(chatMessageUpdateYiers -> {
             chatMessageUpdateYiers.forEach(chatMessagesUpdateYier -> {
                 chatMessagesUpdateYier.onNewChatMessages(List.of(newMessage));
             });
         });
         resultsYier.onResults();
-        executorService.execute(() -> fillMessageContent(newMessage, context, chatMessageDatabaseManager));
+        fillMessageContent(newMessage, context);
     }
 
-    private static void fillMessageContent(ChatMessage newMessage, Context context, ChatMessageDatabaseManager chatMessageDatabaseManager) {
+    public static void fillMessageContent(ChatMessage newMessage, Context context) {
+        ChatMessageDatabaseManager chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(context, newMessage.getOther(context));
         switch (newMessage.getType()){
             case TYPE_IMAGE:{
                 ChatApiCaller.fetchMessageImage(null, newMessage.imageId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                    private boolean got;
+                    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
-                        super.ok(data, raw, call);
+                        super.ok(data, raw, call); //方
                         executorService.execute(() -> {
                             try {
                                 byte[] bytes = data.bytes();
@@ -67,19 +76,34 @@ public class ChatMessage implements Parcelable {
                                 newMessage.setImageFilePath(imageFilePath);
                                 Size imageSize = MediaHelper.getImageSize(bytes);
                                 newMessage.setImageSize(imageSize);
-                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
+                                got = true;
                             } catch (IOException e) {
                                 MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
-                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
-                                throw new RuntimeException(e);
+                                ErrorLogger.log(e);
                             }
+                            countDownLatch.countDown();
                         });
+                        try {
+                            countDownLatch.await();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    @Override
+                    public void complete(Call<ResponseBody> call) {
+                        super.complete(call);
+                        FULL_CONTENT_GETTING_MESSAGE_UUID_SET.remove(newMessage.uuid);
+                        onMessageFullContentGot(got, newMessage, context, chatMessageDatabaseManager);
                     }
                 });
                 break;
             }
             case TYPE_FILE:{
                 ChatApiCaller.fetchMessageFile(null, newMessage.fileId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context){
+                    private boolean got;
+                    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
                         super.ok(data, raw, call);
@@ -88,19 +112,34 @@ public class ChatMessage implements Parcelable {
                                 byte[] bytes = data.bytes();
                                 String chatFileFilePath = PrivateFilesAccessor.ChatFile.save(context, newMessage, bytes);
                                 newMessage.setFileFilePath(chatFileFilePath);
-                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
+                                got = true;
                             } catch (IOException e) {
                                 MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
-                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
-                                throw new RuntimeException(e);
+                                ErrorLogger.log(e);
                             }
+                            countDownLatch.countDown();
                         });
+                        try {
+                            countDownLatch.await();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    @Override
+                    public void complete(Call<ResponseBody> call) {
+                        super.complete(call);
+                        FULL_CONTENT_GETTING_MESSAGE_UUID_SET.remove(newMessage.uuid);
+                        onMessageFullContentGot(got, newMessage, context, chatMessageDatabaseManager);
                     }
                 });
                 break;
             }
             case TYPE_VIDEO:{
                 ChatApiCaller.fetchMessageVideo(null, newMessage.videoId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                    private boolean got;
+                    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
                         super.ok(data, raw, call);
@@ -113,13 +152,25 @@ public class ChatMessage implements Parcelable {
                                 newMessage.setVideoSize(videoSize);
                                 long videoDuration = MediaHelper.getVideoDuration(chatVideoFilePath);
                                 newMessage.setVideoDuration(videoDuration);
-                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
+                                got = true;
                             } catch (IOException e) {
                                 MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
-                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
-                                throw new RuntimeException(e);
+                                ErrorLogger.log(e);
                             }
+                            countDownLatch.countDown();
                         });
+                        try {
+                            countDownLatch.await();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    @Override
+                    public void complete(Call<ResponseBody> call) {
+                        super.complete(call);
+                        FULL_CONTENT_GETTING_MESSAGE_UUID_SET.remove(newMessage.uuid);
+                        onMessageFullContentGot(got, newMessage, context, chatMessageDatabaseManager);
                     }
                 });
                 break;
@@ -127,6 +178,9 @@ public class ChatMessage implements Parcelable {
             case TYPE_VOICE:{
                 newMessage.setVoiceListened(false);
                 ChatApiCaller.fetchMessageVoice(null, newMessage.voiceId, new RetrofitApiCaller.BaseCommonYier<ResponseBody>(context) {
+                    private boolean got;
+                    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+
                     @Override
                     public void ok(ResponseBody data, Response<ResponseBody> raw, Call<ResponseBody> call) {
                         super.ok(data, raw, call);
@@ -135,18 +189,30 @@ public class ChatMessage implements Parcelable {
                                 byte[] bytes = data.bytes();
                                 String chatVoiceFilePath = PrivateFilesAccessor.ChatVoice.save(context, newMessage, bytes);
                                 newMessage.setVoiceFilePath(chatVoiceFilePath);
-                                onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
+                                got = true;
                             } catch (IOException e) {
                                 MessageDisplayer.autoShow(context, "获取聊天消息内容出错", MessageDisplayer.Duration.LONG);
-                                onMessageFullContentGot(false, newMessage, context, chatMessageDatabaseManager);
                                 throw new RuntimeException(e);
                             }
+                            countDownLatch.countDown();
                         });
+                        try {
+                            countDownLatch.await();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    @Override
+                    public void complete(Call<ResponseBody> call) {
+                        super.complete(call);
+                        FULL_CONTENT_GETTING_MESSAGE_UUID_SET.remove(newMessage.uuid);
+                        onMessageFullContentGot(got, newMessage, context, chatMessageDatabaseManager);
                     }
                 });
                 break;
             }
-            case TYPE_UNSEND:{
+            case TYPE_UNSEND: {
                 executorService.execute(() -> {
                     ChatMessage toUnsendMessage = chatMessageDatabaseManager.findOne(newMessage.unsendMessageUuid);
                     chatMessageDatabaseManager.delete(newMessage.unsendMessageUuid);
@@ -155,12 +221,16 @@ public class ChatMessage implements Parcelable {
                             chatMessagesUpdateYier.onUnsendChatMessages(List.of(newMessage), List.of(toUnsendMessage));
                         });
                     });
+                    FULL_CONTENT_GETTING_MESSAGE_UUID_SET.remove(newMessage.uuid);
                     onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
                 });
                 break;
             }
             default:{
-                executorService.execute(() -> onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager));
+                executorService.execute(() -> {
+                    FULL_CONTENT_GETTING_MESSAGE_UUID_SET.remove(newMessage.uuid);
+                    onMessageFullContentGot(true, newMessage, context, chatMessageDatabaseManager);
+                });
                 break;
             }
         }
@@ -174,6 +244,10 @@ public class ChatMessage implements Parcelable {
                 chatMessagesUpdateYier.onChatMessagesUpdated(List.of(message));
             });
         });
+    }
+
+    public static boolean isInGetting(String uuid){
+        return FULL_CONTENT_GETTING_MESSAGE_UUID_SET.contains(uuid);
     }
 
     public static final int TYPE_TEXT = 0;

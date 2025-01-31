@@ -226,25 +226,14 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarSend);
             }
-            if(fullContentGot == null){
-                holder.binding.layoutMessageContentGetSend.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorSend1.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorSend1.startAnimating();
-                new Handler().postDelayed(() -> {
-                    holder.binding.messageContentGettingIndicatorSend2.setVisibility(View.VISIBLE);
-                    holder.binding.messageContentGettingIndicatorSend2.startAnimating();
-                }, 1000);
-                holder.binding.messageContentGetFailedTextSend.setVisibility(View.GONE);
-                holder.binding.layoutMessageSend.setVisibility(View.GONE);
-                holder.binding.unsendSelf.setVisibility(View.GONE);
-                holder.binding.unsendOther.setVisibility(View.GONE);
+            //判断获取状态
+            if(ChatMessage.isInGetting(itemData.chatMessage.getUuid())){
+                toInGettingUiForSend(holder);
             }else if(!fullContentGot){
                 holder.binding.layoutMessageContentGetSend.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorSend1.setVisibility(View.GONE);
-                holder.binding.messageContentGettingIndicatorSend1.stopAnimating();
-                holder.binding.messageContentGettingIndicatorSend2.setVisibility(View.GONE);
-                holder.binding.messageContentGettingIndicatorSend2.stopAnimating();
-                holder.binding.messageContentGetFailedTextSend.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorSend.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorSend.stopAnimating();
+                holder.binding.messageContentGetFailedSend.setVisibility(View.VISIBLE);
                 holder.binding.layoutMessageSend.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
@@ -252,8 +241,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 //不同消息类型
                 holder.binding.layoutMessageContentGetSend.setVisibility(View.GONE);
                 holder.binding.layoutMessageSend.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorSend1.stopAnimating();
-                holder.binding.messageContentGettingIndicatorSend2.stopAnimating();
+                holder.binding.messageContentGettingIndicatorSend.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorSend.stopAnimating();
                 switch (itemData.chatMessage.getType()) {
                     case ChatMessage.TYPE_TEXT: {
                         holder.binding.layoutTextSend.setVisibility(View.VISIBLE);
@@ -340,7 +329,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             } else if (chatVoicePlayer.isPlaying()) {
                                 holder.binding.voiceSendIcon.setVisibility(View.GONE);
                                 holder.binding.voiceSendPlayingSwitchingImages.setVisibility(View.VISIBLE);
-                                holder.binding.voiceSendPlayingSwitchingImages.startAnimating();
+                                holder.binding.voiceSendPlayingSwitchingImages.startAnimating(true);
                                 holder.binding.continueVoicePlaybackSend.setVisibility(View.GONE);
                                 holder.binding.pauseVoicePlaybackSend.setVisibility(View.VISIBLE);
                             } else {
@@ -389,25 +378,14 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarReceive);
             }
-            if(fullContentGot == null){
-                holder.binding.layoutMessageContentGetReceive.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorReceive1.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorReceive1.startAnimating();
-                new Handler().postDelayed(() -> {
-                    holder.binding.messageContentGettingIndicatorReceive2.setVisibility(View.VISIBLE);
-                    holder.binding.messageContentGettingIndicatorReceive2.startAnimating();
-                }, 1000);
-                holder.binding.messageContentGetFailedTextReceive.setVisibility(View.GONE);
-                holder.binding.layoutMessageReceive.setVisibility(View.GONE);
-                holder.binding.unsendSelf.setVisibility(View.GONE);
-                holder.binding.unsendOther.setVisibility(View.GONE);
+            //判断获取状态
+            if(ChatMessage.isInGetting(itemData.chatMessage.getUuid())){
+                toInGettingUiForReceive(holder);
             }else if(!fullContentGot){
                 holder.binding.layoutMessageContentGetReceive.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorReceive1.setVisibility(View.GONE);
-                holder.binding.messageContentGettingIndicatorReceive1.stopAnimating();
-                holder.binding.messageContentGettingIndicatorReceive2.setVisibility(View.GONE);
-                holder.binding.messageContentGettingIndicatorReceive2.stopAnimating();
-                holder.binding.messageContentGetFailedTextReceive.setVisibility(View.VISIBLE);
+                holder.binding.messageContentGettingIndicatorReceive.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorReceive.stopAnimating();
+                holder.binding.messageContentGetFailedReceive.setVisibility(View.VISIBLE);
                 holder.binding.layoutMessageReceive.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
@@ -415,8 +393,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 //不同消息类型
                 holder.binding.layoutMessageContentGetReceive.setVisibility(View.GONE);
                 holder.binding.layoutMessageReceive.setVisibility(View.VISIBLE);
-                holder.binding.messageContentGettingIndicatorReceive1.stopAnimating();
-                holder.binding.messageContentGettingIndicatorReceive2.stopAnimating();
+                holder.binding.messageContentGettingIndicatorReceive.setVisibility(View.GONE);
+                holder.binding.messageContentGettingIndicatorReceive.stopAnimating();
                 switch (itemData.chatMessage.getType()) {
                     case ChatMessage.TYPE_TEXT: {
                         holder.binding.layoutTextReceive.setVisibility(View.VISIBLE);
@@ -503,7 +481,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                             } else if (chatVoicePlayer.isPlaying()) {
                                 holder.binding.voiceReceiveIcon.setVisibility(View.GONE);
                                 holder.binding.voiceReceivePlayingSwitchingImages.setVisibility(View.VISIBLE);
-                                holder.binding.voiceReceivePlayingSwitchingImages.startAnimating();
+                                holder.binding.voiceReceivePlayingSwitchingImages.startAnimating(true);
                                 holder.binding.continueVoicePlaybackReceive.setVisibility(View.GONE);
                                 holder.binding.pauseVoicePlaybackReceive.setVisibility(View.VISIBLE);
                             } else {
@@ -548,6 +526,26 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         }
     }
 
+    private static void toInGettingUiForSend(@NonNull ViewHolder holder) {
+        holder.binding.layoutMessageContentGetSend.setVisibility(View.VISIBLE);
+        holder.binding.messageContentGettingIndicatorSend.setVisibility(View.VISIBLE);
+        holder.binding.messageContentGettingIndicatorSend.startAnimating(false);
+        holder.binding.messageContentGetFailedSend.setVisibility(View.GONE);
+        holder.binding.layoutMessageSend.setVisibility(View.GONE);
+        holder.binding.unsendSelf.setVisibility(View.GONE);
+        holder.binding.unsendOther.setVisibility(View.GONE);
+    }
+
+    private static void toInGettingUiForReceive(@NonNull ViewHolder holder) {
+        holder.binding.layoutMessageContentGetReceive.setVisibility(View.VISIBLE);
+        holder.binding.messageContentGettingIndicatorReceive.setVisibility(View.VISIBLE);
+        holder.binding.messageContentGettingIndicatorReceive.startAnimating(false);
+        holder.binding.messageContentGetFailedReceive.setVisibility(View.GONE);
+        holder.binding.layoutMessageReceive.setVisibility(View.GONE);
+        holder.binding.unsendSelf.setVisibility(View.GONE);
+        holder.binding.unsendOther.setVisibility(View.GONE);
+    }
+
     private void setupImageViewSize(@NonNull View imageView, Size size) {
         int imageWidth = size.getWidth();
         int imageHeight = size.getHeight();
@@ -582,19 +580,19 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         View.OnLongClickListener onMessageReceiveLongClickYier = v -> {
             UiUtil.hideKeyboard(activity);
             scrollDisabler.setScrollingDisabled(true);
-            popupWindow.show(holder.binding.layoutMessageReceive, false);
+            popupWindow.show(v.equals(holder.binding.messageContentGetFailedReceive) ? holder.binding.messageContentGetFailedReceive : holder.binding.layoutMessageReceive, false);
             return true;
         };
         View.OnLongClickListener onMessageSendLongClickYier = v -> {
             if(new KeyboardVisibilityYier(activity).isKeyboardVisible()) {
                 activity.setShowMessagePopupOnKeyboardClosed(() -> {
                     scrollDisabler.setScrollingDisabled(true);
-                    popupWindow.show(holder.binding.layoutMessageSend, true);
+                    popupWindow.show(v.equals(holder.binding.messageContentGetFailedSend) ? holder.binding.messageContentGetFailedSend : holder.binding.layoutMessageSend, true);
                 });
                 UiUtil.hideKeyboard(activity);
             }else {
                 scrollDisabler.setScrollingDisabled(true);
-                popupWindow.show(holder.binding.layoutMessageSend, true);
+                popupWindow.show(v.equals(holder.binding.messageContentGetFailedSend) ? holder.binding.messageContentGetFailedSend : holder.binding.layoutMessageSend, true);
             }
             return true;
         };
@@ -608,6 +606,8 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.layoutVideoSend.setOnLongClickListener(onMessageSendLongClickYier);
         holder.binding.layoutVoiceReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
         holder.binding.layoutVoiceSend.setOnLongClickListener(onMessageSendLongClickYier);
+        holder.binding.messageContentGetFailedReceive.setOnLongClickListener(onMessageReceiveLongClickYier);
+        holder.binding.messageContentGetFailedSend.setOnLongClickListener(onMessageSendLongClickYier);
         popupWindow.getPopupWindow().setOnDismissListener(() -> {
             scrollDisabler.setScrollingDisabled(false);
         });
@@ -638,6 +638,14 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         holder.binding.continueVoicePlaybackSend.setOnClickListener(onVoiceContinue);
         holder.binding.pauseVoicePlaybackReceive.setOnClickListener(onVoicePause);
         holder.binding.continueVoicePlaybackReceive.setOnClickListener(onVoiceContinue);
+        holder.binding.regetMessageFullContentButtonReceive.setOnClickListener(v -> {
+            toInGettingUiForReceive(holder);
+            ChatMessage.fillMessageContent(currentItemData.chatMessage, activity);
+        });
+        holder.binding.regetMessageFullContentButtonSend.setOnClickListener(v -> {
+            toInGettingUiForSend(holder);
+            ChatMessage.fillMessageContent(currentItemData.chatMessage, activity);
+        });
     }
 
     private boolean checkAndRequestBluetoothConnectPermission() {

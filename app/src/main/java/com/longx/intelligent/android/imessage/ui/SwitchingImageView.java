@@ -67,8 +67,15 @@ public class SwitchingImageView extends AppCompatImageView {
         currentIndex = 0;
     }
 
-    public void startAnimating() {
-        if (timer != null) {
+    public boolean isAnimating(){
+        return timer != null;
+    }
+
+    public void startAnimating(boolean force) {
+        if(!force && isAnimating()){
+            return;
+        }
+        if (isAnimating()) {
             stopAnimating();
         }
         timer = new Timer();
@@ -119,7 +126,7 @@ public class SwitchingImageView extends AppCompatImageView {
     public void setInterval(int interval) {
         this.interval = interval;
         if (timer != null) {
-            startAnimating();
+            startAnimating(true);
         }
     }
 

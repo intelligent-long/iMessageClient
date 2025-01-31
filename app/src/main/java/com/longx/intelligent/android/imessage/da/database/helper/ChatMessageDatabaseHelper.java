@@ -37,6 +37,10 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String VOICE_FILE_PATH = "voice_file_path";
         public static final String VOICE_LISTENED = "voice_listened";
         public static final String FULL_CONTENT_GOT = "full_content_got";
+        public static final String IMAGE_ID = "image_id";
+        public static final String FILE_ID = "file_id";
+        public static final String VIDEO_ID = "video_id";
+        public static final String VOICE_ID = "voice_id";
     }
 
     public ChatMessageDatabaseHelper(Context context, String channelImessageId, String imessageId) {
@@ -67,6 +71,10 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.VIDEO_DURATION + " LONG,"
                 + TableChannelChatMessagesColumns.VOICE_FILE_PATH + " VARCHAR,"
                 + TableChannelChatMessagesColumns.VOICE_LISTENED + " BOOLEAN,"
+                + TableChannelChatMessagesColumns.IMAGE_ID + " VARCHAR,"
+                + TableChannelChatMessagesColumns.FILE_ID + " VARCHAR,"
+                + TableChannelChatMessagesColumns.VIDEO_ID + " VARCHAR,"
+                + TableChannelChatMessagesColumns.VOICE_ID + " VARCHAR,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableChannelChatMessagesColumns.TYPE + ","
                 + TableChannelChatMessagesColumns.UUID + ","
