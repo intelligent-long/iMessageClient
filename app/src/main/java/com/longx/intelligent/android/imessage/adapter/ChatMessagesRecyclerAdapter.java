@@ -197,6 +197,27 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             holder.binding.time.setVisibility(View.GONE);
         }
         Boolean fullContentGot = itemData.chatMessage.isFullContentGot();
+        String typeText = null;
+        switch (itemData.chatMessage.getType()){
+            case ChatMessage.TYPE_TEXT:
+                typeText = "[文字]";
+                break;
+            case ChatMessage.TYPE_IMAGE:
+                typeText = "[图片]";
+                break;
+            case ChatMessage.TYPE_FILE:
+                typeText = "[文件]";
+                break;
+            case ChatMessage.TYPE_VIDEO:
+                typeText = "[视频]";
+                break;
+            case ChatMessage.TYPE_VOICE:
+                typeText = "[语音]";
+                break;
+            case ChatMessage.TYPE_UNSEND:
+                typeText = "[撤回]";
+                break;
+        }
         //发送还是接收
         if(itemData.chatMessage.isSelfSender(activity)){
             holder.binding.layoutReceive.setVisibility(View.GONE);
@@ -237,6 +258,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 holder.binding.layoutMessageSend.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
+                holder.binding.messageContentGetFailedTextSend.setText(typeText + "  加载失败");
             }else {
                 //不同消息类型
                 holder.binding.layoutMessageContentGetSend.setVisibility(View.GONE);
@@ -389,6 +411,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 holder.binding.layoutMessageReceive.setVisibility(View.GONE);
                 holder.binding.unsendSelf.setVisibility(View.GONE);
                 holder.binding.unsendOther.setVisibility(View.GONE);
+                holder.binding.messageContentGetFailedTextReceive.setText(typeText + "  加载失败");
             }else {
                 //不同消息类型
                 holder.binding.layoutMessageContentGetReceive.setVisibility(View.GONE);
