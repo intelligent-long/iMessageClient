@@ -80,11 +80,11 @@ public class PreviewToChooseImageActivity extends BaseActivity {
     private void setPurePhoto(boolean purePhoto) {
         if(purePhoto){
             binding.appBarLayout.setVisibility(View.GONE);
-            WindowAndSystemUiUtil.setSystemUIShown(PreviewToChooseImageActivity.this, false);
+            WindowAndSystemUiUtil.setSystemUiShown(PreviewToChooseImageActivity.this, false);
             this.purePhoto = true;
         }else {
             binding.appBarLayout.setVisibility(View.VISIBLE);
-            WindowAndSystemUiUtil.setSystemUIShown(PreviewToChooseImageActivity.this, true);
+            WindowAndSystemUiUtil.setSystemUiShown(PreviewToChooseImageActivity.this, true);
             this.purePhoto = false;
         }
     }

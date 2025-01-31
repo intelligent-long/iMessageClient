@@ -176,11 +176,11 @@ public class PreviewToChooseVideoActivity extends BaseActivity {
     private void setPurePhoto(boolean purePhoto) {
         if(purePhoto){
             binding.appBarLayout.setVisibility(View.GONE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, false);
+            WindowAndSystemUiUtil.setSystemUiShown(this, false);
             this.pureVideo = true;
         }else {
             binding.appBarLayout.setVisibility(View.VISIBLE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, true);
+            WindowAndSystemUiUtil.setSystemUiShown(this, true);
             this.pureVideo = false;
         }
     }

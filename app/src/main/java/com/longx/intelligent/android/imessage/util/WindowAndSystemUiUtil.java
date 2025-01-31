@@ -224,7 +224,7 @@ public class WindowAndSystemUiUtil {
         decorView.setSystemUiVisibility(flags);
     }
 
-    public static void setSystemUIShown(Activity activity, boolean show) {
+    public static void setSystemUiShown(Activity activity, boolean show) {
         int showFlag = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;

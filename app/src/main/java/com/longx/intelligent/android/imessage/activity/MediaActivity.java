@@ -148,11 +148,11 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
         });
         if(pureContent){
             UiUtil.setViewVisibility(binding.appBar, View.GONE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, false);
+            WindowAndSystemUiUtil.setSystemUiShown(this, false);
             this.pureContent = true;
         }else {
             UiUtil.setViewVisibility(binding.appBar, View.VISIBLE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, true);
+            WindowAndSystemUiUtil.setSystemUiShown(this, true);
             this.pureContent = false;
         }
     }

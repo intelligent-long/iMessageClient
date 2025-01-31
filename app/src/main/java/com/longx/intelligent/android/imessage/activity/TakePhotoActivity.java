@@ -133,11 +133,11 @@ public class TakePhotoActivity extends BaseActivity {
     private void setPurePhoto(boolean purePhoto) {
         if(purePhoto){
             binding.appBar.setVisibility(View.GONE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, false);
+            WindowAndSystemUiUtil.setSystemUiShown(this, false);
             this.purePhoto = true;
         }else {
             binding.appBar.setVisibility(View.VISIBLE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, true);
+            WindowAndSystemUiUtil.setSystemUiShown(this, true);
             this.purePhoto = false;
         }
     }

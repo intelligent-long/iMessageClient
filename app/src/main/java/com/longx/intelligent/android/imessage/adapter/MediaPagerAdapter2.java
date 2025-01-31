@@ -317,7 +317,7 @@ public class MediaPagerAdapter2 extends PagerAdapter {
         if(binding == null) return;
         if(pureContent){
             UiUtil.setViewVisibility(activity.getBinding().appBar, View.GONE);
-            WindowAndSystemUiUtil.setSystemUIShown(activity, false);
+            WindowAndSystemUiUtil.setSystemUiShown(activity, false);
             activity.getBinding().topTranslucentOverlayWrap.setVisibility(View.GONE);
             if(mediaList.get(getCurrentItem()).getMediaType() == MediaType.VIDEO) {
                 UiUtil.setViewVisibility(activity.getBinding().playControl, View.GONE);
@@ -325,7 +325,7 @@ public class MediaPagerAdapter2 extends PagerAdapter {
             this.pureContent = true;
         }else {
             UiUtil.setViewVisibility(activity.getBinding().appBar, View.VISIBLE);
-            WindowAndSystemUiUtil.setSystemUIShown(activity, true);
+            WindowAndSystemUiUtil.setSystemUiShown(activity, true);
             activity.getBinding().topTranslucentOverlayWrap.setVisibility(View.VISIBLE);
             if(mediaList.get(getCurrentItem()).getMediaType() == MediaType.VIDEO) {
                 UiUtil.setViewVisibility(activity.getBinding().playControl, View.VISIBLE);

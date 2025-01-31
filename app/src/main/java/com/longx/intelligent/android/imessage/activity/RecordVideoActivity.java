@@ -159,12 +159,12 @@ public class RecordVideoActivity extends BaseActivity {
         if(purePhoto){
             binding.appBar.setVisibility(View.GONE);
             binding.playControl.setVisibility(View.GONE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, false);
+            WindowAndSystemUiUtil.setSystemUiShown(this, false);
             this.purePhoto = true;
         }else {
             binding.appBar.setVisibility(View.VISIBLE);
             binding.playControl.setVisibility(View.VISIBLE);
-            WindowAndSystemUiUtil.setSystemUIShown(this, true);
+            WindowAndSystemUiUtil.setSystemUiShown(this, true);
             this.purePhoto = false;
         }
     }
