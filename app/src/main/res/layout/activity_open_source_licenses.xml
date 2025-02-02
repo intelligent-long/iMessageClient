@@ -37,7 +37,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <WebView
-            android:id="@+id/licenses_message"
+            android:id="@+id/web_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="21dp"/>

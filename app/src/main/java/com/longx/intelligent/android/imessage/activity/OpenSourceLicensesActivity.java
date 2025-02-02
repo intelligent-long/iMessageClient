@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.databinding.ActivityOpenSourceLicensesBinding;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 
@@ -24,23 +25,33 @@ public class OpenSourceLicensesActivity extends BaseActivity {
     }
 
     private void showLicensesMessage() {
-        binding.licensesMessage.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-        binding.licensesMessage.setVerticalScrollBarEnabled(false);
+        binding.webView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
+        binding.webView.setVerticalScrollBarEnabled(false);
         String html = buildHtml();
-        html = changeUiMode(html);
-        binding.licensesMessage.loadDataWithBaseURL("file:///android_res/font/", html, "text/html", "utf-8", null);
+        html = setupTextStyle(html);
+        binding.webView.loadDataWithBaseURL("file:///android_res/font/", html, "text/html", "utf-8", null);
     }
 
-    private String changeUiMode(String html) {
+    private String setupTextStyle(String html) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
             if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
                 html = html.replace("<textColor>", "color: " + ColorUtil.colorToRGB(ColorUtil.getAttrColor(this, android.R.attr.textColorPrimary)) + ";");
-                binding.licensesMessage.getSettings().setForceDark(WebSettings.FORCE_DARK_ON);
+                binding.webView.getSettings().setForceDark(WebSettings.FORCE_DARK_ON);
             } else {
                 html = html.replace("<textColor>", "");
-                binding.licensesMessage.getSettings().setForceDark(WebSettings.FORCE_DARK_OFF);
+                binding.webView.getSettings().setForceDark(WebSettings.FORCE_DARK_OFF);
             }
+        }
+        int font = SharedPreferencesAccessor.DefaultPref.getFont(this);
+        switch (font){
+            case 0:
+            case 1:
+                html = html.replace("<typeFace>", "src: url(\"file:///android_res/font/gsans_regular.ttf\") format(\"truetype\");");
+                break;
+            default:
+                html = html.replace("<typeFace>", "");
+                break;
         }
         return html;
     }
