@@ -122,6 +122,7 @@
     <string name="preference_key_manage_storage">manage_storage</string>
     <string name="preference_key_chat_bubble_color">chat_bubble_color</string>
     <string name="preference_key_bottom_navigation_view_label_visibility_mode">bottom_navigation_view_label_visibility_mode</string>
+    <string name="preference_key_bottom_navigation_view_icon_style">bottom_navigation_view_icon_style</string>
     <string name="preference_key_change_email_visibility">change_email_visibility</string>
     <string name="preference_key_change_sex_visibility">change_sex_visibility</string>
     <string name="preference_key_change_region_visibility">change_region_visibility</string>
@@ -134,6 +135,6 @@
     <string name="preference_key_record_audio">record_audio</string>
     <string name="preference_key_bluetooth_connect">bluetooth_connect</string>
     <string name="preference_key_main_activity_fragment_switch_mode">main_activity_fragment_switch_mode</string>
-    <string name="preference_key_use_system_font">use_system_font</string>
+    <string name="preference_key_font">font</string>
     <string name="preference_key_snackbar_appearance">snackbar_appearance</string>
 </resources>

@@ -42,7 +42,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class RootSettingsActivity extends BaseActivity {
+public class RootSettingsActivity extends BaseSettingsActivity {
     private ActivityRootSettingsBinding binding;
     public static final Bundle instanceState = new Bundle();
 
@@ -111,6 +111,7 @@ public class RootSettingsActivity extends BaseActivity {
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences_root, rootKey);
+
             doDefaultActions();
             initNightMode = SharedPreferencesAccessor.DefaultPref.getNightMode(getContext());
             GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);

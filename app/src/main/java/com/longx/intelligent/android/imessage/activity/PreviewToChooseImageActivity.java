@@ -27,6 +27,7 @@ public class PreviewToChooseImageActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setFontThemes(R.style.DarkStatusBarActivity_Font1, R.style.DarkStatusBarActivity_Font2);
         super.onCreate(savedInstanceState);
         binding = ActivityPreviewToChooseImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

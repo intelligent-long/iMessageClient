@@ -7,7 +7,7 @@
         <style>
         @font-face {
             font-family: "CustomFont";
-            src: url("file:///android_res/font/gsans_ntsanssc_regular.ttf") format("truetype");
+            src: url("file:///android_res/font/gsans_regular.ttf") format("truetype");
         }
         html, body {
             margin: 0;

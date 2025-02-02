@@ -16,7 +16,7 @@
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@android:id/switch_widget"
             android:id="@android:id/title"
-            style="@style/TextAppearance.Material3.TitleLarge"
+            style="@style/MaterialYouPreferenceTitle"
             android:textSize="21sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

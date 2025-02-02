@@ -33,7 +33,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class VersionSettingsActivity extends BaseActivity {
+public class VersionSettingsActivity extends BaseSettingsActivity {
     private ActivityVersionSettingsBinding binding;
 
     @Override

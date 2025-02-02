@@ -14,7 +14,7 @@ import com.longx.intelligent.android.imessage.databinding.ActivityPrivacySetting
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
-public class PrivacySettingsActivity extends BaseActivity {
+public class PrivacySettingsActivity extends BaseSettingsActivity {
     private ActivityPrivacySettingsBinding binding;
 
     @Override

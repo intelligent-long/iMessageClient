@@ -14,7 +14,7 @@ import com.longx.intelligent.android.imessage.databinding.ActivityUiSettingsBind
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;
 
-public class UiSettingsActivity extends BaseActivity {
+public class UiSettingsActivity extends BaseSettingsActivity {
     private ActivityUiSettingsBinding binding;
 
     @Override
@@ -34,11 +34,14 @@ public class UiSettingsActivity extends BaseActivity {
                     .commit();
         }
     }
+
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
         private Material3ListPreference preferenceChatBubbleColor;
         private Material3ListPreference preferenceBottomNavigationViewLabelVisibilityMode;
         private Material3ListPreference preferenceMainActivityFragmentSwitchMode;
         private Material3ListPreference preferenceSnackbarAppearance;
+        private Material3ListPreference preferenceFont;
+        private Material3ListPreference preferenceBottomNavigationViewIconStyle;
 
         public SettingsFragment() {
             super();
@@ -56,14 +59,40 @@ public class UiSettingsActivity extends BaseActivity {
             preferenceBottomNavigationViewLabelVisibilityMode = findPreference(getString(R.string.preference_key_bottom_navigation_view_label_visibility_mode));
             preferenceMainActivityFragmentSwitchMode = findPreference(getString(R.string.preference_key_main_activity_fragment_switch_mode));
             preferenceSnackbarAppearance = findPreference(getString(R.string.preference_key_snackbar_appearance));
+            preferenceFont = findPreference(getString(R.string.preference_key_font));
+            preferenceBottomNavigationViewIconStyle = findPreference(getString(R.string.preference_key_bottom_navigation_view_icon_style));
         }
 
         @Override
         protected void showInfo() {
+            updateFontSummary(null);
+            updateBottomNavigationViewIconStyle(null);
             updateChatBubbleColorSummary(null);
             updateBottomNavigationViewLabelVisibilityMode(null);
             updateMainActivityFragmentSwitchMode(null);
             updateSnackbarAppearance(null);
+        }
+
+        private void updateFontSummary(String newValue){
+            if(newValue == null) {
+                newValue = preferenceFont.getValue();
+            }
+            int index = preferenceFont.findIndexOfValue(newValue);
+            if (index != -1) {
+                String entry = getResources().getStringArray(R.array.font_entries)[index];
+                preferenceFont.setSummary(entry);
+            }
+        }
+
+        private void updateBottomNavigationViewIconStyle(String newValue){
+            if(newValue == null) {
+                newValue = preferenceBottomNavigationViewIconStyle.getValue();
+            }
+            int index = preferenceBottomNavigationViewIconStyle.findIndexOfValue(newValue);
+            if (index != -1) {
+                String entry = getResources().getStringArray(R.array.bottom_navigation_view_icon_style_entries)[index];
+                preferenceBottomNavigationViewIconStyle.setSummary(entry);
+            }
         }
 
         private void updateChatBubbleColorSummary(String newValue){
@@ -116,11 +145,18 @@ public class UiSettingsActivity extends BaseActivity {
             preferenceBottomNavigationViewLabelVisibilityMode.setOnPreferenceChangeListener(this);
             preferenceMainActivityFragmentSwitchMode.setOnPreferenceChangeListener(this);
             preferenceSnackbarAppearance.setOnPreferenceChangeListener(this);
+            preferenceFont.setOnPreferenceChangeListener(this);
+            preferenceBottomNavigationViewIconStyle.setOnPreferenceChangeListener(this);
         }
 
         @Override
         public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-            if(preference.equals(preferenceChatBubbleColor)){
+            if(preference.equals(preferenceFont)){
+                updateFontSummary((String) newValue);
+                ActivityOperator.recreateAll();
+            }else if(preference.equals(preferenceBottomNavigationViewIconStyle)){
+                updateBottomNavigationViewIconStyle((String) newValue);
+            }else if(preference.equals(preferenceChatBubbleColor)){
                 updateChatBubbleColorSummary((String) newValue);
             }else if(preference.equals(preferenceBottomNavigationViewLabelVisibilityMode)){
                 updateBottomNavigationViewLabelVisibilityMode((String) newValue);

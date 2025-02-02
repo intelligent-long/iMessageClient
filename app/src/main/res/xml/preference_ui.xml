@@ -2,28 +2,37 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference-->
-<!--        app:key="@string/preference_key_use_system_font"-->
-<!--        app:title="系统字体"-->
-<!--        android:summary="禁用内置字体"/>-->
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
+        app:key="@string/preference_key_font"
+        app:title="应用字体"
+        app:entries="@array/font_entries"
+        app:entryValues="@array/font_values"
+        app:defaultValue="0" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
         app:key="@string/preference_key_chat_bubble_color"
-        app:title="聊天气泡颜色"
+        app:title="聊天气泡"
         app:entries="@array/chat_bubble_color_entries"
         app:entryValues="@array/chat_bubble_color_values"
         app:defaultValue="0" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
         app:key="@string/preference_key_bottom_navigation_view_label_visibility_mode"
-        app:title="底栏标签显示"
+        app:title="底栏标签"
         app:entries="@array/bottom_navigation_view_label_visibility_mode_entries"
         app:entryValues="@array/bottom_navigation_view_label_visibility_mode_values"
         app:defaultValue="0" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
+        app:key="@string/preference_key_bottom_navigation_view_icon_style"
+        app:title="底栏图标"
+        app:entries="@array/bottom_navigation_view_icon_style_entries"
+        app:entryValues="@array/bottom_navigation_view_icon_style_values"
+        app:defaultValue="0" />
+
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
         app:key="@string/preference_key_main_activity_fragment_switch_mode"
-        android:title="主画面切换模式"
+        android:title="主画面切换"
         android:entries="@array/main_activity_fragment_switch_mode_entries"
         android:entryValues="@array/main_activity_fragment_switch_mode_values"
         android:defaultValue="0"/>

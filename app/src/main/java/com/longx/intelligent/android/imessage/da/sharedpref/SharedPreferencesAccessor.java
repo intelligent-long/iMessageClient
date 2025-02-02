@@ -50,6 +50,10 @@ public class SharedPreferencesAccessor {
             return PreferenceManager.getDefaultSharedPreferences(context);
         }
 
+        public static int getFont(Context context){
+            return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_font), "-1"));
+        }
+
         public static boolean getUseDynamicColorEnabled(Context context){
             return getSharedPreferences(context).getBoolean(context.getString(R.string.preference_key_use_dynamic_color), false);
         }
@@ -64,6 +68,10 @@ public class SharedPreferencesAccessor {
 
         public static int getBottomNavigationViewLabelVisibilityMode(Context context){
             return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_bottom_navigation_view_label_visibility_mode), "-1"));
+        }
+
+        public static int getBottomNavigationViewIconStyle(Context context){
+            return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_bottom_navigation_view_icon_style), "-1"));
         }
 
         public static int getMainActivityFragmentSwitchMode(Context context){

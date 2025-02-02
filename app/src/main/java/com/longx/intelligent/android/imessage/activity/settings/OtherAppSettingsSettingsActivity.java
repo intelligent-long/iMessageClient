@@ -15,7 +15,7 @@ import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFr
 import com.longx.intelligent.android.imessage.util.AppUtil;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
-public class OtherAppSettingsSettingsActivity extends BaseActivity {
+public class OtherAppSettingsSettingsActivity extends BaseSettingsActivity {
     private ActivityOtherAppSettingsSettingsBinding binding;
 
     @Override

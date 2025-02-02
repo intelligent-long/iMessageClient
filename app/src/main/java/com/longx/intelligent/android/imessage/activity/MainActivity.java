@@ -86,6 +86,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     private boolean showNavIconAnimation = true;
     private ValueAnimator navIconVisibilityPlusAnimator;
     private ValueAnimator navIconVisibilityMinusAnimator;
+    private int bottomNavigationViewLabelVisibilityMode;
+    private int bottomNavigationViewIconStyle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -457,10 +459,15 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
             UiUtil.setViewMargin(binding.onlineStateIndicator, -1, -1, -1, (int) (WindowAndSystemUiUtil.getNavigationBarHeight(this) / 2.0));
         }
         setupBottomNavigationViewLabelVisibility();
+        setupBottomNavigationViewIconStyle();
     }
 
     private void setupBottomNavigationViewLabelVisibility() {
         int bottomNavigationViewLabelVisibilityMode = SharedPreferencesAccessor.DefaultPref.getBottomNavigationViewLabelVisibilityMode(this);
+        if(bottomNavigationViewLabelVisibilityMode == this.bottomNavigationViewLabelVisibilityMode){
+            return;
+        }
+        this.bottomNavigationViewLabelVisibilityMode = bottomNavigationViewLabelVisibilityMode;
         switch (bottomNavigationViewLabelVisibilityMode){
             case 0:
                 binding.bottomNavigation.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_LABELED);
@@ -474,10 +481,31 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
     }
 
+    private void setupBottomNavigationViewIconStyle(){
+        int bottomNavigationViewIconStyle = SharedPreferencesAccessor.DefaultPref.getBottomNavigationViewIconStyle(this);
+        if(bottomNavigationViewIconStyle == this.bottomNavigationViewIconStyle){
+            return;
+        }
+        this.bottomNavigationViewIconStyle = bottomNavigationViewIconStyle;
+        switch (bottomNavigationViewIconStyle){
+            case 0:
+                binding.bottomNavigation.getMenu().findItem(R.id.navigation_message).setIcon(R.drawable.selector_bottom_nav_message);
+                binding.bottomNavigation.getMenu().findItem(R.id.navigation_channel).setIcon(R.drawable.selector_bottom_nav_channel);
+                binding.bottomNavigation.getMenu().findItem(R.id.navigation_broadcast).setIcon(R.drawable.selector_bottom_nav_broadcast);
+                break;
+            case 1:
+                binding.bottomNavigation.getMenu().findItem(R.id.navigation_message).setIcon(R.drawable.chat_fill_24px);
+                binding.bottomNavigation.getMenu().findItem(R.id.navigation_channel).setIcon(R.drawable.contacts_fill_24px);
+                binding.bottomNavigation.getMenu().findItem(R.id.navigation_broadcast).setIcon(R.drawable.wifi_tethering_24px);
+                break;
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         setupBottomNavigationViewLabelVisibility();
+        setupBottomNavigationViewIconStyle();
     }
 
     @Override

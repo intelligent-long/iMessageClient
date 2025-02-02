@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.view.MenuItem;
@@ -11,9 +12,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -238,7 +246,6 @@ public class UiUtil {
         return false;
     }
 
-
     public static boolean isViewOutOfScreen(View view) {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
@@ -259,5 +266,30 @@ public class UiUtil {
         boolean viewOutOfScreen = isViewOutOfScreen(view);
         return !(viewCovered || viewOutOfScreen);
     }
+
+    public static void setTypefaceToViews(Typeface typeface, View... views) {
+        for (View view : views) {
+            if (view instanceof TextView) {
+                ((TextView) view).setTypeface(typeface);
+            } else if (view instanceof Spinner) {
+                Spinner spinner = (Spinner) view;
+                if (spinner.getAdapter() != null) {
+                    spinner.setAdapter(new ArrayAdapter<>(spinner.getContext(), android.R.layout.simple_spinner_item, spinner.getAdapter().getCount()));
+                }
+            } else if (view instanceof CollapsingToolbarLayout) {
+                CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view;
+                collapsingToolbarLayout.setExpandedTitleTypeface(typeface);
+                collapsingToolbarLayout.setCollapsedTitleTypeface(typeface);
+            }
+
+            if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    setTypefaceToViews(typeface, viewGroup.getChildAt(i));
+                }
+            }
+        }
+    }
+
 
 }

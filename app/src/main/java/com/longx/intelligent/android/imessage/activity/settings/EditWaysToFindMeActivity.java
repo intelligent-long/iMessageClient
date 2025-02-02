@@ -26,7 +26,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class EditWaysToFindMeActivity extends BaseActivity {
+public class EditWaysToFindMeActivity extends BaseSettingsActivity {
     private ActivityEditWaysToFindMeBinding binding;
 
     @Override

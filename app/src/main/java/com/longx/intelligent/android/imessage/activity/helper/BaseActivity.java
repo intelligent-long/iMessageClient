@@ -29,14 +29,42 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
     private Bundle savedInstanceState;
     private final Set<PermissionOperator> permissionOperators = new HashSet<>();
     private boolean autoCancelInput = true;
+    private Integer[] fontThemes = new Integer[]{R.style.Theme_IChat2Client_Font1, R.style.Theme_IChat2Client_Font2};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Application.foreground = true;
         this.savedInstanceState = savedInstanceState;
+        setThemeOfFontStyle();
         checkAndSetNightMode();
         super.onCreate(savedInstanceState);
         checkAndEnableDynamicColor();
+    }
+
+    protected void setThemeOfFontStyle(){
+        if(fontThemes == null) return;
+        int font = SharedPreferencesAccessor.DefaultPref.getFont(this);
+        switch (font){
+            case 0:
+                if (fontThemes[0] != null) {
+                    setTheme(fontThemes[0]);
+                }
+                break;
+            case 1:
+                if (fontThemes[1] != null) {
+                    setTheme(fontThemes[1]);
+                }
+                break;
+        }
+    }
+
+    public void setFontThemes(Integer fontThemes1, Integer fontTheme2){
+        if(fontThemes == null) return;
+        fontThemes[0] = fontThemes1; fontThemes[1] = fontTheme2;
+    }
+
+    public void useCustomFontSwitching() {
+        fontThemes = null;
     }
 
     protected Bundle getSavedInstanceState() {

@@ -41,7 +41,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class EditUserSettingsActivity extends BaseActivity{
+public class EditUserSettingsActivity extends BaseSettingsActivity{
     private ActivityEditUserSettingsBinding binding;
 
     @Override

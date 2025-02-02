@@ -24,7 +24,7 @@ import com.longx.intelligent.android.imessage.preference.PermissionPreference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermissionSettingsActivity extends BaseActivity {
+public class PermissionSettingsActivity extends BaseSettingsActivity {
     private ActivityPermissionSettingsBinding binding;
     private SettingsFragment settingsFragment;
 

@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@android:id/title"
-                style="@style/TextAppearance.Material3.TitleLarge"
+                style="@style/MaterialYouPreferenceTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" />

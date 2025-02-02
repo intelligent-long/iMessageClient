@@ -32,6 +32,7 @@ public class MediaActivity extends BaseActivity implements RecyclerItemYiers.OnR
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setFontThemes(R.style.DarkStatusBarActivity_Font1, R.style.DarkStatusBarActivity_Font2);
         super.onCreate(savedInstanceState);
         instance = this;
         binding = ActivityMediaBinding.inflate(getLayoutInflater());

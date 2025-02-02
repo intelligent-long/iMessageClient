@@ -88,6 +88,7 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setFontThemes(R.style.ChatActivity_Font1, R.style.ChatActivity_Font2);
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
