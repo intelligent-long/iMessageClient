@@ -82,4 +82,31 @@
             android:text="重新启动"
             android:textAppearance="@style/BottomSheetItemTitle"/>
     </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/settings_outline_24px"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置"
+            android:textAppearance="@style/BottomSheetItemTitle" />
+    </LinearLayout>
 </LinearLayout>

@@ -33,6 +33,7 @@ import com.longx.intelligent.android.imessage.util.AppUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.value.Constants;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3SwitchPreference;
@@ -84,12 +85,13 @@ public class RootSettingsActivity extends BaseSettingsActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(binding.settings.getId(), new SettingsFragment())
+                    .replace(binding.settings.getId(), new SettingsFragment(getIntent().getBooleanExtra(ExtraKeys.AUTH_TO_SETTINGS, false)))
                     .commit();
         }
     }
 
     public static class SettingsFragment extends BasePreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, ContentUpdater.OnServerContentUpdateYier {
+        private boolean authToSettings;
         private Material3Preference preferenceEditUser;
         private Material3Preference preferenceLogout;
         private Material3Preference preferencePrivacy;
@@ -103,9 +105,16 @@ public class RootSettingsActivity extends BaseSettingsActivity {
         private Material3Preference preferenceVersion;
         private Material3Preference preferenceUi;
         private int initNightMode;
+        private Material3Category userCategory;
+        private Material3Category privacyCategory;
 
-        public SettingsFragment() {
+        public SettingsFragment(){
             super();
+        }
+
+        public SettingsFragment(boolean authToSettings) {
+            super();
+            this.authToSettings = authToSettings;
         }
 
         @Override
@@ -114,7 +123,21 @@ public class RootSettingsActivity extends BaseSettingsActivity {
 
             doDefaultActions();
             initNightMode = SharedPreferencesAccessor.DefaultPref.getNightMode(getContext());
+
+            if(savedInstanceState != null){
+                authToSettings = savedInstanceState.getBoolean(InstanceStateKeys.RootSettingsActivity.AUTH_TO_SETTINGS, false);
+            }
+            if(authToSettings){
+                userCategory.setVisible(false);
+                privacyCategory.setVisible(false);
+            }
             GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
+        }
+
+        @Override
+        public void onSaveInstanceState(@NonNull Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putBoolean(InstanceStateKeys.RootSettingsActivity.AUTH_TO_SETTINGS, authToSettings);
         }
 
         @Override
@@ -137,6 +160,8 @@ public class RootSettingsActivity extends BaseSettingsActivity {
             preferenceShare = findPreference(getString(R.string.preference_key_share));
             preferenceVersion = findPreference(getString(R.string.preference_key_version));
             preferenceUi = findPreference(getString(R.string.preference_key_ui));
+            userCategory = findPreference(getString(R.string.preference_key_user_category));
+            privacyCategory = findPreference(getString(R.string.preference_key_privacy_category));
         }
 
         @Override

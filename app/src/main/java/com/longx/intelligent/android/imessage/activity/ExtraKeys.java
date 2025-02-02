@@ -48,4 +48,5 @@ public class ExtraKeys {
     public static final String CHANGE_PERMISSION = "change_permission";
     public static final String TITLE = "title";
     public static final String MESSAGE = "message";
+    public static final String AUTH_TO_SETTINGS = "auth_to_settings";
 }

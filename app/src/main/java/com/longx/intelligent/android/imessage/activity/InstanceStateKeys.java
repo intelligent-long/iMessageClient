@@ -19,6 +19,7 @@ public class InstanceStateKeys {
 
     public static class RootSettingsActivity{
         public static final String APP_BAR_LAYOUT_STATE = "app_bar_layout_state";
+        public static final String AUTH_TO_SETTINGS = "auth_to_settings";
     }
 
     public static class BroadcastFragment{

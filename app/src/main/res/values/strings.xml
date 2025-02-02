@@ -137,4 +137,6 @@
     <string name="preference_key_main_activity_fragment_switch_mode">main_activity_fragment_switch_mode</string>
     <string name="preference_key_font">font</string>
     <string name="preference_key_snackbar_appearance">snackbar_appearance</string>
+    <string name="preference_key_user_category">user_category</string>
+    <string name="preference_key_privacy_category">privacy_category</string>
 </resources>

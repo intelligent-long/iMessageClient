@@ -1,6 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:key="@string/preference_key_user_category"
         app:title="用户">
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
@@ -13,6 +14,7 @@
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:key="@string/preference_key_privacy_category"
         app:title="隐私和安全">
 
         <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
