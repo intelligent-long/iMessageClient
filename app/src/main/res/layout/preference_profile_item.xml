@@ -19,7 +19,7 @@
 
             <TextView
                 android:id="@android:id/title"
-                style="@style/TextAppearance.Material3.TitleLarge"
+                style="@style/MaterialYouPreferenceTitle"
                 android:textSize="21sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
