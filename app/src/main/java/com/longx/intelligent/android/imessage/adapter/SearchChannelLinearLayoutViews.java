@@ -113,10 +113,9 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
 
     private void appendMatchingText(SpannableStringBuilder builder, String prefix, String text, String searchStr) {
         if (builder.length() != 0) builder.append("\r\n");
-        String fullText = prefix + text;
-        int start = fullText.toLowerCase().indexOf(searchStr.toLowerCase());
+        int start = text.toLowerCase().indexOf(searchStr.toLowerCase()) + prefix.length();
         int end = start + searchStr.length();
-        SpannableString spannableString = new SpannableString(fullText);
+        SpannableString spannableString = new SpannableString(prefix + text);
         if (start >= 0) {
             spannableString.setSpan(new ForegroundColorSpan(ColorUtil.getColor(getActivity(), R.color.imessage)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
