@@ -166,6 +166,10 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                     "chatMessage=" + chatMessage +
                     '}';
         }
+
+        public ChatMessage getChatMessage() {
+            return chatMessage;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -878,4 +882,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         return -1;
     }
 
+    public List<ItemData> getItemDataList() {
+        return itemDataList;
+    }
 }

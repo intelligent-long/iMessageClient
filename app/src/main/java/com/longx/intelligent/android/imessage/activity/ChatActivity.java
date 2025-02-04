@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.imessage.R;
@@ -24,9 +25,11 @@ import com.longx.intelligent.android.imessage.da.FileHelper;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.OpenedChatDatabaseManager;
+import com.longx.intelligent.android.imessage.data.BroadcastLike;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
+import com.longx.intelligent.android.imessage.data.MessageViewed;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.data.request.SendFileChatMessagePostBody;
 import com.longx.intelligent.android.imessage.data.request.SendImageChatMessagePostBody;
@@ -85,6 +88,7 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
     private VoiceChatMessageBehaviours voiceChatMessageBehaviours;
     private ChannelDatabaseManager channelDatabaseManager;
     private ChatMessage locateChatMessage;
+    private final List<ChatMessage> viewedNewMessages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +148,11 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
             GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                 openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
             });
+            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                    newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                });
+            });
         }
     }
 
@@ -189,6 +198,52 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
     private void checkAndIndicateMessageLocation() {
         if(locateChatMessage != null){
             adapter.indicateLocation(locateChatMessage.getUuid());
+        }
+    }
+
+    private void viewNewChatMessages(){
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+        int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        List<String> toViewNewMessageIds = new ArrayList<>();
+        for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+            try {
+                if(!adapter.getItemDataList().isEmpty()) {
+                    ChatMessage chatMessage = adapter.getItemDataList().get(i).getChatMessage();
+                    if (!(chatMessage.isViewed() || chatMessage.isSelfSender(this))) {
+                        if (!viewedNewMessages.contains(chatMessage)) {
+                            toViewNewMessageIds.add(chatMessage.getUuid());
+                            viewedNewMessages.add(chatMessage);
+                        }
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+                ErrorLogger.log(e);
+            }
+        }
+        if(!toViewNewMessageIds.isEmpty()){
+            toViewNewMessageIds.forEach(toViewNewMessageId -> {
+                ChatApiCaller.viewMessage(null, toViewNewMessageId, new RetrofitApiCaller.BaseCommonYier<OperationData>(this, false){
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(ChatActivity.this, new int[]{}, () -> {
+                            MessageViewed messageViewed = data.getData(MessageViewed.class);
+                            openedChatDatabaseManager.updateNotViewedCount(messageViewed.getNotViewedCount(), messageViewed.getOther());
+                            chatMessageDatabaseManager.setOneToViewed(messageViewed.getViewedUuid());
+                            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+                            });
+                            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                                    newContentBadgeDisplayYier.autoShowNewContentBadge(ChatActivity.this, NewContentBadgeDisplayYier.ID.MESSAGES);
+                                });
+                            });
+                        });
+
+                    }
+                });
+            });
         }
     }
 
@@ -490,6 +545,13 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
         binding.recyclerView.setOnTouchListener((v, event) -> {
             adapter.cancelIndicateLocation();
             return false;
+        });
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                viewNewChatMessages();
+            }
         });
     }
 
