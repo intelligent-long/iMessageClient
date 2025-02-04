@@ -62,5 +62,15 @@ public class AuthorAccountsBottomSheet extends AbstractBottomSheet{
             MessageDisplayer.autoShow(getActivity(), "微信号: _909691944", MessageDisplayer.Duration.LONG);
             dismiss();
         });
+        binding.github.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/intelligent-long"));
+                getActivity().startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                MessageDisplayer.autoShow(getActivity(), "GitHub: https://github.com/intelligent-long", MessageDisplayer.Duration.LONG);
+            }
+            dismiss();
+        });
     }
 }

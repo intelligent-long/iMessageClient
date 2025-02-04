@@ -8,11 +8,11 @@
     </style>
 
     <style name="Theme.IChat2Client.Font1" parent="Theme.IChat2Client">
-        <item name="fontFamily">@font/app_font_gsans_ntsanssc</item>
+        <item name="fontFamily">@font/app_font_gsans_pingfangsc</item>
     </style>
 
     <style name="Theme.IChat2Client.Font2" parent="Theme.IChat2Client">
-        <item name="fontFamily">@font/app_font_gsans_pingfangsc</item>
+        <item name="fontFamily">@font/app_font_gsans_ntsanssc</item>
     </style>
 
     <style name="SettingsActivity" parent="Theme.IChat2Client">
@@ -25,14 +25,14 @@
         <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
-        <item name="android:fontFamily">@font/app_font_gsans_ntsanssc</item>
+        <item name="android:fontFamily">@font/app_font_gsans_pingfangsc</item>
     </style>
 
     <style name="SettingsActivity.Font2" parent="Theme.IChat2Client">
         <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
-        <item name="android:fontFamily">@font/app_font_gsans_pingfangsc</item>
+        <item name="android:fontFamily">@font/app_font_gsans_ntsanssc</item>
     </style>
 
     <style name="DarkStatusBarActivity" parent="Theme.IChat2Client">
