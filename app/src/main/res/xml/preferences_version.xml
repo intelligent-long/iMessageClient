@@ -11,6 +11,9 @@
         app:key="@string/preference_key_version_code"
         app:title="版本号"/>
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+        app:key="@string/preference_key_build_time"
+        app:title="构建"/>
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
         app:key="@string/preference_key_user_guide"
         app:title="使用须知"/>
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference

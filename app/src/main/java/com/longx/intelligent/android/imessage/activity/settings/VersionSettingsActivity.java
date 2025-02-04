@@ -60,6 +60,7 @@ public class VersionSettingsActivity extends BaseSettingsActivity {
         private Material3Preference preferenceVersionCode;
         private Material3Preference preferenceOpenSourceLicenses;
         private Material3Preference preferenceUserGuide;
+        private Material3Preference preferenceBuildTime;
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {
@@ -74,6 +75,7 @@ public class VersionSettingsActivity extends BaseSettingsActivity {
             preferenceVersionCode = findPreference(getString(R.string.preference_key_version_code));
             preferenceOpenSourceLicenses = findPreference(getString(R.string.preference_key_open_source_licenses));
             preferenceUserGuide = findPreference(getString(R.string.preference_key_user_guide));
+            preferenceBuildTime = findPreference(getString(R.string.preference_key_build_time));
         }
 
         @Override
@@ -81,6 +83,7 @@ public class VersionSettingsActivity extends BaseSettingsActivity {
             preferenceAuthor.setSummary(Constants.AUTHOR);
             preferenceVersionName.setSummary(AppUtil.getVersionName(requireContext()));
             preferenceVersionCode.setSummary(String.valueOf(AppUtil.getVersionCode(requireContext())));
+            preferenceBuildTime.setSummary(Constants.BUILD_TIME);
         }
 
         @Override

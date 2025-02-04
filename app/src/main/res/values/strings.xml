@@ -112,6 +112,7 @@
     <string name="preference_key_change_region">change_region</string>
     <string name="preference_key_version_name">version_name</string>
     <string name="preference_key_version_code">version_code</string>
+    <string name="preference_key_build_time">build_time</string>
     <string name="preference_key_open_source_licenses">open_source_licenses</string>
     <string name="preference_key_user_guide">user_guide</string>
     <string name="preference_key_author">author</string>
