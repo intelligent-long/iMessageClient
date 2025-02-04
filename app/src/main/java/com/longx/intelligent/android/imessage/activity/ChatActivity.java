@@ -122,12 +122,29 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
         voiceChatMessageBehaviours = new VoiceChatMessageBehaviours(this);
         chatMessageDatabaseManager = ChatMessageDatabaseManager.getInstanceOrInitAndGet(ChatActivity.this, channel.getImessageId());
         openedChatDatabaseManager = OpenedChatDatabaseManager.getInstance();
-        openedChatDatabaseManager.updateShow(channel.getImessageId(), true);
         channelDatabaseManager = ChannelDatabaseManager.getInstance();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
         adapter = new ChatMessagesRecyclerAdapter(this, binding.recyclerView);
         binding.recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean toShow = true;
+        for (OpenedChat openedChat : openedChatDatabaseManager.findAllShow()) {
+            if(openedChat.getChannelImessageId().equals(channel.getImessageId())){
+                toShow = false;
+                break;
+            }
+        }
+        if(toShow) {
+            openedChatDatabaseManager.updateShow(channel.getImessageId(), true);
+            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+            });
+        }
     }
 
     private void checkAndLocateMessage() {

@@ -102,9 +102,9 @@ public class OpenedChatDatabaseManager extends BaseDatabaseManager{
         try {
             ContentValues contentValues = new ContentValues();
             contentValues.put(OpenedChatDatabaseHelper.Columns.SHOW, show);
-            int rowNum = getDatabase().update(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, contentValues,
+            int rows = getDatabase().update(OpenedChatDatabaseHelper.DatabaseInfo.TABLE_NAME, contentValues,
                     OpenedChatDatabaseHelper.Columns.CHANNEL_IMESSAGE_ID + "=?", new String[]{channelImessageId});
-            return rowNum > 0;
+            return rows > 0;
         }finally {
             releaseDatabaseIfUnused();
         }
