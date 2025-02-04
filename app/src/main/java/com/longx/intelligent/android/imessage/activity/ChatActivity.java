@@ -179,9 +179,9 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
             initialChatMessageCount = chatMessageDatabaseManager.count();
             showChatMessages();
         }
-        if(openedChatDatabaseManager.findNotViewedCount(channel.getImessageId()) > 0) {
+//        if(openedChatDatabaseManager.findNotViewedCount(channel.getImessageId()) > 0) {
 //            viewAllNewChatMessages();
-        }
+//        }
         ChatMessageAllow chatMessageAllow = channelDatabaseManager.findOneAssociations(channel.getImessageId()).getChatMessageAllowToThem();
         if(!chatMessageAllow.isAllowVoice()){
             UiUtil.setViewEnabled(binding.voiceButton, false, true);
