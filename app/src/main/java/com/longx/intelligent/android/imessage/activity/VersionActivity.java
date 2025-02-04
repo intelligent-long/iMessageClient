@@ -20,8 +20,6 @@ import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 
-import org.apache.tika.utils.StringUtils;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -138,7 +136,7 @@ public class VersionActivity extends BaseActivity {
                                     binding.updatableVersion.setText(updatableRelease.getVersionName());
                                     binding.updatableVersionCode.setText(String.valueOf(updatableRelease.getVersionCode()));
                                     binding.releaseTime.setText(TimeUtil.formatRelativeTime(updatableRelease.getReleaseTime()));
-                                    binding.updateNotes.setText(StringUtils.isEmpty(updatableRelease.getNotes()) ? "-" : updatableRelease.getNotes());
+                                    binding.updateNotes.setText((updatableRelease.getNotes() == null || updatableRelease.getNotes().isEmpty()) ? "-" : updatableRelease.getNotes());
                                     UrlMapApiCaller.fetchImessageWebReleaseUrl(VersionActivity.this, updatableRelease.getVersionCode(), new RetrofitApiCaller.BaseCommonYier<OperationData>(VersionActivity.this){
                                         @Override
                                         public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
