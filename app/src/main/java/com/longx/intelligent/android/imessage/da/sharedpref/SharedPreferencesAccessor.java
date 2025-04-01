@@ -51,7 +51,7 @@ public class SharedPreferencesAccessor {
         }
 
         public static int getFont(Context context){
-            return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_font), "-1"));
+            return Integer.parseInt(getSharedPreferences(context).getString(context.getString(R.string.preference_key_font), "0"));
         }
 
         public static boolean getUseDynamicColorEnabled(Context context){

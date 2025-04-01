@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.activity.settings;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import com.longx.intelligent.android.imessage.activity.edituser.ChangeEmailActiv
 import com.longx.intelligent.android.imessage.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
+import com.longx.intelligent.android.imessage.dialog.AbstractDialog;
 import com.longx.intelligent.android.imessage.dialog.ChoiceDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UrlMapApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -30,6 +32,7 @@ import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.ServerSettingDialog;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.imessage.util.AppUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.value.Constants;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
@@ -230,6 +233,7 @@ public class RootSettingsActivity extends BaseSettingsActivity {
             }else {
                 serverConfig = SharedPreferencesAccessor.ServerPref.getCustomServerConfig(requireContext());
             }
+            if(serverConfig == null) return;
             String serverSettingSummary;
             if(serverConfig.getPort() != 80) {
                 serverSettingSummary = serverConfig.getHost() + ":" + serverConfig.getPort();
@@ -264,7 +268,11 @@ public class RootSettingsActivity extends BaseSettingsActivity {
             }else if(preference.equals(preferenceUseDynamicColor)){
                 ActivityOperator.recreateAll();
             }else if(preference.equals(preferenceServerSetting)){
-                new ServerSettingDialog(getActivity()).create().show();
+                AbstractDialog serverSettingDialog = new ServerSettingDialog(getActivity()).create();
+                serverSettingDialog.setOnDismissListener(dialog -> {
+                    updateServerSettingSummary();
+                });
+                serverSettingDialog.show();
             }else if(preference.equals(preferenceOtherAppSettings)){
                 startActivity(new Intent(getContext(), OtherAppSettingsSettingsActivity.class));
             }else if(preference.equals(preferenceVersion)){

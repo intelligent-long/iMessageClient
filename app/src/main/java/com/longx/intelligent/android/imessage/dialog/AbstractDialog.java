@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -30,6 +31,7 @@ public abstract class AbstractDialog<T extends AbstractDialog<T>> {
     private final ContextThemeWrapper dialogContext;
     private Drawable defaultIcon;
     private Drawable icon;
+    private DialogInterface.OnDismissListener onDismissListener;
 
     public AbstractDialog(Activity activity) {
         this(activity, false);
@@ -172,5 +174,9 @@ public abstract class AbstractDialog<T extends AbstractDialog<T>> {
 
     public AlertDialog getDialog() {
         return dialog;
+    }
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.dialog.setOnDismissListener(onDismissListener);
     }
 }
