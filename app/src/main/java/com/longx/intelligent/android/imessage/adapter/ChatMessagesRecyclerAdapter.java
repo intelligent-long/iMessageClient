@@ -19,7 +19,6 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChatActivity;
 import com.longx.intelligent.android.imessage.activity.ChatFileActivity;
-import com.longx.intelligent.android.imessage.activity.MediaActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.MediaActivity2;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ChatVoicePlayer;
@@ -711,7 +710,6 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         chatMessages.forEach(chatMessage -> {
             if(chatMessage.getType() == ChatMessage.TYPE_IMAGE){
                 MediaType mediaType = MediaType.IMAGE;
-                ErrorLogger.log(chatMessage);
                 String imageFilePath = chatMessage.getImageFilePath();
                 if(imageFilePath != null) {
                     Uri uri = Uri.fromFile(new File(imageFilePath));
@@ -728,37 +726,37 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         });
         intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
         intent.putExtra(ExtraKeys.BUTTON_TEXT, "保存");
-        MediaActivity.setActionButtonYier(v1 -> {
-            int currentItem = MediaActivity.getInstance().getCurrentItemIndex();
+        MediaActivity2.setActionButtonYier(v1 -> {
+            int currentItem = MediaActivity2.getInstance().getCurrentItemIndex();
             if(currentItem == -1) return;
             ChatMessage chatMessage = chatMessages.get(currentItem);
             switch (chatMessage.getType()){
                 case ChatMessage.TYPE_IMAGE:{
                     new Thread(() -> {
-                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
+                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity2.getInstance());
                         operatingDialog.create().show();
                         try {
                             PublicFileAccessor.ChatMedia.saveImage(activity, chatMessage);
                             operatingDialog.dismiss();
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
                             ErrorLogger.log(e);
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
                     }).start();
                     break;
                 }
                 case ChatMessage.TYPE_VIDEO:{
                     new Thread(() -> {
-                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity.getInstance());
+                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity2.getInstance());
                         operatingDialog.create().show();
                         try {
                             PublicFileAccessor.ChatMedia.saveVideo(activity, chatMessage);
                             operatingDialog.dismiss();
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
                             ErrorLogger.log(e);
-                            MessageDisplayer.autoShow(MediaActivity.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
+                            MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
                     }).start();
                 }
