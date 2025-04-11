@@ -100,6 +100,9 @@ public class SearchChatMessageResultItemsRecyclerAdapter extends WrappableRecycl
             case ChatMessage.TYPE_UNSEND:
                 holder.binding.chatMessage.setText("[撤回]");
                 break;
+            case ChatMessage.TYPE_MESSAGE_EXPIRED:
+                holder.binding.chatMessage.setText("[消息过期]");
+                break;
         }
         holder.binding.time.setText(TimeUtil.formatRelativeTime(chatMessage.getTime()));
         setupYiers(holder, position, channel);

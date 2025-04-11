@@ -597,4 +597,20 @@
             android:textColor="?attr/colorOutline"
             android:textSize="12.6sp"/>
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/message_expired"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/time">
+
+        <TextView
+            android:id="@+id/message_expired_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingVertical="10dp"
+            android:textColor="?attr/colorOutline"
+            android:textSize="12.6sp"/>
+    </FrameLayout>
 </RelativeLayout>

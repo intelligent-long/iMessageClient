@@ -65,6 +65,21 @@ public class Notifications {
             case ChatMessage.TYPE_IMAGE:
                 text = "[图片]";
                 break;
+            case ChatMessage.TYPE_FILE:
+                text = "[文件]";
+                break;
+            case ChatMessage.TYPE_VIDEO:
+                text = "[视频]";
+                break;
+            case ChatMessage.TYPE_VOICE:
+                text = "[语音]";
+                break;
+            case ChatMessage.TYPE_UNSEND:
+                text = "[撤回]";
+                break;
+            case ChatMessage.TYPE_MESSAGE_EXPIRED:
+                text = "[消息过期]";
+                break;
         }
         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(chatMessage.getOther(context));
         if(channel == null){

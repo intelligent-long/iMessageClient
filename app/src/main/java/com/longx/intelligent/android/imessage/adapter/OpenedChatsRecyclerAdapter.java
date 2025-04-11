@@ -116,6 +116,9 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
             case ChatMessage.TYPE_UNSEND:
                 holder.binding.newestChatMessage.setText("[撤回]");
                 break;
+            case ChatMessage.TYPE_MESSAGE_EXPIRED:
+                holder.binding.newestChatMessage.setText("[消息过期]");
+                break;
         }
         holder.binding.time.setText(TimeUtil.formatSimpleRelativeTime(newestChatMessage.getTime()));
         displayBadges(holder, itemData);

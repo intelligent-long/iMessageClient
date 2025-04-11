@@ -85,7 +85,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.IMAGE_ID, chatMessage.getImageId());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_ID, chatMessage.getFileId());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_ID, chatMessage.getVideoId());
-            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_ID, chatMessage.getVoiceId());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.EXPIRED_MESSAGE_COUNT, chatMessage.getExpiredMessageCount());
             long id = getDatabase().insertWithOnConflict(((ChatMessageDatabaseHelper)getHelper()).getTableName(), null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             return id != -1;
         }finally {
@@ -125,7 +125,8 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String fileId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_ID);
                 String videoId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_ID);
                 String voiceId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_ID);
-                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid);
+                Integer expiredMessageCount = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.EXPIRED_MESSAGE_COUNT);
+                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, time, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid, expiredMessageCount);
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
                 chatMessage.setFullContentGot(fullContentGot);
@@ -238,7 +239,8 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String fileId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_ID);
                 String videoId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_ID);
                 String voiceId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_ID);
-                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid);
+                Integer expiredMessageCount = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.EXPIRED_MESSAGE_COUNT);
+                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuid, from, to, timeFound, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid, expiredMessageCount);
                 chatMessage.setImageFilePath(imageFilePath);
                 chatMessage.setImageSize(new Size(imageWidth == null ? 0 : imageWidth, imageHeight == null ? 0 : imageHeight));
                 chatMessage.setShowTime(false);
@@ -286,6 +288,7 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_ID, chatMessage.getFileId());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_ID, chatMessage.getVideoId());
             contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_ID, chatMessage.getVoiceId());
+            contentValues.put(ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.EXPIRED_MESSAGE_COUNT, chatMessage.getExpiredMessageCount());
             long rowCount = getDatabase().update(((ChatMessageDatabaseHelper)getHelper()).getTableName(), contentValues, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.UUID + "=\"" + chatMessage.getUuid() + "\"", null);
             return rowCount > 0;
         }finally {
@@ -322,7 +325,8 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String fileId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_ID);
                 String videoId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_ID);
                 String voiceId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_ID);
-                chatMessage = new ChatMessage(type == null ? -1 : type, uuidFound, from, to, time, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid);
+                Integer expiredMessageCount = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.EXPIRED_MESSAGE_COUNT);
+                chatMessage = new ChatMessage(type == null ? -1 : type, uuidFound, from, to, time, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid, expiredMessageCount);
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
                 chatMessage.setFullContentGot(fullContentGot);
@@ -372,7 +376,8 @@ public class ChatMessageDatabaseManager extends BaseDatabaseManager{
                 String fileId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.FILE_ID);
                 String videoId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VIDEO_ID);
                 String voiceId = DatabaseUtil.getString(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.VOICE_ID);
-                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuidFound, from, to, time, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid);
+                Integer expiredMessageCount = DatabaseUtil.getInteger(cursor, ChatMessageDatabaseHelper.TableChannelChatMessagesColumns.EXPIRED_MESSAGE_COUNT);
+                ChatMessage chatMessage = new ChatMessage(type == null ? -1 : type, uuidFound, from, to, time, text, fileName, imageId, fileId, videoId, voiceId, unsendMessageUuid, expiredMessageCount);
                 chatMessage.setShowTime(false);
                 chatMessage.setViewed(viewed);
                 chatMessage.setFullContentGot(fullContentGot);

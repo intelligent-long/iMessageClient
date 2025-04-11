@@ -257,6 +257,7 @@ public class ChatMessage implements Parcelable {
     public static final int TYPE_FILE = 4;
     public static final int TYPE_NOTICE = 5;
     public static final int TYPE_UNSEND = 6;
+    public static final int TYPE_MESSAGE_EXPIRED = 7;
     private int type;
     private String uuid;
     private String from;
@@ -269,6 +270,7 @@ public class ChatMessage implements Parcelable {
     private String videoId;
     private String voiceId;
     private String unsendMessageUuid;
+    private Integer expiredMessageCount;
 
     @JsonIgnore
     private Boolean showTime;
@@ -296,8 +298,8 @@ public class ChatMessage implements Parcelable {
     public ChatMessage() {
     }
 
-    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String fileName,
-                       String imageId, String fileId, String videoId, String voiceId, String unsendMessageUuid) {
+    public ChatMessage(int type, String uuid, String from, String to, Date time, String text, String fileName, String imageId,
+                       String fileId, String videoId, String voiceId, String unsendMessageUuid, Integer expiredMessageCount) {
         this.type = type;
         this.uuid = uuid;
         this.from = from;
@@ -310,6 +312,7 @@ public class ChatMessage implements Parcelable {
         this.videoId = videoId;
         this.voiceId = voiceId;
         this.unsendMessageUuid = unsendMessageUuid;
+        this.expiredMessageCount = expiredMessageCount;
     }
 
     public int getType() {
@@ -358,6 +361,10 @@ public class ChatMessage implements Parcelable {
 
     public String getUnsendMessageUuid() {
         return unsendMessageUuid;
+    }
+
+    public Integer getExpiredMessageCount() {
+        return expiredMessageCount;
     }
 
     public boolean isSelfSender(Context context){
@@ -574,6 +581,7 @@ public class ChatMessage implements Parcelable {
                 ", videoId='" + videoId + '\'' +
                 ", voiceId='" + voiceId + '\'' +
                 ", unsendMessageUuid='" + unsendMessageUuid + '\'' +
+                ", expiredMessageCount=" + expiredMessageCount +
                 ", showTime=" + showTime +
                 ", viewed=" + viewed +
                 ", imageFilePath='" + imageFilePath + '\'' +

@@ -68,6 +68,12 @@ public class ForwardMessageMessagesLinearLayoutViews extends LinearLayoutViews<O
             case ChatMessage.TYPE_VOICE:
                 binding.newestChatMessage.setText("[语音]");
                 break;
+            case ChatMessage.TYPE_UNSEND:
+                binding.newestChatMessage.setText("[撤回]");
+                break;
+            case ChatMessage.TYPE_MESSAGE_EXPIRED:
+                binding.newestChatMessage.setText("[消息过期]");
+                break;
         }
         binding.time.setText(TimeUtil.formatSimpleRelativeTime(newestChatMessage.getTime()));
         setupYiers(binding, openedChat, activity);

@@ -220,6 +220,9 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             case ChatMessage.TYPE_UNSEND:
                 typeText = "[撤回]";
                 break;
+            case ChatMessage.TYPE_MESSAGE_EXPIRED:
+                typeText = "[消息过期]";
+                break;
         }
         //发送还是接收
         if(itemData.chatMessage.isSelfSender(activity)){
@@ -277,6 +280,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarSend.setVisibility(View.VISIBLE);
                         holder.binding.textSend.setText(itemData.chatMessage.getText());
                         break;
@@ -289,6 +293,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarSend.setVisibility(View.VISIBLE);
                         setupImageViewSize(holder.binding.imageSend, itemData.chatMessage.getImageSize());
                         String imageFilePath = itemData.chatMessage.getImageFilePath();
@@ -307,6 +312,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarSend.setVisibility(View.VISIBLE);
                         holder.binding.fileNameSend.setText(itemData.chatMessage.getFileName());
                         holder.binding.fileSizeSend.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
@@ -320,6 +326,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarSend.setVisibility(View.VISIBLE);
                         setupImageViewSize(holder.binding.videoThumbnailSend, itemData.chatMessage.getVideoSize());
                         GlideApp
@@ -341,6 +348,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceSend.setVisibility(View.VISIBLE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarSend.setVisibility(View.VISIBLE);
                         long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
                         holder.binding.voiceTimeSend.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
@@ -381,8 +389,23 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceSend.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.VISIBLE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarSend.setVisibility(View.GONE);
                         holder.binding.layoutMessageContentGetSend.setVisibility(View.GONE);
+                        break;
+                    }
+                    case ChatMessage.TYPE_MESSAGE_EXPIRED: {
+                        holder.binding.layoutTextSend.setVisibility(View.GONE);
+                        holder.binding.imageSend.setVisibility(View.GONE);
+                        holder.binding.layoutFileSend.setVisibility(View.GONE);
+                        holder.binding.layoutVideoSend.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceSend.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.VISIBLE);
+                        holder.binding.avatarSend.setVisibility(View.GONE);
+                        holder.binding.layoutMessageContentGetSend.setVisibility(View.GONE);
+                        holder.binding.messageExpiredText.setText(itemData.chatMessage.getExpiredMessageCount() + " 条消息过期");
                         break;
                     }
                 }
@@ -430,6 +453,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarReceive.setVisibility(View.VISIBLE);
                         holder.binding.textReceive.setText(itemData.chatMessage.getText());
                         break;
@@ -442,6 +466,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarReceive.setVisibility(View.VISIBLE);
                         setupImageViewSize(holder.binding.imageReceive, itemData.chatMessage.getImageSize());
                         String imageFilePath = itemData.chatMessage.getImageFilePath();
@@ -460,6 +485,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarReceive.setVisibility(View.VISIBLE);
                         holder.binding.fileNameReceive.setText(itemData.chatMessage.getFileName());
                         holder.binding.fileSizeReceive.setText(FileUtil.formatFileSize(FileUtil.getFileSize(itemData.chatMessage.getFileFilePath())));
@@ -473,6 +499,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarReceive.setVisibility(View.VISIBLE);
                         setupImageViewSize(holder.binding.videoThumbnailReceive, itemData.chatMessage.getVideoSize());
                         GlideApp
@@ -494,6 +521,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceReceive.setVisibility(View.VISIBLE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarReceive.setVisibility(View.VISIBLE);
                         long duration = AudioUtil.getDuration(activity, itemData.chatMessage.getVoiceFilePath());
                         holder.binding.voiceTimeReceive.setText(TimeUtil.formatTimeToMinutesSeconds(duration));
@@ -539,7 +567,21 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
                         holder.binding.unsendSelf.setVisibility(View.GONE);
                         holder.binding.unsendOther.setVisibility(View.VISIBLE);
+                        holder.binding.messageExpired.setVisibility(View.GONE);
                         holder.binding.avatarReceive.setVisibility(View.GONE);
+                        break;
+                    }
+                    case ChatMessage.TYPE_MESSAGE_EXPIRED: {
+                        holder.binding.layoutTextReceive.setVisibility(View.GONE);
+                        holder.binding.imageReceive.setVisibility(View.GONE);
+                        holder.binding.layoutFileReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVideoReceive.setVisibility(View.GONE);
+                        holder.binding.layoutVoiceReceive.setVisibility(View.GONE);
+                        holder.binding.unsendSelf.setVisibility(View.GONE);
+                        holder.binding.unsendOther.setVisibility(View.GONE);
+                        holder.binding.messageExpired.setVisibility(View.VISIBLE);
+                        holder.binding.avatarReceive.setVisibility(View.GONE);
+                        holder.binding.messageExpiredText.setText(itemData.chatMessage.getExpiredMessageCount() + " 条消息过期");
                         break;
                     }
                 }

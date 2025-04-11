@@ -26,6 +26,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
         public static final String TEXT = "text";
         public static final String FILE_NAME = "file_name";
         public static final String UNSEND_MESSAGE_UUID = "unsend_message_uuid";
+        public static final String EXPIRED_MESSAGE_COUNT = "expired_message_count";
         public static final String IMAGE_FILE_PATH = "image_file_path";
         public static final String IMAGE_WIDTH = "image_width";
         public static final String IMAGE_HEIGHT = "image_height";
@@ -62,6 +63,7 @@ public class ChatMessageDatabaseHelper extends BaseDatabaseHelper{
                 + TableChannelChatMessagesColumns.IMAGE_FILE_PATH + " VARCHAR,"
                 + TableChannelChatMessagesColumns.FILE_NAME + " VARCHAR,"
                 + TableChannelChatMessagesColumns.UNSEND_MESSAGE_UUID + " VARCHAR,"
+                + TableChannelChatMessagesColumns.EXPIRED_MESSAGE_COUNT + " INTEGER,"
                 + TableChannelChatMessagesColumns.IMAGE_WIDTH + " INTEGER,"
                 + TableChannelChatMessagesColumns.IMAGE_HEIGHT + " INTEGER,"
                 + TableChannelChatMessagesColumns.FILE_FILE_PATH + " VARCHAR,"
