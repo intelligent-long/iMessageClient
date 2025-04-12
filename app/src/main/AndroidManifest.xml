@@ -44,7 +44,7 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
-            android:name=".activity.GroupChatsActivity"
+            android:name=".activity.GroupChannelsActivity"
             android:exported="false" />
         <activity
             android:name=".activity.MediaActivity2"

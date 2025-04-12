@@ -4,19 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
-import com.longx.intelligent.android.imessage.databinding.ActivityGroupChatsBinding;
-import com.longx.intelligent.android.imessage.util.UiUtil;
+import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
-public class GroupChatsActivity extends BaseActivity {
-    private ActivityGroupChatsBinding binding;
+public class GroupChannelsActivity extends BaseActivity {
+    private ActivityGroupChannelsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityGroupChatsBinding.inflate(getLayoutInflater());
+        binding = ActivityGroupChannelsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         showContent();
@@ -59,6 +57,6 @@ public class GroupChatsActivity extends BaseActivity {
                 if(!binding.fab.isExtended()) binding.fab.extend();
             }
         });
-        
+
     }
 }

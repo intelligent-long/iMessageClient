@@ -19,7 +19,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChannelAdditionsActivity;
-import com.longx.intelligent.android.imessage.activity.GroupChatsActivity;
+import com.longx.intelligent.android.imessage.activity.GroupChannelsActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.InstanceStateKeys;
 import com.longx.intelligent.android.imessage.activity.ExploreChannelActivity;
@@ -184,7 +184,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
             startActivity(new Intent(requireContext(), TagActivity.class));
         });
         headerViewBinding.layoutGroupChat.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), GroupChatsActivity.class));
+            startActivity(new Intent(requireContext(), GroupChannelsActivity.class));
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.search){
