@@ -50,7 +50,7 @@
     <string name="sex_nv">女</string>
     <string name="title_new_channel">新的频道</string>
     <string name="title_tag">标签</string>
-    <string name="title_group_chat">群聊</string>
+    <string name="title_group_chat">群频道</string>
     <string name="title_add_channel">添加频道</string>
     <string name="title_chat_file">聊天文件</string>
     <string name="search_by_imessage_id_user">iMessage ID</string>

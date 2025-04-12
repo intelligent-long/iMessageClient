@@ -8,6 +8,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChatsBinding;
 import com.longx.intelligent.android.imessage.util.UiUtil;
+import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 public class GroupChatsActivity extends BaseActivity {
     private ActivityGroupChatsBinding binding;
@@ -19,6 +20,7 @@ public class GroupChatsActivity extends BaseActivity {
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         showContent();
+        setUpYiers();
     }
 
     private void showContent() {
@@ -43,5 +45,20 @@ public class GroupChatsActivity extends BaseActivity {
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         binding.noContentLayout.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void setUpYiers() {
+        binding.recyclerView.addOnThresholdScrollUpDownYier(new RecyclerView.OnThresholdScrollUpDownYier(50) {
+            @Override
+            public void onScrollUp() {
+                if(binding.fab.isExtended()) binding.fab.shrink();
+            }
+
+            @Override
+            public void onScrollDown() {
+                if(!binding.fab.isExtended()) binding.fab.extend();
+            }
+        });
+        
     }
 }

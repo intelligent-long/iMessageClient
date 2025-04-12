@@ -64,5 +64,5 @@
         android:layout_marginEnd="@dimen/fab_margin_end"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
         app:icon="@drawable/add_24px"
-        android:text="创建群聊"/>
+        android:text="创建群频道"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
