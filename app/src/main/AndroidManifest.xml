@@ -44,6 +44,9 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.GroupChatsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MediaActivity2"
             android:exported="false"
             android:theme="@style/DarkStatusBarActivity" />
@@ -209,9 +212,14 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="imessage" android:host="channel" android:pathPrefix="/" />
+
+                <data
+                    android:host="channel"
+                    android:pathPrefix="/"
+                    android:scheme="imessage" />
             </intent-filter>
         </activity>
         <activity
@@ -255,7 +263,7 @@
         <activity
             android:name=".activity.edituser.ChangeImessageIdUserActivity"
             android:exported="false"
-            android:screenOrientation="portrait"  />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.settings.EditUserSettingsActivity"
             android:exported="false"

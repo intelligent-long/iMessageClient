@@ -19,6 +19,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChannelAdditionsActivity;
+import com.longx.intelligent.android.imessage.activity.GroupChatsActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.InstanceStateKeys;
 import com.longx.intelligent.android.imessage.activity.ExploreChannelActivity;
@@ -148,7 +149,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         ChannelsRecyclerAdapter channelsRecyclerAdapter = new ChannelsRecyclerAdapter(requireActivity(), this, itemDataList);
         channelsRecyclerAdapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(channelsRecyclerAdapter);
-        headerViewBinding = RecyclerHeaderChannelBinding.inflate(inflater);
+        headerViewBinding = RecyclerHeaderChannelBinding.inflate(inflater, binding.getRoot(), false);
         newChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
     }
@@ -181,6 +182,9 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         });
         headerViewBinding.layoutTag.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), TagActivity.class));
+        });
+        headerViewBinding.layoutGroupChat.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), GroupChatsActivity.class));
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.search){

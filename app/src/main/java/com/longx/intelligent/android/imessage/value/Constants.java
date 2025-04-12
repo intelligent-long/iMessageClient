@@ -8,7 +8,7 @@ import java.util.Locale;
  */
 public class Constants {
     public static final String APP_NAME = "iMessage";
-    public static final String BUILD_TIME = "2025 年 2 月 5 日 01:25";
+    public static final String BUILD_TIME = "2025 年 2 月 5 日";
     public static final String AUTHOR = "LONG";
     public static final SimpleDateFormat COMMON_SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
     public static final long CHAT_MESSAGE_SHOW_TIME_INTERVAL_MILLI_SEC = 5 * 60 * 1000;
