@@ -183,7 +183,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         headerViewBinding.layoutTag.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), TagActivity.class));
         });
-        headerViewBinding.layoutGroupChat.setOnClickListener(v -> {
+        headerViewBinding.layoutGroupChannel.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), GroupChannelsActivity.class));
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {

@@ -1,15 +1,25 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.adapter.GroupChannelRecyclerAdapter;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
+import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderChannelBinding;
+import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupChannelBinding;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
+
+import java.util.ArrayList;
 
 public class GroupChannelsActivity extends BaseActivity {
     private ActivityGroupChannelsBinding binding;
+    private RecyclerHeaderGroupChannelBinding headerViewBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +32,7 @@ public class GroupChannelsActivity extends BaseActivity {
     }
 
     private void showContent() {
+        setupRecyclerView();
         if(true){
             toNoContent();
         }else {
@@ -29,11 +40,19 @@ public class GroupChannelsActivity extends BaseActivity {
         }
     }
 
+    private void setupRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.recyclerView.setLayoutManager(layoutManager);
+        headerViewBinding = RecyclerHeaderGroupChannelBinding.inflate(getLayoutInflater(), binding.recyclerView, false);
+        GroupChannelRecyclerAdapter adapter = new GroupChannelRecyclerAdapter(this, new ArrayList<>());
+        binding.recyclerView.setAdapter(adapter);
+        binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
+    }
+
     private void toNoContent(){
         ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
                 .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
         binding.noContentLayout.setVisibility(View.VISIBLE);
-        binding.recyclerView.setVisibility(View.GONE);
     }
 
     private void toContent(){
@@ -42,7 +61,6 @@ public class GroupChannelsActivity extends BaseActivity {
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
                         | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
         binding.noContentLayout.setVisibility(View.GONE);
-        binding.recyclerView.setVisibility(View.VISIBLE);
     }
 
     private void setUpYiers() {
@@ -58,5 +76,9 @@ public class GroupChannelsActivity extends BaseActivity {
             }
         });
 
+    }
+
+    public ActivityGroupChannelsBinding getBinding(){
+        return binding;
     }
 }
