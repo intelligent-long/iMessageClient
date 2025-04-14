@@ -143,4 +143,6 @@
     <string name="preference_key_snackbar_appearance">snackbar_appearance</string>
     <string name="preference_key_user_category">user_category</string>
     <string name="preference_key_privacy_category">privacy_category</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

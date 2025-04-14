@@ -21,7 +21,7 @@
         android:clipToOutline="true">
 
         <RelativeLayout
-            android:id="@+id/layout_new_channel"
+            android:id="@+id/layout_new_group_channel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -29,7 +29,7 @@
             android:background="?attr/selectableItemBackground">
 
             <ImageView
-                android:id="@+id/new_channel_icon"
+                android:id="@+id/new_group_channel_icon"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:layout_marginStart="20dp"
@@ -39,18 +39,18 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/new_channel_title"
+                android:id="@+id/new_group_channel_title"
                 style="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_toEndOf="@id/new_channel_icon"
+                android:layout_toEndOf="@id/new_group_channel_icon"
                 android:text="@string/title_new_group_channel"
                 android:textSize="18sp"/>
 
             <LinearLayout
-                android:id="@+id/new_channel_badge_host"
+                android:id="@+id/new_group_channel_badge_host"
                 android:layout_width="49dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
@@ -70,7 +70,7 @@
         android:clipToOutline="true">
 
         <RelativeLayout
-            android:id="@+id/layout_tag"
+            android:id="@+id/layout_group_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -78,7 +78,7 @@
             android:background="?attr/selectableItemBackground">
 
             <ImageView
-                android:id="@+id/tag_icon"
+                android:id="@+id/group_tag_icon"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:layout_marginStart="20dp"
@@ -88,18 +88,18 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/tag_title"
+                android:id="@+id/group_tag_title"
                 style="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_toEndOf="@id/tag_icon"
+                android:layout_toEndOf="@id/group_tag_icon"
                 android:text="@string/title_group_tag"
                 android:textSize="18sp"/>
 
             <LinearLayout
-                android:id="@+id/tag_badge_host"
+                android:id="@+id/group_tag_badge_host"
                 android:layout_width="49dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"

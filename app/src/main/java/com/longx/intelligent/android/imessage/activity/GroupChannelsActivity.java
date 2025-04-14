@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.activity;
 
 import static androidx.core.content.ContentProviderCompat.requireContext;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -75,7 +76,12 @@ public class GroupChannelsActivity extends BaseActivity {
                 if(!binding.fab.isExtended()) binding.fab.extend();
             }
         });
-
+        headerViewBinding.layoutNewGroupChannel.setOnClickListener(v -> {
+            startActivity(new Intent(this, GroupChannelAdditionsActivity.class));
+        });
+        headerViewBinding.layoutGroupTag.setOnClickListener(v -> {
+            startActivity(new Intent(this, GroupTagActivity.class));
+        });
     }
 
     public ActivityGroupChannelsBinding getBinding(){
