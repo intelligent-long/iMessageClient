@@ -1,7 +1,5 @@
 package com.longx.intelligent.android.imessage.activity;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelRecyclerAdapter;
+import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelBottomSheet;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
-import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderChannelBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupChannelBinding;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -81,6 +79,16 @@ public class GroupChannelsActivity extends BaseActivity {
         });
         headerViewBinding.layoutGroupTag.setOnClickListener(v -> {
             startActivity(new Intent(this, GroupTagActivity.class));
+        });
+        binding.fab.setOnClickListener(v -> {
+            AddGroupChannelBottomSheet bottomSheet = new AddGroupChannelBottomSheet(this);
+            bottomSheet.setExploreChannelClickYier(v1 -> {
+
+            });
+            bottomSheet.setCreateClickYier(v1 -> {
+
+            });
+            bottomSheet.show();
         });
     }
 

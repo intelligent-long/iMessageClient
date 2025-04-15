@@ -63,6 +63,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin_end"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
-        app:icon="@drawable/add_24px"
-        android:text="创建群频道"/>
+        app:icon="@drawable/group_add_outline_24px"
+        android:text="添加群频道"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

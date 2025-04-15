@@ -26,6 +26,7 @@ import com.longx.intelligent.android.imessage.activity.ExploreChannelActivity;
 import com.longx.intelligent.android.imessage.activity.SearchChannelActivity;
 import com.longx.intelligent.android.imessage.activity.TagActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.bottomsheet.AddChannelBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
@@ -175,7 +176,11 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
             }
         });
         binding.addChannelFab.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), ExploreChannelActivity.class));
+//            AddChannelBottomSheet bottomSheet = new AddChannelBottomSheet(requireActivity());
+//            bottomSheet.setExploreChannelClickYier(v1 -> {
+                startActivity(new Intent(requireContext(), ExploreChannelActivity.class));
+//            });
+//            bottomSheet.show();
         });
         headerViewBinding.layoutNewChannel.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), ChannelAdditionsActivity.class));
