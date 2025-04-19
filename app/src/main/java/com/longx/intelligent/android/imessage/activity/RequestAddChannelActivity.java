@@ -76,7 +76,7 @@ public class RequestAddChannelActivity extends BaseActivity {
                     .setPositiveButton((dialog, which) -> {
                         String inputtedMessage = UiUtil.getEditTextString(binding.messageInput);
                         String inputtedNote = UiUtil.getEditTextString(binding.noteInput);
-                        if(inputtedNote.isEmpty()) inputtedNote = null;
+                        if(inputtedNote == null || inputtedNote.isEmpty()) inputtedNote = null;
                         List<String> presetChannelTagIds = new ArrayList<>();
                         presetChannelTags.forEach(presetChannelTag -> presetChannelTagIds.add(presetChannelTag.getTagId()));
                         RequestAddChannelPostBody postBody = new RequestAddChannelPostBody(channel.getImessageIdUser(), inputtedMessage, inputtedNote, newChannelTagNames, presetChannelTagIds);

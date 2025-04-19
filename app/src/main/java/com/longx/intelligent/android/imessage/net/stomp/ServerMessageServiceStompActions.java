@@ -182,4 +182,8 @@ public class ServerMessageServiceStompActions {
         });
     }
 
+    public static void updateGroupChannels(Context context){
+
+    }
+
 }

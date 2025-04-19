@@ -8,8 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.longx.intelligent.android.imessage.data.GroupTag;
-import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelTagBinding;
+import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupTagBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -22,16 +21,16 @@ import java.util.List;
 /**
  * Created by LONG on 2024/6/3 at 8:47 PM.
  */
-public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<GroupTagsRecyclerAdapter.ViewHolder, List<GroupTag>> {
+public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<GroupTagsRecyclerAdapter.ViewHolder, List<GroupChannelTag>> {
     private final AppCompatActivity activity;
-    private List<GroupTag> pastGroupTags;
-    private List<GroupTag> groupTags;
+    private List<GroupChannelTag> pastGroupChannelTags;
+    private List<GroupChannelTag> groupChannelTags;
     private boolean dragSortState;
 
-    public GroupTagsRecyclerAdapter(AppCompatActivity activity, List<GroupTag> groupTags) {
+    public GroupTagsRecyclerAdapter(AppCompatActivity activity, List<GroupChannelTag> groupChannelTags) {
         this.activity = activity;
-        this.groupTags = groupTags;
-        groupTags.sort(Comparator.comparingInt(GroupTag::getOrder).reversed());
+        this.groupChannelTags = groupChannelTags;
+        groupChannelTags.sort(Comparator.comparingInt(GroupChannelTag::getOrder).reversed());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -51,13 +50,13 @@ public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Group
 
     @Override
     public int getItemCount() {
-        return groupTags.size();
+        return groupChannelTags.size();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        GroupTag groupTag = groupTags.get(position);
-        holder.binding.groupTagName.setText(groupTag.getName());
+        GroupChannelTag groupChannelTag = groupChannelTags.get(position);
+        holder.binding.groupTagName.setText(groupChannelTag.getName());
         if(dragSortState) {
             holder.binding.dragHandle.setVisibility(View.VISIBLE);
         }else {
@@ -67,7 +66,7 @@ public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Group
     }
 
     private void setUpYiers(ViewHolder holder, int position) {
-        GroupTag groupTag = groupTags.get(position);
+        GroupChannelTag groupChannelTag = groupChannelTags.get(position);
         holder.binding.content.setOnClickListener(v -> {
 
         });
@@ -96,35 +95,35 @@ public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Group
 
     @SuppressLint("NotifyDataSetChanged")
     public void moveAndShow(int from, int to){
-        if(pastGroupTags == null) {
-            pastGroupTags = new ArrayList<>(groupTags);
+        if(pastGroupChannelTags == null) {
+            pastGroupChannelTags = new ArrayList<>(groupChannelTags);
         }
         if (from < to) {
-            if(to == groupTags.size()) to --;
+            if(to == groupChannelTags.size()) to --;
             for (int i = from; i < to; i++) {
-                Collections.swap(groupTags, i, i + 1);
+                Collections.swap(groupChannelTags, i, i + 1);
             }
         } else {
             for (int i = from; i > to; i--) {
-                Collections.swap(groupTags, i, i - 1);
+                Collections.swap(groupChannelTags, i, i - 1);
             }
         }
-        for (int i = 0; i < groupTags.size(); i++) {
-            groupTags.get(i).setOrder(i);
+        for (int i = 0; i < groupChannelTags.size(); i++) {
+            groupChannelTags.get(i).setOrder(i);
         }
         notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void cancelMoveAndShow(){
-        if(pastGroupTags != null) {
-            groupTags = new ArrayList<>(pastGroupTags);
-            pastGroupTags = null;
+        if(pastGroupChannelTags != null) {
+            groupChannelTags = new ArrayList<>(pastGroupChannelTags);
+            pastGroupChannelTags = null;
             notifyDataSetChanged();
         }
     }
 
-    public List<GroupTag> getGroupTags() {
-        return groupTags;
+    public List<GroupChannelTag> getGroupTags() {
+        return groupChannelTags;
     }
 }

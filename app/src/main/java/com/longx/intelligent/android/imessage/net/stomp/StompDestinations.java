@@ -20,4 +20,5 @@ public class StompDestinations {
     public static final String BROADCASTS_LIKES_UPDATE = "/user" + PREFIX_QUEUE + "/broadcasts_likes_update";
     public static final String BROADCASTS_COMMENTS_UPDATE = "/user" + PREFIX_QUEUE + "/broadcasts_comments_update";
     public static final String BROADCASTS_REPLIES_UPDATE = "/user" + PREFIX_QUEUE + "/broadcasts_replies_update";
+    public static final String GROUP_CHANNELS_UPDATE = "/user" + PREFIX_QUEUE + "/group_channels_update";
 }

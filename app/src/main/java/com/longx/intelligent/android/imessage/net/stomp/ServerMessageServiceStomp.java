@@ -125,6 +125,9 @@ public class ServerMessageServiceStomp {
         stomp.subscribe(StompDestinations.BROADCASTS_REPLIES_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateNewBroadcastRepliesCount(context);
         });
+        stomp.subscribe(StompDestinations.GROUP_CHANNELS_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateGroupChannels(context);
+        });
     }
 
     public static synchronized boolean isConnected(){

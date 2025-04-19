@@ -31,7 +31,7 @@
         android:id="@+id/option_create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="从频道添加"
+        android:text="@string/title_create_group_channel"
         android:textAppearance="@style/BottomSheetItemTitle"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"

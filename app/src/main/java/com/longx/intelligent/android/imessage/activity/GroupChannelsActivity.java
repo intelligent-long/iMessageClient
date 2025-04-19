@@ -86,7 +86,7 @@ public class GroupChannelsActivity extends BaseActivity {
 
             });
             bottomSheet.setCreateClickYier(v1 -> {
-
+                startActivity(new Intent(this, CreateGroupChannelActivity.class));
             });
             bottomSheet.show();
         });
