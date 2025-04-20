@@ -9,14 +9,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelRecyclerAdapter;
+import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelBottomSheet;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupChannelBinding;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class GroupChannelsActivity extends BaseActivity {
+public class GroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityGroupChannelsBinding binding;
     private RecyclerHeaderGroupChannelBinding headerViewBinding;
 
@@ -28,6 +31,13 @@ public class GroupChannelsActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         showContent();
         setUpYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void showContent() {
@@ -94,5 +104,17 @@ public class GroupChannelsActivity extends BaseActivity {
 
     public ActivityGroupChannelsBinding getBinding(){
         return binding;
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNELS)){
+            showContent();
+        }
     }
 }

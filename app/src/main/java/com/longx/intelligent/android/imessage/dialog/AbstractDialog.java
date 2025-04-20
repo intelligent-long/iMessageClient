@@ -176,7 +176,8 @@ public abstract class AbstractDialog<T extends AbstractDialog<T>> {
         return dialog;
     }
 
-    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+    public T setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         this.dialog.setOnDismissListener(onDismissListener);
+        return (T) this;
     }
 }

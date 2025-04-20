@@ -3,6 +3,7 @@ package com.longx.intelligent.android.imessage.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.GroupChannelApi;
 import com.xcheng.retrofit.CompletableCall;
@@ -17,6 +18,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> createGroupChannel(LifecycleOwner lifecycleOwner, CreateGroupChannelPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().createGroupChannel(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> fetchAllGroupAssociations(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllGroupAssociations();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

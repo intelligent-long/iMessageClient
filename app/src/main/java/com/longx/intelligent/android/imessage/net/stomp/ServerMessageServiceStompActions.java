@@ -17,7 +17,6 @@ import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.notification.Notifications;
 import com.longx.intelligent.android.imessage.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
-import com.longx.intelligent.android.imessage.yier.ChatMessagesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.imessage.yier.OpenedChatsUpdateYier;
@@ -183,7 +182,11 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateGroupChannels(Context context){
-
+        ContentUpdater.updateGroupChannels(context, results -> {
+            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+            });
+        });
     }
 
 }

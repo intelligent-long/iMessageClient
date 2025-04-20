@@ -5,6 +5,7 @@ import android.content.Context;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.ChatMessageDatabaseManager;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.OpenedChatDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Broadcast;
@@ -13,6 +14,8 @@ import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.imessage.data.Self;
@@ -22,6 +25,7 @@ import com.longx.intelligent.android.imessage.data.response.PaginatedOperationDa
 import com.longx.intelligent.android.imessage.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChatApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
@@ -56,6 +60,7 @@ public class ContentUpdater {
         String ID_BROADCAST_LIKE_NEWS_COUNT = "broadcast_like_news_count";
         String ID_BROADCAST_COMMENT_NEWS_COUNT = "broadcast_comment_news_count";
         String ID_BROADCAST_REPLY_NEWS_COUNT = "broadcast_reply_news_count";
+        String ID_GROUP_CHANNELS = "group_channels";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -305,6 +310,20 @@ public class ContentUpdater {
                     SharedPreferencesAccessor.NewContentCount.saveBroadcastReplyCommentNewsCount(context, newsCount);
                     resultsYier.onResults(newsCount);
                 });
+            }
+        });
+    }
+
+    public static void updateGroupChannels(Context context, ResultsYier resultsYier){
+        GroupChannelApiCaller.fetchAllGroupAssociations(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNELS, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                GroupChannelDatabaseManager.getInstance().clearGroupChannels();
+                List<GroupChannel> groupChannels = data.getData(new TypeReference<List<GroupChannel>>() {
+                });
+                GroupChannelDatabaseManager.getInstance().insertAssociationsOrIgnore(groupChannels);
+                resultsYier.onResults();
             }
         });
     }

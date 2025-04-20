@@ -1,10 +1,12 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
 
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -14,5 +16,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel/create")
     CompletableCall<OperationStatus> createGroupChannel(@Body CreateGroupChannelPostBody postBody);
+
+    @GET("group_channel/association/all")
+    CompletableCall<OperationData> fetchAllGroupAssociations();
 
 }

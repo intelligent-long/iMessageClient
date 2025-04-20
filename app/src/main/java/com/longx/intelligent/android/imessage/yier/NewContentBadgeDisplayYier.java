@@ -33,7 +33,7 @@ public interface NewContentBadgeDisplayYier {
                 showNewContentBadge(id, getChannelAdditionActivitiesNewContentCount(context));
                 break;
             case MESSAGES:
-                showNewContentBadge(id, -1);
+                showNewContentBadge(id, -1); //TODO
                 break;
             case BROADCAST_LIKES:
             case BROADCAST_COMMENTS:

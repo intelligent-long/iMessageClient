@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -14,6 +15,7 @@ import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPos
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityCreateGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -102,7 +104,11 @@ public class CreateGroupChannelActivity extends BaseActivity {
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                 super.ok(data, raw, call);
                                 data.commonHandleResult(CreateGroupChannelActivity.this, new int[]{}, () -> {
-                                    new MessageDialog(CreateGroupChannelActivity.this, "已创建群频道").create().show();
+                                    new CustomViewMessageDialog(CreateGroupChannelActivity.this, "已创建群频道")
+                                            .create()
+                                            .setOnDismissListener(dialog1 -> {
+                                                finish();
+                                            }).show();
                                 });
                             }
                         });
