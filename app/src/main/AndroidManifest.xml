@@ -44,6 +44,9 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.ExploreGroupChannelActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.PresettingGroupChannelTagActivity"
             android:exported="false" />
         <activity

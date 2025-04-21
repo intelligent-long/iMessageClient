@@ -35,6 +35,7 @@
     <string name="title_offline_detail">离线信息</string>
     <string name="title_open_source_licenses">开放源代码许可</string>
     <string name="title_explore_channel">搜台</string>
+    <string name="title_explore_group_channel">搜群台</string>
     <string name="title_edit_broadcast">编辑广播</string>
     <string name="title_send_broadcast">发送广播</string>
     <string name="title_request_add_channel">请求添加频道</string>
@@ -59,6 +60,7 @@
     <string name="title_chat_file">聊天文件</string>
     <string name="search_by_imessage_id_user">iMessage ID</string>
     <string name="search_by_email">邮箱</string>
+    <string name="search_by_group_channel_id">群频道 ID</string>
     <string name="channel_addition_activity_pending">待处理</string>
     <string name="channel_addition_activity_send">发出</string>
     <string name="channel_addition_activity_receive">收到</string>

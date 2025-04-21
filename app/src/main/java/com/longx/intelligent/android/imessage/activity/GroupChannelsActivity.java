@@ -96,7 +96,7 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         binding.fab.setOnClickListener(v -> {
             AddGroupChannelBottomSheet bottomSheet = new AddGroupChannelBottomSheet(this);
             bottomSheet.setExploreChannelClickYier(v1 -> {
-
+                startActivity(new Intent(this, ExploreGroupChannelActivity.class));
             });
             bottomSheet.setCreateClickYier(v1 -> {
                 startActivity(new Intent(this, CreateGroupChannelActivity.class));
