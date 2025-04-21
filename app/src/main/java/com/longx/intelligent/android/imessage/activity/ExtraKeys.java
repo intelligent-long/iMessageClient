@@ -51,4 +51,5 @@ public class ExtraKeys {
     public static final String TITLE = "title";
     public static final String MESSAGE = "message";
     public static final String AUTH_TO_SETTINGS = "auth_to_settings";
+    public static final String BITMAP = "bitmap";
 }

@@ -4,36 +4,41 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.preference.Preference;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
-import com.longx.intelligent.android.imessage.activity.edituser.ChangeAvatarActivity;
+import com.longx.intelligent.android.imessage.activity.CropImageActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeEmailActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeImessageIdUserActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeRegionActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeSexActivity;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeUsernameActivity;
-import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.bottomsheet.EditAvatarBottomSheet;
+import com.longx.intelligent.android.imessage.da.SharedImageViewModel;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.data.UserInfo;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityEditUserSettingsBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.imessage.preference.ChangeAvatarPreference;
 import com.longx.intelligent.android.imessage.preference.ProfileItemPreference;
+import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.List;
@@ -80,16 +85,40 @@ public class EditUserSettingsActivity extends BaseSettingsActivity{
         private ProfileItemPreference preferenceChangeSex;
         private ProfileItemPreference preferenceChangeRegion;
 
+        private final ActivityResultLauncher<Intent> imageCropedActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        SharedImageViewModel viewModel = new ViewModelProvider((ViewModelStoreOwner) requireContext().getApplicationContext()).get(SharedImageViewModel.class);
+                        viewModel.getImage().observe(this, cropedBitmap -> {
+                            if (cropedBitmap != null) {
+                                byte[] cropedImageBytes = Utils.encodeBitmapToBytes(cropedBitmap, Bitmap.CompressFormat.PNG, 100);
+                                UserApiCaller.changeAvatar(this, cropedImageBytes, new RetrofitApiCaller.CommonYier<OperationStatus>(requireActivity()){
+                                    @Override
+                                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                        super.ok(data, raw, call);
+                                        data.commonHandleResult(requireActivity(), new int[]{-101, -102}, () -> {
+                                            new MessageDialog(requireActivity(), "修改成功")
+                                                    .create().show();
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+        );
+
         private final ActivityResultLauncher<Intent> imageChosenActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        Intent intent = new Intent(getActivity(), ChangeAvatarActivity.class);
-                        intent.putExtra(ExtraKeys.URI, data.getData().toString());
-                        startActivity(intent);
+                        Intent intent = new Intent(getActivity(), CropImageActivity.class);
+                        intent.putExtra(ExtraKeys.URI, result.getData().getData().toString());
+                        imageCropedActivityResultLauncher.launch(intent);
                     }
-                });
+                }
+        );
 
         @Override
         protected void init(Bundle savedInstanceState, String rootKey) {

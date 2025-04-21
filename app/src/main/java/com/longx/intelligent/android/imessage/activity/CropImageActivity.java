@@ -1,32 +1,27 @@
-package com.longx.intelligent.android.imessage.activity.edituser;
+package com.longx.intelligent.android.imessage.activity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
 import com.canhub.cropper.CropImageView;
 import com.longx.intelligent.android.imessage.R;
-import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
-import com.longx.intelligent.android.imessage.data.response.OperationStatus;
-import com.longx.intelligent.android.imessage.databinding.ActivityChangeAvatarBinding;
-import com.longx.intelligent.android.imessage.dialog.MessageDialog;
+import com.longx.intelligent.android.imessage.da.SharedImageViewModel;
+import com.longx.intelligent.android.imessage.databinding.ActivityCropImageBinding;
 import com.longx.intelligent.android.imessage.dialog.OperatingDialog;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
-import com.longx.intelligent.android.imessage.util.Utils;
 
-import retrofit2.Call;
-import retrofit2.Response;
-
-public class ChangeAvatarActivity extends BaseActivity {
-    private ActivityChangeAvatarBinding binding;
+public class CropImageActivity extends BaseActivity {
+    private ActivityCropImageBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityChangeAvatarBinding.inflate(getLayoutInflater());
+        binding = ActivityCropImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         setupYiers();
@@ -38,7 +33,7 @@ public class ChangeAvatarActivity extends BaseActivity {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.rotate){
                 binding.cropImageView.rotateImage(90);
-            }else if(item.getItemId() == R.id.change){
+            }else if(item.getItemId() == R.id.crop){
                 new Thread(() -> {
                     OperatingDialog operatingDialog = new OperatingDialog(this);
                     runOnUiThread(() -> operatingDialog.create().show());
@@ -47,9 +42,8 @@ public class ChangeAvatarActivity extends BaseActivity {
                         runOnUiThread(operatingDialog::dismiss);
                         MessageDisplayer.autoShow(this, "错误", MessageDisplayer.Duration.SHORT);
                     }else {
-                        byte[] avatar = Utils.encodeBitmapToBytes(croppedImage, Bitmap.CompressFormat.PNG, 100);
                         runOnUiThread(operatingDialog::dismiss);
-                        onImageCropped(avatar);
+                        onImageCropped(croppedImage);
                     }
                 }).start();
             }
@@ -75,16 +69,16 @@ public class ChangeAvatarActivity extends BaseActivity {
         });
     }
 
-    private void onImageCropped(byte[] avatar){
-        UserApiCaller.changeAvatar(this, avatar, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
-            @Override
-            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
-                super.ok(data, raw, call);
-                data.commonHandleResult(ChangeAvatarActivity.this, new int[]{-101, -102}, () -> {
-                    new MessageDialog(ChangeAvatarActivity.this, "修改成功")
-                            .create().show();
-                });
-            }
+    private void onImageCropped(Bitmap bitmap){
+        runOnUiThread(() -> {
+            SharedImageViewModel viewModel = new ViewModelProvider(
+                    getApplicationContext() instanceof ViewModelStoreOwner
+                            ? (ViewModelStoreOwner) getApplicationContext()
+                            : this // fallback
+            ).get(SharedImageViewModel.class);
+            viewModel.setImage(bitmap);
+            setResult(RESULT_OK);
+            finish();
         });
     }
 }

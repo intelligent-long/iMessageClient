@@ -20,7 +20,7 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_change_avatar">
+            app:title="@string/title_crop_image">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"

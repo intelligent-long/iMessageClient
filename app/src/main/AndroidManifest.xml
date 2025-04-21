@@ -251,7 +251,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.edituser.ChangeAvatarActivity"
+            android:name=".activity.CropImageActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

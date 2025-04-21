@@ -13,10 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tint="?attr/colorSurfaceContainerHighest"
-        app:srcCompat="@drawable/shape_bottom_sheet_drag_handle_view" />
+        app:srcCompat="@drawable/shape_bottom_sheet_drag_handle_view"/>
 
     <LinearLayout
-        android:id="@+id/set_avatar"
+        android:id="@+id/choose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -29,11 +29,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="选择头像"
-            android:textAppearance="@style/BottomSheetItemTitle" />
+            android:textAppearance="@style/BottomSheetItemTitle"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/remove_avatar"
+        android:id="@+id/remove"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -46,6 +46,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="移除头像"
-            android:textAppearance="@style/BottomSheetItemTitle"/>
+            android:textAppearance="@style/BottomSheetItemTitle" />
     </LinearLayout>
 </LinearLayout>

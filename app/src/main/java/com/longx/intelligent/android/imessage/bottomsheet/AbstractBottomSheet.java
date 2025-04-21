@@ -19,7 +19,7 @@ public abstract class AbstractBottomSheet {
         bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetDialog);
     }
 
-    public void create() {
+    protected void create() {
         onCreate();
         if (contentView != null) {
             bottomSheetDialog.setContentView(contentView);

@@ -10,9 +10,9 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/change"
-        android:title="更改"
-        android:icon="@drawable/edit_outline_24px"
+        android:id="@+id/crop"
+        android:title="裁剪"
+        android:icon="@drawable/crop_free_24px"
         app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always"/>
 </menu>
