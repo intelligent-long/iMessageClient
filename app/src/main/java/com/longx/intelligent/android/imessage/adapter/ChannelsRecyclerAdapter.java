@@ -62,7 +62,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemChannelBinding binding;
+        private final RecyclerItemChannelBinding binding;
         public ViewHolder(RecyclerItemChannelBinding binding) {
             super(binding.getRoot());
             this.binding = binding;

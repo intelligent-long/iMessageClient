@@ -2,13 +2,17 @@ package com.longx.intelligent.android.imessage.da.database.manager;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.longx.intelligent.android.imessage.da.database.helper.GroupChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
+import com.longx.intelligent.android.imessage.util.DatabaseUtil;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -81,5 +85,41 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
         return result.get();
+    }
+
+    public List<GroupChannel> findAllAssociations(){
+        openDatabaseIfClosed();
+        String sql = "SELECT *, ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID
+                + " FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNELS + " ca "
+                + " LEFT JOIN " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_ASSOCIATIONS + " gca ON "
+                + "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + " = " + "gca." + GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID;
+        try(Cursor cursor = getDatabase().rawQuery(sql, null)) {
+            List<GroupChannel> result = new ArrayList<>();
+            while (cursor.moveToNext()){
+                String groupChannelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID);
+                String owner = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.OWNER);
+                String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME);
+                String note = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE);
+                Long createTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME);
+                GroupChannel groupChannel = new GroupChannel(groupChannelId, owner, name, note, new Date(createTime));
+                String associationId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID);
+                String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
+                String inviteChannelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID);
+                String inviteMessage = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_MESSAGE);
+                Long inviteTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_TIME);
+                Long acceptTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ACCEPT_TIME);
+                GroupChannelAssociation groupChannelAssociation = new GroupChannelAssociation(associationId, groupChannelId, channelImessageId, inviteChannelImessageId, inviteMessage, new Date(inviteTime), new Date(acceptTime));
+                int index = result.indexOf(groupChannel);
+                if(index >= 0){
+                    result.get(index).addGroupChannelAssociation(groupChannelAssociation);
+                }else {
+                    groupChannel.addGroupChannelAssociation(groupChannelAssociation);
+                    result.add(groupChannel);
+                }
+            }
+            return result;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
     }
 }

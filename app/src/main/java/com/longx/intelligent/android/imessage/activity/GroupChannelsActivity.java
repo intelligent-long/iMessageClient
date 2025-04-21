@@ -11,6 +11,8 @@ import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelRecyclerAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelBottomSheet;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupChannelBinding;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
@@ -41,19 +43,20 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
     }
 
     private void showContent() {
-        setupRecyclerView();
-        if(true){
+        List<GroupChannel> allAssociations = GroupChannelDatabaseManager.getInstance().findAllAssociations();
+        if(allAssociations.isEmpty()){
             toNoContent();
         }else {
             toContent();
+            setupRecyclerView(allAssociations);
         }
     }
 
-    private void setupRecyclerView() {
+    private void setupRecyclerView(List<GroupChannel> allAssociations) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
         headerViewBinding = RecyclerHeaderGroupChannelBinding.inflate(getLayoutInflater(), binding.recyclerView, false);
-        GroupChannelRecyclerAdapter adapter = new GroupChannelRecyclerAdapter(this, new ArrayList<>());
+        GroupChannelRecyclerAdapter adapter = new GroupChannelRecyclerAdapter(this, allAssociations);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
     }
