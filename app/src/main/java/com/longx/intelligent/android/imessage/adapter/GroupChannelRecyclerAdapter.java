@@ -37,6 +37,11 @@ public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
         allAssociations.forEach(association -> {
             this.itemDataList.add(new GroupChannelRecyclerAdapter.ItemData(association));
         });
+        itemDataList.sort((o1, o2) -> {
+            if (o1.indexChar == '#') return 1;
+            if (o2.indexChar == '#') return -1;
+            return Character.compare(o1.indexChar, o2.indexChar);
+        });
     }
 
     public static class ItemData{
