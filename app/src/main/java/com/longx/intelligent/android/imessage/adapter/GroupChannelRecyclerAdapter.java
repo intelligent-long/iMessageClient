@@ -129,6 +129,37 @@ public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
     }
 
     private void setupYiers(@NonNull ViewHolder holder, int position) {
+        holder.binding.indexBar.setOnClickListener(v -> {
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_HEADER_CHANNEL, getExistTexts());
+            fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
+                int locatePosition = -1;
+                if(textSelect.equals(".")){
+                    locatePosition = 0;
+                }else {
+                    for (int i = 0; i < itemDataList.size(); i++) {
+                        ItemData data = itemDataList.get(i);
+                        if (String.valueOf(data.indexChar).equals(textSelect)) {
+                            locatePosition = i + 1;
+                            break;
+                        }
+                    }
+                }
+                if(locatePosition != -1) {
+                    activity.getBinding().appBar.setExpanded(locatePosition == 0);
+                    activity.getBinding().recyclerView.smoothScrollToPosition(locatePosition);
+                }
+                fastLocateDialog.dismiss();
+            });
+            fastLocateDialog.create().show();
+        });
+    }
 
+    private String[] getExistTexts(){
+        String[] result = new String[getItemCount() + 1];
+        for (int i = 0; i < itemDataList.size(); i++) {
+            result[i] = String.valueOf(itemDataList.get(i).indexChar);
+        }
+        result[result.length - 1] = ".";
+        return result;
     }
 }
