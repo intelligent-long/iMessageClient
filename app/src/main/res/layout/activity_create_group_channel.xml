@@ -40,33 +40,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="41dp"
-                android:layout_marginTop="15dp"
-                android:text="头像"
-                android:textColor="?attr/colorControlNormal" />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="41dp"-->
+<!--                android:layout_marginTop="15dp"-->
+<!--                android:text="头像"-->
+<!--                android:textColor="?attr/colorControlNormal" />-->
 
-            <LinearLayout
-                android:id="@+id/avatar_click_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="9dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?android:attr/selectableItemBackground">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/avatar_click_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:paddingHorizontal="20dp"-->
+<!--                android:paddingVertical="9dp"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                android:background="?android:attr/selectableItemBackground">-->
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:scaleType="centerCrop"
-                    app:shapeAppearanceOverlay="@style/CircleImageAppearance" />
-            </LinearLayout>
+<!--                <com.google.android.material.imageview.ShapeableImageView-->
+<!--                    android:id="@+id/avatar"-->
+<!--                    android:layout_width="70dp"-->
+<!--                    android:layout_height="70dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    app:shapeAppearanceOverlay="@style/CircleImageAppearance" />-->
+<!--            </LinearLayout>-->
 
             <TextView
                 android:layout_width="wrap_content"

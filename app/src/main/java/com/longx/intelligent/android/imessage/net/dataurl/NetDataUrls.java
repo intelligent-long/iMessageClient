@@ -15,4 +15,9 @@ public class NetDataUrls {
     public static String getBroadcastMediaDataUrl(Context context, String mediaId){
         return BaseUrlProvider.getHttpBaseUrl(context, false) + "broadcast/media/data/" + mediaId;
     }
+
+    public static String getGroupAvatarUrl(Context context, String groupAvatarHash){
+//        return BaseUrlProvider.getHttpBaseUrl(context, false) + "user/info/avatar/" + groupAvatarHash;
+        return null; //TODO
+    }
 }

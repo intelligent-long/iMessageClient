@@ -101,7 +101,7 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME);
                 String note = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE);
                 Long createTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME);
-                GroupChannel groupChannel = new GroupChannel(groupChannelId, owner, name, note, new Date(createTime));
+                GroupChannel groupChannel = new GroupChannel(null, groupChannelId, owner, name, note, new Date(createTime));
                 String associationId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID);
                 String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
                 String inviteChannelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID);

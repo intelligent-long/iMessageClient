@@ -16,6 +16,7 @@ import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChann
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
 import com.longx.intelligent.android.imessage.fragment.main.ChannelsFragment;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -38,25 +39,38 @@ public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
             this.itemDataList.add(new GroupChannelRecyclerAdapter.ItemData(association));
         });
         itemDataList.sort((o1, o2) -> {
-            if (o1.indexChar == '#') return 1;
-            if (o2.indexChar == '#') return -1;
-            return Character.compare(o1.indexChar, o2.indexChar);
+            if (o1.indexChar == '#' && o2.indexChar != '#') return 1;
+            if (o1.indexChar != '#' && o2.indexChar == '#') return -1;
+            if (o1.indexChar == '#' && o2.indexChar == '#') return 0;
+            int pinyinCompare = o1.fullPinyin.compareToIgnoreCase(o2.fullPinyin);
+            if (pinyinCompare != 0) return pinyinCompare;
+            return o1.fullPinyin.compareTo(o2.fullPinyin);
         });
+
     }
 
-    public static class ItemData{
-        private Character indexChar;
-        private GroupChannel groupChannel;
+    public static class ItemData {
+        private final String fullPinyin;
+        private final char indexChar;
+        private final GroupChannel groupChannel;
 
         public ItemData(GroupChannel groupChannel) {
-            indexChar = PinyinUtil.getPinyin(groupChannel.getName()).toUpperCase().charAt(0);
-            if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
+            this.groupChannel = groupChannel;
+            String name = groupChannel.getName();
+            this.fullPinyin = PinyinUtil.getPinyin(name);
+            char firstChar = fullPinyin.charAt(0);
+            if (Character.isLetter(firstChar)) {
+                indexChar = Character.toUpperCase(firstChar);
+            } else {
                 indexChar = '#';
             }
-            this.groupChannel = groupChannel;
         }
 
-        public Character getIndexChar() {
+        public String getFullPinyin() {
+            return fullPinyin;
+        }
+
+        public char getIndexChar() {
             return indexChar;
         }
 
@@ -88,14 +102,23 @@ public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-
+        String groupAvatarHash = itemData.groupChannel.getGroupAvatar() == null ? null : itemData.groupChannel.getGroupAvatar().getHash();
+        if(groupAvatarHash == null){
+            GlideApp.with(activity)
+                    .load(R.drawable.default_avatar)
+                    .into(holder.binding.avatar);
+        }else {
+            GlideApp.with(activity)
+                    .load(NetDataUrls.getGroupAvatarUrl(activity, groupAvatarHash))
+                    .into(holder.binding.avatar);
+        }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
         int previousPosition = position - 1;
         if(position == 0){
             holder.binding.indexBar.setVisibility(View.VISIBLE);
         } else {
             ItemData previousItemData = itemDataList.get(previousPosition);
-            if (previousItemData.indexChar.equals(itemData.indexChar)) {
+            if (previousItemData.indexChar == itemData.indexChar) {
                 holder.binding.indexBar.setVisibility(View.GONE);
             } else {
                 holder.binding.indexBar.setVisibility(View.VISIBLE);

@@ -9,6 +9,7 @@ import java.util.Objects;
  * Created by LONG on 2025/4/15 at 10:49 PM.
  */
 public class GroupChannel {
+    private GroupAvatar groupAvatar;
     private String groupChannelId;
     private String owner;
     private String name;
@@ -19,7 +20,8 @@ public class GroupChannel {
     public GroupChannel() {
     }
 
-    public GroupChannel(String groupChannelId, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations) {
+        this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
         this.owner = owner;
         this.name = name;
@@ -28,13 +30,18 @@ public class GroupChannel {
         this.groupChannelAssociations = groupChannelAssociations;
     }
 
-    public GroupChannel(String groupChannelId, String owner, String name, String note, Date createTime) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String owner, String name, String note, Date createTime) {
+        this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
         this.owner = owner;
         this.name = name;
         this.note = note;
         this.createTime = createTime;
         this.groupChannelAssociations = new ArrayList<>();
+    }
+
+    public GroupAvatar getGroupAvatar() {
+        return groupAvatar;
     }
 
     public String getGroupChannelId() {

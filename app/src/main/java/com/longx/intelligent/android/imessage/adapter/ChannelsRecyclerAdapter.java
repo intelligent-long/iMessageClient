@@ -34,25 +34,37 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
         this.recyclerView = channelsFragment.getBinding().recyclerView;
         this.itemDataList = itemDataList;
         itemDataList.sort((o1, o2) -> {
-            if (o1.indexChar == '#') return 1;
-            if (o2.indexChar == '#') return -1;
-            return Character.compare(o1.indexChar, o2.indexChar);
+            if (o1.indexChar == '#' && o2.indexChar != '#') return 1;
+            if (o1.indexChar != '#' && o2.indexChar == '#') return -1;
+            if (o1.indexChar == '#' && o2.indexChar == '#') return 0;
+            int pinyinCompare = o1.fullPinyin.compareToIgnoreCase(o2.fullPinyin);
+            if (pinyinCompare != 0) return pinyinCompare;
+            return o1.fullPinyin.compareTo(o2.fullPinyin);
         });
     }
 
-    public static class ItemData{
-        private Character indexChar;
-        private Channel channel;
+    public static class ItemData {
+        private final String fullPinyin;
+        private final char indexChar;
+        private final Channel channel;
 
         public ItemData(Channel channel) {
-            indexChar = PinyinUtil.getPinyin(channel.getName()).toUpperCase().charAt(0);
-            if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
+            this.channel = channel;
+            String name = channel.getName();
+            this.fullPinyin = PinyinUtil.getPinyin(name);
+            char firstChar = fullPinyin.charAt(0);
+            if (Character.isLetter(firstChar)) {
+                indexChar = Character.toUpperCase(firstChar);
+            } else {
                 indexChar = '#';
             }
-            this.channel = channel;
         }
 
-        public Character getIndexChar() {
+        public String getFullPinyin() {
+            return fullPinyin;
+        }
+
+        public char getIndexChar() {
             return indexChar;
         }
 
@@ -91,7 +103,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
             holder.binding.indexBar.setVisibility(View.VISIBLE);
         } else {
             ItemData previousItemData = itemDataList.get(previousPosition);
-            if (previousItemData.indexChar.equals(itemData.indexChar)) {
+            if (previousItemData.indexChar == itemData.indexChar) {
                 holder.binding.indexBar.setVisibility(View.GONE);
             } else {
                 holder.binding.indexBar.setVisibility(View.VISIBLE);

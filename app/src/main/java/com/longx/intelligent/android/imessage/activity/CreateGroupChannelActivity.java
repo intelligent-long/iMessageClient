@@ -40,11 +40,8 @@ import retrofit2.Response;
 public class CreateGroupChannelActivity extends BaseActivity {
     private ActivityCreateGroupChannelBinding binding;
     private ActivityResultLauncher<Intent> presettingTagsResultLauncher;
-    private ActivityResultLauncher<Intent> imageChosenActivityResultLauncher;
-    private ActivityResultLauncher<Intent> imageCropedActivityResultLauncher;
     private ArrayList<GroupChannelTag> presetGroupChannelTags = new ArrayList<>();
     private ArrayList<String> newGroupChannelTagNames = new ArrayList<>();
-    private Bitmap avatarBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,36 +64,9 @@ public class CreateGroupChannelActivity extends BaseActivity {
                         newGroupChannelTagNames = data.getStringArrayListExtra(ExtraKeys.GROUP_CHANNEL_TAG_NAMES);
                     }
                 });
-        imageChosenActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent intent = new Intent(this, CropImageActivity.class);
-                        intent.putExtra(ExtraKeys.URI, result.getData().getData().toString());
-                        imageCropedActivityResultLauncher.launch(intent);
-                    }
-                });
-        imageCropedActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        SharedImageViewModel viewModel = new ViewModelProvider((ViewModelStoreOwner) getApplicationContext()).get(SharedImageViewModel.class);
-                        viewModel.getImage().observe(this, cropedBitmap -> {
-                            if (cropedBitmap != null) {
-                                avatarBitmap = cropedBitmap;
-                                GlideApp.with(this)
-                                        .load(cropedBitmap)
-                                        .into(binding.avatar);
-                            }
-                        });
-                    }
-                }
-        );
     }
 
     private void showContent() {
-        GlideApp.with(this)
-                .load(avatarBitmap == null ? R.drawable.default_avatar : avatarBitmap)
-                .into(binding.avatar);
     }
 
     private void setupYiers() {
@@ -150,20 +120,6 @@ public class CreateGroupChannelActivity extends BaseActivity {
                         });
                     })
                     .create().show();
-        });
-
-        binding.avatarClickView.setOnClickListener(v -> {
-            new SetGroupChannelAvatarBottomSheet(this, avatarBitmap != null,
-                    v1 -> {
-                        Intent intent = new Intent(Intent.ACTION_PICK, null);
-                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                        imageChosenActivityResultLauncher.launch(intent);
-                    },
-                    v1 -> {
-                        avatarBitmap = null;
-                        showContent();
-                    })
-                    .show();
         });
     }
 
