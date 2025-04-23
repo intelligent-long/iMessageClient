@@ -110,12 +110,12 @@ public class ChannelSettingActivity extends BaseActivity {
                     .create().show();
         });
         binding.clickViewNote.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SettingChannelNoteActivity.class);
+            Intent intent = new Intent(this, SetChannelNoteActivity.class);
             intent.putExtra(ExtraKeys.IMESSAGE_ID, channel.getImessageId());
             startActivity(intent);
         });
         binding.clickViewTag.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SettingChannelTagActivity.class);
+            Intent intent = new Intent(this, SetChannelTagActivity.class);
             intent.putExtra(ExtraKeys.IMESSAGE_ID, channel.getImessageId());
             startActivity(intent);
         });

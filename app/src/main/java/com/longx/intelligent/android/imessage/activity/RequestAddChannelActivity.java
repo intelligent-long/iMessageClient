@@ -93,7 +93,7 @@ public class RequestAddChannelActivity extends BaseActivity {
                     .create().show();
         });
         binding.clickViewPresettingTag.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PresettingChannelTagActivity.class);
+            Intent intent = new Intent(this, PresetChannelTagActivity.class);
             intent.putExtra(ExtraKeys.CHANNEL, channel);
             intent.putExtra(ExtraKeys.CHANNEL_TAGS, presetChannelTags);
             intent.putExtra(ExtraKeys.CHANNEL_TAG_NAMES, newChannelTagNames);

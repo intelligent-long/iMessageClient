@@ -16,15 +16,16 @@ import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.bottomsheet.AddSettingChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
-import com.longx.intelligent.android.imessage.databinding.ActivityPresettingChannelTagBinding;
+import com.longx.intelligent.android.imessage.databinding.ActivityPresetChannelTagBinding;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PresettingChannelTagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
-    private ActivityPresettingChannelTagBinding binding;
+public class PresetChannelTagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
+    private ActivityPresetChannelTagBinding binding;
     private PresettingTagNewChannelTagsRecyclerAdapter newChannelTagsAdapter;
     private PresettingTagChannelTagsRecyclerAdapter channelTagsAdapter;
     private ArrayList<ChannelTag> checkedChannelTags;
@@ -33,7 +34,7 @@ public class PresettingChannelTagActivity extends BaseActivity implements Conten
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPresettingChannelTagBinding.inflate(getLayoutInflater());
+        binding = ActivityPresetChannelTagBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         getIntentData();
@@ -55,14 +56,21 @@ public class PresettingChannelTagActivity extends BaseActivity implements Conten
     }
 
     private void showContent() {
+        List<ChannelTag> allChannelTags = ChannelDatabaseManager.getInstance().findAllChannelTags();
         binding.recyclerViewNewTags.setLayoutManager(new LinearLayoutManager(this));
         newChannelTagsAdapter = new PresettingTagNewChannelTagsRecyclerAdapter(this, newChannelTagNames);
         binding.recyclerViewNewTags.setAdapter(newChannelTagsAdapter);
         if(!newChannelTagNames.isEmpty()) binding.layoutNewTags.setVisibility(View.VISIBLE);
         binding.recyclerViewTags.setLayoutManager(new LinearLayoutManager(this));
-        List<ChannelTag> allChannelTags = ChannelDatabaseManager.getInstance().findAllChannelTags();
         channelTagsAdapter = new PresettingTagChannelTagsRecyclerAdapter(this, allChannelTags, checkedChannelTags);
         binding.recyclerViewTags.setAdapter(channelTagsAdapter);
+        if(allChannelTags.isEmpty()){
+            binding.noContentLayout.setVisibility(View.VISIBLE);
+            binding.contentScrollView.setVisibility(View.GONE);
+        }else {
+            binding.noContentLayout.setVisibility(View.GONE);
+            binding.contentScrollView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupYiers() {

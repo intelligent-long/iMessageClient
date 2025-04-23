@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.SettingTagChannelTagsRecyclerAdapter;
@@ -18,9 +19,11 @@ import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
-import com.longx.intelligent.android.imessage.databinding.ActivitySettingChannelTagBinding;
+import com.longx.intelligent.android.imessage.databinding.ActivitySetChannelTagBinding;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
@@ -29,8 +32,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SettingChannelTagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
-    private ActivitySettingChannelTagBinding binding;
+public class SetChannelTagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
+    private ActivitySetChannelTagBinding binding;
     private Channel channel;
     private SettingTagNewChannelTagsRecyclerAdapter newChannelTagsAdapter;
     private SettingTagChannelTagsRecyclerAdapter channelTagsAdapter;
@@ -38,7 +41,7 @@ public class SettingChannelTagActivity extends BaseActivity implements ContentUp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySettingChannelTagBinding.inflate(getLayoutInflater());
+        binding = ActivitySetChannelTagBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         String channelImessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
@@ -55,13 +58,34 @@ public class SettingChannelTagActivity extends BaseActivity implements ContentUp
     }
 
     private void showContent() {
+        List<ChannelTag> allChannelTags = ChannelDatabaseManager.getInstance().findAllChannelTags();
         binding.recyclerViewNewTags.setLayoutManager(new LinearLayoutManager(this));
         newChannelTagsAdapter = new SettingTagNewChannelTagsRecyclerAdapter(this);
         binding.recyclerViewNewTags.setAdapter(newChannelTagsAdapter);
         binding.recyclerViewTags.setLayoutManager(new LinearLayoutManager(this));
-        List<ChannelTag> allChannelTags = ChannelDatabaseManager.getInstance().findAllChannelTags();
         channelTagsAdapter = new SettingTagChannelTagsRecyclerAdapter(this, allChannelTags, channel);
         binding.recyclerViewTags.setAdapter(channelTagsAdapter);
+        if(allChannelTags.isEmpty()){
+            toNoContent();
+        }else {
+            toContent();
+        }
+    }
+
+    private void toNoContent(){
+        ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
+        binding.noContentLayout.setVisibility(View.VISIBLE);
+        binding.contentScrollView.setVisibility(View.GONE);
+    }
+
+    private void toContent(){
+        ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                        | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                        | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+        binding.noContentLayout.setVisibility(View.GONE);
+        binding.contentScrollView.setVisibility(View.VISIBLE);
     }
 
     private void setupYiers() {

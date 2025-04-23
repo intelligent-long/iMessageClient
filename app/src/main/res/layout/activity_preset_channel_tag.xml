@@ -21,7 +21,7 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_setting_tag">
+            app:title="@string/title_presetting_tag">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -29,7 +29,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_marginEnd="101dp"
                 app:layout_collapseMode="pin"
-                app:menu="@menu/toolbar_activity_setting_channel_tag">
+                app:menu="@menu/toolbar_activity_presetting_channel_tag">
             </com.google.android.material.appbar.MaterialToolbar>
 
             <LinearLayout
@@ -50,7 +50,24 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:id="@+id/no_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:layout_marginBottom="180dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_content"
+            android:textSize="21sp"
+            android:textColor="?attr/colorOutline"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/content_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">

@@ -47,7 +47,7 @@
             android:name=".activity.ExploreGroupChannelActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.PresettingGroupChannelTagActivity"
+            android:name=".activity.PresetGroupChannelTagActivity"
             android:exported="false" />
         <activity
             android:name=".activity.CreateGroupChannelActivity"
@@ -123,7 +123,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.PresettingChannelTagActivity"
+            android:name=".activity.PresetChannelTagActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -163,7 +163,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
         <activity
-            android:name=".activity.SettingChannelTagActivity"
+            android:name=".activity.SetChannelTagActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -175,7 +175,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SettingChannelNoteActivity"
+            android:name=".activity.SetChannelNoteActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

@@ -8,7 +8,7 @@ import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabas
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
-import com.longx.intelligent.android.imessage.databinding.ActivitySettingChannelNoteBinding;
+import com.longx.intelligent.android.imessage.databinding.ActivitySetChannelNoteBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
@@ -18,14 +18,14 @@ import com.longx.intelligent.android.imessage.util.UiUtil;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SettingChannelNoteActivity extends BaseActivity {
-    private ActivitySettingChannelNoteBinding binding;
+public class SetChannelNoteActivity extends BaseActivity {
+    private ActivitySetChannelNoteBinding binding;
     private Channel channel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySettingChannelNoteBinding.inflate(getLayoutInflater());
+        binding = ActivitySetChannelNoteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         String channelImessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
@@ -43,10 +43,10 @@ public class SettingChannelNoteActivity extends BaseActivity {
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
-                    data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101, -102}, () -> {
+                    data.commonHandleResult(SetChannelNoteActivity.this, new int[]{-101, -102}, () -> {
                         binding.noteInput.setText(inputtedNote);
                         binding.deleteButton.setVisibility(View.VISIBLE);
-                        new MessageDialog(SettingChannelNoteActivity.this, "设置成功").create().show();
+                        new MessageDialog(SetChannelNoteActivity.this, "设置成功").create().show();
                     });
                 }
             });
@@ -59,10 +59,10 @@ public class SettingChannelNoteActivity extends BaseActivity {
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                 super.ok(data, raw, call);
-                                data.commonHandleResult(SettingChannelNoteActivity.this, new int[]{-101}, () -> {
+                                data.commonHandleResult(SetChannelNoteActivity.this, new int[]{-101}, () -> {
                                     binding.noteInput.setText(null);
                                     binding.deleteButton.setVisibility(View.GONE);
-                                    new MessageDialog(SettingChannelNoteActivity.this, "已删除").create().show();
+                                    new MessageDialog(SetChannelNoteActivity.this, "已删除").create().show();
                                 });
                             }
                         });

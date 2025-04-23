@@ -6,27 +6,23 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.PresettingTagGroupChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.adapter.PresettingTagNewGroupChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.bottomsheet.AddSettingGroupChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
-import com.longx.intelligent.android.imessage.databinding.ActivityPresettingGroupChannelTagBinding;
+import com.longx.intelligent.android.imessage.databinding.ActivityPresetGroupChannelTagBinding;
 import com.longx.intelligent.android.imessage.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PresettingGroupChannelTagActivity extends BaseActivity {
-    private ActivityPresettingGroupChannelTagBinding binding;
+public class PresetGroupChannelTagActivity extends BaseActivity {
+    private ActivityPresetGroupChannelTagBinding binding;
     private PresettingTagNewGroupChannelTagsRecyclerAdapter newGroupChannelTagsAdapter;
     private PresettingTagGroupChannelTagsRecyclerAdapter groupChannelTagsAdapter;
     private ArrayList<GroupChannelTag> checkedGroupChannelTags;
@@ -35,7 +31,7 @@ public class PresettingGroupChannelTagActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPresettingGroupChannelTagBinding.inflate(getLayoutInflater());
+        binding = ActivityPresetGroupChannelTagBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         getIntentData();
@@ -58,6 +54,28 @@ public class PresettingGroupChannelTagActivity extends BaseActivity {
         List<GroupChannelTag> allGroupChannelTags = new ArrayList<>(); //TODO
         groupChannelTagsAdapter = new PresettingTagGroupChannelTagsRecyclerAdapter(this, allGroupChannelTags, checkedGroupChannelTags);
         binding.recyclerViewGroupTags.setAdapter(groupChannelTagsAdapter);
+        if(allGroupChannelTags.isEmpty()){
+            toNoContent();
+        }else {
+            toContent();
+        }
+    }
+
+
+    private void toNoContent(){
+        ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL);
+        binding.noContentLayout.setVisibility(View.VISIBLE);
+        binding.contentScrollView.setVisibility(View.GONE);
+    }
+
+    private void toContent(){
+        ((AppBarLayout.LayoutParams)binding.collapsingToolbarLayout.getLayoutParams())
+                .setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                        | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                        | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+        binding.noContentLayout.setVisibility(View.GONE);
+        binding.contentScrollView.setVisibility(View.VISIBLE);
     }
 
     private void setupYiers() {

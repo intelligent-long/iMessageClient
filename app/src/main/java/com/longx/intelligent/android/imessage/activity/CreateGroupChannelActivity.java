@@ -1,22 +1,14 @@
 package com.longx.intelligent.android.imessage.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.MediaStore;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
-import com.longx.intelligent.android.imessage.bottomsheet.SetGroupChannelAvatarBottomSheet;
-import com.longx.intelligent.android.imessage.da.SharedImageViewModel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
@@ -25,7 +17,6 @@ import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.yier.TextChangedYier;
@@ -85,7 +76,7 @@ public class CreateGroupChannelActivity extends BaseActivity {
             }
         });
         binding.clickViewPresettingTag.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PresettingGroupChannelTagActivity.class);
+            Intent intent = new Intent(this, PresetGroupChannelTagActivity.class);
             intent.putExtra(ExtraKeys.GROUP_CHANNEL_TAGS, presetGroupChannelTags);
             intent.putExtra(ExtraKeys.GROUP_CHANNEL_TAG_NAMES, newGroupChannelTagNames);
             presettingTagsResultLauncher.launch(intent);
