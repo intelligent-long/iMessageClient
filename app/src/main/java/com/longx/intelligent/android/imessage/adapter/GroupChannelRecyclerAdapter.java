@@ -105,7 +105,7 @@ public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
         String groupAvatarHash = itemData.groupChannel.getGroupAvatar() == null ? null : itemData.groupChannel.getGroupAvatar().getHash();
         if(groupAvatarHash == null){
             GlideApp.with(activity)
-                    .load(R.drawable.default_avatar)
+                    .load(R.drawable.group_channel_default_avatar)
                     .into(holder.binding.avatar);
         }else {
             GlideApp.with(activity)

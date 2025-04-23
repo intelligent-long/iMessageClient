@@ -44,11 +44,11 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
 
     private void showContent() {
         List<GroupChannel> allAssociations = GroupChannelDatabaseManager.getInstance().findAllAssociations();
+        setupRecyclerView(allAssociations);
         if(allAssociations.isEmpty()){
             toNoContent();
         }else {
             toContent();
-            setupRecyclerView(allAssociations);
         }
     }
 
