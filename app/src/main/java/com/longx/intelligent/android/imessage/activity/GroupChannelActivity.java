@@ -61,11 +61,10 @@ public class GroupChannelActivity extends BaseActivity {
                     .load(NetDataUrls.getGroupAvatarUrl(this, groupChannel.getGroupAvatar().getHash()))
                     .into(binding.avatar);
         }
-        binding.editInfoButton.setVisibility(View.GONE);
         if(isOwner){
             binding.addChannelButton.setVisibility(View.GONE);
         }else {
-            binding.toolbar.getMenu().findItem(R.id.edit_info).setVisible(false);
+            binding.editInfoButton.setVisibility(View.GONE);
             if(inGroup){
                 binding.addChannelButton.setVisibility(View.GONE);
             }else {
