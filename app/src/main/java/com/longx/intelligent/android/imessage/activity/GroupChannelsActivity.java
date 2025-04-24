@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
-import com.longx.intelligent.android.imessage.adapter.GroupChannelRecyclerAdapter;
+import com.longx.intelligent.android.imessage.adapter.GroupChannelsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
@@ -17,11 +17,11 @@ import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsB
 import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupChannelBinding;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
+import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class GroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
+public class GroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier,  WrappableRecyclerViewAdapter.OnItemClickYier<GroupChannelsRecyclerAdapter.ItemData> {
     private ActivityGroupChannelsBinding binding;
     private RecyclerHeaderGroupChannelBinding headerViewBinding;
 
@@ -56,7 +56,8 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
         headerViewBinding = RecyclerHeaderGroupChannelBinding.inflate(getLayoutInflater(), binding.recyclerView, false);
-        GroupChannelRecyclerAdapter adapter = new GroupChannelRecyclerAdapter(this, allAssociations);
+        GroupChannelsRecyclerAdapter adapter = new GroupChannelsRecyclerAdapter(this, allAssociations);
+        adapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
     }
@@ -119,5 +120,12 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNELS)){
             showContent();
         }
+    }
+
+    @Override
+    public void onItemClick(int position, GroupChannelsRecyclerAdapter.ItemData data) {
+        Intent intent = new Intent(this, GroupChannelActivity.class);
+        intent.putExtra(ExtraKeys.GROUP_CHANNEL, data.getGroupChannel());
+        startActivity(intent);
     }
 }

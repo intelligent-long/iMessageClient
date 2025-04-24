@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/toolbar_activity_channel"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/do_not_find_channel_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/do_not_find_channel"
+            android:textSize="21sp"
+            android:textColor="?attr/colorOutline"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/content_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="21dp"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="15dp"
+            android:layout_marginBottom="15dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:shapeAppearance="@style/CircleImageAppearance"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="21sp"/>
+
+                    <ImageView
+                        android:id="@+id/sex_icon"
+                        android:layout_width="21dp"
+                        android:layout_height="21dp"
+                        android:layout_marginStart="10dp"
+                        tools:ignore="ContentDescription"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/group_channel_id_user"
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/infos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/shape_card_background_radius_28"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_name"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/name1"
+                    style="@style/TextAppearance.Material3.TitleLarge"
+                    android:textSize="19sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="Theme.AppTheme.MaterialPreference.Summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1.5dp"
+                    android:textFontWeight="@integer/font_weight_medium"
+                    android:text="名称"/>
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/region_divider"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                style="@style/WindowBackgroundColorDividerColor"/>
+
+            <LinearLayout
+                android:id="@+id/layout_region"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/region"
+                    style="@style/TextAppearance.Material3.TitleLarge"
+                    android:textSize="19sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="Theme.AppTheme.MaterialPreference.Summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1.5dp"
+                    android:textFontWeight="@integer/font_weight_medium"
+                    android:text="地区"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/edit_my_info_button"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="9.5dp"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            app:icon="@drawable/edit_outline_24px"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            android:text="编辑信息"
+            android:textSize="17sp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_channel_button"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="9.5dp"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            app:icon="@drawable/group_add_outline_24px"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            android:text="添加频道"
+            android:textSize="17sp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_message_button"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="9.5dp"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            app:icon="@drawable/chat_outline_24px"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            android:text="发消息"
+            android:textSize="17sp"/>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

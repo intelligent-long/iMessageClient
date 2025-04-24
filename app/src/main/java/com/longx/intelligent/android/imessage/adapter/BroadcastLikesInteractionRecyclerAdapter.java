@@ -85,7 +85,7 @@ public class BroadcastLikesInteractionRecyclerAdapter extends WrappableRecyclerV
         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastLike.getFromId());
         String name;
         if(channel != null){
-            name = channel.getName();
+            name = channel.autoGetName();
         }else {
             name = broadcastLike.getFromName();
         }

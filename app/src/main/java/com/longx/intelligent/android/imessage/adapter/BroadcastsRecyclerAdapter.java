@@ -131,7 +131,7 @@ public class BroadcastsRecyclerAdapter extends WrappableRecyclerViewAdapter<Broa
         }else {
             Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(itemData.broadcast.getImessageId());
             if(channel != null) {
-                name = channel.getName();
+                name = channel.autoGetName();
                 avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
             }else {
                 name = itemData.broadcast.getChannelName();

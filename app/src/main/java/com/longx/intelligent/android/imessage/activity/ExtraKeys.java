@@ -52,4 +52,6 @@ public class ExtraKeys {
     public static final String MESSAGE = "message";
     public static final String AUTH_TO_SETTINGS = "auth_to_settings";
     public static final String BITMAP = "bitmap";
+    public static final String GROUP_CHANNEL_ID = "group_channel_id";
+    public static final String GROUP_CHANNEL = "group_channel";
 }

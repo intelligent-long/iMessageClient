@@ -103,7 +103,7 @@ public class BroadcastComment implements Parcelable {
         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(getFromId());
         String name;
         if(channel != null){
-            name = channel.getName();
+            name = channel.autoGetName();
         }else {
             name = getFromName();
         }

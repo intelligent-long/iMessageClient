@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/more"
-        android:title="更多"
-        android:icon="@drawable/more_horiz_24px"
+        android:id="@+id/search"
+        android:icon="@drawable/search_24px"
+        android:title="搜索"
         app:iconTint="?attr/colorControlNormal"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 </menu>

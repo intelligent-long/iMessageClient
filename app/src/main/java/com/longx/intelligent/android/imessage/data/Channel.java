@@ -51,7 +51,7 @@ public class Channel extends UserInfo implements Parcelable {
         return note;
     }
 
-    public String getName(){
+    public String autoGetName(){
         return note == null ? username : note;
     }
 

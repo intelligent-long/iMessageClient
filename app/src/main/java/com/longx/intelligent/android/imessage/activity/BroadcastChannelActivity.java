@@ -123,7 +123,7 @@ public class BroadcastChannelActivity extends BaseActivity implements BroadcastR
     }
 
     private void showContent() {
-        binding.toolbar.setTitle(channel.getName() + " 的广播");
+        binding.toolbar.setTitle(channel.autoGetName() + " 的广播");
     }
 
     private void setupYiers(){

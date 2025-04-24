@@ -73,7 +73,7 @@ public class SearchChatMessageResultItemsRecyclerAdapter extends WrappableRecycl
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
             }
-            holder.binding.name.setText(channel.getName());
+            holder.binding.name.setText(channel.autoGetName());
         }
         switch (chatMessage.getType()){
             case ChatMessage.TYPE_TEXT:

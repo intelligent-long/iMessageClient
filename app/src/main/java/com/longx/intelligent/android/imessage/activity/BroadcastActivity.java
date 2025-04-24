@@ -156,7 +156,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
         }else {
             Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcast.getImessageId());
             if(channel != null) {
-                name = channel.getName();
+                name = channel.autoGetName();
                 avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
             }else {
                 name = broadcast.getChannelName();
@@ -707,7 +707,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         String channelName;
                         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(broadcastLike.getFromId());
                         if(channel != null) {
-                            channelName = channel.getName();
+                            channelName = channel.autoGetName();
                         }else {
                             channelName = broadcastLike.getFromName();
                         }

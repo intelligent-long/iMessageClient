@@ -42,7 +42,7 @@ public class SearchChatMessageResultItemsActivity extends BaseActivity {
     }
 
     private void showContent() {
-        String name = ChannelDatabaseManager.getInstance().findOneChannel(searchedChatMessages.get(0).getOther(this)).getName();
+        String name = ChannelDatabaseManager.getInstance().findOneChannel(searchedChatMessages.get(0).getOther(this)).autoGetName();
         binding.toolbar.setTitle("和 " + name + " 的相关消息记录");
         binding.recyclerView.setAdapter(adapter);
     }

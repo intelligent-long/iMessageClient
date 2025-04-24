@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.imessage.adapter;
 
-import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,13 +7,9 @@ import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.GroupChannelsActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
-import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
-import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
-import com.longx.intelligent.android.imessage.fragment.main.ChannelsFragment;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
@@ -28,15 +23,15 @@ import java.util.List;
  * Created by LONG on 2025/4/14 at 上午5:37.
  */
 
-public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<GroupChannelRecyclerAdapter.ViewHolder, GroupChannelRecyclerAdapter.ItemData> {
+public class GroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<GroupChannelsRecyclerAdapter.ViewHolder, GroupChannelsRecyclerAdapter.ItemData> {
     private final GroupChannelsActivity activity;
     private final List<ItemData> itemDataList;
 
-    public GroupChannelRecyclerAdapter(GroupChannelsActivity activity, List<GroupChannel> allAssociations) {
+    public GroupChannelsRecyclerAdapter(GroupChannelsActivity activity, List<GroupChannel> allAssociations) {
         this.activity = activity;
         this.itemDataList = new ArrayList<>();
         allAssociations.forEach(association -> {
-            this.itemDataList.add(new GroupChannelRecyclerAdapter.ItemData(association));
+            this.itemDataList.add(new GroupChannelsRecyclerAdapter.ItemData(association));
         });
         itemDataList.sort((o1, o2) -> {
             if (o1.indexChar == '#' && o2.indexChar != '#') return 1;
@@ -56,7 +51,7 @@ public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
 
         public ItemData(GroupChannel groupChannel) {
             this.groupChannel = groupChannel;
-            String name = groupChannel.getName();
+            String name = groupChannel.autoGetName();
             this.fullPinyin = PinyinUtil.getPinyin(name);
             char firstChar = fullPinyin.charAt(0);
             if (Character.isLetter(firstChar)) {
@@ -124,11 +119,16 @@ public class GroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
                 holder.binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        holder.binding.name.setText(itemData.groupChannel.getName());
+        String note = itemData.groupChannel.getNote();
+        holder.binding.name.setText(note == null ? itemData.groupChannel.getName() : note);
         setupYiers(holder, position);
     }
 
     private void setupYiers(@NonNull ViewHolder holder, int position) {
+        ItemData itemData = itemDataList.get(position);
+        holder.binding.clickView.setOnClickListener(v -> {
+            getOnItemClickYier().onItemClick(position, itemData);
+        });
         holder.binding.indexBar.setOnClickListener(v -> {
             FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_HEADER_CHANNEL, getExistTexts());
             fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {

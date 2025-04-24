@@ -43,7 +43,7 @@ public class ForwardMessagesProcessingDialog extends AbstractDialog{
         } else {
             GlideBehaviours.loadToImageView(getActivity().getApplicationContext(), NetDataUrls.getAvatarUrl(getActivity(), avatarHash), binding.avatar);
         }
-        binding.name.setText(channel.getName());
+        binding.name.setText(channel.autoGetName());
     }
 
     public void updateProgressIndicator(long current, long total){

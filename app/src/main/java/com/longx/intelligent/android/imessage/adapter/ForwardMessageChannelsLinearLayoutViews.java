@@ -34,7 +34,7 @@ public class ForwardMessageChannelsLinearLayoutViews extends LinearLayoutViews<F
         private final Channel channel;
 
         public ItemData(Channel channel) {
-            indexChar = PinyinUtil.getPinyin(channel.getName()).toUpperCase().charAt(0);
+            indexChar = PinyinUtil.getPinyin(channel.autoGetName()).toUpperCase().charAt(0);
             if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
                 indexChar = '#';
             }
@@ -72,7 +72,7 @@ public class ForwardMessageChannelsLinearLayoutViews extends LinearLayoutViews<F
                 binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        binding.name.setText(itemData.channel.getName());
+        binding.name.setText(itemData.channel.autoGetName());
         setupYiers(binding, itemData, activity);
         return binding.getRoot();
     }

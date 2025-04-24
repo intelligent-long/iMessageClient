@@ -39,7 +39,7 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
         private Channel channel;
 
         public ItemData(Channel channel) {
-            indexChar = PinyinUtil.getPinyin(channel.getName()).toUpperCase().charAt(0);
+            indexChar = PinyinUtil.getPinyin(channel.autoGetName()).toUpperCase().charAt(0);
             if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
                 indexChar = '#';
             }
@@ -82,7 +82,7 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
                 binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        binding.name.setText(itemData.channel.getName());
+        binding.name.setText(itemData.channel.autoGetName());
         showMatchingIn(binding, itemData, activity);
         setupYiers(binding, itemData, activity);
         return binding.getRoot();

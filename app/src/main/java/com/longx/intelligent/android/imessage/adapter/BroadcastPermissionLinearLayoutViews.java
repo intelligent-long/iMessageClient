@@ -40,7 +40,7 @@ public class BroadcastPermissionLinearLayoutViews extends LinearLayoutViews<Broa
         private final Channel channel;
 
         public ItemData(Channel channel) {
-            indexChar = PinyinUtil.getPinyin(channel.getName()).toUpperCase().charAt(0);
+            indexChar = PinyinUtil.getPinyin(channel.autoGetName()).toUpperCase().charAt(0);
             if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
                 indexChar = '#';
             }
@@ -78,7 +78,7 @@ public class BroadcastPermissionLinearLayoutViews extends LinearLayoutViews<Broa
                 binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        binding.name.setText(itemData.channel.getName());
+        binding.name.setText(itemData.channel.autoGetName());
         if(excludeConnectedChannels.contains(itemData.channel.getImessageId())){
             binding.excludeCheckYes.setVisibility(View.VISIBLE);
             binding.excludeCheckNo.setVisibility(View.GONE);

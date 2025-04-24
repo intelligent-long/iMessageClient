@@ -40,7 +40,7 @@ public class SearchChatMessageLinearLayoutViews extends LinearLayoutViews<List<C
             } else {
                 GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), binding.avatar);
             }
-            binding.name.setText(channel.getName());
+            binding.name.setText(channel.autoGetName());
         }
         binding.searchedChatMessageCountText.setText(searchedData.size() + " 条相关消息记录");
         setupYiers(binding, (ArrayList<ChatMessage>) searchedData, activity);

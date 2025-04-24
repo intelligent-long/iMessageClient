@@ -1,5 +1,10 @@
 package com.longx.intelligent.android.imessage.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +13,7 @@ import java.util.Objects;
 /**
  * Created by LONG on 2025/4/15 at 10:49 PM.
  */
-public class GroupChannel {
+public class GroupChannel implements Parcelable {
     private GroupAvatar groupAvatar;
     private String groupChannelId;
     private String owner;
@@ -16,6 +21,9 @@ public class GroupChannel {
     private String note;
     private Date createTime;
     private List<GroupChannelAssociation> groupChannelAssociations;
+    private UserInfo.Region firstRegion;
+    private UserInfo.Region secondRegion;
+    private UserInfo.Region thirdRegion;
 
     public GroupChannel() {
     }
@@ -56,12 +64,28 @@ public class GroupChannel {
         return name;
     }
 
+    public String autoGetName(){
+        return note == null ? name : note;
+    }
+
     public String getNote() {
         return note;
     }
 
     public Date getCreateTime() {
         return createTime;
+    }
+
+    public UserInfo.Region getFirstRegion() {
+        return firstRegion;
+    }
+
+    public UserInfo.Region getSecondRegion() {
+        return secondRegion;
+    }
+
+    public UserInfo.Region getThirdRegion() {
+        return thirdRegion;
     }
 
     public List<GroupChannelAssociation> getGroupChannelAssociations() {
@@ -83,5 +107,65 @@ public class GroupChannel {
     @Override
     public int hashCode() {
         return Objects.hash(groupChannelId, owner, name, note, createTime);
+    }
+
+    public static final Creator<GroupChannel> CREATOR = new Creator<GroupChannel>() {
+        @Override
+        public GroupChannel createFromParcel(Parcel in) {
+            return new GroupChannel(in);
+        }
+
+        @Override
+        public GroupChannel[] newArray(int size) {
+            return new GroupChannel[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    protected GroupChannel(Parcel in) {
+        groupAvatar = in.readParcelable(getClass().getClassLoader());
+        groupChannelId = in.readString();
+        owner = in.readString();
+        name = in.readString();
+        note = in.readString();
+        createTime = (Date) in.readValue(getClass().getClassLoader());
+        groupChannelAssociations = in.createTypedArrayList(GroupChannelAssociation.CREATOR);
+        firstRegion = in.readParcelable(getClass().getClassLoader());
+        secondRegion = in.readParcelable(getClass().getClassLoader());
+        thirdRegion = in.readParcelable(getClass().getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeParcelable(groupAvatar, flags);
+        dest.writeString(groupChannelId);
+        dest.writeString(owner);
+        dest.writeString(name);
+        dest.writeString(note);
+        dest.writeValue(createTime);
+        dest.writeTypedList(groupChannelAssociations);
+        dest.writeParcelable(firstRegion, flags);
+        dest.writeParcelable(secondRegion, flags);
+        dest.writeParcelable(thirdRegion, flags);
+    }
+
+    public String buildRegionDesc(){
+        String firstRegionName = firstRegion == null ? null : firstRegion.getName();
+        String secondRegionName = secondRegion == null ? null : secondRegion.getName();
+        String thirdRegionName = thirdRegion == null ? null : thirdRegion.getName();
+        if(firstRegionName == null && secondRegionName == null && thirdRegionName == null) return null;
+        StringBuilder regionDesc = new StringBuilder();
+        if(firstRegionName != null) {
+            regionDesc.append(firstRegionName);
+            if(secondRegionName != null) {
+                regionDesc.append(" ").append(secondRegionName);
+                if(thirdRegionName != null) regionDesc.append(" ").append(thirdRegionName);
+            }
+        }
+        return regionDesc.toString();
     }
 }

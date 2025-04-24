@@ -50,7 +50,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
 
         public ItemData(Channel channel) {
             this.channel = channel;
-            String name = channel.getName();
+            String name = channel.autoGetName();
             this.fullPinyin = PinyinUtil.getPinyin(name);
             char firstChar = fullPinyin.charAt(0);
             if (Character.isLetter(firstChar)) {
@@ -109,7 +109,7 @@ public class ChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Channe
                 holder.binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        holder.binding.name.setText(itemData.channel.getName());
+        holder.binding.name.setText(itemData.channel.autoGetName());
         setupYiers(holder, position);
     }
 

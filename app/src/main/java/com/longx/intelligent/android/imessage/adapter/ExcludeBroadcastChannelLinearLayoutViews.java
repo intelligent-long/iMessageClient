@@ -32,7 +32,7 @@ public class ExcludeBroadcastChannelLinearLayoutViews extends LinearLayoutViews<
         private final Channel channel;
 
         public ItemData(Channel channel) {
-            indexChar = PinyinUtil.getPinyin(channel.getName()).toUpperCase().charAt(0);
+            indexChar = PinyinUtil.getPinyin(channel.autoGetName()).toUpperCase().charAt(0);
             if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
                 indexChar = '#';
             }
@@ -70,7 +70,7 @@ public class ExcludeBroadcastChannelLinearLayoutViews extends LinearLayoutViews<
                 binding.indexBar.setVisibility(View.VISIBLE);
             }
         }
-        binding.name.setText(itemData.channel.getName());
+        binding.name.setText(itemData.channel.autoGetName());
         if(excludeBroadcastChannelIds.contains(itemData.channel.getImessageId())){
             binding.checkBox.setChecked(true);
         }
