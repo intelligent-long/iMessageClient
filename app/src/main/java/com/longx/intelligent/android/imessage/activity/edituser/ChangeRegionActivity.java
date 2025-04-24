@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.AmapDistrict;
+import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
@@ -92,7 +93,7 @@ public class ChangeRegionActivity extends BaseActivity {
                     }
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
                             R.layout.layout_auto_complete_text_view_text, allFirstRegionNames);
-                    Self.Region firstRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getFirstRegion();
+                    Region firstRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getFirstRegion();
                     int position = 0;
                     if(firstRegion != null) {
                         for (int i = 0; i < allFirstRegions.size(); i++) {
@@ -140,7 +141,7 @@ public class ChangeRegionActivity extends BaseActivity {
                         }
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
                                 R.layout.layout_auto_complete_text_view_text, allSecondRegionNames);
-                        Self.Region secondRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getSecondRegion();
+                        Region secondRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getSecondRegion();
                         int position = 0;
                         if(secondRegion != null) {
                             for (int i = 0; i < allSecondRegions.size(); i++) {
@@ -189,7 +190,7 @@ public class ChangeRegionActivity extends BaseActivity {
                         }
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
                                 R.layout.layout_auto_complete_text_view_text, allThirdRegionNames);
-                        Self.Region thirdRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getThirdRegion();
+                        Region thirdRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getThirdRegion();
                         int position = 0;
                         if(thirdRegion != null) {
                             for (int i = 0; i < allThirdRegions.size(); i++) {

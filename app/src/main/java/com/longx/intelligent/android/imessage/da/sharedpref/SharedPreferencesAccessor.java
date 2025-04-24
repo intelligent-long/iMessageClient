@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.imessage.data.ChannelAddition;
 import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.OfflineDetail;
+import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.net.ServerConfig;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.data.UserInfo;
@@ -361,9 +362,9 @@ public class SharedPreferencesAccessor {
             return new Self(imessageId, imessageIdUser, email, registerTime, username,
                     new Avatar(avatarHash, avatarImessageId, avatarExtension, avatarTime),
                     sex == -1 ? null : sex,
-                    (firstRegionAdcode == -1 && firstRegionName == null) ? null : new UserInfo.Region(firstRegionAdcode, firstRegionName),
-                    (secondRegionAdcode == -1 && secondRegionName == null) ? null : new UserInfo.Region(secondRegionAdcode, secondRegionName),
-                    (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new UserInfo.Region(thirdRegionAdcode, thirdRegionName),
+                    (firstRegionAdcode == -1 && firstRegionName == null) ? null : new Region(firstRegionAdcode, firstRegionName),
+                    (secondRegionAdcode == -1 && secondRegionName == null) ? null : new Region(secondRegionAdcode, secondRegionName),
+                    (thirdRegionAdcode == -1 && thirdRegionName == null) ? null : new Region(thirdRegionAdcode, thirdRegionName),
                     new UserInfo.UserProfileVisibility(emailVisible, sexVisible, regionVisible),
                     new UserInfo.WaysToFindMe(findMeByImessageId, findMeByEmail));
         }

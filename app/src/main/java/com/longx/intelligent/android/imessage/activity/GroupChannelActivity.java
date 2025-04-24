@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 
+import androidx.appcompat.content.res.AppCompatResources;
+
+import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
@@ -14,6 +17,7 @@ import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBi
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 public class GroupChannelActivity extends BaseActivity {
     private ActivityGroupChannelBinding binding;
@@ -48,18 +52,23 @@ public class GroupChannelActivity extends BaseActivity {
 
     private void showContent() {
         if(groupChannel.getGroupAvatar() == null){
-            GlideApp.with(this).load(R.drawable.group_channel_default_avatar).into(binding.avatar);
+            GlideApp.with(this)
+                    .load(AppCompatResources.getDrawable(this, R.drawable.group_channel_default_avatar))
+                    .override(Target.SIZE_ORIGINAL)
+                    .into(binding.avatar);
         }else {
-            GlideApp.with(this).load(NetDataUrls.getGroupAvatarUrl(this, groupChannel.getGroupAvatar().getHash())).into(binding.avatar);
+            GlideApp.with(this)
+                    .load(NetDataUrls.getGroupAvatarUrl(this, groupChannel.getGroupAvatar().getHash()))
+                    .into(binding.avatar);
         }
+        binding.editInfoButton.setVisibility(View.GONE);
         if(isOwner){
             binding.addChannelButton.setVisibility(View.GONE);
         }else {
+            binding.toolbar.getMenu().findItem(R.id.edit_info).setVisible(false);
             if(inGroup){
-                binding.editMyInfoButton.setVisibility(View.GONE);
                 binding.addChannelButton.setVisibility(View.GONE);
             }else {
-                binding.editMyInfoButton.setVisibility(View.GONE);
                 binding.sendMessageButton.setVisibility(View.GONE);
             }
         }
@@ -71,7 +80,7 @@ public class GroupChannelActivity extends BaseActivity {
             binding.name.setText(groupChannel.getName());
             binding.layoutName.setVisibility(View.GONE);
         }
-        binding.groupChannelIdUser.setText(groupChannel.getGroupChannelId()); //TODO
+        binding.groupChannelIdUser.setText(groupChannel.getGroupChannelIdUser());
         String regionDesc = groupChannel.buildRegionDesc();
         if(groupChannel.getFirstRegion() == null){
             binding.layoutRegion.setVisibility(View.GONE);

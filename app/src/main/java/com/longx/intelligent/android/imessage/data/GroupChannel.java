@@ -16,21 +16,23 @@ import java.util.Objects;
 public class GroupChannel implements Parcelable {
     private GroupAvatar groupAvatar;
     private String groupChannelId;
+    private String groupChannelIdUser;
     private String owner;
     private String name;
     private String note;
     private Date createTime;
     private List<GroupChannelAssociation> groupChannelAssociations;
-    private UserInfo.Region firstRegion;
-    private UserInfo.Region secondRegion;
-    private UserInfo.Region thirdRegion;
+    private Region firstRegion;
+    private Region secondRegion;
+    private Region thirdRegion;
 
     public GroupChannel() {
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations) {
         this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
+        this.groupChannelIdUser = groupChannelIdUser;
         this.owner = owner;
         this.name = name;
         this.note = note;
@@ -38,9 +40,10 @@ public class GroupChannel implements Parcelable {
         this.groupChannelAssociations = groupChannelAssociations;
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String owner, String name, String note, Date createTime) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime) {
         this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
+        this.groupChannelIdUser = groupChannelIdUser;
         this.owner = owner;
         this.name = name;
         this.note = note;
@@ -54,6 +57,10 @@ public class GroupChannel implements Parcelable {
 
     public String getGroupChannelId() {
         return groupChannelId;
+    }
+
+    public String getGroupChannelIdUser() {
+        return groupChannelIdUser;
     }
 
     public String getOwner() {
@@ -76,15 +83,15 @@ public class GroupChannel implements Parcelable {
         return createTime;
     }
 
-    public UserInfo.Region getFirstRegion() {
+    public Region getFirstRegion() {
         return firstRegion;
     }
 
-    public UserInfo.Region getSecondRegion() {
+    public Region getSecondRegion() {
         return secondRegion;
     }
 
-    public UserInfo.Region getThirdRegion() {
+    public Region getThirdRegion() {
         return thirdRegion;
     }
 
@@ -129,6 +136,7 @@ public class GroupChannel implements Parcelable {
     protected GroupChannel(Parcel in) {
         groupAvatar = in.readParcelable(getClass().getClassLoader());
         groupChannelId = in.readString();
+        groupChannelIdUser = in.readString();
         owner = in.readString();
         name = in.readString();
         note = in.readString();
@@ -143,6 +151,7 @@ public class GroupChannel implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(groupAvatar, flags);
         dest.writeString(groupChannelId);
+        dest.writeString(groupChannelIdUser);
         dest.writeString(owner);
         dest.writeString(name);
         dest.writeString(note);
@@ -167,5 +176,22 @@ public class GroupChannel implements Parcelable {
             }
         }
         return regionDesc.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "GroupChannel{" +
+                "groupAvatar=" + groupAvatar +
+                ", groupChannelId='" + groupChannelId + '\'' +
+                ", groupChannelIdUser='" + groupChannelIdUser + '\'' +
+                ", owner='" + owner + '\'' +
+                ", name='" + name + '\'' +
+                ", note='" + note + '\'' +
+                ", createTime=" + createTime +
+                ", groupChannelAssociations=" + groupChannelAssociations +
+                ", firstRegion=" + firstRegion +
+                ", secondRegion=" + secondRegion +
+                ", thirdRegion=" + thirdRegion +
+                '}';
     }
 }

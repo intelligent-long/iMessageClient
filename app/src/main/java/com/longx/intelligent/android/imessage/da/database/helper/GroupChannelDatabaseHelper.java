@@ -27,6 +27,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
 
     public static class TableGroupChannelsColumns {
         public static final String GROUP_CHANNEL_ID = "group_channel_id";
+        public static final String GROUP_CHANNEL_ID_USER = "group_channel_id_user";
         public static final String OWNER = "owner";
         public static final String NAME = "name";
         public static final String NOTE = "note";
@@ -54,6 +55,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         db.execSQL(create_sql_1);
         String create_sql_2 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_GROUP_CHANNELS + "("
                 + TableGroupChannelsColumns.GROUP_CHANNEL_ID + " VARCHAR,"
+                + TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER + " VARCHAR,"
                 + TableGroupChannelsColumns.OWNER + " VARCHAR,"
                 + TableGroupChannelsColumns.NAME + " VARCHAR,"
                 + TableGroupChannelsColumns.NOTE + " VARCHAR,"

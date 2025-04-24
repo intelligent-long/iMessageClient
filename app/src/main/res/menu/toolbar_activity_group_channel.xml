@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/edit_info"
+        android:title="编辑信息"
+        android:icon="@drawable/edit_outline_24px"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/more"
         android:title="更多"
         android:icon="@drawable/more_horiz_24px"

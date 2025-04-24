@@ -4,7 +4,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 
+import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.GroupChannelsActivity;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
@@ -12,6 +14,7 @@ import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChann
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -100,7 +103,8 @@ public class GroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<G
         String groupAvatarHash = itemData.groupChannel.getGroupAvatar() == null ? null : itemData.groupChannel.getGroupAvatar().getHash();
         if(groupAvatarHash == null){
             GlideApp.with(activity)
-                    .load(R.drawable.group_channel_default_avatar)
+                    .load(AppCompatResources.getDrawable(activity, R.drawable.group_channel_default_avatar))
+                    .override(Target.SIZE_ORIGINAL)
                     .into(holder.binding.avatar);
         }else {
             GlideApp.with(activity)

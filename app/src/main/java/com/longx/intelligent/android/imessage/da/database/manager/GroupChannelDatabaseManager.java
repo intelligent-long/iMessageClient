@@ -55,6 +55,7 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             groupChannels.forEach(groupChannel -> {
                 ContentValues values = new ContentValues();
                 values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID, groupChannel.getGroupChannelId());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER, groupChannel.getGroupChannelIdUser());
                 values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.OWNER, groupChannel.getOwner());
                 values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME, groupChannel.getName());
                 values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE, groupChannel.getNote());
@@ -89,7 +90,7 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
 
     public List<GroupChannel> findAllAssociations(){
         openDatabaseIfClosed();
-        String sql = "SELECT *, ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID
+        String sql = "SELECT *, ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + ", ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER
                 + " FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNELS + " ca "
                 + " LEFT JOIN " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_ASSOCIATIONS + " gca ON "
                 + "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + " = " + "gca." + GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID;
@@ -97,11 +98,12 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             List<GroupChannel> result = new ArrayList<>();
             while (cursor.moveToNext()){
                 String groupChannelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID);
+                String groupChannelIdUser = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER);
                 String owner = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.OWNER);
                 String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME);
                 String note = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE);
                 Long createTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME);
-                GroupChannel groupChannel = new GroupChannel(null, groupChannelId, owner, name, note, new Date(createTime));
+                GroupChannel groupChannel = new GroupChannel(null, groupChannelId, groupChannelIdUser, owner, name, note, new Date(createTime));
                 String associationId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID);
                 String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
                 String inviteChannelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID);

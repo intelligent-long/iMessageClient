@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/toolbar_activity_channel"/>
+            app:menu="@menu/toolbar_activity_group_channel"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
@@ -178,10 +178,10 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/edit_my_info_button"
+            android:id="@+id/edit_info_button"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginBottom="9.5dp"
+            android:layout_marginBottom="9.7dp"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             app:icon="@drawable/edit_outline_24px"
             app:iconGravity="textStart"
@@ -193,7 +193,7 @@
             android:id="@+id/add_channel_button"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginBottom="9.5dp"
+            android:layout_marginBottom="9.7dp"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             app:icon="@drawable/group_add_outline_24px"
             app:iconGravity="textStart"
@@ -205,7 +205,7 @@
             android:id="@+id/send_message_button"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginBottom="9.5dp"
+            android:layout_marginBottom="9.7dp"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             app:icon="@drawable/chat_outline_24px"
             app:iconGravity="textStart"

@@ -14,6 +14,7 @@ import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
+import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.data.UserInfo;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
 
@@ -79,13 +80,13 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION, channel.getAvatar() == null ? null : channel.getAvatar().getExtension());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME, channel.getAvatar() == null ? null : channel.getAvatar().getTime().getTime());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.SEX, channel.getSex());
-                UserInfo.Region firstRegion = channel.getFirstRegion();
+                Region firstRegion = channel.getFirstRegion();
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_ADCODE, firstRegion == null ? null : firstRegion.getAdcode());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_NAME, firstRegion == null ? null : firstRegion.getName());
-                UserInfo.Region secondRegion = channel.getSecondRegion();
+                Region secondRegion = channel.getSecondRegion();
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_ADCODE, secondRegion == null ? null : secondRegion.getAdcode());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_NAME, secondRegion == null ? null : secondRegion.getName());
-                UserInfo.Region thirdRegion = channel.getThirdRegion();
+                Region thirdRegion = channel.getThirdRegion();
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE, thirdRegion == null ? null : thirdRegion.getAdcode());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME, thirdRegion == null ? null : thirdRegion.getName());
                 values1.put(ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED, channel.isAssociated());
@@ -142,9 +143,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 result.add(new ChannelAssociation(associationId, associationTableImessageId, channelImessageId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
                         new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                                 channelTableSex,
-                                channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
-                                channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
-                                channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
+                                channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
+                                channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
+                                channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
                                 Boolean.TRUE.equals(channelTableAssociated)),
                         new ChatMessageAllow(allowVoiceChatMessageToThem == null || allowVoiceChatMessageToThem, allowNoticeChatMessageToThem == null || allowNoticeChatMessageToThem),
                         new ChatMessageAllow(allowVoiceChatMessageToMe == null || allowVoiceChatMessageToMe, allowNoticeChatMessageToMe == null || allowNoticeChatMessageToMe)));
@@ -196,9 +197,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             return new ChannelAssociation(associationId, associationTableImessageId, channelImessageId, Boolean.TRUE.equals(isRequester), requestTime, acceptTime, Boolean.TRUE.equals(isActive),
                     new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                             channelTableSex,
-                            channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
-                            channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
-                            channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
+                            channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
+                            channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
+                            channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
                             Boolean.TRUE.equals(channelTableAssociated)),
                     new ChatMessageAllow(allowVoiceChatMessageToThem == null || allowVoiceChatMessageToThem, allowNoticeChatMessageToThem == null || allowNoticeChatMessageToThem),
                     new ChatMessageAllow(allowVoiceChatMessageToMe == null || allowVoiceChatMessageToMe, allowNoticeChatMessageToMe == null || allowNoticeChatMessageToMe));
@@ -230,9 +231,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
             return new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                     channelTableSex,
-                    channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
-                    channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
-                    channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
+                    channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
+                    channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
+                    channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
                     Boolean.TRUE.equals(channelTableAssociated));
         }catch (Exception e){
             return null;
@@ -478,9 +479,9 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 Boolean channelTableAssociated = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED);
                 results.add(new Channel(channelTableImessageId, channelTableImessageIdUser, channelTableEmail, channelTableUsername, channelTableNote, new Avatar(channelTableAvatarHash, channelTableAvatarImessageId, channelTableAvatarExtension, channelTableAvatarTime),
                         channelTableSex,
-                        channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new UserInfo.Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
-                        channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new UserInfo.Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
-                        channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new UserInfo.Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
+                        channelTableFirstRegionAdcode == null && channelTableFirstRegionName == null ? null : new Region(channelTableFirstRegionAdcode, channelTableFirstRegionName),
+                        channelTableSecondRegionAdcode == null && channelTableSecondRegionName == null ? null : new Region(channelTableSecondRegionAdcode, channelTableSecondRegionName),
+                        channelTableThirdRegionAdcode == null && channelTableThirdRegionName == null ? null : new Region(channelTableThirdRegionAdcode, channelTableThirdRegionName),
                         Boolean.TRUE.equals(channelTableAssociated)));
             }
             return results;

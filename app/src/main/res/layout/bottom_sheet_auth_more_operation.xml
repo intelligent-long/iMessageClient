@@ -100,7 +100,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="18dp"
             android:src="@drawable/settings_outline_24px"/>
 
         <TextView

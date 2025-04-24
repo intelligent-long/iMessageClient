@@ -15,56 +15,6 @@ import java.util.Objects;
  */
 public abstract class UserInfo {
 
-    public static class Region implements Parcelable {
-        private final Integer adcode;
-        private final String name;
-
-        public Region() {
-            this(null, null);
-        }
-
-        public Region(Integer adcode, String name) {
-            this.adcode = adcode;
-            this.name = name;
-        }
-
-        public Integer getAdcode() {
-            return adcode;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public static final Creator<Region> CREATOR = new Creator<Region>() {
-            @Override
-            public Region createFromParcel(Parcel in) {
-                return new Region(in);
-            }
-
-            @Override
-            public Region[] newArray(int size) {
-                return new Region[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        protected Region(Parcel in) {
-            adcode = in.readInt();
-            name = in.readString();
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeInt(adcode);
-            dest.writeString(name);
-        }
-    }
-
     public static class UserProfileVisibility{
         private boolean emailVisible;
         private boolean sexVisible;
