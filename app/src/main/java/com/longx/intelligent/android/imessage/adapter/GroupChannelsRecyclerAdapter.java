@@ -125,13 +125,12 @@ public class GroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<G
         }
         String note = itemData.groupChannel.getNote();
         holder.binding.name.setText(note == null ? itemData.groupChannel.getName() : note);
-        setupYiers(holder, position);
+        setupYiers(holder, itemData);
     }
 
-    private void setupYiers(@NonNull ViewHolder holder, int position) {
-        ItemData itemData = itemDataList.get(position);
+    private void setupYiers(@NonNull ViewHolder holder, ItemData itemData) {
         holder.binding.clickView.setOnClickListener(v -> {
-            getOnItemClickYier().onItemClick(position, itemData);
+            getOnItemClickYier().onItemClick(holder.getBindingAdapterPosition(), itemData);
         });
         holder.binding.indexBar.setOnClickListener(v -> {
             FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_HEADER_CHANNEL, getExistTexts());
@@ -158,6 +157,7 @@ public class GroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<G
         });
     }
 
+
     private String[] getExistTexts(){
         String[] result = new String[getItemCount() + 1];
         for (int i = 0; i < itemDataList.size(); i++) {
@@ -165,5 +165,31 @@ public class GroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<G
         }
         result[result.length - 1] = ".";
         return result;
+    }
+
+//    public void updateItem(GroupChannel groupChannel){
+//        for (int i = 0; i < itemDataList.size(); i++) {
+//            if(itemDataList.get(i).groupChannel.getGroupChannelId().equals(groupChannel.getGroupChannelId())){
+//                itemDataList.set(i, new ItemData(groupChannel));
+//                notifyItemChanged(i);
+//                return;
+//            }
+//        }
+//    }
+
+    public void updateAll(List<GroupChannel> groupChannels){
+        itemDataList.clear();
+        groupChannels.forEach(groupChannel -> {
+            itemDataList.add(new ItemData(groupChannel));
+        });
+        itemDataList.sort((o1, o2) -> {
+            if (o1.indexChar == '#' && o2.indexChar != '#') return 1;
+            if (o1.indexChar != '#' && o2.indexChar == '#') return -1;
+            if (o1.indexChar == '#' && o2.indexChar == '#') return 0;
+            int pinyinCompare = o1.fullPinyin.compareToIgnoreCase(o2.fullPinyin);
+            if (pinyinCompare != 0) return pinyinCompare;
+            return o1.fullPinyin.compareTo(o2.fullPinyin);
+        });
+        notifyItemRangeChanged(0, groupChannels.size());
     }
 }

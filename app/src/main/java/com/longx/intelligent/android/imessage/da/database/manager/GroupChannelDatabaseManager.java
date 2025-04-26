@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAcc
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +89,44 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
         return result.get();
     }
 
+    public boolean insertOrUpdate(GroupChannel groupChannel){
+        AtomicBoolean result = new AtomicBoolean(true);
+        openDatabaseIfClosed();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID, groupChannel.getGroupChannelId());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER, groupChannel.getGroupChannelIdUser());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.OWNER, groupChannel.getOwner());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME, groupChannel.getName());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE, groupChannel.getNote());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME, groupChannel.getCreateTime().getTime());
+            long id = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNELS, null,
+                    values, SQLiteDatabase.CONFLICT_REPLACE);
+            if (id == -1) {
+                result.set(false);
+            }
+            List<GroupChannelAssociation> groupChannelAssociations = groupChannel.getGroupChannelAssociations();
+            groupChannelAssociations.forEach(groupChannelAssociation -> {
+                ContentValues values1 = new ContentValues();
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID, groupChannelAssociation.getGroupChannelId());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID, groupChannelAssociation.getAssociationId());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID, groupChannelAssociation.getChannelImessageId());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID, groupChannelAssociation.getInviteChannelImessageId());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_MESSAGE, groupChannelAssociation.getInviteMessage());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_TIME, groupChannelAssociation.getInviteTime().getTime());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ACCEPT_TIME, groupChannelAssociation.getAcceptTime().getTime());
+                long id1 = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_ASSOCIATIONS, null,
+                        values1, SQLiteDatabase.CONFLICT_REPLACE);
+                if (id1 == -1) {
+                    result.set(false);
+                }
+            });
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return result.get();
+    }
+
     public List<GroupChannel> findAllAssociations(){
         openDatabaseIfClosed();
         String sql = "SELECT *, ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + ", ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER
@@ -120,6 +159,44 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 }
             }
             return result;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public GroupChannel findOneAssociation(String groupChannelId){
+        openDatabaseIfClosed();
+        String sql = "SELECT *, ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + ", ca." +  GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER
+                + " FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNELS + " ca "
+                + " LEFT JOIN " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_ASSOCIATIONS + " gca ON "
+                + "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + " = " + "gca." + GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID
+                + " WHERE ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + " = ?";
+        try(Cursor cursor = getDatabase().rawQuery(sql, new String[]{groupChannelId})) {
+            List<GroupChannel> result = new ArrayList<>();
+            while (cursor.moveToNext()){
+                String groupChannelIdFind = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID);
+                String groupChannelIdUser = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER);
+                String owner = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.OWNER);
+                String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME);
+                String note = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE);
+                Long createTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME);
+                GroupChannel groupChannel = new GroupChannel(null, groupChannelIdFind, groupChannelIdUser, owner, name, note, new Date(createTime));
+                String associationId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID);
+                String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
+                String inviteChannelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID);
+                String inviteMessage = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_MESSAGE);
+                Long inviteTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_TIME);
+                Long acceptTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ACCEPT_TIME);
+                GroupChannelAssociation groupChannelAssociation = new GroupChannelAssociation(associationId, groupChannelIdFind, channelImessageId, inviteChannelImessageId, inviteMessage, new Date(inviteTime), new Date(acceptTime));
+                int index = result.indexOf(groupChannel);
+                if(index >= 0){
+                    result.get(index).addGroupChannelAssociation(groupChannelAssociation);
+                }else {
+                    groupChannel.addGroupChannelAssociation(groupChannelAssociation);
+                    result.add(groupChannel);
+                }
+            }
+            return result.get(0);
         }finally {
             releaseDatabaseIfUnused();
         }

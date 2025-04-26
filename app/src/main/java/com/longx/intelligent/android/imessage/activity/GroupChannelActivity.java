@@ -10,21 +10,28 @@ import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.activity.settings.EditGroupInfoSettingsActivity;
+import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
-public class GroupChannelActivity extends BaseActivity {
+import java.util.List;
+
+public class GroupChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityGroupChannelBinding binding;
     private GroupChannel groupChannel;
     private boolean isOwner;
     private boolean inGroup;
+    private String doNotSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        doNotSet = getString(R.string.do_not_set);
         super.onCreate(savedInstanceState);
         binding = ActivityGroupChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -32,6 +39,13 @@ public class GroupChannelActivity extends BaseActivity {
         intentData();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void intentData() {
@@ -109,8 +123,28 @@ public class GroupChannelActivity extends BaseActivity {
         });
         binding.editInfoButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, EditGroupInfoSettingsActivity.class);
-            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL_ID, groupChannel.getGroupChannelId());
             startActivity(intent);
         });
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
+            groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
+            String name = groupChannel.getName() == null ? doNotSet : groupChannel.getName();
+            if(groupChannel.getNote() != null){
+                binding.name1.setText(name);
+                binding.layoutName.setVisibility(View.VISIBLE);
+            }else {
+                binding.name.setText(name);
+                binding.layoutName.setVisibility(View.GONE);
+            }
+        }
     }
 }

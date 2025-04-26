@@ -14,6 +14,7 @@ import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabas
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.notification.Notifications;
 import com.longx.intelligent.android.imessage.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
@@ -21,6 +22,7 @@ import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.imessage.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.imessage.yier.RecentBroadcastMediasUpdateYier;
+import com.longx.intelligent.android.imessage.yier.UpdateGroupChannelYier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,8 +183,16 @@ public class ServerMessageServiceStompActions {
         });
     }
 
-    public static void updateGroupChannels(Context context){
-        ContentUpdater.updateGroupChannels(context, results -> {
+    public static void updateAllGroupChannels(Context context){
+        ContentUpdater.updateAllGroupChannels(context, results -> {
+            GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
+                openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
+            });
+        });
+    }
+
+    public static void updateOneGroupChannel(Context context, String groupChannelId){
+        ContentUpdater.updateOneGroupChannel(context, groupChannelId, results -> {
             GlobalYiersHolder.getYiers(OpenedChatsUpdateYier.class).ifPresent(openedChatUpdateYiers -> {
                 openedChatUpdateYiers.forEach(OpenedChatsUpdateYier::onOpenedChatsUpdate);
             });

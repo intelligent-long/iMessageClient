@@ -126,7 +126,10 @@ public class ServerMessageServiceStomp {
             ServerMessageServiceStompActions.updateNewBroadcastRepliesCount(context);
         });
         stomp.subscribe(StompDestinations.GROUP_CHANNELS_UPDATE, null, message -> {
-            ServerMessageServiceStompActions.updateGroupChannels(context);
+            ServerMessageServiceStompActions.updateAllGroupChannels(context);
+        });
+        stomp.subscribe(StompDestinations.GROUP_CHANNEL_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateOneGroupChannel(context, message.getPayload());
         });
     }
 

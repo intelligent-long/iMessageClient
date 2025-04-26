@@ -15,7 +15,6 @@ import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
-import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.imessage.data.Self;
@@ -61,6 +60,7 @@ public class ContentUpdater {
         String ID_BROADCAST_COMMENT_NEWS_COUNT = "broadcast_comment_news_count";
         String ID_BROADCAST_REPLY_NEWS_COUNT = "broadcast_reply_news_count";
         String ID_GROUP_CHANNELS = "group_channels";
+        String ID_GROUP_CHANNEL = "group_channel";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -314,7 +314,7 @@ public class ContentUpdater {
         });
     }
 
-    public static void updateGroupChannels(Context context, ResultsYier resultsYier){
+    public static void updateAllGroupChannels(Context context, ResultsYier resultsYier){
         GroupChannelApiCaller.fetchAllGroupAssociations(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNELS, context){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
@@ -323,6 +323,18 @@ public class ContentUpdater {
                 List<GroupChannel> groupChannels = data.getData(new TypeReference<List<GroupChannel>>() {
                 });
                 GroupChannelDatabaseManager.getInstance().insertAssociationsOrIgnore(groupChannels);
+                resultsYier.onResults();
+            }
+        });
+    }
+
+    public static void updateOneGroupChannel(Context context, String groupChannelId, ResultsYier resultsYier){
+        GroupChannelApiCaller.fetchOneGroupAssociation(null, groupChannelId, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                GroupChannel groupChannel = data.getData(GroupChannel.class);
+                GroupChannelDatabaseManager.getInstance().insertOrUpdate(groupChannel);
                 resultsYier.onResults();
             }
         });

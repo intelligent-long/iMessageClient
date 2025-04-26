@@ -16,14 +16,16 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupChannelBinding;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.imessage.yier.UpdateGroupChannelYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.List;
 
-public class GroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier,  WrappableRecyclerViewAdapter.OnItemClickYier<GroupChannelsRecyclerAdapter.ItemData> {
+public class GroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, WrappableRecyclerViewAdapter.OnItemClickYier<GroupChannelsRecyclerAdapter.ItemData> {
     private ActivityGroupChannelsBinding binding;
     private RecyclerHeaderGroupChannelBinding headerViewBinding;
+    private GroupChannelsRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +58,11 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
         headerViewBinding = RecyclerHeaderGroupChannelBinding.inflate(getLayoutInflater(), binding.recyclerView, false);
-        GroupChannelsRecyclerAdapter adapter = new GroupChannelsRecyclerAdapter(this, allAssociations);
+        adapter = new GroupChannelsRecyclerAdapter(this, allAssociations);
         adapter.setOnItemClickYier(this);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
+        binding.recyclerView.setItemAnimator(null);
     }
 
     private void toNoContent(){
@@ -117,8 +120,9 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
 
     @Override
     public void onUpdateComplete(String id, List<String> updatingIds) {
-        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNELS)){
-            showContent();
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNELS) || id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
+            List<GroupChannel> allAssociations = GroupChannelDatabaseManager.getInstance().findAllAssociations();
+            adapter.updateAll(allAssociations);
         }
     }
 

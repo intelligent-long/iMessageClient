@@ -9,6 +9,7 @@ import com.xcheng.retrofit.CompletableCall;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:27.
@@ -23,5 +24,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel/info/group_name/change")
     CompletableCall<OperationStatus> changeGroupName(@Body ChangeGroupNamePostBody postBody);
+
+    @GET("group_channel/find/group_channel_id/{groupChannelId}")
+    CompletableCall<OperationData> fetchOneGroupAssociation(@Path("groupChannelId") String groupChannelId);
 
 }
