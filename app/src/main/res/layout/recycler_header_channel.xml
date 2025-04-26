@@ -123,16 +123,16 @@
             android:id="@+id/layout_group_channel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/group_channel_icon"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
-                android:layout_marginStart="20dp"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
                 android:src="@drawable/group_outline_24px"
                 app:tint="?colorOnSurface"
                 tools:ignore="ContentDescription" />
@@ -140,16 +140,66 @@
             <TextView
                 android:id="@+id/group_channel_title"
                 style="@style/TextAppearance.Material3.TitleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/group_channel_icon"
+                android:text="@string/title_group_channel"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/group_channel_badge_host"
+                android:layout_width="49dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:layout_columnWeight="1"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/shape_card_background_radius_26"
+        android:clipToOutline="true">
+
+        <RelativeLayout
+            android:id="@+id/layout_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/favorite_icon"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/favorite_outline_24px"
+                app:tint="?colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/favorite_title"
+                style="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_toEndOf="@id/group_channel_icon"
-                android:text="@string/title_group_channel"
+                android:layout_toEndOf="@id/favorite_icon"
+                android:text="@string/title_favorite"
                 android:textSize="18sp"/>
 
             <LinearLayout
-                android:id="@+id/group_channel_badge_host"
+                android:id="@+id/favorite_badge_host"
                 android:layout_width="49dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"

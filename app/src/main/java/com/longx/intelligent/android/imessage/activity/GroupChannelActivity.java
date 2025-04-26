@@ -2,7 +2,6 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -10,14 +9,13 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.activity.settings.EditGroupInfoSettingsActivity;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBinding;
-import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 public class GroupChannelActivity extends BaseActivity {
     private ActivityGroupChannelBinding binding;
@@ -108,6 +106,11 @@ public class GroupChannelActivity extends BaseActivity {
                 startActivity(intent);
             }
             return true;
+        });
+        binding.editInfoButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, EditGroupInfoSettingsActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+            startActivity(intent);
         });
     }
 }

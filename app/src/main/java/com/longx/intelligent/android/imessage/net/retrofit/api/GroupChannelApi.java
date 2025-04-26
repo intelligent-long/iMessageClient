@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
+import com.longx.intelligent.android.imessage.data.request.ChangeGroupNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
@@ -19,5 +20,8 @@ public interface GroupChannelApi {
 
     @GET("group_channel/association/all")
     CompletableCall<OperationData> fetchAllGroupAssociations();
+
+    @POST("group_channel/info/group_name/change")
+    CompletableCall<OperationStatus> changeGroupName(@Body ChangeGroupNamePostBody postBody);
 
 }

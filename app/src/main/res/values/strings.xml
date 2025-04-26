@@ -21,12 +21,14 @@
     <string name="title_settings_other_app">应用其他</string>
     <string name="title_settings_ui">UI</string>
     <string name="title_settings_edit_user">编辑用户</string>
+    <string name="title_settings_edit_group">编辑群</string>
     <string name="title_settings_edit_user_profile_visibility">用户资料可见性</string>
     <string name="title_settings_ways_to_find_me">查找我的方式</string>
     <string name="title_settings_version">版本</string>
     <string name="title_settings_permission">权限</string>
     <string name="title_change_imessage_id_user">更改 iMessage ID</string>
     <string name="title_change_username">更改用户名</string>
+    <string name="title_change_group_name">更改群名称</string>
     <string name="title_change_email">更改邮箱</string>
     <string name="title_change_sex">更改性别</string>
     <string name="title_change_region">更改地区</string>
@@ -56,6 +58,7 @@
     <string name="title_new_channel">新的频道</string>
     <string name="title_tag">标签</string>
     <string name="title_group_channel">群频道</string>
+    <string name="title_favorite">收藏</string>
     <string name="title_new_group_channel">新的群频道</string>
     <string name="title_group_tag">群标签</string>
     <string name="title_add_channel">添加频道</string>
@@ -114,8 +117,9 @@
     <string name="preference_key_restart">restart</string>
     <string name="preference_key_ui">UI</string>
     <string name="preference_key_change_avatar">change_avatar</string>
-    <string name="preference_key_change_imessage_id_user">imessage_id</string>
+    <string name="preference_key_change_group_id_user">group_id_user</string>
     <string name="preference_key_change_username">change_username</string>
+    <string name="preference_key_change_group_name">change_group_name</string>
     <string name="preference_key_change_email">change_email</string>
     <string name="preference_key_change_sex">change_sex</string>
     <string name="preference_key_change_region">change_region</string>

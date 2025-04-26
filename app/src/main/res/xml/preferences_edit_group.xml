@@ -11,24 +11,16 @@
 
         <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
             app:key="@string/preference_key_change_group_id_user"
-            app:summary="iMessage ID" />
+            app:summary="群 ID" />
 
         <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
-            app:key="@string/preference_key_change_username"
+            app:key="@string/preference_key_change_group_name"
             app:summary="名称" />
-
-        <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
-            app:key="@string/preference_key_change_email"
-            app:summary="邮箱" />
     </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
 
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
         app:title="附加资料">
-
-        <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
-            app:key="@string/preference_key_change_sex"
-            app:summary="性别" />
 
         <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
             app:key="@string/preference_key_change_region"

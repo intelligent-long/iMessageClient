@@ -136,7 +136,7 @@ public class EditUserSettingsActivity extends BaseSettingsActivity{
         @Override
         protected void bindPreferences() {
             preferenceChangeAvatar = findPreference(getString(R.string.preference_key_change_avatar));
-            preferenceChangeImessageIdUser = findPreference(getString(R.string.preference_key_change_imessage_id_user));
+            preferenceChangeImessageIdUser = findPreference(getString(R.string.preference_key_change_group_id_user));
             preferenceChangeUsername = findPreference(getString(R.string.preference_key_change_username));
             preferenceChangeEmail = findPreference(getString(R.string.preference_key_change_email));
             preferenceChangeSex = findPreference(getString(R.string.preference_key_change_sex));
