@@ -9,6 +9,7 @@ import androidx.preference.Preference;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupIdActivity;
 import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupNameActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
@@ -112,7 +113,9 @@ public class EditGroupInfoSettingsActivity extends BaseSettingsActivity{
             if(preference.equals(preferenceChangeAvatar)){
 
             }else if(preference.equals(preferenceChangeGroupIdUser)){
-
+                Intent intent = new Intent(requireContext(), ChangeGroupIdActivity.class);
+                intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+                startActivity(intent);
             }else if(preference.equals(preferenceChangeGroupName)){
                 Intent intent = new Intent(requireContext(), ChangeGroupNameActivity.class);
                 intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
@@ -133,6 +136,8 @@ public class EditGroupInfoSettingsActivity extends BaseSettingsActivity{
             if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
                 groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
                 preferenceChangeGroupName.setTitle(groupChannel.getName() == null ? doNotSet : groupChannel.getName());
+                preferenceChangeGroupIdUser.setTitle(groupChannel.getGroupChannelIdUser() == null ? doNotSet : groupChannel.getGroupChannelIdUser());
+                preferenceChangeRegion.setTitle(groupChannel.buildRegionDesc() == null ? doNotSet : groupChannel.buildRegionDesc());
             }
         }
     }

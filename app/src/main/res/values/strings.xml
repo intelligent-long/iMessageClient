@@ -21,14 +21,15 @@
     <string name="title_settings_other_app">应用其他</string>
     <string name="title_settings_ui">UI</string>
     <string name="title_settings_edit_user">编辑用户</string>
-    <string name="title_settings_edit_group">编辑群</string>
+    <string name="title_settings_edit_group">编辑群频道</string>
     <string name="title_settings_edit_user_profile_visibility">用户资料可见性</string>
     <string name="title_settings_ways_to_find_me">查找我的方式</string>
     <string name="title_settings_version">版本</string>
     <string name="title_settings_permission">权限</string>
     <string name="title_change_imessage_id_user">更改 iMessage ID</string>
     <string name="title_change_username">更改用户名</string>
-    <string name="title_change_group_name">更改群名称</string>
+    <string name="title_change_group_name">更改群频道名称</string>
+    <string name="title_change_group_id">更改群频道 ID</string>
     <string name="title_change_email">更改邮箱</string>
     <string name="title_change_sex">更改性别</string>
     <string name="title_change_region">更改地区</string>

@@ -37,7 +37,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         intentData();
-        showContent();
+        showContent(groupChannel);
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
@@ -62,7 +62,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         }
     }
 
-    private void showContent() {
+    private void showContent(GroupChannel groupChannel) {
         if(groupChannel.getGroupAvatar() == null){
             GlideApp.with(this)
                     .load(AppCompatResources.getDrawable(this, R.drawable.group_channel_default_avatar))
@@ -93,7 +93,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         }
         binding.groupChannelIdUser.setText(groupChannel.getGroupChannelIdUser());
         String regionDesc = groupChannel.buildRegionDesc();
-        if(groupChannel.getFirstRegion() == null){
+        if(regionDesc == null){
             binding.layoutRegion.setVisibility(View.GONE);
             binding.regionDivider.setVisibility(View.GONE);
         }else {
@@ -137,14 +137,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     public void onUpdateComplete(String id, List<String> updatingIds) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
             groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
-            String name = groupChannel.getName() == null ? doNotSet : groupChannel.getName();
-            if(groupChannel.getNote() != null){
-                binding.name1.setText(name);
-                binding.layoutName.setVisibility(View.VISIBLE);
-            }else {
-                binding.name.setText(name);
-                binding.layoutName.setVisibility(View.GONE);
-            }
+            showContent(groupChannel);
         }
     }
 }

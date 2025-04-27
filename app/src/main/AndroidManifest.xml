@@ -44,6 +44,9 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.editgroup.ChangeGroupIdActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.editgroup.ChangeGroupNameActivity"
             android:exported="false" />
         <activity

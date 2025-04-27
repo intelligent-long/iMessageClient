@@ -11,7 +11,7 @@
 
         <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
             app:key="@string/preference_key_change_group_id_user"
-            app:summary="群 ID" />
+            app:summary="ID" />
 
         <com.longx.intelligent.android.imessage.preference.ProfileItemPreference
             app:key="@string/preference_key_change_group_name"

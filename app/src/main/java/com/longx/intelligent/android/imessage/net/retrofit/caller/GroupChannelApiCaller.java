@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.net.retrofit.caller;
 
 import androidx.lifecycle.LifecycleOwner;
 
+import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
@@ -9,6 +10,7 @@ import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.GroupChannelApi;
 import com.xcheng.retrofit.CompletableCall;
 
+import retrofit2.http.Body;
 import retrofit2.http.Path;
 
 /**
@@ -37,8 +39,20 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchOneGroupAssociation(LifecycleOwner lifecycleOwner, @Path("groupChannelId") String groupChannelId, BaseYier<OperationData> yier){
+    public static CompletableCall<OperationData> fetchOneGroupAssociation(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchOneGroupAssociation(groupChannelId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> groupChannelIdUserNowCanChange(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().groupChannelIdUserNowCanChange(groupChannelId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> changeGroupChannelIdUser(LifecycleOwner lifecycleOwner, ChangeGroupChannelIdUserPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().changeGroupChannelIdUser(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
