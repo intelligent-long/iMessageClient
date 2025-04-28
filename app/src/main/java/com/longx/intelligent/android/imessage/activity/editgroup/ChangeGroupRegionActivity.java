@@ -1,4 +1,4 @@
-package com.longx.intelligent.android.imessage.activity.edituser;
+package com.longx.intelligent.android.imessage.activity.editgroup;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,16 +7,20 @@ import android.widget.ArrayAdapter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.edituser.ChangeRegionActivity;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.AmapDistrict;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.Region;
-import com.longx.intelligent.android.imessage.data.Self;
-import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
+import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
-import com.longx.intelligent.android.imessage.databinding.ActivityChangeRegionBinding;
+import com.longx.intelligent.android.imessage.databinding.ActivityChangeGroupRegionBinding;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RegionApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
@@ -30,8 +34,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChangeRegionActivity extends BaseActivity {
-    private ActivityChangeRegionBinding binding;
+public class ChangeGroupRegionActivity extends BaseActivity {
+    private ActivityChangeGroupRegionBinding binding;
+    private GroupChannel groupChannel;
     private List<AmapDistrict> allFirstRegions;
     private List<AmapDistrict> allSecondRegions;
     private List<AmapDistrict> allThirdRegions;
@@ -42,175 +47,34 @@ public class ChangeRegionActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityChangeRegionBinding.inflate(getLayoutInflater());
+        binding = ActivityChangeGroupRegionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setupToolbar();
         setupDefaultBackNavigation(binding.toolbar);
-        setupRegionOnItemClickYiers();
+        intentData();
+        setupYiers();
         startFetchDataAndShow();
     }
 
-    private void setupToolbar() {
+    private void intentData() {
+        groupChannel = getIntent().getParcelableExtra(ExtraKeys.GROUP_CHANNEL);
+    }
+
+    private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.change){
-                ChangeRegionPostBody postBody = new ChangeRegionPostBody(currentFirstRegionAdcode, currentSecondRegionAdcode, currentThirdRegionAdcode);
-                UserApiCaller.changeRegion(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                ChangeGroupChannelRegionPostBody postBody = new ChangeGroupChannelRegionPostBody(groupChannel.getGroupChannelId(), currentFirstRegionAdcode, currentSecondRegionAdcode, currentThirdRegionAdcode);
+                GroupChannelApiCaller.changeGroupChannelRegion(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
                     @Override
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleResult(ChangeRegionActivity.this, new int[]{-101, -102, -103, -104, -105}, () -> {
-                            new MessageDialog(ChangeRegionActivity.this, "修改成功").create().show();
+                        data.commonHandleResult(ChangeGroupRegionActivity.this, new int[]{-101, -102, -103, -104, -105, -106}, () -> {
+                            new MessageDialog(ChangeGroupRegionActivity.this, "修改成功").create().show();
                         });
                     }
                 });
             }
             return true;
         });
-    }
-
-    private void startFetchDataAndShow() {
-        setRegionLayoutsAndChangeMenuItemEnabled(false);
-        fetchAndSetupFirstRegionAutoCompleteTextView(results -> {
-            setRegionLayoutsAndChangeMenuItemEnabled(true);
-        });
-    }
-
-    private void fetchAndSetupFirstRegionAutoCompleteTextView(ResultsYier resultsYier){
-        RegionApiCaller.fetchAllFirstRegions(this, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
-            @Override
-            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                super.ok(data, raw, call);
-                data.commonHandleResult(ChangeRegionActivity.this, new int[]{}, () -> {
-                    allFirstRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
-                    });
-                    List<String> allFirstRegionNames = new ArrayList<>();
-                    if(allFirstRegions.size() == 0){
-                        allFirstRegionNames.add("无");
-                    }else {
-                        allFirstRegionNames.add("不设置");
-                        allFirstRegions.forEach(amapDistrict -> {
-                            allFirstRegionNames.add(amapDistrict.getName());
-                        });
-                    }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
-                            R.layout.layout_auto_complete_text_view_text, allFirstRegionNames);
-                    Region firstRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getFirstRegion();
-                    int position = 0;
-                    if(firstRegion != null) {
-                        for (int i = 0; i < allFirstRegions.size(); i++) {
-                            if (allFirstRegions.get(i).getAdcode().equals(firstRegion.getAdcode())){
-                                position = i + 1;
-                            }
-                        }
-                    }
-                    binding.firstRegionAutoCompleteTextView.setText(adapter.getItem(position));
-                    binding.firstRegionAutoCompleteTextView.setAdapter(adapter);
-                    resultsYier.onResults();
-                    binding.firstRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
-                });
-            }
-        });
-    }
-
-    private void fetchAndSetupSecondRegionAutoCompleteTextView(Integer firstRegionAdcode, ResultsYier resultsYier){
-        if(firstRegionAdcode == null){
-            List<String> allSecondRegionNames = new ArrayList<>();
-            allSecondRegionNames.add("请选择一级区域");
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
-                    R.layout.layout_auto_complete_text_view_text, allSecondRegionNames);
-            int position = 0;
-            binding.secondRegionAutoCompleteTextView.setText(adapter.getItem(position));
-            binding.secondRegionAutoCompleteTextView.setAdapter(adapter);
-            resultsYier.onResults();
-            binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
-        }else {
-            RegionApiCaller.fetchAllSecondRegions(this, firstRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
-                @Override
-                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                    super.ok(data, raw, call);
-                    data.commonHandleResult(ChangeRegionActivity.this, new int[]{}, () -> {
-                        allSecondRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
-                        });
-                        List<String> allSecondRegionNames = new ArrayList<>();
-                        if(allSecondRegions.size() == 0){
-                            allSecondRegionNames.add("无");
-                        }else {
-                            allSecondRegionNames.add("不设置");
-                            allSecondRegions.forEach(amapDistrict -> {
-                                allSecondRegionNames.add(amapDistrict.getName());
-                            });
-                        }
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
-                                R.layout.layout_auto_complete_text_view_text, allSecondRegionNames);
-                        Region secondRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getSecondRegion();
-                        int position = 0;
-                        if(secondRegion != null) {
-                            for (int i = 0; i < allSecondRegions.size(); i++) {
-                                if (allSecondRegions.get(i).getAdcode().equals(secondRegion.getAdcode())){
-                                    position = i + 1;
-                                }
-                            }
-                        }
-                        binding.secondRegionAutoCompleteTextView.setText(adapter.getItem(position));
-                        binding.secondRegionAutoCompleteTextView.setAdapter(adapter);
-                        resultsYier.onResults();
-                        binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
-                    });
-                }
-            });
-        }
-    }
-
-    private void fetchAndSetupThirdRegionAutoCompleteTextView(Integer secondRegionAdcode, ResultsYier resultsYier){
-        if(secondRegionAdcode == null){
-            List<String> allThirdRegionNames = new ArrayList<>();
-            allThirdRegionNames.add("请选择二级区域");
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
-                    R.layout.layout_auto_complete_text_view_text, allThirdRegionNames);
-            int position = 0;
-            binding.thirdRegionAutoCompleteTextView.setText(adapter.getItem(position));
-            binding.thirdRegionAutoCompleteTextView.setAdapter(adapter);
-            resultsYier.onResults();
-            binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
-        }else {
-            RegionApiCaller.fetchAllThirdRegions(this, secondRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
-                @Override
-                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                    super.ok(data, raw, call);
-                    data.commonHandleResult(ChangeRegionActivity.this, new int[]{}, () -> {
-                        allThirdRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
-                        });
-                        List<String> allThirdRegionNames = new ArrayList<>();
-                        if(allThirdRegions.size() == 0){
-                            allThirdRegionNames.add("无");
-                        }else {
-                            allThirdRegionNames.add("不设置");
-                            allThirdRegions.forEach(amapDistrict -> {
-                                allThirdRegionNames.add(amapDistrict.getName());
-                            });
-                        }
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeRegionActivity.this,
-                                R.layout.layout_auto_complete_text_view_text, allThirdRegionNames);
-                        Region thirdRegion = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(ChangeRegionActivity.this).getThirdRegion();
-                        int position = 0;
-                        if(thirdRegion != null) {
-                            for (int i = 0; i < allThirdRegions.size(); i++) {
-                                if (allThirdRegions.get(i).getAdcode().equals(thirdRegion.getAdcode())){
-                                    position = i + 1;
-                                }
-                            }
-                        }
-                        binding.thirdRegionAutoCompleteTextView.setText(adapter.getItem(position));
-                        binding.thirdRegionAutoCompleteTextView.setAdapter(adapter);
-                        resultsYier.onResults();
-                        binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
-                    });
-                }
-            });
-        }
-    }
-
-    private void setupRegionOnItemClickYiers() {
         binding.firstRegionAutoCompleteTextView.setOnItemClickListener(new AutoCompleteTextViewAutoSelectOnItemClickYier(binding.firstRegionAutoCompleteTextView){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -265,5 +129,148 @@ public class ChangeRegionActivity extends BaseActivity {
         binding.secondRegionLayout.setEnabled(enable);
         binding.thirdRegionLayout.setEnabled(enable);
         UiUtil.setIconMenuEnabled(binding.toolbar.getMenu().findItem(R.id.change), enable);
+    }
+
+    private void startFetchDataAndShow() {
+        setRegionLayoutsAndChangeMenuItemEnabled(false);
+        fetchAndSetupFirstRegionAutoCompleteTextView(results -> {
+            setRegionLayoutsAndChangeMenuItemEnabled(true);
+        });
+    }
+
+    private void fetchAndSetupFirstRegionAutoCompleteTextView(ResultsYier resultsYier){
+        RegionApiCaller.fetchAllFirstRegions(this, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleResult(ChangeGroupRegionActivity.this, new int[]{}, () -> {
+                    allFirstRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
+                    });
+                    List<String> allFirstRegionNames = new ArrayList<>();
+                    if(allFirstRegions.size() == 0){
+                        allFirstRegionNames.add("无");
+                    }else {
+                        allFirstRegionNames.add("不设置");
+                        allFirstRegions.forEach(amapDistrict -> {
+                            allFirstRegionNames.add(amapDistrict.getName());
+                        });
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeGroupRegionActivity.this,
+                            R.layout.layout_auto_complete_text_view_text, allFirstRegionNames);
+                    Region firstRegion = groupChannel.getFirstRegion();
+                    int position = 0;
+                    if(firstRegion != null) {
+                        for (int i = 0; i < allFirstRegions.size(); i++) {
+                            if (allFirstRegions.get(i).getAdcode().equals(firstRegion.getAdcode())){
+                                position = i + 1;
+                            }
+                        }
+                    }
+                    binding.firstRegionAutoCompleteTextView.setText(adapter.getItem(position));
+                    binding.firstRegionAutoCompleteTextView.setAdapter(adapter);
+                    resultsYier.onResults();
+                    binding.firstRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
+                });
+            }
+        });
+    }
+
+
+    private void fetchAndSetupSecondRegionAutoCompleteTextView(Integer firstRegionAdcode, ResultsYier resultsYier){
+        if(firstRegionAdcode == null){
+            List<String> allSecondRegionNames = new ArrayList<>();
+            allSecondRegionNames.add("请选择一级区域");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeGroupRegionActivity.this,
+                    R.layout.layout_auto_complete_text_view_text, allSecondRegionNames);
+            int position = 0;
+            binding.secondRegionAutoCompleteTextView.setText(adapter.getItem(position));
+            binding.secondRegionAutoCompleteTextView.setAdapter(adapter);
+            resultsYier.onResults();
+            binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
+        }else {
+            RegionApiCaller.fetchAllSecondRegions(this, firstRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleResult(ChangeGroupRegionActivity.this, new int[]{}, () -> {
+                        allSecondRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
+                        });
+                        List<String> allSecondRegionNames = new ArrayList<>();
+                        if(allSecondRegions.size() == 0){
+                            allSecondRegionNames.add("无");
+                        }else {
+                            allSecondRegionNames.add("不设置");
+                            allSecondRegions.forEach(amapDistrict -> {
+                                allSecondRegionNames.add(amapDistrict.getName());
+                            });
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeGroupRegionActivity.this,
+                                R.layout.layout_auto_complete_text_view_text, allSecondRegionNames);
+                        Region secondRegion = groupChannel.getSecondRegion();
+                        int position = 0;
+                        if(secondRegion != null) {
+                            for (int i = 0; i < allSecondRegions.size(); i++) {
+                                if (allSecondRegions.get(i).getAdcode().equals(secondRegion.getAdcode())){
+                                    position = i + 1;
+                                }
+                            }
+                        }
+                        binding.secondRegionAutoCompleteTextView.setText(adapter.getItem(position));
+                        binding.secondRegionAutoCompleteTextView.setAdapter(adapter);
+                        resultsYier.onResults();
+                        binding.secondRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
+                    });
+                }
+            });
+        }
+    }
+
+    private void fetchAndSetupThirdRegionAutoCompleteTextView(Integer secondRegionAdcode, ResultsYier resultsYier){
+        if(secondRegionAdcode == null){
+            List<String> allThirdRegionNames = new ArrayList<>();
+            allThirdRegionNames.add("请选择二级区域");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeGroupRegionActivity.this,
+                    R.layout.layout_auto_complete_text_view_text, allThirdRegionNames);
+            int position = 0;
+            binding.thirdRegionAutoCompleteTextView.setText(adapter.getItem(position));
+            binding.thirdRegionAutoCompleteTextView.setAdapter(adapter);
+            resultsYier.onResults();
+            binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
+        }else {
+            RegionApiCaller.fetchAllThirdRegions(this, secondRegionAdcode, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this, 2000, true){
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleResult(ChangeGroupRegionActivity.this, new int[]{}, () -> {
+                        allThirdRegions = data.getData(new TypeReference<List<AmapDistrict>>() {
+                        });
+                        List<String> allThirdRegionNames = new ArrayList<>();
+                        if(allThirdRegions.size() == 0){
+                            allThirdRegionNames.add("无");
+                        }else {
+                            allThirdRegionNames.add("不设置");
+                            allThirdRegions.forEach(amapDistrict -> {
+                                allThirdRegionNames.add(amapDistrict.getName());
+                            });
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(ChangeGroupRegionActivity.this,
+                                R.layout.layout_auto_complete_text_view_text, allThirdRegionNames);
+                        Region thirdRegion = groupChannel.getThirdRegion();
+                        int position = 0;
+                        if(thirdRegion != null) {
+                            for (int i = 0; i < allThirdRegions.size(); i++) {
+                                if (allThirdRegions.get(i).getAdcode().equals(thirdRegion.getAdcode())){
+                                    position = i + 1;
+                                }
+                            }
+                        }
+                        binding.thirdRegionAutoCompleteTextView.setText(adapter.getItem(position));
+                        binding.thirdRegionAutoCompleteTextView.setAdapter(adapter);
+                        resultsYier.onResults();
+                        binding.thirdRegionAutoCompleteTextView.getOnItemClickListener().onItemClick(null, null, position, -1);
+                    });
+                }
+            });
+        }
     }
 }

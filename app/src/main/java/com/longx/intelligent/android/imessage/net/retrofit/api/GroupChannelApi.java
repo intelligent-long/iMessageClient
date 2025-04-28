@@ -1,7 +1,9 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
-import com.longx.intelligent.android.imessage.data.request.ChangeGroupNamePostBody;
+import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNamePostBody;
+import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
+import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
@@ -24,7 +26,7 @@ public interface GroupChannelApi {
     CompletableCall<OperationData> fetchAllGroupAssociations();
 
     @POST("group_channel/info/group_name/change")
-    CompletableCall<OperationStatus> changeGroupName(@Body ChangeGroupNamePostBody postBody);
+    CompletableCall<OperationStatus> changeGroupName(@Body ChangeGroupChannelNamePostBody postBody);
 
     @GET("group_channel/find/group_channel_id/{groupChannelId}")
     CompletableCall<OperationData> fetchOneGroupAssociation(@Path("groupChannelId") String groupChannelId);
@@ -34,5 +36,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel/info/group_channel_id_user/change")
     CompletableCall<OperationStatus> changeGroupChannelIdUser(@Body ChangeGroupChannelIdUserPostBody postBody);
+
+    @POST("group_channel/info/region/change")
+    CompletableCall<OperationStatus> changeRegion(@Body ChangeGroupChannelRegionPostBody postBody);
 
 }

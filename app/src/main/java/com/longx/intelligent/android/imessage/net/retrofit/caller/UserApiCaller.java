@@ -81,24 +81,6 @@ public class UserApiCaller extends RetrofitApiCaller{
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchAllFirstRegions(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchAllFirstRegions();
-        call.enqueue(lifecycleOwner, yier);
-        return call;
-    }
-
-    public static CompletableCall<OperationData> fetchAllSecondRegions(LifecycleOwner lifecycleOwner, int firstRegionAdcode, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchAllSecondRegions(firstRegionAdcode);
-        call.enqueue(lifecycleOwner, yier);
-        return call;
-    }
-
-    public static CompletableCall<OperationData> fetchAllThirdRegions(LifecycleOwner lifecycleOwner, int secondRegionAdcode, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchAllThirdRegions(secondRegionAdcode);
-        call.enqueue(lifecycleOwner, yier);
-        return call;
-    }
-
     public static CompletableCall<OperationStatus> changeRegion(LifecycleOwner lifecycleOwner, ChangeRegionPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().changeRegion(postBody);
         call.enqueue(lifecycleOwner, yier);

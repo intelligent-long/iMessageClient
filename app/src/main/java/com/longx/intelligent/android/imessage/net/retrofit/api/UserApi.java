@@ -52,15 +52,6 @@ public interface UserApi {
     @POST("user/info/sex/change")
     CompletableCall<OperationStatus> changeSex(@Body ChangeSexPostBody postBody);
 
-    @GET("user/region/first_region/all")
-    CompletableCall<OperationData> fetchAllFirstRegions();
-
-    @GET("user/region/second_region/all/{firstRegionAdcode}")
-    CompletableCall<OperationData> fetchAllSecondRegions(@Path("firstRegionAdcode") int firstRegionAdcode);
-
-    @GET("user/region/third_region/all/{secondRegionAdcode}")
-    CompletableCall<OperationData> fetchAllThirdRegions(@Path("secondRegionAdcode") int secondRegionAdcode);
-
     @POST("user/info/region/change")
     CompletableCall<OperationStatus> changeRegion(@Body ChangeRegionPostBody postBody);
 }

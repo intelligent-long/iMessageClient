@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -20,13 +21,13 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_change_group_channel_id">
+            app:title="@string/title_change_group_channel_region">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:menu="@menu/toolbar_activity_change_group_channel_id_user"
+                app:menu="@menu/toolbar_activity_change_region"
                 app:layout_collapseMode="pin"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -34,14 +35,13 @@
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/group_id_user_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/first_region_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="25dp"
@@ -52,24 +52,57 @@
             app:boxCornerRadiusTopStart="100dp"
             app:boxStrokeColor="@color/selector_text_input_layout_stroke">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/group_id_user_input"
+            <AutoCompleteTextView
+                android:id="@+id/first_region_auto_complete_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:padding="0dp"
-                android:hint="新群频道 ID"
-                android:inputType="text"
-                android:maxLines="1"
-                android:selectAllOnFocus="true" />
+                android:inputType="none"
+                tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/desc"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/second_region_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="25dp"
-            android:layout_marginTop="32dp"
-            android:gravity="center_horizontal"
-            android:textSize="15sp"/>
+            android:layout_marginTop="8dp"
+            app:boxCornerRadiusBottomEnd="100dp"
+            app:boxCornerRadiusBottomStart="100dp"
+            app:boxCornerRadiusTopEnd="100dp"
+            app:boxCornerRadiusTopStart="100dp"
+            app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+            <AutoCompleteTextView
+                android:id="@+id/second_region_auto_complete_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:padding="0dp"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/third_region_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="8dp"
+            app:boxCornerRadiusBottomEnd="100dp"
+            app:boxCornerRadiusBottomStart="100dp"
+            app:boxCornerRadiusTopEnd="100dp"
+            app:boxCornerRadiusTopStart="100dp"
+            app:boxStrokeColor="@color/selector_text_input_layout_stroke">
+
+            <AutoCompleteTextView
+                android:id="@+id/third_region_auto_complete_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:padding="0dp"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

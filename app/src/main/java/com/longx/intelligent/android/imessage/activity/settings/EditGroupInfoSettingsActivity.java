@@ -11,6 +11,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupIdActivity;
 import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupNameActivity;
+import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupRegionActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
@@ -121,7 +122,9 @@ public class EditGroupInfoSettingsActivity extends BaseSettingsActivity{
                 intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
                 startActivity(intent);
             }else if(preference.equals(preferenceChangeRegion)){
-
+                Intent intent = new Intent(requireContext(), ChangeGroupRegionActivity.class);
+                intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+                startActivity(intent);
             }
             return true;
         }

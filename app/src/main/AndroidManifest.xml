@@ -44,6 +44,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.editgroup.ChangeGroupRegionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.editgroup.ChangeGroupIdActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -58,7 +62,7 @@
         <activity
             android:name=".activity.GroupChannelActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.GroupChannelSettingActivity"
             android:exported="false"
