@@ -47,13 +47,22 @@ public class Region implements Parcelable {
     }
 
     protected Region(Parcel in) {
-        adcode = in.readInt();
+        if (in.readByte() == 0) {
+            adcode = null;
+        } else {
+            adcode = in.readInt();
+        }
         name = in.readString();
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(adcode);
+        if (adcode == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(adcode);
+        }
         dest.writeString(name);
     }
 }

@@ -29,7 +29,7 @@ public class GroupChannel implements Parcelable {
     public GroupChannel() {
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations, Region firstRegion, Region secondRegion, Region thirdRegion) {
         this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
         this.groupChannelIdUser = groupChannelIdUser;
@@ -38,17 +38,13 @@ public class GroupChannel implements Parcelable {
         this.note = note;
         this.createTime = createTime;
         this.groupChannelAssociations = groupChannelAssociations;
+        this.firstRegion = firstRegion;
+        this.secondRegion = secondRegion;
+        this.thirdRegion = thirdRegion;
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime) {
-        this.groupAvatar = groupAvatar;
-        this.groupChannelId = groupChannelId;
-        this.groupChannelIdUser = groupChannelIdUser;
-        this.owner = owner;
-        this.name = name;
-        this.note = note;
-        this.createTime = createTime;
-        this.groupChannelAssociations = new ArrayList<>();
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, Region firstRegion, Region secondRegion, Region thirdRegion) {
+        this(groupAvatar, groupChannelId, groupChannelIdUser, owner, name, note, createTime, new ArrayList<>(), firstRegion, secondRegion, thirdRegion);
     }
 
     public GroupAvatar getGroupAvatar() {

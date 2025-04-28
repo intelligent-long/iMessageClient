@@ -32,6 +32,12 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String NAME = "name";
         public static final String NOTE = "note";
         public static final String CREATE_TIME = "create_time";
+        public static final String FIRST_REGION_ADCODE = "first_region_adcode";
+        public static final String FIRST_REGION_NAME = "first_region_name";
+        public static final String SECOND_REGION_ADCODE = "second_region_adcode";
+        public static final String SECOND_REGION_NAME = "second_region_name";
+        public static final String THIRD_REGION_ADCODE = "third_region_adcode";
+        public static final String THIRD_REGION_NAME = "third_region_name";
     }
 
     public GroupChannelDatabaseHelper(Context context, String imessageId) {
@@ -60,6 +66,12 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableGroupChannelsColumns.NAME + " VARCHAR,"
                 + TableGroupChannelsColumns.NOTE + " VARCHAR,"
                 + TableGroupChannelsColumns.CREATE_TIME + " DATETIME,"
+                + TableGroupChannelsColumns.FIRST_REGION_ADCODE + " INTEGER,"
+                + TableGroupChannelsColumns.FIRST_REGION_NAME + " VARCHAR,"
+                + TableGroupChannelsColumns.SECOND_REGION_ADCODE + " INTEGER,"
+                + TableGroupChannelsColumns.SECOND_REGION_NAME + " VARCHAR,"
+                + TableGroupChannelsColumns.THIRD_REGION_ADCODE + " INTEGER,"
+                + TableGroupChannelsColumns.THIRD_REGION_NAME + " VARCHAR,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableGroupChannelsColumns.GROUP_CHANNEL_ID
                 +")"

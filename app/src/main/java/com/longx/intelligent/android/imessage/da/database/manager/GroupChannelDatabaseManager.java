@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.longx.intelligent.android.imessage.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.database.helper.GroupChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
+import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
@@ -61,6 +63,15 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME, groupChannel.getName());
                 values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE, groupChannel.getNote());
                 values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME, groupChannel.getCreateTime().getTime());
+                Region firstRegion = groupChannel.getFirstRegion();
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_ADCODE, firstRegion == null ? null : firstRegion.getAdcode());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_NAME, firstRegion == null ? null : firstRegion.getName());
+                Region secondRegion = groupChannel.getSecondRegion();
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_ADCODE, secondRegion == null ? null : secondRegion.getAdcode());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_NAME, secondRegion == null ? null : secondRegion.getName());
+                Region thirdRegion = groupChannel.getThirdRegion();
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_ADCODE, thirdRegion == null ? null : thirdRegion.getAdcode());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_NAME, thirdRegion == null ? null : thirdRegion.getName());
                 long id = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNELS, null,
                         values, SQLiteDatabase.CONFLICT_IGNORE);
                 if (id == -1) {
@@ -100,6 +111,15 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME, groupChannel.getName());
             values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE, groupChannel.getNote());
             values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME, groupChannel.getCreateTime().getTime());
+            Region firstRegion = groupChannel.getFirstRegion();
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_ADCODE, firstRegion == null ? null : firstRegion.getAdcode());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_NAME, firstRegion == null ? null : firstRegion.getName());
+            Region secondRegion = groupChannel.getSecondRegion();
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_ADCODE, secondRegion == null ? null : secondRegion.getAdcode());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_NAME, secondRegion == null ? null : secondRegion.getName());
+            Region thirdRegion = groupChannel.getThirdRegion();
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_ADCODE, thirdRegion == null ? null : thirdRegion.getAdcode());
+            values.put(GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_NAME, thirdRegion == null ? null : thirdRegion.getName());
             long id = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNELS, null,
                     values, SQLiteDatabase.CONFLICT_REPLACE);
             if (id == -1) {
@@ -142,7 +162,13 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME);
                 String note = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE);
                 Long createTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME);
-                GroupChannel groupChannel = new GroupChannel(null, groupChannelId, groupChannelIdUser, owner, name, note, new Date(createTime));
+                Integer firstRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_ADCODE);
+                String firstRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_NAME);
+                Integer secondRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_ADCODE);
+                String secondRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_NAME);
+                Integer thirdRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_ADCODE);
+                String thirdRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_NAME);
+                GroupChannel groupChannel = new GroupChannel(null, groupChannelId, groupChannelIdUser, owner, name, note, new Date(createTime), new Region(firstRegionAdcode, firstRegionName), new Region(secondRegionAdcode, secondRegionName), new Region(thirdRegionAdcode, thirdRegionName));
                 String associationId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID);
                 String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
                 String inviteChannelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID);
@@ -180,7 +206,13 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME);
                 String note = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE);
                 Long createTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME);
-                GroupChannel groupChannel = new GroupChannel(null, groupChannelIdFind, groupChannelIdUser, owner, name, note, new Date(createTime));
+                Integer firstRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_ADCODE);
+                String firstRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_NAME);
+                Integer secondRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_ADCODE);
+                String secondRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_NAME);
+                Integer thirdRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_ADCODE);
+                String thirdRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_NAME);
+                GroupChannel groupChannel = new GroupChannel(null, groupChannelIdFind, groupChannelIdUser, owner, name, note, new Date(createTime), new Region(firstRegionAdcode, firstRegionName), new Region(secondRegionAdcode, secondRegionName), new Region(thirdRegionAdcode, thirdRegionName));
                 String associationId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID);
                 String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
                 String inviteChannelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID);

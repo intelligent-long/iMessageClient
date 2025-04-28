@@ -334,6 +334,7 @@ public class ContentUpdater {
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 GroupChannel groupChannel = data.getData(GroupChannel.class);
+                ErrorLogger.log(groupChannel);
                 GroupChannelDatabaseManager.getInstance().insertOrUpdate(groupChannel);
                 resultsYier.onResults();
             }

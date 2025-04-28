@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeRegionActivity;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.AmapDistrict;
@@ -26,6 +27,7 @@ import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCal
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.yier.AutoCompleteTextViewAutoSelectOnItemClickYier;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.ResultsYier;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChangeGroupRegionActivity extends BaseActivity {
+public class ChangeGroupRegionActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityChangeGroupRegionBinding binding;
     private GroupChannel groupChannel;
     private List<AmapDistrict> allFirstRegions;
@@ -52,7 +54,14 @@ public class ChangeGroupRegionActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         intentData();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         startFetchDataAndShow();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void intentData() {
@@ -67,7 +76,7 @@ public class ChangeGroupRegionActivity extends BaseActivity {
                     @Override
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
-                        data.commonHandleResult(ChangeGroupRegionActivity.this, new int[]{-101, -102, -103, -104, -105, -106}, () -> {
+                        data.commonHandleResult(ChangeGroupRegionActivity.this, new int[]{-101, -102, -103, -104, -105, -106, -107}, () -> {
                             new MessageDialog(ChangeGroupRegionActivity.this, "修改成功").create().show();
                         });
                     }
@@ -271,6 +280,18 @@ public class ChangeGroupRegionActivity extends BaseActivity {
                     });
                 }
             });
+        }
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
+            groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
         }
     }
 }
