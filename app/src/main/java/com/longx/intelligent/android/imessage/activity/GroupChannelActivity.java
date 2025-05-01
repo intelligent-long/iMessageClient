@@ -18,6 +18,7 @@ import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     }
 
     private void showContent(GroupChannel groupChannel) {
-        if(groupChannel.getGroupAvatar() == null){
+        if(groupChannel.getGroupAvatar() == null || groupChannel.getGroupAvatar().getHash() == null){
             GlideApp.with(this)
                     .load(AppCompatResources.getDrawable(this, R.drawable.group_channel_default_avatar))
                     .override(Target.SIZE_ORIGINAL)
