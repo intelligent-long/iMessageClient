@@ -17,7 +17,6 @@ public class NetDataUrls {
     }
 
     public static String getGroupAvatarUrl(Context context, String groupAvatarHash){
-//        return BaseUrlProvider.getHttpBaseUrl(context, false) + "user/info/avatar/" + groupAvatarHash;
-        return null; //TODO
+        return BaseUrlProvider.getHttpBaseUrl(context, false) + "group_channel/info/avatar/" + groupAvatarHash;
     }
 }

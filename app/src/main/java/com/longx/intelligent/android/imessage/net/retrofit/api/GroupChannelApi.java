@@ -9,9 +9,13 @@ import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 /**
@@ -39,5 +43,9 @@ public interface GroupChannelApi {
 
     @POST("group_channel/info/region/change")
     CompletableCall<OperationStatus> changeRegion(@Body ChangeGroupChannelRegionPostBody postBody);
+
+    @Multipart
+    @POST("group_channel/info/avatar/change/{groupChannelId}")
+    CompletableCall<OperationStatus> changeGroupChannelAvatar(@Part MultipartBody.Part avatarPart, @Path("groupChannelId") String groupChannelId);
 
 }

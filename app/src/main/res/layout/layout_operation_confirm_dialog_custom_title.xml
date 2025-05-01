@@ -11,7 +11,7 @@
         style="?attr/materialAlertDialogTitlePanelStyle">
 
         <ImageView
-            android:id="@id/new_channel_icon"
+            android:id="@+id/new_channel_icon"
             tools:ignore="ContentDescription"
             style="?attr/materialAlertDialogTitleIconStyle"/>
 

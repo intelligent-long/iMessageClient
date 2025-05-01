@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,11 +27,12 @@ public class GroupChannel implements Parcelable {
     private Region firstRegion;
     private Region secondRegion;
     private Region thirdRegion;
+    private String avatarHash;
 
     public GroupChannel() {
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations, Region firstRegion, Region secondRegion, Region thirdRegion) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash) {
         this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
         this.groupChannelIdUser = groupChannelIdUser;
@@ -41,10 +44,11 @@ public class GroupChannel implements Parcelable {
         this.firstRegion = firstRegion;
         this.secondRegion = secondRegion;
         this.thirdRegion = thirdRegion;
+        this.avatarHash = avatarHash;
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, Region firstRegion, Region secondRegion, Region thirdRegion) {
-        this(groupAvatar, groupChannelId, groupChannelIdUser, owner, name, note, createTime, new ArrayList<>(), firstRegion, secondRegion, thirdRegion);
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash) {
+        this(groupAvatar, groupChannelId, groupChannelIdUser, owner, name, note, createTime, new ArrayList<>(), firstRegion, secondRegion, thirdRegion, avatarHash);
     }
 
     public GroupAvatar getGroupAvatar() {
@@ -89,6 +93,10 @@ public class GroupChannel implements Parcelable {
 
     public Region getThirdRegion() {
         return thirdRegion;
+    }
+
+    public String getAvatarHash() {
+        return avatarHash;
     }
 
     public List<GroupChannelAssociation> getGroupChannelAssociations() {
@@ -141,6 +149,7 @@ public class GroupChannel implements Parcelable {
         firstRegion = in.readParcelable(getClass().getClassLoader());
         secondRegion = in.readParcelable(getClass().getClassLoader());
         thirdRegion = in.readParcelable(getClass().getClassLoader());
+        avatarHash = in.readString();
     }
 
     @Override
@@ -156,6 +165,7 @@ public class GroupChannel implements Parcelable {
         dest.writeParcelable(firstRegion, flags);
         dest.writeParcelable(secondRegion, flags);
         dest.writeParcelable(thirdRegion, flags);
+        dest.writeString(avatarHash);
     }
 
     public String buildRegionDesc(){
@@ -188,6 +198,7 @@ public class GroupChannel implements Parcelable {
                 ", firstRegion=" + firstRegion +
                 ", secondRegion=" + secondRegion +
                 ", thirdRegion=" + thirdRegion +
+                ", avatarHash='" + avatarHash + '\'' +
                 '}';
     }
 }

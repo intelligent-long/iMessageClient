@@ -10,8 +10,12 @@ import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPos
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.GroupChannelApi;
+import com.longx.intelligent.android.imessage.util.JsonUtil;
 import com.xcheng.retrofit.CompletableCall;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 
 /**
@@ -63,4 +67,16 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationStatus> changeGroupChannelAvatar(LifecycleOwner lifecycleOwner, byte[] avatar, String groupChannelId, BaseYier<OperationStatus> yier){
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), avatar);
+        MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", "avatar", requestBody);
+        CompletableCall<OperationStatus> call = getApiImplementation().changeGroupChannelAvatar(avatarPart, groupChannelId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+//    public static  CompletableCall<OperationData> unsendMessage(
+//
+//    )};
 }

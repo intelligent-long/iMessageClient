@@ -16,7 +16,7 @@
         android:layout_row="0"
         android:layout_column="0"
         android:layout_marginStart="18dp"
-        android:layout_marginEnd="7dp"
+        android:layout_marginEnd="7.5dp"
         android:background="@drawable/shape_card_background_radius_26"
         android:clipToOutline="true">
 
@@ -64,7 +64,7 @@
         android:layout_columnWeight="1"
         android:layout_row="0"
         android:layout_column="1"
-        android:layout_marginStart="7dp"
+        android:layout_marginStart="7.5dp"
         android:layout_marginEnd="18dp"
         android:background="@drawable/shape_card_background_radius_26"
         android:clipToOutline="true">

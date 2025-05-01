@@ -42,15 +42,15 @@ public class GroupAvatar implements Parcelable {
         return hash;
     }
 
-    public static final Creator<Avatar> CREATOR = new Creator<Avatar>() {
+    public static final Creator<GroupAvatar> CREATOR = new Creator<GroupAvatar>() {
         @Override
-        public Avatar createFromParcel(Parcel in) {
-            return new Avatar(in);
+        public GroupAvatar createFromParcel(Parcel in) {
+            return new GroupAvatar(in);
         }
 
         @Override
-        public Avatar[] newArray(int size) {
-            return new Avatar[size];
+        public GroupAvatar[] newArray(int size) {
+            return new GroupAvatar[size];
         }
     };
 
@@ -72,5 +72,15 @@ public class GroupAvatar implements Parcelable {
         dest.writeString(groupChannelId);
         dest.writeString(extension);
         dest.writeValue(time);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupAvatar{" +
+                "hash='" + hash + '\'' +
+                ", groupChannelId='" + groupChannelId + '\'' +
+                ", extension='" + extension + '\'' +
+                ", time=" + time +
+                '}';
     }
 }

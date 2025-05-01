@@ -90,10 +90,10 @@ public class EditUserSettingsActivity extends BaseSettingsActivity{
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         SharedImageViewModel viewModel = new ViewModelProvider((ViewModelStoreOwner) requireContext().getApplicationContext()).get(SharedImageViewModel.class);
-                        viewModel.getImage().observe(this, cropedBitmap -> {
-                            if (cropedBitmap != null) {
-                                byte[] cropedImageBytes = Utils.encodeBitmapToBytes(cropedBitmap, Bitmap.CompressFormat.PNG, 100);
-                                UserApiCaller.changeAvatar(this, cropedImageBytes, new RetrofitApiCaller.CommonYier<OperationStatus>(requireActivity()){
+                        viewModel.getImage().observe(this, croppedBitmap -> {
+                            if (croppedBitmap != null) {
+                                byte[] croppedImageBytes = Utils.encodeBitmapToBytes(croppedBitmap, Bitmap.CompressFormat.PNG, 100);
+                                UserApiCaller.changeAvatar(this, croppedImageBytes, new RetrofitApiCaller.CommonYier<OperationStatus>(requireActivity()){
                                     @Override
                                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                         super.ok(data, raw, call);
@@ -183,7 +183,7 @@ public class EditUserSettingsActivity extends BaseSettingsActivity{
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     imageChosenActivityResultLauncher.launch(intent);
                 }, v -> {
-                    new ConfirmDialog((AppCompatActivity) getActivity(), "是否继续？")
+                    new ConfirmDialog(getActivity(), "是否继续？")
                             .setNegativeButton()
                             .setPositiveButton((dialog, which) -> {
                                 UserApiCaller.removeAvatar(getActivity(), new RetrofitApiCaller.CommonYier<OperationStatus>((AppCompatActivity) getActivity()) {

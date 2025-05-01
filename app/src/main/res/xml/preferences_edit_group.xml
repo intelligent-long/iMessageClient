@@ -5,7 +5,7 @@
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
         app:title="主要资料">
 
-        <com.longx.intelligent.android.imessage.preference.ChangeAvatarPreference
+        <com.longx.intelligent.android.imessage.preference.ChangeGroupAvatarPreference
             app:key="@string/preference_key_change_avatar"
             app:summary="头像" />
 
