@@ -117,7 +117,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.more){
                 Intent intent = new Intent(this, GroupChannelSettingActivity.class);
-                intent.putExtra(ExtraKeys.CHANNEL, "");
+                intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
                 startActivity(intent);
             }
             return true;

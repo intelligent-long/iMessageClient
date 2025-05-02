@@ -7,6 +7,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNam
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.GroupChannelApi;
@@ -83,7 +84,15 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         return call;
     }
 
-//    public static  CompletableCall<OperationData> unsendMessage(
-//
-//    )};
+    public static CompletableCall<OperationStatus> setNoteToAssociatedGroupChannel(LifecycleOwner lifecycleOwner, SetNoteToAssociatedGroupChannelPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().setNoteToAssociatedGroupChannel(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> deleteNoteOfAssociatedGroupChannel(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().deleteNoteOfAssociatedGroupChannel(groupChannelId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

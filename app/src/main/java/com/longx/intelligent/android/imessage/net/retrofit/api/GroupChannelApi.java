@@ -5,6 +5,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNam
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
@@ -50,5 +51,11 @@ public interface GroupChannelApi {
 
     @POST("group_channel/info/avatar/remove/{groupChannelId}")
     CompletableCall<OperationStatus> removeGroupChannelAvatar(@Path("groupChannelId") String groupChannelId);
+
+    @POST("group_channel/association/note/set")
+    CompletableCall<OperationStatus> setNoteToAssociatedGroupChannel(@Body SetNoteToAssociatedGroupChannelPostBody postBody);
+
+    @POST("group_channel/association/note/delete/{groupChannelId}")
+    CompletableCall<OperationStatus> deleteNoteOfAssociatedGroupChannel(@Path("groupChannelId") String groupChannelId);
 
 }
