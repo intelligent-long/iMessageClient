@@ -15,19 +15,20 @@ public class EditAvatarBottomSheet extends AbstractBottomSheet {
     private BottomSheetEditAvatarBinding bottomSheetEditAvatarBinding;
     private final View.OnClickListener onClickSetAvatarYier;
     private final View.OnClickListener onClickRemoveAvatarYier;
+    private final boolean hideRemove;
 
-    public EditAvatarBottomSheet(AppCompatActivity activity, View.OnClickListener onClickSetAvatarYier, View.OnClickListener onClickRemoveAvatarYier) {
+    public EditAvatarBottomSheet(AppCompatActivity activity, boolean hideRemove, View.OnClickListener onClickSetAvatarYier, View.OnClickListener onClickRemoveAvatarYier) {
         super(activity);
         this.onClickSetAvatarYier = onClickSetAvatarYier;
         this.onClickRemoveAvatarYier = onClickRemoveAvatarYier;
+        this.hideRemove = hideRemove;
         create();
     }
 
     @Override
     protected void onCreate() {
         bottomSheetEditAvatarBinding = BottomSheetEditAvatarBinding.inflate(getActivity().getLayoutInflater());
-        Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(getActivity());
-        if(currentUserInfo.getAvatar() == null || currentUserInfo.getAvatar().getHash() == null){
+        if(hideRemove){
             bottomSheetEditAvatarBinding.removeAvatar.setVisibility(View.GONE);
         }
         setContentView(bottomSheetEditAvatarBinding.getRoot());

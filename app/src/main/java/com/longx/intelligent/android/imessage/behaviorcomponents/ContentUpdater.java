@@ -319,11 +319,13 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
-                GroupChannelDatabaseManager.getInstance().clearGroupChannels();
-                List<GroupChannel> groupChannels = data.getData(new TypeReference<List<GroupChannel>>() {
+                data.commonHandleSuccessResult(() -> {
+                    GroupChannelDatabaseManager.getInstance().clearGroupChannels();
+                    List<GroupChannel> groupChannels = data.getData(new TypeReference<List<GroupChannel>>() {
+                    });
+                    GroupChannelDatabaseManager.getInstance().insertAssociationsOrIgnore(groupChannels);
+                    resultsYier.onResults();
                 });
-                GroupChannelDatabaseManager.getInstance().insertAssociationsOrIgnore(groupChannels);
-                resultsYier.onResults();
             }
         });
     }
@@ -333,9 +335,11 @@ public class ContentUpdater {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
-                GroupChannel groupChannel = data.getData(GroupChannel.class);
-                GroupChannelDatabaseManager.getInstance().insertOrUpdate(groupChannel);
-                resultsYier.onResults();
+                data.commonHandleSuccessResult(() -> {
+                    GroupChannel groupChannel = data.getData(GroupChannel.class);
+                    GroupChannelDatabaseManager.getInstance().insertOrUpdate(groupChannel);
+                    resultsYier.onResults();
+                });
             }
         });
     }

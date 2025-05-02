@@ -48,4 +48,7 @@ public interface GroupChannelApi {
     @POST("group_channel/info/avatar/change/{groupChannelId}")
     CompletableCall<OperationStatus> changeGroupChannelAvatar(@Part MultipartBody.Part avatarPart, @Path("groupChannelId") String groupChannelId);
 
+    @POST("group_channel/info/avatar/remove/{groupChannelId}")
+    CompletableCall<OperationStatus> removeGroupChannelAvatar(@Path("groupChannelId") String groupChannelId);
+
 }

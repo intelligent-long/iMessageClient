@@ -16,6 +16,7 @@ import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.notification.Notifications;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;

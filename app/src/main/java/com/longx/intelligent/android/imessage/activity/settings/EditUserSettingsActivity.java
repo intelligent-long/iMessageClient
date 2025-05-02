@@ -178,7 +178,8 @@ public class EditUserSettingsActivity extends BaseSettingsActivity{
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
             if(preference.equals(preferenceChangeAvatar)){
-                new EditAvatarBottomSheet((AppCompatActivity) getActivity(), v -> {
+                Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(getActivity());
+                new EditAvatarBottomSheet((AppCompatActivity) getActivity(), currentUserInfo.getAvatar() == null || currentUserInfo.getAvatar().getHash() == null, v -> {
                     Intent intent = new Intent(Intent.ACTION_PICK, null);
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     imageChosenActivityResultLauncher.launch(intent);
@@ -186,7 +187,7 @@ public class EditUserSettingsActivity extends BaseSettingsActivity{
                     new ConfirmDialog(getActivity(), "是否继续？")
                             .setNegativeButton()
                             .setPositiveButton((dialog, which) -> {
-                                UserApiCaller.removeAvatar(getActivity(), new RetrofitApiCaller.CommonYier<OperationStatus>((AppCompatActivity) getActivity()) {
+                                UserApiCaller.removeAvatar(getActivity(), new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()) {
                                     @Override
                                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                         super.ok(data, raw, call);

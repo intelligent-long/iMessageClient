@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -177,6 +178,7 @@ public class GroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<G
 //        }
 //    }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateAll(List<GroupChannel> groupChannels){
         itemDataList.clear();
         groupChannels.forEach(groupChannel -> {
@@ -190,6 +192,6 @@ public class GroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<G
             if (pinyinCompare != 0) return pinyinCompare;
             return o1.fullPinyin.compareTo(o2.fullPinyin);
         });
-        notifyItemRangeChanged(0, groupChannels.size());
+        notifyDataSetChanged();
     }
 }

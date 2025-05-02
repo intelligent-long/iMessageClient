@@ -17,6 +17,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:29.
@@ -72,6 +73,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), avatar);
         MultipartBody.Part avatarPart = MultipartBody.Part.createFormData("avatar", "avatar", requestBody);
         CompletableCall<OperationStatus> call = getApiImplementation().changeGroupChannelAvatar(avatarPart, groupChannelId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> removeGroupChannelAvatar(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().removeGroupChannelAvatar(groupChannelId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

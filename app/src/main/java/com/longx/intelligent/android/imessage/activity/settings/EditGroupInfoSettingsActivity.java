@@ -21,6 +21,7 @@ import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupIdAc
 import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupNameActivity;
 import com.longx.intelligent.android.imessage.activity.editgroup.ChangeGroupRegionActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.bottomsheet.EditAvatarBottomSheet;
 import com.longx.intelligent.android.imessage.da.SharedImageViewModel;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
@@ -42,7 +43,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class EditGroupInfoSettingsActivity extends BaseSettingsActivity{
+public class EditGroupInfoSettingsActivity extends BaseSettingsActivity {
     private ActivityEditGroupInfoSettingsBinding binding;
     private GroupChannel groupChannel;
 
@@ -166,7 +167,7 @@ public class EditGroupInfoSettingsActivity extends BaseSettingsActivity{
         @Override
         public boolean onPreferenceClick(@NonNull Preference preference) {
             if(preference.equals(preferenceChangeGroupAvatar)){
-                new EditAvatarBottomSheet((AppCompatActivity) getActivity(), v -> {
+                new EditAvatarBottomSheet((AppCompatActivity) getActivity(), groupChannel == null || groupChannel.getAvatarHash() == null, v -> {
                     Intent intent = new Intent(Intent.ACTION_PICK, null);
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     imageChosenActivityResultLauncher.launch(intent);
@@ -174,7 +175,15 @@ public class EditGroupInfoSettingsActivity extends BaseSettingsActivity{
                     new ConfirmDialog(getActivity(), "是否继续？")
                             .setNegativeButton()
                             .setPositiveButton((dialog, which) -> {
-
+                                GroupChannelApiCaller.removeGroupChannelAvatar(this, groupChannel.getGroupChannelId(), new RetrofitApiCaller.CommonYier<OperationStatus>(getActivity()) {
+                                    @Override
+                                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                        super.ok(data, raw, call);
+                                        data.commonHandleResult(getActivity(), new int[]{}, () -> {
+                                            MessageDisplayer.autoShow(getActivity(), "头像已移除", MessageDisplayer.Duration.SHORT);
+                                        });
+                                    }
+                                });
                             }).create().show();
                 }).show();
             }else if(preference.equals(preferenceChangeGroupIdUser)){
