@@ -109,7 +109,7 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
 
     @Override
     public void onUpdateComplete(String id, List<String> updatingIds) {
-        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNELS) || id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL_TAGS) || id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
             showContent();
             setupYiers();
         }

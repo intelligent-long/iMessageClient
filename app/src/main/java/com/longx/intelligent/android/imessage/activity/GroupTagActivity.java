@@ -24,6 +24,7 @@ import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCal
 import com.longx.intelligent.android.imessage.ui.DisableExpandAppBarBehavior;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.dragsort.DragSortRecycler;
 
@@ -50,6 +51,13 @@ public class GroupTagActivity extends BaseActivity implements ContentUpdater.OnS
         setupDefaultBackNavigation(binding.toolbar);
         showContent();
         setUpYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void showContent() {
