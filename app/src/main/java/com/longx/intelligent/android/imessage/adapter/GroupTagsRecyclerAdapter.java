@@ -109,7 +109,7 @@ public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Group
             }
         }
         for (int i = 0; i < groupChannelTags.size(); i++) {
-            groupChannelTags.get(i).setOrder(i);
+            groupChannelTags.get(i).setOrder(groupChannelTags.size() - 1 - i);
         }
         notifyDataSetChanged();
     }

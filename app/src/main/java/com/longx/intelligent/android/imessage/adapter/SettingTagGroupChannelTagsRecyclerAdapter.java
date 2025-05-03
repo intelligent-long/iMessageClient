@@ -30,7 +30,7 @@ public class SettingTagGroupChannelTagsRecyclerAdapter extends WrappableRecycler
         this.activity = activity;
         this.groupChannelTags = groupChannelTags;
         this.groupChannel = groupChannel;
-        groupChannelTags.sort(Comparator.comparingInt(GroupChannelTag::getOrder));
+        groupChannelTags.sort(Comparator.comparingInt(GroupChannelTag::getOrder).reversed());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{

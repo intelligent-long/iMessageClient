@@ -12,10 +12,15 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
+import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupTagBinding;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.DisableExpandAppBarBehavior;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
@@ -26,6 +31,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GroupTagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityGroupTagBinding binding;
@@ -170,17 +178,17 @@ public class GroupTagActivity extends BaseActivity implements ContentUpdater.OnS
         groupChannelTags.forEach(groupChannelTag -> {
             orderMap.put(groupChannelTag.getTagId(), groupChannelTag.getOrder());
         });
-//        SortTagsPostBody postBody = new SortTagsPostBody(orderMap);
-//        ChannelApiCaller.sortChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
-//            @Override
-//            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
-//                super.ok(data, raw, call);
-//                data.commonHandleResult(GroupTagActivity.this, new int[]{-101, -102, -103}, () -> {
-//                    switchDragSortState();
-//                    MessageDisplayer.autoShow(getActivity(), "排序成功", MessageDisplayer.Duration.SHORT);
-//                });
-//            }
-//        });
+        SortGroupTagsPostBody postBody = new SortGroupTagsPostBody(orderMap);
+        GroupChannelApiCaller.sortGroupChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+            @Override
+            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                super.ok(data, raw, call);
+                data.commonHandleResult(GroupTagActivity.this, new int[]{-101, -102, -103}, () -> {
+                    switchDragSortState();
+                    MessageDisplayer.autoShow(getActivity(), "排序成功", MessageDisplayer.Duration.SHORT);
+                });
+            }
+        });
     }
 
     @Override

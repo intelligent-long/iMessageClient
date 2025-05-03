@@ -7,6 +7,8 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelReg
 import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
+import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
@@ -65,5 +67,8 @@ public interface GroupChannelApi {
 
     @GET("group_channel/association/tag/all")
     CompletableCall<OperationData> fetchAllTags();
+
+    @POST("group_channel/association/tag/sort")
+    CompletableCall<OperationStatus> sortGroupChannelTags(@Body SortGroupTagsPostBody postBody);
 
 }

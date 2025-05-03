@@ -19,6 +19,7 @@ import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelTag
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -130,7 +131,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             }
         }
         for (int i = 0; i < channelTags.size(); i++) {
-            channelTags.get(i).setOrder(i);
+            channelTags.get(i).setOrder(channelTags.size() - 1 - i);
         }
         notifyDataSetChanged();
     }

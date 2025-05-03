@@ -29,7 +29,7 @@ public class SettingTagChannelTagsRecyclerAdapter extends WrappableRecyclerViewA
         this.activity = activity;
         this.channelTags = channelTags;
         this.channel = channel;
-        channelTags.sort(Comparator.comparingInt(ChannelTag::getOrder));
+        channelTags.sort(Comparator.comparingInt(ChannelTag::getOrder).reversed());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{

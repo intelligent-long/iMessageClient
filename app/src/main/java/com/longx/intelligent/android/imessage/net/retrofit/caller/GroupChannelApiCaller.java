@@ -9,6 +9,8 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelReg
 import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
+import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.GroupChannelApi;
@@ -105,6 +107,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationData> fetchAllTags(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchAllTags();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> sortGroupChannelTags(LifecycleOwner lifecycleOwner, SortGroupTagsPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().sortGroupChannelTags(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
