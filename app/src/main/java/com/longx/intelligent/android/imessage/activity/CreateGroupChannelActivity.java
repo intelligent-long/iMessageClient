@@ -94,7 +94,7 @@ public class CreateGroupChannelActivity extends BaseActivity {
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         List<String> presetGroupChannelTagIds = new ArrayList<>();
-                        presetGroupChannelTags.forEach(presetChannelTag -> presetGroupChannelTagIds.add(presetChannelTag.getGroupTagId()));
+                        presetGroupChannelTags.forEach(presetChannelTag -> presetGroupChannelTagIds.add(presetChannelTag.getTagId()));
                         CreateGroupChannelPostBody postBody = new CreateGroupChannelPostBody(inputtedName, finalInputtedNote, newGroupChannelTagNames, presetGroupChannelTagIds);
                         GroupChannelApiCaller.createGroupChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override

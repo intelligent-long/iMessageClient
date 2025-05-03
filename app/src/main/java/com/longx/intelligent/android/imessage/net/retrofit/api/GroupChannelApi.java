@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
+import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
@@ -10,6 +11,7 @@ import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
 
+import cn.hutool.http.useragent.OS;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -57,5 +59,11 @@ public interface GroupChannelApi {
 
     @POST("group_channel/association/note/delete/{groupChannelId}")
     CompletableCall<OperationStatus> deleteNoteOfAssociatedGroupChannel(@Path("groupChannelId") String groupChannelId);
+
+    @POST("group_channel/association/tag/add")
+    CompletableCall<OperationStatus> addTag(@Body AddGroupChannelTagPostBody postBody);
+
+    @GET("group_channel/association/tag/all")
+    CompletableCall<OperationData> fetchAllTags();
 
 }

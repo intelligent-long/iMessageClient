@@ -14,6 +14,8 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TABLE_NAME_GROUP_CHANNEL_ASSOCIATIONS = "group_channel_associations";
         public static final String TABLE_NAME_GROUP_CHANNELS = "group_channels";
         public static final String TABLE_NAME_GROUP_AVATARS = "group_avatars";
+        public static final String TABLE_NAME_TAGS = "tags";
+        public static final String TABLE_NAME_TAG_CHANNELS = "tag_channels";
     }
 
     public static class TableGroupChannelAssociationsColumns {
@@ -47,6 +49,20 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String GROUP_CHANNEL_ID = "group_channel_id";
         public static final String EXTENSION = "extension";
         public static final String TIME = "time";
+    }
+
+    public static class TableTagsColumns {
+        public static final String ID = "id";
+        public static final String IMESSAGE_ID = "imessage_id";
+        public static final String NAME = "name";
+        public static final String ORDER = "`order`";
+        public static final String RAW_ORDER = "order";
+    }
+
+    public static class TableTagChannelsColumns {
+        public static final String TAG_ID = "tag_id";
+        public static final String IMESSAGE_ID = "imessage_id";
+
     }
 
     public GroupChannelDatabaseHelper(Context context, String imessageId) {
@@ -97,6 +113,21 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 +")"
                 + ");";
         db.execSQL(create_sql_3);
+        String create_sql_4 = "CREATE TABLE IF NOT EXISTS " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + "("
+                + ChannelDatabaseHelper.TableTagsColumns.ID + " VARCHAR,"
+                + ChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID + " VARCHAR,"
+                + ChannelDatabaseHelper.TableTagsColumns.NAME + " VARCHAR,"
+                + ChannelDatabaseHelper.TableTagsColumns.ORDER + " INTEGER,"
+                + " CONSTRAINT con_unique1 UNIQUE("
+                + ChannelDatabaseHelper.TableTagsColumns.ID
+                +")"
+                + ");";
+        db.execSQL(create_sql_4);
+        String create_sql_5 = "CREATE TABLE IF NOT EXISTS " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + "("
+                + ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID + " VARCHAR,"
+                + ChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID + " VARCHAR"
+                + ");";
+        db.execSQL(create_sql_5);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
 

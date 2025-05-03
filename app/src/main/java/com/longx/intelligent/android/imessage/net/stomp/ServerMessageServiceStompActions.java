@@ -200,4 +200,9 @@ public class ServerMessageServiceStompActions {
         });
     }
 
+    public static void updateGroupChannelTags(Context context){
+        ContentUpdater.updateGroupChannelTags(context, results -> {
+        });
+    }
+
 }

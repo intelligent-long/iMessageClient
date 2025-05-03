@@ -5,15 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.longx.intelligent.android.imessage.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.database.helper.GroupChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
+import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -269,6 +268,96 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             }
             return result.get(0);
         }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public List<GroupChannelTag> findAllGroupChannelTags(){
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t"
+                + " LEFT JOIN " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + " tc"
+                + " ON t." + GroupChannelDatabaseHelper.TableTagsColumns.ID + " = tc." + GroupChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, null)){
+            List<GroupChannelTag> result = new ArrayList<>();
+            String currentTagId = null;
+            GroupChannelTag channelTag = null;
+            List<String> channelIds = null;
+            while (cursor.moveToNext()){
+                String tagId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagsColumns.ID);
+                String imessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID);
+                String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagsColumns.NAME);
+                Integer order = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableTagsColumns.RAW_ORDER);
+                String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID);
+                if (currentTagId == null) {
+                    currentTagId = tagId;
+                    channelIds = new ArrayList<>();
+                    if(channelImessageId != null) channelIds.add(channelImessageId);
+                    channelTag = new GroupChannelTag(tagId, imessageId, name, order == null ? -1 : order, null);
+                } else {
+                    if (currentTagId.equals(tagId)) {
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
+                    } else {
+                        channelTag.setGroupChannelIdList(new ArrayList<>(channelIds));
+                        result.add(channelTag);
+                        channelIds = new ArrayList<>();
+                        currentTagId = tagId;
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
+                        channelTag = new GroupChannelTag(tagId, imessageId, name, order == null ? -1 : order, null);
+                    }
+                }
+            }
+            if(channelTag != null) {
+                channelTag.setGroupChannelIdList(new ArrayList<>(channelIds));
+                result.add(channelTag);
+            }
+            return result;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public void clearChannelTags(){
+        openDatabaseIfClosed();
+        try {
+            getDatabase().delete(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, "1=1", null);
+            getDatabase().delete(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS, "1=1", null);
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public boolean insertTagsOrIgnore(List<GroupChannelTag> groupChannelTags){
+        AtomicBoolean result = new AtomicBoolean(true);
+        openDatabaseIfClosed();
+        getDatabase().beginTransaction();
+        try {
+            OUTER: for (GroupChannelTag groupChannelTag : groupChannelTags) {
+                ContentValues values = new ContentValues();
+                values.put(GroupChannelDatabaseHelper.TableTagsColumns.ID, groupChannelTag.getTagId());
+                values.put(GroupChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID, groupChannelTag.getImessageId());
+                values.put(GroupChannelDatabaseHelper.TableTagsColumns.NAME, groupChannelTag.getName());
+                values.put(GroupChannelDatabaseHelper.TableTagsColumns.ORDER, groupChannelTag.getOrder());
+                long rowId = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS, null,
+                        values, SQLiteDatabase.CONFLICT_REPLACE);
+                if (rowId == -1) {
+                    result.set(false);
+                    break;
+                }
+                for (String groupChannelId : groupChannelTag.getGroupChannelIdList()) {
+                    ContentValues values1 = new ContentValues();
+                    values1.put(GroupChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID, groupChannelTag.getTagId());
+                    values1.put(GroupChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID, groupChannelId);
+                    long rowId1 = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS, null,
+                            values1, SQLiteDatabase.CONFLICT_REPLACE);
+                    if (rowId1 == -1) {
+                        result.set(false);
+                        break OUTER;
+                    }
+                };
+            };
+            if(result.get()) getDatabase().setTransactionSuccessful();
+            return result.get();
+        }finally {
+            getDatabase().endTransaction();
             releaseDatabaseIfUnused();
         }
     }

@@ -39,5 +39,10 @@ public class GroupChannelSettingActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
             startActivity(intent);
         });
+        binding.clickViewTag.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SetGroupChannelTagActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+            startActivity(intent);
+        });
     }
 }

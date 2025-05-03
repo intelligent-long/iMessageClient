@@ -12,7 +12,7 @@ import java.util.Objects;
  * Created by LONG on 2024/6/3 at 5:34 PM.
  */
 public class GroupChannelTag implements Parcelable {
-    private String groupTagId;
+    private String tagId;
     private String imessageId;
     private String name;
     private int order;
@@ -21,8 +21,8 @@ public class GroupChannelTag implements Parcelable {
     public GroupChannelTag() {
     }
 
-    public GroupChannelTag(String groupTagId, String imessageId, String name, int order, List<String> groupChannelIdList) {
-        this.groupTagId = groupTagId;
+    public GroupChannelTag(String tagId, String imessageId, String name, int order, List<String> groupChannelIdList) {
+        this.tagId = tagId;
         this.imessageId = imessageId;
         this.name = name;
         this.order = order;
@@ -41,8 +41,8 @@ public class GroupChannelTag implements Parcelable {
         }
     };
 
-    public String getGroupTagId() {
-        return groupTagId;
+    public String getTagId() {
+        return tagId;
     }
 
     public String getImessageId() {
@@ -75,7 +75,7 @@ public class GroupChannelTag implements Parcelable {
     }
 
     protected GroupChannelTag(Parcel in) {
-        groupTagId = in.readString();
+        tagId = in.readString();
         imessageId = in.readString();
         name = in.readString();
         order = in.readInt();
@@ -84,7 +84,7 @@ public class GroupChannelTag implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(groupTagId);
+        dest.writeString(tagId);
         dest.writeString(imessageId);
         dest.writeString(name);
         dest.writeInt(order);
@@ -96,11 +96,11 @@ public class GroupChannelTag implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GroupChannelTag that = (GroupChannelTag) o;
-        return order == that.order && Objects.equals(groupTagId, that.groupTagId) && Objects.equals(imessageId, that.imessageId) && Objects.equals(name, that.name) && Objects.equals(groupChannelIdList, that.groupChannelIdList);
+        return order == that.order && Objects.equals(tagId, that.tagId) && Objects.equals(imessageId, that.imessageId) && Objects.equals(name, that.name) && Objects.equals(groupChannelIdList, that.groupChannelIdList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupTagId, imessageId, name, order, groupChannelIdList);
+        return Objects.hash(tagId, imessageId, name, order, groupChannelIdList);
     }
 }

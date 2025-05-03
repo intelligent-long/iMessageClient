@@ -131,6 +131,9 @@ public class ServerMessageServiceStomp {
         stomp.subscribe(StompDestinations.GROUP_CHANNEL_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateOneGroupChannel(context, message.getPayload());
         });
+        stomp.subscribe(StompDestinations.GROUP_CHANNEL_TAGS_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateGroupChannelTags(context);
+        });
     }
 
     public static synchronized boolean isConnected(){

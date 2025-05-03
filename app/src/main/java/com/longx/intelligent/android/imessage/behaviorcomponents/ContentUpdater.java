@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.imessage.data.Self;
@@ -61,6 +62,7 @@ public class ContentUpdater {
         String ID_BROADCAST_REPLY_NEWS_COUNT = "broadcast_reply_news_count";
         String ID_GROUP_CHANNELS = "group_channels";
         String ID_GROUP_CHANNEL = "group_channel";
+        String ID_GROUP_CHANNEL_TAGS = "group_channel_tags";
 
         void onStartUpdate(String id, List<String> updatingIds);
 
@@ -338,6 +340,22 @@ public class ContentUpdater {
                 data.commonHandleSuccessResult(() -> {
                     GroupChannel groupChannel = data.getData(GroupChannel.class);
                     GroupChannelDatabaseManager.getInstance().insertOrUpdate(groupChannel);
+                    resultsYier.onResults();
+                });
+            }
+        });
+    }
+
+    public static void updateGroupChannelTags(Context context, ResultsYier resultsYier){
+        GroupChannelApiCaller.fetchAllTags(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL_TAGS, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleSuccessResult(() -> {
+                    List<GroupChannelTag> channelTags = data.getData(new TypeReference<List<GroupChannelTag>>() {
+                    });
+                    GroupChannelDatabaseManager.getInstance().clearChannelTags();
+                    GroupChannelDatabaseManager.getInstance().insertTagsOrIgnore(channelTags);
                     resultsYier.onResults();
                 });
             }

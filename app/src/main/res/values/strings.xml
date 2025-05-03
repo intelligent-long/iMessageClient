@@ -50,6 +50,7 @@
     <string name="title_setting_note">设置备注</string>
     <string name="title_setting_group_note">设置群备注</string>
     <string name="title_setting_tag">设置标签</string>
+    <string name="title_setting_group_tag">设置群标签</string>
     <string name="title_presetting_tag">设置标签</string>
     <string name="title_presetting_group_tag">设置群标签</string>
     <string name="title_settings_privacy">隐私</string>
