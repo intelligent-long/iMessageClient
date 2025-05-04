@@ -6,6 +6,7 @@ import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPos
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
+import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
@@ -113,6 +114,18 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> sortGroupChannelTags(LifecycleOwner lifecycleOwner, SortGroupTagsPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().sortGroupChannelTags(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> deleteGroupChannelTag(LifecycleOwner lifecycleOwner, String tagId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().deleteGroupChannelTag(tagId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> changeGroupChannelTagName(LifecycleOwner lifecycleOwner, ChangeGroupChannelTagNamePostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().changeGroupChannelTagName(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

@@ -4,19 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
-import com.longx.intelligent.android.imessage.adapter.SettingTagChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.adapter.SettingTagGroupChannelTagsRecyclerAdapter;
-import com.longx.intelligent.android.imessage.adapter.SettingTagNewChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.adapter.SettingTagNewGroupChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.bottomsheet.AddSettingChannelTagBottomSheet;
@@ -33,6 +26,7 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
     private SettingTagNewGroupChannelTagsRecyclerAdapter newGroupChannelTagsAdapter;
     private SettingTagGroupChannelTagsRecyclerAdapter groupChannelTagsAdapter;
     private GroupChannel groupChannel;
+    private List<GroupChannelTag> allGroupChannelTags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +34,11 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
         binding = ActivitySetGroupChannelTagBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         intentData();
-        showContent();
+        newGroupChannelTagsAdapter = new SettingTagNewGroupChannelTagsRecyclerAdapter(this);
+        binding.recyclerViewNewTags.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewNewTags.setAdapter(newGroupChannelTagsAdapter);
+        binding.recyclerViewTags.setLayoutManager(new LinearLayoutManager(this));
+        updateContent();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
@@ -55,15 +53,15 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
         groupChannel = getIntent().getParcelableExtra(ExtraKeys.GROUP_CHANNEL);
     }
 
-    private void showContent() {
-        binding.recyclerViewNewTags.setLayoutManager(new LinearLayoutManager(this));
-        newGroupChannelTagsAdapter = new SettingTagNewGroupChannelTagsRecyclerAdapter(this);
-        binding.recyclerViewNewTags.setAdapter(newGroupChannelTagsAdapter);
-        List<GroupChannelTag> allGroupChannelTags = GroupChannelDatabaseManager.getInstance().findAllGroupChannelTags();
-        binding.recyclerViewTags.setLayoutManager(new LinearLayoutManager(this));
+    private void updateContent() {
+        allGroupChannelTags = GroupChannelDatabaseManager.getInstance().findAllGroupChannelTags();
         groupChannelTagsAdapter = new SettingTagGroupChannelTagsRecyclerAdapter(this, allGroupChannelTags, groupChannel);
         binding.recyclerViewTags.setAdapter(groupChannelTagsAdapter);
-        if(allGroupChannelTags.isEmpty()){
+        checkAndShowContent();
+    }
+
+    private void checkAndShowContent() {
+        if(allGroupChannelTags.isEmpty() && newGroupChannelTagsAdapter.getNewTagNames().isEmpty()){
             toNoContent();
         }else {
             toContent();
@@ -95,11 +93,18 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
                     String inputtedTagName = (String) results[0];
                     newGroupChannelTagsAdapter.addAndShow(inputtedTagName);
                     binding.layoutNewTags.setVisibility(View.VISIBLE);
+                    checkAndShowContent();
                 }).show();
             }
             return false;
         });
-
+        newGroupChannelTagsAdapter.setOnDeleteClickYier((position, view) -> {
+            newGroupChannelTagsAdapter.removeAndShow(position);
+            if(newGroupChannelTagsAdapter.getItemCount() == 0){
+                binding.layoutNewTags.setVisibility(View.GONE);
+            }
+            checkAndShowContent();
+        });
     }
 
     @Override
@@ -110,7 +115,7 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
     @Override
     public void onUpdateComplete(String id, List<String> updatingIds) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL_TAGS) || id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
-            showContent();
+            updateContent();
             setupYiers();
         }
     }

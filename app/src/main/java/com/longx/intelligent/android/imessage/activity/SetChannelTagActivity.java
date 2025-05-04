@@ -22,8 +22,6 @@ import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivitySetChannelTagBinding;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
-import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
@@ -37,6 +35,7 @@ public class SetChannelTagActivity extends BaseActivity implements ContentUpdate
     private Channel channel;
     private SettingTagNewChannelTagsRecyclerAdapter newChannelTagsAdapter;
     private SettingTagChannelTagsRecyclerAdapter channelTagsAdapter;
+    private List<ChannelTag> allChannelTags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,11 @@ public class SetChannelTagActivity extends BaseActivity implements ContentUpdate
         setupDefaultBackNavigation(binding.toolbar);
         String channelImessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
         channel = ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId);
-        showContent();
+        newChannelTagsAdapter = new SettingTagNewChannelTagsRecyclerAdapter(this);
+        binding.recyclerViewNewTags.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewTags.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewNewTags.setAdapter(newChannelTagsAdapter);
+        updateContent();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
@@ -57,15 +60,15 @@ public class SetChannelTagActivity extends BaseActivity implements ContentUpdate
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
-    private void showContent() {
-        List<ChannelTag> allChannelTags = ChannelDatabaseManager.getInstance().findAllChannelTags();
-        binding.recyclerViewNewTags.setLayoutManager(new LinearLayoutManager(this));
-        newChannelTagsAdapter = new SettingTagNewChannelTagsRecyclerAdapter(this);
-        binding.recyclerViewNewTags.setAdapter(newChannelTagsAdapter);
-        binding.recyclerViewTags.setLayoutManager(new LinearLayoutManager(this));
+    private void updateContent() {
+        allChannelTags = ChannelDatabaseManager.getInstance().findAllChannelTags();
         channelTagsAdapter = new SettingTagChannelTagsRecyclerAdapter(this, allChannelTags, channel);
         binding.recyclerViewTags.setAdapter(channelTagsAdapter);
-        if(allChannelTags.isEmpty()){
+        checkAndShowContent();
+    }
+
+    private void checkAndShowContent() {
+        if(allChannelTags.isEmpty() && newChannelTagsAdapter.getNewTagNames().isEmpty()){
             toNoContent();
         }else {
             toContent();
@@ -97,6 +100,7 @@ public class SetChannelTagActivity extends BaseActivity implements ContentUpdate
                     String inputtedTagName = (String) results[0];
                     newChannelTagsAdapter.addAndShow(inputtedTagName);
                     binding.layoutNewTags.setVisibility(View.VISIBLE);
+                    checkAndShowContent();
                 }).show();
             }
             return false;
@@ -106,6 +110,7 @@ public class SetChannelTagActivity extends BaseActivity implements ContentUpdate
             if(newChannelTagsAdapter.getItemCount() == 0){
                 binding.layoutNewTags.setVisibility(View.GONE);
             }
+            checkAndShowContent();
         });
         binding.doneButton.setOnClickListener(v -> {
             List<String> newTagNames = newChannelTagsAdapter.getNewTagNames();
@@ -139,7 +144,7 @@ public class SetChannelTagActivity extends BaseActivity implements ContentUpdate
     @Override
     public void onUpdateComplete(String id, List<String> updatingIds) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
-            showContent();
+            updateContent();
             setupYiers();
         }
     }

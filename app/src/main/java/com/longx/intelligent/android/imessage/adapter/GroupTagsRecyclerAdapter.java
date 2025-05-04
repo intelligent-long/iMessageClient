@@ -8,15 +8,25 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.imessage.bottomsheet.RenameChannelTagBottomSheet;
+import com.longx.intelligent.android.imessage.bottomsheet.RenameGroupChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupTagBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by LONG on 2024/6/3 at 8:47 PM.
@@ -71,13 +81,21 @@ public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Group
 
         });
         holder.binding.clickViewRename.setOnClickListener(v -> {
-
+            new RenameGroupChannelTagBottomSheet(activity, groupChannelTag).show();
         });
         holder.binding.clickViewDelete.setOnClickListener(v -> {
             new ConfirmDialog(activity, "是否继续？")
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
-
+                        GroupChannelApiCaller.deleteGroupChannelTag(activity, groupChannelTag.getTagId(), new RetrofitApiCaller.CommonYier<OperationStatus>(activity){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(activity, new int[]{}, () -> {
+                                    MessageDisplayer.autoShow(activity, "已删除", MessageDisplayer.Duration.SHORT);
+                                });
+                            }
+                        });
                     })
                     .create().show();
         });
