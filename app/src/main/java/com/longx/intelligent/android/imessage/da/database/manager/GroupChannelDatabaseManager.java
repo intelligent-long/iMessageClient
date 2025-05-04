@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.longx.intelligent.android.imessage.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.database.helper.GroupChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
@@ -310,6 +312,50 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 result.add(channelTag);
             }
             return result;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+    }
+
+    public GroupChannelTag findOneGroupChannelTag(String tagId){
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t"
+                + " LEFT JOIN " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + " tc"
+                + " ON t." + GroupChannelDatabaseHelper.TableTagsColumns.ID + " = tc." + GroupChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID
+                + " WHERE t." + GroupChannelDatabaseHelper.TableTagsColumns.ID + " = \"" + tagId + "\"", null)){
+            List<GroupChannelTag> result = new ArrayList<>();
+            String currentTagId = null;
+            GroupChannelTag channelTag = null;
+            List<String> channelIds = null;
+            while (cursor.moveToNext()){
+                String tagIdFound = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagsColumns.ID);
+                String imessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID);
+                String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagsColumns.NAME);
+                Integer order = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableTagsColumns.RAW_ORDER);
+                String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID);
+                if (currentTagId == null) {
+                    currentTagId = tagIdFound;
+                    channelIds = new ArrayList<>();
+                    if(channelImessageId != null) channelIds.add(channelImessageId);
+                    channelTag = new GroupChannelTag(tagIdFound, imessageId, name, order == null ? -1 : order, null);
+                } else {
+                    if (currentTagId.equals(tagIdFound)) {
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
+                    } else {
+                        channelTag.setGroupChannelIdList(new ArrayList<>(channelIds));
+                        result.add(channelTag);
+                        channelIds = new ArrayList<>();
+                        currentTagId = tagIdFound;
+                        if(channelImessageId != null) channelIds.add(channelImessageId);
+                        channelTag = new GroupChannelTag(tagIdFound, imessageId, name, order == null ? -1 : order, null);
+                    }
+                }
+            }
+            if(channelTag != null) {
+                channelTag.setGroupChannelIdList(new ArrayList<>(channelIds));
+                result.add(channelTag);
+            }
+            return result.get(0);
         }finally {
             releaseDatabaseIfUnused();
         }

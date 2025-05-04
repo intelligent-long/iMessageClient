@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/index_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="16sp"
+        android:gravity="center_vertical"
+        android:paddingStart="19dp"
+        android:textColor="?attr/colorControlNormal"
+        android:textFontWeight="@integer/font_weight_medium"
+        android:background="@color/transparent"
+        tools:ignore="RtlSymmetry" />
+
+    <com.aitsuki.swipe.SwipeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:autoClose="true"
+        app:designer="@string/classic_designer"
+        app:preview="right">
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#FF0000"
+            android:layout_gravity="end">
+
+            <LinearLayout
+                android:id="@+id/click_view_remove"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/remove_24px"
+                    android:tint="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/click_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingHorizontal="19dp"
+            android:paddingVertical="10dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                app:shapeAppearanceOverlay="@style/CircleImageAppearance"/>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="21dp"
+                android:textSize="21sp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/avatar"/>
+        </RelativeLayout>
+    </com.aitsuki.swipe.SwipeLayout>
+</LinearLayout>

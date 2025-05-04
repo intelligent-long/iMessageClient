@@ -15,7 +15,6 @@ import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.imessage.data.Region;
-import com.longx.intelligent.android.imessage.data.UserInfo;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
 
 import java.util.ArrayList;
@@ -342,7 +341,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public ChannelTag findOneChannelTags(String tagId){
+    public ChannelTag findOneChannelTag(String tagId){
         openDatabaseIfClosed();
         try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + " t"
                 + " LEFT JOIN " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + " tc"

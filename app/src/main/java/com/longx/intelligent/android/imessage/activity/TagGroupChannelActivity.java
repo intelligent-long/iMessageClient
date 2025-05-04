@@ -3,75 +3,74 @@ package com.longx.intelligent.android.imessage.activity;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.TagChannelsRecyclerAdapter;
-import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
-import com.longx.intelligent.android.imessage.bottomsheet.AddChannelToTagBottomSheet;
+import com.longx.intelligent.android.imessage.adapter.TagGroupChannelsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
-import com.longx.intelligent.android.imessage.databinding.ActivityTagChannelBinding;
-import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelTag;
+import com.longx.intelligent.android.imessage.databinding.ActivityTagGroupChannelBinding;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
-    private ActivityTagChannelBinding binding;
-    private ChannelTag channelTag;
-    private TagChannelsRecyclerAdapter adapter;
-    private List<Channel> canAddChannels;
+public class TagGroupChannelActivity extends BaseActivity {
+    private ActivityTagGroupChannelBinding binding;
+    private GroupChannelTag groupChannelTag;
+    private TagGroupChannelsRecyclerAdapter adapter;
+    private List<GroupChannel> canAddChannels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityTagChannelBinding.inflate(getLayoutInflater());
+        binding = ActivityTagGroupChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         findChannelTag();
         showContent();
         setupYiers();
-        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void findChannelTag() {
-        String channelTagId = getIntent().getStringExtra(ExtraKeys.CHANNEL_TAG_ID);
-        channelTag = ChannelDatabaseManager.getInstance().findOneChannelTag(channelTagId);
+        String groupChannelTagId = getIntent().getStringExtra(ExtraKeys.GROUP_CHANNEL_TAG_ID);
+        groupChannelTag = GroupChannelDatabaseManager.getInstance().findOneGroupChannelTag(groupChannelTagId);
     }
 
     private void showContent() {
-        binding.toolbar.setTitle(channelTag.getName());
-        if(channelTag.getChannelImessageIdList().isEmpty()){
+        binding.toolbar.setTitle(groupChannelTag.getName());
+        if(groupChannelTag.getGroupChannelIdList().isEmpty()){
             toNoContent();
         }else {
             toContent();
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            List<String> channelImessageIds = channelTag.getChannelImessageIdList();
-            List<Channel> channels = new ArrayList<>();
-            channelImessageIds.forEach(channelImessageId -> {
-                Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId);
-                channels.add(channel);
+            List<String> groupChannelIds = groupChannelTag.getGroupChannelIdList();
+            List<GroupChannel> groupChannels = new ArrayList<>();
+            groupChannelIds.forEach(groupChannelId -> {
+                GroupChannel groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannelId);
+                groupChannels.add(groupChannel);
             });
-            adapter = new TagChannelsRecyclerAdapter(this, channelTag, channels);
+            adapter = new TagGroupChannelsRecyclerAdapter(this, groupChannelTag, groupChannels);
             binding.recyclerView.setAdapter(adapter);
         }
-        List<ChannelAssociation> allAssociations = ChannelDatabaseManager.getInstance().findAllAssociations();
+        List<GroupChannel> groupChannels = GroupChannelDatabaseManager.getInstance().findAllAssociations();
         canAddChannels = new ArrayList<>();
-        allAssociations.forEach(association -> {
-            Channel channel = association.getChannel();
-            if(!channelTag.getChannelImessageIdList().contains(channel.getImessageId())) {
-                canAddChannels.add(channel);
+        groupChannels.forEach(groupChannel -> {
+            if(!groupChannelTag.getGroupChannelIdList().contains(groupChannel.getGroupChannelId())) {
+                canAddChannels.add(groupChannel);
             }
         });
         binding.toolbar.getMenu().findItem(R.id.add_channel).setVisible(!canAddChannels.isEmpty());
@@ -80,7 +79,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.add_channel){
-                new AddChannelToTagBottomSheet(this, channelTag.getTagId(), canAddChannels).show();
+
             }
             return true;
         });
@@ -102,21 +101,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
         binding.recyclerView.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onStartUpdate(String id, List<String> updatingIds) {
-
-    }
-
-    @Override
-    public void onUpdateComplete(String id, List<String> updatingIds) {
-        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
-            findChannelTag();
-            showContent();
-            setupYiers();
-        }
-    }
-
-    public ActivityTagChannelBinding getBinding() {
+    public ActivityTagGroupChannelBinding getBinding() {
         return binding;
     }
 }

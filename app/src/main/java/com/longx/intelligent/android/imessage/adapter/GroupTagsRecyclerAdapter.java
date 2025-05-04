@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.imessage.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.TagChannelActivity;
+import com.longx.intelligent.android.imessage.activity.TagGroupChannelActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.bottomsheet.RenameChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.bottomsheet.RenameGroupChannelTagBottomSheet;
@@ -78,7 +82,9 @@ public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Group
     private void setUpYiers(ViewHolder holder, int position) {
         GroupChannelTag groupChannelTag = groupChannelTags.get(position);
         holder.binding.content.setOnClickListener(v -> {
-
+            Intent intent = new Intent(activity, TagGroupChannelActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL_TAG_ID, groupChannelTag.getTagId());
+            activity.startActivity(intent);
         });
         holder.binding.clickViewRename.setOnClickListener(v -> {
             new RenameGroupChannelTagBottomSheet(activity, groupChannelTag).show();
