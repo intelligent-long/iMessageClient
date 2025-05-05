@@ -3,6 +3,7 @@ package com.longx.intelligent.android.imessage.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddGroupChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
@@ -126,6 +127,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> changeGroupChannelTagName(LifecycleOwner lifecycleOwner, ChangeGroupChannelTagNamePostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().changeGroupChannelTagName(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> addGroupChannelsToTag(LifecycleOwner lifecycleOwner, AddGroupChannelsToTagPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().addGroupChannelsToTag(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

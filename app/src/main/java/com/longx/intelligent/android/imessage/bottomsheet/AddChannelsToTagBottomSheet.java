@@ -21,13 +21,13 @@ import retrofit2.Response;
 /**
  * Created by LONG on 2024/6/3 at 5:49 PM.
  */
-public class AddChannelToTagBottomSheet extends AbstractBottomSheet{
+public class AddChannelsToTagBottomSheet extends AbstractBottomSheet{
     private BottomSheetAddChannelToTagBinding binding;
     private final String tagId;
     private final List<Channel> canAddChannels;
     private AddChannelToTagRecyclerAdapter adapter;
 
-    public AddChannelToTagBottomSheet(AppCompatActivity activity, String tagId, List<Channel> canAddChannels) {
+    public AddChannelsToTagBottomSheet(AppCompatActivity activity, String tagId, List<Channel> canAddChannels) {
         super(activity);
         this.tagId = tagId;
         this.canAddChannels = canAddChannels;

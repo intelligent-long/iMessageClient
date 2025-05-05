@@ -10,16 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
-import com.longx.intelligent.android.imessage.activity.TagChannelActivity;
-import com.longx.intelligent.android.imessage.activity.TagGroupChannelActivity;
+import com.longx.intelligent.android.imessage.activity.TagGroupChannelsActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
-import com.longx.intelligent.android.imessage.bottomsheet.RenameChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.bottomsheet.RenameGroupChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupTagBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -82,7 +79,7 @@ public class GroupTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Group
     private void setUpYiers(ViewHolder holder, int position) {
         GroupChannelTag groupChannelTag = groupChannelTags.get(position);
         holder.binding.content.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, TagGroupChannelActivity.class);
+            Intent intent = new Intent(activity, TagGroupChannelsActivity.class);
             intent.putExtra(ExtraKeys.GROUP_CHANNEL_TAG_ID, groupChannelTag.getTagId());
             activity.startActivity(intent);
         });

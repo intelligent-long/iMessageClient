@@ -10,7 +10,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.TagChannelsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
-import com.longx.intelligent.android.imessage.bottomsheet.AddChannelToTagBottomSheet;
+import com.longx.intelligent.android.imessage.bottomsheet.AddChannelsToTagBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
@@ -80,7 +80,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.add_channel){
-                new AddChannelToTagBottomSheet(this, channelTag.getTagId(), canAddChannels).show();
+                new AddChannelsToTagBottomSheet(this, channelTag.getTagId(), canAddChannels).show();
             }
             return true;
         });

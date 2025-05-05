@@ -8,14 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.imessage.R;
-import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
-import com.longx.intelligent.android.imessage.activity.TagGroupChannelActivity;
+import com.longx.intelligent.android.imessage.activity.TagGroupChannelsActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
-import com.longx.intelligent.android.imessage.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemTagGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
@@ -30,12 +28,12 @@ import java.util.List;
  * Created by LONG on 2024/4/25 at 5:35 PM.
  */
 public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<TagGroupChannelsRecyclerAdapter.ViewHolder, TagGroupChannelsRecyclerAdapter.ItemData> {
-    private final TagGroupChannelActivity tagGroupChannelActivity;
+    private final TagGroupChannelsActivity tagGroupChannelsActivity;
     private final GroupChannelTag groupChannelTag;
     private final List<ItemData> itemDataList;
 
-    public TagGroupChannelsRecyclerAdapter(TagGroupChannelActivity tagGroupChannelActivity, GroupChannelTag groupChannelTag, List<GroupChannel> groupChannels) {
-        this.tagGroupChannelActivity = tagGroupChannelActivity;
+    public TagGroupChannelsRecyclerAdapter(TagGroupChannelsActivity tagGroupChannelsActivity, GroupChannelTag groupChannelTag, List<GroupChannel> groupChannels) {
+        this.tagGroupChannelsActivity = tagGroupChannelsActivity;
         this.groupChannelTag = groupChannelTag;
         this.itemDataList = new ArrayList<>();
         groupChannels.forEach(channel -> {
@@ -80,7 +78,7 @@ public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapte
     @NonNull
     @Override
     public TagGroupChannelsRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemTagGroupChannelBinding binding = RecyclerItemTagGroupChannelBinding.inflate(tagGroupChannelActivity.getLayoutInflater());
+        RecyclerItemTagGroupChannelBinding binding = RecyclerItemTagGroupChannelBinding.inflate(tagGroupChannelsActivity.getLayoutInflater());
         return new ViewHolder(binding);
     }
 
@@ -94,9 +92,9 @@ public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapte
         ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.groupChannel.getGroupAvatar() == null ? null : itemData.groupChannel.getGroupAvatar().getHash();
         if (avatarHash == null) {
-            GlideBehaviours.loadToImageView(tagGroupChannelActivity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+            GlideBehaviours.loadToImageView(tagGroupChannelsActivity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
         } else {
-            GlideBehaviours.loadToImageView(tagGroupChannelActivity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(tagGroupChannelActivity, avatarHash), holder.binding.avatar);
+            GlideBehaviours.loadToImageView(tagGroupChannelsActivity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(tagGroupChannelsActivity, avatarHash), holder.binding.avatar);
         }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
         int previousPosition = position - 1;
@@ -117,12 +115,12 @@ public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapte
     private void setupYiers(TagGroupChannelsRecyclerAdapter.ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         holder.binding.clickView.setOnClickListener(v -> {
-            Intent intent = new Intent(tagGroupChannelActivity, GroupChannelActivity.class);
+            Intent intent = new Intent(tagGroupChannelsActivity, GroupChannelActivity.class);
             intent.putExtra(ExtraKeys.GROUP_CHANNEL, itemData.groupChannel);
-            tagGroupChannelActivity.startActivity(intent);
+            tagGroupChannelsActivity.startActivity(intent);
         });
         holder.binding.clickViewRemove.setOnClickListener(v -> {
-            new ConfirmDialog(tagGroupChannelActivity, "是否继续？")
+            new ConfirmDialog(tagGroupChannelsActivity, "是否继续？")
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
                         //TODO
@@ -130,7 +128,7 @@ public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapte
                     .create().show();
         });
         holder.binding.indexBar.setOnClickListener(v -> {
-            FastLocateDialog fastLocateDialog = new FastLocateDialog(tagGroupChannelActivity, FastLocateDialog.LOCATE_CHANNEL, getExistTexts());
+            FastLocateDialog fastLocateDialog = new FastLocateDialog(tagGroupChannelsActivity, FastLocateDialog.LOCATE_CHANNEL, getExistTexts());
             fastLocateDialog.setLocateYier((positionSelect, textSelect) -> {
                 int locatePosition = -1;
                 for (int i = 0; i < itemDataList.size(); i++) {
@@ -141,8 +139,8 @@ public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapte
                     }
                 }
                 if(locatePosition != -1) {
-                    tagGroupChannelActivity.getBinding().appbar.setExpanded(false);
-                    tagGroupChannelActivity.getBinding().recyclerView.smoothScrollToPosition(locatePosition);
+                    tagGroupChannelsActivity.getBinding().appbar.setExpanded(false);
+                    tagGroupChannelsActivity.getBinding().recyclerView.smoothScrollToPosition(locatePosition);
                 }
                 fastLocateDialog.dismiss();
             });

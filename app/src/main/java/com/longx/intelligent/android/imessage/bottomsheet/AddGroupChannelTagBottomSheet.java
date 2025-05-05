@@ -7,6 +7,7 @@ import com.longx.intelligent.android.imessage.data.request.AddChannelTagPostBody
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.BottomSheetAddChannelTagBinding;
+import com.longx.intelligent.android.imessage.databinding.BottomSheetAddGroupChannelTagBinding;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -20,7 +21,7 @@ import retrofit2.Response;
  * Created by LONG on 2024/6/3 at 5:49 PM.
  */
 public class AddGroupChannelTagBottomSheet extends AbstractBottomSheet{
-    private BottomSheetAddChannelTagBinding binding;
+    private BottomSheetAddGroupChannelTagBinding binding;
     private final ResultsYier resultsYier;
 
     public AddGroupChannelTagBottomSheet(AppCompatActivity activity, ResultsYier resultsYier) {
@@ -31,7 +32,7 @@ public class AddGroupChannelTagBottomSheet extends AbstractBottomSheet{
 
     @Override
     protected void onCreate() {
-        binding = BottomSheetAddChannelTagBinding.inflate(getActivity().getLayoutInflater());
+        binding = BottomSheetAddGroupChannelTagBinding.inflate(getActivity().getLayoutInflater());
         setContentView(binding.getRoot());
         setupYiers();
     }

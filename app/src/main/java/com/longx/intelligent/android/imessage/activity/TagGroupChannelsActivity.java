@@ -3,32 +3,25 @@ package com.longx.intelligent.android.imessage.activity;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
-import com.longx.intelligent.android.imessage.adapter.TagChannelsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.adapter.TagGroupChannelsRecyclerAdapter;
-import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
+import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelsToTagBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
-import com.longx.intelligent.android.imessage.data.Channel;
-import com.longx.intelligent.android.imessage.data.ChannelAssociation;
-import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.databinding.ActivityTagGroupChannelBinding;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagGroupChannelActivity extends BaseActivity {
+public class TagGroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityTagGroupChannelBinding binding;
     private GroupChannelTag groupChannelTag;
     private TagGroupChannelsRecyclerAdapter adapter;
@@ -43,6 +36,13 @@ public class TagGroupChannelActivity extends BaseActivity {
         findChannelTag();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void findChannelTag() {
@@ -79,7 +79,7 @@ public class TagGroupChannelActivity extends BaseActivity {
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.add_channel){
-
+                new AddGroupChannelsToTagBottomSheet(this, groupChannelTag.getTagId(), canAddChannels).show();
             }
             return true;
         });
@@ -103,5 +103,18 @@ public class TagGroupChannelActivity extends BaseActivity {
 
     public ActivityTagGroupChannelBinding getBinding() {
         return binding;
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL_TAGS)){
+            findChannelTag();
+            showContent();
+        }
     }
 }

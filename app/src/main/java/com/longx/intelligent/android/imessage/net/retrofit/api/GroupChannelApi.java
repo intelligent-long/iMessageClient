@@ -1,6 +1,8 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
+import com.longx.intelligent.android.imessage.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddGroupChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
@@ -77,5 +79,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel/association/tag/name/change")
     CompletableCall<OperationStatus> changeGroupChannelTagName(@Body ChangeGroupChannelTagNamePostBody postBody);
+
+    @POST("group_channel/association/tag/channel/add")
+    CompletableCall<OperationStatus> addGroupChannelsToTag(@Body AddGroupChannelsToTagPostBody postBody);
 
 }
