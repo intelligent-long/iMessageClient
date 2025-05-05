@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Created by LONG on 2024/6/4 at 5:36 PM.
- */
 public class AddGroupChannelToTagRecyclerAdapter extends WrappableRecyclerViewAdapter<AddGroupChannelToTagRecyclerAdapter.ViewHolder, AddGroupChannelToTagRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
@@ -30,27 +27,26 @@ public class AddGroupChannelToTagRecyclerAdapter extends WrappableRecyclerViewAd
     public AddGroupChannelToTagRecyclerAdapter(Activity activity, List<GroupChannel> channelList) {
         this.activity = activity;
         this.itemDataList = new ArrayList<>();
-        channelList.forEach(channel -> {
-            this.itemDataList.add(new ItemData(channel));
-        });
+        channelList.forEach(channel -> this.itemDataList.add(new ItemData(channel)));
         itemDataList.sort(Comparator.comparing(o -> o.indexChar));
     }
 
-    public static class ItemData{
+    public static class ItemData {
         private Character indexChar;
         private GroupChannel groupChannel;
+        private boolean checked = false;
 
         public ItemData(GroupChannel groupChannel) {
             indexChar = PinyinUtil.getPinyin(groupChannel.getName()).toUpperCase().charAt(0);
-            if(!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))){
+            if (!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))) {
                 indexChar = '#';
             }
             this.groupChannel = groupChannel;
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        private RecyclerItemAddGroupChannelToTagBinding binding;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final RecyclerItemAddGroupChannelToTagBinding binding;
         public ViewHolder(RecyclerItemAddGroupChannelToTagBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -60,7 +56,8 @@ public class AddGroupChannelToTagRecyclerAdapter extends WrappableRecyclerViewAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerItemAddGroupChannelToTagBinding binding = RecyclerItemAddGroupChannelToTagBinding.inflate(activity.getLayoutInflater(), parent, false);
+        RecyclerItemAddGroupChannelToTagBinding binding =
+                RecyclerItemAddGroupChannelToTagBinding.inflate(activity.getLayoutInflater(), parent, false);
         return new ViewHolder(binding);
     }
 
@@ -71,36 +68,38 @@ public class AddGroupChannelToTagRecyclerAdapter extends WrappableRecyclerViewAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        AddGroupChannelToTagRecyclerAdapter.ItemData itemData = itemDataList.get(position);
+        ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.groupChannel.getGroupAvatar() == null ? null : itemData.groupChannel.getGroupAvatar().getHash();
         if (avatarHash == null) {
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
         } else {
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
         }
+
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
-        int previousPosition = position - 1;
-        if(position == 0){
+        if (position == 0 || !itemDataList.get(position - 1).indexChar.equals(itemData.indexChar)) {
             holder.binding.indexBar.setVisibility(View.VISIBLE);
         } else {
-            AddGroupChannelToTagRecyclerAdapter.ItemData previousItemData = itemDataList.get(previousPosition);
-            if (previousItemData.indexChar.equals(itemData.indexChar)) {
-                holder.binding.indexBar.setVisibility(View.GONE);
-            } else {
-                holder.binding.indexBar.setVisibility(View.VISIBLE);
-            }
+            holder.binding.indexBar.setVisibility(View.GONE);
         }
-        holder.binding.name.setText(itemData.groupChannel.getNote() == null ? itemData.groupChannel.getName() : itemData.groupChannel.getNote());
-        setupYiers(holder, position);
+
+        holder.binding.name.setText(itemData.groupChannel.getNote() == null ?
+                itemData.groupChannel.getName() : itemData.groupChannel.getNote());
+        holder.binding.checkBox.setChecked(itemData.checked);
+        setupClickLogic(holder, itemData);
     }
 
-    private void setupYiers(ViewHolder holder, int position) {
-        AddGroupChannelToTagRecyclerAdapter.ItemData itemData = itemDataList.get(position);
+    private void setupClickLogic(ViewHolder holder, ItemData itemData) {
         holder.binding.clickView.setOnClickListener(v -> {
-            holder.binding.checkBox.setChecked(!holder.binding.checkBox.isChecked());
-            if(holder.binding.checkBox.isChecked()){
-                checkedGroupChannels.add(itemData.groupChannel);
-            }else {
+            boolean newChecked = !itemData.checked;
+            itemData.checked = newChecked;
+            holder.binding.checkBox.setChecked(newChecked);
+
+            if (newChecked) {
+                if (!checkedGroupChannels.contains(itemData.groupChannel)) {
+                    checkedGroupChannels.add(itemData.groupChannel);
+                }
+            } else {
                 checkedGroupChannels.remove(itemData.groupChannel);
             }
         });
