@@ -12,17 +12,26 @@ import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.activity.TagGroupChannelsActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
+import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemTagGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by LONG on 2024/4/25 at 5:35 PM.
@@ -123,7 +132,18 @@ public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapte
             new ConfirmDialog(tagGroupChannelsActivity, "是否继续？")
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
-                        //TODO
+                        List<String> groupChannelIdList = new ArrayList<>();
+                        groupChannelIdList.add(itemData.groupChannel.getGroupChannelId());
+                        RemoveGroupChannelsOfTagPostBody postBody = new RemoveGroupChannelsOfTagPostBody(groupChannelTag.getTagId(), groupChannelIdList);
+                        GroupChannelApiCaller.removeGroupChannelsOfTag(tagGroupChannelsActivity, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(tagGroupChannelsActivity){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(tagGroupChannelsActivity, new int[]{}, () -> {
+                                    MessageDisplayer.autoShow(tagGroupChannelsActivity, "已移除", MessageDisplayer.Duration.SHORT);
+                                });
+                            }
+                        });
                     })
                     .create().show();
         });

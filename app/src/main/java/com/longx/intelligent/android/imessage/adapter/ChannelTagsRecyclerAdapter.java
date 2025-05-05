@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
-import com.longx.intelligent.android.imessage.activity.TagChannelActivity;
+import com.longx.intelligent.android.imessage.activity.TagChannelsActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.bottomsheet.RenameChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
@@ -19,7 +19,6 @@ import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelTag
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class  ChannelTagsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
     private void setUpYiers(ViewHolder holder, int position) {
         ChannelTag channelTag = channelTags.get(position);
         holder.binding.content.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, TagChannelActivity.class);
+            Intent intent = new Intent(activity, TagChannelsActivity.class);
             intent.putExtra(ExtraKeys.CHANNEL_TAG_ID, channelTag.getTagId());
             activity.startActivity(intent);
         });

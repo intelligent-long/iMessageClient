@@ -206,7 +206,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.TagChannelActivity"
+            android:name=".activity.TagChannelsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

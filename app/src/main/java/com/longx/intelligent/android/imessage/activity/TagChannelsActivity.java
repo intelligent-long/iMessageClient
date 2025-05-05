@@ -15,14 +15,14 @@ import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabas
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
-import com.longx.intelligent.android.imessage.databinding.ActivityTagChannelBinding;
+import com.longx.intelligent.android.imessage.databinding.ActivityTagChannelsBinding;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagChannelActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
-    private ActivityTagChannelBinding binding;
+public class TagChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
+    private ActivityTagChannelsBinding binding;
     private ChannelTag channelTag;
     private TagChannelsRecyclerAdapter adapter;
     private List<Channel> canAddChannels;
@@ -30,7 +30,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityTagChannelBinding.inflate(getLayoutInflater());
+        binding = ActivityTagChannelsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         findChannelTag();
@@ -116,7 +116,7 @@ public class TagChannelActivity extends BaseActivity implements ContentUpdater.O
         }
     }
 
-    public ActivityTagChannelBinding getBinding() {
+    public ActivityTagChannelsBinding getBinding() {
         return binding;
     }
 }

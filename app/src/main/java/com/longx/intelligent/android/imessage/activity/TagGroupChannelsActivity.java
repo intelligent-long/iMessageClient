@@ -14,7 +14,7 @@ import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelsToTagB
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
-import com.longx.intelligent.android.imessage.databinding.ActivityTagGroupChannelBinding;
+import com.longx.intelligent.android.imessage.databinding.ActivityTagGroupChannelsBinding;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagGroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
-    private ActivityTagGroupChannelBinding binding;
+    private ActivityTagGroupChannelsBinding binding;
     private GroupChannelTag groupChannelTag;
     private TagGroupChannelsRecyclerAdapter adapter;
     private List<GroupChannel> canAddChannels;
@@ -30,7 +30,7 @@ public class TagGroupChannelsActivity extends BaseActivity implements ContentUpd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityTagGroupChannelBinding.inflate(getLayoutInflater());
+        binding = ActivityTagGroupChannelsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         findChannelTag();
@@ -101,7 +101,7 @@ public class TagGroupChannelsActivity extends BaseActivity implements ContentUpd
         binding.recyclerView.setVisibility(View.VISIBLE);
     }
 
-    public ActivityTagGroupChannelBinding getBinding() {
+    public ActivityTagGroupChannelsBinding getBinding() {
         return binding;
     }
 
