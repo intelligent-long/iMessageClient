@@ -179,8 +179,8 @@
 
             <ImageView
                 android:id="@+id/favorite_icon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_marginStart="20dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/favorite_outline_24px"

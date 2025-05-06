@@ -74,34 +74,17 @@
                 android:text="标签"/>
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
-
-            <LinearLayout
-                android:id="@+id/click_view_group_qr_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="15dp"
-                android:paddingHorizontal="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="21sp"
-                    android:text="群二维码"/>
-            </LinearLayout>
+<!--        <RelativeLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            android:background="?attr/selectableItemBackground">-->
 
 <!--            <LinearLayout-->
 <!--                android:id="@+id/click_view_group_qr_code"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
-<!--                android:layout_toStartOf="@id/qr_code_icon_layout"-->
 <!--                android:paddingVertical="15dp"-->
 <!--                android:paddingHorizontal="24dp"-->
 <!--                android:orientation="horizontal">-->
@@ -114,24 +97,41 @@
 <!--                    android:text="群二维码"/>-->
 <!--            </LinearLayout>-->
 
-<!--            <FrameLayout-->
-<!--                android:id="@+id/qr_code_icon_layout"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_centerVertical="true"-->
-<!--                android:paddingEnd="25dp">-->
+<!--&lt;!&ndash;            <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/click_view_group_qr_code"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_toStartOf="@id/qr_code_icon_layout"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:paddingVertical="15dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:paddingHorizontal="24dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:orientation="horizontal">&ndash;&gt;-->
 
-<!--                <androidx.appcompat.widget.AppCompatImageView-->
-<!--                    android:layout_width="32dp"-->
-<!--                    android:layout_height="32dp"-->
-<!--                    android:padding="0dp"-->
-<!--                    android:layout_marginVertical="0dp"-->
-<!--                    android:layout_marginEnd="0dp"-->
-<!--                    android:src="@drawable/qr_code_2_24px"-->
-<!--                    app:tint="?attr/colorSurfaceDim" />-->
-<!--            </FrameLayout>-->
-        </RelativeLayout>
+<!--&lt;!&ndash;                <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                    style="@style/TextAppearance.Material3.TitleLarge"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:textSize="21sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:text="群二维码"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </LinearLayout>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <FrameLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/qr_code_icon_layout"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_alignParentEnd="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_centerVertical="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:paddingEnd="25dp">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                <androidx.appcompat.widget.AppCompatImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:padding="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_marginVertical="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_marginEnd="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:src="@drawable/qr_code_2_24px"&ndash;&gt;-->
+<!--&lt;!&ndash;                    app:tint="?attr/colorSurfaceDim" />&ndash;&gt;-->
+<!--&lt;!&ndash;            </FrameLayout>&ndash;&gt;-->
+<!--        </RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/click_view_voice_message"
