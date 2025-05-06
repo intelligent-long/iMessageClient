@@ -203,13 +203,13 @@ public class EditGroupInfoSettingsActivity extends BaseSettingsActivity {
         }
 
         @Override
-        public void onStartUpdate(String id, List<String> updatingIds) {
+        public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
 
         }
 
         @Override
-        public void onUpdateComplete(String id, List<String> updatingIds) {
-            if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
+        public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
+            if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL) && objects[0].equals(groupChannel.getGroupChannelId())){
                 groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
                 preferenceChangeGroupName.setTitle(groupChannel.getName() == null ? doNotSet : groupChannel.getName());
                 preferenceChangeGroupIdUser.setTitle(groupChannel.getGroupChannelIdUser() == null ? doNotSet : groupChannel.getGroupChannelIdUser());

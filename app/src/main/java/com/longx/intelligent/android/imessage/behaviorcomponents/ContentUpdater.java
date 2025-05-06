@@ -64,18 +64,26 @@ public class ContentUpdater {
         String ID_GROUP_CHANNEL = "group_channel";
         String ID_GROUP_CHANNEL_TAGS = "group_channel_tags";
 
-        void onStartUpdate(String id, List<String> updatingIds);
+        void onStartUpdate(String id, List<String> updatingIds, Object... objects);
 
-        void onUpdateComplete(String id, List<String> updatingIds);
+        void onUpdateComplete(String id, List<String> updatingIds, Object... objects);
     }
 
     private static class ContentUpdateApiYier<T> extends RetrofitApiCaller.BaseYier<T>{
         private final String updateId;
         private final Context context;
+        private final Object[] objects;
 
         public ContentUpdateApiYier(String updateId, Context context) {
             this.updateId = updateId;
             this.context = context;
+            objects = null;
+        }
+
+        public ContentUpdateApiYier(String updateId, Context context, Object... objects) {
+            this.updateId = updateId;
+            this.context = context;
+            this.objects = objects;
         }
 
         @Override
@@ -83,7 +91,7 @@ public class ContentUpdater {
             synchronized (ContentUpdater.class) {
                 updatingIds.add(updateId);
                 super.start(call);
-                onStartUpdate(updateId);
+                onStartUpdate(updateId, objects);
             }
         }
 
@@ -105,7 +113,7 @@ public class ContentUpdater {
             synchronized (ContentUpdater.class) {
                 updatingIds.remove(updateId);
                 super.complete(call);
-                onUpdateComplete(updateId);
+                onUpdateComplete(updateId, objects);
             }
         }
     };
@@ -118,17 +126,17 @@ public class ContentUpdater {
         return updatingIds;
     }
 
-    private static void onStartUpdate(String updateId) {
+    private static void onStartUpdate(String updateId, Object... objects) {
         GlobalYiersHolder.getYiers(OnServerContentUpdateYier.class)
                 .ifPresent(onServerContentUpdateYiers -> onServerContentUpdateYiers.forEach(onServerContentUpdateYier -> {
-                    onServerContentUpdateYier.onStartUpdate(updateId, new ArrayList<>(updatingIds));
+                    onServerContentUpdateYier.onStartUpdate(updateId, new ArrayList<>(updatingIds), objects);
                 }));
     }
 
-    private static void onUpdateComplete(String updateId) {
+    private static void onUpdateComplete(String updateId, Object... objects) {
         GlobalYiersHolder.getYiers(OnServerContentUpdateYier.class)
                 .ifPresent(onServerContentUpdateYiers -> onServerContentUpdateYiers.forEach(onServerContentUpdateYier -> {
-                    onServerContentUpdateYier.onUpdateComplete(updateId, new ArrayList<>(updatingIds));
+                    onServerContentUpdateYier.onUpdateComplete(updateId, new ArrayList<>(updatingIds), objects);
                 }));
     }
 
@@ -333,7 +341,7 @@ public class ContentUpdater {
     }
 
     public static void updateOneGroupChannel(Context context, String groupChannelId, ResultsYier resultsYier){
-        GroupChannelApiCaller.fetchOneGroupAssociation(null, groupChannelId, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL, context){
+        GroupChannelApiCaller.fetchOneGroupAssociation(null, groupChannelId, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL, context, groupChannelId){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);

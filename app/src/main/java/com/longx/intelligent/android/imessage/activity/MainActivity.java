@@ -509,7 +509,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     @Override
-    public void onStartUpdate(String id, List<String> updatingIds) {
+    public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
         runOnUiThread(() -> {
             if (!isFinishing() && binding != null) {
                 binding.updateIndicator.setVisibility(View.VISIBLE);
@@ -518,7 +518,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     }
 
     @Override
-    public void onUpdateComplete(String id, List<String> updatingIds) {
+    public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
         runOnUiThread(() -> {
             try{
                 if(updatingIds.size() == 0) binding.updateIndicator.setVisibility(View.GONE);

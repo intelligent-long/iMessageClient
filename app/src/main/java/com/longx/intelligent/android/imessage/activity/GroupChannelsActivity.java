@@ -114,12 +114,12 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
     }
 
     @Override
-    public void onStartUpdate(String id, List<String> updatingIds) {
+    public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
 
     }
 
     @Override
-    public void onUpdateComplete(String id, List<String> updatingIds) {
+    public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNELS) || id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL)){
             List<GroupChannel> allAssociations = GroupChannelDatabaseManager.getInstance().findAllAssociations();
             adapter.updateAll(allAssociations);

@@ -201,12 +201,12 @@ public class TagActivity extends BaseActivity implements ContentUpdater.OnServer
     }
 
     @Override
-    public void onStartUpdate(String id, List<String> updatingIds) {
+    public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
 
     }
 
     @Override
-    public void onUpdateComplete(String id, List<String> updatingIds) {
+    public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
             boolean switched = false;
             if(adapter.isDragSortState()){

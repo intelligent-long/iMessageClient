@@ -213,12 +213,12 @@ public class EditUserSettingsActivity extends BaseSettingsActivity{
         }
 
         @Override
-        public void onStartUpdate(String id, List<String> updatingIds) {
+        public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
 
         }
 
         @Override
-        public void onUpdateComplete(String id, List<String> updatingIds) {
+        public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
             if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CURRENT_USER_INFO)){
                 showInfo();
             }

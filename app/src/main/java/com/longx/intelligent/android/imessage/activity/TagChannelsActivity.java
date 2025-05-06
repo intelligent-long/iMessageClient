@@ -103,12 +103,12 @@ public class TagChannelsActivity extends BaseActivity implements ContentUpdater.
     }
 
     @Override
-    public void onStartUpdate(String id, List<String> updatingIds) {
+    public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
 
     }
 
     @Override
-    public void onUpdateComplete(String id, List<String> updatingIds) {
+    public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNEL_TAGS)){
             findChannelTag();
             showContent();

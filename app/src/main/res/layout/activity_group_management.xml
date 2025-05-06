@@ -20,7 +20,7 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_group_channel_setting">
+            app:title="@string/title_group_channel_management">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"

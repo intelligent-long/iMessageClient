@@ -7,10 +7,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelSettingBinding;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
-public class GroupChannelSettingActivity extends BaseActivity {
+import java.util.List;
+
+public class GroupChannelSettingActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityGroupChannelSettingBinding binding;
     private GroupChannel groupChannel;
 
@@ -23,6 +28,13 @@ public class GroupChannelSettingActivity extends BaseActivity {
         intentData();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void intentData() {
@@ -49,5 +61,18 @@ public class GroupChannelSettingActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
             startActivity(intent);
         });
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL) && objects[0].equals(groupChannel.getGroupChannelId())){
+            groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
+            showContent();
+        }
     }
 }

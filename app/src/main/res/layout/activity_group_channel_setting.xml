@@ -193,7 +193,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="21sp"
-                android:text="群管理"/>
+                android:text="管理"/>
         </LinearLayout>
     </LinearLayout>
 
