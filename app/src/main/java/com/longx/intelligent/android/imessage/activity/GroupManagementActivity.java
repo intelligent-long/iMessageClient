@@ -51,7 +51,7 @@ public class GroupManagementActivity extends BaseActivity {
             UiUtil.setViewGroupEnabled(binding.clickViewJoinVerification, false, true);
             boolean changeTo = !binding.switchJoinVerification.isChecked();
             ChangeGroupChannelJoinVerificationPostBody postBody = new ChangeGroupChannelJoinVerificationPostBody(groupChannel.getGroupChannelId(), changeTo);
-            GroupChannelApiCaller.changeGroupJoinVerification(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+            GroupChannelApiCaller.changeGroupJoinVerification(this, postBody, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
