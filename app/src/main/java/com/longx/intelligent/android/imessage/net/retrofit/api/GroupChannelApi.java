@@ -10,6 +10,8 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTag
 import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
+import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
+import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
@@ -86,5 +88,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel/association/tag/channel/remove")
     CompletableCall<OperationStatus> removeGroupChannelsOfTag(@Body RemoveGroupChannelsOfTagPostBody postBody);
+
+    @POST("group_channel/association/tag/channel/set")
+    CompletableCall<OperationStatus> setGroupChannelTags(@Body SetGroupChannelTagsPostBody postBody);
 
 }

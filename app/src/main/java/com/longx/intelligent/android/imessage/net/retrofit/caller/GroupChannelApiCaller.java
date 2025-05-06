@@ -12,6 +12,8 @@ import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
+import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
+import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
@@ -141,6 +143,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> removeGroupChannelsOfTag(LifecycleOwner lifecycleOwner, RemoveGroupChannelsOfTagPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().removeGroupChannelsOfTag(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> setGroupChannelTags(LifecycleOwner lifecycleOwner, SetGroupChannelTagsPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().setGroupChannelTags(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

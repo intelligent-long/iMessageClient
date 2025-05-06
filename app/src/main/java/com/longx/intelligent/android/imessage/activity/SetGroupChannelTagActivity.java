@@ -12,14 +12,24 @@ import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.SettingTagGroupChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.adapter.SettingTagNewGroupChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.bottomsheet.AddSettingChannelTagBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
+import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
+import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivitySetGroupChannelTagBinding;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class SetGroupChannelTagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivitySetGroupChannelTagBinding binding;
@@ -33,6 +43,7 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
         super.onCreate(savedInstanceState);
         binding = ActivitySetGroupChannelTagBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setupDefaultBackNavigation(binding.toolbar);
         intentData();
         newGroupChannelTagsAdapter = new SettingTagNewGroupChannelTagsRecyclerAdapter(this);
         binding.recyclerViewNewTags.setLayoutManager(new LinearLayoutManager(this));
@@ -104,6 +115,28 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
                 binding.layoutNewTags.setVisibility(View.GONE);
             }
             checkAndShowContent();
+        });
+        binding.doneButton.setOnClickListener(v -> {
+            List<String> newTagNames = newGroupChannelTagsAdapter.getNewTagNames();
+            List<String> toAddTagIds = new ArrayList<>();
+            groupChannelTagsAdapter.getToAddGroupChannelTags().forEach(channelTag -> {
+                toAddTagIds.add(channelTag.getTagId());
+            });
+            List<String> toRemoveTagIds = new ArrayList<>();
+            groupChannelTagsAdapter.getToRemoveGroupChannelTags().forEach(channelTag -> {
+                toRemoveTagIds.add(channelTag.getTagId());
+            });
+            SetGroupChannelTagsPostBody postBody = new SetGroupChannelTagsPostBody(groupChannel.getGroupChannelId(), newTagNames, toAddTagIds, toRemoveTagIds);
+            GroupChannelApiCaller.setGroupChannelTags(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                @Override
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleResult(getActivity(), new int[]{-101}, () -> {
+                        binding.layoutNewTags.setVisibility(View.GONE);
+                        MessageDisplayer.autoShow(getActivity(), "设置成功", MessageDisplayer.Duration.SHORT);
+                    });
+                }
+            });
         });
     }
 
