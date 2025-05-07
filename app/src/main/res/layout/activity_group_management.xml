@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="21sp"
-                android:text="取消频道关联"/>
+                android:text="取消关联频道"/>
         </LinearLayout>
 
         <LinearLayout

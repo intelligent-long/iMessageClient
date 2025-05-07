@@ -19,6 +19,7 @@ import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBi
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.List;
@@ -127,6 +128,13 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             intent.putExtra(ExtraKeys.GROUP_CHANNEL_ID, groupChannel.getGroupChannelId());
             startActivity(intent);
         });
+        setLongClickCopyYiers();
+    }
+    private void setLongClickCopyYiers() {
+        binding.name.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.name.getText().toString()));
+        binding.name1.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.name1.getText().toString()));
+        binding.groupChannelIdUser.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.groupChannelIdUser.getText().toString()));
+        binding.region.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.region.getText().toString()));
     }
 
     @Override
@@ -139,6 +147,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL) && objects[0].equals(groupChannel.getGroupChannelId())){
             groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
             showContent(groupChannel);
+            setLongClickCopyYiers();
         }
     }
 }

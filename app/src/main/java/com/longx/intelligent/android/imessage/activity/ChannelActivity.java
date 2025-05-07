@@ -324,6 +324,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         }
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_CHANNELS)){
             showOrFetchAndShow(getImessageId());
+            setLongClickCopyYiers();
         }
     }
 
