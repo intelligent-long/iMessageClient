@@ -95,7 +95,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void setupUi() {
-        if(isSelf || networkFetch) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+        if(isSelf || (networkFetch && channel != null && !channel.isAssociated())) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
     }
 
     private void showOrFetchAndShow(String imessageId) {
@@ -124,6 +124,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                             binding.contentView.setVisibility(View.VISIBLE);
                             binding.loadingView.setVisibility(View.GONE);
                             binding.doNotFindChannelView.setVisibility(View.GONE);
+                            setupUi();
                         }
                     }, new OperationStatus.HandleResult(-101, () -> {
                         binding.contentView.setVisibility(View.GONE);

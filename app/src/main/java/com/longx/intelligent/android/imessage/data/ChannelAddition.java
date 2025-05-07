@@ -125,4 +125,19 @@ public class ChannelAddition implements Parcelable {
         dest.writeInt(isViewed ? 1 : 0);
         dest.writeInt(isExpired ? 1 : 0);
     }
+
+    @Override
+    public String toString() {
+        return "ChannelAddition{" +
+                "uuid='" + uuid + '\'' +
+                ", requesterChannel=" + requesterChannel +
+                ", responderChannel=" + responderChannel +
+                ", message='" + message + '\'' +
+                ", requestTime=" + requestTime +
+                ", respondTime=" + respondTime +
+                ", isAccepted=" + isAccepted +
+                ", isViewed=" + isViewed +
+                ", isExpired=" + isExpired +
+                '}';
+    }
 }

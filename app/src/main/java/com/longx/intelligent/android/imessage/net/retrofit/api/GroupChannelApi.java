@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
-import com.longx.intelligent.android.imessage.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
@@ -8,21 +7,16 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelJoi
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
-import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
-import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
-import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
 
-import cn.hutool.http.useragent.OS;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -45,7 +39,7 @@ public interface GroupChannelApi {
     CompletableCall<OperationStatus> changeGroupName(@Body ChangeGroupChannelNamePostBody postBody);
 
     @GET("group_channel/find/group_channel_id/{groupChannelId}")
-    CompletableCall<OperationData> fetchOneGroupAssociation(@Path("groupChannelId") String groupChannelId);
+    CompletableCall<OperationData> findGroupChannelByGroupChannelId(@Path("groupChannelId") String groupChannelId);
 
     @GET("group_channel/info/group_channel_id_user/can_change/{groupChannelId}")
     CompletableCall<OperationData> groupChannelIdUserNowCanChange(@Path("groupChannelId") String groupChannelId);

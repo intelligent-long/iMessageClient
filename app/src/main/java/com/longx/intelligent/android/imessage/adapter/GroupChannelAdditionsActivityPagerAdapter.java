@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.longx.intelligent.android.imessage.fragment.channeladdition.ChannelAdditionPendingFragment;
 import com.longx.intelligent.android.imessage.fragment.channeladdition.ChannelAdditionReceiveFragment;
 import com.longx.intelligent.android.imessage.fragment.channeladdition.ChannelAdditionSendFragment;
+import com.longx.intelligent.android.imessage.fragment.groupchanneladdition.GroupChannelAdditionPendingFragment;
 import com.longx.intelligent.android.imessage.fragment.groupchanneladdition.GroupChannelAdditionReceiveFragment;
 import com.longx.intelligent.android.imessage.fragment.groupchanneladdition.GroupChannelAdditionSendFragment;
 
@@ -17,26 +18,29 @@ import com.longx.intelligent.android.imessage.fragment.groupchanneladdition.Grou
 public class GroupChannelAdditionsActivityPagerAdapter extends FragmentStateAdapter {
     private final GroupChannelAdditionReceiveFragment groupChannelAdditionReceiveFragment;
     private final GroupChannelAdditionSendFragment groupChannelAdditionSendFragment;
+    private final GroupChannelAdditionPendingFragment groupChannelAdditionPendingFragment;
 
     public GroupChannelAdditionsActivityPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
         groupChannelAdditionReceiveFragment = new GroupChannelAdditionReceiveFragment();
         groupChannelAdditionSendFragment = new GroupChannelAdditionSendFragment();
+        groupChannelAdditionPendingFragment = new GroupChannelAdditionPendingFragment();
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0: return groupChannelAdditionReceiveFragment;
-            case 1: return groupChannelAdditionSendFragment;
+            case 0: return groupChannelAdditionPendingFragment;
+            case 1: return groupChannelAdditionReceiveFragment;
+            case 2: return groupChannelAdditionSendFragment;
         }
         return null;
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 
     public GroupChannelAdditionReceiveFragment getReceiveFragment() {
@@ -45,5 +49,9 @@ public class GroupChannelAdditionsActivityPagerAdapter extends FragmentStateAdap
 
     public GroupChannelAdditionSendFragment getSendFragment() {
         return groupChannelAdditionSendFragment;
+    }
+
+    public GroupChannelAdditionPendingFragment getPendingFragment() {
+        return groupChannelAdditionPendingFragment;
     }
 }

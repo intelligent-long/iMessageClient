@@ -9,26 +9,19 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelJoi
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
-import com.longx.intelligent.android.imessage.data.request.ChangeRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
-import com.longx.intelligent.android.imessage.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
-import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
-import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.GroupChannelApi;
-import com.longx.intelligent.android.imessage.util.JsonUtil;
 import com.xcheng.retrofit.CompletableCall;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Body;
-import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:29.
@@ -56,8 +49,8 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchOneGroupAssociation(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchOneGroupAssociation(groupChannelId);
+    public static CompletableCall<OperationData> findGroupChannelByGroupChannelId(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().findGroupChannelByGroupChannelId(groupChannelId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

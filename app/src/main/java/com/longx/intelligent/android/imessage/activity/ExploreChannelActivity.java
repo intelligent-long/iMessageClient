@@ -71,46 +71,46 @@ public class ExploreChannelActivity extends BaseActivity {
 
     private void setupYiers() {
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.search_channel) {
+            if (item.getItemId() == R.id.search_channel) {
                 String searchText = UiUtil.getEditTextString(binding.searchTextInput);
-                if (searchText == null || searchText.equals("")) {
+                if (searchText == null || searchText.isEmpty()) {
                     MessageDisplayer.autoShow(this, "请输入内容", MessageDisplayer.Duration.SHORT);
                     return true;
                 }
-                if (item.getItemId() == R.id.search_channel) {
-                    if (Objects.equals(UiUtil.getEditTextString(binding.searchByAutoComplete), searchByNames[0])) {
-                        ChannelApiCaller.findChannelByImessageIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
-                            @Override
-                            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                                super.ok(data, raw, call);
-                                data.commonHandleResult(ExploreChannelActivity.this, new int[]{-101}, () -> {
-                                    Channel channel = data.getData(Channel.class);
-                                    Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
-                                    intent.putExtra(ExtraKeys.CHANNEL, channel);
-                                    intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
-                                    startActivity(intent);
-                                });
-                            }
-                        });
-                    } else if (Objects.equals(UiUtil.getEditTextString(binding.searchByAutoComplete), searchByNames[1])) {
-                        ChannelApiCaller.findChannelByEmail(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
-                            @Override
-                            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                                super.ok(data, raw, call);
-                                data.commonHandleResult(ExploreChannelActivity.this, new int[]{-101}, () -> {
-                                    Channel channel = data.getData(Channel.class);
-                                    Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
-                                    intent.putExtra(ExtraKeys.CHANNEL, channel);
-                                    intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
-                                    startActivity(intent);
-                                });
-                            }
-                        });
-                    }
+                String selectedSearchType = UiUtil.getEditTextString(binding.searchByAutoComplete);
+                if (Objects.equals(selectedSearchType, searchByNames[0])) {
+                    ChannelApiCaller.findChannelByImessageIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                        @Override
+                        public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                            super.ok(data, raw, call);
+                            data.commonHandleResult(ExploreChannelActivity.this, new int[]{-101}, () -> {
+                                Channel channel = data.getData(Channel.class);
+                                Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
+                                intent.putExtra(ExtraKeys.CHANNEL, channel);
+                                intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
+                                startActivity(intent);
+                            });
+                        }
+                    });
+                } else if (Objects.equals(selectedSearchType, searchByNames[1])) {
+                    ChannelApiCaller.findChannelByEmail(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                        @Override
+                        public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                            super.ok(data, raw, call);
+                            data.commonHandleResult(ExploreChannelActivity.this, new int[]{-101}, () -> {
+                                Channel channel = data.getData(Channel.class);
+                                Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
+                                intent.putExtra(ExtraKeys.CHANNEL, channel);
+                                intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
+                                startActivity(intent);
+                            });
+                        }
+                    });
                 }
-            }else if(item.getItemId() == R.id.search_by_qr_code){
-
+            } else if (item.getItemId() == R.id.search_by_qr_code) {
+                // TODO: 添加扫码搜索逻辑
             }
+
             return true;
         });
     }

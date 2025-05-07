@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
@@ -11,7 +12,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.response.OperationData;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityExploreGroupChannelBinding;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.util.UiUtil;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ExploreGroupChannelActivity extends BaseActivity {
     private ActivityExploreGroupChannelBinding binding;
@@ -37,6 +48,30 @@ public class ExploreGroupChannelActivity extends BaseActivity {
     }
 
     private void setupYiers() {
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.search_group_channel) {
+                String searchText = UiUtil.getEditTextString(binding.searchTextInput);
+                if (searchText == null || searchText.isEmpty()) {
+                    MessageDisplayer.autoShow(this, "请输入内容", MessageDisplayer.Duration.SHORT);
+                    return true;
+                }
+                GroupChannelApiCaller.findGroupChannelByGroupChannelId(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(ExploreGroupChannelActivity.this, new int[]{-101}, () -> {
+                            GroupChannel groupChannel = data.getData(GroupChannel.class);
+                            Intent intent = new Intent(ExploreGroupChannelActivity.this, GroupChannelActivity.class);
+                            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+                            intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
+                            startActivity(intent);
+                        });
+                    }
+                });
+            } else if (item.getItemId() == R.id.search_by_qr_code) {
 
+            }
+            return true;
+        });
     }
 }

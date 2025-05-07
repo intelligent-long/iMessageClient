@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAcc
 import com.longx.intelligent.android.imessage.data.ChannelAddition;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.FragmentChannelAdditionSendBinding;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesFetchYier;
 
 import java.util.ArrayList;

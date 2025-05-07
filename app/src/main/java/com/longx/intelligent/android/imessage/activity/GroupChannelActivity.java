@@ -29,17 +29,16 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     private GroupChannel groupChannel;
     private boolean isOwner;
     private boolean inGroup;
-    private String doNotSet;
+    private boolean networkFetch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        doNotSet = getString(R.string.do_not_set);
         super.onCreate(savedInstanceState);
         binding = ActivityGroupChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         intentData();
-        showContent(groupChannel);
+        showContent();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
@@ -62,9 +61,11 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
                 break;
             }
         }
+        networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
     }
 
-    private void showContent(GroupChannel groupChannel) {
+    private void showContent() {
+        if(networkFetch && !inGroup) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
         if(groupChannel.getGroupAvatar() == null || groupChannel.getGroupAvatar().getHash() == null){
             GlideApp.with(this)
                     .load(AppCompatResources.getDrawable(this, R.drawable.group_channel_default_avatar))
@@ -76,11 +77,11 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
                     .into(binding.avatar);
         }
         if(isOwner){
-            binding.addChannelButton.setVisibility(View.GONE);
+            binding.joinChannelButton.setVisibility(View.GONE);
         }else {
             binding.editInfoButton.setVisibility(View.GONE);
             if(inGroup){
-                binding.addChannelButton.setVisibility(View.GONE);
+                binding.joinChannelButton.setVisibility(View.GONE);
             }else {
                 binding.sendMessageButton.setVisibility(View.GONE);
             }
@@ -115,6 +116,9 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     }
 
     private void setupYiers() {
+        binding.avatar.setOnClickListener(v -> {
+
+        });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.more){
                 Intent intent = new Intent(this, GroupChannelSettingActivity.class);
@@ -127,6 +131,14 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             Intent intent = new Intent(this, EditGroupInfoSettingsActivity.class);
             intent.putExtra(ExtraKeys.GROUP_CHANNEL_ID, groupChannel.getGroupChannelId());
             startActivity(intent);
+        });
+        binding.joinChannelButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RequestJoinGroupChannelActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+            startActivity(intent);
+        });
+        binding.sendMessageButton.setOnClickListener(v -> {
+
         });
         setLongClickCopyYiers();
     }
@@ -146,7 +158,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
         if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL) && objects[0].equals(groupChannel.getGroupChannelId())){
             groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannel.getGroupChannelId());
-            showContent(groupChannel);
+            showContent();
             setLongClickCopyYiers();
         }
     }

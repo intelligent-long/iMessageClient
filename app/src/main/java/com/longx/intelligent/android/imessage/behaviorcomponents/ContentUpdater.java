@@ -341,7 +341,7 @@ public class ContentUpdater {
     }
 
     public static void updateOneGroupChannel(Context context, String groupChannelId, ResultsYier resultsYier){
-        GroupChannelApiCaller.fetchOneGroupAssociation(null, groupChannelId, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL, context, groupChannelId){
+        GroupChannelApiCaller.findGroupChannelByGroupChannelId(null, groupChannelId, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL, context, groupChannelId){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);

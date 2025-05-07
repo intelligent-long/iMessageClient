@@ -39,6 +39,7 @@ public class GroupChannelAdditionsActivity extends BaseActivity {
         pagerAdapter = new GroupChannelAdditionsActivityPagerAdapter(this);
         binding.viewPager.setAdapter(pagerAdapter);
         PAGER_TITLES = new String[]{
+                getString(R.string.channel_addition_activity_pending),
                 getString(R.string.channel_addition_activity_send),
                 getString(R.string.channel_addition_activity_receive)
         };

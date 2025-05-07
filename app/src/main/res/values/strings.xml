@@ -40,10 +40,11 @@
     <string name="title_offline_detail">离线信息</string>
     <string name="title_open_source_licenses">开放源代码许可</string>
     <string name="title_explore_channel">搜台</string>
-    <string name="title_explore_group_channel">搜群台</string>
+    <string name="title_explore_group_channel">搜台</string>
     <string name="title_edit_broadcast">编辑广播</string>
     <string name="title_send_broadcast">发送广播</string>
     <string name="title_request_add_channel">请求添加频道</string>
+    <string name="title_request_join_group_channel">请求添加群频道</string>
     <string name="title_create_group_channel">创建群频道</string>
     <string name="title_channel_setting">频道设置</string>
     <string name="title_group_channel_setting">群频道设置</string>
