@@ -129,12 +129,12 @@ public class ChannelAddition implements Parcelable {
     @Override
     public String toString() {
         return "ChannelAddition{" +
-                "uuid='" + uuid + '\'' +
-                ", requesterChannel=" + requesterChannel +
+                "getUuid='" + uuid + '\'' +
+                ", getRequesterChannel=" + requesterChannel +
                 ", responderChannel=" + responderChannel +
-                ", message='" + message + '\'' +
-                ", requestTime=" + requestTime +
-                ", respondTime=" + respondTime +
+                ", getMessage='" + message + '\'' +
+                ", getRequestTime=" + requestTime +
+                ", getRespondTime=" + respondTime +
                 ", isAccepted=" + isAccepted +
                 ", isViewed=" + isViewed +
                 ", isExpired=" + isExpired +

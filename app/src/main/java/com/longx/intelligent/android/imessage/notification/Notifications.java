@@ -186,4 +186,31 @@ public class Notifications {
                 .build()
                 .show();
     }
+
+    public static void notifyGroupChannelAdditionActivity(Context context, int notificationRequest, int notificationRespond){
+        Intent intent = new Intent(context, ChannelAdditionsActivity.class);
+        String text;
+        if(notificationRequest != 0 && notificationRespond != 0) {
+            text = notificationRequest + " 个新的群频道添加请求, " + notificationRespond  + " 个新的群频道添加回应";
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
+        }else if(notificationRequest != 0){
+            text = notificationRequest + " 个新的群频道添加请求";
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
+        }else if(notificationRespond != 0){
+            text = notificationRespond + " 个新的群频道添加回应";
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+        }else {
+            return;
+        }
+        new Notification.Builder(context,
+                NotificationChannels.GroupChannelAdditionActivity.ID_GROUP_CHANNEL_ADDITION_ACTIVITY,
+                NotificationChannels.GroupChannelAdditionActivity.NAME_GROUP_CHANNEL_ADDITION_ACTIVITY)
+                .intent(intent)
+                .importance(NotificationManager.IMPORTANCE_HIGH)
+                .title("新的群频道")
+                .text(text)
+                .smallIcon(R.drawable.group_add_fill_24px)
+                .build()
+                .show();
+    }
 }

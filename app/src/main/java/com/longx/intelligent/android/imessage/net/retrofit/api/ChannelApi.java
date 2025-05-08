@@ -45,8 +45,8 @@ public interface ChannelApi {
     @GET("channel/add/activity/all")
     CompletableCall<OperationData> fetchAllAdditionActivities();
 
-    @POST("channel/add/activity/{uuid}/view")
-    CompletableCall<OperationStatus> viewOneAdditionActivity(@Path("uuid") String uuid);
+    @POST("channel/add/activity/{getUuid}/view")
+    CompletableCall<OperationStatus> viewOneAdditionActivity(@Path("getUuid") String uuid);
 
     @GET("channel/association/all")
     CompletableCall<OperationData> fetchAllAssociations();
@@ -54,10 +54,10 @@ public interface ChannelApi {
     @POST("channel/association/delete")
     CompletableCall<OperationStatus> deleteAssociatedChannel(@Body DeleteChannelAssociationPostBody postBody);
 
-    @POST("channel/association/note/set")
+    @POST("channel/association/getNote/set")
     CompletableCall<OperationStatus> setNoteToAssociatedChannel(@Body SetNoteToAssociatedChannelPostBody postBody);
 
-    @POST("channel/association/note/delete/{channelImessageId}")
+    @POST("channel/association/getNote/delete/{channelImessageId}")
     CompletableCall<OperationStatus> deleteNoteOfAssociatedChannel(@Path("channelImessageId") String channelImessageId);
 
     @POST("channel/association/tag/add")

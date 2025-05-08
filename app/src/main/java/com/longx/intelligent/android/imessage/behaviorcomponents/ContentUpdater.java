@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
@@ -63,6 +64,7 @@ public class ContentUpdater {
         String ID_GROUP_CHANNELS = "group_channels";
         String ID_GROUP_CHANNEL = "group_channel";
         String ID_GROUP_CHANNEL_TAGS = "group_channel_tags";
+        String ID_GROUP_CHANNEL_ADDITIONS_UNVIEWED_COUNT = "group_channel_additions_unviewed_count";
 
         void onStartUpdate(String id, List<String> updatingIds, Object... objects);
 
@@ -365,6 +367,20 @@ public class ContentUpdater {
                     GroupChannelDatabaseManager.getInstance().clearChannelTags();
                     GroupChannelDatabaseManager.getInstance().insertTagsOrIgnore(channelTags);
                     resultsYier.onResults();
+                });
+            }
+        });
+    }
+
+    public static void updateGroupChannelAdditionNotViewCount(Context context, ResultsYier resultsYier){
+        GroupChannelApiCaller.fetchGroupChannelAdditionUnviewedCount(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL_ADDITIONS_UNVIEWED_COUNT, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleSuccessResult(() -> {
+                    GroupChannelAdditionNotViewedCount notViewedCount = data.getData(GroupChannelAdditionNotViewedCount.class);
+                    SharedPreferencesAccessor.NewContentCount.saveGroupChannelAdditionActivities(context, notViewedCount);
+                    resultsYier.onResults(notViewedCount);
                 });
             }
         });

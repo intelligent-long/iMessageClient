@@ -95,4 +95,22 @@ public class Self extends UserInfo{
     public Channel toChannel(){
         return new Channel(imessageId, imessageIdUser, email, username, null, avatar, sex, firstRegion, secondRegion, thirdRegion, true);
     }
+
+    @Override
+    public String toString() {
+        return "Self{" +
+                "imessageId='" + imessageId + '\'' +
+                ", imessageIdUser='" + imessageIdUser + '\'' +
+                ", email='" + email + '\'' +
+                ", registerTime=" + registerTime +
+                ", username='" + username + '\'' +
+                ", avatar=" + avatar +
+                ", sex=" + sex +
+                ", firstRegion=" + firstRegion +
+                ", secondRegion=" + secondRegion +
+                ", thirdRegion=" + thirdRegion +
+                ", userProfileVisibility=" + userProfileVisibility +
+                ", waysToFindMe=" + waysToFindMe +
+                '}';
+    }
 }

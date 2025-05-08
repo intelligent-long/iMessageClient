@@ -59,10 +59,10 @@ public interface GroupChannelApi {
     @POST("group_channel/info/avatar/remove/{groupChannelId}")
     CompletableCall<OperationStatus> removeGroupChannelAvatar(@Path("groupChannelId") String groupChannelId);
 
-    @POST("group_channel/association/note/set")
+    @POST("group_channel/association/getNote/set")
     CompletableCall<OperationStatus> setNoteToAssociatedGroupChannel(@Body SetNoteToAssociatedGroupChannelPostBody postBody);
 
-    @POST("group_channel/association/note/delete/{groupChannelId}")
+    @POST("group_channel/association/getNote/delete/{groupChannelId}")
     CompletableCall<OperationStatus> deleteNoteOfAssociatedGroupChannel(@Path("groupChannelId") String groupChannelId);
 
     @POST("group_channel/association/tag/add")
@@ -94,5 +94,11 @@ public interface GroupChannelApi {
 
     @POST("group_channel/add/request")
     CompletableCall<OperationStatus> requestAddGroupChannel(@Body RequestAddGroupChannelPostBody postBody);
+
+    @GET("group_channel/add/activities/not_viewed_count")
+    CompletableCall<OperationData> fetchGroupChannelAdditionNotViewCount();
+
+    @GET("group_channel/add/activity/all")
+    CompletableCall<OperationData> fetchAllGroupAdditionActivities();
 
 }

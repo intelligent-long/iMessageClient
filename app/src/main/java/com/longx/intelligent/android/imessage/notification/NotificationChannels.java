@@ -34,4 +34,9 @@ public class NotificationChannels {
         static final String ID_BROADCAST_INTERACTION = "BROADCAST_INTERACTION";
         static final String NAME_BROADCAST_INTERACTION = "广播互动";
     }
+
+    public static class GroupChannelAdditionActivity{
+        static final String ID_GROUP_CHANNEL_ADDITION_ACTIVITY = "GROUP_CHANNEL_ADDITION_ACTIVITY";
+        static final String NAME_GROUP_CHANNEL_ADDITION_ACTIVITY = "新的群频道消息";
+    }
 }

@@ -14,6 +14,8 @@ import com.longx.intelligent.android.imessage.data.Broadcast;
 import com.longx.intelligent.android.imessage.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.imessage.data.ChannelAddition;
 import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
+import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
+import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.OfflineDetail;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.net.ServerConfig;
@@ -483,6 +485,8 @@ public class SharedPreferencesAccessor {
             private static final String BROADCAST_LIKE_NEWS_COUNT = "broadcast_like_news_count";
             private static final String BROADCAST_COMMENT_NEWS_COUNT = "broadcast_comment_news_count";
             private static final String BROADCAST_REPLY_COMMENT_NEWS_COUNT = "broadcast_reply_comment_news_count";
+            private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_REQUESTER = "group_channel_addition_activities_requester";
+            private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER = "group_channel_addition_activities_responder";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return getCurrentUserSharedPreferences(context, NAME);
@@ -541,6 +545,24 @@ public class SharedPreferencesAccessor {
             return getSharedPreferences(context)
                     .getInt(Key.BROADCAST_REPLY_COMMENT_NEWS_COUNT, 0);
         }
+
+        public static void saveGroupChannelAdditionActivities(Context context, GroupChannelAdditionNotViewedCount newContentCount){
+            getSharedPreferences(context)
+                    .edit()
+                    .putInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_REQUESTER, newContentCount.getRequester())
+                    .putInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER, newContentCount.getResponder())
+                    .apply();
+        }
+
+        public static int getGroupChannelAdditionActivitiesRequester(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_REQUESTER, 0);
+        }
+
+        public static int getGroupChannelAdditionActivitiesResponder(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER, 0);
+        }
     }
 
     public static class ApiJson{
@@ -570,6 +592,7 @@ public class SharedPreferencesAccessor {
             private static final String CHANNEL_ADDITION_ACTIVITIES = "channel_addition_activities";
             private static final String OFFLINE_DETAILS = "offline_details";
             private static final String BROADCASTS = "broadcasts";
+            private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES = "group_channel_addition_activities";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return getCurrentUserSharedPreferences(context, NAME);
@@ -611,6 +634,47 @@ public class SharedPreferencesAccessor {
                 indexedApiJsonList.sort(Comparator.comparingInt(o -> o.index));
                 indexedApiJsonList.forEach(indexedApiJson -> {
                     result.add(JsonUtil.toObject(indexedApiJson.json, ChannelAddition.class));
+                });
+                return result;
+            }
+        }
+
+        public static class GroupChannelAdditionActivities{
+            private static final int MAX_GROUP_CHANNEL_ADDITION_ACTIVITIES_SIZE = 500;
+
+            public static synchronized void addRecord(Context context, GroupChannelAddition groupChannelAddition){
+                Set<String> paginatedJsonSet = getSharedPreferences(context).getStringSet(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
+                if(paginatedJsonSet.size() + 1 > MAX_GROUP_CHANNEL_ADDITION_ACTIVITIES_SIZE) return;
+                String json = JsonUtil.toJson(groupChannelAddition);
+                int index = paginatedJsonSet.size();
+                IndexedApiJson indexedApiJson = new IndexedApiJson(index, json);
+                String paginatedJson = JsonUtil.toJson(indexedApiJson);
+                HashSet<String> paginatedJsonSetCopy = new HashSet<>(paginatedJsonSet);
+                paginatedJsonSetCopy.add(paginatedJson);
+                getSharedPreferences(context)
+                        .edit()
+                        .putStringSet(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES, paginatedJsonSetCopy)
+                        .apply();
+            }
+
+            public static synchronized void clearRecords(Context context){
+                getSharedPreferences(context)
+                        .edit()
+                        .remove(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES)
+                        .apply();
+            }
+
+            public static synchronized List<GroupChannelAddition> getAllRecords(Context context){
+                List<GroupChannelAddition> result = new ArrayList<>();
+                Set<String> jsonSet = getSharedPreferences(context).getStringSet(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES, new HashSet<>());
+                List<IndexedApiJson> indexedApiJsonList = new ArrayList<>();
+                jsonSet.forEach(paginatedJson -> {
+                    IndexedApiJson indexedApiJson = JsonUtil.toObject(paginatedJson, IndexedApiJson.class);
+                    indexedApiJsonList.add(indexedApiJson);
+                });
+                indexedApiJsonList.sort(Comparator.comparingInt(o -> o.index));
+                indexedApiJsonList.forEach(indexedApiJson -> {
+                    result.add(JsonUtil.toObject(indexedApiJson.json, GroupChannelAddition.class));
                 });
                 return result;
             }

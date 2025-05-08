@@ -160,4 +160,16 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationData> fetchGroupChannelAdditionUnviewedCount(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchGroupChannelAdditionNotViewCount();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> fetchAllGroupAdditionActivities(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllGroupAdditionActivities();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

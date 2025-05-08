@@ -8,14 +8,31 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelAdditionsActivityPagerAdapter;
+import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.ChannelAddition;
+import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
+import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelAdditionsBinding;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitiesFetchYier;
+import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitiesUpdateYier;
 
-public class GroupChannelAdditionsActivity extends BaseActivity {
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+public class GroupChannelAdditionsActivity extends BaseActivity implements GroupChannelAdditionActivitiesUpdateYier, GroupChannelAdditionActivitiesFetchYier {
     private ActivityGroupChannelAdditionsBinding binding;
     private GroupChannelAdditionsActivityPagerAdapter pagerAdapter;
     private int initTabIndex;
@@ -29,6 +46,13 @@ public class GroupChannelAdditionsActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         intentData();
         setupUi();
+        GlobalYiersHolder.holdYier(this, GroupChannelAdditionActivitiesUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, GroupChannelAdditionActivitiesUpdateYier.class, this);
     }
 
     private void intentData() {
@@ -50,5 +74,62 @@ public class GroupChannelAdditionsActivity extends BaseActivity {
                 tab.select();
             }
         });
+    }
+
+    @Override
+    public void onStartFetch() {
+        pagerAdapter.getPendingFragment().onStartFetch();
+        pagerAdapter.getSendFragment().onStartFetch();
+        pagerAdapter.getReceiveFragment().onStartFetch();
+    }
+
+    @Override
+    public void onFetched(List<GroupChannelAddition> groupChannelAdditions) {
+        SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.clearRecords(this);
+        groupChannelAdditions.forEach(groupChannelAddition -> {
+            SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.addRecord(this, groupChannelAddition);
+        });
+        pagerAdapter.getPendingFragment().onFetched(groupChannelAdditions);
+        pagerAdapter.getSendFragment().onFetched(groupChannelAdditions);
+        pagerAdapter.getReceiveFragment().onFetched(groupChannelAdditions);
+    }
+
+    @Override
+    public void onFailure(String failureMessage) {
+        pagerAdapter.getPendingFragment().onFailure(failureMessage);
+        pagerAdapter.getSendFragment().onFailure(failureMessage);
+        pagerAdapter.getReceiveFragment().onFailure(failureMessage);
+    }
+
+    private void fetchAndShowContent() {
+        onStartFetch();
+        GroupChannelApiCaller.fetchAllGroupAdditionActivities(this, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleResult(GroupChannelAdditionsActivity.this, new int[]{}, () -> {
+                    List<GroupChannelAddition> groupChannelAdditions = data.getData(new TypeReference<List<GroupChannelAddition>>() {
+                    });
+                    onFetched(groupChannelAdditions);
+                });
+            }
+
+            @Override
+            public void notOk(int code, String message, Response<OperationData> row, Call<OperationData> call) {
+                super.notOk(code, message, row, call);
+                GroupChannelAdditionsActivity.this.onFailure("HTTP 状态码异常 > " + code);
+            }
+
+            @Override
+            public void failure(Throwable t, Call<OperationData> call) {
+                super.failure(t, call);
+                GroupChannelAdditionsActivity.this.onFailure("出错了 > " + t.getClass().getName());
+            }
+        });
+    }
+
+    @Override
+    public void onGroupChannelAdditionActivitiesUpdate() {
+        runOnUiThread(this::fetchAndShowContent);
     }
 }

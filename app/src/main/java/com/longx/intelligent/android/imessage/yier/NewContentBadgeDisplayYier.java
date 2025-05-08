@@ -8,7 +8,7 @@ import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAcc
  * Created by LONG on 2024/5/3 at 3:58 PM.
  */
 public interface NewContentBadgeDisplayYier {
-    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES, BROADCAST_COMMENTS, BROADCAST_REPLIES}
+    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES, BROADCAST_COMMENTS, BROADCAST_REPLIES, GROUP_CHANNEL_ADDITION_ACTIVITIES}
 
     static int getChannelAdditionActivitiesNewContentCount(Context context){
         return SharedPreferencesAccessor.NewContentCount.getChannelAdditionActivitiesRequester(context)
@@ -27,6 +27,11 @@ public interface NewContentBadgeDisplayYier {
         return SharedPreferencesAccessor.NewContentCount.getBroadcastReplyCommentNewsCount(context);
     }
 
+    static int getGroupChannelAdditionActivitiesNewContentCount(Context context){
+        return SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesRequester(context)
+                + SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesResponder(context);
+    }
+
     default void autoShowNewContentBadge(Context context, ID id){
         switch (id){
             case CHANNEL_ADDITION_ACTIVITIES:
@@ -41,6 +46,9 @@ public interface NewContentBadgeDisplayYier {
                 showNewContentBadge(id, getBroadcastLikesNewsCount(context) +
                         getBroadcastCommentsNewsCount(context) +
                         getBroadcastRepliesNewsCount(context));
+                break;
+            case GROUP_CHANNEL_ADDITION_ACTIVITIES:
+                showNewContentBadge(id, getGroupChannelAdditionActivitiesNewContentCount(context));
                 break;
 
         }

@@ -73,4 +73,14 @@ public class Avatar implements Parcelable {
         dest.writeString(extension);
         dest.writeValue(time);
     }
+
+    @Override
+    public String toString() {
+        return "Avatar{" +
+                "hash='" + hash + '\'' +
+                ", imessageId='" + imessageId + '\'' +
+                ", extension='" + extension + '\'' +
+                ", time=" + time +
+                '}';
+    }
 }

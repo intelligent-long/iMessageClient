@@ -62,6 +62,8 @@ public class GlobalYiersHolder {
             triggerChannelAdditionActivitiesUpdateEvent((ChannelAdditionActivitiesUpdateYier) yier);
         }else if(yier instanceof OpenedChatsUpdateYier && clazz.isAssignableFrom(OpenedChatsUpdateYier.class)){
             triggerOpenedChatUpdateEvent((OpenedChatsUpdateYier) yier);
+        }else if(yier instanceof GroupChannelAdditionActivitiesUpdateYier && clazz.isAssignableFrom(GroupChannelAdditionActivitiesUpdateYier.class)) {
+            triggerGroupChannelAdditionActivitiesUpdateEvent((GroupChannelAdditionActivitiesUpdateYier) yier);
         }
     }
 
@@ -83,7 +85,7 @@ public class GlobalYiersHolder {
             if (updating) {
                 List<String> updatingIds = ContentUpdater.getUpdatingIds();
                 updatingIds.forEach(updatingId -> {
-                    onServerContentUpdateYier.onStartUpdate(updatingId, updatingIds, null);
+                    onServerContentUpdateYier.onStartUpdate(updatingId, updatingIds,null);
                 });
             }
         }
@@ -99,5 +101,9 @@ public class GlobalYiersHolder {
 
     private static void triggerOpenedChatUpdateEvent(OpenedChatsUpdateYier yier){
         yier.onOpenedChatsUpdate();
+    }
+
+    private static void triggerGroupChannelAdditionActivitiesUpdateEvent(GroupChannelAdditionActivitiesUpdateYier yier){
+        yier.onGroupChannelAdditionActivitiesUpdate();
     }
 }

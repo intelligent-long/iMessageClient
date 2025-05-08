@@ -140,7 +140,7 @@ public class Channel extends UserInfo implements Parcelable {
                 ", imessageIdUser='" + imessageIdUser + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", note='" + note + '\'' +
+                ", getNote='" + note + '\'' +
                 ", avatar=" + avatar +
                 ", sex=" + sex +
                 ", firstRegion=" + firstRegion +

@@ -15,11 +15,13 @@ import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAcc
 import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.notification.Notifications;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.imessage.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.imessage.yier.RecentBroadcastMediasUpdateYier;
@@ -206,11 +208,29 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateGroupChannelAdditionActivities(Context context){
-        ErrorLogger.log("updateGroupChannelAdditionActivities()");
+        GlobalYiersHolder.getYiers(GroupChannelAdditionActivitiesUpdateYier.class).ifPresent(groupChannelAdditionActivitiesUpdateYiers -> {
+            groupChannelAdditionActivitiesUpdateYiers.forEach(GroupChannelAdditionActivitiesUpdateYier::onGroupChannelAdditionActivitiesUpdate);
+        });
     }
 
     public static void updateGroupChannelAdditionsNotViewCount(Context context) {
-        ErrorLogger.log("updateGroupChannelAdditionsNotViewCount()");
+        ContentUpdater.updateGroupChannelAdditionNotViewCount(context, results -> {
+            GroupChannelAdditionNotViewedCount notViewedCount = (GroupChannelAdditionNotViewedCount) results[0];
+            if(notViewedCount != null) {
+                if (!Application.foreground) {
+                    Notifications.notifyGroupChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
+                } else {
+                    if (!(ActivityOperator.getTopActivity() instanceof MainActivity)) {
+                        Notifications.notifyGroupChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
+                    }
+                }
+            }
+            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                    newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+                });
+            });
+        });
     }
 
 }
