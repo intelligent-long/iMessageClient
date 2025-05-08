@@ -29,15 +29,15 @@ public class GroupChannelTag implements Parcelable {
         this.groupChannelIdList = groupChannelIdList;
     }
 
-    public static final Creator<ChannelTag> CREATOR = new Creator<ChannelTag>() {
+    public static final Creator<GroupChannelTag> CREATOR = new Creator<GroupChannelTag>() {
         @Override
-        public ChannelTag createFromParcel(Parcel in) {
-            return new ChannelTag(in);
+        public GroupChannelTag createFromParcel(Parcel in) {
+            return new GroupChannelTag(in);
         }
 
         @Override
-        public ChannelTag[] newArray(int size) {
-            return new ChannelTag[size];
+        public GroupChannelTag[] newArray(int size) {
+            return new GroupChannelTag[size];
         }
     };
 

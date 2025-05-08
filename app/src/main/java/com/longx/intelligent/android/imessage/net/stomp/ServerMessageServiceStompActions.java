@@ -206,9 +206,11 @@ public class ServerMessageServiceStompActions {
     }
 
     public static void updateGroupChannelAdditionActivities(Context context){
+        ErrorLogger.log("updateGroupChannelAdditionActivities()");
     }
 
     public static void updateGroupChannelAdditionsNotViewCount(Context context) {
+        ErrorLogger.log("updateGroupChannelAdditionsNotViewCount()");
     }
 
 }
