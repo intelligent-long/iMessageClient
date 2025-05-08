@@ -205,4 +205,10 @@ public class ServerMessageServiceStompActions {
         });
     }
 
+    public static void updateGroupChannelAdditionActivities(Context context){
+    }
+
+    public static void updateGroupChannelAdditionsNotViewCount(Context context) {
+    }
+
 }

@@ -134,6 +134,12 @@ public class ServerMessageServiceStomp {
         stomp.subscribe(StompDestinations.GROUP_CHANNEL_TAGS_UPDATE, null, message -> {
             ServerMessageServiceStompActions.updateGroupChannelTags(context);
         });
+        stomp.subscribe(StompDestinations.GROUP_CHANNEL_ADDITIONS_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateGroupChannelAdditionActivities(context);
+        });
+        stomp.subscribe(StompDestinations.GROUP_CHANNEL_ADDITIONS_NOT_VIEW_COUNT_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateGroupChannelAdditionsNotViewCount(context);
+        });
     }
 
     public static synchronized boolean isConnected(){

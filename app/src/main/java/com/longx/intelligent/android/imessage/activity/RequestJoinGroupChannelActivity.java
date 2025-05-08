@@ -14,8 +14,12 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityRequestJoinGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.MessageDialog;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.value.Mutables;
@@ -24,6 +28,9 @@ import com.longx.intelligent.android.imessage.yier.TextChangedYier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class RequestJoinGroupChannelActivity extends BaseActivity {
     private ActivityRequestJoinGroupChannelBinding binding;
@@ -77,7 +84,15 @@ public class RequestJoinGroupChannelActivity extends BaseActivity {
                         List<String> presetGroupChannelTagIds = new ArrayList<>();
                         presetGroupChannelTags.forEach(presetGroupChannelTag -> presetGroupChannelTagIds.add(presetGroupChannelTag.getTagId()));
                         RequestAddGroupChannelPostBody postBody = new RequestAddGroupChannelPostBody(groupChannel.getGroupChannelIdUser(), inputtedMessage, inputtedNote, newGroupChannelTagNames, presetGroupChannelTagIds);
-
+                        GroupChannelApiCaller.requestAddGroupChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(RequestJoinGroupChannelActivity.this, new int[]{-101, -102, -103}, () -> {
+                                    new MessageDialog(RequestJoinGroupChannelActivity.this, "发送请求", "已发送添加频道请求").create().show();
+                                });
+                            }
+                        });
                     })
                     .create().show();
         });
