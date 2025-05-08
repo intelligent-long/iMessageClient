@@ -35,4 +35,5 @@ google-services.json
 # Android Profiling
 *.hprof
 
+/app/**/*.kts
 **/*.kts
