@@ -13,15 +13,18 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.PresettingTagGroupChannelTagsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.adapter.PresettingTagNewGroupChannelTagsRecyclerAdapter;
+import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.bottomsheet.AddSettingGroupChannelTagBottomSheet;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.databinding.ActivityPresetGroupChannelTagBinding;
 import com.longx.intelligent.android.imessage.util.Utils;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PresetGroupChannelTagActivity extends BaseActivity {
+public class PresetGroupChannelTagActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityPresetGroupChannelTagBinding binding;
     private PresettingTagNewGroupChannelTagsRecyclerAdapter newGroupChannelTagsAdapter;
     private PresettingTagGroupChannelTagsRecyclerAdapter groupChannelTagsAdapter;
@@ -37,6 +40,13 @@ public class PresetGroupChannelTagActivity extends BaseActivity {
         getIntentData();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void getIntentData() {
@@ -51,7 +61,7 @@ public class PresetGroupChannelTagActivity extends BaseActivity {
         binding.recyclerViewNewGroupTags.setAdapter(newGroupChannelTagsAdapter);
         if(!newGroupChannelTagNames.isEmpty()) binding.layoutNewTags.setVisibility(View.VISIBLE);
         binding.recyclerViewGroupTags.setLayoutManager(new LinearLayoutManager(this));
-        List<GroupChannelTag> allGroupChannelTags = new ArrayList<>(); //TODO
+        List<GroupChannelTag> allGroupChannelTags = GroupChannelDatabaseManager.getInstance().findAllGroupChannelTags();
         groupChannelTagsAdapter = new PresettingTagGroupChannelTagsRecyclerAdapter(this, allGroupChannelTags, checkedGroupChannelTags);
         binding.recyclerViewGroupTags.setAdapter(groupChannelTagsAdapter);
         if(allGroupChannelTags.isEmpty()){
@@ -104,5 +114,18 @@ public class PresetGroupChannelTagActivity extends BaseActivity {
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
         });
+    }
+
+    @Override
+    public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
+        if(id.equals(ContentUpdater.OnServerContentUpdateYier.ID_GROUP_CHANNEL_TAGS)){
+            showContent();
+            setupYiers();
+        }
     }
 }

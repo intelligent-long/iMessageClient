@@ -11,6 +11,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelReg
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
+import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
@@ -22,6 +23,7 @@ import com.xcheng.retrofit.CompletableCall;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:29.
@@ -149,6 +151,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> changeGroupJoinVerification(LifecycleOwner lifecycleOwner, ChangeGroupChannelJoinVerificationPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().changeGroupJoinVerification(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> requestAddGroupChannel(LifecycleOwner lifecycleOwner, RequestAddGroupChannelPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().requestAddGroupChannel(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

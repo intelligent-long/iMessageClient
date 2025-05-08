@@ -26,7 +26,7 @@ public class PresettingTagChannelTagsRecyclerAdapter extends WrappableRecyclerVi
     public PresettingTagChannelTagsRecyclerAdapter(AppCompatActivity activity, List<ChannelTag> channelTags, ArrayList<ChannelTag> checkedChannelTags) {
         this.activity = activity;
         this.channelTags = channelTags;
-        channelTags.sort(Comparator.comparingInt(ChannelTag::getOrder));
+        channelTags.sort(Comparator.comparingInt(ChannelTag::getOrder).reversed());
         this.checkedChannelTags = checkedChannelTags;
     }
 

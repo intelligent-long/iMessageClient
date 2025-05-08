@@ -54,7 +54,6 @@ public class RequestAddChannelActivity extends BaseActivity {
 
     private void showContent() {
         binding.messageInput.setText(Mutables.getRequestAddChannelDefaultMessage(currentUserInfo.getUsername()));
-        binding.noteInput.setText(channel.getNote());
     }
 
     private void registerForActivityResult(){

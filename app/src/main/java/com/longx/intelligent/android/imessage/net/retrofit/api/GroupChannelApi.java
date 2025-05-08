@@ -9,6 +9,8 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelReg
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
+import com.longx.intelligent.android.imessage.data.request.RequestAddChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
@@ -89,5 +91,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel_management/group_join_verification/change")
     CompletableCall<OperationStatus> changeGroupJoinVerification(@Body ChangeGroupChannelJoinVerificationPostBody postBody);
+
+    @POST("group_channel/add/request")
+    CompletableCall<OperationStatus> requestAddGroupChannel(@Body RequestAddGroupChannelPostBody postBody);
 
 }

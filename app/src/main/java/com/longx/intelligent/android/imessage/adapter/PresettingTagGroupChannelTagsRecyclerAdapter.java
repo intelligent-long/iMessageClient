@@ -25,7 +25,7 @@ public class PresettingTagGroupChannelTagsRecyclerAdapter extends WrappableRecyc
     public PresettingTagGroupChannelTagsRecyclerAdapter(AppCompatActivity activity, List<GroupChannelTag> groupChannelTags, ArrayList<GroupChannelTag> checkedGroupChannelTags) {
         this.activity = activity;
         this.groupChannelTags = groupChannelTags;
-        groupChannelTags.sort(Comparator.comparingInt(GroupChannelTag::getOrder));
+        groupChannelTags.sort(Comparator.comparingInt(GroupChannelTag::getOrder).reversed());
         this.checkedGroupChannelTags = checkedGroupChannelTags;
     }
 

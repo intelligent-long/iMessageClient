@@ -10,8 +10,12 @@ import java.util.Locale;
  */
 public class Mutables {
     private static final String REQUEST_ADD_CHANNEL_DEFAULT_MESSAGE = "我是{NAME}。";
+    private static final String REQUEST_JOIN_GROUP_CHANNEL_DEFAULT_MESSAGE = "大家好，我是{NAME}。";
     public static String getRequestAddChannelDefaultMessage(String name){
         return REQUEST_ADD_CHANNEL_DEFAULT_MESSAGE.replace("{NAME}", name);
+    }
+    public static String getRequestJoinGroupChannelDefaultMessage(String name){
+        return REQUEST_JOIN_GROUP_CHANNEL_DEFAULT_MESSAGE.replace("{NAME}", name);
     }
 
     public static String getTimeRangeStr(long firstCompletelyVisibleItemTime, long lastCompletelyVisibleItemTime){
