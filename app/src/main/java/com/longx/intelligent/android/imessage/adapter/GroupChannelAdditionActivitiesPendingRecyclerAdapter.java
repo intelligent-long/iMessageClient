@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.imessage.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.activity.ChannelAdditionActivity;
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -101,7 +105,11 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
 
     private View.OnClickListener getOnClickYier(ViewHolder viewHolder, int position){
         return v -> {
-            //TODO
+            if(v.getId() == viewHolder.binding.clickView.getId() || v.getId() == viewHolder.binding.goConfirmButton.getId()){
+                Intent intent = new Intent(activity, GroupChannelAdditionActivity.class);
+                intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION_INFO, itemDataList.get(position).groupChannelAddition);
+                activity.startActivity(intent);
+            }
         };
     }
 
@@ -115,20 +123,28 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
         Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
         boolean isCurrentUserRequester = currentUserInfo.getImessageId().equals(itemData.groupChannelAddition.getRequesterChannel().getImessageId());
         Channel requesterChannel = itemData.groupChannelAddition.getRequesterChannel();
-        if(requesterChannel.getAvatar() != null) {
-            String avatarHash = requesterChannel.getAvatar().getHash();
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
-        }else {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
-        }
-        holder.binding.name.setText(requesterChannel.getNote() == null ? requesterChannel.getUsername() : requesterChannel.getNote());
+        GroupChannel responderGroupChannel = itemData.groupChannelAddition.getResponderGroupChannel();
         holder.binding.message.setText(itemData.groupChannelAddition.getMessage());
         if(isCurrentUserRequester){
             holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
             holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);
+            if(responderGroupChannel.getGroupAvatar() != null) {
+                String avatarHash = responderGroupChannel.getGroupAvatar().getHash();
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
+            }else {
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+            }
+            holder.binding.name.setText(responderGroupChannel.getNote() == null ? responderGroupChannel.getName() : responderGroupChannel.getNote());
         }else {
             holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
             holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
+            if(requesterChannel.getAvatar() != null) {
+                String avatarHash = requesterChannel.getAvatar().getHash();
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+            }else {
+                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+            }
+            holder.binding.name.setText(requesterChannel.getNote() == null ? requesterChannel.getUsername() : requesterChannel.getNote());
         }
         checkAndShowTimeText(holder, position, itemData);
         if (!itemData.groupChannelAddition.isViewed()) {

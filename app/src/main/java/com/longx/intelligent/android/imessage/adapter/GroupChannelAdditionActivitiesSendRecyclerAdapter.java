@@ -105,15 +105,15 @@ public class GroupChannelAdditionActivitiesSendRecyclerAdapter extends Wrappable
 
     private void showItem(ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        Channel requesterChannel = itemData.groupChannelAddition.getRequesterChannel();
-        if(requesterChannel.getAvatar() != null) {
-            String avatarHash = requesterChannel.getAvatar().getHash();
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
-        }else {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
-        }
-        holder.binding.name.setText(requesterChannel.getNote() == null ? requesterChannel.getUsername() : requesterChannel.getNote());
+        GroupChannel responderGroupChannel = itemData.groupChannelAddition.getResponderGroupChannel();
         holder.binding.message.setText(itemData.groupChannelAddition.getMessage());
+        if (responderGroupChannel.getGroupAvatar() != null) {
+            String avatarHash = responderGroupChannel.getGroupAvatar().getHash();
+            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
+        } else {
+            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+        }
+        holder.binding.name.setText(responderGroupChannel.getNote() == null ? responderGroupChannel.getName() : responderGroupChannel.getNote());
         if (itemData.groupChannelAddition.isAccepted()) {
             holder.binding.addedText.setVisibility(View.VISIBLE);
             holder.binding.expiredText.setVisibility(View.GONE);

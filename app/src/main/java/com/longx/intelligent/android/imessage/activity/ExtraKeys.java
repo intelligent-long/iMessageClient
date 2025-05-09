@@ -55,4 +55,5 @@ public class ExtraKeys {
     public static final String BITMAP = "bitmap";
     public static final String GROUP_CHANNEL_ID = "group_channel_id";
     public static final String GROUP_CHANNEL = "group_channel";
+    public static final String GROUP_CHANNEL_ADDITION_INFO = "group_channel_addition_info";
 }

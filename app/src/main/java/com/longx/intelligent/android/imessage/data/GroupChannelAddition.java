@@ -1,5 +1,10 @@
 package com.longx.intelligent.android.imessage.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -9,7 +14,7 @@ import java.util.Objects;
 /**
  * Created by LONG on 2024/5/2 at 1:11 AM.
  */
-public class GroupChannelAddition {
+public class GroupChannelAddition implements Parcelable {
     private String uuid;
     private Channel requesterChannel;
     private GroupChannel responderGroupChannel;
@@ -45,6 +50,37 @@ public class GroupChannelAddition {
         this.isViewed = isViewed;
         this.isExpired = isExpired;
     }
+
+    protected GroupChannelAddition(Parcel in) {
+        uuid = in.readString();
+        requesterChannel = in.readParcelable(Channel.class.getClassLoader());
+        responderGroupChannel = in.readParcelable(GroupChannel.class.getClassLoader());
+        message = in.readString();
+        note = in.readString();
+        newTagNames = in.createStringArrayList();
+        toAddTagIds = in.createStringArrayList();
+        if(in.readLong() != -1) {
+            requestTime = new Date(in.readLong());
+        }
+        if(in.readLong() != -1) {
+            respondTime = new Date(in.readLong());
+        }
+        isAccepted = in.readByte() != 0;
+        isViewed = in.readByte() != 0;
+        isExpired = in.readByte() != 0;
+    }
+
+    public static final Creator<GroupChannelAddition> CREATOR = new Creator<GroupChannelAddition>() {
+        @Override
+        public GroupChannelAddition createFromParcel(Parcel in) {
+            return new GroupChannelAddition(in);
+        }
+
+        @Override
+        public GroupChannelAddition[] newArray(int size) {
+            return new GroupChannelAddition[size];
+        }
+    };
 
     public String getUuid() {
         return uuid;
@@ -136,4 +172,32 @@ public class GroupChannelAddition {
                 '}';
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(uuid);
+        dest.writeParcelable(requesterChannel, flags);
+        dest.writeParcelable(responderGroupChannel, flags);
+        dest.writeString(message);
+        dest.writeString(note);
+        dest.writeStringList(newTagNames);
+        dest.writeStringList(toAddTagIds);
+        if(requestTime != null) {
+            dest.writeLong(requestTime.getTime());
+        }else {
+            dest.writeLong(-1);
+        }
+        if(respondTime != null) {
+            dest.writeLong(respondTime.getTime());
+        }else {
+            dest.writeLong(-1);
+        }
+        dest.writeByte((byte) (isAccepted ? 1 : 0));
+        dest.writeByte((byte) (isViewed ? 1 : 0));
+        dest.writeByte((byte) (isExpired ? 1 : 0));
+    }
 }
