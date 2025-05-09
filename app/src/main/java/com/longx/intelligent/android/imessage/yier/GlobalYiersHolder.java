@@ -57,7 +57,11 @@ public class GlobalYiersHolder {
         }else if(yier instanceof ContentUpdater.OnServerContentUpdateYier && clazz.isAssignableFrom(ContentUpdater.OnServerContentUpdateYier.class)){
             checkAndTriggerContentUpdateEvent((ContentUpdater.OnServerContentUpdateYier) yier);
         }else if(yier instanceof NewContentBadgeDisplayYier && clazz.isAssignableFrom(NewContentBadgeDisplayYier.class)){
-            triggerNewContentBadgeDisplayEvent(context, (NewContentBadgeDisplayYier) yier, (NewContentBadgeDisplayYier.ID) objects[0]);
+            NewContentBadgeDisplayYier.ID[] ids = new NewContentBadgeDisplayYier.ID[objects.length];
+            for (int i = 0; i < objects.length; i++) {
+                ids[i] = (NewContentBadgeDisplayYier.ID) objects[i];
+            }
+            triggerNewContentBadgeDisplayEvent(context, (NewContentBadgeDisplayYier) yier, ids);
         }else if(yier instanceof ChannelAdditionActivitiesUpdateYier && clazz.isAssignableFrom(ChannelAdditionActivitiesUpdateYier.class)){
             triggerChannelAdditionActivitiesUpdateEvent((ChannelAdditionActivitiesUpdateYier) yier);
         }else if(yier instanceof OpenedChatsUpdateYier && clazz.isAssignableFrom(OpenedChatsUpdateYier.class)){
@@ -91,8 +95,10 @@ public class GlobalYiersHolder {
         }
     }
 
-    private static void triggerNewContentBadgeDisplayEvent(Context context, NewContentBadgeDisplayYier yier, NewContentBadgeDisplayYier.ID id){
-        yier.autoShowNewContentBadge(context, id);
+    private static void triggerNewContentBadgeDisplayEvent(Context context, NewContentBadgeDisplayYier yier, NewContentBadgeDisplayYier.ID... ids){
+        for (NewContentBadgeDisplayYier.ID id : ids) {
+            yier.autoShowNewContentBadge(context, id);
+        }
     }
 
     private static void triggerChannelAdditionActivitiesUpdateEvent(ChannelAdditionActivitiesUpdateYier yier){

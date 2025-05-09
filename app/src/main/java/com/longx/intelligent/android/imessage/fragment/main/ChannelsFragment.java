@@ -36,6 +36,7 @@ import com.longx.intelligent.android.imessage.adapter.ChannelsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.databinding.FragmentChannelsBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderChannelBinding;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
@@ -50,20 +51,22 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     private FragmentChannelsBinding binding;
     private RecyclerHeaderChannelBinding headerViewBinding;
     private int channelAdditionActivitiesNewContentCount;
+    private int groupChannelAdditionActivitiesNewContentCount;
     private Badge newChannelBadge;
+    private Badge newGroupChannelBadge;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
     }
 
     @Override
@@ -153,6 +156,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         headerViewBinding = RecyclerHeaderChannelBinding.inflate(inflater, binding.getRoot(), false);
         newChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
+        newGroupChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.groupChannelBadgeHost, groupChannelAdditionActivitiesNewContentCount, Gravity.CENTER);
     }
 
     @Override
@@ -219,6 +223,12 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
             channelAdditionActivitiesNewContentCount = newContentCount;
             if(newChannelBadge != null){
                 newChannelBadge.setBadgeNumber(newContentCount);
+            }
+        }
+        if(id.equals(ID.GROUP_CHANNEL_ADDITION_ACTIVITIES)){
+            groupChannelAdditionActivitiesNewContentCount = newContentCount;
+            if(newGroupChannelBadge != null){
+                newGroupChannelBadge.setBadgeNumber(newContentCount);
             }
         }
     }

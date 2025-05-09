@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,17 +16,23 @@ import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDa
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelsBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupChannelBinding;
+import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
+import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.imessage.yier.UpdateGroupChannelYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.List;
 
-public class GroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, WrappableRecyclerViewAdapter.OnItemClickYier<GroupChannelsRecyclerAdapter.ItemData> {
+import q.rorbin.badgeview.Badge;
+
+public class GroupChannelsActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier, WrappableRecyclerViewAdapter.OnItemClickYier<GroupChannelsRecyclerAdapter.ItemData>, NewContentBadgeDisplayYier {
     private ActivityGroupChannelsBinding binding;
     private RecyclerHeaderGroupChannelBinding headerViewBinding;
     private GroupChannelsRecyclerAdapter adapter;
+    private int groupChannelAdditionActivitiesNewContentCount;
+    private Badge newGroupChannelBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +43,14 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         showContent();
         setUpYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
     }
 
     private void showContent() {
@@ -63,6 +72,7 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
         binding.recyclerView.setItemAnimator(null);
+        newGroupChannelBadge = BadgeDisplayer.initBadge(this, headerViewBinding.newGroupChannelBadgeHost, groupChannelAdditionActivitiesNewContentCount, Gravity.CENTER);
     }
 
     private void toNoContent(){
@@ -131,5 +141,15 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         Intent intent = new Intent(this, GroupChannelActivity.class);
         intent.putExtra(ExtraKeys.GROUP_CHANNEL, data.getGroupChannel());
         startActivity(intent);
+    }
+
+    @Override
+    public void showNewContentBadge(ID id, int newContentCount) {
+        if(id.equals(ID.GROUP_CHANNEL_ADDITION_ACTIVITIES)){
+            groupChannelAdditionActivitiesNewContentCount = newContentCount;
+            if(newGroupChannelBadge != null){
+                newGroupChannelBadge.setBadgeNumber(newContentCount);
+            }
+        }
     }
 }

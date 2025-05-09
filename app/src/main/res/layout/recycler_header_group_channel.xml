@@ -51,8 +51,9 @@
 
             <LinearLayout
                 android:id="@+id/new_group_channel_badge_host"
-                android:layout_width="49dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_toEndOf="@id/new_group_channel_title"
                 android:layout_alignParentEnd="true"
                 android:orientation="horizontal" />
         </RelativeLayout>
