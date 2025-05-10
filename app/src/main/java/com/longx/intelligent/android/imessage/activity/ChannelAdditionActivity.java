@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import static com.longx.intelligent.android.imessage.value.Constants.COMMON_SIMPLE_DATE_FORMAT;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +31,6 @@ public class ChannelAdditionActivity extends BaseActivity {
     private ChannelAddition channelAddition;
     private boolean isRequester;
     private Channel channel;
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +55,6 @@ public class ChannelAdditionActivity extends BaseActivity {
         } else {
             GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, channel.getAvatar().getHash()), binding.avatar);
         }
-        if(channel.getNote() != null){
-            binding.name.setText(channel.getNote());
-            binding.username.setText(channel.getUsername());
-            binding.layoutUsername.setVisibility(View.VISIBLE);
-            binding.emailDivider.setVisibility(View.VISIBLE);
-        }else {
-            binding.name.setText(channel.getUsername());
-            binding.layoutUsername.setVisibility(View.GONE);
-            binding.emailDivider.setVisibility(View.GONE);
-        }
         if(channel.getSex() == null || (channel.getSex() != 0 && channel.getSex() != 1)){
             binding.sexIcon.setVisibility(View.GONE);
         }else {
@@ -75,29 +66,54 @@ public class ChannelAdditionActivity extends BaseActivity {
             }
         }
         binding.imessageIdUser.setText(channel.getImessageIdUser());
-        if(channel.getEmail() == null){
-            binding.layoutEmail.setVisibility(View.GONE);
-        }else {
-            binding.layoutEmail.setVisibility(View.VISIBLE);
-            binding.email.setText(channel.getEmail());
+
+        boolean hasPrevious = false;
+        if (channel.getNote() != null) {
+            binding.name.setText(channel.getNote());
+            binding.username.setText(channel.getUsername());
+            binding.layoutUsername.setVisibility(View.VISIBLE);
+            hasPrevious = true;
+        } else {
+            binding.name.setText(channel.getUsername());
+            binding.layoutUsername.setVisibility(View.GONE);
         }
+
+        if (channel.getEmail() != null) {
+            if (hasPrevious) {
+                binding.emailDivider.setVisibility(View.VISIBLE);
+            } else {
+                binding.emailDivider.setVisibility(View.GONE);
+            }
+            binding.email.setText(channel.getEmail());
+            binding.layoutEmail.setVisibility(View.VISIBLE);
+            hasPrevious = true;
+        } else {
+            binding.layoutEmail.setVisibility(View.GONE);
+            binding.emailDivider.setVisibility(View.GONE);
+        }
+
         String regionDesc = channel.buildRegionDesc();
-        if(regionDesc == null){
+        if (regionDesc != null) {
+            if (hasPrevious) {
+                binding.regionDivider.setVisibility(View.VISIBLE);
+            } else {
+                binding.regionDivider.setVisibility(View.GONE);
+            }
+            binding.region.setText(regionDesc);
+            binding.layoutRegion.setVisibility(View.VISIBLE);
+        } else {
             binding.layoutRegion.setVisibility(View.GONE);
             binding.regionDivider.setVisibility(View.GONE);
-        }else {
-            binding.layoutRegion.setVisibility(View.VISIBLE);
-            binding.regionDivider.setVisibility(View.VISIBLE);
-            binding.region.setText(regionDesc);
         }
-        binding.requestTime.setText(SIMPLE_DATE_FORMAT.format(channelAddition.getRequestTime()));
+
+        binding.requestTime.setText(COMMON_SIMPLE_DATE_FORMAT.format(channelAddition.getRequestTime()));
         if(channelAddition.getRespondTime() == null){
             binding.respondTimeDivider.setVisibility(View.GONE);
             binding.layoutRespondTime.setVisibility(View.GONE);
         }else {
             binding.respondTimeDivider.setVisibility(View.VISIBLE);
             binding.layoutRespondTime.setVisibility(View.VISIBLE);
-            binding.respondTime.setText(SIMPLE_DATE_FORMAT.format(channelAddition.getRespondTime()));
+            binding.respondTime.setText(COMMON_SIMPLE_DATE_FORMAT.format(channelAddition.getRespondTime()));
         }
         String message = channelAddition.getMessage();
         if(message == null || message.equals("")){

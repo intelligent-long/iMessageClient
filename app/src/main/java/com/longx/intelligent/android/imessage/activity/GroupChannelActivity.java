@@ -61,7 +61,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
                 break;
             }
         }
-        networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
+        networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false); //TODO
     }
 
     private void showContent() {

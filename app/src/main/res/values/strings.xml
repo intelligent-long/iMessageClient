@@ -68,6 +68,7 @@
     <string name="title_new_group_channel">新的群频道</string>
     <string name="title_group_tag">群标签</string>
     <string name="title_add_channel">添加频道</string>
+    <string name="title_add_group_channel">添加群频道</string>
     <string name="title_chat_file">聊天文件</string>
     <string name="search_by_imessage_id_user">iMessage ID</string>
     <string name="search_by_email">邮箱</string>

@@ -19,9 +19,6 @@ public class GroupChannelAddition implements Parcelable {
     private Channel requesterChannel;
     private GroupChannel responderGroupChannel;
     private String message;
-    private String note;
-    private List<String> newTagNames;
-    private List<String> toAddTagIds;
     private Date requestTime;
     private Date respondTime;
     @JsonProperty("isAccepted")
@@ -35,15 +32,12 @@ public class GroupChannelAddition implements Parcelable {
     }
 
     public GroupChannelAddition(String uuid, Channel requesterChannel, GroupChannel responderGroupChannel,
-                                String message, String note, List<String> newTagNames, List<String> toAddTagIds, Date requestTime,
-                                Date respondTime, boolean isAccepted, boolean isViewed, boolean isExpired) {
+                                String message, Date requestTime, Date respondTime, boolean isAccepted,
+                                boolean isViewed, boolean isExpired) {
         this.uuid = uuid;
         this.requesterChannel = requesterChannel;
         this.responderGroupChannel = responderGroupChannel;
         this.message = message;
-        this.note = note;
-        this.newTagNames = newTagNames;
-        this.toAddTagIds = toAddTagIds;
         this.requestTime = requestTime;
         this.respondTime = respondTime;
         this.isAccepted = isAccepted;
@@ -56,9 +50,6 @@ public class GroupChannelAddition implements Parcelable {
         requesterChannel = in.readParcelable(Channel.class.getClassLoader());
         responderGroupChannel = in.readParcelable(GroupChannel.class.getClassLoader());
         message = in.readString();
-        note = in.readString();
-        newTagNames = in.createStringArrayList();
-        toAddTagIds = in.createStringArrayList();
         if(in.readLong() != -1) {
             requestTime = new Date(in.readLong());
         }
@@ -98,18 +89,6 @@ public class GroupChannelAddition implements Parcelable {
         return message;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public List<String> getNewTagNames() {
-        return newTagNames;
-    }
-
-    public List<String> getToAddTagIds() {
-        return toAddTagIds;
-    }
-
     public Date getRequestTime() {
         return requestTime;
     }
@@ -139,9 +118,6 @@ public class GroupChannelAddition implements Parcelable {
                 Objects.equals(this.requesterChannel, that.requesterChannel) &&
                 Objects.equals(this.responderGroupChannel, that.responderGroupChannel) &&
                 Objects.equals(this.message, that.message) &&
-                Objects.equals(this.note, that.note) &&
-                Objects.equals(this.newTagNames, that.newTagNames) &&
-                Objects.equals(this.toAddTagIds, that.toAddTagIds) &&
                 Objects.equals(this.requestTime, that.requestTime) &&
                 Objects.equals(this.respondTime, that.respondTime) &&
                 this.isAccepted == that.isAccepted &&
@@ -151,7 +127,7 @@ public class GroupChannelAddition implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, requesterChannel, responderGroupChannel, message, note, newTagNames, toAddTagIds, requestTime, respondTime, isAccepted, isViewed, isExpired);
+        return Objects.hash(uuid, requesterChannel, responderGroupChannel, message, requestTime, respondTime, isAccepted, isViewed, isExpired);
     }
 
     @Override
@@ -161,9 +137,6 @@ public class GroupChannelAddition implements Parcelable {
                 ", getRequesterChannel=" + requesterChannel +
                 ", getResponderGroupChannel=" + responderGroupChannel +
                 ", getMessage='" + message + '\'' +
-                ", getNote='" + note + '\'' +
-                ", getNewTagNames=" + newTagNames +
-                ", getToAddTagIds=" + toAddTagIds +
                 ", getRequestTime=" + requestTime +
                 ", getRespondTime=" + respondTime +
                 ", isAccepted=" + isAccepted +
@@ -183,9 +156,6 @@ public class GroupChannelAddition implements Parcelable {
         dest.writeParcelable(requesterChannel, flags);
         dest.writeParcelable(responderGroupChannel, flags);
         dest.writeString(message);
-        dest.writeString(note);
-        dest.writeStringList(newTagNames);
-        dest.writeStringList(toAddTagIds);
         if(requestTime != null) {
             dest.writeLong(requestTime.getTime());
         }else {

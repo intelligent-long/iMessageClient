@@ -22,7 +22,7 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="@string/title_add_channel">
+            app:title="@string/title_add_group_channel">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -75,7 +75,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/click_view_channel"
+                    android:id="@+id/click_view_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -124,7 +124,7 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:id="@+id/imessage_id_user"
+                                android:id="@+id/id_user"
                                 android:textSize="16sp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
