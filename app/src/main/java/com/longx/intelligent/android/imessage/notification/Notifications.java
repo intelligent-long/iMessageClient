@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.activity.BroadcastInteractionsActi
 import com.longx.intelligent.android.imessage.activity.ChannelAdditionsActivity;
 import com.longx.intelligent.android.imessage.activity.ChatActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionsActivity;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
@@ -188,7 +189,7 @@ public class Notifications {
     }
 
     public static void notifyGroupChannelAdditionActivity(Context context, int notificationRequest, int notificationRespond){
-        Intent intent = new Intent(context, ChannelAdditionsActivity.class);
+        Intent intent = new Intent(context, GroupChannelAdditionsActivity.class);
         String text;
         if(notificationRequest != 0 && notificationRespond != 0) {
             text = notificationRequest + " 个新的群频道添加请求, " + notificationRespond  + " 个新的群频道添加回应";

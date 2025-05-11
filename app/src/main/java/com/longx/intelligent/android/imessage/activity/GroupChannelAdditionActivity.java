@@ -22,6 +22,7 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelAdditionBinding;
+import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 
@@ -195,5 +196,13 @@ public class GroupChannelAdditionActivity extends BaseActivity {
                 }
             });
         }
+        binding.acceptAddButton.setOnClickListener(v -> {
+            new ConfirmDialog(this, "是否接受添加频道请求？")
+                    .setNegativeButton()
+                    .setPositiveButton("确定", (dialog, which) -> {
+
+                    })
+                    .create().show();
+        });
     }
 }

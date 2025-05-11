@@ -104,8 +104,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         setupYier();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
-        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
-        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this,
+                ID.MESSAGES, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
         new Thread(() -> {
             runOnUiThread(() -> {
@@ -124,8 +124,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         if(navIconVisibilityPlusAnimator != null) navIconVisibilityPlusAnimator.cancel();
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
-        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.MESSAGES);
-        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this,
+                ID.MESSAGES, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
         GlobalYiersHolder.removeYier(this, BroadcastFetchNewsYier.class, this);
     }
 
@@ -604,6 +604,12 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         }
     }
 
+    boolean showChannelBadge = false;
+    boolean showGroupChannelBadge = false;
+    boolean showBroadcastLikesBadge = false;
+    boolean showBroadcastCommentsBadge = false;
+    boolean showBroadcastRepliesBadge = false;
+
     @Override
     public void showNewContentBadge(ID id, int newContentCount) {
         switch (id){
@@ -622,22 +628,31 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                     showNavigationMessageBadge();
                 }
                 break;
+            case GROUP_CHANNEL_ADDITION_ACTIVITIES:
+                showGroupChannelBadge = newContentCount > 0;
+                break;
             case CHANNEL_ADDITION_ACTIVITIES:
-                if(newContentCount > 0) {
-                    showNavigationChannelBadge();
-                } else {
-                    hideNavigationChannelBadge();
-                }
+                showChannelBadge = newContentCount > 0;
                 break;
             case BROADCAST_LIKES:
-            case BROADCAST_COMMENTS:
-            case BROADCAST_REPLIES:
-                if(newContentCount > 0){
-                    showNavigationBroadcastBadge();
-                }else {
-                    hideNavigationBroadcastBadge();
-                }
+                showBroadcastLikesBadge = newContentCount > 0;
                 break;
+            case BROADCAST_COMMENTS:
+                showBroadcastCommentsBadge = newContentCount > 0;
+                break;
+            case BROADCAST_REPLIES:
+                showBroadcastRepliesBadge = newContentCount > 0;
+                break;
+        }
+        if(showChannelBadge || showGroupChannelBadge){
+            showNavigationChannelBadge();
+        }else {
+            hideNavigationChannelBadge();
+        }
+        if(showBroadcastLikesBadge || showBroadcastCommentsBadge || showBroadcastRepliesBadge){
+            showNavigationBroadcastBadge();
+        }else {
+            hideNavigationBroadcastBadge();
         }
     }
 
