@@ -105,4 +105,7 @@ public interface GroupChannelApi {
     @POST("group_channel/add/accept")
     CompletableCall<OperationStatus> acceptAdd(@Body AcceptAddGroupChannelPostBody postBody);
 
+    @POST("group_channel/add/activity/{uuid}/view")
+    CompletableCall<OperationStatus> viewOneAdditionActivity(@Path("uuid") String uuid);
+
 }

@@ -90,7 +90,7 @@ public class GroupChannelAdditionSendFragment extends Fragment implements GroupC
                     && groupChannelAddition.getRequesterChannel().getImessageId().equals(currentUserInfo.getImessageId()))
                 sendGroupChannelAdditions.add(groupChannelAddition);
         });
-        if (sendGroupChannelAdditions.size() == 0) {
+        if (sendGroupChannelAdditions.isEmpty()) {
             if(!fetchingVisible) toNoContentVisible();
         } else {
             if(!fetchingVisible) toRecyclerViewVisible();

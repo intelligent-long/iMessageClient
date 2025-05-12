@@ -20,6 +20,7 @@ import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelAdditionActivitySendBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
@@ -130,7 +131,7 @@ public class GroupChannelAdditionActivitiesSendRecyclerAdapter extends Wrappable
         }
         checkAndShowTimeText(holder, position, itemData);
         if (!itemData.groupChannelAddition.isViewed()) {
-            //TODO 发送服务器
+            GroupChannelApiCaller.viewOneAdditionActivity(null, itemData.groupChannelAddition.getUuid(), new RetrofitApiCaller.CommonYier<>(activity, false, true));
         }
         if(!itemData.groupChannelAddition.isViewed()) {
             holder.binding.badgeHost.setVisibility(View.VISIBLE);

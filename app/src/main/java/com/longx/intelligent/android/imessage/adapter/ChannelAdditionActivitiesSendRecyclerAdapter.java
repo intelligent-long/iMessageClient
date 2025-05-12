@@ -130,7 +130,7 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
                 holder.binding.expiredText.setVisibility(View.VISIBLE);
             }
             if(!itemData.channelAddition.isViewed()) {
-                ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAddition.getUuid(), new RetrofitApiCaller.CommonYier<>((AppCompatActivity) activity, false, true));
+                ChannelApiCaller.viewOneAdditionActivity(null, itemData.channelAddition.getUuid(), new RetrofitApiCaller.CommonYier<>(activity, false, true));
             }
         }else {
             holder.binding.getRoot().setVisibility(View.GONE);

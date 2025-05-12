@@ -108,7 +108,7 @@ public class ChannelAdditionSendFragment extends Fragment implements ChannelAddi
                     && channelAdditionInfo.getRequesterChannel().getImessageId().equals(currentUserInfo.getImessageId()))
                 sendChannelAdditions.add(channelAdditionInfo);
         });
-        if (sendChannelAdditions.size() == 0) {
+        if (sendChannelAdditions.isEmpty()) {
             if(!fetchingVisible) toNoContentVisible();
         } else {
             if(!fetchingVisible) toRecyclerViewVisible();
