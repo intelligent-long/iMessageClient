@@ -26,8 +26,104 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"/>
+                app:layout_collapseMode="pin"
+                app:menu="@menu/toolbar_activity_invite_join_group_channel"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/card_choose_channel"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:elevation="-1dp"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/card_background"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    style="@style/CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/choose_channel_button"
+                    android:text="频道" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/choose_channel_button"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="选择" />
+            </RelativeLayout>
+
+<!--            <TextView-->
+<!--                android:id="@+id/no_channel_text_view"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="请选择频道"-->
+<!--                android:textSize="19sp"-->
+<!--                android:textColor="?attr/colorOutline"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginHorizontal="30dp"-->
+<!--                android:layout_marginVertical="21dp"/>-->
+
+            <RelativeLayout
+                android:id="@+id/card_choose_group_channel"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:elevation="-1dp"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/card_background"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    style="@style/CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/choose_group_channel_button"
+                    android:text="群频道" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/choose_group_channel_button"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="选择" />
+            </RelativeLayout>
+
+<!--            <TextView-->
+<!--                android:id="@+id/no_group_channel_text_view"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="请选择群频道"-->
+<!--                android:textSize="19sp"-->
+<!--                android:textColor="?attr/colorOutline"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginHorizontal="30dp"-->
+<!--                android:layout_marginVertical="21dp"/>-->
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

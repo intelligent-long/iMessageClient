@@ -169,4 +169,8 @@
         <item name="backgroundTint">?attr/colorSecondaryContainer</item>
         <item name="android:textColor">?attr/colorOnSecondaryContainer</item>
     </style>
+
+    <style name="CardTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">21sp</item>
+    </style>
 </resources>

@@ -63,9 +63,10 @@ public class GroupChannelAdditionsActivity extends BaseActivity implements Group
         pagerAdapter = new GroupChannelAdditionsActivityPagerAdapter(this);
         binding.viewPager.setAdapter(pagerAdapter);
         PAGER_TITLES = new String[]{
-                getString(R.string.channel_addition_activity_pending),
-                getString(R.string.channel_addition_activity_send),
-                getString(R.string.channel_addition_activity_receive)
+                getString(R.string.group_channel_addition_activity_pending),
+                getString(R.string.group_channel_addition_activity_send),
+                getString(R.string.group_channel_addition_activity_receive),
+                getString(R.string.group_channel_addition_activity_invite)
         };
         new TabLayoutMediator(binding.tabs, binding.viewPager, (tab, position) -> tab.setText(PAGER_TITLES[position])).attach();
         binding.tabs.post(() -> {
