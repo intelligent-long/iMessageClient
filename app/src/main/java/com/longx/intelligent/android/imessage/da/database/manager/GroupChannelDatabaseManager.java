@@ -5,10 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.longx.intelligent.android.imessage.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.database.helper.GroupChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
@@ -86,8 +84,8 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                     ContentValues values1 = new ContentValues();
                     values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID, groupChannelAssociation.getGroupChannelId());
                     values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID, groupChannelAssociation.getAssociationId());
-                    values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID, groupChannelAssociation.getChannelImessageId());
-                    values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID, groupChannelAssociation.getInviteChannelImessageId());
+                    values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID, groupChannelAssociation.getOwner());
+                    values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID, groupChannelAssociation.getInviter());
                     values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_MESSAGE, groupChannelAssociation.getInviteMessage());
                     values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_TIME, groupChannelAssociation.getInviteTime().getTime());
                     values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ACCEPT_TIME, groupChannelAssociation.getAcceptTime().getTime());
@@ -147,8 +145,8 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 ContentValues values1 = new ContentValues();
                 values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID, groupChannelAssociation.getGroupChannelId());
                 values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID, groupChannelAssociation.getAssociationId());
-                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID, groupChannelAssociation.getChannelImessageId());
-                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID, groupChannelAssociation.getInviteChannelImessageId());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID, groupChannelAssociation.getOwner());
+                values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID, groupChannelAssociation.getInviter());
                 values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_MESSAGE, groupChannelAssociation.getInviteMessage());
                 values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_TIME, groupChannelAssociation.getInviteTime().getTime());
                 values1.put(GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ACCEPT_TIME, groupChannelAssociation.getAcceptTime().getTime());

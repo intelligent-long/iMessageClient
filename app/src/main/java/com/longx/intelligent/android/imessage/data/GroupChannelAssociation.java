@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by LONG on 2025/4/20 at 2:02 AM.
@@ -14,8 +13,8 @@ import java.util.List;
 public class GroupChannelAssociation implements Parcelable {
     private String associationId;
     private String groupChannelId;
-    private String channelImessageId;
-    private String inviteChannelImessageId;
+    private String owner;
+    private String inviter;
     private String inviteMessage;
     private Date inviteTime;
     private Date acceptTime;
@@ -23,11 +22,11 @@ public class GroupChannelAssociation implements Parcelable {
     public GroupChannelAssociation() {
     }
 
-    public GroupChannelAssociation(String associationId, String groupChannelId, String channelImessageId, String inviteChannelImessageId, String inviteMessage, Date inviteTime, Date acceptTime) {
+    public GroupChannelAssociation(String associationId, String groupChannelId, String owner, String inviter, String inviteMessage, Date inviteTime, Date acceptTime) {
         this.associationId = associationId;
         this.groupChannelId = groupChannelId;
-        this.channelImessageId = channelImessageId;
-        this.inviteChannelImessageId = inviteChannelImessageId;
+        this.owner = owner;
+        this.inviter = inviter;
         this.inviteMessage = inviteMessage;
         this.inviteTime = inviteTime;
         this.acceptTime = acceptTime;
@@ -53,12 +52,12 @@ public class GroupChannelAssociation implements Parcelable {
         return groupChannelId;
     }
 
-    public String getChannelImessageId() {
-        return channelImessageId;
+    public String getOwner() {
+        return owner;
     }
 
-    public String getInviteChannelImessageId() {
-        return inviteChannelImessageId;
+    public String getInviter() {
+        return inviter;
     }
 
     public String getInviteMessage() {
@@ -76,8 +75,8 @@ public class GroupChannelAssociation implements Parcelable {
     public GroupChannelAssociation(Parcel in) {
         associationId = in.readString();
         groupChannelId = in.readString();
-        channelImessageId = in.readString();
-        inviteChannelImessageId = in.readString();
+        owner = in.readString();
+        inviter = in.readString();
         inviteMessage = in.readString();
         inviteTime = (Date) in.readValue(getClass().getClassLoader());
         acceptTime = (Date) in.readValue(getClass().getClassLoader());
@@ -92,8 +91,8 @@ public class GroupChannelAssociation implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(associationId);
         dest.writeString(groupChannelId);
-        dest.writeString(channelImessageId);
-        dest.writeString(inviteChannelImessageId);
+        dest.writeString(owner);
+        dest.writeString(inviter);
         dest.writeString(inviteMessage);
         dest.writeValue(inviteTime);
         dest.writeValue(acceptTime);

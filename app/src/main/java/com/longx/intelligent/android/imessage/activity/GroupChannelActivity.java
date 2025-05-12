@@ -18,7 +18,6 @@ import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
@@ -56,7 +55,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             isOwner = true;
         }
         for (GroupChannelAssociation groupChannelAssociation : groupChannel.getGroupChannelAssociations()) {
-            if(groupChannelAssociation.getChannelImessageId().equals(currentUserImessageId)){
+            if(groupChannelAssociation.getInviter().equals(currentUserImessageId)){
                 inGroup = true;
                 break;
             }
