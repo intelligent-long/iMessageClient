@@ -6,12 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
@@ -192,7 +186,7 @@ public class GroupChannelAdditionActivity extends BaseActivity {
             binding.clickViewHeader.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GroupChannelActivity.class);
                 intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannelAddition.getResponderGroupChannel());
-                intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
+                intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
                 startActivity(intent);
             });
         }else {

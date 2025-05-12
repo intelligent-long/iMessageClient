@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.imessage.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,15 +9,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.activity.ChannelActivity;
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
-import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
-import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelAdditionActivityReceiveBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -98,7 +97,11 @@ public class GroupChannelAdditionActivitiesReceiveRecyclerAdapter extends Wrappa
 
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.clickView.setOnClickListener(v -> {
-            //TODO
+            GroupChannelAddition groupChannelAddition = itemDataList.get(position).groupChannelAddition;
+            Intent intent = new Intent(activity, ChannelActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, groupChannelAddition.getRequesterChannel());
+            intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
+            activity.startActivity(intent);
         });
     }
 

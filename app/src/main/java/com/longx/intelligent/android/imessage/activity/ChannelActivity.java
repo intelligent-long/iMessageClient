@@ -48,7 +48,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private Channel channel;
     private Self self;
     private boolean isSelf;
-    private boolean networkFetch;
+    private boolean mayNotAssociated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(imessageId == null) {
             imessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
             channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
-            networkFetch = getIntent().getBooleanExtra(ExtraKeys.NETWORK_FETCH, false);
+            mayNotAssociated = getIntent().getBooleanExtra(ExtraKeys.MAY_NOT_ASSOCIATED, false);
         }
         self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         isSelf = (imessageId == null && channel == null)
@@ -95,7 +95,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     }
 
     private void setupUi() {
-        if(isSelf || (networkFetch && channel != null && !channel.isAssociated())) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+        if(isSelf || (mayNotAssociated && channel != null && !channel.isAssociated())) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
     }
 
     private void showOrFetchAndShow(String imessageId) {
@@ -103,7 +103,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(channel != null){
             showContent();
         }else {
-            networkFetch = true;
+            mayNotAssociated = true;
             ChannelApiCaller.findChannelByImessageId(this, imessageId, new RetrofitApiCaller.CommonYier<OperationData>(this, false, true){
 
                 @Override

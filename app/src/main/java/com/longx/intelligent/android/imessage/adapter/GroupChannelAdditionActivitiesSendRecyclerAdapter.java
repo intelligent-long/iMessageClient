@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.imessage.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -99,7 +102,11 @@ public class GroupChannelAdditionActivitiesSendRecyclerAdapter extends Wrappable
 
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.clickView.setOnClickListener(v -> {
-            //TODO
+            GroupChannelAddition groupChannelAddition = itemDataList.get(position).groupChannelAddition;
+            GroupChannel responderGroupChannel = groupChannelAddition.getResponderGroupChannel();
+            Intent intent = new Intent(activity, GroupChannelActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, responderGroupChannel);
+            activity.startActivity(intent);
         });
     }
 

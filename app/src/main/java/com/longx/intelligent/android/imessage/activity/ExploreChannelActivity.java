@@ -87,7 +87,7 @@ public class ExploreChannelActivity extends BaseActivity {
                                 Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
                                 intent.putExtra(ExtraKeys.CHANNEL, channel);
-                                intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
+                                intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
                                 startActivity(intent);
                             });
                         }
@@ -101,7 +101,7 @@ public class ExploreChannelActivity extends BaseActivity {
                                 Channel channel = data.getData(Channel.class);
                                 Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
                                 intent.putExtra(ExtraKeys.CHANNEL, channel);
-                                intent.putExtra(ExtraKeys.NETWORK_FETCH, true);
+                                intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
                                 startActivity(intent);
                             });
                         }
