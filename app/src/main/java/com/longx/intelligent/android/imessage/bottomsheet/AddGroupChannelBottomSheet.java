@@ -12,6 +12,7 @@ public class AddGroupChannelBottomSheet extends AbstractBottomSheet{
     private BottomSheetAddGroupChannelBinding binding;
     private View.OnClickListener exploreChannelClickYier;
     private View.OnClickListener createClickYier;
+    private View.OnClickListener inviteClickYier;
 
     public AddGroupChannelBottomSheet(Activity activity) {
         super(activity);
@@ -34,6 +35,10 @@ public class AddGroupChannelBottomSheet extends AbstractBottomSheet{
             dismiss();
             if(createClickYier != null) createClickYier.onClick(v);
         });
+        binding.optionInviteJoinChannel.setOnClickListener(v -> {
+            dismiss();
+            if(inviteClickYier != null) inviteClickYier.onClick(v);
+        });
     }
 
     public void setExploreChannelClickYier(View.OnClickListener exploreChannelClickYier) {
@@ -42,5 +47,9 @@ public class AddGroupChannelBottomSheet extends AbstractBottomSheet{
 
     public void setCreateClickYier(View.OnClickListener createClickYier) {
         this.createClickYier = createClickYier;
+    }
+
+    public void setInviteClickYier(View.OnClickListener inviteClickYier) {
+        this.inviteClickYier = inviteClickYier;
     }
 }

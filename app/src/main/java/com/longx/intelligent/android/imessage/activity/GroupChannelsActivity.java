@@ -115,6 +115,9 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
             bottomSheet.setCreateClickYier(v1 -> {
                 startActivity(new Intent(this, CreateGroupChannelActivity.class));
             });
+            bottomSheet.setInviteClickYier(v1 -> {
+                startActivity(new Intent(this, InviteJoinGroupChannelActivity.class));
+            });
             bottomSheet.show();
         });
     }

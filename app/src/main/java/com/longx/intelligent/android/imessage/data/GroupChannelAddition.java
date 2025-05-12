@@ -50,11 +50,13 @@ public class GroupChannelAddition implements Parcelable {
         requesterChannel = in.readParcelable(Channel.class.getClassLoader());
         responderGroupChannel = in.readParcelable(GroupChannel.class.getClassLoader());
         message = in.readString();
-        if(in.readLong() != -1) {
-            requestTime = new Date(in.readLong());
+        long requestTimeLong = in.readLong();
+        if (requestTimeLong != -1) {
+            requestTime = new Date(requestTimeLong);
         }
-        if(in.readLong() != -1) {
-            respondTime = new Date(in.readLong());
+        long respondTimeLong = in.readLong();
+        if (respondTimeLong != -1) {
+            respondTime = new Date(respondTimeLong);
         }
         isAccepted = in.readByte() != 0;
         isViewed = in.readByte() != 0;

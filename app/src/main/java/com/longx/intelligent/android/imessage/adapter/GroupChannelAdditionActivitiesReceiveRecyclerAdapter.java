@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
@@ -19,6 +20,7 @@ import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -100,9 +102,8 @@ public class GroupChannelAdditionActivitiesReceiveRecyclerAdapter extends Wrappa
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.clickView.setOnClickListener(v -> {
             GroupChannelAddition groupChannelAddition = itemDataList.get(position).groupChannelAddition;
-            Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL, groupChannelAddition.getRequesterChannel());
-            intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
+            Intent intent = new Intent(activity, GroupChannelAdditionActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION_INFO, groupChannelAddition);
             activity.startActivity(intent);
         });
     }
