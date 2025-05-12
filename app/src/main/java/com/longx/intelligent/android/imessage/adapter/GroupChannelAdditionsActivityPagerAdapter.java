@@ -32,8 +32,8 @@ public class GroupChannelAdditionsActivityPagerAdapter extends FragmentStateAdap
     public Fragment createFragment(int position) {
         switch (position){
             case 0: return groupChannelAdditionPendingFragment;
-            case 1: return groupChannelAdditionReceiveFragment;
-            case 2: return groupChannelAdditionSendFragment;
+            case 1: return groupChannelAdditionSendFragment;
+            case 2: return groupChannelAdditionReceiveFragment;
         }
         return null;
     }

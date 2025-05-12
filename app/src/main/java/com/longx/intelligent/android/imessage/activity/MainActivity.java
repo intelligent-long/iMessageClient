@@ -59,6 +59,7 @@ import com.longx.intelligent.android.imessage.permission.ToRequestPermissionsIte
 import com.longx.intelligent.android.imessage.service.ServerMessageService;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.WindowAndSystemUiUtil;

@@ -21,10 +21,18 @@ import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
 import com.longx.intelligent.android.imessage.data.Self;
+import com.longx.intelligent.android.imessage.data.request.AcceptAddGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelAdditionBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GroupChannelAdditionActivity extends BaseActivity {
     private ActivityGroupChannelAdditionBinding binding;
@@ -200,7 +208,15 @@ public class GroupChannelAdditionActivity extends BaseActivity {
             new ConfirmDialog(this, "是否接受添加频道请求？")
                     .setNegativeButton()
                     .setPositiveButton("确定", (dialog, which) -> {
-
+                        GroupChannelApiCaller.acceptAdd(this, new AcceptAddGroupChannelPostBody(groupChannelAddition.getUuid()), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(GroupChannelAdditionActivity.this, new int[]{-101, -102, -103}, () -> {
+                                    new MessageDialog(GroupChannelAdditionActivity.this, "添加群频道", "群频道已添加").create().show();
+                                });
+                            }
+                        });
                     })
                     .create().show();
         });

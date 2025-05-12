@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
+import com.longx.intelligent.android.imessage.data.request.AcceptAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
@@ -100,5 +101,8 @@ public interface GroupChannelApi {
 
     @GET("group_channel/add/activity/all")
     CompletableCall<OperationData> fetchAllGroupAdditionActivities();
+
+    @POST("group_channel/add/accept")
+    CompletableCall<OperationStatus> acceptAdd(@Body AcceptAddGroupChannelPostBody postBody);
 
 }
