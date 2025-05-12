@@ -14,21 +14,21 @@ public class GroupChannelAssociation implements Parcelable {
     private String associationId;
     private String groupChannelId;
     private String owner;
-    private String inviter;
-    private String inviteMessage;
-    private Date inviteTime;
+    private String requester;
+    private String requestMessage;
+    private Date requestTime;
     private Date acceptTime;
 
     public GroupChannelAssociation() {
     }
 
-    public GroupChannelAssociation(String associationId, String groupChannelId, String owner, String inviter, String inviteMessage, Date inviteTime, Date acceptTime) {
+    public GroupChannelAssociation(String associationId, String groupChannelId, String owner, String requester, String requestMessage, Date requestTime, Date acceptTime) {
         this.associationId = associationId;
         this.groupChannelId = groupChannelId;
         this.owner = owner;
-        this.inviter = inviter;
-        this.inviteMessage = inviteMessage;
-        this.inviteTime = inviteTime;
+        this.requester = requester;
+        this.requestMessage = requestMessage;
+        this.requestTime = requestTime;
         this.acceptTime = acceptTime;
     }
 
@@ -56,16 +56,16 @@ public class GroupChannelAssociation implements Parcelable {
         return owner;
     }
 
-    public String getInviter() {
-        return inviter;
+    public String getRequester() {
+        return requester;
     }
 
-    public String getInviteMessage() {
-        return inviteMessage;
+    public String getRequestMessage() {
+        return requestMessage;
     }
 
-    public Date getInviteTime() {
-        return inviteTime;
+    public Date getRequestTime() {
+        return requestTime;
     }
 
     public Date getAcceptTime() {
@@ -76,9 +76,9 @@ public class GroupChannelAssociation implements Parcelable {
         associationId = in.readString();
         groupChannelId = in.readString();
         owner = in.readString();
-        inviter = in.readString();
-        inviteMessage = in.readString();
-        inviteTime = (Date) in.readValue(getClass().getClassLoader());
+        requester = in.readString();
+        requestMessage = in.readString();
+        requestTime = (Date) in.readValue(getClass().getClassLoader());
         acceptTime = (Date) in.readValue(getClass().getClassLoader());
     }
 
@@ -92,9 +92,9 @@ public class GroupChannelAssociation implements Parcelable {
         dest.writeString(associationId);
         dest.writeString(groupChannelId);
         dest.writeString(owner);
-        dest.writeString(inviter);
-        dest.writeString(inviteMessage);
-        dest.writeValue(inviteTime);
+        dest.writeString(requester);
+        dest.writeString(requestMessage);
+        dest.writeValue(requestTime);
         dest.writeValue(acceptTime);
     }
 }

@@ -41,6 +41,7 @@
     <string name="title_open_source_licenses">开放源代码许可</string>
     <string name="title_explore_channel">搜台</string>
     <string name="title_explore_group_channel">搜台</string>
+    <string name="title_invite_group_channel">邀请添加</string>
     <string name="title_edit_broadcast">编辑广播</string>
     <string name="title_send_broadcast">发送广播</string>
     <string name="title_request_add_channel">请求添加频道</string>
