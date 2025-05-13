@@ -2,9 +2,11 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -65,7 +67,12 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
                         ErrorLogger.log(choseGroupChannel);
                     })
                     .create().show();
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.invite){
 
+            }
+            return true;
         });
     }
 }
