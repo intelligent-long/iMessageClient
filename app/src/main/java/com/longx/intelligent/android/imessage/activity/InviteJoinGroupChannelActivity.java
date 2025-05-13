@@ -20,6 +20,7 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.ActivityInviteJoinGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneChannelDialog;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneGroupChannelDialog;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import java.util.List;
 
 public class InviteJoinGroupChannelActivity extends BaseActivity {
     private ActivityInviteJoinGroupChannelBinding binding;
+    private Channel choseChannel;
+    private GroupChannel choseGroupChannel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,7 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
             ChooseOneChannelDialog chooseOneChannelDialog = new ChooseOneChannelDialog(this, "选择频道", channels);
             chooseOneChannelDialog
                     .setPositiveButton("确定", (dialog, which) -> {
-                        Channel choseChannel = chooseOneChannelDialog.getAdapter().getSelected();
+                        choseChannel = chooseOneChannelDialog.getAdapter().getSelected();
                         ErrorLogger.log(choseChannel);
                     })
                     .setNegativeButton(null)
@@ -63,14 +66,17 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
             chooseOneGroupChannelDialog
                     .setNegativeButton(null)
                     .setPositiveButton("确定", (dialog, which) -> {
-                        GroupChannel choseGroupChannel = chooseOneGroupChannelDialog.getAdapter().getSelected();
+                        choseGroupChannel = chooseOneGroupChannelDialog.getAdapter().getSelected();
                         ErrorLogger.log(choseGroupChannel);
                     })
                     .create().show();
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.invite){
-
+                if(choseChannel == null || choseGroupChannel == null){
+                    new CustomViewMessageDialog(this, "请选择频道").create().show();
+                    return true;
+                }
             }
             return true;
         });
