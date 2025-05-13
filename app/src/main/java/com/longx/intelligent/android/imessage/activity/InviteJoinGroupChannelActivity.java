@@ -18,6 +18,7 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.ActivityInviteJoinGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneChannelDialog;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneGroupChannelDialog;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,21 +46,26 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
             ChannelDatabaseManager.getInstance().findAllAssociations().forEach(channelAssociation -> {
                 channels.add(channelAssociation.getChannel());
             });
-            new ChooseOneChannelDialog(this, "选择频道", channels)
+            ChooseOneChannelDialog chooseOneChannelDialog = new ChooseOneChannelDialog(this, "选择频道", channels);
+            chooseOneChannelDialog
                     .setPositiveButton("确定", (dialog, which) -> {
-
+                        Channel choseChannel = chooseOneChannelDialog.getAdapter().getSelected();
+                        ErrorLogger.log(choseChannel);
                     })
                     .setNegativeButton(null)
                     .create().show();
         });
         binding.chooseGroupChannelButton.setOnClickListener(v -> {
             List<GroupChannel> allAssociations = GroupChannelDatabaseManager.getInstance().findAllAssociations();
-            new ChooseOneGroupChannelDialog(this, "选择群频道", allAssociations)
-                    .setPositiveButton("确定", (dialog, which) -> {
-
-                    })
+            ChooseOneGroupChannelDialog chooseOneGroupChannelDialog = new ChooseOneGroupChannelDialog(this, "选择群频道", allAssociations);
+            chooseOneGroupChannelDialog
                     .setNegativeButton(null)
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        GroupChannel choseGroupChannel = chooseOneGroupChannelDialog.getAdapter().getSelected();
+                        ErrorLogger.log(choseGroupChannel);
+                    })
                     .create().show();
+
         });
     }
 }

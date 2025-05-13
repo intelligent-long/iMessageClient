@@ -93,4 +93,8 @@ public class ChooseOneChannelDialog extends AbstractDialog<ChooseOneChannelDialo
         neutralButtonInfo = new DialogButtonInfo(text, yier);
         return this;
     }
+
+    public ChooseOneChannelRecyclerAdapter getAdapter() {
+        return adapter;
+    }
 }

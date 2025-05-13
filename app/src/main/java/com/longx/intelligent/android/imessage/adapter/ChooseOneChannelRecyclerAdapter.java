@@ -1,6 +1,8 @@
 package com.longx.intelligent.android.imessage.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,8 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.activity.ChannelActivity;
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemAddChannelToTagBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChooseOneChannelBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
@@ -26,6 +32,8 @@ import java.util.List;
 public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseOneChannelRecyclerAdapter.ViewHolder, ChooseOneChannelRecyclerAdapter.ItemData> {
     private final Activity activity;
     private final List<ItemData> itemDataList;
+    private int selectedPosition = -1;
+    private static final Object PAYLOAD_SELECTION_CHANGE = new Object();
 
     public ChooseOneChannelRecyclerAdapter(Activity activity, List<Channel> channelList) {
         this.activity = activity;
@@ -37,7 +45,6 @@ public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapte
     public static class ItemData {
         private Character indexChar;
         private Channel channel;
-        private boolean checked = false;
 
         public ItemData(Channel channel) {
             indexChar = PinyinUtil.getPinyin(channel.getUsername()).toUpperCase().charAt(0);
@@ -70,7 +77,7 @@ public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.channel.getAvatar() == null ? null : itemData.channel.getAvatar().getHash();
         if (avatarHash == null) {
@@ -78,14 +85,36 @@ public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapte
         } else {
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
         }
-
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
         if (position == 0 || !itemDataList.get(position - 1).indexChar.equals(itemData.indexChar)) {
             holder.binding.indexBar.setVisibility(View.VISIBLE);
         } else {
             holder.binding.indexBar.setVisibility(View.GONE);
         }
-
         holder.binding.name.setText(itemData.channel.getNote() == null ? itemData.channel.getUsername() : itemData.channel.getNote());
+        holder.binding.radioButton.setOnCheckedChangeListener(null);
+        holder.binding.radioButton.setChecked(position == selectedPosition);
+        holder.binding.radioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && selectedPosition != position) {
+                int previous = selectedPosition;
+                selectedPosition = position;
+
+                if (previous != -1) notifyItemChanged(previous, PAYLOAD_SELECTION_CHANGE);
+                notifyItemChanged(selectedPosition, PAYLOAD_SELECTION_CHANGE);
+            }
+        });
+        holder.binding.clickView.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ChannelActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, itemData.channel);
+            activity.startActivity(intent);
+        });
+    }
+
+    public Channel getSelected(){
+        try {
+            return itemDataList.get(selectedPosition).channel;
+        }catch (Exception e){
+            return null;
+        }
     }
 }

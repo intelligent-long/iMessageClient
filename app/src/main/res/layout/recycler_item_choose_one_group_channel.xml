@@ -42,11 +42,11 @@
             android:layout_marginStart="21dp"
             android:textSize="21sp"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/check_box"
+            android:layout_toStartOf="@id/radio_button"
             android:layout_toEndOf="@id/avatar"/>
 
         <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/check_box"
+            android:id="@+id/radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

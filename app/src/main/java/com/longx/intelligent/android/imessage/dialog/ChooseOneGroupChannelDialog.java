@@ -95,4 +95,8 @@ public class ChooseOneGroupChannelDialog extends AbstractDialog<ChooseOneGroupCh
         neutralButtonInfo = new DialogButtonInfo(text, yier);
         return this;
     }
+
+    public ChooseOneGroupChannelRecyclerAdapter getAdapter() {
+        return adapter;
+    }
 }

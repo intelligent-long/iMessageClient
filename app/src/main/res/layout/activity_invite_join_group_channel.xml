@@ -20,7 +20,7 @@
             app:expandedTitleTextAppearance="@style/ExpandedTitleTextAppearance"
             app:expandedTitleMarginStart="@dimen/collapsing_toolbar_layout_expanded_title_margin_start"
             app:expandedTitleMarginBottom="@dimen/collapsing_toolbar_layout_expanded_title_margin_bottom"
-            app:title="邀请添加群频道">
+            app:title="@string/title_invite_group_channel">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
