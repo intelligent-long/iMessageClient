@@ -36,21 +36,21 @@ import java.util.List;
  */
 public class ChooseOneGroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseOneGroupChannelRecyclerAdapter.ViewHolder, ChooseOneGroupChannelRecyclerAdapter.ItemData> {
     private final Activity activity;
-    private final List<GroupChannel> sourceGroupChannelList;
     private final List<ItemData> itemDataList;
     private int selectedPosition = -1;
     private static final Object PAYLOAD_SELECTION_CHANGE = new Object();
 
     public ChooseOneGroupChannelRecyclerAdapter(Activity activity, List<GroupChannel> groupChannelList, GroupChannel choseGroupChannel) {
         this.activity = activity;
-        this.sourceGroupChannelList = groupChannelList;
         this.itemDataList = new ArrayList<>();
-        for (int i = 0; i < groupChannelList.size(); i++) {
-            GroupChannel groupChannel = groupChannelList.get(i);
+        groupChannelList.forEach(groupChannel -> {
             this.itemDataList.add(new ItemData(groupChannel));
+        });
+        itemDataList.sort(Comparator.comparing(o -> o.indexChar));
+        for (int i = 0; i < itemDataList.size(); i++) {
+            GroupChannel groupChannel = itemDataList.get(i).groupChannel;
             if(groupChannel.equals(choseGroupChannel)) selectedPosition = i;
         }
-        itemDataList.sort(Comparator.comparing(o -> o.indexChar));
     }
 
     public static class ItemData {
@@ -122,7 +122,7 @@ public class ChooseOneGroupChannelRecyclerAdapter extends WrappableRecyclerViewA
 
     public GroupChannel getSelected(){
         try {
-            return sourceGroupChannelList.get(selectedPosition);
+            return itemDataList.get(selectedPosition).groupChannel;
         }catch (Exception e){
             return null;
         }

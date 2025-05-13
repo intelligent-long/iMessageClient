@@ -32,21 +32,21 @@ import java.util.List;
  */
 public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseOneChannelRecyclerAdapter.ViewHolder, ChooseOneChannelRecyclerAdapter.ItemData> {
     private final Activity activity;
-    private final List<Channel> sourceChannelList;
     private final List<ItemData> itemDataList;
     private int selectedPosition = -1;
     private static final Object PAYLOAD_SELECTION_CHANGE = new Object();
 
     public ChooseOneChannelRecyclerAdapter(Activity activity, List<Channel> channelList, Channel choseChannel) {
         this.activity = activity;
-        this.sourceChannelList = channelList;
         this.itemDataList = new ArrayList<>();
-        for (int i = 0; i < channelList.size(); i++) {
-            Channel channel = channelList.get(i);
+        channelList.forEach(channel -> {
             this.itemDataList.add(new ItemData(channel));
+        });
+        itemDataList.sort(Comparator.comparing(o -> o.indexChar));
+        for (int i = 0; i < itemDataList.size(); i++) {
+            Channel channel = itemDataList.get(i).channel;
             if(channel.equals(choseChannel)) selectedPosition = i;
         }
-        itemDataList.sort(Comparator.comparing(o -> o.indexChar));
     }
 
     public static class ItemData {
@@ -118,7 +118,7 @@ public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapte
 
     public Channel getSelected(){
         try {
-            return sourceChannelList.get(selectedPosition);
+            return itemDataList.get(selectedPosition).channel;
         }catch (Exception e){
             return null;
         }
