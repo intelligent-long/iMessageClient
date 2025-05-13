@@ -167,9 +167,15 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
 
     private void showContent(String avatarHash, String username, String note, Integer sex, String imessageId, String imessageIdUser, String email, String regionDesc){
         if (avatarHash == null) {
-            GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, binding.avatar);
+            GlideApp
+                    .with(this)
+                    .load(R.drawable.default_avatar)
+                    .into(binding.avatar);
         } else {
-            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, avatarHash), binding.avatar);
+            GlideApp
+                    .with(this)
+                    .load(NetDataUrls.getAvatarUrl(this, avatarHash))
+                    .into(binding.avatar);
         }
         if(note != null){
             binding.name.setText(note);
