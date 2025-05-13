@@ -77,6 +77,7 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
                     new CustomViewMessageDialog(this, "请选择频道").create().show();
                     return true;
                 }
+
             }
             return true;
         });
