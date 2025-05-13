@@ -29,11 +29,13 @@ public class ChooseOneGroupChannelDialog extends AbstractDialog<ChooseOneGroupCh
     private DialogButtonInfo positiveButtonInfo;
     private DialogButtonInfo negativeDialogButtonInfo;
     private DialogButtonInfo neutralButtonInfo;
+    private GroupChannel choseGroupChannel;
 
-    public ChooseOneGroupChannelDialog(Activity activity, String title, List<GroupChannel> groupChannels) {
+    public ChooseOneGroupChannelDialog(Activity activity, String title, List<GroupChannel> groupChannels, GroupChannel choseGroupChannel) {
         super(activity);
         this.title = title;
         this.groupChannels = groupChannels;
+        this.choseGroupChannel = choseGroupChannel;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class ChooseOneGroupChannelDialog extends AbstractDialog<ChooseOneGroupCh
     }
 
     private void showContent() {
-        adapter = new ChooseOneGroupChannelRecyclerAdapter(getActivity(), groupChannels);
+        adapter = new ChooseOneGroupChannelRecyclerAdapter(getActivity(), groupChannels, choseGroupChannel);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);

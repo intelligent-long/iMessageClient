@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by LONG on 2025/4/20 at 2:02 AM.
@@ -96,5 +97,18 @@ public class GroupChannelAssociation implements Parcelable {
         dest.writeString(requestMessage);
         dest.writeValue(requestTime);
         dest.writeValue(acceptTime);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroupChannelAssociation that = (GroupChannelAssociation) o;
+        return Objects.equals(associationId, that.associationId) && Objects.equals(groupChannelId, that.groupChannelId) && Objects.equals(owner, that.owner) && Objects.equals(requester, that.requester) && Objects.equals(requestMessage, that.requestMessage) && Objects.equals(requestTime, that.requestTime) && Objects.equals(acceptTime, that.acceptTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(associationId, groupChannelId, owner, requester, requestMessage, requestTime, acceptTime);
     }
 }

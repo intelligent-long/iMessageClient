@@ -36,14 +36,20 @@ import java.util.List;
  */
 public class ChooseOneGroupChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseOneGroupChannelRecyclerAdapter.ViewHolder, ChooseOneGroupChannelRecyclerAdapter.ItemData> {
     private final Activity activity;
+    private final List<GroupChannel> sourceGroupChannelList;
     private final List<ItemData> itemDataList;
     private int selectedPosition = -1;
     private static final Object PAYLOAD_SELECTION_CHANGE = new Object();
 
-    public ChooseOneGroupChannelRecyclerAdapter(Activity activity, List<GroupChannel> groupChannelList) {
+    public ChooseOneGroupChannelRecyclerAdapter(Activity activity, List<GroupChannel> groupChannelList, GroupChannel choseGroupChannel) {
         this.activity = activity;
+        this.sourceGroupChannelList = groupChannelList;
         this.itemDataList = new ArrayList<>();
-        groupChannelList.forEach(groupChannel -> this.itemDataList.add(new ItemData(groupChannel)));
+        for (int i = 0; i < groupChannelList.size(); i++) {
+            GroupChannel groupChannel = groupChannelList.get(i);
+            this.itemDataList.add(new ItemData(groupChannel));
+            if(groupChannel.equals(choseGroupChannel)) selectedPosition = i;
+        }
         itemDataList.sort(Comparator.comparing(o -> o.indexChar));
     }
 
@@ -103,7 +109,6 @@ public class ChooseOneGroupChannelRecyclerAdapter extends WrappableRecyclerViewA
             if (isChecked && selectedPosition != position) {
                 int previous = selectedPosition;
                 selectedPosition = position;
-
                 if (previous != -1) notifyItemChanged(previous, PAYLOAD_SELECTION_CHANGE);
                 notifyItemChanged(selectedPosition, PAYLOAD_SELECTION_CHANGE);
             }
@@ -117,7 +122,7 @@ public class ChooseOneGroupChannelRecyclerAdapter extends WrappableRecyclerViewA
 
     public GroupChannel getSelected(){
         try {
-            return itemDataList.get(selectedPosition).groupChannel;
+            return sourceGroupChannelList.get(selectedPosition);
         }catch (Exception e){
             return null;
         }

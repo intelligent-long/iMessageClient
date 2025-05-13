@@ -19,6 +19,7 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemAddChannelToTagBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChooseOneChannelBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -31,14 +32,20 @@ import java.util.List;
  */
 public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapter<ChooseOneChannelRecyclerAdapter.ViewHolder, ChooseOneChannelRecyclerAdapter.ItemData> {
     private final Activity activity;
+    private final List<Channel> sourceChannelList;
     private final List<ItemData> itemDataList;
     private int selectedPosition = -1;
     private static final Object PAYLOAD_SELECTION_CHANGE = new Object();
 
-    public ChooseOneChannelRecyclerAdapter(Activity activity, List<Channel> channelList) {
+    public ChooseOneChannelRecyclerAdapter(Activity activity, List<Channel> channelList, Channel choseChannel) {
         this.activity = activity;
+        this.sourceChannelList = channelList;
         this.itemDataList = new ArrayList<>();
-        channelList.forEach(channel -> this.itemDataList.add(new ItemData(channel)));
+        for (int i = 0; i < channelList.size(); i++) {
+            Channel channel = channelList.get(i);
+            this.itemDataList.add(new ItemData(channel));
+            if(channel.equals(choseChannel)) selectedPosition = i;
+        }
         itemDataList.sort(Comparator.comparing(o -> o.indexChar));
     }
 
@@ -98,7 +105,6 @@ public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapte
             if (isChecked && selectedPosition != position) {
                 int previous = selectedPosition;
                 selectedPosition = position;
-
                 if (previous != -1) notifyItemChanged(previous, PAYLOAD_SELECTION_CHANGE);
                 notifyItemChanged(selectedPosition, PAYLOAD_SELECTION_CHANGE);
             }
@@ -112,7 +118,7 @@ public class ChooseOneChannelRecyclerAdapter extends WrappableRecyclerViewAdapte
 
     public Channel getSelected(){
         try {
-            return itemDataList.get(selectedPosition).channel;
+            return sourceChannelList.get(selectedPosition);
         }catch (Exception e){
             return null;
         }

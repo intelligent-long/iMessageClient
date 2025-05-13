@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by LONG on 2025/4/22 at 5:00 PM.
@@ -72,6 +73,19 @@ public class GroupAvatar implements Parcelable {
         dest.writeString(groupChannelId);
         dest.writeString(extension);
         dest.writeValue(time);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroupAvatar that = (GroupAvatar) o;
+        return Objects.equals(hash, that.hash) && Objects.equals(groupChannelId, that.groupChannelId) && Objects.equals(extension, that.extension) && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hash, groupChannelId, extension, time);
     }
 
     @Override

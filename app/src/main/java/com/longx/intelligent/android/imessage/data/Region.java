@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 /**
  * Created by LONG on 2025/4/25 at 上午1:58.
  */
@@ -64,5 +66,18 @@ public class Region implements Parcelable {
             dest.writeInt(adcode);
         }
         dest.writeString(name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Region region = (Region) o;
+        return Objects.equals(adcode, region.adcode) && Objects.equals(name, region.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(adcode, name);
     }
 }

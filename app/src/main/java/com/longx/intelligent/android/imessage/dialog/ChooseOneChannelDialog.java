@@ -27,11 +27,13 @@ public class ChooseOneChannelDialog extends AbstractDialog<ChooseOneChannelDialo
     private DialogButtonInfo positiveButtonInfo;
     private DialogButtonInfo negativeDialogButtonInfo;
     private DialogButtonInfo neutralButtonInfo;
+    private Channel choseChannel;
 
-    public ChooseOneChannelDialog(Activity activity, String title, List<Channel> channels) {
+    public ChooseOneChannelDialog(Activity activity, String title, List<Channel> channels, Channel choseChannel) {
         super(activity);
         this.title = title;
         this.channels = channels;
+        this.choseChannel = choseChannel;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class ChooseOneChannelDialog extends AbstractDialog<ChooseOneChannelDialo
     }
 
     private void showContent() {
-        adapter = new ChooseOneChannelRecyclerAdapter(getActivity(), channels);
+        adapter = new ChooseOneChannelRecyclerAdapter(getActivity(), channels, choseChannel);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);

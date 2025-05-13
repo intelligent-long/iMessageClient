@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by LONG on 2024/4/29 at 9:28 PM.
@@ -72,6 +73,19 @@ public class Avatar implements Parcelable {
         dest.writeString(imessageId);
         dest.writeString(extension);
         dest.writeValue(time);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Avatar avatar = (Avatar) o;
+        return Objects.equals(hash, avatar.hash) && Objects.equals(imessageId, avatar.imessageId) && Objects.equals(extension, avatar.extension) && Objects.equals(time, avatar.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hash, imessageId, extension, time);
     }
 
     @Override

@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 /**
  * Created by LONG on 2024/4/26 at 8:19 PM.
  */
@@ -131,6 +133,19 @@ public class Channel extends UserInfo implements Parcelable {
         dest.writeParcelable(secondRegion, flags);
         dest.writeParcelable(thirdRegion, flags);
         dest.writeInt(associated ? 1 : 0);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Channel channel = (Channel) o;
+        return associated == channel.associated && Objects.equals(imessageId, channel.imessageId) && Objects.equals(imessageIdUser, channel.imessageIdUser) && Objects.equals(email, channel.email) && Objects.equals(username, channel.username) && Objects.equals(note, channel.note) && Objects.equals(avatar, channel.avatar) && Objects.equals(sex, channel.sex) && Objects.equals(firstRegion, channel.firstRegion) && Objects.equals(secondRegion, channel.secondRegion) && Objects.equals(thirdRegion, channel.thirdRegion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imessageId, imessageIdUser, email, username, note, avatar, sex, firstRegion, secondRegion, thirdRegion, associated);
     }
 
     @Override
