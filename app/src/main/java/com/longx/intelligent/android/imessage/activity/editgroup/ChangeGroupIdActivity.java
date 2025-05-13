@@ -18,6 +18,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdU
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChangeGroupIdBinding;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -79,7 +80,7 @@ public class ChangeGroupIdActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeGroupIdActivity.this, new int[]{-101, -102, -103, -104, -105, -106}, () -> {
-                            new MessageDialog(ChangeGroupIdActivity.this, "修改成功").create().show();
+                            new CustomViewMessageDialog(ChangeGroupIdActivity.this, "修改成功").create().show();
                         });
                     }
                 });

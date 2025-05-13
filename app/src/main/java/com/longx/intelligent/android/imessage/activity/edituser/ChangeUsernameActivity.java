@@ -8,6 +8,7 @@ import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAcc
 import com.longx.intelligent.android.imessage.data.request.ChangeUsernamePostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChangeUsernameBinding;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
@@ -44,7 +45,7 @@ public class ChangeUsernameActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeUsernameActivity.this, new int[]{-101}, () -> {
-                            new MessageDialog(ChangeUsernameActivity.this, "修改成功").create().show();
+                            new CustomViewMessageDialog(ChangeUsernameActivity.this, "修改成功").create().show();
                         });
                     }
                 });

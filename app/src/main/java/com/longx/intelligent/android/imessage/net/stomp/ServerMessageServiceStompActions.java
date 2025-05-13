@@ -217,12 +217,8 @@ public class ServerMessageServiceStompActions {
         ContentUpdater.updateGroupChannelAdditionNotViewCount(context, results -> {
             GroupChannelAdditionNotViewedCount notViewedCount = (GroupChannelAdditionNotViewedCount) results[0];
             if(notViewedCount != null) {
-                if (!Application.foreground) {
+                if (!Application.foreground || !(ActivityOperator.getTopActivity() instanceof MainActivity)) {
                     Notifications.notifyGroupChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
-                } else {
-                    if (!(ActivityOperator.getTopActivity() instanceof MainActivity)) {
-                        Notifications.notifyGroupChannelAdditionActivity(context, notViewedCount.getNotificationRequest(), notViewedCount.getNotificationRespond());
-                    }
                 }
             }
             GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {

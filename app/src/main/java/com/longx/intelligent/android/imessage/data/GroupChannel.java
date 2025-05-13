@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Objects;
 /**
  * Created by LONG on 2025/4/15 at 10:49 PM.
  */
+@JsonIgnoreProperties({"stability"})
 public class GroupChannel implements Parcelable {
     private GroupAvatar groupAvatar;
     private String groupChannelId;

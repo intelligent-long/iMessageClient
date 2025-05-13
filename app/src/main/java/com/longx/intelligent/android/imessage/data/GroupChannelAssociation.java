@@ -5,12 +5,15 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * Created by LONG on 2025/4/20 at 2:02 AM.
  */
+@JsonIgnoreProperties({"stability"})
 public class GroupChannelAssociation implements Parcelable {
     private String associationId;
     private String groupChannelId;

@@ -11,6 +11,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNam
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.InviteJoinGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
@@ -182,6 +183,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> viewOneAdditionActivity(LifecycleOwner lifecycleOwner, String uuid, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().viewOneAdditionActivity(uuid);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> invite(LifecycleOwner lifecycleOwner, InviteJoinGroupChannelPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().invite(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeImessageIdUserP
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChangeImessageIdUserBinding;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
@@ -71,7 +72,7 @@ public class ChangeImessageIdUserActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeImessageIdUserActivity.this, new int[]{-101, -102, -103, -104}, () -> {
-                            new MessageDialog(ChangeImessageIdUserActivity.this, "修改成功").create().show();
+                            new CustomViewMessageDialog(ChangeImessageIdUserActivity.this, "修改成功").create().show();
                         });
                     }
                 });

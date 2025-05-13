@@ -9,6 +9,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelNam
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelRegionPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.InviteJoinGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
@@ -107,5 +108,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel/add/activity/{uuid}/view")
     CompletableCall<OperationStatus> viewOneAdditionActivity(@Path("uuid") String uuid);
+
+    @POST("group_channel/add/invite")
+    CompletableCall<OperationStatus> invite(@Body InviteJoinGroupChannelPostBody postBody);
 
 }

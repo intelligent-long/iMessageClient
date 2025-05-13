@@ -5,11 +5,14 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Objects;
 
 /**
  * Created by LONG on 2024/4/26 at 8:19 PM.
  */
+@JsonIgnoreProperties({"stability"})
 public class Channel extends UserInfo implements Parcelable {
     private final String imessageId;
     private final String imessageIdUser;

@@ -5,11 +5,14 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Objects;
 
 /**
  * Created by LONG on 2025/4/25 at 上午1:58.
  */
+@JsonIgnoreProperties({"stability"})
 public class Region implements Parcelable {
     private final Integer adcode;
     private final String name;

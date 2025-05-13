@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivitySetGroupChannelNoteBinding;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -58,7 +59,7 @@ public class SetGroupChannelNoteActivity extends BaseActivity {
                     data.commonHandleResult(SetGroupChannelNoteActivity.this, new int[]{-101, -102}, () -> {
                         binding.noteInput.setText(inputtedNote);
                         binding.deleteButton.setVisibility(View.VISIBLE);
-                        new MessageDialog(SetGroupChannelNoteActivity.this, "设置成功").create().show();
+                        new CustomViewMessageDialog(SetGroupChannelNoteActivity.this, "设置成功").create().show();
                     });
                 }
             });
@@ -71,7 +72,7 @@ public class SetGroupChannelNoteActivity extends BaseActivity {
                     data.commonHandleResult(SetGroupChannelNoteActivity.this, new int[]{-101}, () -> {
                         binding.noteInput.setText(null);
                         binding.deleteButton.setVisibility(View.GONE);
-                        new MessageDialog(SetGroupChannelNoteActivity.this, "已删除").create().show();
+                        new CustomViewMessageDialog(SetGroupChannelNoteActivity.this, "已删除").create().show();
                     });
                 }
             });

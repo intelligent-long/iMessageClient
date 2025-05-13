@@ -22,16 +22,24 @@ import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabas
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.request.InviteJoinGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityInviteJoinGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneChannelDialog;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneGroupChannelDialog;
 import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
+import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class InviteJoinGroupChannelActivity extends BaseActivity {
     private ActivityInviteJoinGroupChannelBinding binding;
@@ -157,7 +165,16 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
                     new CustomViewMessageDialog(this, "请选择频道").create().show();
                     return true;
                 }
-                //TODO
+                InviteJoinGroupChannelPostBody postBody = new InviteJoinGroupChannelPostBody(choseChannel, choseGroupChannel);
+                GroupChannelApiCaller.invite(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                    @Override
+                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(InviteJoinGroupChannelActivity.this, new int[]{-101, -102, -103}, () -> {
+                            new CustomViewMessageDialog(InviteJoinGroupChannelActivity.this, "已发送邀请添加群频道请求").create().show();
+                        });
+                    }
+                });
             }
             return true;
         });

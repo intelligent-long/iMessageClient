@@ -20,6 +20,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelReg
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChangeGroupRegionBinding;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RegionApiCaller;
@@ -77,7 +78,7 @@ public class ChangeGroupRegionActivity extends BaseActivity implements ContentUp
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeGroupRegionActivity.this, new int[]{-101, -102, -103, -104, -105, -106, -107}, () -> {
-                            new MessageDialog(ChangeGroupRegionActivity.this, "修改成功").create().show();
+                            new CustomViewMessageDialog(ChangeGroupRegionActivity.this, "修改成功").create().show();
                         });
                     }
                 });

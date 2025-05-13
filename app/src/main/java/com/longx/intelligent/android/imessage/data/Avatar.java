@@ -5,12 +5,15 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * Created by LONG on 2024/4/29 at 9:28 PM.
  */
+@JsonIgnoreProperties({"stability"})
 public class Avatar implements Parcelable {
     private String hash;
     private String imessageId;

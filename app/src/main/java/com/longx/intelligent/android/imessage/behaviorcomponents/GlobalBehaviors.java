@@ -21,6 +21,7 @@ import com.longx.intelligent.android.imessage.data.request.SendVerifyCodePostBod
 import com.longx.intelligent.android.imessage.data.request.VerifyCodeLoginPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.fragment.main.BroadcastsFragment;
@@ -176,7 +177,7 @@ public class GlobalBehaviors {
                 super.ok(data, raw, call);
                 data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
                     String notice = data.getDetails().get("notice").get(0);
-                    new MessageDialog(activity, notice).create().show();
+                    new CustomViewMessageDialog(activity, notice).create().show();
                 });
             }
         });

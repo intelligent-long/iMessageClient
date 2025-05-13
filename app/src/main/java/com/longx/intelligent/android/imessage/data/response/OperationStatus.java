@@ -2,6 +2,9 @@ package com.longx.intelligent.android.imessage.data.response;
 
 import android.app.Activity;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 
 import java.util.ArrayList;
@@ -139,7 +142,7 @@ public class OperationStatus {
             }
             String failureMessage = buildFailureMessage(messageCodes, excludeCodes);
             if(failureMessage != null) {
-                new MessageDialog(activity, failureMessage).create().show();
+                new CustomViewMessageDialog((AppCompatActivity) activity, failureMessage).create().show();
             }
         }
         //处理其他结果

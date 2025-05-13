@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.data.request.AcceptAddChannelPostB
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChannelAdditionBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
@@ -162,7 +163,7 @@ public class ChannelAdditionActivity extends BaseActivity {
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                 super.ok(data, raw, call);
                                 data.commonHandleResult(ChannelAdditionActivity.this, new int[]{-101, -102, -103}, () -> {
-                                    new MessageDialog(ChannelAdditionActivity.this, "添加频道", "频道已添加").create().show();
+                                    new CustomViewMessageDialog(ChannelAdditionActivity.this, "频道已添加").create().show();
                                 });
                             }
                         });

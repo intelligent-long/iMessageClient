@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.data.request.ChangeSexPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChangeSexBinding;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
@@ -42,7 +43,7 @@ public class ChangeSexActivity extends BaseActivity {
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                         super.ok(data, raw, call);
                         data.commonHandleResult(ChangeSexActivity.this, new int[]{-101}, () -> {
-                            new MessageDialog(ChangeSexActivity.this, "修改成功").create().show();
+                            new CustomViewMessageDialog(ChangeSexActivity.this, "修改成功").create().show();
                         });
                     }
                 });

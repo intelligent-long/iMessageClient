@@ -29,6 +29,7 @@ import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityEditGroupInfoSettingsBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
@@ -142,7 +143,7 @@ public class EditGroupInfoSettingsActivity extends BaseSettingsActivity {
                                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                         super.ok(data, raw, call);
                                         data.commonHandleResult(requireActivity(), new int[]{-101, -102}, () -> {
-                                            new MessageDialog(requireActivity(), "修改成功")
+                                            new CustomViewMessageDialog((AppCompatActivity) requireActivity(), "修改成功")
                                                     .create().show();
                                         });
                                     }

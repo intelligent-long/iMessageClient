@@ -17,6 +17,7 @@ import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChanne
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityRequestJoinGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -89,7 +90,7 @@ public class RequestJoinGroupChannelActivity extends BaseActivity {
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                 super.ok(data, raw, call);
                                 data.commonHandleResult(RequestJoinGroupChannelActivity.this, new int[]{-101, -102, -103}, () -> {
-                                    new MessageDialog(RequestJoinGroupChannelActivity.this, "发送请求", "已发送添加频道请求").create().show();
+                                    new CustomViewMessageDialog(RequestJoinGroupChannelActivity.this, "已发送添加频道请求").create().show();
                                 });
                             }
                         });

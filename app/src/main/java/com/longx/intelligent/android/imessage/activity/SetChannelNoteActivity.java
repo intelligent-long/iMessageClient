@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedCh
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivitySetChannelNoteBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -46,7 +47,7 @@ public class SetChannelNoteActivity extends BaseActivity {
                     data.commonHandleResult(SetChannelNoteActivity.this, new int[]{-101, -102}, () -> {
                         binding.noteInput.setText(inputtedNote);
                         binding.deleteButton.setVisibility(View.VISIBLE);
-                        new MessageDialog(SetChannelNoteActivity.this, "设置成功").create().show();
+                        new CustomViewMessageDialog(SetChannelNoteActivity.this, "设置成功").create().show();
                     });
                 }
             });
@@ -62,7 +63,7 @@ public class SetChannelNoteActivity extends BaseActivity {
                                 data.commonHandleResult(SetChannelNoteActivity.this, new int[]{-101}, () -> {
                                     binding.noteInput.setText(null);
                                     binding.deleteButton.setVisibility(View.GONE);
-                                    new MessageDialog(SetChannelNoteActivity.this, "已删除").create().show();
+                                    new CustomViewMessageDialog(SetChannelNoteActivity.this, "已删除").create().show();
                                 });
                             }
                         });
