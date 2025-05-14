@@ -9,18 +9,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.imessage.R;
-import com.longx.intelligent.android.imessage.activity.ChannelAdditionActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
+import com.longx.intelligent.android.imessage.data.GroupChannelInvitation;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelAdditionActivityPendingBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
@@ -53,11 +53,11 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
     public GroupChannelAdditionActivitiesPendingRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
         itemDataList.sort((o1, o2) -> {
-            Date o1RequestTime = o1.getChannelAdditionInfo().getRequestTime();
-            Date o1RespondTime = o1.getChannelAdditionInfo().getRespondTime();
+            Date o1RequestTime = o1.groupChannelActivity.getRequestTime();
+            Date o1RespondTime = o1.groupChannelActivity.getRespondTime();
             Date o1Time = o1RespondTime == null ? o1RequestTime : o1RespondTime;
-            Date o2RequestTime = o2.getChannelAdditionInfo().getRequestTime();
-            Date o2RespondTime = o2.getChannelAdditionInfo().getRespondTime();
+            Date o2RequestTime = o2.groupChannelActivity.getRequestTime();
+            Date o2RespondTime = o2.groupChannelActivity.getRespondTime();
             Date o2Time = o2RespondTime == null ? o2RequestTime : o2RespondTime;
             return -o1Time.compareTo(o2Time);
         });
@@ -65,14 +65,14 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
     }
 
     public static class ItemData{
-        private final GroupChannelAddition groupChannelAddition;
+        private final GroupChannelActivity groupChannelActivity;
 
-        public ItemData(GroupChannelAddition groupChannelAddition) {
-            this.groupChannelAddition = groupChannelAddition;
+        public ItemData(GroupChannelActivity groupChannelActivity) {
+            this.groupChannelActivity = groupChannelActivity;
         }
 
-        public GroupChannelAddition getChannelAdditionInfo() {
-            return groupChannelAddition;
+        public GroupChannelActivity getGroupChannelActivity() {
+            return groupChannelActivity;
         }
     }
 
@@ -107,9 +107,14 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
     private View.OnClickListener getOnClickYier(ViewHolder viewHolder, int position){
         return v -> {
             if(v.getId() == viewHolder.binding.clickView.getId() || v.getId() == viewHolder.binding.goConfirmButton.getId()){
-                Intent intent = new Intent(activity, GroupChannelAdditionActivity.class);
-                intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION_INFO, itemDataList.get(position).groupChannelAddition);
-                activity.startActivity(intent);
+                GroupChannelActivity groupChannelActivity = itemDataList.get(position).groupChannelActivity;
+                if(groupChannelActivity instanceof GroupChannelAddition) {
+                    Intent intent = new Intent(activity, GroupChannelAdditionActivity.class);
+                    intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION_INFO, (GroupChannelAddition) groupChannelActivity);
+                    activity.startActivity(intent);
+                }else if(groupChannelActivity instanceof GroupChannelInvitation){
+                    //TODO
+                }
             }
         };
     }
@@ -121,54 +126,97 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
 
     private void showItem(ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
-        boolean isCurrentUserRequester = currentUserInfo.getImessageId().equals(itemData.groupChannelAddition.getRequesterChannel().getImessageId());
-        Channel requesterChannel = itemData.groupChannelAddition.getRequesterChannel();
-        GroupChannel responderGroupChannel = itemData.groupChannelAddition.getResponderGroupChannel();
-        holder.binding.message.setText(itemData.groupChannelAddition.getMessage());
-        if(isCurrentUserRequester){
-            holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
-            holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);
-            if(responderGroupChannel.getGroupAvatar() != null) {
-                String avatarHash = responderGroupChannel.getGroupAvatar().getHash();
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
-            }else {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+        if (itemData.groupChannelActivity instanceof GroupChannelAddition) {
+            GroupChannelAddition groupChannelAddition = (GroupChannelAddition) itemData.groupChannelActivity;
+            Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
+            boolean isCurrentUserRequester = currentUserInfo.getImessageId().equals(groupChannelAddition.getRequesterChannel().getImessageId());
+            Channel requesterChannel = groupChannelAddition.getRequesterChannel();
+            GroupChannel responderGroupChannel = groupChannelAddition.getResponderGroupChannel();
+            holder.binding.message.setText(groupChannelAddition.getMessage());
+            if (isCurrentUserRequester) {
+                holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
+                holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);
+                if (responderGroupChannel.getGroupAvatar() != null) {
+                    String avatarHash = responderGroupChannel.getGroupAvatar().getHash();
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
+                } else {
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+                }
+                holder.binding.name.setText(responderGroupChannel.getNote() == null ? responderGroupChannel.getName() : responderGroupChannel.getNote());
+            } else {
+                holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
+                holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
+                if (requesterChannel.getAvatar() != null) {
+                    String avatarHash = requesterChannel.getAvatar().getHash();
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+                } else {
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+                }
+                holder.binding.name.setText(requesterChannel.getNote() == null ? requesterChannel.getUsername() : requesterChannel.getNote());
             }
-            holder.binding.name.setText(responderGroupChannel.getNote() == null ? responderGroupChannel.getName() : responderGroupChannel.getNote());
-        }else {
-            holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
-            holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
-            if(requesterChannel.getAvatar() != null) {
-                String avatarHash = requesterChannel.getAvatar().getHash();
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
-            }else {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+            checkAndShowTimeText(holder, position, itemData);
+            if (!groupChannelAddition.isViewed()) {
+                GroupChannelApiCaller.viewOneAdditionActivity(null, groupChannelAddition.getUuid(), new RetrofitApiCaller.CommonYier<>(activity, false, true));
             }
-            holder.binding.name.setText(requesterChannel.getNote() == null ? requesterChannel.getUsername() : requesterChannel.getNote());
-        }
-        checkAndShowTimeText(holder, position, itemData);
-        if (!itemData.groupChannelAddition.isViewed()) {
-            GroupChannelApiCaller.viewOneAdditionActivity(null, itemData.groupChannelAddition.getUuid(), new RetrofitApiCaller.CommonYier<>(activity, false, true));
-        }
-        if(!itemData.groupChannelAddition.isViewed()) {
-            holder.binding.badgeHost.setVisibility(View.VISIBLE);
-            BadgeDisplayer.initIndicatorBadge(activity, holder.binding.badgeHost, Gravity.CENTER);
-        }else {
-            holder.binding.badgeHost.setVisibility(View.GONE);
+            if (!groupChannelAddition.isViewed()) {
+                holder.binding.badgeHost.setVisibility(View.VISIBLE);
+                BadgeDisplayer.initIndicatorBadge(activity, holder.binding.badgeHost, Gravity.CENTER);
+            } else {
+                holder.binding.badgeHost.setVisibility(View.GONE);
+            }
+        } else if (itemData.groupChannelActivity instanceof GroupChannelInvitation) {
+            GroupChannelInvitation groupChannelInvitation = (GroupChannelInvitation) itemData.groupChannelActivity;
+            Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
+            ErrorLogger.log(groupChannelInvitation);
+            boolean isCurrentUserInviter = currentUserInfo.getImessageId().equals(groupChannelInvitation.getInviter().getImessageId());
+            Channel inviter = groupChannelInvitation.getInviter();
+            Channel invitee = groupChannelInvitation.getInvitee();
+            GroupChannel groupChannelInvitedTo = groupChannelInvitation.getGroupChannelInvitedTo();
+            holder.binding.message.setText(groupChannelInvitation.getMessage());
+            if (isCurrentUserInviter) {
+                holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
+                holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);
+                if (invitee.getAvatar() != null) {
+                    String avatarHash = invitee.getAvatar().getHash();
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
+                } else {
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+                }
+                holder.binding.name.setText(invitee.getNote() == null ? invitee.getUsername() : invitee.getNote());
+            } else {
+                holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
+                holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
+                if (inviter.getAvatar() != null) {
+                    String avatarHash = inviter.getAvatar().getHash();
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+                } else {
+                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+                }
+                holder.binding.name.setText(inviter.getNote() == null ? inviter.getUsername() : inviter.getNote());
+            }
+            checkAndShowTimeText(holder, position, itemData);
+            if (!groupChannelInvitation.isViewed()) {
+                //TODO
+            }
+            if (!groupChannelInvitation.isViewed()) {
+                holder.binding.badgeHost.setVisibility(View.VISIBLE);
+                BadgeDisplayer.initIndicatorBadge(activity, holder.binding.badgeHost, Gravity.CENTER);
+            } else {
+                holder.binding.badgeHost.setVisibility(View.GONE);
+            }
         }
     }
 
     private void checkAndShowTimeText(ViewHolder holder, int position, ItemData itemData) {
         boolean hideTimeText = false;
-        Date time = itemData.groupChannelAddition.getRespondTime() == null ? itemData.groupChannelAddition.getRequestTime() : itemData.groupChannelAddition.getRespondTime();
+        Date time = itemData.groupChannelActivity.getRespondTime() == null ? itemData.groupChannelActivity.getRequestTime() : itemData.groupChannelActivity.getRespondTime();
         int timeTextIndex = getTimeTextIndex(time);
         if(timeTextIndex == -1){
             hideTimeText = true;
         }else {
             if (position > 0) {
                 ItemData itemDataPrevious = itemDataList.get(position - 1);
-                Date timePrevious = itemDataPrevious.groupChannelAddition.getRespondTime() == null ? itemDataPrevious.groupChannelAddition.getRequestTime() : itemDataPrevious.groupChannelAddition.getRespondTime();
+                Date timePrevious = itemDataPrevious.groupChannelActivity.getRespondTime() == null ? itemDataPrevious.groupChannelActivity.getRequestTime() : itemDataPrevious.groupChannelActivity.getRespondTime();
                 int timeTextIndexPrevious = getTimeTextIndex(timePrevious);
                 if (timeTextIndex == timeTextIndexPrevious) hideTimeText = true;
             }

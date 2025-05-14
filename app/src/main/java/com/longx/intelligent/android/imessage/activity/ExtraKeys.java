@@ -50,7 +50,7 @@ public class ExtraKeys {
     public static final String BROADCAST_PERMISSION = "broadcast_permission";
     public static final String CHANGE_PERMISSION = "change_permission";
     public static final String TITLE = "title";
-    public static final String MESSAGE = "getMessage";
+    public static final String MESSAGE = "message";
     public static final String AUTH_TO_SETTINGS = "auth_to_settings";
     public static final String BITMAP = "bitmap";
     public static final String GROUP_CHANNEL_ID = "group_channel_id";

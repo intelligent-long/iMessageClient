@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.net.okhttp.caller;
 
+import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.net.ServerLocation;
 import com.longx.intelligent.android.imessage.net.ServerValues;
 

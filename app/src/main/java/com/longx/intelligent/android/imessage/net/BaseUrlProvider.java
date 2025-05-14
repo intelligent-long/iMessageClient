@@ -34,7 +34,7 @@ public class BaseUrlProvider {
             }
 
             @Override
-            public void ok(ServerLocation serverLocation, Response response) {
+            public void ok(ServerLocation serverLocation, Response response, String json) {
                 ServerConfig serverConfig = new ServerConfig(serverLocation.getHost(), serverLocation.getPort(), serverLocation.getBaseUrl(), ServerValues.CENTRAL_DATA_FOLDER);
                 SharedPreferencesAccessor.ServerPref.saveCentralServerConfig(context, serverConfig);
                 countDownLatch.countDown();

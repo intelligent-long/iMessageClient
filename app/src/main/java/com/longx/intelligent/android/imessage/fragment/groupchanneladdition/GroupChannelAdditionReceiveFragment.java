@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.longx.intelligent.android.imessage.adapter.GroupChannelAdditionActivitiesReceiveRecyclerAdapter;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.FragmentGroupChannelAdditionReceiveBinding;
@@ -23,7 +24,7 @@ public class GroupChannelAdditionReceiveFragment extends BaseFragment implements
     private FragmentGroupChannelAdditionReceiveBinding binding;
     private boolean fetchingVisible;
     private String failureMessage;
-    private List<GroupChannelAddition> fetchedGroupChannelAdditions;
+    private List<GroupChannelActivity> fetchedGroupChannelActivities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,25 +42,28 @@ public class GroupChannelAdditionReceiveFragment extends BaseFragment implements
     private void showContent() {
         if(fetchingVisible) toFetchingVisible();
         if(failureMessage != null) toFetchFailureMessageVisible(failureMessage);
-        if(fetchedGroupChannelAdditions == null) {
+        if(fetchedGroupChannelActivities == null) {
             showCachedContent();
         }else {
-            setupRecyclerView(fetchedGroupChannelAdditions);
+            setupRecyclerView(fetchedGroupChannelActivities);
         }
     }
 
     private void showCachedContent() {
-        List<GroupChannelAddition> groupChannelAdditions = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
-        setupRecyclerView(groupChannelAdditions);
+        List<GroupChannelActivity> groupChannelActivities = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
+        setupRecyclerView(groupChannelActivities);
     }
 
-    private void setupRecyclerView(List<GroupChannelAddition> groupChannelAdditions) {
+    private void setupRecyclerView(List<GroupChannelActivity> groupChannelActivities) {
         List<GroupChannelAddition> sendGroupChannelAdditions = new ArrayList<>();
         Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
-        groupChannelAdditions.forEach(groupChannelAddition -> {
-            if ((groupChannelAddition.getRespondTime() != null || groupChannelAddition.isExpired())
-                    && groupChannelAddition.getResponderGroupChannel().getOwner().equals(currentUserInfo.getImessageId()))
-                sendGroupChannelAdditions.add(groupChannelAddition);
+        groupChannelActivities.forEach(groupChannelActivity -> {
+            if(groupChannelActivity instanceof GroupChannelAddition) {
+                GroupChannelAddition groupChannelAddition = (GroupChannelAddition) groupChannelActivity;
+                if ((groupChannelAddition.getRespondTime() != null || groupChannelAddition.isExpired())
+                        && groupChannelAddition.getResponderGroupChannel().getOwner().equals(currentUserInfo.getImessageId()))
+                    sendGroupChannelAdditions.add(groupChannelAddition);
+            }
         });
         if (sendGroupChannelAdditions.size() == 0) {
             if(!fetchingVisible) toNoContentVisible();
@@ -110,12 +114,12 @@ public class GroupChannelAdditionReceiveFragment extends BaseFragment implements
     }
 
     @Override
-    public void onFetched(List<GroupChannelAddition> groupChannelAdditions) {
+    public void onFetched(List<GroupChannelActivity> groupChannelActivities) {
         fetchingVisible = false;
         if(binding == null) {
-            fetchedGroupChannelAdditions = groupChannelAdditions;
+            fetchedGroupChannelActivities = groupChannelActivities;
         }else {
-            setupRecyclerView(groupChannelAdditions);
+            setupRecyclerView(groupChannelActivities);
         }
     }
 

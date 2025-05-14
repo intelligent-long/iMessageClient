@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.imessage.adapter.GroupChannelAdditionActivitiesPendingRecyclerAdapter;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
 import com.longx.intelligent.android.imessage.databinding.FragmentGroupChannelAdditionPendingBinding;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
@@ -22,7 +23,7 @@ public class GroupChannelAdditionPendingFragment extends Fragment implements Gro
     private FragmentGroupChannelAdditionPendingBinding binding;
     private boolean fetchingVisible;
     private String failureMessage;
-    private List<GroupChannelAddition> fetchedGroupChannelAdditions;
+    private List<GroupChannelActivity> fetchedGroupChannelActivities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,16 +41,16 @@ public class GroupChannelAdditionPendingFragment extends Fragment implements Gro
     private void showContent() {
         if(fetchingVisible) toFetchingVisible();
         if(failureMessage != null) toFetchFailureMessageVisible(failureMessage);
-        if(fetchedGroupChannelAdditions == null) {
+        if(fetchedGroupChannelActivities == null) {
             showCachedContent();
         }else {
-            setupRecyclerView(fetchedGroupChannelAdditions);
+            setupRecyclerView(fetchedGroupChannelActivities);
         }
     }
 
     private void showCachedContent() {
-        List<GroupChannelAddition> groupChannelAdditions = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
-        setupRecyclerView(groupChannelAdditions);
+        List<GroupChannelActivity> groupChannelActivities = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
+        setupRecyclerView(groupChannelActivities);
     }
 
     private void toNoContentVisible() {
@@ -81,20 +82,20 @@ public class GroupChannelAdditionPendingFragment extends Fragment implements Gro
         if(binding != null) binding.fetchFailureMessage.setText(message);
     }
 
-    private void setupRecyclerView(List<GroupChannelAddition> groupChannelAdditions) {
-        List<GroupChannelAddition> pendingGroupChannelAdditions = new ArrayList<>();
-        groupChannelAdditions.forEach(groupChannelAddition -> {
-            if(groupChannelAddition.getRespondTime() == null && !groupChannelAddition.isExpired()) {
-                pendingGroupChannelAdditions.add(groupChannelAddition);
+    private void setupRecyclerView(List<GroupChannelActivity> groupChannelActivities) {
+        List<GroupChannelActivity> pendingGroupChannelActivities = new ArrayList<>();
+        groupChannelActivities.forEach(groupChannelActivity -> {
+            if(groupChannelActivity.getRespondTime() == null && !groupChannelActivity.isExpired()) {
+                pendingGroupChannelActivities.add(groupChannelActivity);
             }
         });
-        if(pendingGroupChannelAdditions.isEmpty()){
+        if(pendingGroupChannelActivities.isEmpty()){
             if(!fetchingVisible) toNoContentVisible();
         }else {
             if(!fetchingVisible) toRecyclerViewVisible();
             List<GroupChannelAdditionActivitiesPendingRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
-            pendingGroupChannelAdditions.forEach(pendingGroupChannelAddition -> {
-                itemDataList.add(new GroupChannelAdditionActivitiesPendingRecyclerAdapter.ItemData(pendingGroupChannelAddition));
+            pendingGroupChannelActivities.forEach(pendingGroupChannelActivity -> {
+                itemDataList.add(new GroupChannelAdditionActivitiesPendingRecyclerAdapter.ItemData(pendingGroupChannelActivity));
             });
             GroupChannelAdditionActivitiesPendingRecyclerAdapter recyclerAdapter = new GroupChannelAdditionActivitiesPendingRecyclerAdapter(requireActivity(), itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
@@ -108,12 +109,12 @@ public class GroupChannelAdditionPendingFragment extends Fragment implements Gro
     }
 
     @Override
-    public void onFetched(List<GroupChannelAddition> groupChannelAdditions) {
+    public void onFetched(List<GroupChannelActivity> groupChannelActivities) {
         fetchingVisible = false;
         if(binding == null) {
-            fetchedGroupChannelAdditions = groupChannelAdditions;
+            fetchedGroupChannelActivities = groupChannelActivities;
         }else {
-            setupRecyclerView(groupChannelAdditions);
+            setupRecyclerView(groupChannelActivities);
         }
     }
 

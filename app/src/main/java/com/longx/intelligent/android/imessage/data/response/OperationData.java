@@ -35,4 +35,14 @@ public class OperationData extends OperationStatus{
     public String getJson(){
         return JsonUtil.toJson(this);
     }
+
+    @Override
+    public String toString() {
+        return "OperationData{" +
+                "code=" + getCode() +
+                ", message='" + getMessage() + '\'' +
+                ", details=" + getDetails() +
+                "data=" + data +
+                '}';
+    }
 }

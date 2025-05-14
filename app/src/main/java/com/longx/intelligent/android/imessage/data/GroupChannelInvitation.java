@@ -10,17 +10,20 @@ import java.util.Objects;
 /**
  * Created by LONG on 2025/5/8 at 5:09 AM.
  */
-public final class GroupChannelInvitation {
-    private final String uuid;
-    private final Channel inviter;
-    private final Channel invitee;
-    private final GroupChannel groupChannelInvitedTo;
-    private final String message;
-    private final Date requestTime;
-    private final Date respondTime;
-    private final boolean isAccepted;
-    private final boolean isViewed;
-    private final boolean isExpired;
+public final class GroupChannelInvitation implements GroupChannelActivity{
+    private String uuid;
+    private Channel inviter;
+    private Channel invitee;
+    private GroupChannel groupChannelInvitedTo;
+    private String message;
+    private Date requestTime;
+    private Date respondTime;
+    private boolean isAccepted;
+    private boolean isViewed;
+    private boolean isExpired;
+
+    public GroupChannelInvitation() {
+    }
 
     public GroupChannelInvitation(
             String uuid, Channel inviter, Channel invitee, GroupChannel groupChannelInvitedTo,
@@ -37,31 +40,31 @@ public final class GroupChannelInvitation {
         this.isExpired = isExpired;
     }
 
-    public String uuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public Channel inviter() {
+    public Channel getInviter() {
         return inviter;
     }
 
-    public Channel invitee() {
+    public Channel getInvitee() {
         return invitee;
     }
 
-    public GroupChannel groupChannelInvitedTo() {
+    public GroupChannel getGroupChannelInvitedTo() {
         return groupChannelInvitedTo;
     }
 
-    public String message() {
+    public String getMessage() {
         return message;
     }
 
-    public Date requestTime() {
+    public Date getRequestTime() {
         return requestTime;
     }
 
-    public Date respondTime() {
+    public Date getRespondTime() {
         return respondTime;
     }
 

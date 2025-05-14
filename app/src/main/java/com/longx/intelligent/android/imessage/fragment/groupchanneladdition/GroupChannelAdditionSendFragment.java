@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.longx.intelligent.android.imessage.adapter.GroupChannelAdditionActivitiesSendRecyclerAdapter;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.FragmentGroupChannelAdditionSendBinding;
@@ -23,7 +24,7 @@ public class GroupChannelAdditionSendFragment extends Fragment implements GroupC
     private FragmentGroupChannelAdditionSendBinding binding;
     private boolean fetchingVisible;
     private String failureMessage;
-    private List<GroupChannelAddition> fetchedGroupChannelAdditions;
+    private List<GroupChannelActivity> fetchedGroupChannelActivities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,16 +42,16 @@ public class GroupChannelAdditionSendFragment extends Fragment implements GroupC
     private void showContent() {
         if(fetchingVisible) toFetchingVisible();
         if(failureMessage != null) toFetchFailureMessageVisible(failureMessage);
-        if(fetchedGroupChannelAdditions == null) {
+        if(fetchedGroupChannelActivities == null) {
             showCachedContent();
         }else {
-            setupRecyclerView(fetchedGroupChannelAdditions);
+            setupRecyclerView(fetchedGroupChannelActivities);
         }
     }
 
     private void showCachedContent() {
-        List<GroupChannelAddition> groupChannelAdditions = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
-        setupRecyclerView(groupChannelAdditions);
+        List<GroupChannelActivity> groupChannelActivities = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
+        setupRecyclerView(groupChannelActivities);
     }
 
     private void toNoContentVisible() {
@@ -82,13 +83,16 @@ public class GroupChannelAdditionSendFragment extends Fragment implements GroupC
         if(binding != null) binding.fetchFailureMessage.setText(message);
     }
 
-    private void setupRecyclerView(List<GroupChannelAddition> groupChannelAdditions) {
+    private void setupRecyclerView(List<GroupChannelActivity> groupChannelActivities) {
         List<GroupChannelAddition> sendGroupChannelAdditions = new ArrayList<>();
         Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
-        groupChannelAdditions.forEach(groupChannelAddition -> {
-            if ((groupChannelAddition.getRespondTime() != null || groupChannelAddition.isExpired())
-                    && groupChannelAddition.getRequesterChannel().getImessageId().equals(currentUserInfo.getImessageId()))
-                sendGroupChannelAdditions.add(groupChannelAddition);
+        groupChannelActivities.forEach(groupChannelActivity -> {
+            if(groupChannelActivity instanceof GroupChannelAddition){
+                GroupChannelAddition groupChannelAddition = (GroupChannelAddition) groupChannelActivity;
+                if ((groupChannelAddition.getRespondTime() != null || groupChannelAddition.isExpired())
+                        && groupChannelAddition.getRequesterChannel().getImessageId().equals(currentUserInfo.getImessageId()))
+                    sendGroupChannelAdditions.add(groupChannelAddition);
+            }
         });
         if (sendGroupChannelAdditions.isEmpty()) {
             if(!fetchingVisible) toNoContentVisible();
@@ -110,12 +114,12 @@ public class GroupChannelAdditionSendFragment extends Fragment implements GroupC
     }
 
     @Override
-    public void onFetched(List<GroupChannelAddition> groupChannelAdditions) {
+    public void onFetched(List<GroupChannelActivity> groupChannelActivities) {
         fetchingVisible = false;
         if(binding == null) {
-            fetchedGroupChannelAdditions = groupChannelAdditions;
+            fetchedGroupChannelActivities = groupChannelActivities;
         }else {
-            setupRecyclerView(groupChannelAdditions);
+            setupRecyclerView(groupChannelActivities);
         }
     }
 

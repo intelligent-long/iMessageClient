@@ -16,17 +16,22 @@ import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelAdditionsActivityPagerAdapter;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.ChannelAddition;
+import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
+import com.longx.intelligent.android.imessage.data.GroupChannelInvitation;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelAdditionsBinding;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.util.JsonUtil;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitiesFetchYier;
 import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitiesUpdateYier;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -85,14 +90,14 @@ public class GroupChannelAdditionsActivity extends BaseActivity implements Group
     }
 
     @Override
-    public void onFetched(List<GroupChannelAddition> groupChannelAdditions) {
+    public void onFetched(List<com.longx.intelligent.android.imessage.data.GroupChannelActivity> groupChannelActivities) {
         SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.clearRecords(this);
-        groupChannelAdditions.forEach(groupChannelAddition -> {
-            SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.addRecord(this, groupChannelAddition);
+        groupChannelActivities.forEach(groupChannelActivity-> {
+            SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.addRecord(this, groupChannelActivity);
         });
-        pagerAdapter.getPendingFragment().onFetched(groupChannelAdditions);
-        pagerAdapter.getSendFragment().onFetched(groupChannelAdditions);
-        pagerAdapter.getReceiveFragment().onFetched(groupChannelAdditions);
+        pagerAdapter.getPendingFragment().onFetched(groupChannelActivities);
+        pagerAdapter.getSendFragment().onFetched(groupChannelActivities);
+        pagerAdapter.getReceiveFragment().onFetched(groupChannelActivities);
     }
 
     @Override
@@ -109,9 +114,9 @@ public class GroupChannelAdditionsActivity extends BaseActivity implements Group
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(GroupChannelAdditionsActivity.this, new int[]{}, () -> {
-                    List<GroupChannelAddition> groupChannelAdditions = data.getData(new TypeReference<List<GroupChannelAddition>>() {
+                    List<GroupChannelActivity> groupChannelActivities = data.getData(new TypeReference<List<GroupChannelActivity>>() {
                     });
-                    onFetched(groupChannelAdditions);
+                    onFetched(groupChannelActivities);
                 });
             }
 

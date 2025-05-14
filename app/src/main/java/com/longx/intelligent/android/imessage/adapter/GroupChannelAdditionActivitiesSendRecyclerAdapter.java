@@ -10,17 +10,12 @@ import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
-import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
-import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
-import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelAdditionActivitySendBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;

@@ -570,7 +570,7 @@ public class ChatMessage implements Parcelable {
     public String toString() {
         return "ChatMessage{" +
                 "type=" + type +
-                ", getUuid='" + uuid + '\'' +
+                ", uuid='" + uuid + '\'' +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", time=" + time +

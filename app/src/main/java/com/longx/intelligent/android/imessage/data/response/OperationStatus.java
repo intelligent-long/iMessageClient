@@ -64,7 +64,7 @@ public class OperationStatus {
     public String toString() {
         return "OperationStatus{" +
                 "code=" + code +
-                ", getMessage='" + message + '\'' +
+                ", message='" + message + '\'' +
                 ", details=" + details +
                 '}';
     }

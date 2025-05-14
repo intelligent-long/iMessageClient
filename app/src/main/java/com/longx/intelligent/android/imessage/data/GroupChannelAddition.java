@@ -8,13 +8,12 @@ import androidx.annotation.NonNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
  * Created by LONG on 2024/5/2 at 1:11 AM.
  */
-public class GroupChannelAddition implements Parcelable {
+public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
     private String uuid;
     private Channel requesterChannel;
     private GroupChannel responderGroupChannel;
@@ -135,12 +134,12 @@ public class GroupChannelAddition implements Parcelable {
     @Override
     public String toString() {
         return "GroupChannelAddition{" +
-                "getUuid='" + uuid + '\'' +
-                ", getRequesterChannel=" + requesterChannel +
-                ", getResponderGroupChannel=" + responderGroupChannel +
-                ", getMessage='" + message + '\'' +
-                ", getRequestTime=" + requestTime +
-                ", getRespondTime=" + respondTime +
+                "uuid='" + uuid + '\'' +
+                ", requesterChannel=" + requesterChannel +
+                ", responderGroupChannel=" + responderGroupChannel +
+                ", message='" + message + '\'' +
+                ", requestTime=" + requestTime +
+                ", respondTime=" + respondTime +
                 ", isAccepted=" + isAccepted +
                 ", isViewed=" + isViewed +
                 ", isExpired=" + isExpired +

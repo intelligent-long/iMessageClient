@@ -21,7 +21,7 @@ public class ApiCaller {
     public interface CallYier<T>{
         void failure(Exception e);
         void notOk(int code, Response response);
-        void ok(T data, Response response);
+        void ok(T data, Response response, String json);
     }
 
     public static class BaseCallYier<T> implements CallYier<T>{
@@ -56,7 +56,7 @@ public class ApiCaller {
         }
 
         @Override
-        public void ok(T data, Response response) {
+        public void ok(T data, Response response, String json) {
 
         }
     }
@@ -80,7 +80,7 @@ public class ApiCaller {
                 String json = response.body().string();
                 Log.d(ApiCaller.class.getName(), ">> START " + url + "\n" + JsonUtil.format(json) + "\n<< END");
                 T data = JsonUtil.toObject(json, clazz);
-                yier.ok(data, response);
+                yier.ok(data, response, json);
             }catch (FailureResponseCodeException e){
                 ErrorLogger.log(e);
                 yier.notOk(e.response.code(), e.response);
