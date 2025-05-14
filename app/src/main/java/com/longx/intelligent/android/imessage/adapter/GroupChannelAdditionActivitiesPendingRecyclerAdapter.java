@@ -167,7 +167,6 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
         } else if (itemData.groupChannelActivity instanceof GroupChannelInvitation) {
             GroupChannelInvitation groupChannelInvitation = (GroupChannelInvitation) itemData.groupChannelActivity;
             Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
-            ErrorLogger.log(groupChannelInvitation);
             boolean isCurrentUserInviter = currentUserInfo.getImessageId().equals(groupChannelInvitation.getInviter().getImessageId());
             Channel inviter = groupChannelInvitation.getInviter();
             Channel invitee = groupChannelInvitation.getInvitee();

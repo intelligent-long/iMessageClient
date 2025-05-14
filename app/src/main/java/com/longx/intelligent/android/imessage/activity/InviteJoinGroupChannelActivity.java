@@ -165,7 +165,8 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
                     new CustomViewMessageDialog(this, "请选择频道").create().show();
                     return true;
                 }
-                InviteJoinGroupChannelPostBody postBody = new InviteJoinGroupChannelPostBody(choseChannel, choseGroupChannel);
+                String message = binding.messageInput.getText() == null ? null : binding.messageInput.getText() .toString();
+                InviteJoinGroupChannelPostBody postBody = new InviteJoinGroupChannelPostBody(message, choseChannel, choseGroupChannel);
                 GroupChannelApiCaller.invite(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                     @Override
                     public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
