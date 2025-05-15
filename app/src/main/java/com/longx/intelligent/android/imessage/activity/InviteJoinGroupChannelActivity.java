@@ -27,6 +27,7 @@ import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityInviteJoinGroupChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneChannelDialog;
 import com.longx.intelligent.android.imessage.dialog.ChooseOneGroupChannelDialog;
+import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
@@ -34,6 +35,7 @@ import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelAp
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.value.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +59,7 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
     }
 
     private void showContent() {
-
+        binding.messageInput.setText(Constants.INVITE_JOIN_GROUP_CHANNEL_MESSAGE);
     }
 
     private void showChannel(){
@@ -165,17 +167,22 @@ public class InviteJoinGroupChannelActivity extends BaseActivity {
                     new CustomViewMessageDialog(this, "请选择频道").create().show();
                     return true;
                 }
-                String message = binding.messageInput.getText() == null ? null : binding.messageInput.getText() .toString();
-                InviteJoinGroupChannelPostBody postBody = new InviteJoinGroupChannelPostBody(message, choseChannel, choseGroupChannel);
-                GroupChannelApiCaller.invite(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
-                    @Override
-                    public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
-                        super.ok(data, raw, call);
-                        data.commonHandleResult(InviteJoinGroupChannelActivity.this, new int[]{-101, -102, -103}, () -> {
-                            new CustomViewMessageDialog(InviteJoinGroupChannelActivity.this, "已发送邀请添加群频道请求").create().show();
-                        });
-                    }
-                });
+                new ConfirmDialog(this)
+                        .setNegativeButton()
+                        .setPositiveButton((dialog, which) -> {
+                            String message = binding.messageInput.getText() == null ? null : binding.messageInput.getText() .toString();
+                            InviteJoinGroupChannelPostBody postBody = new InviteJoinGroupChannelPostBody(message, choseChannel, choseGroupChannel);
+                            GroupChannelApiCaller.invite(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                                @Override
+                                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                    super.ok(data, raw, call);
+                                    data.commonHandleResult(InviteJoinGroupChannelActivity.this, new int[]{-101, -102, -103}, () -> {
+                                        new CustomViewMessageDialog(InviteJoinGroupChannelActivity.this, "已发送邀请添加群频道请求").create().show();
+                                    });
+                                }
+                            });
+                        })
+                        .create().show();
             }
             return true;
         });

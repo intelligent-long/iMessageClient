@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelAdditionActivity;
@@ -103,7 +102,7 @@ public class ChannelAdditionActivitiesSendRecyclerAdapter extends WrappableRecyc
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.clickView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelAdditionActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL_ADDITION_INFO, itemDataList.get(position).channelAddition);
+            intent.putExtra(ExtraKeys.CHANNEL_ADDITION, itemDataList.get(position).channelAddition);
             activity.startActivity(intent);
         });
     }

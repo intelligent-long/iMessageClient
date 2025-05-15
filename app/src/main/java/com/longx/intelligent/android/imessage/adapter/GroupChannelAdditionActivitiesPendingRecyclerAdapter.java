@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionActivity;
+import com.longx.intelligent.android.imessage.activity.GroupChannelInvitationActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -24,7 +25,6 @@ import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -110,10 +110,12 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
                 GroupChannelActivity groupChannelActivity = itemDataList.get(position).groupChannelActivity;
                 if(groupChannelActivity instanceof GroupChannelAddition) {
                     Intent intent = new Intent(activity, GroupChannelAdditionActivity.class);
-                    intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION_INFO, (GroupChannelAddition) groupChannelActivity);
+                    intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION, (GroupChannelAddition) groupChannelActivity);
                     activity.startActivity(intent);
                 }else if(groupChannelActivity instanceof GroupChannelInvitation){
-                    //TODO
+                    Intent intent = new Intent(activity, GroupChannelInvitationActivity.class);
+                    intent.putExtra(ExtraKeys.GROUP_CHANNEL_INVITATION, (GroupChannelInvitation) groupChannelActivity);
+                    activity.startActivity(intent);
                 }
             }
         };

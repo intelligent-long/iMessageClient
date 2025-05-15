@@ -101,7 +101,7 @@ public class GroupChannelAdditionActivitiesReceiveRecyclerAdapter extends Wrappa
         holder.binding.clickView.setOnClickListener(v -> {
             GroupChannelAddition groupChannelAddition = itemDataList.get(position).groupChannelAddition;
             Intent intent = new Intent(activity, GroupChannelAdditionActivity.class);
-            intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION_INFO, groupChannelAddition);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL_ADDITION, groupChannelAddition);
             activity.startActivity(intent);
         });
     }

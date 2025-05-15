@@ -16,13 +16,9 @@ import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChannelAdditionBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
-import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -39,7 +35,7 @@ public class ChannelAdditionActivity extends BaseActivity {
         binding = ActivityChannelAdditionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        channelAddition = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_ADDITION_INFO);
+        channelAddition = getIntent().getParcelableExtra(ExtraKeys.CHANNEL_ADDITION);
         isRequester = channelAddition.isRequester(this);
         if(isRequester){
             channel = channelAddition.getResponderChannel();

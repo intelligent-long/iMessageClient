@@ -47,7 +47,7 @@
                 android:layout_marginStart="21dp"
                 android:layout_marginTop="15dp"
                 android:textColor="?attr/colorControlNormal"
-                android:text="发送添加频道请求"/>
+                android:text="消息"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

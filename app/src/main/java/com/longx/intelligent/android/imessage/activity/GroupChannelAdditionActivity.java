@@ -47,7 +47,7 @@ public class GroupChannelAdditionActivity extends BaseActivity {
     }
 
     private void intentData() {
-        groupChannelAddition = getIntent().getParcelableExtra(ExtraKeys.GROUP_CHANNEL_ADDITION_INFO);
+        groupChannelAddition = getIntent().getParcelableExtra(ExtraKeys.GROUP_CHANNEL_ADDITION);
         Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         isRequester = groupChannelAddition.getRequesterChannel().getImessageId().equals(self.getImessageId());
         requesterChannel = groupChannelAddition.getRequesterChannel();

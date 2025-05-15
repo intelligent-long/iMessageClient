@@ -105,7 +105,7 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
         return v -> {
             if(v.getId() == viewHolder.binding.clickView.getId() || v.getId() == viewHolder.binding.goConfirmButton.getId()){
                 Intent intent = new Intent(activity, ChannelAdditionActivity.class);
-                intent.putExtra(ExtraKeys.CHANNEL_ADDITION_INFO, itemDataList.get(position).channelAddition);
+                intent.putExtra(ExtraKeys.CHANNEL_ADDITION, itemDataList.get(position).channelAddition);
                 activity.startActivity(intent);
             }
         };

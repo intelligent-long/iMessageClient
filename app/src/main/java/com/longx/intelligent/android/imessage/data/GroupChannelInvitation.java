@@ -1,5 +1,10 @@
 package com.longx.intelligent.android.imessage.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 
@@ -10,7 +15,7 @@ import java.util.Objects;
 /**
  * Created by LONG on 2025/5/8 at 5:09 AM.
  */
-public final class GroupChannelInvitation implements GroupChannelActivity{
+public final class GroupChannelInvitation implements GroupChannelActivity, Parcelable {
     private String uuid;
     private Channel inviter;
     private Channel invitee;
@@ -38,6 +43,25 @@ public final class GroupChannelInvitation implements GroupChannelActivity{
         this.isAccepted = isAccepted;
         this.isViewed = isViewed;
         this.isExpired = isExpired;
+    }
+
+    protected GroupChannelInvitation(Parcel in) {
+        uuid = in.readString();
+        inviter = in.readParcelable(Channel.class.getClassLoader());
+        invitee = in.readParcelable(GroupChannel.class.getClassLoader());
+        groupChannelInvitedTo = in.readParcelable(GroupChannel.class.getClassLoader());
+        message = in.readString();
+        long requestTimeLong = in.readLong();
+        if (requestTimeLong != -1) {
+            requestTime = new Date(requestTimeLong);
+        }
+        long respondTimeLong = in.readLong();
+        if (respondTimeLong != -1) {
+            respondTime = new Date(respondTimeLong);
+        }
+        isAccepted = in.readByte() != 0;
+        isViewed = in.readByte() != 0;
+        isExpired = in.readByte() != 0;
     }
 
     public String getUuid() {
@@ -117,4 +141,42 @@ public final class GroupChannelInvitation implements GroupChannelActivity{
                 "isExpired=" + isExpired + ']';
     }
 
+    public static final Creator<GroupChannelInvitation> CREATOR = new Creator<GroupChannelInvitation>() {
+        @Override
+        public GroupChannelInvitation createFromParcel(Parcel in) {
+            return new GroupChannelInvitation(in);
+        }
+
+        @Override
+        public GroupChannelInvitation[] newArray(int size) {
+            return new GroupChannelInvitation[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(uuid);
+        dest.writeParcelable(inviter, flags);
+        dest.writeParcelable(invitee, flags);
+        dest.writeParcelable(groupChannelInvitedTo, flags);
+        dest.writeString(message);
+        if(requestTime != null) {
+            dest.writeLong(requestTime.getTime());
+        }else {
+            dest.writeLong(-1);
+        }
+        if(respondTime != null) {
+            dest.writeLong(respondTime.getTime());
+        }else {
+            dest.writeLong(-1);
+        }
+        dest.writeByte((byte) (isAccepted ? 1 : 0));
+        dest.writeByte((byte) (isViewed ? 1 : 0));
+        dest.writeByte((byte) (isExpired ? 1 : 0));
+    }
 }

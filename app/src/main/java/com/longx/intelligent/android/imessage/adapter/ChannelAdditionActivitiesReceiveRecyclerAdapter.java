@@ -103,7 +103,7 @@ public class ChannelAdditionActivitiesReceiveRecyclerAdapter extends WrappableRe
     private void setupYiers(ViewHolder holder, int position) {
         holder.binding.clickView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelAdditionActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL_ADDITION_INFO, itemDataList.get(position).channelAddition);
+            intent.putExtra(ExtraKeys.CHANNEL_ADDITION, itemDataList.get(position).channelAddition);
             activity.startActivity(intent);
         });
     }

@@ -12,7 +12,7 @@ public class ExtraKeys {
     public static final String AVATAR_HASH = "avatar_hash";
     public static final String AVATAR_EXTENSION = "avatar_extension";
     public static final String IS_NETWORK_FETCHED = "is_network_fetched";
-    public static final String CHANNEL_ADDITION_INFO = "channel_addition_info";
+    public static final String CHANNEL_ADDITION = "channel_addition";
     public static final String INIT_TAB_INDEX = "init_tab_index";
     public static final String NEED_RESTORE_INSTANCE_STATE = "need_restore_instance_state";
     public static final String POSITION = "position";
@@ -55,5 +55,6 @@ public class ExtraKeys {
     public static final String BITMAP = "bitmap";
     public static final String GROUP_CHANNEL_ID = "group_channel_id";
     public static final String GROUP_CHANNEL = "group_channel";
-    public static final String GROUP_CHANNEL_ADDITION_INFO = "group_channel_addition_info";
+    public static final String GROUP_CHANNEL_ADDITION = "group_channel_addition";
+    public static final String GROUP_CHANNEL_INVITATION = "group_channel_invitation";
 }

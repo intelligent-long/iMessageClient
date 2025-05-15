@@ -44,4 +44,5 @@ public class Constants {
     public static final int FETCH_BROADCAST_REPLY_COMMENTS_INTERACTION_PAGE_SIZE = 30;
     public static final int MAX_ALLOW_UNSEND_MINUTES = 3;
     public static final long MIN_CHECK_SOFTWARE_UPDATABLE_INTERVAL_MILLI_SEC = 5 * 60 * 60 * 1000;
+    public static final String INVITE_JOIN_GROUP_CHANNEL_MESSAGE = "邀请添加群频道。";
 }
