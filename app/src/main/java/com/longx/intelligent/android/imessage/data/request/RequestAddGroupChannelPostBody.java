@@ -11,16 +11,18 @@ public class RequestAddGroupChannelPostBody {
     private String note;
     private List<String> newTagNames;
     private List<String> toAddTagIds;
+    private String inviteUuid;
 
     public RequestAddGroupChannelPostBody() {
     }
 
-    public RequestAddGroupChannelPostBody(String groupChannelIdUser, String message, String note, List<String> newTagNames, List<String> toAddTagIds) {
+    public RequestAddGroupChannelPostBody(String groupChannelIdUser, String message, String note, List<String> newTagNames, List<String> toAddTagIds, String inviteUuid) {
         this.groupChannelIdUser = groupChannelIdUser;
         this.message = message;
         this.note = note;
         this.newTagNames = newTagNames;
         this.toAddTagIds = toAddTagIds;
+        this.inviteUuid = inviteUuid;
     }
 
     public String getGroupChannelIdUser() {
@@ -41,5 +43,9 @@ public class RequestAddGroupChannelPostBody {
 
     public List<String> getToAddTagIds() {
         return toAddTagIds;
+    }
+
+    public String getInviteUuid() {
+        return inviteUuid;
     }
 }

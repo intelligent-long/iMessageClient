@@ -87,6 +87,7 @@ public class GroupChannelAdditionsActivity extends BaseActivity implements Group
         pagerAdapter.getPendingFragment().onStartFetch();
         pagerAdapter.getSendFragment().onStartFetch();
         pagerAdapter.getReceiveFragment().onStartFetch();
+        pagerAdapter.getInviteFragment().onStartFetch();
     }
 
     @Override
@@ -98,6 +99,7 @@ public class GroupChannelAdditionsActivity extends BaseActivity implements Group
         pagerAdapter.getPendingFragment().onFetched(groupChannelActivities);
         pagerAdapter.getSendFragment().onFetched(groupChannelActivities);
         pagerAdapter.getReceiveFragment().onFetched(groupChannelActivities);
+        pagerAdapter.getInviteFragment().onFetched(groupChannelActivities);
     }
 
     @Override
@@ -105,6 +107,7 @@ public class GroupChannelAdditionsActivity extends BaseActivity implements Group
         pagerAdapter.getPendingFragment().onFailure(failureMessage);
         pagerAdapter.getSendFragment().onFailure(failureMessage);
         pagerAdapter.getReceiveFragment().onFailure(failureMessage);
+        pagerAdapter.getInviteFragment().onFailure(failureMessage);
     }
 
     private void fetchAndShowContent() {

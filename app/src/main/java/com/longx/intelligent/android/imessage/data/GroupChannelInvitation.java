@@ -5,11 +5,9 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.longx.intelligent.android.imessage.data.Channel;
-import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,16 +21,22 @@ public final class GroupChannelInvitation implements GroupChannelActivity, Parce
     private String message;
     private Date requestTime;
     private Date respondTime;
+    @JsonProperty("isAccepted")
     private boolean isAccepted;
+    @JsonProperty("isViewed")
     private boolean isViewed;
+    @JsonProperty("isExpired")
     private boolean isExpired;
+    private Type inviteType;
+
+    public enum Type{INVITER, INVITEE}
 
     public GroupChannelInvitation() {
     }
 
     public GroupChannelInvitation(
-            String uuid, Channel inviter, Channel invitee, GroupChannel groupChannelInvitedTo,
-            String message, Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed, boolean isExpired) {
+            String uuid, Channel inviter, Channel invitee, GroupChannel groupChannelInvitedTo, String message,
+            Date requestTime, Date respondTime, boolean isAccepted, boolean isViewed, boolean isExpired, Type inviteType) {
         this.uuid = uuid;
         this.inviter = inviter;
         this.invitee = invitee;
@@ -43,6 +47,7 @@ public final class GroupChannelInvitation implements GroupChannelActivity, Parce
         this.isAccepted = isAccepted;
         this.isViewed = isViewed;
         this.isExpired = isExpired;
+        this.inviteType = inviteType;
     }
 
     protected GroupChannelInvitation(Parcel in) {
@@ -62,6 +67,11 @@ public final class GroupChannelInvitation implements GroupChannelActivity, Parce
         isAccepted = in.readByte() != 0;
         isViewed = in.readByte() != 0;
         isExpired = in.readByte() != 0;
+        if(in.readInt() == 0) {
+            inviteType = Type.INVITER;
+        }else if(in.readInt() == 1) {
+            inviteType = Type.INVITEE;
+        }
     }
 
     public String getUuid() {
@@ -104,6 +114,10 @@ public final class GroupChannelInvitation implements GroupChannelActivity, Parce
         return isExpired;
     }
 
+    public Type getInviteType() {
+        return inviteType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
@@ -118,12 +132,13 @@ public final class GroupChannelInvitation implements GroupChannelActivity, Parce
                 Objects.equals(this.respondTime, that.respondTime) &&
                 this.isAccepted == that.isAccepted &&
                 this.isViewed == that.isViewed &&
-                this.isExpired == that.isExpired;
+                this.isExpired == that.isExpired &&
+                this.inviteType == that.inviteType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, inviter, invitee, groupChannelInvitedTo, message, requestTime, respondTime, isAccepted, isViewed, isExpired);
+        return Objects.hash(uuid, inviter, invitee, groupChannelInvitedTo, message, requestTime, respondTime, isAccepted, isViewed, isExpired, inviteType);
     }
 
     @Override
@@ -138,7 +153,8 @@ public final class GroupChannelInvitation implements GroupChannelActivity, Parce
                 "respondTime=" + respondTime + ", " +
                 "isAccepted=" + isAccepted + ", " +
                 "isViewed=" + isViewed + ", " +
-                "isExpired=" + isExpired + ']';
+                "isExpired=" + isExpired +
+                "inviteType=" + inviteType+ ']';
     }
 
     public static final Creator<GroupChannelInvitation> CREATOR = new Creator<GroupChannelInvitation>() {
@@ -178,5 +194,10 @@ public final class GroupChannelInvitation implements GroupChannelActivity, Parce
         dest.writeByte((byte) (isAccepted ? 1 : 0));
         dest.writeByte((byte) (isViewed ? 1 : 0));
         dest.writeByte((byte) (isExpired ? 1 : 0));
+        if(inviteType == Type.INVITER){
+            dest.writeInt(0);
+        }else if(inviteType == Type.INVITEE){
+            dest.writeInt(1);
+        }
     }
 }

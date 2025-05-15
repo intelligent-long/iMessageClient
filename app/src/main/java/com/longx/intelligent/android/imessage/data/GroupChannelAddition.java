@@ -26,13 +26,14 @@ public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
     private boolean isViewed;
     @JsonProperty("isExpired")
     private boolean isExpired;
+    private String inviteUuid;
 
     public GroupChannelAddition() {
     }
 
     public GroupChannelAddition(String uuid, Channel requesterChannel, GroupChannel responderGroupChannel,
                                 String message, Date requestTime, Date respondTime, boolean isAccepted,
-                                boolean isViewed, boolean isExpired) {
+                                boolean isViewed, boolean isExpired, String inviteUuid) {
         this.uuid = uuid;
         this.requesterChannel = requesterChannel;
         this.responderGroupChannel = responderGroupChannel;
@@ -42,6 +43,7 @@ public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
         this.isAccepted = isAccepted;
         this.isViewed = isViewed;
         this.isExpired = isExpired;
+        this.inviteUuid = inviteUuid;
     }
 
     protected GroupChannelAddition(Parcel in) {
@@ -60,6 +62,7 @@ public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
         isAccepted = in.readByte() != 0;
         isViewed = in.readByte() != 0;
         isExpired = in.readByte() != 0;
+        inviteUuid = in.readString();
     }
 
     public static final Creator<GroupChannelAddition> CREATOR = new Creator<GroupChannelAddition>() {
@@ -110,6 +113,10 @@ public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
         return isExpired;
     }
 
+    public String getInviteUuid() {
+        return inviteUuid;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
@@ -123,12 +130,13 @@ public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
                 Objects.equals(this.respondTime, that.respondTime) &&
                 this.isAccepted == that.isAccepted &&
                 this.isViewed == that.isViewed &&
-                this.isExpired == that.isExpired;
+                this.isExpired == that.isExpired &&
+                Objects.equals(this.inviteUuid, that.inviteUuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, requesterChannel, responderGroupChannel, message, requestTime, respondTime, isAccepted, isViewed, isExpired);
+        return Objects.hash(uuid, requesterChannel, responderGroupChannel, message, requestTime, respondTime, isAccepted, isViewed, isExpired, inviteUuid);
     }
 
     @Override
@@ -143,6 +151,7 @@ public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
                 ", isAccepted=" + isAccepted +
                 ", isViewed=" + isViewed +
                 ", isExpired=" + isExpired +
+                ", inviteUuid=" + inviteUuid +
                 '}';
     }
 
@@ -170,5 +179,6 @@ public class GroupChannelAddition implements Parcelable, GroupChannelActivity {
         dest.writeByte((byte) (isAccepted ? 1 : 0));
         dest.writeByte((byte) (isViewed ? 1 : 0));
         dest.writeByte((byte) (isExpired ? 1 : 0));
+        dest.writeString(inviteUuid);
     }
 }

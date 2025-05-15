@@ -40,6 +40,7 @@ public class RequestJoinGroupChannelActivity extends BaseActivity {
     private ArrayList<GroupChannelTag> presetGroupChannelTags = new ArrayList<>();
     private ArrayList<String> newGroupChannelTagNames = new ArrayList<>();
     private ActivityResultLauncher<Intent> resultLauncher;
+    private String inviteUuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class RequestJoinGroupChannelActivity extends BaseActivity {
     private void initData() {
         groupChannel = getIntent().getParcelableExtra(ExtraKeys.GROUP_CHANNEL);
         currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
+        inviteUuid = getIntent().getStringExtra(ExtraKeys.INVITE_UUID);
     }
 
     private void showContent() {
@@ -84,7 +86,7 @@ public class RequestJoinGroupChannelActivity extends BaseActivity {
                         if(inputtedNote == null || inputtedNote.isEmpty()) inputtedNote = null;
                         List<String> presetGroupChannelTagIds = new ArrayList<>();
                         presetGroupChannelTags.forEach(presetGroupChannelTag -> presetGroupChannelTagIds.add(presetGroupChannelTag.getTagId()));
-                        RequestAddGroupChannelPostBody postBody = new RequestAddGroupChannelPostBody(groupChannel.getGroupChannelIdUser(), inputtedMessage, inputtedNote, newGroupChannelTagNames, presetGroupChannelTagIds);
+                        RequestAddGroupChannelPostBody postBody = new RequestAddGroupChannelPostBody(groupChannel.getGroupChannelIdUser(), inputtedMessage, inputtedNote, newGroupChannelTagNames, presetGroupChannelTagIds, inviteUuid);
                         GroupChannelApiCaller.requestAddGroupChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
                             @Override
                             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {

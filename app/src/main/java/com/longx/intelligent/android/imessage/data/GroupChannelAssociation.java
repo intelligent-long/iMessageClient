@@ -22,11 +22,12 @@ public class GroupChannelAssociation implements Parcelable {
     private String requestMessage;
     private Date requestTime;
     private Date acceptTime;
+    private String inviteUuid;
 
     public GroupChannelAssociation() {
     }
 
-    public GroupChannelAssociation(String associationId, String groupChannelId, String owner, String requester, String requestMessage, Date requestTime, Date acceptTime) {
+    public GroupChannelAssociation(String associationId, String groupChannelId, String owner, String requester, String requestMessage, Date requestTime, Date acceptTime, String inviteUuid) {
         this.associationId = associationId;
         this.groupChannelId = groupChannelId;
         this.owner = owner;
@@ -34,6 +35,7 @@ public class GroupChannelAssociation implements Parcelable {
         this.requestMessage = requestMessage;
         this.requestTime = requestTime;
         this.acceptTime = acceptTime;
+        this.inviteUuid = inviteUuid;
     }
 
     public static final Creator<GroupChannelAssociation> CREATOR = new Creator<GroupChannelAssociation>() {
@@ -76,6 +78,10 @@ public class GroupChannelAssociation implements Parcelable {
         return acceptTime;
     }
 
+    public String getInviteUuid() {
+        return inviteUuid;
+    }
+
     public GroupChannelAssociation(Parcel in) {
         associationId = in.readString();
         groupChannelId = in.readString();
@@ -84,6 +90,7 @@ public class GroupChannelAssociation implements Parcelable {
         requestMessage = in.readString();
         requestTime = (Date) in.readValue(getClass().getClassLoader());
         acceptTime = (Date) in.readValue(getClass().getClassLoader());
+        inviteUuid = in.readString();
     }
 
     @Override
@@ -100,6 +107,7 @@ public class GroupChannelAssociation implements Parcelable {
         dest.writeString(requestMessage);
         dest.writeValue(requestTime);
         dest.writeValue(acceptTime);
+        dest.writeString(inviteUuid);
     }
 
     @Override
@@ -107,11 +115,11 @@ public class GroupChannelAssociation implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GroupChannelAssociation that = (GroupChannelAssociation) o;
-        return Objects.equals(associationId, that.associationId) && Objects.equals(groupChannelId, that.groupChannelId) && Objects.equals(owner, that.owner) && Objects.equals(requester, that.requester) && Objects.equals(requestMessage, that.requestMessage) && Objects.equals(requestTime, that.requestTime) && Objects.equals(acceptTime, that.acceptTime);
+        return Objects.equals(associationId, that.associationId) && Objects.equals(groupChannelId, that.groupChannelId) && Objects.equals(owner, that.owner) && Objects.equals(requester, that.requester) && Objects.equals(requestMessage, that.requestMessage) && Objects.equals(requestTime, that.requestTime) && Objects.equals(acceptTime, that.acceptTime) && Objects.equals(inviteUuid, that.inviteUuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(associationId, groupChannelId, owner, requester, requestMessage, requestTime, acceptTime);
+        return Objects.hash(associationId, groupChannelId, owner, requester, requestMessage, requestTime, acceptTime, inviteUuid);
     }
 }

@@ -57,4 +57,5 @@ public class ExtraKeys {
     public static final String GROUP_CHANNEL = "group_channel";
     public static final String GROUP_CHANNEL_ADDITION = "group_channel_addition";
     public static final String GROUP_CHANNEL_INVITATION = "group_channel_invitation";
+    public static final String INVITE_UUID = "invite_uuid";
 }

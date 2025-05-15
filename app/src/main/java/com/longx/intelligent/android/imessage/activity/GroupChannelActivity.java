@@ -29,6 +29,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     private boolean isOwner;
     private boolean inGroup;
     private boolean networkFetch;
+    private String inviteUuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             }
         }
         networkFetch = getIntent().getBooleanExtra(ExtraKeys.MAY_NOT_ASSOCIATED, false);
+        inviteUuid = getIntent().getStringExtra(ExtraKeys.INVITE_UUID);
     }
 
     private void showContent() {
@@ -134,6 +136,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         binding.joinChannelButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, RequestJoinGroupChannelActivity.class);
             intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+            intent.putExtra(ExtraKeys.INVITE_UUID, inviteUuid);
             startActivity(intent);
         });
         binding.sendMessageButton.setOnClickListener(v -> {

@@ -26,6 +26,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String INVITE_MESSAGE = "invite_message";
         public static final String INVITE_TIME = "invite_time";
         public static final String ACCEPT_TIME = "accept_time";
+        public static final String INVITE_UUID = "invite_uuid";
     }
 
     public static class TableGroupChannelsColumns {
@@ -80,6 +81,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableGroupChannelAssociationsColumns.INVITE_MESSAGE + " VARCHAR,"
                 + TableGroupChannelAssociationsColumns.INVITE_TIME + " DATETIME,"
                 + TableGroupChannelAssociationsColumns.ACCEPT_TIME + " DATETIME,"
+                + TableGroupChannelAssociationsColumns.INVITE_UUID + " VARCHAR,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableGroupChannelAssociationsColumns.ASSOCIATION_ID
                 +")"
