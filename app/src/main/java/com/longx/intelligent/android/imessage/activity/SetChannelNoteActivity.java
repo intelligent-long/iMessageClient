@@ -3,6 +3,7 @@ package com.longx.intelligent.android.imessage.activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -32,7 +33,7 @@ public class SetChannelNoteActivity extends BaseActivity {
         String channelImessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
         channel = ChannelDatabaseManager.getInstance().findOneChannel(channelImessageId);
         binding.noteInput.setText(channel.getNote());
-        if (channel.getNote() == null) binding.deleteButton.setVisibility(View.GONE);
+        if (channel.getNote() == null) binding.toolbar.getMenu().findItem(R.id.delete).setVisible(false);
         setupYiers();
     }
 
@@ -46,13 +47,13 @@ public class SetChannelNoteActivity extends BaseActivity {
                     super.ok(data, raw, call);
                     data.commonHandleResult(SetChannelNoteActivity.this, new int[]{-101, -102}, () -> {
                         binding.noteInput.setText(inputtedNote);
-                        binding.deleteButton.setVisibility(View.VISIBLE);
+                        binding.toolbar.getMenu().findItem(R.id.delete).setVisible(true);
                         new CustomViewMessageDialog(SetChannelNoteActivity.this, "设置成功").create().show();
                     });
                 }
             });
         });
-        binding.deleteButton.setOnClickListener(v -> {
+        binding.toolbar.getMenu().findItem(R.id.delete).setOnMenuItemClickListener(item -> {
             new ConfirmDialog(this, "是否继续？")
                     .setNegativeButton()
                     .setPositiveButton((dialog, which) -> {
@@ -62,13 +63,14 @@ public class SetChannelNoteActivity extends BaseActivity {
                                 super.ok(data, raw, call);
                                 data.commonHandleResult(SetChannelNoteActivity.this, new int[]{-101}, () -> {
                                     binding.noteInput.setText(null);
-                                    binding.deleteButton.setVisibility(View.GONE);
+                                    binding.toolbar.getMenu().findItem(R.id.delete).setVisible(false);
                                     new CustomViewMessageDialog(SetChannelNoteActivity.this, "已删除").create().show();
                                 });
                             }
                         });
                     })
                     .create().show();
+            return false;
         });
     }
 }

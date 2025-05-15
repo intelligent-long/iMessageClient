@@ -61,10 +61,10 @@ public interface GroupChannelApi {
     @POST("group_channel/info/avatar/remove/{groupChannelId}")
     CompletableCall<OperationStatus> removeGroupChannelAvatar(@Path("groupChannelId") String groupChannelId);
 
-    @POST("group_channel/association/getNote/set")
+    @POST("group_channel/association/note/set")
     CompletableCall<OperationStatus> setNoteToAssociatedGroupChannel(@Body SetNoteToAssociatedGroupChannelPostBody postBody);
 
-    @POST("group_channel/association/getNote/delete/{groupChannelId}")
+    @POST("group_channel/association/note/delete/{groupChannelId}")
     CompletableCall<OperationStatus> deleteNoteOfAssociatedGroupChannel(@Path("groupChannelId") String groupChannelId);
 
     @POST("group_channel/association/tag/add")
