@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:ns1="http://schemas.android.com/apk/res-auto">
-    <style name="Theme.IChat2Client" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.IMessageClient" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
@@ -7,43 +7,43 @@
         <item name="android:windowActivityTransitions">true</item>
     </style>
 
-    <style name="Theme.IChat2Client.Font1" parent="Theme.IChat2Client">
+    <style name="Theme.IMessageClient.Font1" parent="Theme.IMessageClient">
         <item name="fontFamily">@font/app_font_gsans_ntsanssc</item>
     </style>
 
-    <style name="Theme.IChat2Client.Font2" parent="Theme.IChat2Client">
+    <style name="Theme.IMessageClient.Font2" parent="Theme.IMessageClient">
         <item name="fontFamily">@font/app_font_gsans_pingfangsc</item>
     </style>
 
-    <style name="SettingsActivity" parent="Theme.IChat2Client">
+    <style name="SettingsActivity" parent="Theme.IMessageClient">
         <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
     </style>
 
-    <style name="SettingsActivity.Font1" parent="Theme.IChat2Client">
+    <style name="SettingsActivity.Font1" parent="Theme.IMessageClient">
         <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
         <item name="android:fontFamily">@font/app_font_gsans_ntsanssc</item>
     </style>
 
-    <style name="SettingsActivity.Font2" parent="Theme.IChat2Client">
+    <style name="SettingsActivity.Font2" parent="Theme.IMessageClient">
         <item name="materialAlertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="alertDialogTheme">@style/MaterialYouPreference.Dialog</item>
         <item name="android:preferenceCategoryStyle">@style/MaterialYouPreference.Category</item>
         <item name="android:fontFamily">@font/app_font_gsans_pingfangsc</item>
     </style>
 
-    <style name="DarkStatusBarActivity" parent="Theme.IChat2Client">
+    <style name="DarkStatusBarActivity" parent="Theme.IMessageClient">
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="DarkStatusBarActivity.Font1" parent="Theme.IChat2Client.Font1">
+    <style name="DarkStatusBarActivity.Font1" parent="Theme.IMessageClient.Font1">
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="DarkStatusBarActivity.Font2" parent="Theme.IChat2Client.Font2">
+    <style name="DarkStatusBarActivity.Font2" parent="Theme.IMessageClient.Font2">
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
@@ -104,17 +104,17 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="ChatActivity" parent="Theme.IChat2Client">
+    <style name="ChatActivity" parent="Theme.IMessageClient">
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowBackground">?attr/colorSurface</item>
     </style>
 
-    <style name="ChatActivity.Font1" parent="Theme.IChat2Client.Font1">
+    <style name="ChatActivity.Font1" parent="Theme.IMessageClient.Font1">
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowBackground">?attr/colorSurface</item>
     </style>
 
-    <style name="ChatActivity.Font2" parent="Theme.IChat2Client.Font2">
+    <style name="ChatActivity.Font2" parent="Theme.IMessageClient.Font2">
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowBackground">?attr/colorSurface</item>
     </style>

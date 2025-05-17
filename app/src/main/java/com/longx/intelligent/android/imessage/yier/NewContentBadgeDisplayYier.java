@@ -29,7 +29,9 @@ public interface NewContentBadgeDisplayYier {
 
     static int getGroupChannelAdditionActivitiesNewContentCount(Context context){
         return SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesRequester(context)
-                + SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesResponder(context);
+                + SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesResponder(context)
+                + SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesInviter(context)
+                + SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesInvitee(context);
     }
 
     default void autoShowNewContentBadge(Context context, ID id){

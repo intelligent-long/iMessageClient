@@ -188,20 +188,40 @@ public class Notifications {
                 .show();
     }
 
-    public static void notifyGroupChannelAdditionActivity(Context context, int notificationRequest, int notificationRespond){
+    public static void notifyGroupChannelAdditionActivity(Context context, int notificationRequest, int notificationRespond, int notificationInviter, int notificationInvitee){
         Intent intent = new Intent(context, GroupChannelAdditionsActivity.class);
         String text;
-        if(notificationRequest != 0 && notificationRespond != 0) {
-            text = notificationRequest + " 个新的群频道添加请求, " + notificationRespond  + " 个新的群频道添加回应";
-            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
-        }else if(notificationRequest != 0){
-            text = notificationRequest + " 个新的群频道添加请求";
-            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
-        }else if(notificationRespond != 0){
-            text = notificationRespond + " 个新的群频道添加回应";
-            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+        boolean[] booleans = new boolean[4];
+        StringBuilder stringBuilder = new StringBuilder();
+        if(notificationRequest != 0){
+            stringBuilder.append(notificationRequest).append(" 个新的群频道添加请求, ");
+            booleans[0] = true;
+        }
+        if(notificationRespond != 0){
+            stringBuilder.append(notificationRequest).append(" 个新的群频道添加回应, ");
+            booleans[1] = true;
+        }
+        if(notificationInviter != 0){
+            stringBuilder.append(notificationInviter).append(" 个新的邀请添加群频道请求, ");
+            booleans[2] = true;
+        }
+        if(notificationInvitee != 0){
+            stringBuilder.append(notificationInvitee).append(" 个新的邀请添加群频道回应, ");
+            booleans[3] = true;
+        }
+        if(stringBuilder.length() != 0){
+            text = stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length() - 1).toString();
         }else {
             return;
+        }
+        if((booleans[0] || booleans[2])){
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
+        }else if(booleans[1] && booleans[3]){
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+        }else if(booleans[1]){
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+        }else if(booleans[3]){
+            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 3);
         }
         new Notification.Builder(context,
                 NotificationChannels.GroupChannelAdditionActivity.ID_GROUP_CHANNEL_ADDITION_ACTIVITY,

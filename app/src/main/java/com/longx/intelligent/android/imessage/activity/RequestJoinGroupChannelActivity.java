@@ -61,6 +61,7 @@ public class RequestJoinGroupChannelActivity extends BaseActivity {
     }
 
     private void showContent() {
+//        if(inviteUuid != null) binding.collapsingToolbarLayout.setTitle("接受群频道邀请");
         binding.messageInput.setText(Mutables.getRequestJoinGroupChannelDefaultMessage(currentUserInfo.getUsername()));
     }
 

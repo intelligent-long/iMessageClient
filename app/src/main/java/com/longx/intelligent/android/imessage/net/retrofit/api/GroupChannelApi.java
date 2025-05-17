@@ -27,6 +27,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:27.
@@ -44,6 +45,9 @@ public interface GroupChannelApi {
 
     @GET("group_channel/find/group_channel_id/{groupChannelId}")
     CompletableCall<OperationData> findGroupChannelByGroupChannelId(@Path("groupChannelId") String groupChannelId);
+
+    @GET("group_channel/find/group_channel_id/{groupChannelId}")
+    CompletableCall<OperationData> findGroupChannelByGroupChannelId(@Path("groupChannelId") String groupChannelId, @Query("queryType") String queryType);
 
     @GET("group_channel/info/group_channel_id_user/can_change/{groupChannelId}")
     CompletableCall<OperationData> groupChannelIdUserNowCanChange(@Path("groupChannelId") String groupChannelId);

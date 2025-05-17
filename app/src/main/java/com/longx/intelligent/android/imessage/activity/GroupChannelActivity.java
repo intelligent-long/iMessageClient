@@ -66,6 +66,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     }
 
     private void showContent() {
+//        if(inviteUuid != null) binding.toolbar.setTitle("接受邀请");
         if(networkFetch && !inGroup) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
         if(groupChannel.getGroupAvatar() == null || groupChannel.getGroupAvatar().getHash() == null){
             GlideApp.with(this)

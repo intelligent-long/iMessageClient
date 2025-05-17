@@ -59,6 +59,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         return call;
     }
 
+    public static CompletableCall<OperationData> findGroupChannelByGroupChannelId(LifecycleOwner lifecycleOwner, String groupChannelId, String queryType, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().findGroupChannelByGroupChannelId(groupChannelId, queryType);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
     public static CompletableCall<OperationData> groupChannelIdUserNowCanChange(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().groupChannelIdUserNowCanChange(groupChannelId);
         call.enqueue(lifecycleOwner, yier);

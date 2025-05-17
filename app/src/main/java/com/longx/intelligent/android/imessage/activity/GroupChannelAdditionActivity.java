@@ -199,7 +199,7 @@ public class GroupChannelAdditionActivity extends BaseActivity {
             });
         }
         binding.acceptAddButton.setOnClickListener(v -> {
-            new ConfirmDialog(this, "是否接受添加频道请求？")
+            new ConfirmDialog(this, "是否接受添加群频道请求？")
                     .setNegativeButton()
                     .setPositiveButton("确定", (dialog, which) -> {
                         GroupChannelApiCaller.acceptAdd(this, new AcceptAddGroupChannelPostBody(groupChannelAddition.getUuid()), new RetrofitApiCaller.CommonYier<OperationStatus>(this){

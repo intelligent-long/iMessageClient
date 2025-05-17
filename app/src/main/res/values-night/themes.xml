@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.IChat2Client" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.IMessageClient" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@color/black</item>
@@ -21,7 +21,7 @@
         <item name="dividerColor">@color/black</item>
     </style>
 
-    <style name="ChatActivity" parent="Theme.IChat2Client">
+    <style name="ChatActivity" parent="Theme.IMessageClient">
         <item name="android:navigationBarColor">@color/black</item>
         <item name="android:windowBackground">@color/black</item>
     </style>

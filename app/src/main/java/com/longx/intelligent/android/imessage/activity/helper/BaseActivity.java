@@ -29,7 +29,7 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
     private Bundle savedInstanceState;
     private final Set<PermissionOperator> permissionOperators = new HashSet<>();
     private boolean autoCancelInput = true;
-    private Integer[] fontThemes = new Integer[]{R.style.Theme_IChat2Client_Font1, R.style.Theme_IChat2Client_Font2};
+    private Integer[] fontThemes = new Integer[]{R.style.Theme_IMessageClient_Font1, R.style.Theme_IMessageClient_Font2};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -154,7 +154,7 @@ public class GroupChannelInvitationActivity extends BaseActivity {
             startActivity(intent);
         });
         binding.acceptAddButton.setOnClickListener(v -> {
-            new ConfirmDialog(this, "是否接受添加频道邀请？")
+            new ConfirmDialog(this, "是否接受添加群频道邀请？")
                     .setNegativeButton()
                     .setPositiveButton("确定", (dialog, which) -> {
                         Intent intent = new Intent(GroupChannelInvitationActivity.this, GroupChannelActivity.class);

@@ -490,6 +490,8 @@ public class SharedPreferencesAccessor {
             private static final String BROADCAST_REPLY_COMMENT_NEWS_COUNT = "broadcast_reply_comment_news_count";
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_REQUESTER = "group_channel_addition_activities_requester";
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER = "group_channel_addition_activities_responder";
+            private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITER = "group_channel_addition_activities_inviter";
+            private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITEE = "group_channel_addition_activities_invitee";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return getCurrentUserSharedPreferences(context, NAME);
@@ -554,6 +556,8 @@ public class SharedPreferencesAccessor {
                     .edit()
                     .putInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_REQUESTER, newContentCount.getRequester())
                     .putInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER, newContentCount.getResponder())
+                    .putInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITER, newContentCount.getInviter())
+                    .putInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITEE, newContentCount.getInvitee())
                     .apply();
         }
 
@@ -565,6 +569,16 @@ public class SharedPreferencesAccessor {
         public static int getGroupChannelAdditionActivitiesResponder(Context context){
             return getSharedPreferences(context)
                     .getInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER, 0);
+        }
+
+        public static int getGroupChannelAdditionActivitiesInviter(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITER, 0);
+        }
+
+        public static int getGroupChannelAdditionActivitiesInvitee(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITEE, 0);
         }
     }
 
