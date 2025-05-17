@@ -138,4 +138,12 @@ public class PublicFileAccessor {
             return FileHelper.saveNetImage(context, avatarUrl, avatarPath);
         }
     }
+
+    public static class GroupChannel{
+        public static String saveAvatar(Context context, String groupId, String avatarHash, String avatarExtension) throws IOException, InterruptedException {
+            String avatarUrl = NetDataUrls.getGroupAvatarUrl(context, avatarHash);
+            String avatarPath = DataPaths.PublicFile.avatarFilePath(avatarHash, groupId, avatarExtension);
+            return FileHelper.saveNetImage(context, avatarUrl, avatarPath);
+        }
+    }
 }

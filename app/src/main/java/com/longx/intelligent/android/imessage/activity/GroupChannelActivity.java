@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -16,6 +17,7 @@ import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAcc
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBinding;
+import com.longx.intelligent.android.imessage.data.AvatarType;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.yier.CopyTextOnLongClickYier;
@@ -119,7 +121,14 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
 
     private void setupYiers() {
         binding.avatar.setOnClickListener(v -> {
-
+            if(groupChannel != null && groupChannel.getGroupAvatar() != null && groupChannel.getGroupAvatar().getHash() != null) {
+                Intent intent = new Intent(this, AvatarActivity.class);
+                intent.putExtra(ExtraKeys.IMESSAGE_ID, groupChannel.getGroupChannelId());
+                intent.putExtra(ExtraKeys.AVATAR_HASH, groupChannel.getGroupAvatar().getHash());
+                intent.putExtra(ExtraKeys.AVATAR_EXTENSION, groupChannel.getGroupAvatar().getExtension());
+                intent.putExtra(ExtraKeys.AVATAR_TYPE, (Parcelable) AvatarType.GROUP_CHANNEL);
+                startActivity(intent);
+            }
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.more){

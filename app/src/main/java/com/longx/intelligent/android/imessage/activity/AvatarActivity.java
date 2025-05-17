@@ -18,6 +18,7 @@ import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplaye
 import com.longx.intelligent.android.imessage.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.imessage.databinding.ActivityAvatarBinding;
 import com.longx.intelligent.android.imessage.dialog.OperatingDialog;
+import com.longx.intelligent.android.imessage.data.AvatarType;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
@@ -29,6 +30,7 @@ public class AvatarActivity extends BaseActivity {
     private String imessageId;
     private String avatarExtension;
     private String avatarHash;
+    private AvatarType avatarType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class AvatarActivity extends BaseActivity {
         imessageId = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID));
         avatarHash = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.AVATAR_HASH));
         avatarExtension = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.AVATAR_EXTENSION));
+        avatarType = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.AVATAR_TYPE));
         setupToolbar();
         showAvatar();
     }
@@ -57,7 +60,11 @@ public class AvatarActivity extends BaseActivity {
             OperatingDialog operatingDialog = new OperatingDialog(this);
             operatingDialog.create().show();
             try {
-                PublicFileAccessor.User.saveAvatar(this, imessageId, avatarHash, avatarExtension);
+                if(avatarType == AvatarType.CHANNEL) {
+                    PublicFileAccessor.User.saveAvatar(this, imessageId, avatarHash, avatarExtension);
+                }else if(avatarType == AvatarType.GROUP_CHANNEL){
+                    PublicFileAccessor.GroupChannel.saveAvatar(this, imessageId, avatarHash, avatarExtension);
+                }
                 operatingDialog.dismiss();
                 MessageDisplayer.autoShow(this, "已保存", MessageDisplayer.Duration.SHORT);
             } catch (IOException | InterruptedException e) {
@@ -71,7 +78,14 @@ public class AvatarActivity extends BaseActivity {
         binding.loadingIndicator.hide();
         binding.loadingIndicator.show();
 
-        GlideBehaviours.loadToBitmap(getApplicationContext(), NetDataUrls.getAvatarUrl(this, avatarHash),
+        String avatarUrl = null;
+        if(avatarType == AvatarType.CHANNEL) {
+            avatarUrl = NetDataUrls.getAvatarUrl(this, avatarHash);
+        }else if(avatarType == AvatarType.GROUP_CHANNEL){
+            avatarUrl = NetDataUrls.getGroupAvatarUrl(this, avatarHash);
+        }
+
+        GlideBehaviours.loadToBitmap(getApplicationContext(), avatarUrl,
                 new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

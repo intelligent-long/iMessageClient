@@ -3,6 +3,7 @@ package com.longx.intelligent.android.imessage.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -16,7 +17,6 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.activity.settings.EditUserSettingsActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.BroadcastMedia;
@@ -26,6 +26,7 @@ import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChannelBinding;
+import com.longx.intelligent.android.imessage.data.AvatarType;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
@@ -276,6 +277,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                     intent.putExtra(ExtraKeys.IMESSAGE_ID, isSelf ? self.getImessageId() : channel.getImessageId());
                     intent.putExtra(ExtraKeys.AVATAR_HASH, isSelf ? self.getAvatar().getHash() : channel.getAvatar().getHash());
                     intent.putExtra(ExtraKeys.AVATAR_EXTENSION, isSelf ? self.getAvatar().getExtension() : channel.getAvatar().getExtension());
+                    intent.putExtra(ExtraKeys.AVATAR_TYPE, (Parcelable) AvatarType.CHANNEL);
                     startActivity(intent);
             }
         });

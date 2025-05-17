@@ -18,6 +18,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +50,7 @@ import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.fragment.main.BroadcastsFragment;
 import com.longx.intelligent.android.imessage.fragment.main.ChannelsFragment;
 import com.longx.intelligent.android.imessage.fragment.main.MessagesFragment;
+import com.longx.intelligent.android.imessage.data.AvatarType;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.permission.SpecialPermissionOperator;
 import com.longx.intelligent.android.imessage.permission.LinkPermissionOperatorActivity;
@@ -59,7 +61,6 @@ import com.longx.intelligent.android.imessage.permission.ToRequestPermissionsIte
 import com.longx.intelligent.android.imessage.service.ServerMessageService;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.WindowAndSystemUiUtil;
@@ -447,6 +448,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 intent.putExtra(ExtraKeys.IMESSAGE_ID, self.getImessageId());
                 intent.putExtra(ExtraKeys.AVATAR_HASH, self.getAvatar().getHash());
                 intent.putExtra(ExtraKeys.AVATAR_EXTENSION, self.getAvatar().getExtension());
+                intent.putExtra(ExtraKeys.AVATAR_TYPE, (Parcelable) AvatarType.CHANNEL);
                 startActivity(intent);
             }
         });
