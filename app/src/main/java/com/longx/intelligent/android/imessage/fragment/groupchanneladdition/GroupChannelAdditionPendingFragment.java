@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.longx.intelligent.android.imessage.adapter.GroupChannelAdditionActivitiesPendingRecyclerAdapter;
@@ -24,6 +25,11 @@ public class GroupChannelAdditionPendingFragment extends Fragment implements Gro
     private boolean fetchingVisible;
     private String failureMessage;
     private List<GroupChannelActivity> fetchedGroupChannelActivities;
+    private FragmentActivity fragmentActivity;
+
+    public GroupChannelAdditionPendingFragment(FragmentActivity fragmentActivity) {
+        this.fragmentActivity = fragmentActivity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +39,7 @@ public class GroupChannelAdditionPendingFragment extends Fragment implements Gro
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGroupChannelAdditionPendingBinding.inflate(inflater, container, false);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(fragmentActivity));
         showContent();
         return binding.getRoot();
     }
@@ -97,7 +103,7 @@ public class GroupChannelAdditionPendingFragment extends Fragment implements Gro
             pendingGroupChannelActivities.forEach(pendingGroupChannelActivity -> {
                 itemDataList.add(new GroupChannelAdditionActivitiesPendingRecyclerAdapter.ItemData(pendingGroupChannelActivity));
             });
-            GroupChannelAdditionActivitiesPendingRecyclerAdapter recyclerAdapter = new GroupChannelAdditionActivitiesPendingRecyclerAdapter(requireActivity(), itemDataList);
+            GroupChannelAdditionActivitiesPendingRecyclerAdapter recyclerAdapter = new GroupChannelAdditionActivitiesPendingRecyclerAdapter(fragmentActivity, itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
         }
     }

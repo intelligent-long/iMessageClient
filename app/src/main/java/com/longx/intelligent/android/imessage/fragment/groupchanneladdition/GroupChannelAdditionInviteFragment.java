@@ -3,6 +3,7 @@ package com.longx.intelligent.android.imessage.fragment.groupchanneladdition;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -29,6 +30,11 @@ public class GroupChannelAdditionInviteFragment extends BaseFragment implements 
     private boolean fetchingVisible;
     private String failureMessage;
     private List<GroupChannelActivity> fetchedGroupChannelActivities;
+    private FragmentActivity fragmentActivity;
+
+    public GroupChannelAdditionInviteFragment(FragmentActivity fragmentActivity) {
+        this.fragmentActivity = fragmentActivity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,7 @@ public class GroupChannelAdditionInviteFragment extends BaseFragment implements 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGroupChannelAdditionInviteBinding.inflate(inflater, container, false);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(fragmentActivity));
         showContent();
         return binding.getRoot();
     }
@@ -54,7 +60,7 @@ public class GroupChannelAdditionInviteFragment extends BaseFragment implements 
     }
 
     private void showCachedContent() {
-        List<GroupChannelActivity> groupChannelActivities = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
+        List<GroupChannelActivity> groupChannelActivities = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(fragmentActivity);
         setupRecyclerView(groupChannelActivities);
     }
 
@@ -104,7 +110,7 @@ public class GroupChannelAdditionInviteFragment extends BaseFragment implements 
             groupChannelInvitations.forEach(sendGroupChannelInvitation -> {
                 itemDataList.add(new GroupChannelAdditionActivitiesInviteRecyclerAdapter.ItemData(sendGroupChannelInvitation));
             });
-            GroupChannelAdditionActivitiesInviteRecyclerAdapter recyclerAdapter = new GroupChannelAdditionActivitiesInviteRecyclerAdapter(requireActivity(), itemDataList);
+            GroupChannelAdditionActivitiesInviteRecyclerAdapter recyclerAdapter = new GroupChannelAdditionActivitiesInviteRecyclerAdapter(fragmentActivity, itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
         }
     }

@@ -24,10 +24,10 @@ public class GroupChannelAdditionsActivityPagerAdapter extends FragmentStateAdap
 
     public GroupChannelAdditionsActivityPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-        groupChannelAdditionReceiveFragment = new GroupChannelAdditionReceiveFragment();
-        groupChannelAdditionSendFragment = new GroupChannelAdditionSendFragment();
-        groupChannelAdditionPendingFragment = new GroupChannelAdditionPendingFragment();
-        groupChannelAdditionInviteFragment = new GroupChannelAdditionInviteFragment();
+        groupChannelAdditionReceiveFragment = new GroupChannelAdditionReceiveFragment(fragmentActivity);
+        groupChannelAdditionSendFragment = new GroupChannelAdditionSendFragment(fragmentActivity);
+        groupChannelAdditionPendingFragment = new GroupChannelAdditionPendingFragment(fragmentActivity);
+        groupChannelAdditionInviteFragment = new GroupChannelAdditionInviteFragment(fragmentActivity);
     }
 
     @NonNull

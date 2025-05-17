@@ -149,7 +149,7 @@ public class GroupChannelAdditionActivitiesInviteRecyclerAdapter extends Wrappab
 
         checkAndShowTimeText(holder, position, itemData);
         if (!itemData.groupChannelInvitation.isViewed()) {
-            //TODO
+            GroupChannelApiCaller.viewOneAdditionActivity(null, itemData.groupChannelInvitation.getUuid(), new RetrofitApiCaller.CommonYier<>(activity, false, true));
         }
         if(!itemData.groupChannelInvitation.isViewed()) {
             holder.binding.badgeHost.setVisibility(View.VISIBLE);

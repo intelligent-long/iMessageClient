@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.fragment.groupchanneladdition;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -25,6 +26,11 @@ public class GroupChannelAdditionReceiveFragment extends BaseFragment implements
     private boolean fetchingVisible;
     private String failureMessage;
     private List<GroupChannelActivity> fetchedGroupChannelActivities;
+    private FragmentActivity fragmentActivity;
+
+    public GroupChannelAdditionReceiveFragment(FragmentActivity fragmentActivity) {
+        this.fragmentActivity = fragmentActivity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,7 @@ public class GroupChannelAdditionReceiveFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGroupChannelAdditionReceiveBinding.inflate(inflater, container, false);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(fragmentActivity));
         showContent();
         return binding.getRoot();
     }
@@ -50,13 +56,13 @@ public class GroupChannelAdditionReceiveFragment extends BaseFragment implements
     }
 
     private void showCachedContent() {
-        List<GroupChannelActivity> groupChannelActivities = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(requireContext());
+        List<GroupChannelActivity> groupChannelActivities = SharedPreferencesAccessor.ApiJson.GroupChannelAdditionActivities.getAllRecords(fragmentActivity);
         setupRecyclerView(groupChannelActivities);
     }
 
     private void setupRecyclerView(List<GroupChannelActivity> groupChannelActivities) {
         List<GroupChannelAddition> sendGroupChannelAdditions = new ArrayList<>();
-        Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(requireContext());
+        Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(fragmentActivity);
         groupChannelActivities.forEach(groupChannelActivity -> {
             if(groupChannelActivity instanceof GroupChannelAddition) {
                 GroupChannelAddition groupChannelAddition = (GroupChannelAddition) groupChannelActivity;
@@ -73,7 +79,7 @@ public class GroupChannelAdditionReceiveFragment extends BaseFragment implements
             sendGroupChannelAdditions.forEach(sendGroupChannelAddition -> {
                 itemDataList.add(new GroupChannelAdditionActivitiesReceiveRecyclerAdapter.ItemData(sendGroupChannelAddition));
             });
-            GroupChannelAdditionActivitiesReceiveRecyclerAdapter recyclerAdapter = new GroupChannelAdditionActivitiesReceiveRecyclerAdapter(requireActivity(), itemDataList);
+            GroupChannelAdditionActivitiesReceiveRecyclerAdapter recyclerAdapter = new GroupChannelAdditionActivitiesReceiveRecyclerAdapter(fragmentActivity, itemDataList);
             binding.recyclerView.setAdapter(recyclerAdapter);
         }
     }

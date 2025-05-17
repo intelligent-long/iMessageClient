@@ -197,7 +197,7 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
             }
             checkAndShowTimeText(holder, position, itemData);
             if (!groupChannelInvitation.isViewed()) {
-                //TODO
+                GroupChannelApiCaller.viewOneAdditionActivity(null, itemData.groupChannelActivity.getUuid(), new RetrofitApiCaller.CommonYier<>(activity, false, true));
             }
             if (!groupChannelInvitation.isViewed()) {
                 holder.binding.badgeHost.setVisibility(View.VISIBLE);
