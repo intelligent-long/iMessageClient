@@ -157,7 +157,7 @@
                 android:layout_marginBottom="5dp"
                 android:textFontWeight="@integer/font_weight_medium"
                 android:textColor="?attr/colorControlNormal"
-                android:text="频道"/>
+                android:text="群频道"/>
 
             <LinearLayout
                 android:id="@+id/click_view_header_group"

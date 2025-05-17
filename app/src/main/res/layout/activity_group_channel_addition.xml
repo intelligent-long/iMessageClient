@@ -74,17 +74,27 @@
                         android:textSize="19sp"/>
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/label_requester"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:textFontWeight="@integer/font_weight_medium"
+                    android:textColor="?attr/colorControlNormal"
+                    android:text="请求者"/>
+
                 <LinearLayout
-                    android:id="@+id/click_view_header"
+                    android:id="@+id/click_view_header_requester"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
                     android:paddingHorizontal="20dp"
                     android:paddingVertical="15dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/avatar"
+                        android:id="@+id/avatar_requester"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         app:shapeAppearance="@style/CircleImageAppearance"/>
@@ -103,13 +113,13 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:id="@+id/name"
+                                android:id="@+id/name_requester"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="21sp"/>
 
                             <ImageView
-                                android:id="@+id/sex_icon"
+                                android:id="@+id/sex_icon_requester"
                                 android:layout_width="21dp"
                                 android:layout_height="21dp"
                                 android:layout_marginStart="10dp"
@@ -124,7 +134,7 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:id="@+id/id_user"
+                                android:id="@+id/id_requester"
                                 android:textSize="16sp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -132,112 +142,62 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:textFontWeight="@integer/font_weight_medium"
+                    android:textColor="?attr/colorControlNormal"
+                    android:text="群频道"/>
+
                 <LinearLayout
+                    android:id="@+id/click_view_header_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/shape_card_background_radius_28"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/avatar_group"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:shapeAppearance="@style/CircleImageAppearance" />
 
                     <LinearLayout
-                        android:id="@+id/layout_username"
-                        android:paddingHorizontal="20dp"
-                        android:paddingVertical="14dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/username"
-                                style="@style/TextAppearance.Material3.TitleLarge"
-                                android:textSize="19sp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                style="Theme.AppTheme.MaterialPreference.Summary"
-                                android:layout_width="match_parent"
+                                android:id="@+id/name_group"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1.5dp"
-                                android:textFontWeight="@integer/font_weight_medium"
-                                android:text="名称"/>
+                                android:textSize="21sp" />
                         </LinearLayout>
-                    </LinearLayout>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:id="@+id/email_divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        style="@style/WindowBackgroundColorDividerColor"/>
-
-                    <LinearLayout
-                        android:id="@+id/layout_email"
-                        android:paddingHorizontal="20dp"
-                        android:paddingVertical="14dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:layout_marginTop="5dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/email"
-                                style="@style/TextAppearance.Material3.TitleLarge"
-                                android:textSize="19sp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                style="Theme.AppTheme.MaterialPreference.Summary"
+                                android:id="@+id/id_group"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1.5dp"
-                                android:textFontWeight="@integer/font_weight_medium"
-                                android:text="邮箱"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:id="@+id/region_divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        style="@style/WindowBackgroundColorDividerColor"/>
-
-                    <LinearLayout
-                        android:id="@+id/layout_region"
-                        android:paddingHorizontal="20dp"
-                        android:paddingVertical="14dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/region"
-                                style="@style/TextAppearance.Material3.TitleLarge"
-                                android:textSize="19sp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                style="Theme.AppTheme.MaterialPreference.Summary"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="1.5dp"
-                                android:textFontWeight="@integer/font_weight_medium"
-                                android:text="地区"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

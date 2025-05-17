@@ -73,7 +73,7 @@ public class GroupChannelInvitationActivity extends BaseActivity {
             channel = groupChannelInvitation.getInviter();
         }
         Avatar avatar = channel.getAvatar();
-        if (avatar != null) {
+        if (avatar != null && avatar.getHash() != null) {
             GlideApp.with(this)
                     .load(NetDataUrls.getAvatarUrl(this, avatar.getHash()))
                     .into(binding.avatarChannel);
@@ -90,7 +90,7 @@ public class GroupChannelInvitationActivity extends BaseActivity {
         }
         GroupChannel groupChannel = groupChannelInvitation.getGroupChannelInvitedTo();
         GroupAvatar groupAvatar = groupChannel.getGroupAvatar();
-        if (groupAvatar != null) {
+        if (groupAvatar != null && groupAvatar.getHash() != null) {
             GlideApp.with(this)
                     .load(NetDataUrls.getGroupAvatarUrl(this, groupAvatar.getHash()))
                     .into(binding.avatarGroup);

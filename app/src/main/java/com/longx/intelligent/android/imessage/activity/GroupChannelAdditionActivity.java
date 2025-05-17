@@ -62,93 +62,56 @@ public class GroupChannelAdditionActivity extends BaseActivity {
             binding.messageText.setText(message);
         }
         if(isRequester){
+            binding.labelRequester.setVisibility(View.GONE);
+            binding.clickViewHeaderRequester.setVisibility(View.GONE);
             GroupAvatar groupAvatar = responderGroupChannel.getGroupAvatar();
-            if(groupAvatar != null) {
+            if(groupAvatar != null && groupAvatar.getHash() != null) {
                 GlideApp.with(this)
                         .load(NetDataUrls.getGroupAvatarUrl(this, groupAvatar.getHash()))
-                        .into(binding.avatar);
+                        .into(binding.avatarGroup);
             }else {
                 GlideApp.with(this)
                         .load(R.drawable.group_channel_default_avatar)
-                        .into(binding.avatar);
+                        .into(binding.avatarGroup);
             }
-            binding.idUser.setText(responderGroupChannel.getGroupChannelIdUser());
-
-            boolean hasPrevious = false;
+            binding.idGroup.setText(responderGroupChannel.getGroupChannelIdUser());
             if (responderGroupChannel.getNote() != null) {
-                binding.name.setText(responderGroupChannel.getNote());
-                binding.username.setText(responderGroupChannel.getName());
-                binding.layoutUsername.setVisibility(View.VISIBLE);
-                hasPrevious = true;
+                binding.nameGroup.setText(responderGroupChannel.getNote());
             } else {
-                binding.name.setText(responderGroupChannel.getName());
-                binding.layoutUsername.setVisibility(View.GONE);
-            }
-
-            binding.layoutEmail.setVisibility(View.GONE);
-            binding.emailDivider.setVisibility(View.GONE);
-
-            if (responderGroupChannel.getFirstRegion() != null) {
-                if (hasPrevious) {
-                    binding.regionDivider.setVisibility(View.VISIBLE);
-                } else {
-                    binding.regionDivider.setVisibility(View.GONE);
-                }
-                binding.region.setText(responderGroupChannel.buildRegionDesc());
-                binding.layoutRegion.setVisibility(View.VISIBLE);
-            } else {
-                binding.layoutRegion.setVisibility(View.GONE);
-                binding.regionDivider.setVisibility(View.GONE);
+                binding.nameGroup.setText(responderGroupChannel.getName());
             }
         }else {
             Avatar avatar = requesterChannel.getAvatar();
-            if(avatar != null) {
+            if(avatar != null && avatar.getHash() != null) {
                 GlideApp.with(this)
-                        .load(NetDataUrls.getGroupAvatarUrl(this, avatar.getHash()))
-                        .into(binding.avatar);
+                        .load(NetDataUrls.getAvatarUrl(this, avatar.getHash()))
+                        .into(binding.avatarRequester);
             }else {
                 GlideApp.with(this)
                         .load(R.drawable.default_avatar)
-                        .into(binding.avatar);
+                        .into(binding.avatarRequester);
             }
-            binding.idUser.setText(requesterChannel.getImessageIdUser());
-
-            boolean hasPrevious = false;
+            binding.idRequester.setText(requesterChannel.getImessageIdUser());
             if (requesterChannel.getNote() != null) {
-                binding.name.setText(requesterChannel.getNote());
-                binding.username.setText(requesterChannel.getUsername());
-                binding.layoutUsername.setVisibility(View.VISIBLE);
-                hasPrevious = true;
+                binding.nameRequester.setText(requesterChannel.getNote());
             } else {
-                binding.name.setText(requesterChannel.getUsername());
-                binding.layoutUsername.setVisibility(View.GONE);
+                binding.nameRequester.setText(requesterChannel.getUsername());
             }
-
-            if (requesterChannel.getEmail() != null) {
-                if (hasPrevious) {
-                    binding.emailDivider.setVisibility(View.VISIBLE);
-                } else {
-                    binding.emailDivider.setVisibility(View.GONE);
-                }
-                binding.email.setText(requesterChannel.getEmail());
-                binding.layoutEmail.setVisibility(View.VISIBLE);
-                hasPrevious = true;
-            } else {
-                binding.layoutEmail.setVisibility(View.GONE);
-                binding.emailDivider.setVisibility(View.GONE);
+            GroupAvatar groupAvatar = responderGroupChannel.getGroupAvatar();
+            if(groupAvatar != null && groupAvatar.getHash() != null) {
+                GlideApp.with(this)
+                        .load(NetDataUrls.getGroupAvatarUrl(this, groupAvatar.getHash()))
+                        .into(binding.avatarGroup);
+            }else {
+                GlideApp.with(this)
+                        .load(R.drawable.group_channel_default_avatar)
+                        .into(binding.avatarGroup);
             }
-
-            if (requesterChannel.getFirstRegion() != null) {
-                if (hasPrevious) {
-                    binding.regionDivider.setVisibility(View.VISIBLE);
-                } else {
-                    binding.regionDivider.setVisibility(View.GONE);
-                }
-                binding.region.setText(requesterChannel.buildRegionDesc());
-                binding.layoutRegion.setVisibility(View.VISIBLE);
+            binding.idGroup.setText(responderGroupChannel.getGroupChannelIdUser());
+            if (responderGroupChannel.getNote() != null) {
+                binding.nameGroup.setText(responderGroupChannel.getNote());
             } else {
-                binding.layoutRegion.setVisibility(View.GONE);
-                binding.regionDivider.setVisibility(View.GONE);
+                binding.nameGroup.setText(responderGroupChannel.getName());
             }
         }
         binding.requestTime.setText(COMMON_SIMPLE_DATE_FORMAT.format(groupChannelAddition.getRequestTime()));
@@ -183,14 +146,14 @@ public class GroupChannelAdditionActivity extends BaseActivity {
 
     private void setupYiers() {
         if(isRequester){
-            binding.clickViewHeader.setOnClickListener(v -> {
+            binding.clickViewHeaderGroup.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GroupChannelActivity.class);
                 intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannelAddition.getResponderGroupChannel());
                 intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
                 startActivity(intent);
             });
         }else {
-            binding.clickViewHeader.setOnClickListener(v -> {
+            binding.clickViewHeaderRequester.setOnClickListener(v -> {
                 if(requesterChannel != null) {
                     Intent intent = new Intent(this, ChannelActivity.class);
                     intent.putExtra(ExtraKeys.IMESSAGE_ID, requesterChannel.getImessageId());

@@ -110,7 +110,7 @@ public class GroupChannelAdditionActivitiesSendRecyclerAdapter extends Wrappable
         ItemData itemData = itemDataList.get(position);
         GroupChannel responderGroupChannel = itemData.groupChannelAddition.getResponderGroupChannel();
         holder.binding.message.setText(itemData.groupChannelAddition.getMessage());
-        if (responderGroupChannel.getGroupAvatar() != null) {
+        if (responderGroupChannel.getGroupAvatar() != null && responderGroupChannel.getGroupAvatar().getHash() != null) {
             String avatarHash = responderGroupChannel.getGroupAvatar().getHash();
             GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
         } else {
