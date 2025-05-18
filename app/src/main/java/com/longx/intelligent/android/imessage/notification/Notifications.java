@@ -188,17 +188,17 @@ public class Notifications {
                 .show();
     }
 
-    public static void notifyGroupChannelAdditionActivity(Context context, int notificationRequest, int notificationRespond, int notificationInviter, int notificationInvitee){
+    public static void notifyGroupChannelAdditionActivity(Context context, int selfNotificationRequest, int selfNotificationRespond, int otherNotificationRequest, int otherNotificationRespond, int notificationInviter, int notificationInvitee){
         Intent intent = new Intent(context, GroupChannelAdditionsActivity.class);
         String text;
         boolean[] booleans = new boolean[4];
         StringBuilder stringBuilder = new StringBuilder();
-        if(notificationRequest != 0){
-            stringBuilder.append(notificationRequest).append(" 个新的群频道添加请求, ");
+        if(selfNotificationRequest + otherNotificationRequest != 0){
+            stringBuilder.append(selfNotificationRequest + otherNotificationRequest).append(" 个新的群频道添加请求, ");
             booleans[0] = true;
         }
-        if(notificationRespond != 0){
-            stringBuilder.append(notificationRequest).append(" 个新的群频道添加回应, ");
+        if(selfNotificationRespond + otherNotificationRespond != 0){
+            stringBuilder.append(selfNotificationRespond + otherNotificationRespond).append(" 个新的群频道添加回应, ");
             booleans[1] = true;
         }
         if(notificationInviter != 0){
@@ -217,9 +217,17 @@ public class Notifications {
         if((booleans[0] || booleans[2])){
             intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 0);
         }else if(booleans[1] && booleans[3]){
-            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+            if(otherNotificationRespond == 0){
+                intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 2);
+            }else {
+                intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+            }
         }else if(booleans[1]){
-            intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+            if(otherNotificationRespond == 0){
+                intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 2);
+            }else {
+                intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 1);
+            }
         }else if(booleans[3]){
             intent.putExtra(ExtraKeys.INIT_TAB_INDEX, 3);
         }

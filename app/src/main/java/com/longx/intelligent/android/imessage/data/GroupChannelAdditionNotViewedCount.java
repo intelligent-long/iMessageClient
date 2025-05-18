@@ -3,8 +3,10 @@ package com.longx.intelligent.android.imessage.data;
 public class GroupChannelAdditionNotViewedCount {
     private int requester;
     private int responder;
-    private int notificationRequest;
-    private int notificationRespond;
+    private int selfNotificationRequest;
+    private int selfNotificationRespond;
+    private int otherNotificationRequest;
+    private int otherNotificationRespond;
     private int inviter;
     private int invitee;
     private int notificationInviter;
@@ -13,11 +15,13 @@ public class GroupChannelAdditionNotViewedCount {
     public GroupChannelAdditionNotViewedCount() {
     }
 
-    public GroupChannelAdditionNotViewedCount(int requester, int responder, int notificationRequest, int notificationRespond, int inviter, int invitee, int notificationInviter, int notificationInvitee) {
+    public GroupChannelAdditionNotViewedCount(int requester, int responder, int selfNotificationRequest, int selfNotificationRespond, int otherNotificationRequest, int otherNotificationRespond, int inviter, int invitee, int notificationInviter, int notificationInvitee) {
         this.requester = requester;
         this.responder = responder;
-        this.notificationRequest = notificationRequest;
-        this.notificationRespond = notificationRespond;
+        this.selfNotificationRequest = selfNotificationRequest;
+        this.selfNotificationRespond = selfNotificationRespond;
+        this.otherNotificationRequest = otherNotificationRequest;
+        this.otherNotificationRespond = otherNotificationRespond;
         this.inviter = inviter;
         this.invitee = invitee;
         this.notificationInviter = notificationInviter;
@@ -32,12 +36,20 @@ public class GroupChannelAdditionNotViewedCount {
         return responder;
     }
 
-    public int getNotificationRequest() {
-        return notificationRequest;
+    public int getSelfNotificationRequest() {
+        return selfNotificationRequest;
     }
 
-    public int getNotificationRespond() {
-        return notificationRespond;
+    public int getSelfNotificationRespond() {
+        return selfNotificationRespond;
+    }
+
+    public int getOtherNotificationRequest() {
+        return otherNotificationRequest;
+    }
+
+    public int getOtherNotificationRespond() {
+        return otherNotificationRespond;
     }
 
     public int getInviter() {
