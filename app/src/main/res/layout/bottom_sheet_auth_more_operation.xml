@@ -22,8 +22,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp">
+        style="@style/BottomSheetItemLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,8 +38,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp">
+        style="@style/BottomSheetItemLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -56,8 +54,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp">
+        style="@style/BottomSheetItemLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,8 +70,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp">
+        style="@style/BottomSheetItemLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -94,13 +90,12 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp">
+        style="@style/BottomSheetItemLayout">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="18dp"
+            android:layout_marginEnd="17dp"
             android:src="@drawable/settings_outline_24px"/>
 
         <TextView

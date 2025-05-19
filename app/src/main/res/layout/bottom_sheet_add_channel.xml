@@ -24,8 +24,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp" />
+        style="@style/BottomSheetItemLayout" />
 
     <TextView
         android:id="@+id/option_qr_code"
@@ -36,6 +35,5 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp"/>
+        style="@style/BottomSheetItemLayout"/>
 </LinearLayout>
