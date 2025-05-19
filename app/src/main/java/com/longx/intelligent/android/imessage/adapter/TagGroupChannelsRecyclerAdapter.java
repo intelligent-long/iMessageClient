@@ -11,7 +11,6 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.activity.TagGroupChannelsActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
@@ -24,6 +23,7 @@ import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -100,10 +100,16 @@ public class TagGroupChannelsRecyclerAdapter extends WrappableRecyclerViewAdapte
     public void onBindViewHolder(@NonNull TagGroupChannelsRecyclerAdapter.ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.groupChannel.getGroupAvatar() == null ? null : itemData.groupChannel.getGroupAvatar().getHash();
-        if (avatarHash == null) {
-            GlideBehaviours.loadToImageView(tagGroupChannelsActivity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
-        } else {
-            GlideBehaviours.loadToImageView(tagGroupChannelsActivity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(tagGroupChannelsActivity, avatarHash), holder.binding.avatar);
+        if(avatarHash == null){
+            GlideApp
+                    .with(tagGroupChannelsActivity.getApplicationContext())
+                    .load(R.drawable.group_channel_default_avatar)
+                    .into(holder.binding.avatar);
+        }else {
+            GlideApp
+                    .with(tagGroupChannelsActivity.getApplicationContext())
+                    .load(NetDataUrls.getGroupAvatarUrl(tagGroupChannelsActivity, avatarHash))
+                    .into(holder.binding.avatar);
         }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
         int previousPosition = position - 1;

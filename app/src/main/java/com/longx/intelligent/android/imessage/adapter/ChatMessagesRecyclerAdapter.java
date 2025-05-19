@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.adapter;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Size;
@@ -15,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChatActivity;
@@ -22,7 +24,6 @@ import com.longx.intelligent.android.imessage.activity.ChatFileActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.MediaActivity2;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ChatVoicePlayer;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.ChatMessageDatabaseManager;
@@ -43,6 +44,7 @@ import com.longx.intelligent.android.imessage.permission.ToRequestPermissionsIte
 import com.longx.intelligent.android.imessage.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.imessage.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+import com.longx.intelligent.android.imessage.ui.glide.GlideRequest;
 import com.longx.intelligent.android.imessage.util.AudioUtil;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
@@ -249,9 +251,15 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             Self currentUserInfo = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity);
             String avatarHash = currentUserInfo.getAvatar() == null ? null : currentUserInfo.getAvatar().getHash();
             if (avatarHash == null) {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarSend);
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(R.drawable.default_avatar)
+                        .into(holder.binding.avatarSend);
             } else {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarSend);
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                        .into(holder.binding.avatarSend);
             }
             //判断获取状态
             if(ChatMessage.isInGetting(itemData.chatMessage.getUuid())){
@@ -422,9 +430,15 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(itemData.chatMessage.getFrom());
             String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
             if (avatarHash == null) {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatarReceive);
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(R.drawable.default_avatar)
+                        .into(holder.binding.avatarReceive);
             } else {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatarReceive);
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                        .into(holder.binding.avatarReceive);
             }
             //判断获取状态
             if(ChatMessage.isInGetting(itemData.chatMessage.getUuid())){

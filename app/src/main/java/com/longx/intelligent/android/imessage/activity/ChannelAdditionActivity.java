@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.data.ChannelAddition;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.request.AcceptAddChannelPostBody;
@@ -19,6 +19,7 @@ import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -48,9 +49,15 @@ public class ChannelAdditionActivity extends BaseActivity {
 
     private void showContent(){
         if (channel.getAvatar() == null || channel.getAvatar().getHash() == null) {
-            GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, binding.avatar);
+            GlideApp
+                    .with(getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(binding.avatar);
         } else {
-            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, channel.getAvatar().getHash()), binding.avatar);
+            GlideApp
+                    .with(getApplicationContext())
+                    .load(NetDataUrls.getAvatarUrl(this, channel.getAvatar().getHash()))
+                    .into(binding.avatar);
         }
         if(channel.getSex() == null || (channel.getSex() != 0 && channel.getSex() != 1)){
             binding.sexIcon.setVisibility(View.GONE);

@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -35,7 +36,6 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.activity.settings.RootSettingsActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.behaviorcomponents.GlobalBehaviors;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
@@ -60,6 +60,7 @@ import com.longx.intelligent.android.imessage.permission.ToRequestPermissions;
 import com.longx.intelligent.android.imessage.permission.ToRequestPermissionsItems;
 import com.longx.intelligent.android.imessage.service.ServerMessageService;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
@@ -239,9 +240,15 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         Self self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);
         ShapeableImageView avatarImageView = headerView1.findViewById(R.id.avatar);
         if (self.getAvatar() == null || self.getAvatar().getHash() == null) {
-            GlideBehaviours.loadToImageView(getApplicationContext(), R.drawable.default_avatar, avatarImageView);
+            GlideApp
+                    .with(getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(avatarImageView);
         } else {
-            GlideBehaviours.loadToImageView(getApplicationContext(), NetDataUrls.getAvatarUrl(this, self.getAvatar().getHash()), avatarImageView);
+            GlideApp
+                    .with(getApplicationContext())
+                    .load(NetDataUrls.getAvatarUrl(this, self.getAvatar().getHash()))
+                    .into(avatarImageView);
         }
         String username = self.getUsername();
         String imessageIdUser = self.getImessageIdUser();

@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.TagChannelsActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
@@ -23,6 +23,7 @@ import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -100,9 +101,15 @@ public class TagChannelsRecyclerAdapter extends WrappableRecyclerViewAdapter<Tag
         ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.channel.getAvatar() == null ? null : itemData.channel.getAvatar().getHash();
         if (avatarHash == null) {
-            GlideBehaviours.loadToImageView(tagChannelsActivity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+            GlideApp
+                    .with(tagChannelsActivity.getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(holder.binding.avatar);
         } else {
-            GlideBehaviours.loadToImageView(tagChannelsActivity.getApplicationContext(), NetDataUrls.getAvatarUrl(tagChannelsActivity, avatarHash), holder.binding.avatar);
+            GlideApp
+                    .with(tagChannelsActivity.getApplicationContext())
+                    .load(NetDataUrls.getAvatarUrl(tagChannelsActivity, avatarHash))
+                    .into(holder.binding.avatar);
         }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
         int previousPosition = position - 1;

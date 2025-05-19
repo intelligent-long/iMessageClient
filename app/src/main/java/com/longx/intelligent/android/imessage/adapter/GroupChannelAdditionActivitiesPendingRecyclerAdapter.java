@@ -12,7 +12,6 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionActivity;
 import com.longx.intelligent.android.imessage.activity.GroupChannelInvitationActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
@@ -25,6 +24,7 @@ import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -138,21 +138,33 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
             if (isCurrentUserRequester) {
                 holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
                 holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);
-                if (responderGroupChannel.getGroupAvatar() != null) {
+                if(responderGroupChannel.getGroupAvatar() == null){
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(R.drawable.group_channel_default_avatar)
+                            .into(holder.binding.avatar);
+                }else {
                     String avatarHash = responderGroupChannel.getGroupAvatar().getHash();
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
-                } else {
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(NetDataUrls.getGroupAvatarUrl(activity, avatarHash))
+                            .into(holder.binding.avatar);
                 }
                 holder.binding.name.setText(responderGroupChannel.getNote() == null ? responderGroupChannel.getName() : responderGroupChannel.getNote());
             } else {
                 holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
                 holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
-                if (requesterChannel.getAvatar() != null) {
+                if(requesterChannel.getAvatar() == null){
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(R.drawable.default_avatar)
+                            .into(holder.binding.avatar);
+                }else {
                     String avatarHash = requesterChannel.getAvatar().getHash();
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
-                } else {
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                            .into(holder.binding.avatar);
                 }
                 holder.binding.name.setText(requesterChannel.getNote() == null ? requesterChannel.getUsername() : requesterChannel.getNote());
             }
@@ -177,21 +189,33 @@ public class GroupChannelAdditionActivitiesPendingRecyclerAdapter extends Wrappa
             if (isCurrentUserInviter) {
                 holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);
                 holder.binding.pendingConfirmText.setVisibility(View.VISIBLE);
-                if (invitee.getAvatar() != null) {
+                if(invitee.getAvatar() == null){
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(R.drawable.group_channel_default_avatar)
+                            .into(holder.binding.avatar);
+                }else {
                     String avatarHash = invitee.getAvatar().getHash();
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
-                } else {
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(NetDataUrls.getGroupAvatarUrl(activity, avatarHash))
+                            .into(holder.binding.avatar);
                 }
                 holder.binding.name.setText(invitee.getNote() == null ? invitee.getUsername() : invitee.getNote());
             } else {
                 holder.binding.goConfirmButton.setVisibility(View.VISIBLE);
                 holder.binding.pendingConfirmText.setVisibility(View.INVISIBLE);
-                if (inviter.getAvatar() != null) {
+                if(inviter.getAvatar() == null){
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(R.drawable.default_avatar)
+                            .into(holder.binding.avatar);
+                }else {
                     String avatarHash = inviter.getAvatar().getHash();
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
-                } else {
-                    GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                            .into(holder.binding.avatar);
                 }
                 holder.binding.name.setText(inviter.getNote() == null ? inviter.getUsername() : inviter.getNote());
             }

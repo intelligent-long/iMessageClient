@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelAdditionActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelAdditionActivityReceiveBinding;
@@ -19,6 +18,7 @@ import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -110,11 +110,17 @@ public class GroupChannelAdditionActivitiesReceiveRecyclerAdapter extends Wrappa
         ItemData itemData = itemDataList.get(position);
         Channel requesterChannel = itemData.groupChannelAddition.getRequesterChannel();
         holder.binding.message.setText(itemData.groupChannelAddition.getMessage());
-        if (requesterChannel.getAvatar() != null) {
+        if(requesterChannel.getAvatar() == null){
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(holder.binding.avatar);
+        }else {
             String avatarHash = requesterChannel.getAvatar().getHash();
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
-        } else {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                    .into(holder.binding.avatar);
         }
         holder.binding.name.setText(requesterChannel.getNote() == null ? requesterChannel.getUsername() : requesterChannel.getNote());
         if (itemData.groupChannelAddition.isAccepted()) {

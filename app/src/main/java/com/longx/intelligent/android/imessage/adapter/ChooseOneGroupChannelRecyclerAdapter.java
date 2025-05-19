@@ -17,12 +17,12 @@ import com.longx.intelligent.android.imessage.activity.ExploreGroupChannelActivi
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.activity.GroupChannelsActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChooseOneChannelBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChooseOneGroupChannelBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -91,10 +91,16 @@ public class ChooseOneGroupChannelRecyclerAdapter extends WrappableRecyclerViewA
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ItemData itemData = itemDataList.get(position);
         String avatarHash = itemData.groupChannel.getGroupAvatar() == null ? null : itemData.groupChannel.getGroupAvatar().getHash();
-        if (avatarHash == null) {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.group_channel_default_avatar, holder.binding.avatar);
-        } else {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getGroupAvatarUrl(activity, avatarHash), holder.binding.avatar);
+        if(avatarHash == null){
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(R.drawable.group_channel_default_avatar)
+                    .into(holder.binding.avatar);
+        }else {
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(NetDataUrls.getGroupAvatarUrl(activity, avatarHash))
+                    .into(holder.binding.avatar);
         }
         holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
         if (position == 0 || !itemDataList.get(position - 1).indexChar.equals(itemData.indexChar)) {

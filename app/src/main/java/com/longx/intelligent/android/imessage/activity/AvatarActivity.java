@@ -9,17 +9,18 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.da.publicfile.PublicFileAccessor;
 import com.longx.intelligent.android.imessage.databinding.ActivityAvatarBinding;
 import com.longx.intelligent.android.imessage.dialog.OperatingDialog;
 import com.longx.intelligent.android.imessage.data.AvatarType;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.io.IOException;
@@ -81,12 +82,16 @@ public class AvatarActivity extends BaseActivity {
         String avatarUrl = null;
         if(avatarType == AvatarType.CHANNEL) {
             avatarUrl = NetDataUrls.getAvatarUrl(this, avatarHash);
-        }else if(avatarType == AvatarType.GROUP_CHANNEL){
+        } else if (avatarType == AvatarType.GROUP_CHANNEL) {
             avatarUrl = NetDataUrls.getGroupAvatarUrl(this, avatarHash);
         }
 
-        GlideBehaviours.loadToBitmap(getApplicationContext(), avatarUrl,
-                new CustomTarget<Bitmap>() {
+        GlideApp
+                .with(getApplicationContext())
+                .asBitmap()
+                .override(Target.SIZE_ORIGINAL)
+                .load(avatarUrl)
+                .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         binding.loadingIndicator.hide();
@@ -99,6 +104,6 @@ public class AvatarActivity extends BaseActivity {
                     public void onLoadCleared(@Nullable Drawable placeholder) {
 
                     }
-                }, true);
+                });
     }
 }

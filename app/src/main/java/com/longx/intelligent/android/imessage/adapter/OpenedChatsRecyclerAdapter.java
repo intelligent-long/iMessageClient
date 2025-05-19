@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChatActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.OpenedChatDatabaseManager;
@@ -23,6 +22,7 @@ import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemOpenedChatBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -84,10 +84,16 @@ public class OpenedChatsRecyclerAdapter extends WrappableRecyclerViewAdapter<Ope
         Channel channel = itemData.openedChat.getChannel();
         if(channel != null) {
             String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
-            if (avatarHash == null) {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
-            } else {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+            if(avatarHash == null){
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(R.drawable.default_avatar)
+                        .into(holder.binding.avatar);
+            }else {
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                        .into(holder.binding.avatar);
             }
             holder.binding.name.setText(channel.autoGetName());
         }

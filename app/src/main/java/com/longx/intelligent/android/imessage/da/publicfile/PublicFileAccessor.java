@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.OperationCanceledException;
 
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.DataPaths;
 import com.longx.intelligent.android.imessage.da.FileHelper;
 import com.longx.intelligent.android.imessage.data.Broadcast;
@@ -19,6 +19,7 @@ import com.longx.intelligent.android.imessage.media.helper.MediaStoreHelper;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.BroadcastApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.io.File;
@@ -70,34 +71,39 @@ public class PublicFileAccessor {
             String savePath = DataPaths.PublicFile.broadcastFilePath(broadcast, mediaIndex);
             final String[] savedPath = new String[1];
             final IOException[] ioException = new IOException[1];
-            GlideBehaviours.loadToFile(context, NetDataUrls.getBroadcastMediaDataUrl(context, broadcast.getBroadcastMedias().get(mediaIndex).getMediaId()), new CustomTarget<File>() {
-                @Override
-                public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                    InputStream inputStream = null;
-                    try {
-                        inputStream = Files.newInputStream(resource.toPath());
-                        savedPath[0] = FileHelper.save(inputStream, savePath);
-                        countDownLatch.countDown();
-                    } catch (IOException e) {
-                        ErrorLogger.log(e);
-                        ioException[0] = e;
-                        countDownLatch.countDown();
-                    }finally {
-                        try {
-                            if (inputStream != null) {
-                                inputStream.close();
+            GlideApp
+                    .with(context)
+                    .downloadOnly()
+                    .override(Target.SIZE_ORIGINAL)
+                    .load(NetDataUrls.getBroadcastMediaDataUrl(context, broadcast.getBroadcastMedias().get(mediaIndex).getMediaId()))
+                    .into(new CustomTarget<File>() {
+                        @Override
+                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                            InputStream inputStream = null;
+                            try {
+                                inputStream = Files.newInputStream(resource.toPath());
+                                savedPath[0] = FileHelper.save(inputStream, savePath);
+                                countDownLatch.countDown();
+                            } catch (IOException e) {
+                                ErrorLogger.log(e);
+                                ioException[0] = e;
+                                countDownLatch.countDown();
+                            }finally {
+                                try {
+                                    if (inputStream != null) {
+                                        inputStream.close();
+                                    }
+                                } catch (IOException e) {
+                                    ErrorLogger.log(e);
+                                    ioException[0] = e;
+                                }
                             }
-                        } catch (IOException e) {
-                            ErrorLogger.log(e);
-                            ioException[0] = e;
                         }
-                    }
-                }
 
-                @Override
-                public void onLoadCleared(@Nullable Drawable placeholder) {
-                }
-            }, true);
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                        }
+                    });
             countDownLatch.await();
             if(ioException[0] != null) throw ioException[0];
             MediaStoreHelper.notifyMediaStore(context, savedPath[0]);

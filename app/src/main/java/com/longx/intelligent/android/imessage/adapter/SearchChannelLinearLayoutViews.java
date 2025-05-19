@@ -19,8 +19,8 @@ import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.databinding.LinearLayoutViewsSearchChannelBinding;
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.ui.LinearLayoutViews;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
@@ -64,10 +64,16 @@ public class SearchChannelLinearLayoutViews extends LinearLayoutViews<SearchChan
     public View getView(ItemData itemData, Activity activity) {
         LinearLayoutViewsSearchChannelBinding binding = LinearLayoutViewsSearchChannelBinding.inflate(activity.getLayoutInflater());
         String avatarHash = itemData.channel.getAvatar() == null ? null : itemData.channel.getAvatar().getHash();
-        if (avatarHash == null) {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, binding.avatar);
-        } else {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash),binding.avatar);
+        if(avatarHash == null){
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(binding.avatar);
+        }else {
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                    .into(binding.avatar);
         }
         binding.indexBar.setText(String.valueOf(itemData.indexChar));
         int position = getAllItems().indexOf(itemData);

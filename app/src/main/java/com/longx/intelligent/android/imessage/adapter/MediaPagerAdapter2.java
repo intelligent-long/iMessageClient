@@ -17,6 +17,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -24,11 +25,11 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.longx.intelligent.android.imessage.activity.MediaActivity2;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.databinding.PagerItemMediaBinding;
 import com.longx.intelligent.android.imessage.media.MediaType;
 import com.longx.intelligent.android.imessage.media.data.Media;
 import com.longx.intelligent.android.imessage.ui.SwipeDownGestureYier;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
@@ -180,16 +181,21 @@ public class MediaPagerAdapter2 extends PagerAdapter {
                     }
                 });
                 if(activity.isGlideLoad()) {
-                    GlideBehaviours.loadToFile(activity.getApplicationContext(), imageUri, new CustomTarget<File>() {
-                        @Override
-                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                            binding.photoView.setImage(ImageSource.uri(Uri.fromFile(resource)));
-                        }
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .downloadOnly()
+                            .override(Target.SIZE_ORIGINAL)
+                            .load(imageUri)
+                            .into(new CustomTarget<File>() {
+                                @Override
+                                public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                                    binding.photoView.setImage(ImageSource.uri(Uri.fromFile(resource)));
+                                }
 
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) {
-                        }
-                    }, true);
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                                }
+                            });
                 }else {
                     binding.photoView.setImage(ImageSource.uri(imageUri));
                 }

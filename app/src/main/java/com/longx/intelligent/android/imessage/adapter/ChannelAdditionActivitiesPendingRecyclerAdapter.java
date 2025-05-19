@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelAdditionActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.ChannelAddition;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -22,6 +21,7 @@ import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -128,11 +128,17 @@ public class ChannelAdditionActivitiesPendingRecyclerAdapter extends WrappableRe
         }
         holder.binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
         holder.binding.message.setText(itemData.channelAddition.getMessage());
-        if(channel.getAvatar() != null) {
-            String avatarHash = channel.getAvatar().getHash();
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+        if(channel.getAvatar() == null){
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(holder.binding.avatar);
         }else {
-            GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
+            String avatarHash = channel.getAvatar().getHash();
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                    .into(holder.binding.avatar);
         }
         if(isCurrentUserRequester){
             holder.binding.goConfirmButton.setVisibility(View.INVISIBLE);

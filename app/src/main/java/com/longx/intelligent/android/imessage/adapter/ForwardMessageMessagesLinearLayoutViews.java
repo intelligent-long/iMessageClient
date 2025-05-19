@@ -12,8 +12,8 @@ import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.databinding.LinearLayoutViewsForwardMessageMessageBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.ui.LinearLayoutViews;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 
 import java.util.HashSet;
@@ -39,10 +39,16 @@ public class ForwardMessageMessagesLinearLayoutViews extends LinearLayoutViews<O
         Channel channel = openedChat.getChannel();
         if(channel != null) {
             String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
-            if (avatarHash == null) {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, binding.avatar);
-            } else {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), binding.avatar);
+            if(avatarHash == null){
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(R.drawable.default_avatar)
+                        .into(binding.avatar);
+            }else {
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                        .into(binding.avatar);
             }
             binding.name.setText(channel.getNote() == null ? channel.getUsername() : channel.getNote());
         }

@@ -9,8 +9,8 @@ import androidx.preference.PreferenceViewHolder;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.longx.intelligent.android.imessage.R;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;
 
 import java.io.File;
@@ -44,9 +44,15 @@ public class ChangeAvatarPreference extends Material3Preference {
 
     private void showAvatar() {
         if(avatarHash == null){
-            GlideBehaviours.loadToImageView(getContext(), R.drawable.default_avatar, avatarView);
+            GlideApp
+                    .with(getContext())
+                    .load(R.drawable.default_avatar)
+                    .into(avatarView);
         }else {
-            GlideBehaviours.loadToImageView(getContext(), NetDataUrls.getAvatarUrl(getContext(), avatarHash), avatarView);
+            GlideApp
+                    .with(getContext())
+                    .load(NetDataUrls.getAvatarUrl(getContext(), avatarHash))
+                    .into(avatarView);
         }
     }
 }

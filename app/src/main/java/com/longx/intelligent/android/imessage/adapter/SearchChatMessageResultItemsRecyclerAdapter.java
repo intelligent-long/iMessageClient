@@ -15,7 +15,7 @@ import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemSearchChatMessageResultItemBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.imessage.behaviorcomponents.GlideBehaviours;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -68,10 +68,16 @@ public class SearchChatMessageResultItemsRecyclerAdapter extends WrappableRecycl
         Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(chatMessage.getOther(activity));
         if(channel != null) {
             String avatarHash = channel.getAvatar() == null ? null : channel.getAvatar().getHash();
-            if (avatarHash == null) {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), R.drawable.default_avatar, holder.binding.avatar);
-            } else {
-                GlideBehaviours.loadToImageView(activity.getApplicationContext(), NetDataUrls.getAvatarUrl(activity, avatarHash), holder.binding.avatar);
+            if(avatarHash == null){
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(R.drawable.default_avatar)
+                        .into(holder.binding.avatar);
+            }else {
+                GlideApp
+                        .with(activity.getApplicationContext())
+                        .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
+                        .into(holder.binding.avatar);
             }
             holder.binding.name.setText(channel.autoGetName());
         }
