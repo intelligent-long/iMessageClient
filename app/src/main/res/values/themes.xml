@@ -80,8 +80,10 @@
     </style>
 
     <style name="BottomSheetItemLayout">
-        <item name="android:paddingHorizontal">20dp</item>
-        <item name="android:paddingVertical">20dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
     </style>
 
     <style name="TitleLargeMaterialAlertDialog" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered">
