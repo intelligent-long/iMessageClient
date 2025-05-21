@@ -58,7 +58,7 @@ public class ChooseOneGroupChannelRecyclerAdapter extends WrappableRecyclerViewA
         private GroupChannel groupChannel;
 
         public ItemData(GroupChannel groupChannel) {
-            indexChar = PinyinUtil.getPinyin(groupChannel.getName()).toUpperCase().charAt(0);
+            indexChar = PinyinUtil.getPinyin(groupChannel.autoGetName()).toUpperCase().charAt(0);
             if (!((indexChar >= 65 && indexChar <= 90) || (indexChar >= 97 && indexChar <= 122))) {
                 indexChar = '#';
             }

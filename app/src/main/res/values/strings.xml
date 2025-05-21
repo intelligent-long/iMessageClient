@@ -50,6 +50,7 @@
     <string name="title_channel_setting">频道设置</string>
     <string name="title_group_channel_setting">群频道设置</string>
     <string name="title_group_channel_management">群频道管理</string>
+    <string name="title_transfer_group_channel_admin">移交群频道管理员</string>
     <string name="title_setting_note">设置备注</string>
     <string name="title_setting_group_note">设置群备注</string>
     <string name="title_setting_tag">设置标签</string>

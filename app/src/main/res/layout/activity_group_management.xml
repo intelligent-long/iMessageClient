@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="21sp"
-                android:text="移交群频道管理员"/>
+                android:text="@string/title_transfer_group_channel_admin"/>
         </LinearLayout>
     </LinearLayout>
 

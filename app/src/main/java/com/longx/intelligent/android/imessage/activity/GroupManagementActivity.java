@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -68,7 +69,9 @@ public class GroupManagementActivity extends BaseActivity {
             });
         });
         binding.clickViewTransferGroupChannelAdmin.setOnClickListener(v -> {
-
+            Intent intent = new Intent(this, TransferGroupChannelAdminActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+            startActivity(intent);
         });
         binding.disbandGroupChannel.setOnClickListener(v -> {
 
