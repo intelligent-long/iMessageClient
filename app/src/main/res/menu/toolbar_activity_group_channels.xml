@@ -9,10 +9,18 @@
 <!--        app:iconTint="?attr/colorControlNormal"-->
 <!--        app:showAsAction="always" />-->
 
+<!--    <item-->
+<!--        android:id="@+id/notification"-->
+<!--        android:icon="@drawable/notifications_outline_24px"-->
+<!--        android:title="通知"-->
+<!--        app:iconTint="?attr/colorControlNormal"-->
+<!--        app:showAsAction="always" />-->
+
     <item
         android:id="@+id/search"
         android:icon="@drawable/search_24px"
         android:title="搜索"
         app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always" />
+
 </menu>

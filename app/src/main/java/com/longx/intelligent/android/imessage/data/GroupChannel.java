@@ -202,7 +202,7 @@ public class GroupChannel implements Parcelable {
                 ", groupChannelIdUser='" + groupChannelIdUser + '\'' +
                 ", owner='" + owner + '\'' +
                 ", name='" + name + '\'' +
-                ", getNote='" + note + '\'' +
+                ", note='" + note + '\'' +
                 ", createTime=" + createTime +
                 ", groupChannelAssociations=" + groupChannelAssociations +
                 ", firstRegion=" + firstRegion +

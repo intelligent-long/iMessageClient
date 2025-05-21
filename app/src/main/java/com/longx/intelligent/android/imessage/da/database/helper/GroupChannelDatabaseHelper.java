@@ -22,9 +22,9 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String ASSOCIATION_ID = "association_id";
         public static final String GROUP_CHANNEL_ID = "group_channel_id";
         public static final String CHANNEL_IMESSAGE_ID = "channel_imessage_id";
-        public static final String INVITE_CHANNEL_IMESSAGE_ID = "invite_channel_imessage_id";
-        public static final String INVITE_MESSAGE = "invite_message";
-        public static final String INVITE_TIME = "invite_time";
+        public static final String REQUESTER_CHANNEL_IMESSAGE_ID = "requester_channel_imessage_id";
+        public static final String REQUESTER_MESSAGE = "requester_message";
+        public static final String REQUESTER__TIME = "requester_time";
         public static final String ACCEPT_TIME = "accept_time";
         public static final String INVITE_UUID = "invite_uuid";
     }
@@ -77,9 +77,9 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableGroupChannelAssociationsColumns.ASSOCIATION_ID + " VARCHAR,"
                 + TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID + " VARCHAR,"
                 + TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID + " VARCHAR,"
-                + TableGroupChannelAssociationsColumns.INVITE_CHANNEL_IMESSAGE_ID + " VARCHAR,"
-                + TableGroupChannelAssociationsColumns.INVITE_MESSAGE + " VARCHAR,"
-                + TableGroupChannelAssociationsColumns.INVITE_TIME + " DATETIME,"
+                + TableGroupChannelAssociationsColumns.REQUESTER_CHANNEL_IMESSAGE_ID + " VARCHAR,"
+                + TableGroupChannelAssociationsColumns.REQUESTER_MESSAGE + " VARCHAR,"
+                + TableGroupChannelAssociationsColumns.REQUESTER__TIME + " DATETIME,"
                 + TableGroupChannelAssociationsColumns.ACCEPT_TIME + " DATETIME,"
                 + TableGroupChannelAssociationsColumns.INVITE_UUID + " VARCHAR,"
                 + " CONSTRAINT con_unique1 UNIQUE("

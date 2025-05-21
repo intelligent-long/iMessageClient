@@ -16,6 +16,7 @@ import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -95,6 +96,42 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                     result.set(false);
                 }
             });
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return result.get();
+    }
+
+    public boolean insertChannelOrIgnore(Channel channel){
+        AtomicBoolean result = new AtomicBoolean(true);
+        openDatabaseIfClosed();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID, channel.getImessageId());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID_USER, channel.getImessageIdUser());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.EMAIL, channel.getEmail());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.USERNAME, channel.getUsername());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.NOTE, channel.getNote());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_HASH, channel.getAvatar() == null ? null : channel.getAvatar().getHash());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_IMESSAGE_ID, channel.getAvatar() == null ? null : channel.getAvatar().getImessageId());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_EXTENSION, channel.getAvatar() == null ? null : channel.getAvatar().getExtension());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.AVATAR_TIME, channel.getAvatar() == null ? null : channel.getAvatar().getTime().getTime());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.SEX, channel.getSex());
+            Region firstRegion = channel.getFirstRegion();
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_ADCODE, firstRegion == null ? null : firstRegion.getAdcode());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.FIRST_REGION_NAME, firstRegion == null ? null : firstRegion.getName());
+            Region secondRegion = channel.getSecondRegion();
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_ADCODE, secondRegion == null ? null : secondRegion.getAdcode());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.SECOND_REGION_NAME, secondRegion == null ? null : secondRegion.getName());
+            Region thirdRegion = channel.getThirdRegion();
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_ADCODE, thirdRegion == null ? null : thirdRegion.getAdcode());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.THIRD_REGION_NAME, thirdRegion == null ? null : thirdRegion.getName());
+            values.put(ChannelDatabaseHelper.TableChannelsColumns.ASSOCIATED, channel.isAssociated());
+            long id1 = getDatabase().insertWithOnConflict(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_CHANNELS, null,
+                    values, SQLiteDatabase.CONFLICT_IGNORE);
+            if (id1 == -1) {
+                result.set(false);
+            }
         }finally {
             releaseDatabaseIfUnused();
         }

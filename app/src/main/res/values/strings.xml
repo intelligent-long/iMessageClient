@@ -65,6 +65,7 @@
     <string name="title_new_channel">新的频道</string>
     <string name="title_tag">标签</string>
     <string name="title_group_channel">群频道</string>
+    <string name="title_notifications">通知</string>
     <string name="title_favorite">收藏</string>
     <string name="title_new_group_channel">新的群频道</string>
     <string name="title_group_tag">群标签</string>

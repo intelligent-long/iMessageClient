@@ -58,7 +58,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             isOwner = true;
         }
         for (GroupChannelAssociation groupChannelAssociation : groupChannel.getGroupChannelAssociations()) {
-            if(groupChannelAssociation.getRequester().equals(currentUserImessageId)){
+            if(groupChannelAssociation.getRequester().getImessageId().equals(currentUserImessageId)){
                 inGroup = true;
                 break;
             }
