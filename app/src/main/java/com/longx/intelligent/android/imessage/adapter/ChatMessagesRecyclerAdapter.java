@@ -2,9 +2,7 @@ package com.longx.intelligent.android.imessage.adapter;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChatActivity;
@@ -44,7 +41,6 @@ import com.longx.intelligent.android.imessage.permission.ToRequestPermissionsIte
 import com.longx.intelligent.android.imessage.popupwindow.ChatMessageActionsPopupWindow;
 import com.longx.intelligent.android.imessage.ui.RecyclerViewScrollDisabler;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
-import com.longx.intelligent.android.imessage.ui.glide.GlideRequest;
 import com.longx.intelligent.android.imessage.util.AudioUtil;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;

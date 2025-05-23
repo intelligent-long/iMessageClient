@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.longx.intelligent.android.imessage.R;
-import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.databinding.ActivityPermissionSettingsBinding;

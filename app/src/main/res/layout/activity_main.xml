@@ -43,7 +43,7 @@
                 app:menu="@menu/bottom_navigation_activity_main"
                 app:itemHorizontalTranslationEnabled="false"
                 app:labelVisibilityMode="labeled"
-                style="@style/MainBottomNavigationView"/>
+                style="@style/MainBottomNavigationView" />
 
             <View
                 android:id="@+id/online_state_indicator"

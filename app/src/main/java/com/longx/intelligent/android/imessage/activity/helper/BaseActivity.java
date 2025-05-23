@@ -12,10 +12,10 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.color.DynamicColors;
 import com.longx.intelligent.android.imessage.Application;
 import com.longx.intelligent.android.imessage.R;
-import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.permission.LinkPermissionOperatorActivity;
-import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.permission.PermissionOperator;
+import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 
 import java.util.HashSet;

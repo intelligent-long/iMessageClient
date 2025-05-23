@@ -20,6 +20,8 @@ import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by LONG on 2024/10/14 at 上午2:22.
@@ -125,16 +127,29 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
         });
         binding.excludeCheck.setOnClickListener(v -> {
             if(binding.excludeCheckYes.getVisibility() == View.VISIBLE && binding.excludeCheckNo.getVisibility() == View.GONE) {
-                binding.excludeCheckYes.setVisibility(View.GONE);
-                binding.excludeCheckNo.setVisibility(View.VISIBLE);
+                switchViewsWithFade(binding.excludeCheckYes, binding.excludeCheckNo);
                 excludeConnectedChannels.remove(itemData.channel.getImessageId());
             }else if(binding.excludeCheckYes.getVisibility() == View.GONE && binding.excludeCheckNo.getVisibility() == View.VISIBLE) {
-                binding.excludeCheckYes.setVisibility(View.VISIBLE);
-                binding.excludeCheckNo.setVisibility(View.GONE);
+                switchViewsWithFade(binding.excludeCheckNo, binding.excludeCheckYes);
                 excludeConnectedChannels.add(itemData.channel.getImessageId());
             }
             SharedPreferencesAccessor.BroadcastPref.saveAppBroadcastChannelPermission(activity, new BroadcastChannelPermission(BroadcastChannelPermission.CONNECTED_CHANNEL_CIRCLE, excludeConnectedChannels));
         });
+    }
+
+    private void switchViewsWithFade(View viewToHide, View viewToShow) {
+        viewToHide.animate()
+                .alpha(0f)
+                .setDuration(480)
+                .withEndAction(() -> {
+                    viewToHide.setVisibility(View.GONE);
+                    viewToShow.setAlpha(0f);
+                    viewToShow.setVisibility(View.VISIBLE);
+                    viewToShow.animate()
+                            .alpha(1f)
+                            .setDuration(480)
+                            .start();
+                }).start();
     }
 
     private String[] getExistTexts(){

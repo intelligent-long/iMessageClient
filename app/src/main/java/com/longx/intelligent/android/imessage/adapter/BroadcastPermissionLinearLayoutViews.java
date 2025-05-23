@@ -123,17 +123,30 @@ public class BroadcastPermissionLinearLayoutViews extends LinearLayoutViews<Broa
         });
         binding.excludeCheck.setOnClickListener(v -> {
             if(binding.excludeCheckYes.getVisibility() == View.VISIBLE && binding.excludeCheckNo.getVisibility() == View.GONE) {
-                binding.excludeCheckYes.setVisibility(View.GONE);
-                binding.excludeCheckNo.setVisibility(View.VISIBLE);
+                switchViewsWithFade(binding.excludeCheckYes, binding.excludeCheckNo);
                 excludeConnectedChannels.remove(itemData.channel.getImessageId());
             }else if(binding.excludeCheckYes.getVisibility() == View.GONE && binding.excludeCheckNo.getVisibility() == View.VISIBLE) {
-                binding.excludeCheckYes.setVisibility(View.VISIBLE);
-                binding.excludeCheckNo.setVisibility(View.GONE);
+                switchViewsWithFade(binding.excludeCheckNo, binding.excludeCheckYes);
                 excludeConnectedChannels.add(itemData.channel.getImessageId());
             }
             ((BroadcastPermissionActivity) activity).getBroadcastPermission().setExcludeConnectedChannels(excludeConnectedChannels);
             ((BroadcastPermissionActivity) activity).setResult();
         });
+    }
+
+    private void switchViewsWithFade(View viewToHide, View viewToShow) {
+        viewToHide.animate()
+                .alpha(0f)
+                .setDuration(480)
+                .withEndAction(() -> {
+                    viewToHide.setVisibility(View.GONE);
+                    viewToShow.setAlpha(0f);
+                    viewToShow.setVisibility(View.VISIBLE);
+                    viewToShow.animate()
+                            .alpha(1f)
+                            .setDuration(480)
+                            .start();
+                }).start();
     }
 
     private String[] getExistTexts(){

@@ -149,6 +149,7 @@
     </style>
 
     <style name="BottomNavTextAppearanceActive" parent="TextAppearance.AppCompat">
+        <item name="android:fontWeight">@integer/font_weight_medium</item>
         <item name="android:textSize">12.5sp</item>
     </style>
 

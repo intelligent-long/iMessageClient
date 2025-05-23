@@ -27,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -104,7 +103,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         } else {
             setupNavigationKeepInMemory();
         }
-        setupYier();
+        setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this,
@@ -437,7 +436,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         });
     }
 
-    private void setupYier() {
+    private void setupYiers() {
         binding.navigationDrawer2.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_settings) {
                 Intent intent = new Intent(MainActivity.this, RootSettingsActivity.class);

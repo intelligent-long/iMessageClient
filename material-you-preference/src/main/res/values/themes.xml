@@ -19,8 +19,8 @@
         <item name="android:paddingStart">24dp</item>
 <!--        <item name="android:paddingTop">15dp</item>-->
 <!--        <item name="android:paddingBottom">15dp</item>-->
-        <item name="android:paddingTop">16.7dp</item>
-        <item name="android:paddingBottom">16.7dp</item>
+        <item name="android:paddingTop">16.9dp</item>
+        <item name="android:paddingBottom">16.9dp</item>
     </style>
 
     <style name="Theme.MaterialYouPreference.MaterialPreferenceHeaderSwitch">
@@ -50,12 +50,12 @@
         <item name="android:letterSpacing">0</item>
 <!--        <item name="lineHeight">20sp</item>-->
         <item name="android:includeFontPadding">false</item>
-        <item name="android:paddingTop">2.7dp</item>
+        <item name="android:paddingTop">2.6dp</item>
     </style>
 
     <style name="MaterialYouPreferenceTitle">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textSize">21.9sp</item>
+        <item name="android:textSize">21.6sp</item>
         <item name="android:letterSpacing">0</item>
 <!--        <item name="lineHeight">28sp</item>-->
         <item name="android:includeFontPadding">false</item>
