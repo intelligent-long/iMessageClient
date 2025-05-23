@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import static java.security.AccessController.getContext;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -15,11 +17,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -95,7 +100,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (checkAndSwitchToAuth()) return;
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        Context context = new ContextThemeWrapper(this, com.google.android.material.R.style.Theme_Material3_DayNight_NoActionBar);
+        binding = ActivityMainBinding.inflate(LayoutInflater.from(context));
         setContentView(binding.getRoot());
         int mainActivityFragmentSwitchMode = SharedPreferencesAccessor.DefaultPref.getMainActivityFragmentSwitchMode(this);
         if (mainActivityFragmentSwitchMode == 1) {
