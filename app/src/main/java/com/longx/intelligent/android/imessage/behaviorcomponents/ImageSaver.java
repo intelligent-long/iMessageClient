@@ -2,13 +2,16 @@ package com.longx.intelligent.android.imessage.behaviorcomponents;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
 import androidx.core.content.FileProvider;
 
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.da.FileHelper;
 import com.longx.intelligent.android.imessage.permission.PermissionOperator;
 import com.longx.intelligent.android.imessage.permission.PermissionRequirementChecker;
 import com.longx.intelligent.android.imessage.permission.ToRequestPermissions;
@@ -17,7 +20,9 @@ import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.ResultsYier;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
@@ -91,74 +96,112 @@ public class ImageSaver {
     }
 
     private static Uri saveImageForApiQAndAbove(Context context, File sourceImageFile, String saveFileName, String dcimRelativePath) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, saveFileName);
-        String mimeType = URLConnection.guessContentTypeFromName(saveFileName);
-        if (mimeType == null) {
-            mimeType = "image/jpeg";
-        }
-        contentValues.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
-        contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + File.separator + dcimRelativePath);
-        contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1);
-        Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-        if (uri != null) {
-            try (OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
-                 InputStream inputStream = Files.newInputStream(sourceImageFile.toPath())) {
-                Objects.requireNonNull(outputStream);
-                byte[] buf = new byte[10240];
-                int len;
-                while ((len = inputStream.read(buf)) > 0) {
-                    outputStream.write(buf, 0, len);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, saveFileName);
+            String mimeType = URLConnection.guessContentTypeFromName(saveFileName);
+            if (mimeType == null) {
+                mimeType = "image/jpeg";
+            }
+            contentValues.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + File.separator + dcimRelativePath);
+            contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1);
+            Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            if (uri != null) {
+                try (OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
+                     InputStream inputStream = Files.newInputStream(sourceImageFile.toPath())) {
+                    Objects.requireNonNull(outputStream);
+                    byte[] buf = new byte[10240];
+                    int len;
+                    while ((len = inputStream.read(buf)) > 0) {
+                        outputStream.write(buf, 0, len);
+                    }
+                    contentValues.clear();
+                    contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0);
+                    context.getContentResolver().update(uri, contentValues, null, null);
+                    return uri;
+                } catch (Exception e) {
+                    ErrorLogger.log(ImageSaver.class, e);
+                    MessageDisplayer.autoShow(context, "错误", MessageDisplayer.Duration.SHORT);
+                    return null;
                 }
-                contentValues.clear();
-                contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0);
-                context.getContentResolver().update(uri, contentValues, null, null);
-                return uri;
-            } catch (Exception e) {
-                ErrorLogger.log(ImageSaver.class, e);
-                MessageDisplayer.autoShow(context, "错误", MessageDisplayer.Duration.SHORT);
-                return null;
             }
         }
         return null;
     }
 
     private static Uri saveImageForBelowApiQ(Context context, File sourceImageFile, String saveFileName, String dcimRelativePath) {
-        File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), dcimRelativePath);
-        if (!directory.exists() && !directory.mkdirs()) {
-            return null;
-        }
-        File saveFile = new File(directory, saveFileName);
-        synchronized (ImageSaver.class) {
-            String imageFileAbsolutePath = saveFile.getAbsolutePath();
-            String pathPart1 = imageFileAbsolutePath.substring(0, imageFileAbsolutePath.lastIndexOf("."));
-            String pathPart2 = imageFileAbsolutePath.substring(imageFileAbsolutePath.lastIndexOf("."));
-            for (int i = 1; saveFile.exists(); i++) {
-                saveFile = new File(pathPart1 + " (" + i + ")" + pathPart2);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), dcimRelativePath);
+            if (!directory.exists() && !directory.mkdirs()) {
+                return null;
             }
-            try {
-                saveFile.createNewFile();
+            File saveFile = new File(directory, saveFileName);
+            synchronized (ImageSaver.class) {
+                String imageFileAbsolutePath = saveFile.getAbsolutePath();
+                String pathPart1 = imageFileAbsolutePath.substring(0, imageFileAbsolutePath.lastIndexOf("."));
+                String pathPart2 = imageFileAbsolutePath.substring(imageFileAbsolutePath.lastIndexOf("."));
+                for (int i = 1; saveFile.exists(); i++) {
+                    saveFile = new File(pathPart1 + " (" + i + ")" + pathPart2);
+                }
+                try {
+                    saveFile.createNewFile();
+                } catch (Exception e) {
+                    ErrorLogger.log(ImageSaver.class, e);
+                    return null;
+                }
+                if (!saveFile.exists()) {
+                    return null;
+                }
+            }
+            try (InputStream inputStream = new FileInputStream(sourceImageFile);
+                 OutputStream outputStream = new FileOutputStream(saveFile)) {
+                byte[] buf = new byte[10240];
+                int len;
+                while ((len = inputStream.read(buf)) > 0) {
+                    outputStream.write(buf, 0, len);
+                }
+                Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", saveFile);
+                context.getContentResolver().notifyChange(uri, null);
+                return uri;
             } catch (Exception e) {
                 ErrorLogger.log(ImageSaver.class, e);
                 return null;
             }
-            if(!saveFile.exists()){
-                return null;
-            }
         }
-        try (InputStream inputStream = Files.newInputStream(sourceImageFile.toPath());
-             OutputStream outputStream = Files.newOutputStream(saveFile.toPath())) {
-            byte[] buf = new byte[10240];
-            int len;
-            while ((len = inputStream.read(buf)) > 0) {
-                outputStream.write(buf, 0, len);
-            }
-            Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", saveFile);
-            context.getContentResolver().notifyChange(uri, null);
-            return uri;
-        } catch (Exception e) {
-            ErrorLogger.log(ImageSaver.class, e);
+        return null;
+    }
+
+    public static String saveBitmapAsPng(Bitmap bitmap, String filePath) {
+        File file = new File(filePath);
+        String imageFileAbsolutePath = file.getAbsolutePath();
+        try {
+            FileHelper.createFile(imageFileAbsolutePath);
+        } catch (IOException e) {
+            ErrorLogger.log(e);
             return null;
         }
+        if (!file.exists()) {
+            return null;
+        }
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            if(bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)){
+                return file.getAbsolutePath();
+            }
+        } catch (IOException e) {
+            ErrorLogger.log(e);
+            return null;
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

@@ -6,7 +6,7 @@ import java.util.Collection;
  * Created by LONG on 2024/8/30 at 上午2:33.
  */
 public class CollectionUtil {
-    public static <T> boolean isEmpty(Collection<T> collection){
+    public static <T> boolean isEmptyOrNull(Collection<T> collection){
         return collection == null || collection.isEmpty();
     }
 

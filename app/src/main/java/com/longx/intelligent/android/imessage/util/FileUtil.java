@@ -3,6 +3,7 @@ package com.longx.intelligent.android.imessage.util;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.OpenableColumns;
 
 import com.longx.intelligent.android.imessage.da.ProgressCallback;
@@ -172,13 +173,22 @@ public class FileUtil {
     }
 
     public static boolean deleteFile(String filePath) {
-        Path path = Paths.get(filePath);
-        try {
-            return Files.deleteIfExists(path);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Path path = Paths.get(filePath);
+            try {
+                return Files.deleteIfExists(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            File file = new File(filePath);
+            if (file.exists()) {
+                return file.delete();
+            }
             return false;
         }
     }
+
 
 }

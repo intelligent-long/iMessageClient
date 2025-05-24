@@ -636,16 +636,18 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                         operatingDialog.create().show();
                         try {
                             PublicFileAccessor.BroadcastMedia.saveImage(MediaActivity2.getInstance(), broadcast, currentItem);
-                            operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException | InterruptedException e){
                             ErrorLogger.log(e);
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
+                        operatingDialog.dismiss();
                     }).start();
                     break;
                 case BroadcastMedia.TYPE_VIDEO:
                     new Thread(() -> {
+                        OperatingDialog operatingDialog = new OperatingDialog(MediaActivity2.getInstance());
+                        operatingDialog.create().show();
                         try {
                             PublicFileAccessor.BroadcastMedia.saveVideo(MediaActivity2.getInstance(), broadcast, currentItem);
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
@@ -655,6 +657,7 @@ public class BroadcastActivity extends BaseActivity implements BroadcastUpdateYi
                             ErrorLogger.log(e);
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
+                        operatingDialog.dismiss();
                     }).start();
                     break;
             }

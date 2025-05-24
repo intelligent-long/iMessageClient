@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.OpenableColumns;
 import android.webkit.MimeTypeMap;
 
@@ -289,14 +291,18 @@ public class FileHelper {
                     public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
                         InputStream inputStream = null;
                         try {
-                            inputStream = Files.newInputStream(resource.toPath());
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                inputStream = Files.newInputStream(resource.toPath());
+                            } else {
+                                inputStream = new FileInputStream(resource);
+                            }
                             savedPath[0] = FileHelper.save(inputStream, savePath);
                             countDownLatch.countDown();
                         } catch (IOException e) {
                             ErrorLogger.log(e);
                             ioException[0] = e;
                             countDownLatch.countDown();
-                        }finally {
+                        } finally {
                             try {
                                 if (inputStream != null) {
                                     inputStream.close();
@@ -307,14 +313,17 @@ public class FileHelper {
                             }
                         }
                     }
-
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
                     }
                 });
         countDownLatch.await();
-        if(ioException[0] != null) throw ioException[0];
-        MediaStoreHelper.notifyMediaStore(context, savedPath[0]);
+        if (ioException[0] != null) throw ioException[0];
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStoreHelper.notifyMediaStore(context, savedPath[0]);
+        } else {
+            MediaScannerConnection.scanFile(context, new String[]{savedPath[0]}, null, null);
+        }
         return savedPath[0];
     }
 }

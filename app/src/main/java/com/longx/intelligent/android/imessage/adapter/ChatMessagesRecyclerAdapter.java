@@ -789,12 +789,12 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         operatingDialog.create().show();
                         try {
                             PublicFileAccessor.ChatMedia.saveImage(activity, chatMessage);
-                            operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
                             ErrorLogger.log(e);
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
+                        operatingDialog.dismiss();
                     }).start();
                     break;
                 }
@@ -804,12 +804,12 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                         operatingDialog.create().show();
                         try {
                             PublicFileAccessor.ChatMedia.saveVideo(activity, chatMessage);
-                            operatingDialog.dismiss();
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "已保存", MessageDisplayer.Duration.SHORT);
                         }catch (IOException e){
                             ErrorLogger.log(e);
                             MessageDisplayer.autoShow(MediaActivity2.getInstance(), "保存失败", MessageDisplayer.Duration.SHORT);
                         }
+                        operatingDialog.dismiss();
                     }).start();
                 }
             }

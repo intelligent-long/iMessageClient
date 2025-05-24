@@ -124,7 +124,7 @@ public class EditBroadcastMediasRecyclerAdapter extends WrappableRecyclerViewAda
 //                Intent intent1 = new Intent();
 //                intent1.putParcelableArrayListExtra(ExtraKeys.MEDIAS, medias);
 //                MediaActivity.getInstance().setResult(RESULT_OK, intent1);
-//                if(medias.isEmpty()) MediaActivity.getInstance().finish();
+//                if(medias.isEmptyOrNull()) MediaActivity.getInstance().finish();
 //                MediaActivity.getInstance().getBinding().toolbar.setTitle((currentItem == medias.size() ? currentItem : currentItem + 1) + " / " + medias.size());
 //                adapter.removeItem(currentItem);
 //            });

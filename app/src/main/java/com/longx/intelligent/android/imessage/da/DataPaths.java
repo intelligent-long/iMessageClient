@@ -118,5 +118,11 @@ public class DataPaths {
             String fileName = yyyyMMddHHmmss.format(new Date()) + "_" + imessageId + "_" + avatarHash + "." + avatarExtension;
             return publicFileRootPath() + File.separator + "Avatar" + File.separator + fileName;
         }
+
+        public static String qrCodeFilePath(String id, String extension){
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(new Date()) + "_" + "QRCode" + "_" + id + "." + extension;
+            return publicFileRootPath() + File.separator + "QR Code" + File.separator + fileName;
+        }
     }
 }

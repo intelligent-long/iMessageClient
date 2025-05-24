@@ -61,7 +61,7 @@ public class QRCodeUtil {
             return srcBitmap;
         }
         if(logoPercent < 0F || logoPercent > 1F){
-            logoPercent = 0.2F;
+            logoPercent = 0.18F;
         }
         int srcWidth = srcBitmap.getWidth();
         int srcHeight = srcBitmap.getHeight();

@@ -78,7 +78,7 @@ public class EditBroadcastActivity extends BaseActivity {
 
     private void intentData() {
         broadcast = getIntent().getParcelableExtra(ExtraKeys.BROADCAST);
-        if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
+        if(!CollectionUtil.isEmptyOrNull(broadcast.getBroadcastMedias())){
             for (int i = 0; i < broadcast.getBroadcastMedias().size(); i++) {
                 BroadcastMedia broadcastMedia = broadcast.getBroadcastMedias().get(i);
                 MediaType mediaType = null;
@@ -209,13 +209,13 @@ public class EditBroadcastActivity extends BaseActivity {
         });
         binding.textInput.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus){
-                if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
+                if(!CollectionUtil.isEmptyOrNull(broadcast.getBroadcastMedias())){
                     binding.recyclerViewMedias.setVisibility(View.GONE);
                 }
             }
         });
         binding.textInput.setOnClickListener(v -> {
-            if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
+            if(!CollectionUtil.isEmptyOrNull(broadcast.getBroadcastMedias())){
                 binding.recyclerViewMedias.setVisibility(View.GONE);
             }
         });
@@ -227,7 +227,7 @@ public class EditBroadcastActivity extends BaseActivity {
 
             @Override
             public void onKeyboardClosed() {
-                if(!CollectionUtil.isEmpty(broadcast.getBroadcastMedias())){
+                if(!CollectionUtil.isEmptyOrNull(broadcast.getBroadcastMedias())){
                     binding.recyclerViewMedias.setVisibility(View.VISIBLE);
                 }
             }

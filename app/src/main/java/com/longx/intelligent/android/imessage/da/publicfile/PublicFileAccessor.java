@@ -1,7 +1,10 @@
 package com.longx.intelligent.android.imessage.da.publicfile;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +14,7 @@ import androidx.core.os.OperationCanceledException;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.longx.intelligent.android.imessage.behaviorcomponents.ImageSaver;
 import com.longx.intelligent.android.imessage.da.DataPaths;
 import com.longx.intelligent.android.imessage.da.FileHelper;
 import com.longx.intelligent.android.imessage.data.Broadcast;
@@ -23,6 +27,7 @@ import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -81,14 +86,18 @@ public class PublicFileAccessor {
                         public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
                             InputStream inputStream = null;
                             try {
-                                inputStream = Files.newInputStream(resource.toPath());
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    inputStream = Files.newInputStream(resource.toPath());
+                                } else {
+                                    inputStream = new FileInputStream(resource);
+                                }
                                 savedPath[0] = FileHelper.save(inputStream, savePath);
                                 countDownLatch.countDown();
                             } catch (IOException e) {
                                 ErrorLogger.log(e);
                                 ioException[0] = e;
                                 countDownLatch.countDown();
-                            }finally {
+                            } finally {
                                 try {
                                     if (inputStream != null) {
                                         inputStream.close();
@@ -99,14 +108,17 @@ public class PublicFileAccessor {
                                 }
                             }
                         }
-
                         @Override
                         public void onLoadCleared(@Nullable Drawable placeholder) {
                         }
                     });
             countDownLatch.await();
-            if(ioException[0] != null) throw ioException[0];
-            MediaStoreHelper.notifyMediaStore(context, savedPath[0]);
+            if (ioException[0] != null) throw ioException[0];
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                MediaStoreHelper.notifyMediaStore(context, savedPath[0]);
+            } else {
+                MediaScannerConnection.scanFile(context, new String[]{savedPath[0]}, null, null);
+            }
             return savedPath[0];
         }
 
@@ -150,6 +162,15 @@ public class PublicFileAccessor {
             String avatarUrl = NetDataUrls.getGroupAvatarUrl(context, avatarHash);
             String avatarPath = DataPaths.PublicFile.avatarFilePath(avatarHash, groupId, avatarExtension);
             return FileHelper.saveNetImage(context, avatarUrl, avatarPath);
+        }
+    }
+
+    public static class QrCode{
+        public static String saveQrCode(Context context, String id, Bitmap bitmap) {
+            String savePath = DataPaths.PublicFile.qrCodeFilePath(id, "png");
+            String saved = ImageSaver.saveBitmapAsPng(bitmap, savePath);
+            MediaStoreHelper.notifyMediaStore(context, savePath);
+            return saved;
         }
     }
 }
