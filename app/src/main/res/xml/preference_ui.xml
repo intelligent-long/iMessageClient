@@ -7,7 +7,7 @@
         app:title="应用字体"
         app:entries="@array/font_entries"
         app:entryValues="@array/font_values"
-        app:defaultValue="0" />
+        app:defaultValue="1" />
 
     <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference
         app:key="@string/preference_key_chat_bubble_color"

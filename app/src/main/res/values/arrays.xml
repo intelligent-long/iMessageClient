@@ -13,7 +13,7 @@
 
     <string-array name="font_entries">
         <item>"A"</item>
-        <item>"B"</item>
+        <item>"B（默认）"</item>
         <item>"系统字体"</item>
     </string-array>
 
@@ -24,7 +24,7 @@
     </string-array>
 
     <string-array name="chat_bubble_color_entries">
-        <item>"绿"</item>
+        <item>"绿（默认）</item>
         <item>"蓝"</item>
     </string-array>
 
@@ -43,7 +43,7 @@
     </array>
 
     <string-array name="bottom_navigation_view_label_visibility_mode_entries">
-        <item>"显示"</item>
+        <item>"显示（默认）"</item>
         <item>"隐藏"</item>
         <item>"显示当前项"</item>
     </string-array>
@@ -55,7 +55,7 @@
     </string-array>
 
     <string-array name="bottom_navigation_view_icon_style_entries">
-        <item>"动态"</item>
+        <item>"动态（默认）"</item>
         <item>"填充"</item>
     </string-array>
 
@@ -65,7 +65,7 @@
     </string-array>
 
     <string-array name="main_activity_fragment_switch_mode_entries">
-        <item>"保持内存"</item>
+        <item>"保持内存（默认）"</item>
         <item>"回收内存"</item>
     </string-array>
 
@@ -75,7 +75,7 @@
     </string-array>
 
     <string-array name="snackbar_appearance_entries">
-        <item>"原色"</item>
+        <item>"原色（默认）"</item>
         <item>"表面色"</item>
         <item>"第三色"</item>
     </string-array>
