@@ -8,7 +8,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.longx.intelligent.android.imessage.R;
@@ -28,6 +30,7 @@ import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.JsonUtil;
 import com.longx.intelligent.android.imessage.util.QRCodeUtil;
 import com.longx.intelligent.android.imessage.util.ResourceUtil;
+import com.longx.intelligent.android.imessage.util.ShareUtil;
 
 import java.io.IOException;
 import java.util.Date;
@@ -94,6 +97,13 @@ public class QrCodeActivity extends BaseActivity {
                 }
                 operatingDialog.dismiss();
             }).start();
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.share){
+                ShareUtil.shareBitmap(QrCodeActivity.this, qrCodeBitmap, id);
+                return true;
+            }
+            return false;
         });
     }
 }

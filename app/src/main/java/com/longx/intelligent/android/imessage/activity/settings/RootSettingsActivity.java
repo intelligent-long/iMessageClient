@@ -33,6 +33,7 @@ import com.longx.intelligent.android.imessage.dialog.ServerSettingDialog;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.imessage.util.AppUtil;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.util.ShareUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.value.Constants;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
@@ -299,13 +300,8 @@ public class RootSettingsActivity extends BaseSettingsActivity {
                                 .setPositiveButton("确定", null)
                                 .setNeutralButton("直接分享", (dialog, which) -> {
                                     String shareStr = "[" + Constants.APP_NAME + "] 我正在使用 " + Constants.APP_NAME + "，非常不错的通讯应用，你也试试吧\n地址： " + imessageWebHomeUrl;
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareStr);
-                                    sendIntent.putExtra(Intent.EXTRA_TITLE, "分享 " + Constants.APP_NAME);
-                                    sendIntent.setType("text/plain");
-                                    Intent shareIntent = Intent.createChooser(sendIntent, null);
-                                    startActivity(shareIntent);
+                                    String title = "分享 " + Constants.APP_NAME;
+                                    ShareUtil.shareString(requireContext(), shareStr, title);
                                 })
                                 .create()
                                 .show();

@@ -42,8 +42,14 @@ public class DataPaths {
 
         public static String appUpdateCacheFilePath(Context context){
             return cacheFileRootPath(context) +
-                    File.separator + "app-update" +
+                    File.separator + "app_update" +
                     File.separator + "app-release.apk";
+        }
+
+        public static String qrCodeFilePath(Context context, String id, String extension){
+            SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fileName = yyyyMMddHHmmss.format(new Date()) + "_" + "QRCode" + "_" + id + "." + extension;
+            return cacheFileRootPath(context) + File.separator + "qr_code" + File.separator + fileName;
         }
     }
 
