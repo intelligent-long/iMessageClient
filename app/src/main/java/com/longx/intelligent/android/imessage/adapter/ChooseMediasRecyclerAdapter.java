@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.MediaActivity2;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
@@ -225,6 +226,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 .load(mediaInfo.getPath())
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(new RequestOptions().override(holder.binding.imageView.getWidth(), holder.binding.imageView.getHeight()))
                 .into(holder.binding.imageView);
         holder.binding.videoDuration.setVisibility(View.GONE);
     }
@@ -235,6 +237,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 .load(mediaInfo.getPath())
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(new RequestOptions().override(holder.binding.imageView.getWidth(), holder.binding.imageView.getHeight()))
                 .into(holder.binding.imageView);
         holder.binding.videoDuration.setVisibility(View.VISIBLE);
         holder.binding.videoDuration.setText(TimeUtil.formatTimeToHHMMSS(mediaInfo.getVideoDuration()));
