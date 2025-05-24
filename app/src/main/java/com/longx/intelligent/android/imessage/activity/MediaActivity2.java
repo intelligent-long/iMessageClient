@@ -1,8 +1,10 @@
 package com.longx.intelligent.android.imessage.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.longx.intelligent.android.imessage.R;
@@ -57,13 +59,17 @@ public class MediaActivity2 extends BaseActivity {
     private void intentData() {
         mediaList = getIntent().getParcelableArrayListExtra(ExtraKeys.MEDIAS);
         position = getIntent().getIntExtra(ExtraKeys.POSITION, 0);
-        binding.actionButton.setText(getIntent().getStringExtra(ExtraKeys.BUTTON_TEXT));;
+//        binding.actionButton.setText(getIntent().getStringExtra(ExtraKeys.BUTTON_TEXT));
         glideLoad = getIntent().getBooleanExtra(ExtraKeys.GLIDE_LOAD, false);
     }
 
     private void setupYiers() {
         if(actionButtonYier != null) {
-            binding.actionButton.setOnClickListener(actionButtonYier);
+//            binding.actionButton.setOnClickListener(actionButtonYier);
+            binding.toolbar.setOnMenuItemClickListener(item -> {
+                actionButtonYier.onClick(binding.toolbar);
+                return false;
+            });
         }
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private boolean right;
@@ -119,7 +125,8 @@ public class MediaActivity2 extends BaseActivity {
         binding.viewPager.setOffscreenPageLimit(2);
         binding.viewPager.setCurrentItem(position, false);
         binding.viewPager.setPageMargin(UiUtil.dpToPx(this, getResources().getDimension(R.dimen.media_page_margin)));
-        binding.actionButton.post(() -> binding.actionButton.setVisibility(actionButtonYier == null ? View.GONE : View.VISIBLE));
+//        binding.actionButton.post(() -> binding.actionButton.setVisibility(actionButtonYier == null ? View.GONE : View.VISIBLE));
+        binding.toolbar.post(() -> binding.toolbar.getMenu().findItem(R.id.save).setVisible(actionButtonYier != null));
         binding.viewPager.post(() -> {
             adapter.startPlayer();
         });
@@ -128,7 +135,7 @@ public class MediaActivity2 extends BaseActivity {
     public static void setActionButtonYier(View.OnClickListener yier){
         actionButtonYier = yier;
         if(instance != null && instance.binding != null) {
-            instance.binding.actionButton.post(() -> instance.binding.actionButton.setVisibility(yier == null ? View.GONE : View.VISIBLE));
+            instance.binding.toolbar.post(() -> instance.binding.toolbar.getMenu().findItem(R.id.save).setVisible(actionButtonYier != null));
         }
     }
 

@@ -131,7 +131,12 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             }
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.more){
+            if(item.getItemId() == R.id.qr_code){
+                Intent intent = new Intent(GroupChannelActivity.this, QrCodeActivity.class);
+                intent.putExtra(ExtraKeys.TYPE_OBJECT, groupChannel);
+                intent.putExtra(ExtraKeys.DESCRIPTION, "扫描二维码打开群频道");
+                startActivity(intent);
+            }else if(item.getItemId() == R.id.more){
                 Intent intent = new Intent(this, GroupChannelSettingActivity.class);
                 intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
                 startActivity(intent);
