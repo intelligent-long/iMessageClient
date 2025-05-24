@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.databinding.BottomSheetAuthorAccountBinding;
 import com.longx.intelligent.android.imessage.value.Constants;
 
@@ -29,12 +30,16 @@ public class AuthorAccountsBottomSheet extends AbstractBottomSheet{
 
     private void setupListeners() {
         binding.imessage.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("imessage://channel/LONG"));
-                getActivity().startActivity(intent);
-            }catch (Exception e){
-                e.printStackTrace();
-                MessageDisplayer.autoShow(getActivity(), Constants.APP_NAME + " ID: LONG", MessageDisplayer.Duration.LONG);
+            if(!SharedPreferencesAccessor.ServerPref.isUseCentral(getActivity())){
+                MessageDisplayer.autoShow(getActivity(), "应使用中央服务器", MessageDisplayer.Duration.LONG);
+            }else {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("imessage://channel/LONG"));
+                    getActivity().startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    MessageDisplayer.autoShow(getActivity(), Constants.APP_NAME + " ID: LONG", MessageDisplayer.Duration.LONG);
+                }
             }
             dismiss();
         });

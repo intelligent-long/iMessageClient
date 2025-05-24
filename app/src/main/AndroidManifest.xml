@@ -44,6 +44,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.QrCodeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.TransferGroupChannelAdminActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -295,7 +297,12 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             startActivity(intent);
         });
         binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.more){
+            if(item.getItemId() == R.id.qr_code){
+                Intent intent = new Intent(ChannelActivity.this, QrCodeActivity.class);
+                intent.putExtra(ExtraKeys.TYPE_OBJECT, channel);
+                intent.putExtra(ExtraKeys.DESCRIPTION, "扫描二维码打开频道");
+                startActivity(intent);
+            }else if(item.getItemId() == R.id.more){
                 Intent intent = new Intent(this, ChannelSettingActivity.class);
                 intent.putExtra(ExtraKeys.CHANNEL, channel);
                 startActivity(intent);

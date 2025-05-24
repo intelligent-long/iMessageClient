@@ -14,4 +14,5 @@
     <color name="negative_red">#FF2637</color>
     <color name="divider">#D1D1D1</color>
     <color name="broadcast_liked">#F7113F</color>
+    <color name="qr_code">#1C1C1E</color>
 </resources>

@@ -7,7 +7,7 @@ public class ExtraKeys {
     public static final String CHANGE_PASSWORD_MODE = "change_password_mode";
     public static final String URI = "uri";
     public static final String IMESSAGE_ID = "imessage_id";
-    public static final String CHANNEL = "channel_info";
+    public static final String CHANNEL = "channel";
     public static final String MAY_NOT_ASSOCIATED = "may_not_associated";
     public static final String AVATAR_HASH = "avatar_hash";
     public static final String AVATAR_EXTENSION = "avatar_extension";
@@ -59,4 +59,6 @@ public class ExtraKeys {
     public static final String GROUP_CHANNEL_INVITATION = "group_channel_invitation";
     public static final String INVITE_UUID = "invite_uuid";
     public static final String AVATAR_TYPE = "avatar_type";
+    public static final String DESCRIPTION = "description";
+    public static final String TYPE_OBJECT = "type_object";
 }
