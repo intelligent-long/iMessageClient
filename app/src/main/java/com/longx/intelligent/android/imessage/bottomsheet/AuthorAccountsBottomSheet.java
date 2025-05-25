@@ -31,7 +31,7 @@ public class AuthorAccountsBottomSheet extends AbstractBottomSheet{
     private void setupListeners() {
         binding.imessage.setOnClickListener(v -> {
             if(!SharedPreferencesAccessor.ServerPref.isUseCentral(getActivity())){
-                MessageDisplayer.autoShow(getActivity(), "必须使用中央服务器", MessageDisplayer.Duration.LONG);
+                MessageDisplayer.autoShow(getActivity(), "需要使用中央服务器", MessageDisplayer.Duration.LONG);
             }else {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("imessage://channel/LONG"));
