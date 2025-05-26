@@ -181,4 +181,11 @@
     <style name="CardTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textSize">21sp</item>
     </style>
+
+    <style name="QrScanActivity" parent="Theme.IMessageClient">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
 </resources>

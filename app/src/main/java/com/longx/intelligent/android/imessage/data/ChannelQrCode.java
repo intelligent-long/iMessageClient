@@ -36,4 +36,14 @@ public class ChannelQrCode {
     public Date getGenerateTime() {
         return generateTime;
     }
+
+    @Override
+    public String toString() {
+        return "ChannelQrCode{" +
+                "appVersionCode=" + appVersionCode +
+                ", appVersionName='" + appVersionName + '\'' +
+                ", channelId='" + channelId + '\'' +
+                ", generateTime=" + generateTime +
+                '}';
+    }
 }

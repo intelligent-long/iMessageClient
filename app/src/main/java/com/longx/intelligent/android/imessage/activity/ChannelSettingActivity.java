@@ -40,7 +40,7 @@ public class ChannelSettingActivity extends BaseActivity {
     }
 
     private void showContent() {
-        ChatMessageAllow chatMessageAllowToMe = ChannelDatabaseManager.getInstance().findOneAssociations(channel.getImessageId()).getChatMessageAllowToMe();
+        ChatMessageAllow chatMessageAllowToMe = ChannelDatabaseManager.getInstance().findOneAssociation(channel.getImessageId()).getChatMessageAllowToMe();
         binding.switchVoiceMessage.setChecked(chatMessageAllowToMe.isAllowVoice());
         binding.switchNotice.setChecked(chatMessageAllowToMe.isAllowNotice());
     }

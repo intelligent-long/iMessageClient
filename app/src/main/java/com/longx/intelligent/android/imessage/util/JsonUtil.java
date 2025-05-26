@@ -61,6 +61,14 @@ public class JsonUtil {
         }
     }
 
+    public static <T> T toObject(String json, TypeReference<T> toValueTypeReference) {
+        try {
+            return mapper.readValue(json, toValueTypeReference);
+        } catch (IOException e) {
+            throw new JsonException("反序列化为 Java 对象出错", e);
+        }
+    }
+
     public static <T> List<T> toObjectList(String json, Class<T> clazz) {
         JavaType javaType = mapper.getTypeFactory().constructParametricType(List.class, clazz);
         try {
@@ -74,8 +82,8 @@ public class JsonUtil {
         return mapper.convertValue(object, clazz);
     }
 
-    public static <T> T convertValue(Object object, TypeReference<T> toValueTypeRefz){
-        return mapper.convertValue(object, toValueTypeRefz);
+    public static <T> T convertValue(Object object, TypeReference<T> toValueTypeReference){
+        return mapper.convertValue(object, toValueTypeReference);
     }
 
     public static String format(String json){

@@ -25,8 +25,8 @@ import com.longx.intelligent.android.imessage.da.FileHelper;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.ChatMessageDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.OpenedChatDatabaseManager;
-import com.longx.intelligent.android.imessage.data.BroadcastLike;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
 import com.longx.intelligent.android.imessage.data.MessageViewed;
@@ -36,7 +36,6 @@ import com.longx.intelligent.android.imessage.data.request.SendImageChatMessageP
 import com.longx.intelligent.android.imessage.data.request.SendTextChatMessagePostBody;
 import com.longx.intelligent.android.imessage.data.request.SendVideoChatMessagePostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
-import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChatBinding;
 import com.longx.intelligent.android.imessage.media.MediaType;
 import com.longx.intelligent.android.imessage.media.data.MediaInfo;
@@ -45,7 +44,6 @@ import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCal
 import com.longx.intelligent.android.imessage.util.ColorUtil;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.FileUtil;
-import com.longx.intelligent.android.imessage.util.JsonUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.value.Constants;
@@ -58,7 +56,6 @@ import com.longx.intelligent.android.imessage.yier.TextChangedYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -182,9 +179,19 @@ public class ChatActivity extends BaseActivity implements ChatMessagesUpdateYier
 //        if(openedChatDatabaseManager.findNotViewedCount(channel.getImessageId()) > 0) {
 //            viewAllNewChatMessages();
 //        }
-        ChatMessageAllow chatMessageAllow = channelDatabaseManager.findOneAssociations(channel.getImessageId()).getChatMessageAllowToThem();
-        if(!chatMessageAllow.isAllowVoice()){
-            UiUtil.setViewEnabled(binding.voiceButton, false, true);
+        ChannelAssociation association = null;
+        try {
+            association = channelDatabaseManager.findOneAssociation(channel.getImessageId());
+        }catch (Exception e){
+            ErrorLogger.log(e);
+        }
+        if(association != null) {
+            ChatMessageAllow chatMessageAllow = association.getChatMessageAllowToThem();
+            if (!chatMessageAllow.isAllowVoice()) {
+                UiUtil.setViewEnabled(binding.voiceButton, false, true);
+            }
+        }else {
+            binding.voiceButton.setVisibility(View.GONE);
         }
     }
 

@@ -16,7 +16,6 @@ import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -192,7 +191,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public ChannelAssociation findOneAssociations(String imessageId){
+    public ChannelAssociation findOneAssociation(String imessageId){
         openDatabaseIfClosed();
         String sql = "SELECT *, " + " ca." + ChannelDatabaseHelper.TableChannelAssociationsColumns.IMESSAGE_ID + " AS associationTableImessageId, "
                 + " c." + ChannelDatabaseHelper.TableChannelsColumns.IMESSAGE_ID + " AS channelTableImessageId "

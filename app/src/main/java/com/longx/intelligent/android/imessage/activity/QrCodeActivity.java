@@ -58,13 +58,13 @@ public class QrCodeActivity extends BaseActivity {
             Channel channel = (Channel) typeObject;
             id = channel.getImessageId();
             ChannelQrCode channelQrCode = new ChannelQrCode(AppUtil.getVersionCode(this), AppUtil.getVersionName(this), id, new Date());
-            QrCodeData qrCodeData = new QrCodeData(QrCodeData.Type.CHANNEL, channelQrCode);
+            QrCodeData<ChannelQrCode> qrCodeData = new QrCodeData<>(QrCodeData.Type.CHANNEL, channelQrCode);
             return JsonUtil.toJson(qrCodeData);
         }else if(typeObject instanceof GroupChannel){
             GroupChannel groupChannel = (GroupChannel) typeObject;
             id = groupChannel.getGroupChannelId();
             GroupChannelQrCode groupChannelQrCode = new GroupChannelQrCode(AppUtil.getVersionCode(this), AppUtil.getVersionName(this), id, new Date());
-            QrCodeData qrCodeData = new QrCodeData(QrCodeData.Type.GROUP_CHANNEL, groupChannelQrCode);
+            QrCodeData<GroupChannelQrCode> qrCodeData = new QrCodeData<>(QrCodeData.Type.GROUP_CHANNEL, groupChannelQrCode);
             return JsonUtil.toJson(qrCodeData);
         }
         return null;
