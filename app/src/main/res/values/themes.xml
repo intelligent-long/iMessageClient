@@ -150,12 +150,12 @@
 
     <style name="BottomNavTextAppearanceActive" parent="TextAppearance.AppCompat">
         <item name="android:fontWeight">@integer/font_weight_medium</item>
-        <item name="android:textSize">12.5sp</item>
+        <item name="android:textSize">12.37sp</item>
     </style>
 
     <style name="BottomNavTextAppearanceInactive" parent="TextAppearance.AppCompat">
         <item name="android:fontWeight">@integer/font_weight_regular</item>
-        <item name="android:textSize">12.5sp</item>
+        <item name="android:textSize">12.37sp</item>
     </style>
 
     <style name="AuthorDialog" parent="TitleLargeMaterialAlertDialog">

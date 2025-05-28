@@ -98,8 +98,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (checkAndSwitchToAuth()) return;
-        Context context = new ContextThemeWrapper(this, com.google.android.material.R.style.Theme_Material3_DayNight_NoActionBar);
-        binding = ActivityMainBinding.inflate(LayoutInflater.from(context));
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         int mainActivityFragmentSwitchMode = SharedPreferencesAccessor.DefaultPref.getMainActivityFragmentSwitchMode(this);
         if (mainActivityFragmentSwitchMode == 1) {
