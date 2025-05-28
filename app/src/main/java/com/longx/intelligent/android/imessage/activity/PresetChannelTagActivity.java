@@ -17,7 +17,6 @@ import com.longx.intelligent.android.imessage.bottomsheet.AddSettingChannelTagBo
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.databinding.ActivityPresetChannelTagBinding;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 

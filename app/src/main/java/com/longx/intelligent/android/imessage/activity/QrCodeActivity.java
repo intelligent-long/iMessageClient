@@ -1,17 +1,7 @@
 package com.longx.intelligent.android.imessage.activity;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.AdaptiveIconDrawable;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
@@ -26,13 +16,11 @@ import com.longx.intelligent.android.imessage.databinding.ActivityQrCodeBinding;
 import com.longx.intelligent.android.imessage.dialog.OperatingDialog;
 import com.longx.intelligent.android.imessage.util.AppUtil;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.JsonUtil;
 import com.longx.intelligent.android.imessage.util.QRCodeUtil;
 import com.longx.intelligent.android.imessage.util.ResourceUtil;
 import com.longx.intelligent.android.imessage.util.ShareUtil;
 
-import java.io.IOException;
 import java.util.Date;
 
 public class QrCodeActivity extends BaseActivity {

@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 
 import com.longx.intelligent.android.imessage.R;
-import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.UserInfo;

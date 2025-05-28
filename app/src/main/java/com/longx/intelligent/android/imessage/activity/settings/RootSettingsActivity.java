@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.imessage.activity.settings;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,7 +15,6 @@ import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.InstanceStateKeys;
 import com.longx.intelligent.android.imessage.activity.edituser.ChangeEmailActivity;
 import com.longx.intelligent.android.imessage.activity.helper.ActivityOperator;
-import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.dialog.AbstractDialog;
 import com.longx.intelligent.android.imessage.dialog.ChoiceDialog;
@@ -32,7 +30,6 @@ import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.dialog.ServerSettingDialog;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.imessage.util.AppUtil;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.ShareUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.value.Constants;

@@ -1,7 +1,5 @@
 package com.longx.intelligent.android.imessage.activity;
 
-import static java.security.AccessController.getContext;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -109,6 +107,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         } else {
             setupNavigationKeepInMemory();
         }
+        setupUi();
         setupYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
@@ -118,7 +117,6 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         new Thread(() -> {
             runOnUiThread(() -> {
                 startServerMessageService();
-                setupUi();
                 showNavHeaderInfo();
                 requestPermissions();
                 GlobalBehaviors.checkAndNotifySoftwareUpdate(this);

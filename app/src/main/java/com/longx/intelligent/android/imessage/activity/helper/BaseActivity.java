@@ -35,8 +35,8 @@ public class BaseActivity extends HoldableActivity implements LinkPermissionOper
     protected void onCreate(Bundle savedInstanceState) {
         Application.foreground = true;
         this.savedInstanceState = savedInstanceState;
-        setThemeOfFontStyle();
         checkAndSetNightMode();
+        setThemeOfFontStyle();
         super.onCreate(savedInstanceState);
         checkAndEnableDynamicColor();
     }

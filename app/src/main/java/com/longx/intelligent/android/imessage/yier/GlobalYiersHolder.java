@@ -89,7 +89,7 @@ public class GlobalYiersHolder {
             if (updating) {
                 List<String> updatingIds = ContentUpdater.getUpdatingIds();
                 updatingIds.forEach(updatingId -> {
-                    onServerContentUpdateYier.onStartUpdate(updatingId, updatingIds,null);
+                    onServerContentUpdateYier.onStartUpdate(updatingId, updatingIds, (Object[]) null);
                 });
             }
         }

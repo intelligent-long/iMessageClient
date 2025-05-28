@@ -2,12 +2,6 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -15,23 +9,15 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelAdditionsActivityPagerAdapter;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
-import com.longx.intelligent.android.imessage.data.ChannelAddition;
 import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
-import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
-import com.longx.intelligent.android.imessage.data.GroupChannelInvitation;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelAdditionsBinding;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
-import com.longx.intelligent.android.imessage.util.JsonUtil;
-import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitiesFetchYier;
 import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitiesUpdateYier;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;

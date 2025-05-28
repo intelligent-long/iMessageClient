@@ -9,7 +9,6 @@ import androidx.preference.Preference;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.BroadcastChannelPermissionActivity;
 import com.longx.intelligent.android.imessage.activity.ExcludeBroadcastChannelActivity;
-import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.databinding.ActivityPrivacySettingsBinding;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference;

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
-import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
@@ -26,7 +25,6 @@ import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.yier.TextChangedYier;
 
-import java.util.Collections;
 import java.util.Objects;
 
 import retrofit2.Call;

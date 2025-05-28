@@ -11,7 +11,6 @@ import com.longx.intelligent.android.imessage.data.request.ChangeSexPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChangeSexBinding;
 import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
-import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.imessage.util.UiUtil;

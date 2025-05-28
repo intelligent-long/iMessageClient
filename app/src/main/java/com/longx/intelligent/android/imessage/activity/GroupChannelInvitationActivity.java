@@ -6,12 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
@@ -21,16 +15,10 @@ import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelInvitation;
 import com.longx.intelligent.android.imessage.data.Self;
-import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelInvitationBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
-import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class GroupChannelInvitationActivity extends BaseActivity {
     private ActivityGroupChannelInvitationBinding binding;

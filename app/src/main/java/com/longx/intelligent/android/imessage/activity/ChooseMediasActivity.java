@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ChooseMediasActivity extends BaseActivity{
+public class ChooseMediasActivity extends BaseActivity {
     private ActivityChooseMediasBinding binding;
     private RecyclerHeaderGalleryBinding headerBinding;
     private RecyclerFooterGalleryBinding footerBinding;

@@ -9,7 +9,6 @@ import androidx.preference.Preference;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.MainActivity;
 import com.longx.intelligent.android.imessage.activity.helper.ActivityOperator;
-import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.databinding.ActivityUiSettingsBinding;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
 import com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3ListPreference;

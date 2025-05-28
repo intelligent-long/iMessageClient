@@ -9,7 +9,6 @@ import com.longx.intelligent.android.imessage.data.request.ChangeEmailPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChangeEmailBinding;
 import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
-import com.longx.intelligent.android.imessage.dialog.MessageDialog;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.UserApiCaller;
 import com.longx.intelligent.android.imessage.util.UiUtil;

@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.FutureTarget;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.OpenSourceLicensesActivity;
 import com.longx.intelligent.android.imessage.activity.VersionActivity;
-import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.bottomsheet.AuthorAccountsBottomSheet;
 import com.longx.intelligent.android.imessage.databinding.ActivityVersionSettingsBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;

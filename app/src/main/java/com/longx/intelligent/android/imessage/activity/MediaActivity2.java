@@ -1,10 +1,8 @@
 package com.longx.intelligent.android.imessage.activity;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.longx.intelligent.android.imessage.R;
@@ -12,11 +10,9 @@ import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.MediaPagerAdapter2;
 import com.longx.intelligent.android.imessage.databinding.ActivityMedia2Binding;
 import com.longx.intelligent.android.imessage.databinding.PagerItemMediaBinding;
-import com.longx.intelligent.android.imessage.databinding.RecyclerItemMediaBinding;
 import com.longx.intelligent.android.imessage.media.MediaType;
 import com.longx.intelligent.android.imessage.media.data.Media;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.Utils;
 import com.longx.intelligent.android.imessage.util.WindowAndSystemUiUtil;

@@ -19,7 +19,6 @@ import com.longx.intelligent.android.imessage.databinding.RecyclerHeaderGroupCha
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
-import com.longx.intelligent.android.imessage.yier.UpdateGroupChannelYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 

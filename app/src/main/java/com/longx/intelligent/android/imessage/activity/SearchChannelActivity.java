@@ -2,7 +2,6 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.os.Bundle;
 
-import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.SearchChannelLinearLayoutViews;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;

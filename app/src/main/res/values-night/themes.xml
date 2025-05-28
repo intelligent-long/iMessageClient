@@ -25,4 +25,15 @@
         <item name="android:navigationBarColor">@color/black</item>
         <item name="android:windowBackground">@color/black</item>
     </style>
+
+    <style name="ChatActivity.Font2" parent="Theme.IMessageClient.Font2">
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="ChatActivity.Font1" parent="Theme.IMessageClient.Font1">
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
 </resources>

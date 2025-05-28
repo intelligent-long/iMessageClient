@@ -17,7 +17,6 @@ import com.longx.intelligent.android.imessage.bottomsheet.AddSettingChannelTagBo
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
-import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivitySetGroupChannelTagBinding;

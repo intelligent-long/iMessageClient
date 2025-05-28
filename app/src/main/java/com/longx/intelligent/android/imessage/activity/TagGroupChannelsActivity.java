@@ -15,7 +15,6 @@ import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDa
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.databinding.ActivityTagGroupChannelsBinding;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
