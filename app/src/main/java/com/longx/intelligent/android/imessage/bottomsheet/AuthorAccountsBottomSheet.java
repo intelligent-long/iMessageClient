@@ -34,46 +34,46 @@ public class AuthorAccountsBottomSheet extends AbstractBottomSheet{
                 MessageDisplayer.autoShow(getActivity(), "需要使用中央服务器", MessageDisplayer.Duration.LONG);
             }else {
                 try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("imessage://channel/LONG"));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.MY_IMESSAGE_URL));
                     getActivity().startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    MessageDisplayer.autoShow(getActivity(), Constants.APP_NAME + " ID: LONG", MessageDisplayer.Duration.LONG);
+                    MessageDisplayer.autoShow(getActivity(), Constants.APP_NAME + " ID: " + Constants.MY_IMESSAGE_ID, MessageDisplayer.Duration.LONG);
                 }
             }
             dismiss();
         });
         binding.email.setOnClickListener(v -> {
             try {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:tx.long@outlook.com"));
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constants.MY_EMAIL));
                 getActivity().startActivity(intent);
             }catch (Exception e){
                 e.printStackTrace();
-                MessageDisplayer.autoShow(getActivity(), "Email: tx.long@outlook.com", MessageDisplayer.Duration.LONG);
+                MessageDisplayer.autoShow(getActivity(), "Email: " + Constants.MY_EMAIL, MessageDisplayer.Duration.LONG);
             }
             dismiss();
         });
         binding.qq.setOnClickListener(v -> {
             try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mqq://im/chat?chat_type=wpa&uin=909691944&version=1&src_type=web"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.MY_QQ_URL));
                 getActivity().startActivity(intent);
             }catch (Exception e){
                 e.printStackTrace();
-                MessageDisplayer.autoShow(getActivity(), "QQ: 909691944", MessageDisplayer.Duration.LONG);
+                MessageDisplayer.autoShow(getActivity(), "QQ: " + Constants.MY_QQ_ID, MessageDisplayer.Duration.LONG);
             }
             dismiss();
         });
         binding.wechat.setOnClickListener(v -> {
-            MessageDisplayer.autoShow(getActivity(), "微信号: _909691944", MessageDisplayer.Duration.LONG);
+            MessageDisplayer.autoShow(getActivity(), "微信号: " + Constants.MY_WECHAT_ID, MessageDisplayer.Duration.LONG);
             dismiss();
         });
         binding.github.setOnClickListener(v -> {
             try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/intelligent-long"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.MY_GITHUB_URL));
                 getActivity().startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
-                MessageDisplayer.autoShow(getActivity(), "GitHub: https://github.com/intelligent-long", MessageDisplayer.Duration.LONG);
+                MessageDisplayer.autoShow(getActivity(), "GitHub: " + Constants.MY_GITHUB_URL, MessageDisplayer.Duration.LONG);
             }
             dismiss();
         });

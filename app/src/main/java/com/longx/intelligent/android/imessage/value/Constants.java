@@ -45,4 +45,11 @@ public class Constants {
     public static final int MAX_ALLOW_UNSEND_MINUTES = 3;
     public static final long MIN_CHECK_SOFTWARE_UPDATABLE_INTERVAL_MILLI_SEC = 5 * 60 * 60 * 1000;
     public static final String INVITE_JOIN_GROUP_CHANNEL_MESSAGE = "邀请添加群频道。";
+    public static final String MY_IMESSAGE_URL = "imessage://channel/LONG";
+    public static final String MY_IMESSAGE_ID = "LONG";
+    public static final String MY_EMAIL = "tx.long@outlook.com";
+    public static final String MY_QQ_URL = "mqq://im/chat?chat_type=wpa&uin=909691944&version=1&src_type=web";
+    public static final String MY_QQ_ID = "909691944";
+    public static final String MY_WECHAT_ID = "_909691944";
+    public static final String MY_GITHUB_URL = "https://github.com/intelligent-long";
 }
