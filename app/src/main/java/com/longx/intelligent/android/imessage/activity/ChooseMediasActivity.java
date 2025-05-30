@@ -124,29 +124,18 @@ public class ChooseMediasActivity extends BaseActivity {
 
     private void setupYiers() {
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView r, int dx, int dy) {
-                super.onScrolled(r, dx, dy);
-                updateInfos();
-            }
-        });
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    GlideApp.with(ChooseMediasActivity.this).resumeRequests();
-                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
-                    GlideApp.with(ChooseMediasActivity.this).pauseRequests();
-                }
-            }
+            int lastFirstVisible = -1;
+            int lastLastVisible = -1;
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (Math.abs(dy) < 100) {
-                    GlideApp.with(ChooseMediasActivity.this).resumeRequests();
+                int firstVisible = gridLayoutManager.findFirstVisibleItemPosition();
+                int lastVisible = gridLayoutManager.findLastVisibleItemPosition();
+                if (firstVisible != lastFirstVisible || lastVisible != lastLastVisible) {
+                    lastFirstVisible = firstVisible;
+                    lastLastVisible = lastVisible;
+                    updateInfos();
                 }
             }
         });
@@ -293,32 +282,21 @@ public class ChooseMediasActivity extends BaseActivity {
     }
 
     private void updateInfos() {
-        ChooseMediasRecyclerAdapter chooseMediasRecyclerAdapter = (ChooseMediasRecyclerAdapter) binding.recyclerView.getAdapter();
-        if(chooseMediasRecyclerAdapter.getItemDataList().isEmpty()) return;
-        RecyclerView.LayoutManager layoutManager = binding.recyclerView.getLayoutManager();
-        if(layoutManager instanceof LinearLayoutManager){
-            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-            int firstItemPosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-            if(firstItemPosition == -1) firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-            int lastItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-            if(lastItemPosition == -1) lastItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-            if(firstItemPosition == -1) return;
-            if(lastItemPosition == -1) return;
-            if(binding.recyclerView.isPositionFooter(lastItemPosition)){
-                lastItemPosition --;
-            }
-            if(binding.recyclerView.isPositionHeader(firstItemPosition)){
-                firstItemPosition ++;
-            }
-            if(binding.recyclerView.hasHeader()){
-                firstItemPosition --;
-                lastItemPosition --;
-            }
-            ChooseMediasRecyclerAdapter.ItemData firstItem = chooseMediasRecyclerAdapter.getItemDataList().get(firstItemPosition);
-            ChooseMediasRecyclerAdapter.ItemData lastItem = chooseMediasRecyclerAdapter.getItemDataList().get(lastItemPosition);
-            updateTimeRange(firstItem, lastItem);
-            updateLocation(firstItem, lastItem);
-        }
+        if (adapter.getItemDataList().isEmpty()) return;
+        int firstItemPosition = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
+        if (firstItemPosition == -1) firstItemPosition = gridLayoutManager.findFirstVisibleItemPosition();
+        int lastItemPosition = gridLayoutManager.findLastCompletelyVisibleItemPosition();
+        if (lastItemPosition == -1) lastItemPosition = gridLayoutManager.findLastVisibleItemPosition();
+        if (firstItemPosition < 0 || firstItemPosition >= adapter.getItemCount()) {
+            firstItemPosition = 0;
+        };
+        if (lastItemPosition < 0 || lastItemPosition >= adapter.getItemCount()) {
+            lastItemPosition = adapter.getItemCount() - 2;
+        };
+        ChooseMediasRecyclerAdapter.ItemData firstItem = adapter.getItemDataList().get(firstItemPosition);
+        ChooseMediasRecyclerAdapter.ItemData lastItem = adapter.getItemDataList().get(lastItemPosition);
+        updateTimeRange(firstItem, lastItem);
+//        updateLocation(firstItem, lastItem);
     }
 
     private void updateTimeRange(ChooseMediasRecyclerAdapter.ItemData firstItem, ChooseMediasRecyclerAdapter.ItemData lastItem){

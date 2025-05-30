@@ -45,16 +45,16 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
         int column = position % spanCount;
 
         if (includeEdge) {
-            outRect.left = Math.round(spacing - column * (float)spacing / spanCount);
-            outRect.right = Math.round((column + 1) * (float)spacing / spanCount);
+            outRect.left = (int) Math.ceil(spacing - column * (float)spacing / spanCount);
+            outRect.right = (int) Math.ceil((column + 1) * (float)spacing / spanCount);
 
             if (position < spanCount) {
                 outRect.top = spacing;
             }
             outRect.bottom = spacing;
         } else {
-            outRect.left = Math.round(column * (float)spacing / spanCount);
-            outRect.right = Math.round(spacing - (column + 1) * (float)spacing / spanCount);
+            outRect.left = (int) Math.ceil(column * (float)spacing / spanCount);
+            outRect.right = (int) Math.ceil(spacing - (column + 1) * (float)spacing / spanCount);
             if (position >= spanCount) {
                 outRect.top = spacing;
             }
@@ -84,12 +84,12 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
             int width = spaceGridDimensionProvider.getWidth(itemPosition);
             int height = spaceGridDimensionProvider.getHeight(itemPosition);
             layoutParams.width = itemWidth;
-            layoutParams.height = Math.round(height / (width / (float) itemWidth));
+            layoutParams.height = (int) Math.ceil(height / (width / (float) itemWidth));
         }
     }
 
     private int calculateItemWidth() {
-        return Math.round((recyclerViewWidth - (spanCount - 1) * spacing) / (float) spanCount);
+        return (int) Math.ceil((recyclerViewWidth - (spanCount - 1) * spacing) / (float) spanCount);
     }
 
     public void setSpaceGridDecorationDimensionProvider(SpaceGridDimensionProvider spaceGridDimensionProvider) {
