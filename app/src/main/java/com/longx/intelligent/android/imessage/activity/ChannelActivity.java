@@ -88,6 +88,12 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
             String path = uri.getPath();
             if (path != null) {
                 imessageId = path.substring(1);
+                if(!SharedPreferencesAccessor.ServerPref.isUseCentral(this)) {
+                    if (imessageId != null) {
+                        needCentralServer = Arrays.asList(Constants.CENTRAL_SERVER_IMESSAGE_IDS).contains(imessageId);
+                    }
+                    if (needCentralServer) return;
+                }
             }
         }
         if(imessageId == null) {
@@ -99,14 +105,6 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         isSelf = (imessageId == null && channel == null)
                 || (imessageId != null && imessageId.equals(self.getImessageId())
                 || (channel != null && channel.getImessageId().equals(self.getImessageId())));
-        if(!SharedPreferencesAccessor.ServerPref.isUseCentral(this)) {
-            if (imessageId != null) {
-                needCentralServer = Arrays.asList(Constants.CENTRAL_SERVER_IMESSAGE_IDS).contains(imessageId);
-            } else if (channel != null) {
-                needCentralServer = Arrays.asList(Constants.CENTRAL_SERVER_IMESSAGE_IDS).contains(channel.getImessageId());
-            }
-            if (needCentralServer) return;
-        }
         if(isSelf || channel != null){
             showContent();
         }else {
