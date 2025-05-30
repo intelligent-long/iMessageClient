@@ -38,6 +38,7 @@ import com.longx.intelligent.android.imessage.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 import com.longx.intelligent.android.imessage.yier.RecentBroadcastMediasUpdateYier;
 
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -50,6 +51,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
     private Self self;
     private boolean isSelf;
     private boolean mayNotAssociated;
+    private boolean needCentralServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +60,17 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
         getUserInfoAndShow();
-        setupUi();
-        setupYiers();
+        if(!needCentralServer) {
+            setupUi();
+            setupYiers();
+        }else {
+            binding.contentView.setVisibility(View.GONE);
+            binding.loadingView.setVisibility(View.GONE);
+            binding.errorInfo.setText(getString(R.string.need_central_server));
+            binding.errorView.setVisibility(View.VISIBLE);
+            binding.toolbar.getMenu().findItem(R.id.qr_code).setVisible(false);
+            binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+        }
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, RecentBroadcastMediasUpdateYier.class, this);
     }
@@ -88,6 +99,14 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         isSelf = (imessageId == null && channel == null)
                 || (imessageId != null && imessageId.equals(self.getImessageId())
                 || (channel != null && channel.getImessageId().equals(self.getImessageId())));
+        if(!SharedPreferencesAccessor.ServerPref.isUseCentral(this)) {
+            if (imessageId != null) {
+                needCentralServer = Arrays.asList(Constants.CENTRAL_SERVER_IMESSAGE_IDS).contains(imessageId);
+            } else if (channel != null) {
+                needCentralServer = Arrays.asList(Constants.CENTRAL_SERVER_IMESSAGE_IDS).contains(channel.getImessageId());
+            }
+            if (needCentralServer) return;
+        }
         if(isSelf || channel != null){
             showContent();
         }else {
@@ -112,7 +131,7 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                     super.start(call);
                     binding.contentView.setVisibility(View.GONE);
                     binding.loadingView.setVisibility(View.VISIBLE);
-                    binding.doNotFindChannelView.setVisibility(View.GONE);
+                    binding.errorView.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -124,13 +143,16 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
                             showContent();
                             binding.contentView.setVisibility(View.VISIBLE);
                             binding.loadingView.setVisibility(View.GONE);
-                            binding.doNotFindChannelView.setVisibility(View.GONE);
+                            binding.errorView.setVisibility(View.GONE);
                             setupUi();
                         }
                     }, new OperationStatus.HandleResult(-101, () -> {
                         binding.contentView.setVisibility(View.GONE);
                         binding.loadingView.setVisibility(View.GONE);
-                        binding.doNotFindChannelView.setVisibility(View.VISIBLE);
+                        binding.errorInfo.setText(getString(R.string.do_not_find_channel));
+                        binding.errorView.setVisibility(View.VISIBLE);
+                        binding.toolbar.getMenu().findItem(R.id.qr_code).setVisible(false);
+                        binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
                     }));
                 }
 

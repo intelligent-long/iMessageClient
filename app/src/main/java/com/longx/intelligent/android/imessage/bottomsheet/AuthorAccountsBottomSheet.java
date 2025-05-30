@@ -30,16 +30,12 @@ public class AuthorAccountsBottomSheet extends AbstractBottomSheet{
 
     private void setupListeners() {
         binding.imessage.setOnClickListener(v -> {
-            if(!SharedPreferencesAccessor.ServerPref.isUseCentral(getActivity())){
-                MessageDisplayer.autoShow(getActivity(), "需要使用中央服务器", MessageDisplayer.Duration.LONG);
-            }else {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.MY_IMESSAGE_URL));
-                    getActivity().startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    MessageDisplayer.autoShow(getActivity(), Constants.APP_NAME + " ID: " + Constants.MY_IMESSAGE_ID, MessageDisplayer.Duration.LONG);
-                }
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.MY_IMESSAGE_URL));
+                getActivity().startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                MessageDisplayer.autoShow(getActivity(), Constants.APP_NAME + " ID: " + Constants.MY_IMESSAGE_ID, MessageDisplayer.Duration.LONG);
             }
             dismiss();
         });

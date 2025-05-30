@@ -35,14 +35,14 @@
 
     <RelativeLayout
         android:visibility="gone"
-        android:id="@+id/do_not_find_channel_view"
+        android:id="@+id/error_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/error_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/do_not_find_channel"
             android:textSize="21sp"
             android:textColor="?attr/colorOutline"
             android:layout_centerInParent="true"/>
