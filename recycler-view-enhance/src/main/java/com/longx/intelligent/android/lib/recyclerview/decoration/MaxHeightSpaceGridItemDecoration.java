@@ -17,7 +17,7 @@ public class MaxHeightSpaceGridItemDecoration extends RecyclerView.ItemDecoratio
     private int spanCount;
     private int spacing;
     private boolean includeEdge;
-    private SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider;
+    private SpaceGridDimensionProvider spaceGridDimensionProvider;
     private int recyclerViewWidth = -1;
     private boolean widthInitialized = false;
 
@@ -109,11 +109,11 @@ public class MaxHeightSpaceGridItemDecoration extends RecyclerView.ItemDecoratio
 
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         int itemWidth = calculateItemWidth();
-        if (spaceGridDecorationDimensionProvider == null) {
+        if (spaceGridDimensionProvider == null) {
             layoutParams.width = layoutParams.height = itemWidth;
         } else {
-            int width = spaceGridDecorationDimensionProvider.getWidth(itemPosition);
-            int height = spaceGridDecorationDimensionProvider.getHeight(itemPosition);
+            int width = spaceGridDimensionProvider.getWidth(itemPosition);
+            int height = spaceGridDimensionProvider.getHeight(itemPosition);
             layoutParams.width = itemWidth;
             layoutParams.height = (int) (height / (width / (double) itemWidth));
         }
@@ -123,7 +123,7 @@ public class MaxHeightSpaceGridItemDecoration extends RecyclerView.ItemDecoratio
         return (recyclerViewWidth - (spanCount - 1) * spacing) / spanCount;
     }
 
-    public void setSpaceGridDecorationDimensionProvider(SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider) {
-        this.spaceGridDecorationDimensionProvider = spaceGridDecorationDimensionProvider;
+    public void setSpaceGridDecorationDimensionProvider(SpaceGridDimensionProvider spaceGridDimensionProvider) {
+        this.spaceGridDimensionProvider = spaceGridDimensionProvider;
     }
 }

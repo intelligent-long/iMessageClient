@@ -10,18 +10,18 @@ import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 public class SpaceGridDecorationSetter {
     private RecyclerView.ItemDecoration itemDecoration;
 
-    public void setSpace(Context context, RecyclerView recyclerView, int columnCount, double spaceDp, boolean includeEdge, SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider){
-        setSpace(context, recyclerView, columnCount, spaceDp, includeEdge, spaceGridDecorationDimensionProvider, false);
+    public void setSpace(Context context, RecyclerView recyclerView, int columnCount, double spaceDp, boolean includeEdge, SpaceGridDimensionProvider spaceGridDimensionProvider){
+        setSpace(context, recyclerView, columnCount, spaceDp, includeEdge, spaceGridDimensionProvider, false);
     }
 
-    public void setSpace(Context context, RecyclerView recyclerView, int columnCount, double spaceDp, boolean includeEdge, SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider, boolean maxHeight){
+    public void setSpace(Context context, RecyclerView recyclerView, int columnCount, double spaceDp, boolean includeEdge, SpaceGridDimensionProvider spaceGridDimensionProvider, boolean maxHeight){
         recyclerView.removeItemDecoration(itemDecoration);
         if(!maxHeight) {
-            itemDecoration = new SpaceGridItemDecoration(context, columnCount, dpToPx(context, spaceDp), includeEdge);
-            ((SpaceGridItemDecoration) itemDecoration).setSpaceGridDecorationDimensionProvider(spaceGridDecorationDimensionProvider);
+            itemDecoration = new SpaceGridItemDecoration(columnCount, dpToPx(context, spaceDp), includeEdge);
+            ((SpaceGridItemDecoration) itemDecoration).setSpaceGridDecorationDimensionProvider(spaceGridDimensionProvider);
         }else {
             itemDecoration = new MaxHeightSpaceGridItemDecoration(context, columnCount, dpToPx(context, spaceDp), includeEdge);
-            ((MaxHeightSpaceGridItemDecoration) itemDecoration).setSpaceGridDecorationDimensionProvider(spaceGridDecorationDimensionProvider);
+            ((MaxHeightSpaceGridItemDecoration) itemDecoration).setSpaceGridDecorationDimensionProvider(spaceGridDimensionProvider);
         }
         recyclerView.addItemDecoration(itemDecoration);
     }

@@ -1,9 +1,10 @@
 package com.longx.intelligent.android.lib.recyclerview.decoration;
 
-import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 
@@ -11,22 +12,20 @@ import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
  * Created by LONG on 2024/1/6 at 4:10 PM.
  */
 public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
-    private Context context;
-    private int spanCount;
-    private int spacing;
-    private boolean includeEdge;
-    private SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider;
+    private final int spanCount;
+    private final int spacing;
+    private final boolean includeEdge;
+    private SpaceGridDimensionProvider spaceGridDimensionProvider;
     private int recyclerViewWidth = -1;
 
-    public SpaceGridItemDecoration(Context context, int spanCount, int spacing, boolean includeEdge) {
-        this.context = context;
+    public SpaceGridItemDecoration(int spanCount, int spacing, boolean includeEdge) {
         this.spanCount = spanCount;
         this.spacing = spacing;
         this.includeEdge = includeEdge;
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, androidx.recyclerview.widget.RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull androidx.recyclerview.widget.RecyclerView parent, @NonNull RecyclerView.State state) {
         if (recyclerViewWidth == -1 && parent.getWidth() > 0) {
             recyclerViewWidth = parent.getWidth();
         }
@@ -46,16 +45,16 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
         int column = position % spanCount;
 
         if (includeEdge) {
-            outRect.left = spacing - column * spacing / spanCount;
-            outRect.right = (column + 1) * spacing / spanCount;
+            outRect.left = Math.round(spacing - column * (float)spacing / spanCount);
+            outRect.right = Math.round((column + 1) * (float)spacing / spanCount);
 
             if (position < spanCount) {
                 outRect.top = spacing;
             }
             outRect.bottom = spacing;
         } else {
-            outRect.left = column * spacing / spanCount;
-            outRect.right = spacing - (column + 1) * spacing / spanCount;
+            outRect.left = Math.round(column * (float)spacing / spanCount);
+            outRect.right = Math.round(spacing - (column + 1) * (float)spacing / spanCount);
             if (position >= spanCount) {
                 outRect.top = spacing;
             }
@@ -79,21 +78,21 @@ public class SpaceGridItemDecoration extends RecyclerView.ItemDecoration {
 
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         int itemWidth = calculateItemWidth();
-        if (spaceGridDecorationDimensionProvider == null) {
+        if (spaceGridDimensionProvider == null) {
             layoutParams.width = layoutParams.height = itemWidth;
         } else {
-            int width = spaceGridDecorationDimensionProvider.getWidth(itemPosition);
-            int height = spaceGridDecorationDimensionProvider.getHeight(itemPosition);
+            int width = spaceGridDimensionProvider.getWidth(itemPosition);
+            int height = spaceGridDimensionProvider.getHeight(itemPosition);
             layoutParams.width = itemWidth;
-            layoutParams.height = (int) (height / (width / (double) itemWidth));
+            layoutParams.height = Math.round(height / (width / (float) itemWidth));
         }
     }
 
     private int calculateItemWidth() {
-        return (recyclerViewWidth - (spanCount - 1) * spacing) / spanCount;
+        return Math.round((recyclerViewWidth - (spanCount - 1) * spacing) / (float) spanCount);
     }
 
-    public void setSpaceGridDecorationDimensionProvider(SpaceGridDecorationDimensionProvider spaceGridDecorationDimensionProvider) {
-        this.spaceGridDecorationDimensionProvider = spaceGridDecorationDimensionProvider;
+    public void setSpaceGridDecorationDimensionProvider(SpaceGridDimensionProvider spaceGridDimensionProvider) {
+        this.spaceGridDimensionProvider = spaceGridDimensionProvider;
     }
 }
