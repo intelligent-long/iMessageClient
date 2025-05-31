@@ -48,7 +48,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
         this.maxAllowVideoCount = maxAllowVideoCount;
         this.maxAllowImageSize = maxAllowImageSize;
         this.maxAllowVideoSize = maxAllowVideoSize;
-        sortDataList(itemDataList);
         this.itemDataList.addAll(itemDataList);
 
         if(chosenMediaInfoList != null) {
@@ -94,10 +93,6 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             super(binding.getRoot());
             this.binding = binding;
         }
-    }
-
-    private void sortDataList(List<ItemData> itemDataList) {
-        itemDataList.sort(Comparator.comparingLong(t0 -> t0.getMediaInfo().getAddedTime()));
     }
 
     @NonNull

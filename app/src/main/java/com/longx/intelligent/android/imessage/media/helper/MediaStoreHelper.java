@@ -31,56 +31,107 @@ public class MediaStoreHelper {
         return getDirectoryImages(context, null, page, pageSize);
     }
 
+    public static List<MediaInfo> getImages(Context context, int page, int pageSize, String sortOrder) {
+        return getDirectoryImages(context, null, page, pageSize, sortOrder);
+    }
+
     public static List<MediaInfo> getAllImages(Context context) {
         return getAllDirectoryImages(context, null);
     }
 
+    public static List<MediaInfo> getAllImages(Context context, String sortOrder) {
+        return getAllDirectoryImages(context, null, sortOrder);
+    }
+
     public static List<MediaInfo> getDirectoryImages(Context context, String directoryPath, int page, int pageSize) {
-        return getMedias(context, directoryPath, MediaType.IMAGE, page, pageSize);
+        return getMedias(context, directoryPath, MediaType.IMAGE, page, pageSize, null);
+    }
+
+    public static List<MediaInfo> getDirectoryImages(Context context, String directoryPath, int page, int pageSize, String sortOrder) {
+        return getMedias(context, directoryPath, MediaType.IMAGE, page, pageSize, sortOrder);
     }
 
     public static List<MediaInfo> getAllDirectoryImages(Context context, String directoryPath) {
-        return getAllMedias(context, directoryPath, MediaType.IMAGE);
+        return getAllMedias(context, directoryPath, MediaType.IMAGE, null);
+    }
+
+    public static List<MediaInfo> getAllDirectoryImages(Context context, String directoryPath, String sortOrder) {
+        return getAllMedias(context, directoryPath, MediaType.IMAGE, sortOrder);
     }
 
     public static List<MediaInfo> getVideos(Context context, int page, int pageSize) {
         return getDirectoryVideos(context, null, page, pageSize);
     }
 
+    public static List<MediaInfo> getVideos(Context context, int page, int pageSize, String sortOrder) {
+        return getDirectoryVideos(context, null, page, pageSize, sortOrder);
+    }
+
     public static List<MediaInfo> getAllVideos(Context context) {
         return getAllDirectoryVideos(context, null);
     }
 
+    public static List<MediaInfo> getAllVideos(Context context, String sortOrder) {
+        return getAllDirectoryVideos(context, null, sortOrder);
+    }
+
     public static List<MediaInfo> getDirectoryVideos(Context context, String directoryPath, int page, int pageSize) {
-        return getMedias(context, directoryPath, MediaType.VIDEO, page, pageSize);
+        return getMedias(context, directoryPath, MediaType.VIDEO, page, pageSize, null);
+    }
+
+    public static List<MediaInfo> getDirectoryVideos(Context context, String directoryPath, int page, int pageSize, String sortOrder) {
+        return getMedias(context, directoryPath, MediaType.VIDEO, page, pageSize, sortOrder);
     }
 
     public static List<MediaInfo> getAllDirectoryVideos(Context context, String directoryPath) {
-        return getAllMedias(context, directoryPath, MediaType.VIDEO);
+        return getAllMedias(context, directoryPath, MediaType.VIDEO, null);
+    }
+
+    public static List<MediaInfo> getAllDirectoryVideos(Context context, String directoryPath, String sortOrder) {
+        return getAllMedias(context, directoryPath, MediaType.VIDEO, sortOrder);
     }
 
     public static List<MediaInfo> getMedias(Context context, int page, int pageSize){
         return getDirectoryMedias(context, null, page, pageSize);
     }
+
+    public static List<MediaInfo> getMedias(Context context, int page, int pageSize, String sortOrder){
+        return getDirectoryMedias(context, null, page, pageSize, sortOrder);
+    }
+
     public static List<MediaInfo> getAllMedias(Context context){
         return getAllDirectoryMedias(context, null);
     }
 
+    public static List<MediaInfo> getAllMedias(Context context, String sortOrder){
+        return getAllDirectoryMedias(context, null, sortOrder);
+    }
+
     public static List<MediaInfo> getDirectoryMedias(Context context, String directoryPath, int page, int pageSize){
-        return getMedias(context, directoryPath, null, page, pageSize);
+        return getMedias(context, directoryPath, null, page, pageSize, null);
+    }
+
+    public static List<MediaInfo> getDirectoryMedias(Context context, String directoryPath, int page, int pageSize, String sortOrder){
+        return getMedias(context, directoryPath, null, page, pageSize, sortOrder);
     }
 
     public static List<MediaInfo> getAllDirectoryMedias(Context context, String directoryPath){
-        return getAllMedias(context, directoryPath, null);
+        return getAllMedias(context, directoryPath, null, null);
     }
 
-    private static List<MediaInfo> getMedias(Context context, String directoryPath, MediaType mediaType, int page, int pageSize) {
+    public static List<MediaInfo> getAllDirectoryMedias(Context context, String directoryPath, String sortOrder){
+        return getAllMedias(context, directoryPath, null, sortOrder);
+    }
+
+    private static List<MediaInfo> getMedias(Context context, String directoryPath, MediaType mediaType, int page, int pageSize, String sortOrder) {
         List<MediaInfo> mediaUris = new ArrayList<>();
         List<String> projection = new ArrayList<>();
         projection.add(MediaStore.Files.FileColumns.DATA);
         projection.add(MediaStore.Files.FileColumns.MEDIA_TYPE);
         projection.add(MediaStore.Files.FileColumns._ID);
-        String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
+        if (sortOrder == null || sortOrder.trim().isEmpty()) {
+            sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
+        }
         String selection;
         String[] selectionArgs = null;
         if(directoryPath == null && mediaType == null) { //所有的
@@ -227,13 +278,15 @@ public class MediaStoreHelper {
         return mediaUris;
     }
 
-    private static List<MediaInfo> getAllMedias(Context context, String directoryPath, MediaType mediaType) {
+    private static List<MediaInfo> getAllMedias(Context context, String directoryPath, MediaType mediaType, String sortOrder) {
         List<MediaInfo> mediaInfos = new ArrayList<>();
         List<String> projection = new ArrayList<>();
         projection.add(MediaStore.Files.FileColumns.DATA);
         projection.add(MediaStore.Files.FileColumns.MEDIA_TYPE);
         projection.add(MediaStore.Files.FileColumns._ID);
-        String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
+        if (sortOrder == null || sortOrder.trim().isEmpty()) {
+            sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
+        }
         String selection;
         String[] selectionArgs = null;
         if(directoryPath == null && mediaType == null) { //所有的

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -203,19 +204,19 @@ public class ChooseMediasActivity extends BaseActivity {
         List<MediaInfo> mediaInfos = Collections.emptyList();
         if(currentDirectoryPath == null) {
             if(mediaType == null){
-                mediaInfos = MediaStoreHelper.getAllMedias(this);
+                mediaInfos = MediaStoreHelper.getAllMedias(this, MediaStore.Images.Media.DATE_ADDED);
             }else if(mediaType.equals(MediaType.IMAGE)) {
-                mediaInfos = MediaStoreHelper.getAllImages(this);
+                mediaInfos = MediaStoreHelper.getAllImages(this, MediaStore.Images.Media.DATE_ADDED);
             }else if(mediaType.equals(MediaType.VIDEO)){
-                mediaInfos = MediaStoreHelper.getAllVideos(this);
+                mediaInfos = MediaStoreHelper.getAllVideos(this, MediaStore.Images.Media.DATE_ADDED);
             }
         }else {
             if(mediaType == null){
-                mediaInfos = MediaStoreHelper.getAllDirectoryMedias(this, currentDirectoryPath);
+                mediaInfos = MediaStoreHelper.getAllDirectoryMedias(this, currentDirectoryPath, MediaStore.Images.Media.DATE_ADDED);
             }else if(mediaType.equals(MediaType.IMAGE)) {
-                mediaInfos = MediaStoreHelper.getAllDirectoryImages(this, currentDirectoryPath);
+                mediaInfos = MediaStoreHelper.getAllDirectoryImages(this, currentDirectoryPath, MediaStore.Images.Media.DATE_ADDED);
             }else if(mediaType.equals(MediaType.VIDEO)){
-                mediaInfos = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath);
+                mediaInfos = MediaStoreHelper.getAllDirectoryVideos(this, currentDirectoryPath, MediaStore.Images.Media.DATE_ADDED);
             }
         }
         List<ChooseMediasRecyclerAdapter.ItemData> itemDataList = new ArrayList<>();
