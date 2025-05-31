@@ -26,6 +26,12 @@ import java.util.Map;
  * Created by LONG on 2024/1/7 at 6:46 PM.
  */
 public class MediaStoreHelper {
+    public static class MediaSort {
+        public static final String DATE_TAKEN_IMAGE = MediaStore.Images.Media.DATE_TAKEN;
+        public static final String DATE_TAKEN_VIDEO = MediaStore.Video.Media.DATE_TAKEN;
+        public static final String DATE_ADDED = MediaStore.Files.FileColumns.DATE_ADDED;
+        public static final String DATE_MODIFIED = MediaStore.Files.FileColumns.DATE_MODIFIED;
+    }
 
     public static List<MediaInfo> getImages(Context context, int page, int pageSize) {
         return getDirectoryImages(context, null, page, pageSize);
