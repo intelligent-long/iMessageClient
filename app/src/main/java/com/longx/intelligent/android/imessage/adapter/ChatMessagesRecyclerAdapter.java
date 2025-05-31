@@ -814,6 +814,7 @@ public class ChatMessagesRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
                 }
             }
         });
+        intent.putExtra(ExtraKeys.GLIDE_LOAD, true);
         activity.startActivity(intent);
     }
 

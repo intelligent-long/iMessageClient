@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.imessage.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -183,17 +184,19 @@ public class MediaPagerAdapter2 extends PagerAdapter {
                 if(activity.isGlideLoad()) {
                     GlideApp
                             .with(activity.getApplicationContext())
-                            .downloadOnly()
-                            .override(Target.SIZE_ORIGINAL)
+                            .asBitmap()
+                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .dontTransform()
                             .load(imageUri)
-                            .into(new CustomTarget<File>() {
+                            .into(new CustomTarget<Bitmap>() {
                                 @Override
-                                public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                                    binding.photoView.setImage(ImageSource.uri(Uri.fromFile(resource)));
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    binding.photoView.setImage(ImageSource.cachedBitmap(resource));
                                 }
 
                                 @Override
                                 public void onLoadCleared(@Nullable Drawable placeholder) {
+
                                 }
                             });
                 }else {

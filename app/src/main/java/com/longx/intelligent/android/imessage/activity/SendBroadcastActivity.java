@@ -309,7 +309,7 @@ public class SendBroadcastActivity extends BaseActivity {
             binding.recyclerViewMedias.setVisibility(View.VISIBLE);
             spaceGridDecorationSetter.setSpace(this, binding.recyclerViewMedias, Constants.EDIT_BROADCAST_MEDIA_COLUMN_COUNT, 
                     Constants.GRID_SPACE_SEND_BROADCAST_DP, false, null, true);
-            adapter = new EditBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaInfoList, false);
+            adapter = new EditBroadcastMediasRecyclerAdapter(this, returnFromPreviewToSendMediaResultLauncher, mediaInfoList, true);
             binding.recyclerViewMedias.setAdapter(adapter);
         }
     }

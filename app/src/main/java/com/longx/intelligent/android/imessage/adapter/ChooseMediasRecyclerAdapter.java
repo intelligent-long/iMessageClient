@@ -140,6 +140,7 @@ public class ChooseMediasRecyclerAdapter extends WrappableRecyclerViewAdapter<Ch
             }
             intent.putParcelableArrayListExtra(ExtraKeys.MEDIAS, mediaList);
             intent.putExtra(ExtraKeys.POSITION, current);
+            intent.putExtra(ExtraKeys.GLIDE_LOAD, true);
             activity.startActivity(intent);
         });
         if(checkedPositions.contains(position + 1)){
