@@ -75,6 +75,7 @@ public class OpenSourceLicensesActivity extends BaseActivity {
                 .append(getText(R.string.tika))
                 .append(getText(R.string.exo_player))
                 .append(getText(R.string.flow_layout))
+                .append(getText(R.string.zxing))
                 .append(getText(R.string.html_text_suffix))
                 .toString();
     }
