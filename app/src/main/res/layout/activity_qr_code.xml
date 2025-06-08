@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginHorizontal="21dp"
-                    android:layout_marginTop="30dp" />
+                    android:layout_marginTop="37dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/save_qr_code_button"
