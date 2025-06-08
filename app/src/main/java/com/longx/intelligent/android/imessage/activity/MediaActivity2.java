@@ -118,7 +118,7 @@ public class MediaActivity2 extends BaseActivity {
         binding.toolbar.setTitle((position + 1) + " / " + mediaList.size());
         adapter = new MediaPagerAdapter2(this, mediaList);
         binding.viewPager.setAdapter(adapter);
-        binding.viewPager.setOffscreenPageLimit(5);
+        binding.viewPager.setOffscreenPageLimit(7);
         binding.viewPager.setCurrentItem(position, false);
         binding.viewPager.setPageMargin(UiUtil.dpToPx(this, getResources().getDimension(R.dimen.media_page_margin)));
 //        binding.actionButton.post(() -> binding.actionButton.setVisibility(actionButtonYier == null ? View.GONE : View.VISIBLE));

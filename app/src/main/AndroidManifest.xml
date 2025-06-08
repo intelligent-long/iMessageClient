@@ -44,10 +44,13 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.AllGroupMembersActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.QrScanActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/QrScanActivity"/>
+            android:theme="@style/QrScanActivity" />
         <activity
             android:name=".activity.QrCodeActivity"
             android:exported="false"

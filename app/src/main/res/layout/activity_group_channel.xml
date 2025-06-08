@@ -171,6 +171,18 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/all_members_button"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="9.7dp"
+            style="@style/AllMembersButton"
+            app:icon="@drawable/group_outline_24px"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            android:text="全部成员"
+            android:textSize="17sp"/>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_info_button"
             android:layout_width="match_parent"
             android:layout_height="70dp"

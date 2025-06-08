@@ -188,4 +188,10 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
+
+    <style name="AllMembersButton" parent="Widget.Material3.Button.IconButton.Filled">
+        <item name="backgroundTint">?attr/colorSurfaceContainer</item>
+        <item name="rippleColor" tools:ignore="PrivateResource">@color/m3_tonal_button_ripple_color_selector</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.Button.IconButton.Filled.Tonal</item>
+    </style>
 </resources>

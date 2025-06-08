@@ -181,7 +181,7 @@ public class MediaPagerAdapter2 extends PagerAdapter {
                                 });
                     }
                 });
-                if(activity.isGlideLoad()) {
+                if(false) {
                     GlideApp
                             .with(activity.getApplicationContext())
                             .asBitmap()
