@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+<!--    <item-->
+<!--        android:id="@+id/edit"-->
+<!--        android:title="编辑"-->
+<!--        android:icon="@drawable/edit_outline_24px"-->
+<!--        app:iconTint="?attr/colorControlNormal"-->
+<!--        app:showAsAction="always"/>-->
+
     <item
         android:id="@+id/qr_code"
         android:title="群二维码"

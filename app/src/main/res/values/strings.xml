@@ -37,6 +37,7 @@
     <string name="title_change_avatar">更改头像</string>
     <string name="title_crop_image">裁剪图片</string>
     <string name="title_avatar">头像</string>
+    <string name="title_all_group_members">所有成员</string>
     <string name="title_qr_code">二维码</string>
     <string name="title_save_qr_code">保存二维码</string>
     <string name="title_offline_detail">离线信息</string>

@@ -170,17 +170,32 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/all_members_button"
+        <LinearLayout
+            android:id="@+id/layout_all_group_members"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginBottom="9.7dp"
-            style="@style/AllMembersButton"
-            app:icon="@drawable/group_outline_24px"
-            app:iconGravity="textStart"
-            app:iconPadding="10dp"
-            android:text="全部成员"
-            android:textSize="17sp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:background="@drawable/shape_card_background_radius_28"
+            android:orientation="vertical"
+            android:clipToOutline="true">
+
+            <LinearLayout
+                android:id="@+id/click_layout_all_group_members"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="21dp"
+                android:background="?selectableItemBackground"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.Material3.TitleLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="19sp"
+                    android:text="@string/title_all_group_members"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_info_button"

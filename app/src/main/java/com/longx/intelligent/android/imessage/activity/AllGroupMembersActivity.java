@@ -20,6 +20,7 @@ public class AllGroupMembersActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAllGroupMembersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setupDefaultBackNavigation(binding.toolbar);
         intentData();
     }
 

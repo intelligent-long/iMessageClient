@@ -158,6 +158,10 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
 
         });
         setLongClickCopyYiers();
+        binding.clickLayoutAllGroupMembers.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AllGroupMembersActivity.class);
+            startActivity(intent);
+        });
     }
     private void setLongClickCopyYiers() {
         binding.name.setOnLongClickListener(new CopyTextOnLongClickYier(this, binding.name.getText().toString()));
