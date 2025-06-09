@@ -44,7 +44,7 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
-            android:name=".activity.AllGroupMembersActivity"
+            android:name=".activity.GroupMembersActivity"
             android:exported="false" />
         <activity
             android:name=".activity.QrScanActivity"
