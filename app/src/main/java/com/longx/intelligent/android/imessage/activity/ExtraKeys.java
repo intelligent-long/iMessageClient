@@ -61,4 +61,5 @@ public class ExtraKeys {
     public static final String AVATAR_TYPE = "avatar_type";
     public static final String DESCRIPTION = "description";
     public static final String TYPE_OBJECT = "type_object";
+    public static final String TRUE = "true";
 }

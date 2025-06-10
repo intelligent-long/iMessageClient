@@ -116,4 +116,7 @@ public interface GroupChannelApi {
     @POST("group_channel/add/invite")
     CompletableCall<OperationStatus> invite(@Body InviteJoinGroupChannelPostBody postBody);
 
+    @POST("group_channel/disconnect/{groupChannelId}")
+    CompletableCall<OperationStatus> disconnect(@Path("groupChannelId") String groupChannelId);
+
 }

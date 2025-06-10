@@ -8,13 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupMembersRecyclerAdapter;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
+import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupMembersBinding;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
-import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GroupMembersActivity extends BaseActivity {
     private ActivityGroupMembersBinding binding;
@@ -27,13 +32,27 @@ public class GroupMembersActivity extends BaseActivity {
         binding = ActivityGroupMembersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
-        intentData();
-        showContent();
+        start();
     }
 
-    private void intentData() {
+    private void start() {
         groupId = getIntent().getStringExtra(ExtraKeys.GROUP_CHANNEL_ID);
-        groupChannelAssociations = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupId).getGroupChannelAssociations();
+        try {
+            groupChannelAssociations = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupId).getGroupChannelAssociations();
+            showContent();
+        }catch (IndexOutOfBoundsException e){
+            GroupChannelApiCaller.findGroupChannelByGroupChannelId(null, groupId, "id", new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleSuccessResult(() -> {
+                        GroupChannel groupChannel = data.getData(GroupChannel.class);
+                        groupChannelAssociations = groupChannel.getGroupChannelAssociations();
+                        showContent();
+                    });
+                }
+            });
+        }
     }
 
     public ActivityGroupMembersBinding getBinding() {

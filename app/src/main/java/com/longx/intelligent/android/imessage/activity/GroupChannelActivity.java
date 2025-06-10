@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.request.target.Target;
@@ -32,6 +34,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     private boolean inGroup;
     private boolean networkFetch;
     private String inviteUuid;
+    private ActivityResultLauncher<Intent> groupChannelSettingResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,19 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         binding = ActivityGroupChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
+        groupChannelSettingResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            if(data.getBooleanExtra(ExtraKeys.TRUE, false)){
+                                binding.sendMessageButton.setVisibility(View.GONE);
+                                binding.joinChannelButton.setVisibility(View.VISIBLE);
+                                binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+                            }
+                        }
+                    }
+                });
         intentData();
         showContent();
         setupYiers();
@@ -139,7 +155,7 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             }else if(item.getItemId() == R.id.more){
                 Intent intent = new Intent(this, GroupChannelSettingActivity.class);
                 intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
-                startActivity(intent);
+                groupChannelSettingResultLauncher.launch(intent);
             }
             return true;
         });

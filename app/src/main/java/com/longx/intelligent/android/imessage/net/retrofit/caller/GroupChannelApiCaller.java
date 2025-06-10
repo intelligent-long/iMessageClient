@@ -198,4 +198,10 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationStatus> disconnect(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().disconnect(groupChannelId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

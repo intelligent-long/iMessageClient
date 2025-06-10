@@ -39,6 +39,11 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         binding = ActivityGroupChannelsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupDefaultBackNavigation(binding.toolbar);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         showContent();
         setUpYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);

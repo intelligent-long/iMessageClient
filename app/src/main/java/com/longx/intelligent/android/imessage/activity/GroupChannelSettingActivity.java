@@ -1,18 +1,28 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelSettingBinding;
+import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GroupChannelSettingActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityGroupChannelSettingBinding binding;
@@ -61,6 +71,30 @@ public class GroupChannelSettingActivity extends BaseActivity implements Content
             Intent intent = new Intent(this, GroupManagementActivity.class);
             intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
             startActivity(intent);
+        });
+        binding.disconnectChannel.setOnClickListener(v -> {
+            if(groupChannel.getOwner().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getImessageId())){
+                MessageDisplayer.autoShow(this, "你是群主，无法退出群聊。请先转让群主身份再尝试退出。", MessageDisplayer.Duration.LONG);
+            }else {
+                new ConfirmDialog(this)
+                        .setNegativeButton()
+                        .setPositiveButton((dialog, which) -> {
+                            GroupChannelApiCaller.disconnect(this, groupChannel.getGroupChannelId(), new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                                @Override
+                                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                    super.ok(data, raw, call);
+                                    data.commonHandleResult(getActivity(), new int[]{-101}, () -> {
+                                        MessageDisplayer.showToast(getActivity(), "已退出", Toast.LENGTH_SHORT);
+                                        Intent intent = new Intent();
+                                        intent.putExtra(ExtraKeys.TRUE, true);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                    });
+                                }
+                            });
+                        })
+                        .create().show();
+            }
         });
     }
 
