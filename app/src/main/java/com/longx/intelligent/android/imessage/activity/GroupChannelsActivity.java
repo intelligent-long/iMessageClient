@@ -22,6 +22,8 @@ import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.lib.recyclerview.RecyclerView;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import org.apache.commons.collections4.ListUtils;
+
 import java.util.List;
 
 import q.rorbin.badgeview.Badge;
@@ -32,6 +34,7 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
     private GroupChannelsRecyclerAdapter adapter;
     private int groupChannelAdditionActivitiesNewContentCount;
     private Badge newGroupChannelBadge;
+    private List<GroupChannel> allAssociations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,8 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
 
     private void showContent() {
         List<GroupChannel> allAssociations = GroupChannelDatabaseManager.getInstance().findAllAssociations();
+        if(ListUtils.isEqualList(allAssociations, this.allAssociations)) return;
+        this.allAssociations = allAssociations;
         setupRecyclerView(allAssociations);
         if(allAssociations.isEmpty()){
             toNoContent();
