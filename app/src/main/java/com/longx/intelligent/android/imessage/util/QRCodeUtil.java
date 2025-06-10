@@ -5,9 +5,14 @@ import android.graphics.Canvas;
 import android.text.TextUtils;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.Reader;
+import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.Hashtable;
@@ -117,6 +122,20 @@ public class QRCodeUtil {
             return bitmap;
         } catch (WriterException e) {
             ErrorLogger.log(e);
+            return null;
+        }
+    }
+
+    public static String decodeQRCode(Bitmap bitmap) {
+        if (bitmap == null) return null;
+        BitmapLuminanceSource source = new BitmapLuminanceSource(bitmap);
+        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+        Reader reader = new MultiFormatReader();
+        try {
+            Result result = reader.decode(binaryBitmap);
+            return result.getText();
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

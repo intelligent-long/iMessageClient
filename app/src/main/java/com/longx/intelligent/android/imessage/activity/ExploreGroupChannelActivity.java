@@ -2,7 +2,10 @@ package com.longx.intelligent.android.imessage.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.ArrayAdapter;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -12,6 +15,7 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.imessage.bottomsheet.ScanQrCodeByBottomSheet;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelQrCode;
 import com.longx.intelligent.android.imessage.data.QrCodeData;
@@ -20,7 +24,10 @@ import com.longx.intelligent.android.imessage.databinding.ActivityExploreGroupCh
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.util.QRCodeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -29,6 +36,7 @@ public class ExploreGroupChannelActivity extends BaseActivity {
     private ActivityExploreGroupChannelBinding binding;
     private String[] searchByNames;
     private ActivityResultLauncher<Intent> qrScanLauncher;
+    private ActivityResultLauncher<Intent> imageChosenActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,44 +54,69 @@ public class ExploreGroupChannelActivity extends BaseActivity {
         qrScanLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    String qrContent = null;
+                    String qrText = null;
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Intent data = result.getData();
-                        qrContent = data.getStringExtra("SCAN_RESULT");
-                        if (qrContent == null) {
+                        qrText = data.getStringExtra("SCAN_RESULT");
+                        if (qrText == null) {
                             Bundle extras = data.getExtras();
                             if (extras != null) {
-                                qrContent = extras.get("SCAN_RESULT").toString();
+                                qrText = extras.get("SCAN_RESULT").toString();
                             }
                         }
                     }
-                    if (qrContent != null){
-                        GroupChannelQrCode groupChannelQrCode = null;
+                    onQrCodeRecognized(qrText);
+                }
+        );
+
+        imageChosenActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Uri imageUri = result.getData().getData();
                         try {
-                            QrCodeData<?> qrCodeData = QrCodeData.toObject(qrContent);
-                            groupChannelQrCode = qrCodeData.getData(GroupChannelQrCode.class);
-                        }catch (Exception e){
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                            String qrText = QRCodeUtil.decodeQRCode(bitmap);
+                            if (qrText != null) {
+                                onQrCodeRecognized(qrText);
+                            } else {
+                                MessageDisplayer.autoShow(this, "未识别到二维码", MessageDisplayer.Duration.SHORT);
+                            }
+                        } catch (IOException e) {
                             ErrorLogger.log(e);
                             MessageDisplayer.autoShow(this, "二维码解析失败", MessageDisplayer.Duration.SHORT);
-                        }
-                        if(groupChannelQrCode != null) {
-                            GroupChannelApiCaller.findGroupChannelByGroupChannelId(this, groupChannelQrCode.getGroupChannelId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
-                                @Override
-                                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                                    super.ok(data, raw, call);
-                                    data.commonHandleResult(ExploreGroupChannelActivity.this, new int[]{-101}, () -> {
-                                        GroupChannel groupChannel = data.getData(GroupChannel.class);
-                                        Intent intent = new Intent(ExploreGroupChannelActivity.this, GroupChannelActivity.class);
-                                        intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
-                                        intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
-                                        startActivity(intent);
-                                    });
-                                }
-                            });
                         }
                     }
                 }
         );
+    }
+
+    private void onQrCodeRecognized(String qrText) {
+        if (qrText != null){
+            GroupChannelQrCode groupChannelQrCode = null;
+            try {
+                QrCodeData<?> qrCodeData = QrCodeData.toObject(qrText);
+                groupChannelQrCode = qrCodeData.getData(GroupChannelQrCode.class);
+            }catch (Exception e){
+                ErrorLogger.log(e);
+                MessageDisplayer.autoShow(this, "二维码解析失败", MessageDisplayer.Duration.SHORT);
+            }
+            if(groupChannelQrCode != null) {
+                GroupChannelApiCaller.findGroupChannelByGroupChannelId(this, groupChannelQrCode.getGroupChannelId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(ExploreGroupChannelActivity.this, new int[]{-101}, () -> {
+                            GroupChannel groupChannel = data.getData(GroupChannel.class);
+                            Intent intent = new Intent(ExploreGroupChannelActivity.this, GroupChannelActivity.class);
+                            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+                            intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
+                            startActivity(intent);
+                        });
+                    }
+                });
+            }
+        }
     }
 
     private void setupViews() {
@@ -116,10 +149,15 @@ public class ExploreGroupChannelActivity extends BaseActivity {
                     }
                 });
             } else if (item.getItemId() == R.id.search_by_qr_code) {
-                ScanOptions options = new ScanOptions();
-                options.setPrompt("请将群频道二维码置于取景框内扫描。");
-                options.setCaptureActivity(QrScanActivity.class);
-                qrScanLauncher.launch(options.createScanIntent(this));
+                new ScanQrCodeByBottomSheet(this, v -> {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    imageChosenActivityResultLauncher.launch(intent);
+                }, v -> {
+                    ScanOptions options = new ScanOptions();
+                    options.setPrompt("请将群频道二维码置于取景框内扫描。");
+                    options.setCaptureActivity(QrScanActivity.class);
+                    qrScanLauncher.launch(options.createScanIntent(this));
+                }).show();
             }
             return true;
         });

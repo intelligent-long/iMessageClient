@@ -6,12 +6,17 @@ import androidx.annotation.NonNull;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.journeyapps.barcodescanner.ScanOptions;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
+import com.longx.intelligent.android.imessage.bottomsheet.ScanQrCodeByBottomSheet;
 import com.longx.intelligent.android.imessage.data.ChannelQrCode;
 import com.longx.intelligent.android.imessage.data.QrCodeData;
 import com.longx.intelligent.android.imessage.databinding.ActivityExploreChannelBinding;
@@ -22,9 +27,11 @@ import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.util.QRCodeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.yier.TextChangedYier;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -34,6 +41,7 @@ public class ExploreChannelActivity extends BaseActivity {
     private ActivityExploreChannelBinding binding;
     private String[] searchByNames;
     private ActivityResultLauncher<Intent> qrScanLauncher;
+    private ActivityResultLauncher<Intent> imageChosenActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,44 +61,69 @@ public class ExploreChannelActivity extends BaseActivity {
         qrScanLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    String qrContent = null;
+                    String qrText = null;
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Intent data = result.getData();
-                        qrContent = data.getStringExtra("SCAN_RESULT");
-                        if (qrContent == null) {
+                        qrText = data.getStringExtra("SCAN_RESULT");
+                        if (qrText == null) {
                             Bundle extras = data.getExtras();
                             if (extras != null) {
-                                qrContent = extras.get("SCAN_RESULT").toString();
+                                qrText = extras.get("SCAN_RESULT").toString();
                             }
                         }
                     }
-                    if (qrContent != null){
-                        ChannelQrCode channelQrCode = null;
+                    onQrCodeRecognized(qrText);
+                }
+        );
+
+        imageChosenActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Uri imageUri = result.getData().getData();
                         try {
-                            QrCodeData<?> qrCodeData = QrCodeData.toObject(qrContent);
-                            channelQrCode = qrCodeData.getData(ChannelQrCode.class);
-                        }catch (Exception e){
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                            String qrText = QRCodeUtil.decodeQRCode(bitmap);
+                            if (qrText != null) {
+                                onQrCodeRecognized(qrText);
+                            } else {
+                                MessageDisplayer.autoShow(this, "未识别到二维码", MessageDisplayer.Duration.SHORT);
+                            }
+                        } catch (IOException e) {
                             ErrorLogger.log(e);
                             MessageDisplayer.autoShow(this, "二维码解析失败", MessageDisplayer.Duration.SHORT);
-                        }
-                        if(channelQrCode != null) {
-                            ChannelApiCaller.findChannelByImessageId(this, channelQrCode.getChannelId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
-                                @Override
-                                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
-                                    super.ok(data, raw, call);
-                                    data.commonHandleResult(ExploreChannelActivity.this, new int[]{-101}, () -> {
-                                        Channel channel = data.getData(Channel.class);
-                                        Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
-                                        intent.putExtra(ExtraKeys.CHANNEL, channel);
-                                        intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
-                                        startActivity(intent);
-                                    });
-                                }
-                            });
                         }
                     }
                 }
         );
+    }
+
+    private void onQrCodeRecognized(String qrText) {
+        if (qrText != null){
+            ChannelQrCode channelQrCode = null;
+            try {
+                QrCodeData<?> qrCodeData = QrCodeData.toObject(qrText);
+                channelQrCode = qrCodeData.getData(ChannelQrCode.class);
+            }catch (Exception e){
+                ErrorLogger.log(e);
+                MessageDisplayer.autoShow(this, "二维码解析失败", MessageDisplayer.Duration.SHORT);
+            }
+            if(channelQrCode != null) {
+                ChannelApiCaller.findChannelByImessageId(this, channelQrCode.getChannelId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                    @Override
+                    public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                        super.ok(data, raw, call);
+                        data.commonHandleResult(ExploreChannelActivity.this, new int[]{-101}, () -> {
+                            Channel channel = data.getData(Channel.class);
+                            Intent intent = new Intent(ExploreChannelActivity.this, ChannelActivity.class);
+                            intent.putExtra(ExtraKeys.CHANNEL, channel);
+                            intent.putExtra(ExtraKeys.MAY_NOT_ASSOCIATED, true);
+                            startActivity(intent);
+                        });
+                    }
+                });
+            }
+        }
     }
 
     private void setupViews() {
@@ -161,10 +194,15 @@ public class ExploreChannelActivity extends BaseActivity {
                     });
                 }
             } else if (item.getItemId() == R.id.search_by_qr_code) {
-                ScanOptions options = new ScanOptions();
-                options.setPrompt("请将频道二维码置于取景框内扫描。");
-                options.setCaptureActivity(QrScanActivity.class);
-                qrScanLauncher.launch(options.createScanIntent(this));
+                new ScanQrCodeByBottomSheet(this, v -> {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    imageChosenActivityResultLauncher.launch(intent);
+                }, v -> {
+                    ScanOptions options = new ScanOptions();
+                    options.setPrompt("请将频道二维码置于取景框内扫描。");
+                    options.setCaptureActivity(QrScanActivity.class);
+                    qrScanLauncher.launch(options.createScanIntent(this));
+                }).show();
             }
             return true;
         });
