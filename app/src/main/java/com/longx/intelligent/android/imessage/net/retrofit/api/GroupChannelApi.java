@@ -10,6 +10,7 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelReg
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.InviteJoinGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.ManageGroupChannelDisconnectPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
@@ -118,5 +119,8 @@ public interface GroupChannelApi {
 
     @POST("group_channel/disconnect/{groupChannelId}")
     CompletableCall<OperationStatus> disconnect(@Path("groupChannelId") String groupChannelId);
+
+    @POST("group_channel/disconnect/manage/{groupChannelId}")
+    CompletableCall<OperationStatus> manageGroupChannelDisconnectChannel(@Path("groupChannelId") String groupChannelId, @Body ManageGroupChannelDisconnectPostBody postBody);
 
 }

@@ -64,8 +64,10 @@ public class GroupManagementActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
             startActivity(intent);
         });
-        binding.disbandGroupChannel.setOnClickListener(v -> {
-
+        binding.clickViewRemoveChannel.setOnClickListener(v -> {
+            Intent intent = new Intent(this, GroupChannelRemoveActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
+            startActivity(intent);
         });
     }
 }
