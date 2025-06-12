@@ -157,6 +157,7 @@ public class RemoveGroupChannelRecyclerAdapter extends WrappableRecyclerViewAdap
             }else {
                 checkedChannel.remove(itemData.channel);
             }
+            activity.getBinding().toolbar.getMenu().findItem(R.id.remove).setEnabled(!checkedChannel.isEmpty());
         });
     }
 

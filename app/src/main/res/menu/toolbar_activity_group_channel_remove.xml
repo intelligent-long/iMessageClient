@@ -7,6 +7,7 @@
         app:iconTint="?attr/colorControlNormal"
         android:title="移除"
         android:icon="@drawable/remove_24px"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:enabled="false"/>
 
 </menu>

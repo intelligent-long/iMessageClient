@@ -95,7 +95,7 @@ public class GroupChannelRemoveActivity extends BaseActivity {
                                 @Override
                                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                     super.ok(data, raw, call);
-                                    data.commonHandleResult(GroupChannelRemoveActivity.this, new int[]{-101, -102}, () -> {
+                                    data.commonHandleResult(GroupChannelRemoveActivity.this, new int[]{-101, -102, -103}, () -> {
                                         MessageDisplayer.showToast(GroupChannelRemoveActivity.this, "已移除", Toast.LENGTH_SHORT);
                                         finish();
                                     });
