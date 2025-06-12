@@ -91,7 +91,7 @@ public class GroupChannelRemoveActivity extends BaseActivity {
                                 channelIds.add(channel.getImessageId());
                             });
                             ManageGroupChannelDisconnectPostBody postBody = new ManageGroupChannelDisconnectPostBody(channelIds);
-                            GroupChannelApiCaller.manageGroupChannelDisconnectChannel(this, groupId, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>() {
+                            GroupChannelApiCaller.manageGroupChannelDisconnectChannel(this, groupId, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
                                 @Override
                                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                                     super.ok(data, raw, call);
