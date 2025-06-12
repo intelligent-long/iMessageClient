@@ -14,10 +14,8 @@ import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabas
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
-import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.notification.Notifications;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.BroadcastFetchNewsYier;
 import com.longx.intelligent.android.imessage.yier.ChannelAdditionActivitiesUpdateYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
@@ -25,7 +23,6 @@ import com.longx.intelligent.android.imessage.yier.GroupChannelAdditionActivitie
 import com.longx.intelligent.android.imessage.yier.NewContentBadgeDisplayYier;
 import com.longx.intelligent.android.imessage.yier.OpenedChatsUpdateYier;
 import com.longx.intelligent.android.imessage.yier.RecentBroadcastMediasUpdateYier;
-import com.longx.intelligent.android.imessage.yier.UpdateGroupChannelYier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,6 +223,16 @@ public class ServerMessageServiceStompActions {
             GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
                 newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
                     newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+                });
+            });
+        });
+    }
+
+    public static void updateGroupChannelDisconnections(Context context){
+        ContentUpdater.updateGroupChannelDisconnections(context, results -> {
+            GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
+                newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
+                    newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.GROUP_CHANNEL_NOTIFICATIONS);
                 });
             });
         });

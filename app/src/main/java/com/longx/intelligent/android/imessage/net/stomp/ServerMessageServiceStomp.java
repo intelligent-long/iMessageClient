@@ -141,10 +141,9 @@ public class ServerMessageServiceStomp {
             ServerMessageServiceStompActions.updateGroupChannelAdditionsNotViewCount(context);
         });
         stomp.subscribe(StompDestinations.GROUP_CHANNEL_DISCONNECTIONS_UPDATE, null, message -> {
-
+            ServerMessageServiceStompActions.updateGroupChannelDisconnections(context);
         });
         stomp.subscribe(StompDestinations.GROUP_CHANNEL_DISCONNECTIONS_NOT_VIEW_COUNT_UPDATE, null, message -> {
-
         });
     }
 

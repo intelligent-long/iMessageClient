@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.holdYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this,
-                ID.MESSAGES, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+                ID.MESSAGES, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_NOTIFICATIONS);
         GlobalYiersHolder.holdYier(this, BroadcastFetchNewsYier.class, this);
         new Thread(() -> {
             runOnUiThread(() -> {
@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
         GlobalYiersHolder.removeYier(this, ServerMessageService.OnOnlineStateChangeYier.class, this);
         GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this,
-                ID.MESSAGES, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+                ID.MESSAGES, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_NOTIFICATIONS);
         GlobalYiersHolder.removeYier(this, BroadcastFetchNewsYier.class, this);
     }
 
@@ -641,6 +641,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 }
                 break;
             case GROUP_CHANNEL_ADDITION_ACTIVITIES:
+            case GROUP_CHANNEL_NOTIFICATIONS:
                 showGroupChannelBadge = newContentCount > 0;
                 break;
             case CHANNEL_ADDITION_ACTIVITIES:

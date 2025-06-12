@@ -3,12 +3,13 @@ package com.longx.intelligent.android.imessage.yier;
 import android.content.Context;
 
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 /**
  * Created by LONG on 2024/5/3 at 3:58 PM.
  */
 public interface NewContentBadgeDisplayYier {
-    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES, BROADCAST_COMMENTS, BROADCAST_REPLIES, GROUP_CHANNEL_ADDITION_ACTIVITIES}
+    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES, BROADCAST_COMMENTS, BROADCAST_REPLIES, GROUP_CHANNEL_ADDITION_ACTIVITIES, GROUP_CHANNEL_NOTIFICATIONS}
 
     static int getChannelAdditionActivitiesNewContentCount(Context context){
         return SharedPreferencesAccessor.NewContentCount.getChannelAdditionActivitiesRequester(context)
@@ -34,6 +35,10 @@ public interface NewContentBadgeDisplayYier {
                 + SharedPreferencesAccessor.NewContentCount.getGroupChannelAdditionActivitiesInvitee(context);
     }
 
+    static int getGroupChannelNotificationsNewContentCount(Context context){
+        return SharedPreferencesAccessor.NewContentCount.getGroupChannelNotificationsNewsCount(context);
+    }
+
     default void autoShowNewContentBadge(Context context, ID id){
         switch (id){
             case CHANNEL_ADDITION_ACTIVITIES:
@@ -51,6 +56,9 @@ public interface NewContentBadgeDisplayYier {
                 break;
             case GROUP_CHANNEL_ADDITION_ACTIVITIES:
                 showNewContentBadge(id, getGroupChannelAdditionActivitiesNewContentCount(context));
+                break;
+            case GROUP_CHANNEL_NOTIFICATIONS:
+                showNewContentBadge(id, getGroupChannelNotificationsNewContentCount(context));
                 break;
 
         }

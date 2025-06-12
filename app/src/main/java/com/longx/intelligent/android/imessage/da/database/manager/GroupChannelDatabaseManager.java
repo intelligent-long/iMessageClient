@@ -11,10 +11,10 @@ import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
+import com.longx.intelligent.android.imessage.data.GroupChannelDisconnection;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -418,5 +418,46 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             getDatabase().endTransaction();
             releaseDatabaseIfUnused();
         }
+    }
+
+    public boolean insertGroupChannelDisconnectionsOrUpdate(List<GroupChannelDisconnection> groupChannelDisconnections){
+        openDatabaseIfClosed();
+        boolean success = false;
+        try {
+            for (GroupChannelDisconnection groupChannelDisconnection : groupChannelDisconnections) {
+                ContentValues values = new ContentValues();
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID, groupChannelDisconnection.getGroupChannelId());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.CHANNEL_ID, groupChannelDisconnection.getChannelId());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.PASSIVE, groupChannelDisconnection.isPassive());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.BY_WHOM, groupChannelDisconnection.getByWhom());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.TIME, groupChannelDisconnection.getTime().getTime());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.IS_VIEWED, groupChannelDisconnection.isViewed());
+                long rowId = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS, null,
+                        values, SQLiteDatabase.CONFLICT_REPLACE);
+                if(rowId >= 0) success = true;
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return success;
+    }
+
+    public List<GroupChannelDisconnection> findAllGroupChannelDisconnections(){
+        openDatabaseIfClosed();
+        List<GroupChannelDisconnection> result = new ArrayList<>();
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS, null)){
+            while (cursor.moveToNext()){
+                String groupChannelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID);
+                String channelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.CHANNEL_ID);
+                Boolean passive = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.PASSIVE);
+                String byWhom = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.BY_WHOM);
+                Date time = new Date(DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.TIME));
+                Boolean isViewed = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.IS_VIEWED);
+                result.add(new GroupChannelDisconnection(groupChannelId, channelId, passive, byWhom, time, isViewed));
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return result;
     }
 }

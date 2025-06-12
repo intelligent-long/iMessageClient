@@ -492,6 +492,7 @@ public class SharedPreferencesAccessor {
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER = "group_channel_addition_activities_responder";
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITER = "group_channel_addition_activities_inviter";
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITEE = "group_channel_addition_activities_invitee";
+            private static final String GROUP_CHANNEL_DISCONNECTIONS_NEWS_COUNT = "group_channel_disconnections_news_count";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return getCurrentUserSharedPreferences(context, NAME);
@@ -579,6 +580,18 @@ public class SharedPreferencesAccessor {
         public static int getGroupChannelAdditionActivitiesInvitee(Context context){
             return getSharedPreferences(context)
                     .getInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITEE, 0);
+        }
+
+        public static void saveGroupChannelDisconnections(Context context, int newsCount){
+            getSharedPreferences(context)
+                    .edit()
+                    .putInt(Key.GROUP_CHANNEL_DISCONNECTIONS_NEWS_COUNT, newsCount)
+                    .apply();
+        }
+
+        public static int getGroupChannelNotificationsNewsCount(Context context){
+            return getSharedPreferences(context)
+                    .getInt(Key.GROUP_CHANNEL_DISCONNECTIONS_NEWS_COUNT, 0);
         }
     }
 

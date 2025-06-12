@@ -33,7 +33,9 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
     private RecyclerHeaderGroupChannelBinding headerViewBinding;
     private GroupChannelsRecyclerAdapter adapter;
     private int groupChannelAdditionActivitiesNewContentCount;
+    private int groupChannelNotificationsNewContentCount;
     private Badge newGroupChannelBadge;
+    private Badge newGroupChannelNotificationsBadge;
     private List<GroupChannel> allAssociations;
 
     @Override
@@ -50,14 +52,14 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         showContent();
         setUpYiers();
         GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.holdYier(this, NewContentBadgeDisplayYier.class, this, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_NOTIFICATIONS);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.removeYier(this, NewContentBadgeDisplayYier.class, this, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_NOTIFICATIONS);
     }
 
     private void showContent() {
@@ -82,6 +84,7 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
         binding.recyclerView.setItemAnimator(null);
         newGroupChannelBadge = BadgeDisplayer.initBadge(this, headerViewBinding.newGroupChannelBadgeHost, groupChannelAdditionActivitiesNewContentCount, Gravity.CENTER);
+        newGroupChannelNotificationsBadge = BadgeDisplayer.initBadge(this, headerViewBinding.groupChannelBadgeHost, groupChannelNotificationsNewContentCount, Gravity.CENTER);
     }
 
     private void toNoContent(){
@@ -161,6 +164,11 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
             groupChannelAdditionActivitiesNewContentCount = newContentCount;
             if(newGroupChannelBadge != null){
                 newGroupChannelBadge.setBadgeNumber(newContentCount);
+            }
+        }else if(id.equals(ID.GROUP_CHANNEL_NOTIFICATIONS)){
+            groupChannelNotificationsNewContentCount = newContentCount;
+            if(newGroupChannelNotificationsBadge != null){
+                newGroupChannelNotificationsBadge.setBadgeNumber(newContentCount);
             }
         }
     }

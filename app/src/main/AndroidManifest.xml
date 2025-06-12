@@ -44,6 +44,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.GroupChannelNotificationsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.GroupChannelRemoveActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

@@ -26,7 +26,6 @@ import com.longx.intelligent.android.imessage.activity.ExploreChannelActivity;
 import com.longx.intelligent.android.imessage.activity.SearchChannelActivity;
 import com.longx.intelligent.android.imessage.activity.TagActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
-import com.longx.intelligent.android.imessage.bottomsheet.AddChannelBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
@@ -52,6 +51,7 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     private RecyclerHeaderChannelBinding headerViewBinding;
     private int channelAdditionActivitiesNewContentCount;
     private int groupChannelAdditionActivitiesNewContentCount;
+    private int groupChannelNotificationsNewContentCount;
     private Badge newChannelBadge;
     private Badge newGroupChannelBadge;
 
@@ -59,14 +59,14 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GlobalYiersHolder.holdYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.holdYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_NOTIFICATIONS);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         GlobalYiersHolder.removeYier(requireContext(), ContentUpdater.OnServerContentUpdateYier.class, this);
-        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES);
+        GlobalYiersHolder.removeYier(requireContext(), NewContentBadgeDisplayYier.class, this, ID.CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_ADDITION_ACTIVITIES, ID.GROUP_CHANNEL_NOTIFICATIONS);
     }
 
     @Override
@@ -155,8 +155,8 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
         binding.recyclerView.setAdapter(channelsRecyclerAdapter);
         headerViewBinding = RecyclerHeaderChannelBinding.inflate(inflater, binding.getRoot(), false);
         newChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.newChannelBadgeHost, channelAdditionActivitiesNewContentCount, Gravity.CENTER);
+        newGroupChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.groupChannelBadgeHost, groupChannelAdditionActivitiesNewContentCount + groupChannelNotificationsNewContentCount, Gravity.CENTER);
         binding.recyclerView.setHeaderView(headerViewBinding.getRoot());
-        newGroupChannelBadge = BadgeDisplayer.initBadge(requireContext(), headerViewBinding.groupChannelBadgeHost, groupChannelAdditionActivitiesNewContentCount, Gravity.CENTER);
     }
 
     @Override
@@ -224,11 +224,14 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
             if(newChannelBadge != null){
                 newChannelBadge.setBadgeNumber(newContentCount);
             }
-        }
-        if(id.equals(ID.GROUP_CHANNEL_ADDITION_ACTIVITIES)){
-            groupChannelAdditionActivitiesNewContentCount = newContentCount;
+        }else{
+            if(id.equals(ID.GROUP_CHANNEL_ADDITION_ACTIVITIES)){
+                groupChannelAdditionActivitiesNewContentCount = newContentCount;
+            }else if(id.equals(ID.GROUP_CHANNEL_NOTIFICATIONS)){
+                groupChannelNotificationsNewContentCount = newContentCount;
+            }
             if(newGroupChannelBadge != null){
-                newGroupChannelBadge.setBadgeNumber(newContentCount);
+                newGroupChannelBadge.setBadgeNumber(groupChannelAdditionActivitiesNewContentCount + groupChannelNotificationsNewContentCount);
             }
         }
     }

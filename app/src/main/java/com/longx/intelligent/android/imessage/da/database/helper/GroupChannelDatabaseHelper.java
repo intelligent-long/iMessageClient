@@ -16,6 +16,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TABLE_NAME_GROUP_AVATARS = "group_avatars";
         public static final String TABLE_NAME_TAGS = "tags";
         public static final String TABLE_NAME_TAG_CHANNELS = "tag_channels";
+        public static final String TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS = "group_channel_disconnections";
     }
 
     public static class TableGroupChannelAssociationsColumns {
@@ -65,6 +66,15 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TAG_ID = "tag_id";
         public static final String IMESSAGE_ID = "imessage_id";
 
+    }
+
+    public static class TableGroupChannelDisconnectionsColumns {
+        public static final String GROUP_CHANNEL_ID = "group_channel_id";
+        public static final String CHANNEL_ID = "channel_id";
+        public static final String PASSIVE = "passive";
+        public static final String BY_WHOM = "`by_whom`";
+        public static final String TIME = "time";
+        public static final String IS_VIEWED = "is_viewed";
     }
 
     public GroupChannelDatabaseHelper(Context context, String imessageId) {
@@ -132,6 +142,22 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 + ChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID + " VARCHAR"
                 + ");";
         db.execSQL(create_sql_5);
+        String create_sql_6 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS + "("
+                + TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID + " VARCHAR,"
+                + TableGroupChannelDisconnectionsColumns.CHANNEL_ID + " VARCHAR,"
+                + TableGroupChannelDisconnectionsColumns.PASSIVE + " BOOLEAN,"
+                + TableGroupChannelDisconnectionsColumns.BY_WHOM + " VARCHAR,"
+                + TableGroupChannelDisconnectionsColumns.TIME + " DATETIME,"
+                + TableGroupChannelDisconnectionsColumns.IS_VIEWED + " BOOLEAN,"
+                + " CONSTRAINT con_unique1 UNIQUE("
+                + TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID + ","
+                + TableGroupChannelDisconnectionsColumns.CHANNEL_ID + ","
+                + TableGroupChannelDisconnectionsColumns.PASSIVE + ","
+                + TableGroupChannelDisconnectionsColumns.BY_WHOM + ","
+                + TableGroupChannelDisconnectionsColumns.TIME
+                +")"
+                + ");";
+        db.execSQL(create_sql_6);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
 

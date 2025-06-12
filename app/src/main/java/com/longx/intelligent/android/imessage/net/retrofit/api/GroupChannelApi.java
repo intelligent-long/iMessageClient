@@ -123,4 +123,7 @@ public interface GroupChannelApi {
     @POST("group_channel/disconnect/manage/{groupChannelId}")
     CompletableCall<OperationStatus> manageGroupChannelDisconnectChannel(@Path("groupChannelId") String groupChannelId, @Body ManageGroupChannelDisconnectPostBody postBody);
 
+    @GET("group_channel/group_channel_disconnections")
+    CompletableCall<OperationData> fetchGroupChannelDisconnections();
+
 }
