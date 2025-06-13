@@ -64,6 +64,7 @@ import com.longx.intelligent.android.imessage.service.ServerMessageService;
 import com.longx.intelligent.android.imessage.ui.BadgeDisplayer;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ColorUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.util.WindowAndSystemUiUtil;
@@ -618,6 +619,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     boolean showChannelBadge = false;
     boolean showGroupChannelBadge = false;
+    boolean showGroupChannelNotificationBadge = false;
     boolean showBroadcastLikesBadge = false;
     boolean showBroadcastCommentsBadge = false;
     boolean showBroadcastRepliesBadge = false;
@@ -641,8 +643,10 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 }
                 break;
             case GROUP_CHANNEL_ADDITION_ACTIVITIES:
-            case GROUP_CHANNEL_NOTIFICATIONS:
                 showGroupChannelBadge = newContentCount > 0;
+                break;
+            case GROUP_CHANNEL_NOTIFICATIONS:
+                showGroupChannelNotificationBadge = newContentCount > 0;
                 break;
             case CHANNEL_ADDITION_ACTIVITIES:
                 showChannelBadge = newContentCount > 0;
@@ -657,7 +661,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
                 showBroadcastRepliesBadge = newContentCount > 0;
                 break;
         }
-        if(showChannelBadge || showGroupChannelBadge){
+        if(showChannelBadge || showGroupChannelBadge || showGroupChannelNotificationBadge){
             showNavigationChannelBadge();
         }else {
             hideNavigationChannelBadge();

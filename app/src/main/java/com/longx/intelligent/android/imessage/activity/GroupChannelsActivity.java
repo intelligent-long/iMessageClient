@@ -132,6 +132,9 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
             });
             bottomSheet.show();
         });
+        headerViewBinding.layoutNotifications.setOnClickListener(v -> {
+            startActivity(new Intent(this, GroupChannelNotificationsActivity.class));
+        });
     }
 
     public ActivityGroupChannelsBinding getBinding(){

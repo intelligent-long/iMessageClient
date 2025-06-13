@@ -72,7 +72,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String GROUP_CHANNEL_ID = "group_channel_id";
         public static final String CHANNEL_ID = "channel_id";
         public static final String PASSIVE = "passive";
-        public static final String BY_WHOM = "`by_whom`";
+        public static final String BY_WHOM = "by_whom";
         public static final String TIME = "time";
         public static final String IS_VIEWED = "is_viewed";
     }

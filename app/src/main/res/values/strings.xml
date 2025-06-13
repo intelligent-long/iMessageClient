@@ -108,6 +108,7 @@
     <string name="do_not_find_channel">没有找到频道</string>
     <string name="need_central_server">需要使用中央服务器</string>
     <string name="title_remove_group_channel">取消关联频道</string>
+    <string name="title_group_channel_notifications">通知</string>
 
     <string name="fab_text_add_channel">添加频道</string>
     <string name="fab_text_start_chat">发送消息</string>

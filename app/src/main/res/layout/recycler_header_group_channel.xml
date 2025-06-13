@@ -121,7 +121,7 @@
         android:clipToOutline="true">
 
         <RelativeLayout
-            android:id="@+id/layout_group_channel"
+            android:id="@+id/layout_notifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"

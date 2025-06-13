@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="19dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/channel_avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="21dp"
+        app:shapeAppearanceOverlay="@style/CircleImageAppearance"/>
+
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/channel_avatar">
+
+        <RelativeLayout
+            android:id="@+id/channel_name_and_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/channel_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/time_and_badge"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <LinearLayout
+                android:id="@+id/time_and_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true">
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOutline"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/badge"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@drawable/shape_red_badge"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:ellipsize="end"
+                android:maxLines="11"
+                android:letterSpacing="0.007"
+                android:lineSpacingMultiplier="1.2"
+                android:breakStrategy="simple"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/by_avatar"
+                android:layout_marginEnd="17dp"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/by_avatar"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                app:shapeAppearanceOverlay="@style/CircleImageAppearance"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/layout_group_channel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_card_background_low_radius_25"
+            android:clipToOutline="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/group_channel_avatar"
+                    android:layout_width="77dp"
+                    android:layout_height="77dp"
+                    app:shapeAppearanceOverlay="@style/CircleImageAppearance" />
+
+                <TextView
+                    android:id="@+id/group_channel_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="13dp"
+                    android:textSize="21sp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/group_channel_avatar"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </RelativeLayout>
+        </FrameLayout>
+    </LinearLayout>
+</RelativeLayout>
