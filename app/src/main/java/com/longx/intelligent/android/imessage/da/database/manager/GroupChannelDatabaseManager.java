@@ -11,7 +11,7 @@ import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
-import com.longx.intelligent.android.imessage.data.GroupChannelDisconnection;
+import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
@@ -420,19 +420,21 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
         }
     }
 
-    public boolean insertGroupChannelDisconnectionsOrUpdate(List<GroupChannelDisconnection> groupChannelDisconnections){
+    public boolean insertGroupChannelNotificationsOrUpdate(List<GroupChannelNotification> groupChannelNotifications){
         openDatabaseIfClosed();
         boolean success = false;
         try {
-            for (GroupChannelDisconnection groupChannelDisconnection : groupChannelDisconnections) {
+            for (GroupChannelNotification groupChannelNotification : groupChannelNotifications) {
                 ContentValues values = new ContentValues();
-                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID, groupChannelDisconnection.getGroupChannelId());
-                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.CHANNEL_ID, groupChannelDisconnection.getChannelId());
-                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.PASSIVE, groupChannelDisconnection.isPassive());
-                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.BY_WHOM, groupChannelDisconnection.getByWhom());
-                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.TIME, groupChannelDisconnection.getTime().getTime());
-                values.put(GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.IS_VIEWED, groupChannelDisconnection.isViewed());
-                long rowId = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS, null,
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.UUID, groupChannelNotification.getUuid());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.TYPE, groupChannelNotification.getType().name());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.GROUP_CHANNEL_ID, groupChannelNotification.getGroupChannelId());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.CHANNEL_ID, groupChannelNotification.getChannelId());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.PASSIVE, groupChannelNotification.isPassive());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.BY_WHOM, groupChannelNotification.getByWhom());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.TIME, groupChannelNotification.getTime().getTime());
+                values.put(GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.IS_VIEWED, groupChannelNotification.isViewed());
+                long rowId = getDatabase().insertWithOnConflict(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_NOTIFICATIONS, null,
                         values, SQLiteDatabase.CONFLICT_REPLACE);
                 if(rowId >= 0) success = true;
             }
@@ -442,18 +444,20 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
         return success;
     }
 
-    public List<GroupChannelDisconnection> findAllGroupChannelDisconnections(){
+    public List<GroupChannelNotification> findAllGroupChannelNotifications(){
         openDatabaseIfClosed();
-        List<GroupChannelDisconnection> result = new ArrayList<>();
-        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS, null)){
+        List<GroupChannelNotification> result = new ArrayList<>();
+        try(Cursor cursor = getDatabase().rawQuery("SELECT * FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_NOTIFICATIONS, null)){
             while (cursor.moveToNext()){
-                String groupChannelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID);
-                String channelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.CHANNEL_ID);
-                Boolean passive = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.PASSIVE);
-                String byWhom = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.BY_WHOM);
-                Date time = new Date(DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.TIME));
-                Boolean isViewed = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelDisconnectionsColumns.IS_VIEWED);
-                result.add(new GroupChannelDisconnection(groupChannelId, channelId, passive, byWhom, time, isViewed));
+                String uuid = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.UUID);
+                GroupChannelNotification.Type type = GroupChannelNotification.Type.valueOf(DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.TYPE));
+                String groupChannelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.GROUP_CHANNEL_ID);
+                String channelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.CHANNEL_ID);
+                Boolean passive = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.PASSIVE);
+                String byWhom = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.BY_WHOM);
+                Date time = new Date(DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.TIME));
+                Boolean isViewed = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelNotificationsColumns.IS_VIEWED);
+                result.add(new GroupChannelNotification(uuid, type, groupChannelId, channelId, passive, byWhom, time, isViewed));
             }
         }finally {
             releaseDatabaseIfUnused();

@@ -16,7 +16,7 @@ import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
-import com.longx.intelligent.android.imessage.data.GroupChannelDisconnection;
+import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
@@ -388,20 +388,20 @@ public class ContentUpdater {
         });
     }
 
-    public static void updateGroupChannelDisconnections(Context context, ResultsYier resultsYier){
-        GroupChannelApiCaller.fetchGroupChannelDisconnections(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL_NOTIFICATIONS, context){
+    public static void updateGroupChannelNotifications(Context context, ResultsYier resultsYier){
+        GroupChannelApiCaller.fetchGroupChannelNotifications(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL_NOTIFICATIONS, context){
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
-                    List<GroupChannelDisconnection> groupChannelDisconnections = data.getData(new TypeReference<List<GroupChannelDisconnection>>() {
+                    List<GroupChannelNotification> groupChannelNotifications = data.getData(new TypeReference<List<GroupChannelNotification>>() {
                     });
                     int newsCount = 0;
-                    for (GroupChannelDisconnection groupChannelDisconnection : groupChannelDisconnections) {
-                        if(!groupChannelDisconnection.isViewed()) newsCount ++;
+                    for (GroupChannelNotification groupChannelNotification : groupChannelNotifications) {
+                        if(!groupChannelNotification.isViewed()) newsCount ++;
                     }
-                    SharedPreferencesAccessor.NewContentCount.saveGroupChannelDisconnections(context, newsCount);
-                    GroupChannelDatabaseManager.getInstance().insertGroupChannelDisconnectionsOrUpdate(groupChannelDisconnections);
+                    SharedPreferencesAccessor.NewContentCount.saveGroupChannelNotifications(context, newsCount);
+                    GroupChannelDatabaseManager.getInstance().insertGroupChannelNotificationsOrUpdate(groupChannelNotifications);
                     resultsYier.onResults(newsCount);
                 });
             }

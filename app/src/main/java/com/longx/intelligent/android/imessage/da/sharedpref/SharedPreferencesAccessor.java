@@ -15,16 +15,13 @@ import com.longx.intelligent.android.imessage.data.BroadcastChannelPermission;
 import com.longx.intelligent.android.imessage.data.ChannelAddition;
 import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.GroupChannelActivity;
-import com.longx.intelligent.android.imessage.data.GroupChannelAddition;
 import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
-import com.longx.intelligent.android.imessage.data.GroupChannelInvitation;
 import com.longx.intelligent.android.imessage.data.OfflineDetail;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.net.ServerConfig;
 import com.longx.intelligent.android.imessage.data.Self;
 import com.longx.intelligent.android.imessage.data.UserInfo;
 import com.longx.intelligent.android.imessage.net.ServerValues;
-import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.JsonUtil;
 
 import java.util.ArrayList;
@@ -492,7 +489,7 @@ public class SharedPreferencesAccessor {
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_RESPONDER = "group_channel_addition_activities_responder";
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITER = "group_channel_addition_activities_inviter";
             private static final String GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITEE = "group_channel_addition_activities_invitee";
-            private static final String GROUP_CHANNEL_DISCONNECTIONS_NEWS_COUNT = "group_channel_disconnections_news_count";
+            private static final String GROUP_CHANNEL_NOTIFICATIONS_NEWS_COUNT = "group_channel_notifications_news_count";
         }
         private static SharedPreferences getSharedPreferences(Context context) {
             return getCurrentUserSharedPreferences(context, NAME);
@@ -582,16 +579,16 @@ public class SharedPreferencesAccessor {
                     .getInt(Key.GROUP_CHANNEL_ADDITION_ACTIVITIES_INVITEE, 0);
         }
 
-        public static void saveGroupChannelDisconnections(Context context, int newsCount){
+        public static void saveGroupChannelNotifications(Context context, int newsCount){
             getSharedPreferences(context)
                     .edit()
-                    .putInt(Key.GROUP_CHANNEL_DISCONNECTIONS_NEWS_COUNT, newsCount)
+                    .putInt(Key.GROUP_CHANNEL_NOTIFICATIONS_NEWS_COUNT, newsCount)
                     .apply();
         }
 
         public static int getGroupChannelNotificationsNewsCount(Context context){
             return getSharedPreferences(context)
-                    .getInt(Key.GROUP_CHANNEL_DISCONNECTIONS_NEWS_COUNT, 0);
+                    .getInt(Key.GROUP_CHANNEL_NOTIFICATIONS_NEWS_COUNT, 0);
         }
     }
 

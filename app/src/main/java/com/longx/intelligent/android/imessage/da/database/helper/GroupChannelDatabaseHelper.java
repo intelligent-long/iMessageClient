@@ -16,7 +16,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TABLE_NAME_GROUP_AVATARS = "group_avatars";
         public static final String TABLE_NAME_TAGS = "tags";
         public static final String TABLE_NAME_TAG_CHANNELS = "tag_channels";
-        public static final String TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS = "group_channel_disconnections";
+        public static final String TABLE_NAME_GROUP_CHANNEL_NOTIFICATIONS = "group_channel_notifications";
     }
 
     public static class TableGroupChannelAssociationsColumns {
@@ -68,7 +68,9 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
 
     }
 
-    public static class TableGroupChannelDisconnectionsColumns {
+    public static class TableGroupChannelNotificationsColumns {
+        public static final String UUID = "uuid";
+        public static final String TYPE = "type";
         public static final String GROUP_CHANNEL_ID = "group_channel_id";
         public static final String CHANNEL_ID = "channel_id";
         public static final String PASSIVE = "passive";
@@ -142,19 +144,17 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 + ChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID + " VARCHAR"
                 + ");";
         db.execSQL(create_sql_5);
-        String create_sql_6 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_DISCONNECTIONS + "("
-                + TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID + " VARCHAR,"
-                + TableGroupChannelDisconnectionsColumns.CHANNEL_ID + " VARCHAR,"
-                + TableGroupChannelDisconnectionsColumns.PASSIVE + " BOOLEAN,"
-                + TableGroupChannelDisconnectionsColumns.BY_WHOM + " VARCHAR,"
-                + TableGroupChannelDisconnectionsColumns.TIME + " DATETIME,"
-                + TableGroupChannelDisconnectionsColumns.IS_VIEWED + " BOOLEAN,"
+        String create_sql_6 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_NOTIFICATIONS + "("
+                + TableGroupChannelNotificationsColumns.UUID + " VARCHAR,"
+                + TableGroupChannelNotificationsColumns.TYPE + " VARCHAR,"
+                + TableGroupChannelNotificationsColumns.GROUP_CHANNEL_ID + " VARCHAR,"
+                + TableGroupChannelNotificationsColumns.CHANNEL_ID + " VARCHAR,"
+                + TableGroupChannelNotificationsColumns.PASSIVE + " BOOLEAN,"
+                + TableGroupChannelNotificationsColumns.BY_WHOM + " VARCHAR,"
+                + TableGroupChannelNotificationsColumns.TIME + " DATETIME,"
+                + TableGroupChannelNotificationsColumns.IS_VIEWED + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
-                + TableGroupChannelDisconnectionsColumns.GROUP_CHANNEL_ID + ","
-                + TableGroupChannelDisconnectionsColumns.CHANNEL_ID + ","
-                + TableGroupChannelDisconnectionsColumns.PASSIVE + ","
-                + TableGroupChannelDisconnectionsColumns.BY_WHOM + ","
-                + TableGroupChannelDisconnectionsColumns.TIME
+                + TableGroupChannelNotificationsColumns.UUID
                 +")"
                 + ");";
         db.execSQL(create_sql_6);

@@ -228,8 +228,8 @@ public class ServerMessageServiceStompActions {
         });
     }
 
-    public static void updateGroupChannelDisconnections(Context context){
-        ContentUpdater.updateGroupChannelDisconnections(context, results -> {
+    public static void updateGroupChannelNotifications(Context context){
+        ContentUpdater.updateGroupChannelNotifications(context, results -> {
             GlobalYiersHolder.getYiers(NewContentBadgeDisplayYier.class).ifPresent(newContentBadgeDisplayYiers -> {
                 newContentBadgeDisplayYiers.forEach(newContentBadgeDisplayYier -> {
                     newContentBadgeDisplayYier.autoShowNewContentBadge(context, NewContentBadgeDisplayYier.ID.GROUP_CHANNEL_NOTIFICATIONS);

@@ -14,6 +14,7 @@ import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelNotificationBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
@@ -36,20 +37,10 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
     }
 
     public static class ItemData {
-        private Constants.GroupChannelNotificationType groupChannelNotificationType;
-        private GroupChannel groupChannel;
-        private Channel channel;
-        private Channel by;
-        private Date time;
-        private boolean isViewed;
+        private final GroupChannelNotification groupChannelNotification;
 
-        public ItemData(Constants.GroupChannelNotificationType groupChannelNotificationType, GroupChannel groupChannel, Channel channel, Channel by, Date time, boolean isViewed) {
-            this.groupChannelNotificationType = groupChannelNotificationType;
-            this.groupChannel = groupChannel;
-            this.channel = channel;
-            this.by = by;
-            this.time = time;
-            this.isViewed = isViewed;
+        public ItemData(GroupChannelNotification groupChannelNotification) {
+            this.groupChannelNotification = groupChannelNotification;
         }
     }
 
@@ -78,35 +69,35 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         Glide.with(activity.getApplicationContext())
-                .load(NetDataUrls.getAvatarUrl(activity, itemData.channel.getAvatar().getHash()))
+                .load(NetDataUrls.getAvatarUrl(activity, itemData.groupChannelNotification.getChannel().getAvatar().getHash()))
                 .centerCrop()
                 .into(holder.binding.channelAvatar);
         Glide.with(activity.getApplicationContext())
-                .load(NetDataUrls.getGroupAvatarUrl(activity, itemData.groupChannel.getGroupAvatar().getHash()))
+                .load(NetDataUrls.getGroupAvatarUrl(activity, itemData.groupChannelNotification.getGroupChannel().getGroupAvatar().getHash()))
                 .centerCrop()
                 .into(holder.binding.groupChannelAvatar);
         String text = null;
-        switch (itemData.groupChannelNotificationType){
+        switch (itemData.groupChannelNotification.getType()){
             case PASSIVE_DISCONNECT:
                 Glide.with(activity.getApplicationContext())
-                        .load(NetDataUrls.getAvatarUrl(activity, itemData.by.getAvatar().getHash()))
+                        .load(NetDataUrls.getAvatarUrl(activity, itemData.groupChannelNotification.getByChannel().getAvatar().getHash()))
                         .centerCrop()
                         .into(holder.binding.byAvatar);
-                text = itemData.channel.autoGetName() + " 被 " + itemData.by.autoGetName() + " 移除了群聊。";
+                text = itemData.groupChannelNotification.getChannel().autoGetName() + " 被 " + itemData.groupChannelNotification.getByChannel().autoGetName() + " 移除了群聊。";
                 break;
             case ACTIVE_DISCONNECT:
-                text = itemData.channel.autoGetName() + " 离开了群聊。";
+                text = itemData.groupChannelNotification.getChannel().autoGetName() + " 离开了群聊。";
                 break;
         }
         holder.binding.text.setText(text);
-        holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.time));
-        if(itemData.isViewed){
+        holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.groupChannelNotification.getTime()));
+        if(itemData.groupChannelNotification.isViewed()){
             holder.binding.badge.setVisibility(View.GONE);
         }else {
             holder.binding.badge.setVisibility(View.VISIBLE);
         }
-        holder.binding.channelName.setText(itemData.channel.autoGetName());
-        holder.binding.groupChannelName.setText(itemData.groupChannel.getName());
+        holder.binding.channelName.setText(itemData.groupChannelNotification.getChannel().autoGetName());
+        holder.binding.groupChannelName.setText(itemData.groupChannelNotification.getGroupChannel().getName());
         setupYiers(holder, position);
     }
 
@@ -114,17 +105,17 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
         ItemData itemData = itemDataList.get(position);
         holder.binding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL, itemData.channel);
+            intent.putExtra(ExtraKeys.CHANNEL, itemData.groupChannelNotification.getChannel());
             activity.startActivity(intent);
         });
         holder.binding.byAvatar.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChannelActivity.class);
-            intent.putExtra(ExtraKeys.CHANNEL, itemData.by);
+            intent.putExtra(ExtraKeys.CHANNEL, itemData.groupChannelNotification.getByChannel());
             activity.startActivity(intent);
         });
         holder.binding.layoutGroupChannel.setOnClickListener(v -> {
             Intent intent = new Intent(activity, GroupChannelActivity.class);
-            intent.putExtra(ExtraKeys.GROUP_CHANNEL, itemData.groupChannel);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, itemData.groupChannelNotification.getGroupChannel());
             activity.startActivity(intent);
         });
     }

@@ -53,5 +53,4 @@ public class Constants {
     public static final String MY_WECHAT_ID = "_909691944";
     public static final String MY_GITHUB_URL = "https://github.com/intelligent-long";
     public static final String[] CENTRAL_SERVER_IMESSAGE_IDS = {"LONG"};
-    public enum GroupChannelNotificationType {ACTIVE_DISCONNECT, PASSIVE_DISCONNECT}
 }

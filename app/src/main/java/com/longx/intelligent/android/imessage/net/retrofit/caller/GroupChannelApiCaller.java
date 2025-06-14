@@ -26,8 +26,6 @@ import com.xcheng.retrofit.CompletableCall;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Body;
-import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:29.
@@ -213,8 +211,8 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         return call;
     }
 
-    public static CompletableCall<OperationData> fetchGroupChannelDisconnections(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
-        CompletableCall<OperationData> call = getApiImplementation().fetchGroupChannelDisconnections();
+    public static CompletableCall<OperationData> fetchGroupChannelNotifications(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchGroupChannelNotifications();
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

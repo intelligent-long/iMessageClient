@@ -25,6 +25,6 @@ public class StompDestinations {
     public static final String GROUP_CHANNEL_TAGS_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_tags_update";
     public static final String GROUP_CHANNEL_ADDITIONS_UPDATE = "/user" +  PREFIX_QUEUE + "/group_channel_additions_update";
     public static final String GROUP_CHANNEL_ADDITIONS_NOT_VIEW_COUNT_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_additions_not_view_count_update";
-    public static final String GROUP_CHANNEL_DISCONNECTIONS_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_disconnections_update";
-    public static final String GROUP_CHANNEL_DISCONNECTIONS_NOT_VIEW_COUNT_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_disconnections_not_view_count_update";
+    public static final String GROUP_CHANNEL_NOTIFICATIONS_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_notifications_update";
+    public static final String GROUP_CHANNEL_NOTIFICATIONS_NOT_VIEW_COUNT_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_notifications_not_view_count_update";
 }
