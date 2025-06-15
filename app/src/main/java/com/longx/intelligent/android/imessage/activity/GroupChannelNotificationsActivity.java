@@ -11,6 +11,7 @@ import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabas
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelNotificationsBinding;
+import com.longx.intelligent.android.imessage.net.stomp.ServerMessageServiceStompActions;
 import com.longx.intelligent.android.imessage.value.Constants;
 
 import java.util.ArrayList;
@@ -45,5 +46,11 @@ public class GroupChannelNotificationsActivity extends BaseActivity {
             binding.recyclerView.setVisibility(View.GONE);
             binding.noContentLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ServerMessageServiceStompActions.updateGroupChannelNotifications(this);
     }
 }
