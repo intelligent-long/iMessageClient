@@ -9,10 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
+import com.longx.intelligent.android.imessage.data.Avatar;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
 import com.longx.intelligent.android.imessage.data.request.ViewGroupChannelNotificationsPostBody;
@@ -21,6 +24,7 @@ import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.value.Constants;
@@ -73,21 +77,45 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
-        Glide.with(activity.getApplicationContext())
-                .load(NetDataUrls.getAvatarUrl(activity, itemData.groupChannelNotification.getChannel().getAvatar().getHash()))
-                .centerCrop()
-                .into(holder.binding.channelAvatar);
-        Glide.with(activity.getApplicationContext())
-                .load(NetDataUrls.getGroupAvatarUrl(activity, itemData.groupChannelNotification.getGroupChannel().getGroupAvatar().getHash()))
-                .centerCrop()
-                .into(holder.binding.groupChannelAvatar);
+        Avatar channelAvatar = itemData.groupChannelNotification.getChannel().getAvatar();
+        if (channelAvatar == null || channelAvatar.getHash() == null) {
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(R.drawable.default_avatar)
+                    .into(holder.binding.channelAvatar);
+        } else {
+            Glide.with(activity.getApplicationContext())
+                    .load(NetDataUrls.getAvatarUrl(activity, channelAvatar.getHash()))
+                    .centerCrop()
+                    .into(holder.binding.channelAvatar);
+        }
+        GroupAvatar groupAvatar = itemData.groupChannelNotification.getGroupChannel().getGroupAvatar();
+        if(groupAvatar == null || groupAvatar.getHash() == null){
+            GlideApp
+                    .with(activity.getApplicationContext())
+                    .load(R.drawable.group_channel_default_avatar)
+                    .into(holder.binding.groupChannelAvatar);
+        }else {
+            Glide.with(activity.getApplicationContext())
+                    .load(NetDataUrls.getGroupAvatarUrl(activity, groupAvatar.getHash()))
+                    .centerCrop()
+                    .into(holder.binding.groupChannelAvatar);
+        }
         String text = null;
         switch (itemData.groupChannelNotification.getType()){
             case PASSIVE_DISCONNECT:
-                Glide.with(activity.getApplicationContext())
-                        .load(NetDataUrls.getAvatarUrl(activity, itemData.groupChannelNotification.getByChannel().getAvatar().getHash()))
-                        .centerCrop()
-                        .into(holder.binding.byAvatar);
+                Avatar byAvatar = itemData.groupChannelNotification.getByChannel().getAvatar();
+                if (byAvatar == null || byAvatar.getHash() == null) {
+                    GlideApp
+                            .with(activity.getApplicationContext())
+                            .load(R.drawable.default_avatar)
+                            .into(holder.binding.byAvatar);
+                } else {
+                    Glide.with(activity.getApplicationContext())
+                            .load(NetDataUrls.getAvatarUrl(activity, byAvatar.getHash()))
+                            .centerCrop()
+                            .into(holder.binding.byAvatar);
+                }
                 text = itemData.groupChannelNotification.getChannel().autoGetName() + " 被 " + itemData.groupChannelNotification.getByChannel().autoGetName() + " 移除了群聊。";
                 break;
             case ACTIVE_DISCONNECT:
