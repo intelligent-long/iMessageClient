@@ -16,6 +16,7 @@ import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChanne
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
+import com.longx.intelligent.android.imessage.data.request.ViewGroupChannelNotificationsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.xcheng.retrofit.CompletableCall;
@@ -124,5 +125,8 @@ public interface GroupChannelApi {
 
     @GET("group_channel/group_channel_notifications")
     CompletableCall<OperationData> fetchGroupChannelNotifications();
+
+    @POST("group_channel/group_channel_notifications/view")
+    CompletableCall<OperationStatus> viewGroupChannelNotifications(@Body ViewGroupChannelNotificationsPostBody postBody);
 
 }

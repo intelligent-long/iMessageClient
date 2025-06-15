@@ -15,8 +15,13 @@ import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
+import com.longx.intelligent.android.imessage.data.request.ViewGroupChannelNotificationsPostBody;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelNotificationBinding;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.TimeUtil;
 import com.longx.intelligent.android.imessage.value.Constants;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
@@ -98,6 +103,10 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
         }
         holder.binding.channelName.setText(itemData.groupChannelNotification.getChannel().autoGetName());
         holder.binding.groupChannelName.setText(itemData.groupChannelNotification.getGroupChannel().getName());
+        if(!itemData.groupChannelNotification.isViewed()) {
+            ViewGroupChannelNotificationsPostBody postBody = new ViewGroupChannelNotificationsPostBody(List.of(itemData.groupChannelNotification.getUuid()));
+            GroupChannelApiCaller.viewGroupChannelNotifications(null, postBody, new RetrofitApiCaller.CommonYier<>(activity, false, true));
+        }
         setupYiers(holder, position);
     }
 

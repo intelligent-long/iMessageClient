@@ -18,6 +18,7 @@ import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChanne
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
+import com.longx.intelligent.android.imessage.data.request.ViewGroupChannelNotificationsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.GroupChannelApi;
@@ -26,6 +27,7 @@ import com.xcheng.retrofit.CompletableCall;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:29.
@@ -213,6 +215,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationData> fetchGroupChannelNotifications(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().fetchGroupChannelNotifications();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> viewGroupChannelNotifications(LifecycleOwner lifecycleOwner, ViewGroupChannelNotificationsPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().viewGroupChannelNotifications(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

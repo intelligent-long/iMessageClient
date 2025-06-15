@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 
@@ -17,6 +18,7 @@ public class GroupChannelNotification {
     private boolean passive;
     private String byWhom;
     private Date time;
+    @JsonProperty("viewed")
     private boolean isViewed;
 
     private GroupChannel groupChannel;
