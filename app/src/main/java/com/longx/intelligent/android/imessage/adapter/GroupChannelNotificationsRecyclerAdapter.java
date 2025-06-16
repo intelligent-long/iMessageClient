@@ -33,6 +33,7 @@ import com.longx.intelligent.android.imessage.value.Constants;
 import com.longx.intelligent.android.imessage.yier.ResultsYier;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
 
     public GroupChannelNotificationsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
         this.activity = activity;
+        itemDataList.sort((o1, o2) -> o2.groupChannelNotification.getTime().compareTo(o1.groupChannelNotification.getTime()));
         this.itemDataList = itemDataList;
     }
 
@@ -80,12 +82,13 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ItemData itemData = itemDataList.get(position);
+        final int currentPosition = holder.getBindingAdapterPosition();
         itemData.groupChannelNotification.getChannel((AppCompatActivity) activity, results -> {
+            if (holder.getBindingAdapterPosition() != currentPosition) return;
             Channel channel = (Channel) results[0];
-            if(channel != null) {
+            if (channel != null) {
                 if (channel.getAvatar() == null || channel.getAvatar().getHash() == null) {
-                    GlideApp
-                            .with(activity.getApplicationContext())
+                    GlideApp.with(activity.getApplicationContext())
                             .load(R.drawable.default_avatar)
                             .into(holder.binding.channelAvatar);
                 } else {
@@ -99,11 +102,11 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
             }
         });
         itemData.groupChannelNotification.getGroupChannel((AppCompatActivity) activity, results -> {
+            if (holder.getBindingAdapterPosition() != currentPosition) return;
             GroupChannel groupChannel = (GroupChannel) results[0];
-            if(groupChannel != null) {
+            if (groupChannel != null) {
                 if (groupChannel.getGroupAvatar() == null || groupChannel.getGroupAvatar().getHash() == null) {
-                    GlideApp
-                            .with(activity.getApplicationContext())
+                    GlideApp.with(activity.getApplicationContext())
                             .load(R.drawable.group_channel_default_avatar)
                             .into(holder.binding.groupChannelAvatar);
                 } else {
@@ -115,14 +118,15 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                 holder.binding.groupChannelName.setText(groupChannel.getName());
             }
         });
-        switch (itemData.groupChannelNotification.getType()){
+        switch (itemData.groupChannelNotification.getType()) {
             case PASSIVE_DISCONNECT:
                 itemData.groupChannelNotification.getByChannel((AppCompatActivity) activity, results -> {
+                    if (holder.getBindingAdapterPosition() != currentPosition) return;
+
                     Channel byChannel = (Channel) results[0];
-                    if(byChannel != null) {
+                    if (byChannel != null) {
                         if (byChannel.getAvatar() == null || byChannel.getAvatar().getHash() == null) {
-                            GlideApp
-                                    .with(activity.getApplicationContext())
+                            GlideApp.with(activity.getApplicationContext())
                                     .load(R.drawable.default_avatar)
                                     .into(holder.binding.byAvatar);
                         } else {
@@ -139,13 +143,13 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                 break;
         }
         holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.groupChannelNotification.getTime()));
-        if(itemData.groupChannelNotification.isViewed()){
+        if (itemData.groupChannelNotification.isViewed()) {
             holder.binding.badge.setVisibility(View.GONE);
-        }else {
+        } else {
             holder.binding.badge.setVisibility(View.VISIBLE);
-        }
-        if(!itemData.groupChannelNotification.isViewed()) {
-            ViewGroupChannelNotificationsPostBody postBody = new ViewGroupChannelNotificationsPostBody(List.of(itemData.groupChannelNotification.getUuid()));
+            ViewGroupChannelNotificationsPostBody postBody = new ViewGroupChannelNotificationsPostBody(
+                    List.of(itemData.groupChannelNotification.getUuid())
+            );
             GroupChannelApiCaller.viewGroupChannelNotifications(null, postBody, new RetrofitApiCaller.CommonYier<>(activity, false, true));
         }
         setupYiers(holder, position);
