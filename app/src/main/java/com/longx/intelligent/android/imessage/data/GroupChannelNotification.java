@@ -1,10 +1,21 @@
 package com.longx.intelligent.android.imessage.data;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
+import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.response.OperationData;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.yier.ResultsYier;
 
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by LONG on 2025/6/14 at 7:09 AM.
@@ -71,24 +82,81 @@ public class GroupChannelNotification {
         return isViewed;
     }
 
-    public GroupChannel getGroupChannel() {
-        if(groupChannel == null){
-            groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannelId);
-        }
-        return groupChannel;
-    }
-
-    public Channel getChannel() {
+    public void getChannel(AppCompatActivity activity, ResultsYier resultsYier) {
         if(channel == null){
             channel = ChannelDatabaseManager.getInstance().findOneChannel(channelId);
         }
-        return channel;
+        if(channel == null && channelId.equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())){
+            channel = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).toChannel();
+        }
+        if(channel == null) {
+            ChannelApiCaller.findChannelByImessageId(activity, channelId, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity){
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleSuccessResult(() -> {
+                        channel = data.getData(Channel.class);
+                        resultsYier.onResults(channel);
+                    });
+                }
+            });
+        }else {
+            resultsYier.onResults(channel);
+        }
     }
 
-    public Channel getByChannel() {
+    public void getGroupChannel(AppCompatActivity activity, ResultsYier resultsYier) {
+        if(groupChannel == null){
+            groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannelId);
+        }
+        if(groupChannel == null){
+            GroupChannelApiCaller.findGroupChannelByGroupChannelId(activity, groupChannelId, "id", new RetrofitApiCaller.BaseCommonYier<OperationData>(activity){
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleSuccessResult(() -> {
+                        groupChannel = data.getData(GroupChannel.class);
+                        resultsYier.onResults(groupChannel);
+                    });
+                }
+            });
+        }else {
+            resultsYier.onResults(groupChannel);
+        }
+    }
+
+    public void getByChannel(AppCompatActivity activity, ResultsYier resultsYier) {
         if(byChannel == null){
             byChannel = ChannelDatabaseManager.getInstance().findOneChannel(byWhom);
         }
+        if(byChannel == null && byWhom.equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())){
+            byChannel = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).toChannel();
+        }
+        if(byChannel == null){
+            ChannelApiCaller.findChannelByImessageId(activity, byWhom, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity){
+                @Override
+                public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleSuccessResult(() -> {
+                        byChannel = data.getData(Channel.class);
+                        resultsYier.onResults(byChannel);
+                    });
+                }
+            });
+        }else {
+            resultsYier.onResults(byChannel);
+        }
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public GroupChannel getGroupChannel() {
+        return groupChannel;
+    }
+
+    public Channel getByChannel() {
         return byChannel;
     }
 }

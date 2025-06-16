@@ -27,7 +27,6 @@ import com.xcheng.retrofit.CompletableCall;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:29.
@@ -55,7 +54,7 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         return call;
     }
 
-    public static CompletableCall<OperationData> findGroupChannelByGroupChannelId(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationData> yier){
+    public static CompletableCall<OperationData> findGroupChannelByGroupChannelIdUser(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationData> yier){
         CompletableCall<OperationData> call = getApiImplementation().findGroupChannelByGroupChannelId(groupChannelId);
         call.enqueue(lifecycleOwner, yier);
         return call;

@@ -281,6 +281,7 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                     result.add(groupChannel);
                 }
             }
+            if(result.isEmpty()) return null;
             return result.get(0);
         }finally {
             releaseDatabaseIfUnused();

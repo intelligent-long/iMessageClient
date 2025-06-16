@@ -102,7 +102,7 @@ public class ExploreGroupChannelActivity extends BaseActivity {
                 MessageDisplayer.autoShow(this, "二维码解析失败", MessageDisplayer.Duration.SHORT);
             }
             if(groupChannelQrCode != null) {
-                GroupChannelApiCaller.findGroupChannelByGroupChannelId(this, groupChannelQrCode.getGroupChannelId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                GroupChannelApiCaller.findGroupChannelByGroupChannelIdUser(this, groupChannelQrCode.getGroupChannelId(), new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
@@ -135,7 +135,7 @@ public class ExploreGroupChannelActivity extends BaseActivity {
                     MessageDisplayer.autoShow(this, "请输入内容", MessageDisplayer.Duration.SHORT);
                     return true;
                 }
-                GroupChannelApiCaller.findGroupChannelByGroupChannelId(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
+                GroupChannelApiCaller.findGroupChannelByGroupChannelIdUser(this, searchText, new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
                     @Override
                     public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                         super.ok(data, raw, call);
