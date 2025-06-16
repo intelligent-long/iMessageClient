@@ -130,7 +130,7 @@ public class SetGroupChannelTagActivity extends BaseActivity implements ContentU
                 @Override
                 public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                     super.ok(data, raw, call);
-                    data.commonHandleResult(getActivity(), new int[]{-101}, () -> {
+                    data.commonHandleResult(getActivity(), new int[]{-101, -102}, () -> {
                         binding.layoutNewTags.setVisibility(View.GONE);
                         MessageDisplayer.autoShow(getActivity(), "设置成功", MessageDisplayer.Duration.SHORT);
                     });

@@ -102,8 +102,10 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
             binding.editInfoButton.setVisibility(View.GONE);
             if(inGroup){
                 binding.joinChannelButton.setVisibility(View.GONE);
+                binding.toolbar.getMenu().findItem(R.id.more).setVisible(true);
             }else {
                 binding.sendMessageButton.setVisibility(View.GONE);
+                binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
             }
         }
         if(groupChannel.getNote() != null){

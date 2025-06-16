@@ -40,7 +40,7 @@ public class GroupMembersActivity extends BaseActivity {
         try {
             groupChannelAssociations = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupId).getGroupChannelAssociations();
             showContent();
-        }catch (IndexOutOfBoundsException e){
+        }catch (Exception e){
             GroupChannelApiCaller.findGroupChannelByGroupChannelId(null, groupId, "id", new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
