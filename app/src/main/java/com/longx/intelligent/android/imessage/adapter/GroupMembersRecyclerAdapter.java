@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.GroupMembersActivity;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupMembersBinding;
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
@@ -28,10 +29,12 @@ import java.util.List;
 public class GroupMembersRecyclerAdapter extends WrappableRecyclerViewAdapter<GroupMembersRecyclerAdapter.ViewHolder, GroupMembersRecyclerAdapter.ItemData> {
     private final GroupMembersActivity activity;
     private final List<GroupMembersRecyclerAdapter.ItemData> itemDataList;
+    private final GroupChannel groupChannel;
 
-    public GroupMembersRecyclerAdapter(GroupMembersActivity activity, List<GroupMembersRecyclerAdapter.ItemData> itemDataList) {
+    public GroupMembersRecyclerAdapter(GroupMembersActivity activity, List<GroupMembersRecyclerAdapter.ItemData> itemDataList, GroupChannel groupChannel) {
         this.activity = activity;
         this.itemDataList = itemDataList;
+        this.groupChannel = groupChannel;
         itemDataList.sort((o1, o2) -> {
             if (o1.indexChar == '#' && o2.indexChar != '#') return 1;
             if (o1.indexChar != '#' && o2.indexChar == '#') return -1;
@@ -115,6 +118,11 @@ public class GroupMembersRecyclerAdapter extends WrappableRecyclerViewAdapter<Gr
             }
         }
         holder.binding.name.setText(itemData.channel.autoGetName());
+        if(groupChannel.getOwner().equals(itemData.channel.getImessageId())){
+            holder.binding.ownerLabel.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.ownerLabel.setVisibility(View.GONE);
+        }
         setupYiers(holder, position);
     }
 

@@ -42,6 +42,7 @@ public class GroupChannelRemoveActivity extends BaseActivity {
     private List<GroupChannelAssociation> groupChannelAssociations;
     private RemoveGroupChannelRecyclerAdapter adapter;
     private String groupId;
+    private GroupChannel groupChannel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,8 @@ public class GroupChannelRemoveActivity extends BaseActivity {
     }
 
     private void intentData() {
-        groupId = ((GroupChannel)getIntent().getParcelableExtra(ExtraKeys.GROUP_CHANNEL)).getGroupChannelId();
+        groupChannel = getIntent().getParcelableExtra(ExtraKeys.GROUP_CHANNEL);
+        groupId = groupChannel.getGroupChannelId();
     }
 
     private void showContent() {
@@ -65,7 +67,7 @@ public class GroupChannelRemoveActivity extends BaseActivity {
         groupChannelAssociations.forEach(groupChannelAssociation -> {
             itemDataList.add(new RemoveGroupChannelRecyclerAdapter.ItemData(groupChannelAssociation.getRequester()));
         });
-        adapter = new RemoveGroupChannelRecyclerAdapter(this, itemDataList);
+        adapter = new RemoveGroupChannelRecyclerAdapter(this, itemDataList, groupChannel);
         adapter.setOnItemClickYier((position, data) -> {
             Intent intent = new Intent(this, ChannelActivity.class);
             intent.putExtra(ExtraKeys.IMESSAGE_ID, data.getChannel().getImessageId());

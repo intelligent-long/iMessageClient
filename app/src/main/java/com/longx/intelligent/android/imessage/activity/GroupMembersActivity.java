@@ -24,7 +24,8 @@ import retrofit2.Response;
 public class GroupMembersActivity extends BaseActivity {
     private ActivityGroupMembersBinding binding;
     private String groupId;
-    List<GroupChannelAssociation> groupChannelAssociations;
+    private List<GroupChannelAssociation> groupChannelAssociations;
+    private GroupChannel groupChannel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,8 @@ public class GroupMembersActivity extends BaseActivity {
     private void start() {
         groupId = getIntent().getStringExtra(ExtraKeys.GROUP_CHANNEL_ID);
         try {
-            groupChannelAssociations = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupId).getGroupChannelAssociations();
+            groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupId);
+            groupChannelAssociations = groupChannel.getGroupChannelAssociations();
             showContent();
         }catch (Exception e){
             GroupChannelApiCaller.findGroupChannelByGroupChannelId(null, groupId, "id", new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationData>(this) {
@@ -46,7 +48,7 @@ public class GroupMembersActivity extends BaseActivity {
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);
                     data.commonHandleSuccessResult(() -> {
-                        GroupChannel groupChannel = data.getData(GroupChannel.class);
+                        groupChannel = data.getData(GroupChannel.class);
                         groupChannelAssociations = groupChannel.getGroupChannelAssociations();
                         showContent();
                     });
@@ -65,7 +67,7 @@ public class GroupMembersActivity extends BaseActivity {
         groupChannelAssociations.forEach(groupChannelAssociation -> {
             itemDataList.add(new GroupMembersRecyclerAdapter.ItemData(groupChannelAssociation.getRequester()));
         });
-        GroupMembersRecyclerAdapter adapter = new GroupMembersRecyclerAdapter(this, itemDataList);
+        GroupMembersRecyclerAdapter adapter = new GroupMembersRecyclerAdapter(this, itemDataList, groupChannel);
         adapter.setOnItemClickYier((position, data) -> {
             Intent intent = new Intent(this, ChannelActivity.class);
             intent.putExtra(ExtraKeys.IMESSAGE_ID, data.getChannel().getImessageId());

@@ -12,6 +12,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.GroupChannelRemoveActivity;
 import com.longx.intelligent.android.imessage.activity.GroupMembersActivity;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupMembersBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemRemoveGroupChannelBinding;
@@ -33,10 +34,12 @@ public class RemoveGroupChannelRecyclerAdapter extends WrappableRecyclerViewAdap
     private final GroupChannelRemoveActivity activity;
     private final List<RemoveGroupChannelRecyclerAdapter.ItemData> itemDataList;
     private List<Channel> checkedChannel = new ArrayList<>();
+    private final GroupChannel groupChannel;
 
-    public RemoveGroupChannelRecyclerAdapter(GroupChannelRemoveActivity activity, List<RemoveGroupChannelRecyclerAdapter.ItemData> itemDataList) {
+    public RemoveGroupChannelRecyclerAdapter(GroupChannelRemoveActivity activity, List<RemoveGroupChannelRecyclerAdapter.ItemData> itemDataList, GroupChannel groupChannel) {
         this.activity = activity;
         this.itemDataList = itemDataList;
+        this.groupChannel = groupChannel;
         itemDataList.sort((o1, o2) -> {
             if (o1.indexChar == '#' && o2.indexChar != '#') return 1;
             if (o1.indexChar != '#' && o2.indexChar == '#') return -1;
@@ -120,6 +123,11 @@ public class RemoveGroupChannelRecyclerAdapter extends WrappableRecyclerViewAdap
             }
         }
         holder.binding.name.setText(itemData.channel.autoGetName());
+        if(groupChannel.getOwner().equals(itemData.channel.getImessageId())){
+            holder.binding.ownerLabel.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.ownerLabel.setVisibility(View.GONE);
+        }
         setupYiers(holder, position);
     }
 
