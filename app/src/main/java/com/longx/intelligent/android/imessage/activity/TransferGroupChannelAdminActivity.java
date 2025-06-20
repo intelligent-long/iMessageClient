@@ -1,5 +1,6 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,10 +14,18 @@ import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.TransferGroupChannelAdminRecyclerAdapter;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.request.TransferGroupChannelManagerPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityTransferGroupChannelAdminBinding;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class TransferGroupChannelAdminActivity extends BaseActivity {
     private ActivityTransferGroupChannelAdminBinding binding;
@@ -68,13 +77,21 @@ public class TransferGroupChannelAdminActivity extends BaseActivity {
     }
 
     private void setupYiers() {
-        binding.toolbar.getMenu().findItem(R.id.transfer_group_channel).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(@NonNull MenuItem item) {
-                Channel selected = adapter.getSelected();
-                //TODO
-                return true;
-            }
+        binding.toolbar.getMenu().findItem(R.id.transfer_group_channel_admin).setOnMenuItemClickListener(item -> {
+            Channel selected = adapter.getSelected();
+            TransferGroupChannelManagerPostBody postBody = new TransferGroupChannelManagerPostBody(groupChannel.getGroupChannelId(), selected.getImessageId());
+            GroupChannelApiCaller.transferGroupChannelManager(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+                @Override
+                public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                    super.ok(data, raw, call);
+                    data.commonHandleResult(TransferGroupChannelAdminActivity.this, new int[]{-101, -102, -103, -104, -105}, () -> {
+                        new CustomViewMessageDialog(TransferGroupChannelAdminActivity.this, "已发送移交请求。")
+                                .create().show()
+                                .setOnDismissListener(dialog -> finish());
+                    });
+                }
+            });
+            return true;
         });
     }
 }

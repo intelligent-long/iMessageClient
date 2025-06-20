@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.data;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
@@ -20,13 +21,14 @@ import retrofit2.Response;
 /**
  * Created by LONG on 2025/6/14 at 7:09 AM.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupChannelNotification {
-    public enum Type{ACTIVE_DISCONNECT, PASSIVE_DISCONNECT}
+    public enum Type{ACTIVE_DISCONNECT, PASSIVE_DISCONNECT, INVITE_TRANSFER_MANAGER}
     private String uuid;
     private Type type;
     private String groupChannelId;
     private String channelId;
-    private boolean passive;
+    private Boolean passive;
     private String byWhom;
     private Date time;
     @JsonProperty("viewed")
@@ -39,7 +41,7 @@ public class GroupChannelNotification {
     public GroupChannelNotification() {
     }
 
-    public GroupChannelNotification(String uuid, Type type, String groupChannelId, String channelId, boolean passive, String byWhom, Date time, boolean isViewed) {
+    public GroupChannelNotification(String uuid, Type type, String groupChannelId, String channelId, Boolean passive, String byWhom, Date time, boolean isViewed) {
         this.uuid = uuid;
         this.type = type;
         this.groupChannelId = groupChannelId;
@@ -66,7 +68,7 @@ public class GroupChannelNotification {
         return channelId;
     }
 
-    public boolean isPassive() {
+    public Boolean isPassive() {
         return passive;
     }
 

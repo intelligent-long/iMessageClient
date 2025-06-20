@@ -9,7 +9,7 @@ import com.longx.intelligent.android.imessage.util.ErrorLogger;
  * Created by LONG on 2024/5/3 at 3:58 PM.
  */
 public interface NewContentBadgeDisplayYier {
-    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES, BROADCAST_COMMENTS, BROADCAST_REPLIES, GROUP_CHANNEL_ADDITION_ACTIVITIES, GROUP_CHANNEL_NOTIFICATIONS}
+    enum ID{CHANNEL_ADDITION_ACTIVITIES, MESSAGES, BROADCAST_LIKES, BROADCAST_COMMENTS, BROADCAST_REPLIES, GROUP_CHANNEL_ADDITION_ACTIVITIES, GROUP_CHANNEL_NOTIFICATIONS, GROUP_CHANNEL_MANAGER_TRANSFER}
 
     static int getChannelAdditionActivitiesNewContentCount(Context context){
         return SharedPreferencesAccessor.NewContentCount.getChannelAdditionActivitiesRequester(context)
@@ -60,7 +60,9 @@ public interface NewContentBadgeDisplayYier {
             case GROUP_CHANNEL_NOTIFICATIONS:
                 showNewContentBadge(id, getGroupChannelNotificationsNewContentCount(context));
                 break;
-
+            case GROUP_CHANNEL_MANAGER_TRANSFER:
+                //TODO
+                break;
         }
     }
 

@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
+import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Avatar;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
@@ -115,14 +116,15 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                             .centerCrop()
                             .into(holder.binding.groupChannelAvatar);
                 }
+                showText(holder, itemData.groupChannelNotification);
                 holder.binding.groupChannelName.setText(groupChannel.getName());
             }
         });
         switch (itemData.groupChannelNotification.getType()) {
             case PASSIVE_DISCONNECT:
+            case INVITE_TRANSFER_MANAGER:
                 itemData.groupChannelNotification.getByChannel((AppCompatActivity) activity, results -> {
                     if (holder.getBindingAdapterPosition() != currentPosition) return;
-
                     Channel byChannel = (Channel) results[0];
                     if (byChannel != null) {
                         if (byChannel.getAvatar() == null || byChannel.getAvatar().getHash() == null) {
@@ -166,6 +168,15 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
             case ACTIVE_DISCONNECT:
                 if(groupChannelNotification.getChannel() != null) {
                     text = groupChannelNotification.getChannel().autoGetName() + " 离开了群频道。";
+                }
+                break;
+            case INVITE_TRANSFER_MANAGER:
+                if(groupChannelNotification.getGroupChannel() != null && groupChannelNotification.getChannel() != null && groupChannelNotification.getByChannel() != null) {
+                    if(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId().equals(groupChannelNotification.getChannelId())) {
+                        text = groupChannelNotification.getByChannel().autoGetName()  + " 邀请你移交 " + groupChannelNotification.getGroupChannel().getName() + " 的管理员。";
+                    }else {
+                        text = groupChannelNotification.getByChannel().autoGetName()  + " 邀请 " + groupChannelNotification.getChannel().autoGetName() + " 移交 " + groupChannelNotification.getGroupChannel().getName() + " 的管理员。";
+                    }
                 }
                 break;
         }
