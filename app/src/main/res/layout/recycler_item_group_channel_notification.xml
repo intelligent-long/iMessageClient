@@ -127,5 +127,25 @@
                     android:ellipsize="end" />
             </RelativeLayout>
         </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/layout_accept_inviter_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/accept_inviter_button"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:layout_marginTop="13dp"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                app:icon="@drawable/check_circle_outline_24px"
+                app:iconGravity="textStart"
+                app:iconPadding="9dp"
+                app:iconTint="?attr/colorOutline"
+                android:backgroundTint="?attr/colorSurfaceContainer"
+                android:text="接受移交"
+                android:textSize="17sp"/>
+        </FrameLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -1,5 +1,8 @@
 package com.longx.intelligent.android.imessage.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -122,6 +125,25 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
         });
         switch (itemData.groupChannelNotification.getType()) {
             case PASSIVE_DISCONNECT:
+                itemData.groupChannelNotification.getByChannel((AppCompatActivity) activity, results -> {
+                    if (holder.getBindingAdapterPosition() != currentPosition) return;
+                    Channel byChannel = (Channel) results[0];
+                    if (byChannel != null) {
+                        if (byChannel.getAvatar() == null || byChannel.getAvatar().getHash() == null) {
+                            GlideApp.with(activity.getApplicationContext())
+                                    .load(R.drawable.default_avatar)
+                                    .into(holder.binding.byAvatar);
+                        } else {
+                            Glide.with(activity.getApplicationContext())
+                                    .load(NetDataUrls.getAvatarUrl(activity, byChannel.getAvatar().getHash()))
+                                    .centerCrop()
+                                    .into(holder.binding.byAvatar);
+                        }
+                        showText(holder, itemData.groupChannelNotification);
+                    }
+                });
+                holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
+                break;
             case INVITE_TRANSFER_MANAGER:
                 itemData.groupChannelNotification.getByChannel((AppCompatActivity) activity, results -> {
                     if (holder.getBindingAdapterPosition() != currentPosition) return;
@@ -140,15 +162,17 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                         showText(holder, itemData.groupChannelNotification);
                     }
                 });
+                holder.binding.layoutAcceptInviterButton.setVisibility(VISIBLE);
                 break;
             case ACTIVE_DISCONNECT:
+                holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
                 break;
         }
         holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.groupChannelNotification.getTime()));
         if (itemData.groupChannelNotification.isViewed()) {
-            holder.binding.badge.setVisibility(View.GONE);
+            holder.binding.badge.setVisibility(GONE);
         } else {
-            holder.binding.badge.setVisibility(View.VISIBLE);
+            holder.binding.badge.setVisibility(VISIBLE);
             ViewGroupChannelNotificationsPostBody postBody = new ViewGroupChannelNotificationsPostBody(
                     List.of(itemData.groupChannelNotification.getUuid())
             );
@@ -208,6 +232,9 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                 intent.putExtra(ExtraKeys.GROUP_CHANNEL, groupChannel);
                 activity.startActivity(intent);
             }
+        });
+        holder.binding.acceptInviterButton.setOnClickListener(v -> {
+
         });
     }
 }
