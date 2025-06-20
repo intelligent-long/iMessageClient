@@ -6,19 +6,19 @@ package com.longx.intelligent.android.imessage.data.request;
 public class ChangeGroupChannelJoinVerificationPostBody {
 
     private final String groupId;
-    private final Boolean groupJoinVerification;
+    private final Boolean groupJoinVerificationEnabled;
 
     public ChangeGroupChannelJoinVerificationPostBody() {
         this(null, null);
     }
 
-    public ChangeGroupChannelJoinVerificationPostBody(String groupId, Boolean groupJoinVerification) {
+    public ChangeGroupChannelJoinVerificationPostBody(String groupId, Boolean groupJoinVerificationEnabled) {
         this.groupId = groupId;
-        this.groupJoinVerification = groupJoinVerification;
+        this.groupJoinVerificationEnabled = groupJoinVerificationEnabled;
     }
 
-    public Boolean getGroupJoinVerification() {
-        return groupJoinVerification;
+    public Boolean getGroupJoinVerificationEnabled() {
+        return groupJoinVerificationEnabled;
     }
 
     public String getGroupId() {
