@@ -1,6 +1,5 @@
 package com.longx.intelligent.android.imessage.adapter;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
-import com.longx.intelligent.android.imessage.activity.ChatActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
-import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.activity.TransferGroupChannelAdminActivity;
 import com.longx.intelligent.android.imessage.data.Channel;
-import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemTransferGroupChannelAdminBinding;
 import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
@@ -24,7 +20,6 @@ import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**

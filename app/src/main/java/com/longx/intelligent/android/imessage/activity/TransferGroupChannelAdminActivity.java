@@ -1,11 +1,14 @@
 package com.longx.intelligent.android.imessage.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.TransferGroupChannelAdminRecyclerAdapter;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -28,6 +31,7 @@ public class TransferGroupChannelAdminActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         intentData();
         showContent();
+        setupYiers();
     }
 
     private void intentData() {
@@ -61,5 +65,16 @@ public class TransferGroupChannelAdminActivity extends BaseActivity {
 
     public ActivityTransferGroupChannelAdminBinding getBinding() {
         return binding;
+    }
+
+    private void setupYiers() {
+        binding.toolbar.getMenu().findItem(R.id.transfer_group_channel).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                Channel selected = adapter.getSelected();
+                //TODO
+                return true;
+            }
+        });
     }
 }

@@ -15,6 +15,7 @@ import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDa
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.databinding.ActivityTagGroupChannelsBinding;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
@@ -60,7 +61,9 @@ public class TagGroupChannelsActivity extends BaseActivity implements ContentUpd
             List<GroupChannel> groupChannels = new ArrayList<>();
             groupChannelIds.forEach(groupChannelId -> {
                 GroupChannel groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannelId);
-                groupChannels.add(groupChannel);
+                if(groupChannel != null) {
+                    groupChannels.add(groupChannel);
+                }
             });
             adapter = new TagGroupChannelsRecyclerAdapter(this, groupChannelTag, groupChannels);
             binding.recyclerView.setAdapter(adapter);

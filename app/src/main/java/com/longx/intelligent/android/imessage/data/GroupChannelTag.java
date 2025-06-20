@@ -103,4 +103,15 @@ public class GroupChannelTag implements Parcelable {
     public int hashCode() {
         return Objects.hash(tagId, imessageId, name, order, groupChannelIdList);
     }
+
+    @Override
+    public String toString() {
+        return "GroupChannelTag{" +
+                "tagId='" + tagId + '\'' +
+                ", imessageId='" + imessageId + '\'' +
+                ", name='" + name + '\'' +
+                ", order=" + order +
+                ", groupChannelIdList=" + groupChannelIdList +
+                '}';
+    }
 }

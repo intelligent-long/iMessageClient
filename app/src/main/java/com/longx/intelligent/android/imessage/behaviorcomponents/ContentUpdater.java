@@ -334,10 +334,9 @@ public class ContentUpdater {
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
-                    GroupChannelDatabaseManager.getInstance().clearGroupChannels();
                     List<GroupChannel> groupChannels = data.getData(new TypeReference<List<GroupChannel>>() {
                     });
-                    GroupChannelDatabaseManager.getInstance().insertAssociationsOrIgnore(groupChannels);
+                    GroupChannelDatabaseManager.getInstance().updateAssociationsOrIgnore(groupChannels);
                     resultsYier.onResults();
                 });
             }
@@ -366,8 +365,7 @@ public class ContentUpdater {
                 data.commonHandleSuccessResult(() -> {
                     List<GroupChannelTag> channelTags = data.getData(new TypeReference<List<GroupChannelTag>>() {
                     });
-                    GroupChannelDatabaseManager.getInstance().clearChannelTags();
-                    GroupChannelDatabaseManager.getInstance().insertTagsOrIgnore(channelTags);
+                    GroupChannelDatabaseManager.getInstance().updateTagsOrIgnore(channelTags);
                     resultsYier.onResults();
                 });
             }

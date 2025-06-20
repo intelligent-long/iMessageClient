@@ -160,12 +160,12 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
         switch (groupChannelNotification.getType()) {
             case PASSIVE_DISCONNECT:
                 if(groupChannelNotification.getChannel() != null && groupChannelNotification.getByChannel() != null) {
-                    text = groupChannelNotification.getChannel().autoGetName() + " 被 " + groupChannelNotification.getByChannel().autoGetName() + " 移除了群聊。";
+                    text = groupChannelNotification.getChannel().autoGetName() + " 被 " + groupChannelNotification.getByChannel().autoGetName() + " 移除了群频道。";
                 }
                 break;
             case ACTIVE_DISCONNECT:
                 if(groupChannelNotification.getChannel() != null) {
-                    text = groupChannelNotification.getChannel().autoGetName() + " 离开了群聊。";
+                    text = groupChannelNotification.getChannel().autoGetName() + " 离开了群频道。";
                 }
                 break;
         }

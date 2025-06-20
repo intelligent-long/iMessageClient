@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,12 +29,12 @@ public class GroupChannel implements Parcelable {
     private Region secondRegion;
     private Region thirdRegion;
     private String avatarHash;
-    private Boolean groupJoinVerification;
+    private Boolean groupJoinVerificationEnabled;
 
     public GroupChannel() {
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerification) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerificationEnabled) {
         this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
         this.groupChannelIdUser = groupChannelIdUser;
@@ -48,11 +47,11 @@ public class GroupChannel implements Parcelable {
         this.secondRegion = secondRegion;
         this.thirdRegion = thirdRegion;
         this.avatarHash = avatarHash;
-        this.groupJoinVerification = groupJoinVerification;
+        this.groupJoinVerificationEnabled = groupJoinVerificationEnabled;
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerification) {
-        this(groupAvatar, groupChannelId, groupChannelIdUser, owner, name, note, createTime, new ArrayList<>(), firstRegion, secondRegion, thirdRegion, avatarHash, groupJoinVerification);
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerificationEnabled) {
+        this(groupAvatar, groupChannelId, groupChannelIdUser, owner, name, note, createTime, new ArrayList<>(), firstRegion, secondRegion, thirdRegion, avatarHash, groupJoinVerificationEnabled);
     }
 
     public GroupAvatar getGroupAvatar() {
@@ -111,8 +110,8 @@ public class GroupChannel implements Parcelable {
         groupChannelAssociations.add(groupChannelAssociation);
     }
 
-    public Boolean getGroupJoinVerification() {
-        return groupJoinVerification;
+    public Boolean getGroupJoinVerificationEnabled() {
+        return groupJoinVerificationEnabled;
     }
 
     @Override
@@ -158,7 +157,7 @@ public class GroupChannel implements Parcelable {
         secondRegion = in.readParcelable(getClass().getClassLoader());
         thirdRegion = in.readParcelable(getClass().getClassLoader());
         avatarHash = in.readString();
-        groupJoinVerification = (Boolean) in.readValue(getClass().getClassLoader());
+        groupJoinVerificationEnabled = (Boolean) in.readValue(getClass().getClassLoader());
     }
 
     @Override
@@ -175,7 +174,7 @@ public class GroupChannel implements Parcelable {
         dest.writeParcelable(secondRegion, flags);
         dest.writeParcelable(thirdRegion, flags);
         dest.writeString(avatarHash);
-        dest.writeValue(groupJoinVerification);
+        dest.writeValue(groupJoinVerificationEnabled);
     }
 
     public String buildRegionDesc(){
@@ -209,7 +208,7 @@ public class GroupChannel implements Parcelable {
                 ", secondRegion=" + secondRegion +
                 ", thirdRegion=" + thirdRegion +
                 ", avatarHash='" + avatarHash + '\'' +
-                ", groupJoinVerification=" + groupJoinVerification +
+                ", groupJoinVerificationEnabled=" + groupJoinVerificationEnabled +
                 '}';
     }
 }

@@ -96,7 +96,7 @@ public interface GroupChannelApi {
     @POST("group_channel/association/tag/channel/set")
     CompletableCall<OperationStatus> setGroupChannelTags(@Body SetGroupChannelTagsPostBody postBody);
 
-    @POST("group_channel_management/group_join_verification/change")
+    @POST("group_channel_manage/group_join_verification/enabled/change")
     CompletableCall<OperationStatus> changeGroupJoinVerification(@Body ChangeGroupChannelJoinVerificationPostBody postBody);
 
     @POST("group_channel/add/request")
@@ -120,7 +120,7 @@ public interface GroupChannelApi {
     @POST("group_channel/disconnect/{groupChannelId}")
     CompletableCall<OperationStatus> disconnect(@Path("groupChannelId") String groupChannelId);
 
-    @POST("group_channel/disconnect/manage/{groupChannelId}")
+    @POST("group_channel_manage/disconnect/{groupChannelId}")
     CompletableCall<OperationStatus> manageGroupChannelDisconnectChannel(@Path("groupChannelId") String groupChannelId, @Body ManageGroupChannelDisconnectPostBody postBody);
 
     @GET("group_channel/group_channel_notifications")

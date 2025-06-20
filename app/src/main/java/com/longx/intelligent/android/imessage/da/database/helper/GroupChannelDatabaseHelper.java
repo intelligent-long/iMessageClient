@@ -25,7 +25,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String CHANNEL_IMESSAGE_ID = "channel_imessage_id";
         public static final String REQUESTER_CHANNEL_IMESSAGE_ID = "requester_channel_imessage_id";
         public static final String REQUESTER_MESSAGE = "requester_message";
-        public static final String REQUESTER__TIME = "requester_time";
+        public static final String REQUESTER_TIME = "requester_time";
         public static final String ACCEPT_TIME = "accept_time";
         public static final String INVITE_UUID = "invite_uuid";
     }
@@ -91,7 +91,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID + " VARCHAR,"
                 + TableGroupChannelAssociationsColumns.REQUESTER_CHANNEL_IMESSAGE_ID + " VARCHAR,"
                 + TableGroupChannelAssociationsColumns.REQUESTER_MESSAGE + " VARCHAR,"
-                + TableGroupChannelAssociationsColumns.REQUESTER__TIME + " DATETIME,"
+                + TableGroupChannelAssociationsColumns.REQUESTER_TIME + " DATETIME,"
                 + TableGroupChannelAssociationsColumns.ACCEPT_TIME + " DATETIME,"
                 + TableGroupChannelAssociationsColumns.INVITE_UUID + " VARCHAR,"
                 + " CONSTRAINT con_unique1 UNIQUE("

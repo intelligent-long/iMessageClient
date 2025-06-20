@@ -35,7 +35,7 @@ public class GroupManagementActivity extends BaseActivity {
     }
 
     private void showContent() {
-        binding.switchJoinVerification.setChecked(groupChannel.getGroupJoinVerification() != null && groupChannel.getGroupJoinVerification());
+        binding.switchJoinVerification.setChecked(groupChannel.getGroupJoinVerificationEnabled() != null && groupChannel.getGroupJoinVerificationEnabled());
     }
 
     private void setupYiers() {

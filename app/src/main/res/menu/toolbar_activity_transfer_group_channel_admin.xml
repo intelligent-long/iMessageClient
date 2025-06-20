@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/transfer"
+        android:id="@+id/transfer_group_channel"
         android:title="移交"
         app:showAsAction="always"/>
 
