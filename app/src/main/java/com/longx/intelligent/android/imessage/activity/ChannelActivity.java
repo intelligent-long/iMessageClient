@@ -99,6 +99,8 @@ public class ChannelActivity extends BaseActivity implements ContentUpdater.OnSe
         if(imessageId == null) {
             imessageId = getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID);
             channel = getIntent().getParcelableExtra(ExtraKeys.CHANNEL);
+            if(imessageId == null && channel != null) imessageId = channel.getImessageId();
+            if(channel == null && imessageId != null) channel = ChannelDatabaseManager.getInstance().findOneChannel(imessageId);
             mayNotAssociated = getIntent().getBooleanExtra(ExtraKeys.MAY_NOT_ASSOCIATED, false);
         }
         self = SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this);

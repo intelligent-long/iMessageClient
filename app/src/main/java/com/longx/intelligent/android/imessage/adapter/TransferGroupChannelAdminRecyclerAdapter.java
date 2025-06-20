@@ -154,6 +154,7 @@ public class TransferGroupChannelAdminRecyclerAdapter extends WrappableRecyclerV
                 selectedPosition = position;
                 if (previous != -1) notifyItemChanged(previous, PAYLOAD_SELECTION_CHANGE);
                 notifyItemChanged(selectedPosition, PAYLOAD_SELECTION_CHANGE);
+                activity.getBinding().toolbar.getMenu().findItem(R.id.transfer_group_channel_admin).setEnabled(true);
             }
         });
     }
