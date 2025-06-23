@@ -19,6 +19,7 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
+import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Avatar;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -173,11 +174,23 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                         showText(holder, itemData.groupChannelNotification);
                     }
                 });
-                if(itemData.groupChannelNotification.getChannelId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())) {
+                boolean isSelf = itemData.groupChannelNotification.getChannelId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId());
+                GroupChannel groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(itemData.groupChannelNotification.getGroupChannelId());
+                boolean isManager = itemData.groupChannelNotification.getChannelId().equals(groupChannel.getOwner());
+                if(isSelf && !isManager) {
                     holder.binding.layoutAcceptInviterButton.setVisibility(VISIBLE);
+                    holder.binding.layoutAcceptedText.setVisibility(GONE);
+                }else if(isManager){
+                    holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
+                    holder.binding.layoutAcceptedText.setVisibility(VISIBLE);
                 }else {
                     holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
+                    holder.binding.layoutAcceptedText.setVisibility(GONE);
                 }
+                break;
+            case ACCEPTED_TRANSFER_MANAGER:
+                holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
+                holder.binding.layoutAcceptedText.setVisibility(GONE);
                 break;
         }
         holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.groupChannelNotification.getTime()));
@@ -213,6 +226,11 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                     }else {
                         text = "邀请 " + groupChannelNotification.getChannel().autoGetName() + " 移交 " + groupChannelNotification.getGroupChannel().getName() + " 的管理员。";
                     }
+                }
+                break;
+            case ACCEPTED_TRANSFER_MANAGER:
+                if(groupChannelNotification.getChannel() != null) {
+                    text = "管理员已移交至 " + groupChannelNotification.getChannel().autoGetName() + " 。";
                 }
                 break;
         }

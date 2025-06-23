@@ -138,6 +138,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     @Override
     protected void onResume() {
         super.onResume();
+        if(!SharedPreferencesAccessor.NetPref.getLoginState(this)) return;
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -517,12 +518,14 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
     @Override
     protected void onStart() {
         super.onStart();
+        if(!SharedPreferencesAccessor.NetPref.getLoginState(this)) return;
         setupBottomNavigationViewLabelVisibility();
         setupBottomNavigationViewIconStyle();
     }
 
     @Override
     public void onStartUpdate(String id, List<String> updatingIds, Object... objects) {
+        if(!SharedPreferencesAccessor.NetPref.getLoginState(this)) return;
         runOnUiThread(() -> {
             if (!isFinishing() && binding != null) {
                 binding.updateIndicator.setVisibility(View.VISIBLE);
@@ -532,6 +535,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     @Override
     public void onUpdateComplete(String id, List<String> updatingIds, Object... objects) {
+        if(!SharedPreferencesAccessor.NetPref.getLoginState(this)) return;
         runOnUiThread(() -> {
             try{
                 if(updatingIds.size() == 0) binding.updateIndicator.setVisibility(View.GONE);
@@ -626,6 +630,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     @Override
     public void showNewContentBadge(ID id, int newContentCount) {
+        if(!SharedPreferencesAccessor.NetPref.getLoginState(this)) return;
         switch (id){
             case MESSAGES:
                 AtomicBoolean hideNavigationMessageBadge = new AtomicBoolean(true);
@@ -675,6 +680,7 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
 
     @Override
     public void fetchNews(String imessageId) {
+        if(!SharedPreferencesAccessor.NetPref.getLoginState(this)) return;
         Fragment fragment = getSupportFragmentManager().getFragments().get(0);
         if (fragment instanceof BroadcastsFragment) {
             BroadcastsFragment.needFetchNewBroadcasts = false;

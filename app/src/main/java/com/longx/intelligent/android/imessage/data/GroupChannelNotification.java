@@ -23,7 +23,7 @@ import retrofit2.Response;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupChannelNotification {
-    public enum Type{ACTIVE_DISCONNECT, PASSIVE_DISCONNECT, INVITE_TRANSFER_MANAGER}
+    public enum Type{ACTIVE_DISCONNECT, PASSIVE_DISCONNECT, INVITE_TRANSFER_MANAGER, ACCEPTED_TRANSFER_MANAGER}
     private String uuid;
     private Type type;
     private String groupChannelId;
