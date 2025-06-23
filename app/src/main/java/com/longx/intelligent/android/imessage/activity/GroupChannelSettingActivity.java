@@ -74,7 +74,7 @@ public class GroupChannelSettingActivity extends BaseActivity implements Content
         });
         binding.disconnectChannel.setOnClickListener(v -> {
             if(groupChannel.getOwner().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getImessageId())){
-                MessageDisplayer.autoShow(this, "你是群主，无法退出群聊。请先转让群主身份再尝试退出。", MessageDisplayer.Duration.LONG);
+                MessageDisplayer.autoShow(this, "你是群管理员，无法退出群频道。请先转让群管理员身份再尝试退出。", MessageDisplayer.Duration.LONG);
             }else {
                 new ConfirmDialog(this)
                         .setNegativeButton()
