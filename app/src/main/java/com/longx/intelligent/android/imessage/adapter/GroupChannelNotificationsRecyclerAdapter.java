@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,12 @@ import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
+import com.longx.intelligent.android.imessage.data.request.AcceptTransferGroupChannelManagerPostBody;
 import com.longx.intelligent.android.imessage.data.request.ViewGroupChannelNotificationsPostBody;
+import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelNotificationBinding;
+import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.dialog.CustomViewMessageDialog;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
@@ -41,14 +46,17 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 /**
  * Created by LONG on 2025/6/13 at 下午10:51.
  */
 public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerViewAdapter<GroupChannelNotificationsRecyclerAdapter.ViewHolder, GroupChannelNotificationsRecyclerAdapter.ItemData> {
-    private final Activity activity;
+    private final AppCompatActivity activity;
     private final List<ItemData> itemDataList;
 
-    public GroupChannelNotificationsRecyclerAdapter(Activity activity, List<ItemData> itemDataList) {
+    public GroupChannelNotificationsRecyclerAdapter(AppCompatActivity activity, List<ItemData> itemDataList) {
         this.activity = activity;
         itemDataList.sort((o1, o2) -> o2.groupChannelNotification.getTime().compareTo(o1.groupChannelNotification.getTime()));
         this.itemDataList = itemDataList;
@@ -87,7 +95,7 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ItemData itemData = itemDataList.get(position);
         final int currentPosition = holder.getBindingAdapterPosition();
-        itemData.groupChannelNotification.getChannel((AppCompatActivity) activity, results -> {
+        itemData.groupChannelNotification.getChannel(activity, results -> {
             if (holder.getBindingAdapterPosition() != currentPosition) return;
             Channel channel = (Channel) results[0];
             if (channel != null) {
@@ -105,7 +113,7 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                 holder.binding.channelName.setText(channel.autoGetName());
             }
         });
-        itemData.groupChannelNotification.getGroupChannel((AppCompatActivity) activity, results -> {
+        itemData.groupChannelNotification.getGroupChannel(activity, results -> {
             if (holder.getBindingAdapterPosition() != currentPosition) return;
             GroupChannel groupChannel = (GroupChannel) results[0];
             if (groupChannel != null) {
@@ -125,7 +133,7 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
         });
         switch (itemData.groupChannelNotification.getType()) {
             case PASSIVE_DISCONNECT:
-                itemData.groupChannelNotification.getByChannel((AppCompatActivity) activity, results -> {
+                itemData.groupChannelNotification.getByChannel(activity, results -> {
                     if (holder.getBindingAdapterPosition() != currentPosition) return;
                     Channel byChannel = (Channel) results[0];
                     if (byChannel != null) {
@@ -143,29 +151,33 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                     }
                 });
                 holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
-                break;
-            case INVITE_TRANSFER_MANAGER:
-                itemData.groupChannelNotification.getByChannel((AppCompatActivity) activity, results -> {
-                    if (holder.getBindingAdapterPosition() != currentPosition) return;
-                    Channel byChannel = (Channel) results[0];
-                    if (byChannel != null) {
-                        if (byChannel.getAvatar() == null || byChannel.getAvatar().getHash() == null) {
-                            GlideApp.with(activity.getApplicationContext())
-                                    .load(R.drawable.default_avatar)
-                                    .into(holder.binding.byAvatar);
-                        } else {
-                            Glide.with(activity.getApplicationContext())
-                                    .load(NetDataUrls.getAvatarUrl(activity, byChannel.getAvatar().getHash()))
-                                    .centerCrop()
-                                    .into(holder.binding.byAvatar);
-                        }
-                        showText(holder, itemData.groupChannelNotification);
-                    }
-                });
-                holder.binding.layoutAcceptInviterButton.setVisibility(VISIBLE);
                 break;
             case ACTIVE_DISCONNECT:
                 holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
+                break;
+            case INVITE_TRANSFER_MANAGER:
+                itemData.groupChannelNotification.getByChannel(activity, results -> {
+                    if (holder.getBindingAdapterPosition() != currentPosition) return;
+                    Channel byChannel = (Channel) results[0];
+                    if (byChannel != null) {
+                        if (byChannel.getAvatar() == null || byChannel.getAvatar().getHash() == null) {
+                            GlideApp.with(activity.getApplicationContext())
+                                    .load(R.drawable.default_avatar)
+                                    .into(holder.binding.byAvatar);
+                        } else {
+                            Glide.with(activity.getApplicationContext())
+                                    .load(NetDataUrls.getAvatarUrl(activity, byChannel.getAvatar().getHash()))
+                                    .centerCrop()
+                                    .into(holder.binding.byAvatar);
+                        }
+                        showText(holder, itemData.groupChannelNotification);
+                    }
+                });
+                if(itemData.groupChannelNotification.getChannelId().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId())) {
+                    holder.binding.layoutAcceptInviterButton.setVisibility(VISIBLE);
+                }else {
+                    holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
+                }
                 break;
         }
         holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.groupChannelNotification.getTime()));
@@ -199,7 +211,7 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                     if(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(activity).getImessageId().equals(groupChannelNotification.getChannelId())) {
                         text = groupChannelNotification.getByChannel().autoGetName()  + " 邀请你移交 " + groupChannelNotification.getGroupChannel().getName() + " 的管理员。";
                     }else {
-                        text = groupChannelNotification.getByChannel().autoGetName()  + " 邀请 " + groupChannelNotification.getChannel().autoGetName() + " 移交 " + groupChannelNotification.getGroupChannel().getName() + " 的管理员。";
+                        text = "邀请 " + groupChannelNotification.getChannel().autoGetName() + " 移交 " + groupChannelNotification.getGroupChannel().getName() + " 的管理员。";
                     }
                 }
                 break;
@@ -234,7 +246,24 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
             }
         });
         holder.binding.acceptInviterButton.setOnClickListener(v -> {
-
+            new ConfirmDialog(activity)
+                    .setNegativeButton()
+                    .setPositiveButton(new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           AcceptTransferGroupChannelManagerPostBody postBody = new AcceptTransferGroupChannelManagerPostBody(itemData.groupChannelNotification.getUuid());
+                           GroupChannelApiCaller.acceptTransferGroupChannelManager(activity, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(activity) {
+                               @Override
+                               public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                   super.ok(data, raw, call);
+                                   data.commonHandleResult(activity, new int[]{-101, -102}, () -> {
+                                       new CustomViewMessageDialog(activity, "操作成功。")
+                                               .create().show();
+                                   });
+                               }
+                           });
+                       }
+                   }).create().show();
         });
     }
 }

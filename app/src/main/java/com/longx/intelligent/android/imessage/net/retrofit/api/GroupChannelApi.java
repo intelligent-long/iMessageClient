@@ -1,6 +1,7 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
 import com.longx.intelligent.android.imessage.data.request.AcceptAddGroupChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.AcceptTransferGroupChannelManagerPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
@@ -130,7 +131,10 @@ public interface GroupChannelApi {
     @POST("group_channel/group_channel_notifications/view")
     CompletableCall<OperationStatus> viewGroupChannelNotifications(@Body ViewGroupChannelNotificationsPostBody postBody);
 
-    @POST("group_channel_manage/transfer_manager")
+    @POST("group_channel_manage/transfer_manager/invite")
     CompletableCall<OperationStatus> transferGroupChannelManager(@Body TransferGroupChannelManagerPostBody postBody);
+
+    @POST("group_channel_manage/transfer_manager/accept")
+    CompletableCall<OperationStatus> acceptTransferGroupChannelManager(@Body AcceptTransferGroupChannelManagerPostBody postBody);
 
 }

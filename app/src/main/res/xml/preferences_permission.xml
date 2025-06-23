@@ -30,7 +30,7 @@
     <com.longx.intelligent.android.imessage.preference.PermissionPreference
         app:key="@string/preference_key_record_audio"
         app:title="录制音频"
-        app:summary="录制语音消息和通话"/>
+        app:summary="录制语音和通话"/>
 
     <com.longx.intelligent.android.imessage.preference.PermissionPreference
         app:key="@string/preference_key_bluetooth_connect"
