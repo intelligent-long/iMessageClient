@@ -30,6 +30,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.Path;
 
 /**
  * Created by LONG on 2025/4/20 at 上午5:29.
@@ -235,6 +236,12 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> acceptTransferGroupChannelManager(LifecycleOwner lifecycleOwner, AcceptTransferGroupChannelManagerPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().acceptTransferGroupChannelManager(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> terminateGroupChannel(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().terminateGroupChannel(groupChannelId);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

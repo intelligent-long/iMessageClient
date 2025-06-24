@@ -120,7 +120,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/disband_group_channel"
+        android:id="@+id/terminate_group_channel"
         style="@style/Widget.Material3.Button.TonalButton.Icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

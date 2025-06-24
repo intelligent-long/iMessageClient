@@ -137,4 +137,8 @@ public interface GroupChannelApi {
     @POST("group_channel_manage/transfer_manager/accept")
     CompletableCall<OperationStatus> acceptTransferGroupChannelManager(@Body AcceptTransferGroupChannelManagerPostBody postBody);
 
+    @POST("group_channel_manage/terminate/{groupChannelId}")
+    CompletableCall<OperationStatus> terminateGroupChannel(@Path("groupChannelId") String groupChannelId);
+
+
 }

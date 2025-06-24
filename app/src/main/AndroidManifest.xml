@@ -144,7 +144,7 @@
             android:name=".activity.GroupChannelAdditionsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activity.GroupChannelsActivity"
             android:exported="false"

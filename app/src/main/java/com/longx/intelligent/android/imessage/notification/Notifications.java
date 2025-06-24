@@ -190,6 +190,7 @@ public class Notifications {
 
     public static void notifyGroupChannelAdditionActivity(Context context, int selfNotificationRequest, int selfNotificationRespond, int otherNotificationRequest, int otherNotificationRespond, int notificationInviter, int notificationInvitee){
         Intent intent = new Intent(context, GroupChannelAdditionsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         String text;
         boolean[] booleans = new boolean[4];
         StringBuilder stringBuilder = new StringBuilder();
