@@ -135,6 +135,7 @@
     <string name="preference_key_app_settings">app_settings</string>
     <string name="preference_key_permission">permission</string>
     <string name="preference_key_restart">restart</string>
+    <string name="preference_key_clear_all_badges">clear_all_badges</string>
     <string name="preference_key_ui">UI</string>
     <string name="preference_key_change_avatar">change_avatar</string>
     <string name="preference_key_change_group_id_user">group_id_user</string>

@@ -12,7 +12,17 @@
         app:title="权限"
         app:showDivider="true"/>
 
-    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
-        app:key="@string/preference_key_restart"
-        app:title="重启" />
+    <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category
+        app:title="重置">
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_clear_all_badges"
+            app:title="清空提示标记"
+            app:summary="清除所有未查看内容的提示标记"/>
+
+        <com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Preference
+            app:key="@string/preference_key_restart"
+            app:title="重启" />
+    </com.longx.intelligent.android.lib.materialyoupreference.preferences.Material3Category>
+
 </PreferenceScreen>

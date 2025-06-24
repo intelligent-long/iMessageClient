@@ -12,6 +12,8 @@ import com.longx.intelligent.android.imessage.activity.VersionActivity;
 import com.longx.intelligent.android.imessage.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.imessage.da.database.DatabaseInitiator;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
+import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.OfflineDetail;
 import com.longx.intelligent.android.imessage.data.Release;
 import com.longx.intelligent.android.imessage.data.Self;
@@ -293,5 +295,15 @@ public class GlobalBehaviors {
                 });
             }
         });
+    }
+
+    public static void clearAllBadges(Context context){
+        SharedPreferencesAccessor.NewContentCount.saveBroadcastCommentNewsCount(context, 0);
+        SharedPreferencesAccessor.NewContentCount.saveBroadcastLikeNewsCount(context, 0);
+        SharedPreferencesAccessor.NewContentCount.saveBroadcastReplyCommentNewsCount(context, 0);
+        SharedPreferencesAccessor.NewContentCount.saveChannelAdditionActivities(context, new ChannelAdditionNotViewedCount(0, 0, 0, 0));
+        SharedPreferencesAccessor.NewContentCount.saveGroupChannelAdditionActivities(context, new GroupChannelAdditionNotViewedCount(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+        SharedPreferencesAccessor.NewContentCount.saveGroupChannelNotifications(context, 0);
+        AppUtil.restartApp(context);
     }
 }

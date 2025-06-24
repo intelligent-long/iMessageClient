@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.behaviorcomponents.GlobalBehaviors;
 import com.longx.intelligent.android.imessage.databinding.ActivityOtherAppSettingsSettingsBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
 import com.longx.intelligent.android.imessage.fragment.settings.BasePreferenceFragmentCompat;
@@ -39,6 +40,7 @@ public class OtherAppSettingsSettingsActivity extends BaseSettingsActivity {
         private Material3Preference preferenceAppSettings;
         private Material3Preference preferencePermission;
         private Material3Preference preferenceRestart;
+        private Material3Preference preferenceClearAllBadges;
 
         public SettingsFragment() {
             super();
@@ -55,6 +57,7 @@ public class OtherAppSettingsSettingsActivity extends BaseSettingsActivity {
             preferenceAppSettings = findPreference(getString(R.string.preference_key_app_settings));
             preferencePermission = findPreference(getString(R.string.preference_key_permission));
             preferenceRestart = findPreference(getString(R.string.preference_key_restart));
+            preferenceClearAllBadges = findPreference(getString(R.string.preference_key_clear_all_badges));
         }
 
         @Override
@@ -67,6 +70,7 @@ public class OtherAppSettingsSettingsActivity extends BaseSettingsActivity {
             preferenceAppSettings.setOnPreferenceClickListener(this);
             preferencePermission.setOnPreferenceClickListener(this);
             preferenceRestart.setOnPreferenceClickListener(this);
+            preferenceClearAllBadges.setOnPreferenceClickListener(this);
         }
 
         @Override
@@ -81,11 +85,19 @@ public class OtherAppSettingsSettingsActivity extends BaseSettingsActivity {
             }else if(preference.equals(preferencePermission)){
                 startActivity(new Intent(getActivity(), PermissionSettingsActivity.class));
             }else if(preference.equals(preferenceRestart)){
-                new ConfirmDialog((AppCompatActivity) getActivity(), "如果应用出现异常，重新启动可能可以解决问题。\n是否确定要继续？\n注意：此操作有极低概率导致数据异常。")
+                new ConfirmDialog(getActivity(), "如果应用出现异常，重新启动可能可以解决问题。\n是否确定要继续？\n注意：此操作有极低概率导致数据异常。")
                         .setNegativeButton()
                         .setPositiveButton((dialog, which) -> {
                             AppUtil.restartApp(requireContext());
                         })
+                        .create().show();
+            } else if (preference.equals(preferenceClearAllBadges)) {
+                new ConfirmDialog(getActivity(), "如果应用内显示的提示标记出现异常，可以尝试通过此操作解决问题。\n是否确定要继续？\n注意：此操作有极低概率导致数据异常。")
+                        .setNegativeButton()
+                        .setPositiveButton((dialog, which) -> {
+                                    GlobalBehaviors.clearAllBadges(requireContext());
+                                }
+                        )
                         .create().show();
             }
             return true;
