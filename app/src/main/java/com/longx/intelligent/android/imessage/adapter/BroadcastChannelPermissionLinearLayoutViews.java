@@ -140,14 +140,14 @@ public class BroadcastChannelPermissionLinearLayoutViews extends LinearLayoutVie
     private void switchViewsWithFade(View viewToHide, View viewToShow) {
         viewToHide.animate()
                 .alpha(0f)
-                .setDuration(480)
+                .setDuration(240)
                 .withEndAction(() -> {
                     viewToHide.setVisibility(View.GONE);
                     viewToShow.setAlpha(0f);
                     viewToShow.setVisibility(View.VISIBLE);
                     viewToShow.animate()
                             .alpha(1f)
-                            .setDuration(480)
+                            .setDuration(240)
                             .start();
                 }).start();
     }
