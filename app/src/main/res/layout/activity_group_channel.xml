@@ -57,6 +57,15 @@
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/terminated_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="17sp"
+            android:text="群频道已解散"
+            android:textColor="?attr/colorOutline"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -232,13 +241,5 @@
             app:iconPadding="10dp"
             android:text="发消息"
             android:textSize="17sp"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/terminated_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:textSize="15sp"
-            android:text="群频道已解散。"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
