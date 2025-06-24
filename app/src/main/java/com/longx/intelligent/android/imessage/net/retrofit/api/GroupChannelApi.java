@@ -50,7 +50,7 @@ public interface GroupChannelApi {
     CompletableCall<OperationData> findGroupChannelByGroupChannelId(@Path("groupChannelId") String groupChannelId);
 
     @GET("group_channel/find/group_channel_id/{groupChannelId}")
-    CompletableCall<OperationData> findGroupChannelByGroupChannelId(@Path("groupChannelId") String groupChannelId, @Query("queryType") String queryType);
+    CompletableCall<OperationData> findGroupChannelByGroupChannelId(@Path("groupChannelId") String groupChannelId, @Query("queryType") String queryType,  @Query("includeInactive") boolean includeInactive);
 
     @GET("group_channel/info/group_channel_id_user/can_change/{groupChannelId}")
     CompletableCall<OperationData> groupChannelIdUserNowCanChange(@Path("groupChannelId") String groupChannelId);

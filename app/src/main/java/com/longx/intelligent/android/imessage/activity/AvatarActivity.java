@@ -41,19 +41,23 @@ public class AvatarActivity extends BaseActivity {
         setupDefaultBackNavigation(binding.toolbar);
         imessageId = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.IMESSAGE_ID));
         avatarHash = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.AVATAR_HASH));
-        avatarExtension = Objects.requireNonNull(getIntent().getStringExtra(ExtraKeys.AVATAR_EXTENSION));
+        avatarExtension = getIntent().getStringExtra(ExtraKeys.AVATAR_EXTENSION);
         avatarType = Objects.requireNonNull(getIntent().getParcelableExtra(ExtraKeys.AVATAR_TYPE));
         setupToolbar();
         showAvatar();
     }
 
     private void setupToolbar() {
-        binding.toolbar.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.save_avatar){
-                saveAvatar();
-            }
-            return true;
-        });
+        if(avatarExtension == null) {
+            binding.toolbar.getMenu().findItem(R.id.save_avatar).setVisible(false);
+        }else {
+            binding.toolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.save_avatar) {
+                    saveAvatar();
+                }
+                return true;
+            });
+        }
     }
 
     private void saveAvatar() {

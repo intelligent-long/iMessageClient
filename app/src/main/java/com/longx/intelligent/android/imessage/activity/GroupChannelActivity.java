@@ -1,5 +1,8 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -48,8 +51,8 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
                         Intent data = result.getData();
                         if (data != null) {
                             if(data.getBooleanExtra(ExtraKeys.TRUE, false)){
-                                binding.sendMessageButton.setVisibility(View.GONE);
-                                binding.joinChannelButton.setVisibility(View.VISIBLE);
+                                binding.sendMessageButton.setVisibility(GONE);
+                                binding.joinChannelButton.setVisibility(VISIBLE);
                                 binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
                             }
                         }
@@ -84,56 +87,67 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
     }
 
     private void showContent() {
-//        if(inviteUuid != null) binding.toolbar.setTitle("接受邀请");
-        if(networkFetch && !inGroup) binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
-        if(groupChannel.getGroupAvatar() == null || groupChannel.getGroupAvatar().getHash() == null){
+        if (groupChannel.getGroupAvatar() == null || groupChannel.getGroupAvatar().getHash() == null) {
             GlideApp.with(this)
                     .load(AppCompatResources.getDrawable(this, R.drawable.group_channel_default_avatar))
                     .override(Target.SIZE_ORIGINAL)
                     .into(binding.avatar);
-        }else {
+        } else {
             GlideApp.with(this)
                     .load(NetDataUrls.getGroupAvatarUrl(this, groupChannel.getGroupAvatar().getHash()))
                     .into(binding.avatar);
         }
-        if(isOwner){
-            binding.joinChannelButton.setVisibility(View.GONE);
-        }else {
-            binding.editInfoButton.setVisibility(View.GONE);
-            if(inGroup){
-                binding.joinChannelButton.setVisibility(View.GONE);
-                binding.toolbar.getMenu().findItem(R.id.more).setVisible(true);
-            }else {
-                binding.sendMessageButton.setVisibility(View.GONE);
-                binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
-            }
-        }
         if(groupChannel.getNote() != null){
             binding.name.setText(groupChannel.getNote());
             binding.name1.setText(groupChannel.getName());
-            binding.layoutName.setVisibility(View.VISIBLE);
+            binding.layoutName.setVisibility(VISIBLE);
         }else {
             binding.name.setText(groupChannel.getName());
-            binding.layoutName.setVisibility(View.GONE);
+            binding.layoutName.setVisibility(GONE);
         }
         binding.groupChannelIdUser.setText(groupChannel.getGroupChannelIdUser());
         String regionDesc = groupChannel.buildRegionDesc();
         if(regionDesc == null){
-            binding.layoutRegion.setVisibility(View.GONE);
-            binding.regionDivider.setVisibility(View.GONE);
+            binding.layoutRegion.setVisibility(GONE);
+            binding.regionDivider.setVisibility(GONE);
         }else {
-            binding.layoutRegion.setVisibility(View.VISIBLE);
+            binding.layoutRegion.setVisibility(VISIBLE);
             if(groupChannel.getNote() == null){
-                binding.regionDivider.setVisibility(View.GONE);
+                binding.regionDivider.setVisibility(GONE);
             }else {
-                binding.regionDivider.setVisibility(View.VISIBLE);
+                binding.regionDivider.setVisibility(VISIBLE);
             }
             binding.region.setText(regionDesc);
         }
-        if((binding.layoutName.getVisibility() == View.GONE) && (binding.layoutRegion.getVisibility() == View.GONE)){
-            binding.infos.setVisibility(View.GONE);
+        if((binding.layoutName.getVisibility() == GONE) && (binding.layoutRegion.getVisibility() == GONE)){
+            binding.infos.setVisibility(GONE);
         }else {
-            binding.infos.setVisibility(View.VISIBLE);
+            binding.infos.setVisibility(VISIBLE);
+        }
+        if(groupChannel.isTerminated()) {
+            binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+            binding.toolbar.getMenu().findItem(R.id.qr_code).setVisible(false);
+            binding.layoutAllGroupMembers.setVisibility(GONE);
+            binding.editInfoButton.setVisibility(GONE);
+            binding.joinChannelButton.setVisibility(GONE);
+            binding.sendMessageButton.setVisibility(GONE);
+            binding.terminatedText.setVisibility(VISIBLE);
+        }else {
+            binding.terminatedText.setVisibility(GONE);
+            if (networkFetch && !inGroup)
+                binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+            if (isOwner) {
+                binding.joinChannelButton.setVisibility(GONE);
+            } else {
+                binding.editInfoButton.setVisibility(GONE);
+                if (inGroup) {
+                    binding.joinChannelButton.setVisibility(GONE);
+                    binding.toolbar.getMenu().findItem(R.id.more).setVisible(true);
+                } else {
+                    binding.sendMessageButton.setVisibility(GONE);
+                    binding.toolbar.getMenu().findItem(R.id.more).setVisible(false);
+                }
+            }
         }
     }
 

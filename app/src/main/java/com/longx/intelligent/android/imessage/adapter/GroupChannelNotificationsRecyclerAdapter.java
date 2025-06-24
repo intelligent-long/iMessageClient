@@ -192,6 +192,10 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
                 holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
                 holder.binding.layoutAcceptedText.setVisibility(GONE);
                 break;
+            case TERMINATED_GROUP_CHANNEL:
+                holder.binding.layoutAcceptInviterButton.setVisibility(GONE);
+                holder.binding.layoutAcceptedText.setVisibility(GONE);
+                break;
         }
         holder.binding.time.setText(TimeUtil.formatRelativeTime(itemData.groupChannelNotification.getTime()));
         if (itemData.groupChannelNotification.isViewed()) {
@@ -231,6 +235,11 @@ public class GroupChannelNotificationsRecyclerAdapter extends WrappableRecyclerV
             case ACCEPTED_TRANSFER_MANAGER:
                 if(groupChannelNotification.getChannel() != null) {
                     text = "管理员已移交至 " + groupChannelNotification.getChannel().autoGetName() + " 。";
+                }
+                break;
+            case TERMINATED_GROUP_CHANNEL:
+                if(groupChannelNotification.getChannel() != null) {
+                    text = "群频道已被 " + groupChannelNotification.getChannel().autoGetName() + " 解散。";
                 }
                 break;
         }

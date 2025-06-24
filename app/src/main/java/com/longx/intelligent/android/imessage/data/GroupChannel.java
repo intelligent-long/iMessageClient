@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,11 +31,13 @@ public class GroupChannel implements Parcelable {
     private Region thirdRegion;
     private String avatarHash;
     private Boolean groupJoinVerificationEnabled;
+    @JsonProperty("terminated")
+    private boolean isTerminated;
 
     public GroupChannel() {
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerificationEnabled) {
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, List<GroupChannelAssociation> groupChannelAssociations, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerificationEnabled, boolean isTerminated) {
         this.groupAvatar = groupAvatar;
         this.groupChannelId = groupChannelId;
         this.groupChannelIdUser = groupChannelIdUser;
@@ -48,10 +51,11 @@ public class GroupChannel implements Parcelable {
         this.thirdRegion = thirdRegion;
         this.avatarHash = avatarHash;
         this.groupJoinVerificationEnabled = groupJoinVerificationEnabled;
+        this.isTerminated = isTerminated;
     }
 
-    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerificationEnabled) {
-        this(groupAvatar, groupChannelId, groupChannelIdUser, owner, name, note, createTime, new ArrayList<>(), firstRegion, secondRegion, thirdRegion, avatarHash, groupJoinVerificationEnabled);
+    public GroupChannel(GroupAvatar groupAvatar, String groupChannelId, String groupChannelIdUser, String owner, String name, String note, Date createTime, Region firstRegion, Region secondRegion, Region thirdRegion, String avatarHash, Boolean groupJoinVerificationEnabled, boolean isTerminated) {
+        this(groupAvatar, groupChannelId, groupChannelIdUser, owner, name, note, createTime, new ArrayList<>(), firstRegion, secondRegion, thirdRegion, avatarHash, groupJoinVerificationEnabled, isTerminated);
     }
 
     public GroupAvatar getGroupAvatar() {
@@ -102,6 +106,10 @@ public class GroupChannel implements Parcelable {
         return avatarHash;
     }
 
+    public boolean isTerminated() {
+        return isTerminated;
+    }
+
     public List<GroupChannelAssociation> getGroupChannelAssociations() {
         return groupChannelAssociations;
     }
@@ -116,15 +124,14 @@ public class GroupChannel implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GroupChannel that = (GroupChannel) o;
-        return Objects.equals(groupChannelId, that.groupChannelId) && Objects.equals(owner, that.owner) && Objects.equals(name, that.name) && Objects.equals(note, that.note) && Objects.equals(createTime, that.createTime);
+        return isTerminated == that.isTerminated && Objects.equals(groupChannelId, that.groupChannelId) && Objects.equals(groupChannelIdUser, that.groupChannelIdUser);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupChannelId, owner, name, note, createTime);
+        return Objects.hash(groupChannelId, groupChannelIdUser, isTerminated);
     }
 
     public static final Creator<GroupChannel> CREATOR = new Creator<GroupChannel>() {
@@ -158,6 +165,12 @@ public class GroupChannel implements Parcelable {
         thirdRegion = in.readParcelable(getClass().getClassLoader());
         avatarHash = in.readString();
         groupJoinVerificationEnabled = (Boolean) in.readValue(getClass().getClassLoader());
+        int booleanInt = in.readInt();
+        if(booleanInt == 0){
+            isTerminated =  false;
+        }else if(booleanInt == 1){
+            isTerminated = true;
+        }
     }
 
     @Override
@@ -175,6 +188,7 @@ public class GroupChannel implements Parcelable {
         dest.writeParcelable(thirdRegion, flags);
         dest.writeString(avatarHash);
         dest.writeValue(groupJoinVerificationEnabled);
+        dest.writeInt(isTerminated ? 1 : 0);
     }
 
     public String buildRegionDesc(){
@@ -209,6 +223,7 @@ public class GroupChannel implements Parcelable {
                 ", thirdRegion=" + thirdRegion +
                 ", avatarHash='" + avatarHash + '\'' +
                 ", groupJoinVerificationEnabled=" + groupJoinVerificationEnabled +
+                ", isTerminated=" + isTerminated +
                 '}';
     }
 }

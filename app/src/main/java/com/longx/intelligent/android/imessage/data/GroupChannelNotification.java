@@ -23,7 +23,7 @@ import retrofit2.Response;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupChannelNotification {
-    public enum Type{ACTIVE_DISCONNECT, PASSIVE_DISCONNECT, INVITE_TRANSFER_MANAGER, ACCEPTED_TRANSFER_MANAGER}
+    public enum Type{ACTIVE_DISCONNECT, PASSIVE_DISCONNECT, INVITE_TRANSFER_MANAGER, ACCEPTED_TRANSFER_MANAGER, TERMINATED_GROUP_CHANNEL}
     private String uuid;
     private Type type;
     private String groupChannelId;
@@ -112,7 +112,7 @@ public class GroupChannelNotification {
             groupChannel = GroupChannelDatabaseManager.getInstance().findOneAssociation(groupChannelId);
         }
         if(groupChannel == null){
-            GroupChannelApiCaller.findGroupChannelByGroupChannelId(activity, groupChannelId, "id", new RetrofitApiCaller.BaseCommonYier<OperationData>(activity){
+            GroupChannelApiCaller.findGroupChannelByGroupChannelId(activity, groupChannelId, "id", true, new RetrofitApiCaller.BaseCommonYier<OperationData>(activity){
                 @Override
                 public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                     super.ok(data, raw, call);

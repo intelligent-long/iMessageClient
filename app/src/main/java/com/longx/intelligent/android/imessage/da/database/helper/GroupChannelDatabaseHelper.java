@@ -45,6 +45,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String THIRD_REGION_NAME = "third_region_name";
         public static final String AVATAR_HASH = "avatar_hash";
         public static final String GROUP_JOIN_VERIFICATION = "group_join_verification";
+        public static final String IS_TERMINATED = "is_terminated";
     }
 
     public static class TableAvatarsColumns{
@@ -114,6 +115,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableGroupChannelsColumns.THIRD_REGION_NAME + " VARCHAR,"
                 + TableGroupChannelsColumns.AVATAR_HASH + " VARCHAR,"
                 + TableGroupChannelsColumns.GROUP_JOIN_VERIFICATION + " BOOLEAN,"
+                + TableGroupChannelsColumns.IS_TERMINATED + " BOOLEAN,"
                 + " CONSTRAINT con_unique1 UNIQUE("
                 + TableGroupChannelsColumns.GROUP_CHANNEL_ID
                 +")"
