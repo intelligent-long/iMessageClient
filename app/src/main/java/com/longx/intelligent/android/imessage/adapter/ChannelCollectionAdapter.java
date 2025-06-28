@@ -9,6 +9,7 @@ import static com.longx.intelligent.android.imessage.da.sharedpref.SharedPrefere
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,7 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChannelCollectionActivity;
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelCollectionBinding;
@@ -139,7 +142,9 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
     private void setupYiers(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         holder.binding.clickView.setOnClickListener(v -> {
-            getOnItemClickYier().onItemClick(position, itemData);
+            Intent intent = new Intent(activity, ChannelActivity.class);
+            intent.putExtra(ExtraKeys.CHANNEL, itemData.channel);
+            activity.startActivity(intent);
         });
         holder.binding.indexBar.setOnClickListener(v -> {
             FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_HEADER_CHANNEL, getExistTexts());

@@ -17,22 +17,31 @@ import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.ChannelCollectionAdapter;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelCollectionAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.bottomsheet.AddChannelCollectionBottomSheet;
+import com.longx.intelligent.android.imessage.bottomsheet.AddGroupChannelCollectionBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelCollectionItem;
 import com.longx.intelligent.android.imessage.databinding.ActivityChannelCollectionBinding;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelCollectionBinding;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GroupChannelCollectionActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier{
     private ActivityGroupChannelCollectionBinding binding;
     private GroupChannelCollectionAdapter adapter;
+    private int lastScrollPosition = -1;
+    private int lastScrollOffset = 0;
+    private List<GroupChannel> canAddGroupChannels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,13 @@ public class GroupChannelCollectionActivity extends BaseActivity implements Cont
         init();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void init() {
@@ -111,6 +127,24 @@ public class GroupChannelCollectionActivity extends BaseActivity implements Cont
         updateSort();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
+        List<GroupChannel> groupChannels = GroupChannelDatabaseManager.getInstance().findAllAssociations();
+        canAddGroupChannels = new ArrayList<>();
+        Set<String> collectedGroupChannelIds = new HashSet<>();
+        for (GroupChannelCollectionItem item : allGroupChannelCollections) {
+            collectedGroupChannelIds.add(item.getGroupChannelId());
+        }
+        for (GroupChannel groupChannel : groupChannels) {
+            if (!collectedGroupChannelIds.contains(groupChannel.getGroupChannelId())) {
+                canAddGroupChannels.add(groupChannel);
+            }
+        }
+        binding.toolbar.getMenu().findItem(R.id.add).setEnabled(!canAddGroupChannels.isEmpty());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        showContent();
     }
 
     @Override
@@ -149,13 +183,29 @@ public class GroupChannelCollectionActivity extends BaseActivity implements Cont
                 SharedPreferencesAccessor.SortPref.saveGroupChannelCollectionSortBy(this, SharedPreferencesAccessor.SortPref.GroupChannelCollectionSortBy.Z_TO_A);
                 updateMenuChecked();
                 updateSort();
+            }else if(id == R.id.add){
+                new AddGroupChannelCollectionBottomSheet(this, canAddGroupChannels).show();
             }
             return true;
         });
     }
 
     private void updateSort() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            View topView = layoutManager.getChildAt(0);
+            if (topView != null) {
+                lastScrollPosition = layoutManager.findFirstVisibleItemPosition();
+                lastScrollOffset = topView.getTop() - binding.recyclerView.getPaddingTop();
+            }
+        }
         SharedPreferencesAccessor.SortPref.GroupChannelCollectionSortBy groupChannelCollectionSortBy = SharedPreferencesAccessor.SortPref.getGroupChannelCollectionSortBy(this);
         adapter.sort(groupChannelCollectionSortBy);
+        binding.recyclerView.post(() -> {
+            LinearLayoutManager lm = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+            if (lm != null && lastScrollPosition >= 0) {
+                lm.scrollToPositionWithOffset(lastScrollPosition, lastScrollOffset);
+            }
+        });
     }
 }

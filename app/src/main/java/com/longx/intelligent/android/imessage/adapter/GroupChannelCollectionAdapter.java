@@ -6,13 +6,17 @@ import static com.longx.intelligent.android.imessage.da.sharedpref.SharedPrefere
 import static com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor.SortPref.GroupChannelCollectionSortBy.Z_TO_A;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longx.intelligent.android.imessage.R;
+import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChannelCollectionActivity;
+import com.longx.intelligent.android.imessage.activity.ExtraKeys;
+import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.activity.GroupChannelCollectionActivity;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
@@ -137,7 +141,9 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
     private void setupYiers(@NonNull ViewHolder holder, int position) {
         ItemData itemData = itemDataList.get(position);
         holder.binding.clickView.setOnClickListener(v -> {
-            getOnItemClickYier().onItemClick(position, itemData);
+            Intent intent = new Intent(activity, GroupChannelActivity.class);
+            intent.putExtra(ExtraKeys.GROUP_CHANNEL, itemData.groupChannel);
+            activity.startActivity(intent);
         });
         holder.binding.indexBar.setOnClickListener(v -> {
             FastLocateDialog fastLocateDialog = new FastLocateDialog(activity, FastLocateDialog.LOCATE_HEADER_CHANNEL, getExistTexts());

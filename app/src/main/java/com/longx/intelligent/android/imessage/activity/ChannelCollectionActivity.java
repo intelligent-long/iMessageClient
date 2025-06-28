@@ -18,19 +18,27 @@ import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.ChannelCollectionAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
+import com.longx.intelligent.android.imessage.bottomsheet.AddChannelCollectionBottomSheet;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.databinding.ActivityChannelCollectionBinding;
 import com.longx.intelligent.android.imessage.util.ErrorLogger;
+import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ChannelCollectionActivity extends BaseActivity implements ContentUpdater.OnServerContentUpdateYier {
     private ActivityChannelCollectionBinding binding;
     private ChannelCollectionAdapter adapter;
+    private int lastScrollPosition = -1;
+    private int lastScrollOffset = 0;
+    private List<Channel> canAddChannels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,13 @@ public class ChannelCollectionActivity extends BaseActivity implements ContentUp
         init();
         showContent();
         setupYiers();
+        GlobalYiersHolder.holdYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlobalYiersHolder.removeYier(this, ContentUpdater.OnServerContentUpdateYier.class, this);
     }
 
     private void init() {
@@ -93,7 +108,7 @@ public class ChannelCollectionActivity extends BaseActivity implements ContentUp
         return binding;
     }
 
-    private void showContent() {
+    public void showContent() {
         List<ChannelCollectionItem> allChannelCollections = ChannelDatabaseManager.getInstance().findAllChannelCollections();
         if (allChannelCollections.isEmpty()) {
             toNoContent();
@@ -109,6 +124,25 @@ public class ChannelCollectionActivity extends BaseActivity implements ContentUp
         updateSort();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(adapter);
+        List<ChannelAssociation> allAssociations = ChannelDatabaseManager.getInstance().findAllAssociations();
+        canAddChannels = new ArrayList<>();
+        Set<String> collectedChannelIds = new HashSet<>();
+        for (ChannelCollectionItem item : allChannelCollections) {
+            collectedChannelIds.add(item.getChannelId());
+        }
+        for (ChannelAssociation association : allAssociations) {
+            Channel channel = association.getChannel();
+            if (!collectedChannelIds.contains(channel.getImessageId())) {
+                canAddChannels.add(channel);
+            }
+        }
+        binding.toolbar.getMenu().findItem(R.id.add).setEnabled(!canAddChannels.isEmpty());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        showContent();
     }
 
     @Override
@@ -147,13 +181,29 @@ public class ChannelCollectionActivity extends BaseActivity implements ContentUp
                 SharedPreferencesAccessor.SortPref.saveChannelCollectionSortBy(this, SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy.Z_TO_A);
                 updateMenuChecked();
                 updateSort();
+            }else if(id == R.id.add){
+                new AddChannelCollectionBottomSheet(this, canAddChannels).show();
             }
             return true;
         });
     }
 
     private void updateSort() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            View topView = layoutManager.getChildAt(0);
+            if (topView != null) {
+                lastScrollPosition = layoutManager.findFirstVisibleItemPosition();
+                lastScrollOffset = topView.getTop() - binding.recyclerView.getPaddingTop();
+            }
+        }
         SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy channelCollectionSortBy = SharedPreferencesAccessor.SortPref.getChannelCollectionSortBy(this);
         adapter.sort(channelCollectionSortBy);
+        binding.recyclerView.post(() -> {
+            LinearLayoutManager lm = (LinearLayoutManager) binding.recyclerView.getLayoutManager();
+            if (lm != null && lastScrollPosition >= 0) {
+                lm.scrollToPositionWithOffset(lastScrollPosition, lastScrollOffset);
+            }
+        });
     }
 }
