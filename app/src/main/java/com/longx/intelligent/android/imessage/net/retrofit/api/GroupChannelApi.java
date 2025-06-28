@@ -2,6 +2,8 @@ package com.longx.intelligent.android.imessage.net.retrofit.api;
 
 import com.longx.intelligent.android.imessage.data.request.AcceptAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.AcceptTransferGroupChannelManagerPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddChannelCollectionPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddGroupChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
@@ -12,6 +14,8 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTag
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.InviteJoinGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.ManageGroupChannelDisconnectPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveChannelCollectionPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
@@ -139,6 +143,15 @@ public interface GroupChannelApi {
 
     @POST("group_channel_manage/terminate/{groupChannelId}")
     CompletableCall<OperationStatus> terminateGroupChannel(@Path("groupChannelId") String groupChannelId);
+
+    @GET("group_channel/collection")
+    CompletableCall<OperationData> fetchAllGroupCollections();
+
+    @POST("group_channel/collection/add")
+    CompletableCall<OperationStatus> addGroupCollection(@Body AddGroupChannelCollectionPostBody postBody);
+
+    @POST("group_channel/collection/remove")
+    CompletableCall<OperationStatus> removeGroupCollection(@Body RemoveGroupChannelCollectionPostBody postBody);
 
 
 }

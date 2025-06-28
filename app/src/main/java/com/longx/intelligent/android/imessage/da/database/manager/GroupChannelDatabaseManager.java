@@ -5,16 +5,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.longx.intelligent.android.imessage.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.database.helper.GroupChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAssociation;
+import com.longx.intelligent.android.imessage.data.GroupChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -470,5 +474,105 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
         return result;
+    }
+
+    public boolean deleteAllGroupChannelCollections() {
+        boolean isSuccess = true;
+        openDatabaseIfClosed();
+        try {
+            int rowsDeleted = getDatabase().delete(
+                    GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
+                    null,
+                    null
+            );
+            if (rowsDeleted == 0) {
+                isSuccess = false;
+            }
+        } catch (Exception e) {
+            ErrorLogger.log(e);
+            isSuccess = false;
+        } finally {
+            releaseDatabaseIfUnused();
+        }
+        return isSuccess;
+    }
+
+    public List<GroupChannelCollectionItem> findAllGroupChannelCollections(){
+        List<GroupChannelCollectionItem> result = new ArrayList<>();
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().query(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS, null, GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true", null, null, null, GroupChannelDatabaseHelper.TableCollectionsColumns.ORDER)){
+            while (cursor.moveToNext()){
+                String uuid = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.UUID);
+                String owner = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.OWNER);
+                String groupChannelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.GROUP_CHANNEL_ID);
+                Date addTime = DatabaseUtil.getTime(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.ADD_TIME);
+                Integer order = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.RAW_ORDER);
+                Boolean isActive = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE);
+                result.add(new GroupChannelCollectionItem(uuid, owner, groupChannelId, addTime, order == null ? -1 : order, Boolean.TRUE.equals(isActive)));
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return result;
+    }
+
+    public GroupChannelCollectionItem findOneGroupChannelCollection(String groupChannelId) {
+        GroupChannelCollectionItem result = null;
+        openDatabaseIfClosed();
+        try (Cursor cursor = getDatabase().query(
+                GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
+                null,
+                GroupChannelDatabaseHelper.TableCollectionsColumns.GROUP_CHANNEL_ID + "=? AND " +
+                        GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true",
+                new String[]{groupChannelId},
+                null, null, GroupChannelDatabaseHelper.TableCollectionsColumns.ORDER)) {
+
+            if (cursor.moveToFirst()) {
+                String uuid = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.UUID);
+                String owner = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.OWNER);
+                Date addTime = DatabaseUtil.getTime(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.ADD_TIME);
+                Integer order = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.RAW_ORDER);
+                Boolean isActive = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE);
+                result = new GroupChannelCollectionItem(
+                        uuid, owner, groupChannelId, addTime, order == null ? -1 : order, Boolean.TRUE.equals(isActive)
+                );
+            }
+        } finally {
+            releaseDatabaseIfUnused();
+        }
+        return result;
+    }
+
+    public boolean updateGroupChannelCollections(List<GroupChannelCollectionItem> groupChannelCollectionItems) {
+        boolean isSuccess = true;
+        openDatabaseIfClosed();
+        try {
+            getDatabase().beginTransaction();
+            for (GroupChannelCollectionItem item : groupChannelCollectionItems) {
+                ContentValues values = new ContentValues();
+                values.put(GroupChannelDatabaseHelper.TableCollectionsColumns.UUID, item.getUuid());
+                values.put(GroupChannelDatabaseHelper.TableCollectionsColumns.OWNER, item.getOwner());
+                values.put(GroupChannelDatabaseHelper.TableCollectionsColumns.GROUP_CHANNEL_ID, item.getGroupChannelId());
+                values.put(GroupChannelDatabaseHelper.TableCollectionsColumns.ADD_TIME, item.getAddTime().getTime());
+                values.put(GroupChannelDatabaseHelper.TableCollectionsColumns.ORDER, item.getOrder());
+                values.put(GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE, item.isActive());
+                long id = getDatabase().insertWithOnConflict(
+                        GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
+                        null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                if (id == -1) {
+                    isSuccess = false;
+                }
+            }
+            if(isSuccess) {
+                getDatabase().setTransactionSuccessful();
+            }
+        } catch (Exception e) {
+            ErrorLogger.log(e);
+            isSuccess = false;
+        } finally {
+            getDatabase().endTransaction();
+            releaseDatabaseIfUnused();
+        }
+        return isSuccess;
     }
 }

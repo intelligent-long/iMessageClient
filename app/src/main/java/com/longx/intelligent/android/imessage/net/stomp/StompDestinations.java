@@ -30,4 +30,5 @@ public class StompDestinations {
 //    public static final String GROUP_CHANNEL_MANAGER_TRANSFER_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_manager_transfer_update";
 //    public static final String GROUP_CHANNEL_MANAGER_TRANSFER_NOT_VIEW_COUNT_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_manager_transfer_not_view_count_update";
     public static final String CHANNEL_COLLECTIONS_UPDATE = "/user" + PREFIX_QUEUE + "/channel_collections_update";
+    public static final String GROUP_CHANNEL_COLLECTIONS_UPDATE = "/user" + PREFIX_QUEUE + "/group_channel_collections_update";
 }

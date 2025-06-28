@@ -242,4 +242,9 @@ public class ServerMessageServiceStompActions {
         ContentUpdater.updateChannelCollections(context, results -> {
         });
     }
+
+    public static void updateGroupChannelCollections(Context context){
+        ContentUpdater.updateGroupChannelCollections(context, results -> {
+        });
+    }
 }

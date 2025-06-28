@@ -140,7 +140,7 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
             startActivity(new Intent(this, GroupChannelNotificationsActivity.class));
         });
         headerViewBinding.layoutFavorite.setOnClickListener(v -> {
-
+            startActivity(new Intent(this, GroupChannelCollectionActivity.class));
         });
     }
 

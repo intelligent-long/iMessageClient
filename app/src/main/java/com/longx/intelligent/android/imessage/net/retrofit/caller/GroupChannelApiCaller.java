@@ -4,6 +4,8 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.imessage.data.request.AcceptAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.AcceptTransferGroupChannelManagerPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddChannelCollectionPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddGroupChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddGroupChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelIdUserPostBody;
@@ -14,6 +16,8 @@ import com.longx.intelligent.android.imessage.data.request.ChangeGroupChannelTag
 import com.longx.intelligent.android.imessage.data.request.CreateGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.InviteJoinGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.ManageGroupChannelDisconnectPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveChannelCollectionPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddGroupChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetGroupChannelTagsPostBody;
@@ -242,6 +246,24 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
 
     public static CompletableCall<OperationStatus> terminateGroupChannel(LifecycleOwner lifecycleOwner, String groupChannelId, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().terminateGroupChannel(groupChannelId);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> fetchAllGroupCollections(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllGroupCollections();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> addGroupCollection(LifecycleOwner lifecycleOwner, AddGroupChannelCollectionPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().addGroupCollection(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> removeGroupCollection(LifecycleOwner lifecycleOwner, RemoveGroupChannelCollectionPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().removeGroupCollection(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

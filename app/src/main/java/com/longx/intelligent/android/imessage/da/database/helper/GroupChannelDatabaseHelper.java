@@ -17,6 +17,7 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TABLE_NAME_TAGS = "tags";
         public static final String TABLE_NAME_TAG_CHANNELS = "tag_channels";
         public static final String TABLE_NAME_GROUP_CHANNEL_NOTIFICATIONS = "group_channel_notifications";
+        public static final String TABLE_NAME_COLLECTIONS = "collections";
     }
 
     public static class TableGroupChannelAssociationsColumns {
@@ -80,6 +81,16 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String IS_VIEWED = "is_viewed";
     }
 
+    public static class TableCollectionsColumns {
+        public static final String UUID = "uuid";
+        public static final String OWNER = "owner";
+        public static final String GROUP_CHANNEL_ID = "group_channel_id";
+        public static final String ADD_TIME = "add_time";
+        public static final String ORDER = "`order`";
+        public static final String RAW_ORDER = "order";
+        public static final String IS_ACTIVE = "is_active";
+    }
+
     public GroupChannelDatabaseHelper(Context context, String imessageId) {
         super(context, DatabaseInfo.DATABASE_NAME, null, DatabaseInfo.DATABASE_VERSION, imessageId);
     }
@@ -131,19 +142,19 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 +")"
                 + ");";
         db.execSQL(create_sql_3);
-        String create_sql_4 = "CREATE TABLE IF NOT EXISTS " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAGS + "("
-                + ChannelDatabaseHelper.TableTagsColumns.ID + " VARCHAR,"
-                + ChannelDatabaseHelper.TableTagsColumns.IMESSAGE_ID + " VARCHAR,"
-                + ChannelDatabaseHelper.TableTagsColumns.NAME + " VARCHAR,"
-                + ChannelDatabaseHelper.TableTagsColumns.ORDER + " INTEGER,"
+        String create_sql_4 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_TAGS + "("
+                + TableTagsColumns.ID + " VARCHAR,"
+                + TableTagsColumns.IMESSAGE_ID + " VARCHAR,"
+                + TableTagsColumns.NAME + " VARCHAR,"
+                + TableTagsColumns.ORDER + " INTEGER,"
                 + " CONSTRAINT con_unique1 UNIQUE("
-                + ChannelDatabaseHelper.TableTagsColumns.ID
+                + TableTagsColumns.ID
                 +")"
                 + ");";
         db.execSQL(create_sql_4);
-        String create_sql_5 = "CREATE TABLE IF NOT EXISTS " + ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_TAG_CHANNELS + "("
-                + ChannelDatabaseHelper.TableTagChannelsColumns.TAG_ID + " VARCHAR,"
-                + ChannelDatabaseHelper.TableTagChannelsColumns.IMESSAGE_ID + " VARCHAR"
+        String create_sql_5 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_TAG_CHANNELS + "("
+                + TableTagChannelsColumns.TAG_ID + " VARCHAR,"
+                + TableTagChannelsColumns.IMESSAGE_ID + " VARCHAR"
                 + ");";
         db.execSQL(create_sql_5);
         String create_sql_6 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_NOTIFICATIONS + "("
@@ -160,6 +171,18 @@ public class GroupChannelDatabaseHelper extends BaseDatabaseHelper{
                 +")"
                 + ");";
         db.execSQL(create_sql_6);
+        String create_sql_7 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_COLLECTIONS + "("
+                + TableCollectionsColumns.UUID + " VARCHAR,"
+                + TableCollectionsColumns.OWNER + " VARCHAR,"
+                + TableCollectionsColumns.GROUP_CHANNEL_ID + " VARCHAR,"
+                + TableCollectionsColumns.ADD_TIME + " DATETIME,"
+                + TableCollectionsColumns.ORDER + " INTEGER,"
+                + TableCollectionsColumns.IS_ACTIVE + " BOOLEAN,"
+                + " CONSTRAINT con_unique1 UNIQUE("
+                + TableCollectionsColumns.UUID
+                +")"
+                + ");";
+        db.execSQL(create_sql_7);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
 

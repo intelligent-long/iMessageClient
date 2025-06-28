@@ -996,6 +996,14 @@ public class SharedPreferencesAccessor {
             Z_TO_A
         }
 
+        public static enum GroupChannelCollectionSortBy {
+            CUSTOM,
+            NEW_TO_OLD,
+            OLD_TO_NEW,
+            A_TO_Z,
+            Z_TO_A
+        }
+
         private static SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         }
@@ -1010,6 +1018,18 @@ public class SharedPreferencesAccessor {
         public static ChannelCollectionSortBy getChannelCollectionSortBy(Context context){
             String name = getSharedPreferences(context).getString(Key.CHANNEL_COLLECTION_SORT_BY, ChannelCollectionSortBy.A_TO_Z.name());
             return ChannelCollectionSortBy.valueOf(name);
+        }
+
+        public static void saveGroupChannelCollectionSortBy(Context context, GroupChannelCollectionSortBy sortBy){
+            getSharedPreferences(context)
+                    .edit()
+                    .putString(Key.GROUP_CHANNEL_COLLECTION_SORT_BY, sortBy.name())
+                    .apply();
+        }
+
+        public static GroupChannelCollectionSortBy getGroupChannelCollectionSortBy(Context context){
+            String name = getSharedPreferences(context).getString(Key.GROUP_CHANNEL_COLLECTION_SORT_BY, GroupChannelCollectionSortBy.A_TO_Z.name());
+            return GroupChannelCollectionSortBy.valueOf(name);
         }
     }
 

@@ -17,6 +17,7 @@ import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.data.GroupChannelAdditionNotViewedCount;
+import com.longx.intelligent.android.imessage.data.GroupChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.GroupChannelNotification;
 import com.longx.intelligent.android.imessage.data.GroupChannelTag;
 import com.longx.intelligent.android.imessage.data.OpenedChat;
@@ -69,6 +70,7 @@ public class ContentUpdater {
         String ID_GROUP_CHANNEL_ADDITIONS_UNVIEWED_COUNT = "group_channel_additions_unviewed_count";
         String ID_GROUP_CHANNEL_NOTIFICATIONS = "group_channel_notifications";
         String ID_CHANNEL_COLLECTIONS = "channel_collections";
+        String ID_GROUP_CHANNEL_COLLECTIONS = "group_channel_collections";
 
         void onStartUpdate(String id, List<String> updatingIds, Object... objects);
 
@@ -418,6 +420,22 @@ public class ContentUpdater {
                     });
                     ChannelDatabaseManager.getInstance().deleteAllChannelCollections();
                     ChannelDatabaseManager.getInstance().updateChannelCollections(channelCollectionItems);
+                    resultsYier.onResults();
+                });
+            }
+        });
+    }
+
+    public static void updateGroupChannelCollections(Context context, ResultsYier resultsYier){
+        GroupChannelApiCaller.fetchAllGroupCollections(null, new ContentUpdateApiYier<>(OnServerContentUpdateYier.ID_GROUP_CHANNEL_COLLECTIONS, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleSuccessResult(() -> {
+                    List<GroupChannelCollectionItem> groupChannelCollectionItems = data.getData(new TypeReference<>() {
+                    });
+                    GroupChannelDatabaseManager.getInstance().deleteAllGroupChannelCollections();
+                    GroupChannelDatabaseManager.getInstance().updateGroupChannelCollections(groupChannelCollectionItems);
                     resultsYier.onResults();
                 });
             }

@@ -9,14 +9,23 @@ import android.widget.Toast;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
 import com.longx.intelligent.android.imessage.behaviorcomponents.MessageDisplayer;
+import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.database.manager.GroupChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
+import com.longx.intelligent.android.imessage.data.GroupChannelCollectionItem;
+import com.longx.intelligent.android.imessage.data.request.AddChannelCollectionPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddGroupChannelCollectionPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveChannelCollectionPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveGroupChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelSettingBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
+import com.longx.intelligent.android.imessage.net.retrofit.caller.ChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.GroupChannelApiCaller;
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
+import com.longx.intelligent.android.imessage.util.UiUtil;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
 import java.util.List;
@@ -54,6 +63,8 @@ public class GroupChannelSettingActivity extends BaseActivity implements Content
         if(!groupChannel.getOwner().equals(SharedPreferencesAccessor.UserProfilePref.getCurrentUserProfile(this).getImessageId())){
             binding.clickViewGroupManage.setVisibility(View.GONE);
         }
+        GroupChannelCollectionItem oneGroupChannelCollection = GroupChannelDatabaseManager.getInstance().findOneGroupChannelCollection(groupChannel.getGroupChannelId());
+        binding.checkBoxCollect.setChecked(oneGroupChannelCollection != null && oneGroupChannelCollection.isActive());
     }
 
     private void setupYiers() {
@@ -94,6 +105,47 @@ public class GroupChannelSettingActivity extends BaseActivity implements Content
                             });
                         })
                         .create().show();
+            }
+        });
+        binding.clickViewCollect.setOnClickListener(v -> {
+            UiUtil.setViewGroupEnabled(binding.clickViewCollect, false, true);
+            if (!binding.checkBoxCollect.isChecked()) {
+                GroupChannelApiCaller.addGroupCollection(this, new AddGroupChannelCollectionPostBody(List.of(groupChannel.getGroupChannelId())),
+                        new RetrofitApiCaller.DelayedShowDialogCommonYier<>(this) {
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(GroupChannelSettingActivity
+                                        .this, new int[]{}, () -> {
+                                    binding.checkBoxCollect.setChecked(true);
+                                });
+                            }
+
+                            @Override
+                            public synchronized void complete(Call<OperationStatus> call) {
+                                super.complete(call);
+                                UiUtil.setViewGroupEnabled(binding.clickViewCollect, true, true);
+                            }
+                        });
+            } else {
+                String uuid = GroupChannelDatabaseManager.getInstance().findOneGroupChannelCollection(groupChannel.getGroupChannelId()).getUuid();
+                GroupChannelApiCaller.removeGroupCollection(this, new RemoveGroupChannelCollectionPostBody(List.of(uuid)),
+                        new RetrofitApiCaller.DelayedShowDialogCommonYier<>(this) {
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(GroupChannelSettingActivity
+                                        .this, new int[]{}, () -> {
+                                    binding.checkBoxCollect.setChecked(false);
+                                });
+                            }
+
+                            @Override
+                            public synchronized void complete(Call<OperationStatus> call) {
+                                super.complete(call);
+                                UiUtil.setViewGroupEnabled(binding.clickViewCollect, true, true);
+                            }
+                        });
             }
         });
     }
