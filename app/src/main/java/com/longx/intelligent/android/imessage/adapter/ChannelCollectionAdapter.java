@@ -1,5 +1,7 @@
 package com.longx.intelligent.android.imessage.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy.A_TO_Z;
 import static com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy.NEW_TO_OLD;
 import static com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy.OLD_TO_NEW;
@@ -35,6 +37,7 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
     private final ChannelCollectionActivity activity;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
     private final List<ItemData> itemDataList;
+    private SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy sortBy;
 
     public ChannelCollectionAdapter(ChannelCollectionActivity activity, List<ItemData> itemDataList) {
         this.activity = activity;
@@ -113,19 +116,23 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
                     .load(NetDataUrls.getAvatarUrl(activity, avatarHash))
                     .into(holder.binding.avatar);
         }
-        holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
-        int previousPosition = position - 1;
-        if(position == 0){
-            holder.binding.indexBar.setVisibility(View.VISIBLE);
-        } else {
-            ItemData previousItemData = itemDataList.get(previousPosition);
-            if (previousItemData.indexChar == itemData.indexChar) {
-                holder.binding.indexBar.setVisibility(View.GONE);
+        holder.binding.name.setText(itemData.channel.autoGetName());
+        if(sortBy != null && !sortBy.equals(A_TO_Z) && !sortBy.equals(Z_TO_A)){
+            holder.binding.indexBar.setVisibility(GONE);
+        }else {
+            holder.binding.indexBar.setText(String.valueOf(itemData.indexChar));
+            int previousPosition = position - 1;
+            if(position == 0){
+                holder.binding.indexBar.setVisibility(VISIBLE);
             } else {
-                holder.binding.indexBar.setVisibility(View.VISIBLE);
+                ItemData previousItemData = itemDataList.get(previousPosition);
+                if (previousItemData.indexChar == itemData.indexChar) {
+                    holder.binding.indexBar.setVisibility(GONE);
+                } else {
+                    holder.binding.indexBar.setVisibility(VISIBLE);
+                }
             }
         }
-        holder.binding.name.setText(itemData.channel.autoGetName());
         setupYiers(holder, position);
     }
 
@@ -170,6 +177,7 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
 
     @SuppressLint("NotifyDataSetChanged")
     public void sort(SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy sortBy){
+        this.sortBy = sortBy;
         switch (sortBy) {
             case CUSTOM -> {
 
