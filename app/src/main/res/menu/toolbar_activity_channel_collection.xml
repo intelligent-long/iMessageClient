@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add"
+        android:icon="@drawable/add_24px"
+        android:title="添加"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/sort"
+        android:icon="@drawable/swap_vert_24px"
+        android:title="排序"
+        app:iconTint="?android:attr/colorControlNormal"
+        app:showAsAction="always">
+        <menu>
+            <group
+                android:id="@+id/char_sorting_direction_group"
+                android:checkableBehavior="single"
+                android:visible="true">
+                <item
+                    android:id="@+id/sort_by_custom"
+                    android:title="自定义" />
+                <item
+                    android:id="@+id/new_to_old"
+                    android:title="从新到旧" />
+                <item
+                    android:id="@+id/old_to_new"
+                    android:title="从旧到新" />
+                <item
+                    android:id="@+id/a_to_z"
+                    android:title="A - Z" />
+                <item
+                    android:id="@+id/z_to_a"
+                    android:title="Z - A" />
+            </group>
+            <group>
+                <item
+                    android:id="@+id/custom_sort"
+                    android:title="排序" />
+            </group>
+        </menu>
+    </item>
+</menu>

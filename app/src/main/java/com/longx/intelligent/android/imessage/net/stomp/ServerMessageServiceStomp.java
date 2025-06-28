@@ -145,6 +145,9 @@ public class ServerMessageServiceStomp {
         });
         stomp.subscribe(StompDestinations.GROUP_CHANNEL_NOTIFICATIONS_NOT_VIEW_COUNT_UPDATE, null, message -> {
         });
+        stomp.subscribe(StompDestinations.CHANNEL_COLLECTIONS_UPDATE, null, message -> {
+            ServerMessageServiceStompActions.updateChannelCollections(context);
+        });
     }
 
     public static synchronized boolean isConnected(){

@@ -237,4 +237,9 @@ public class ServerMessageServiceStompActions {
             });
         });
     }
+
+    public static void updateChannelCollections(Context context){
+        ContentUpdater.updateChannelCollections(context, results -> {
+        });
+    }
 }

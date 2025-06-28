@@ -11,11 +11,13 @@ import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAcc
 import com.longx.intelligent.android.imessage.data.Avatar;
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
 import com.longx.intelligent.android.imessage.data.RecentBroadcastMedia;
 import com.longx.intelligent.android.imessage.data.Region;
 import com.longx.intelligent.android.imessage.util.DatabaseUtil;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -524,5 +526,106 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
     }
+
+    public boolean deleteAllChannelCollections() {
+        boolean isSuccess = true;
+        openDatabaseIfClosed();
+        try {
+            int rowsDeleted = getDatabase().delete(
+                    ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
+                    null,
+                    null
+            );
+            if (rowsDeleted == 0) {
+                isSuccess = false;
+            }
+        } catch (Exception e) {
+            ErrorLogger.log(e);
+            isSuccess = false;
+        } finally {
+            releaseDatabaseIfUnused();
+        }
+        return isSuccess;
+    }
+
+    public List<ChannelCollectionItem> findAllChannelCollections(){
+        List<ChannelCollectionItem> result = new ArrayList<>();
+        openDatabaseIfClosed();
+        try(Cursor cursor = getDatabase().query(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS, null, ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true", null, null, null, ChannelDatabaseHelper.TableCollectionsColumns.ORDER)){
+            while (cursor.moveToNext()){
+                String uuid = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableCollectionsColumns.UUID);
+                String owner = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableCollectionsColumns.OWNER);
+                String channelId = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableCollectionsColumns.CHANNEL_ID);
+                Date addTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableCollectionsColumns.ADD_TIME);
+                Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableCollectionsColumns.RAW_ORDER);
+                Boolean isActive = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE);
+                result.add(new ChannelCollectionItem(uuid, owner, channelId, addTime, order == null ? -1 : order, Boolean.TRUE.equals(isActive)));
+            }
+        }finally {
+            releaseDatabaseIfUnused();
+        }
+        return result;
+    }
+
+    public ChannelCollectionItem findOneChannelCollection(String channelId) {
+        ChannelCollectionItem result = null;
+        openDatabaseIfClosed();
+        try (Cursor cursor = getDatabase().query(
+                ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
+                null,
+                ChannelDatabaseHelper.TableCollectionsColumns.CHANNEL_ID + "=? AND " +
+                        ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true",
+                new String[]{channelId},
+                null, null, ChannelDatabaseHelper.TableCollectionsColumns.ORDER)) {
+
+            if (cursor.moveToFirst()) {
+                String uuid = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableCollectionsColumns.UUID);
+                String owner = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableCollectionsColumns.OWNER);
+                Date addTime = DatabaseUtil.getTime(cursor, ChannelDatabaseHelper.TableCollectionsColumns.ADD_TIME);
+                Integer order = DatabaseUtil.getInteger(cursor, ChannelDatabaseHelper.TableCollectionsColumns.RAW_ORDER);
+                Boolean isActive = DatabaseUtil.getBoolean(cursor, ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE);
+                result = new ChannelCollectionItem(
+                        uuid, owner, channelId, addTime, order == null ? -1 : order, Boolean.TRUE.equals(isActive)
+                );
+            }
+        } finally {
+            releaseDatabaseIfUnused();
+        }
+        return result;
+    }
+
+    public boolean updateChannelCollections(List<ChannelCollectionItem> channelCollectionItems) {
+        boolean isSuccess = true;
+        openDatabaseIfClosed();
+        try {
+            getDatabase().beginTransaction();
+            for (ChannelCollectionItem item : channelCollectionItems) {
+                ContentValues values = new ContentValues();
+                values.put(ChannelDatabaseHelper.TableCollectionsColumns.UUID, item.getUuid());
+                values.put(ChannelDatabaseHelper.TableCollectionsColumns.OWNER, item.getOwner());
+                values.put(ChannelDatabaseHelper.TableCollectionsColumns.CHANNEL_ID, item.getChannelId());
+                values.put(ChannelDatabaseHelper.TableCollectionsColumns.ADD_TIME, item.getAddTime().getTime());
+                values.put(ChannelDatabaseHelper.TableCollectionsColumns.ORDER, item.getOrder());
+                values.put(ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE, item.isActive());
+                long id = getDatabase().insertWithOnConflict(
+                        ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
+                        null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                if (id == -1) {
+                    isSuccess = false;
+                }
+            }
+            if(isSuccess) {
+                getDatabase().setTransactionSuccessful();
+            }
+        } catch (Exception e) {
+            ErrorLogger.log(e);
+            isSuccess = false;
+        } finally {
+            getDatabase().endTransaction();
+            releaseDatabaseIfUnused();
+        }
+        return isSuccess;
+    }
+
 
 }

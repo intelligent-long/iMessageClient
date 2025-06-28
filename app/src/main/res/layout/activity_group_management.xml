@@ -132,9 +132,9 @@
         app:iconTint="@color/negative_red"
         app:iconSize="24dp"
         app:iconGravity="textStart"
-        app:iconPadding="8dp"
+        app:iconPadding="10dp"
         android:text="解散群频道"
-        android:textSize="20sp"
+        android:textSize="19.14sp"
         android:textColor="@color/negative_red"
         android:backgroundTint="?attr/colorSurfaceContainer" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

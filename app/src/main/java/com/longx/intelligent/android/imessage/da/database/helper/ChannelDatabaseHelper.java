@@ -16,6 +16,7 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String TABLE_NAME_TAGS = "tags";
         public static final String TABLE_NAME_TAG_CHANNELS = "tag_channels";
         public static final String TABLE_NAME_RECENT_BROADCAST_MEDIAS = "recent_broadcast_medias";
+        public static final String TABLE_NAME_COLLECTIONS = "collections";
     }
 
     public static class TableChannelAssociationsColumns {
@@ -75,6 +76,16 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
         public static final String VIDEO_DURATION = "video_duration";
         public static final String INDEX = "`index`";
         public static final String RAW_INDEX = "index";
+    }
+
+    public static class TableCollectionsColumns {
+        public static final String UUID = "uuid";
+        public static final String OWNER = "owner";
+        public static final String CHANNEL_ID = "channel_id";
+        public static final String ADD_TIME = "add_time";
+        public static final String ORDER = "`order`";
+        public static final String RAW_ORDER = "order";
+        public static final String IS_ACTIVE = "is_active";
     }
 
     public ChannelDatabaseHelper(Context context, String imessageId) {
@@ -148,6 +159,18 @@ public class ChannelDatabaseHelper extends BaseDatabaseHelper{
                 + TableRecentBroadcastMedias.INDEX + " INTEGER"
                 + ");";
         db.execSQL(create_sql_5);
+        String create_sql_6 = "CREATE TABLE IF NOT EXISTS " + DatabaseInfo.TABLE_NAME_COLLECTIONS + "("
+                + TableCollectionsColumns.UUID + " VARCHAR,"
+                + TableCollectionsColumns.OWNER + " VARCHAR,"
+                + TableCollectionsColumns.CHANNEL_ID + " VARCHAR,"
+                + TableCollectionsColumns.ADD_TIME + " DATETIME,"
+                + TableCollectionsColumns.ORDER + " INTEGER,"
+                + TableCollectionsColumns.IS_ACTIVE + " BOOLEAN,"
+                + " CONSTRAINT con_unique1 UNIQUE("
+                + TableCollectionsColumns.UUID
+                +")"
+                + ");";
+        db.execSQL(create_sql_6);
         onUpgrade(db, DatabaseInfo.FIRST_VERSION, DatabaseInfo.DATABASE_VERSION);
     }
 

@@ -1,10 +1,12 @@
 package com.longx.intelligent.android.imessage.net.retrofit.api;
 
 import com.longx.intelligent.android.imessage.data.request.AcceptAddChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.DeleteChannelAssociationPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
@@ -83,4 +85,13 @@ public interface ChannelApi {
 
     @POST("channel/association/tag/channel/set")
     CompletableCall<OperationStatus> setChannelTags(@Body SetChannelTagsPostBody postBody);
+
+    @GET("channel/collection")
+    CompletableCall<OperationData> fetchAllCollections();
+
+    @POST("channel/collection/add")
+    CompletableCall<OperationStatus> addCollection(@Body AddChannelCollectionPostBody postBody);
+
+    @POST("channel/collection/remove")
+    CompletableCall<OperationStatus> removeCollection(@Body RemoveChannelCollectionPostBody postBody);
 }

@@ -44,6 +44,10 @@
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="34">
         <activity
+            android:name=".activity.ChannelCollectionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.GroupChannelNotificationsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -143,8 +147,8 @@
         <activity
             android:name=".activity.GroupChannelAdditionsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.GroupChannelsActivity"
             android:exported="false"

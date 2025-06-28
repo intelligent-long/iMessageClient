@@ -12,6 +12,7 @@ import com.longx.intelligent.android.imessage.data.Broadcast;
 import com.longx.intelligent.android.imessage.data.BroadcastMedia;
 import com.longx.intelligent.android.imessage.data.ChannelAdditionNotViewedCount;
 import com.longx.intelligent.android.imessage.data.ChannelAssociation;
+import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.ChatMessage;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
@@ -67,6 +68,7 @@ public class ContentUpdater {
         String ID_GROUP_CHANNEL_TAGS = "group_channel_tags";
         String ID_GROUP_CHANNEL_ADDITIONS_UNVIEWED_COUNT = "group_channel_additions_unviewed_count";
         String ID_GROUP_CHANNEL_NOTIFICATIONS = "group_channel_notifications";
+        String ID_CHANNEL_COLLECTIONS = "channel_collections";
 
         void onStartUpdate(String id, List<String> updatingIds, Object... objects);
 
@@ -387,20 +389,36 @@ public class ContentUpdater {
     }
 
     public static void updateGroupChannelNotifications(Context context, ResultsYier resultsYier){
-        GroupChannelApiCaller.fetchGroupChannelNotifications(null, new ContentUpdateApiYier<OperationData>(OnServerContentUpdateYier.ID_GROUP_CHANNEL_NOTIFICATIONS, context){
+        GroupChannelApiCaller.fetchGroupChannelNotifications(null, new ContentUpdateApiYier<>(OnServerContentUpdateYier.ID_GROUP_CHANNEL_NOTIFICATIONS, context) {
             @Override
             public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
                 super.ok(data, raw, call);
                 data.commonHandleSuccessResult(() -> {
-                    List<GroupChannelNotification> groupChannelNotifications = data.getData(new TypeReference<List<GroupChannelNotification>>() {
+                    List<GroupChannelNotification> groupChannelNotifications = data.getData(new TypeReference<>() {
                     });
                     int newsCount = 0;
                     for (GroupChannelNotification groupChannelNotification : groupChannelNotifications) {
-                        if(!groupChannelNotification.isViewed()) newsCount ++;
+                        if (!groupChannelNotification.isViewed()) newsCount++;
                     }
                     SharedPreferencesAccessor.NewContentCount.saveGroupChannelNotifications(context, newsCount);
                     GroupChannelDatabaseManager.getInstance().insertGroupChannelNotificationsOrUpdate(groupChannelNotifications);
                     resultsYier.onResults(newsCount);
+                });
+            }
+        });
+    }
+    
+    public static void updateChannelCollections(Context context, ResultsYier resultsYier){
+        ChannelApiCaller.fetchAllCollections(null, new ContentUpdateApiYier<>(OnServerContentUpdateYier.ID_CHANNEL_COLLECTIONS, context){
+            @Override
+            public void ok(OperationData data, Response<OperationData> raw, Call<OperationData> call) {
+                super.ok(data, raw, call);
+                data.commonHandleSuccessResult(() -> {
+                    List<ChannelCollectionItem> channelCollectionItems = data.getData(new TypeReference<>() {
+                    });
+                    ChannelDatabaseManager.getInstance().deleteAllChannelCollections();
+                    ChannelDatabaseManager.getInstance().updateChannelCollections(channelCollectionItems);
+                    resultsYier.onResults();
                 });
             }
         });

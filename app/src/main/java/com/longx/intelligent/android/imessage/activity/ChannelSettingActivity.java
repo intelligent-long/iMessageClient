@@ -7,9 +7,12 @@ import com.longx.intelligent.android.imessage.activity.helper.ActivityOperator;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.da.database.manager.ChannelDatabaseManager;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.ChatMessageAllow;
+import com.longx.intelligent.android.imessage.data.request.AddChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeAllowChatMessagePostBody;
 import com.longx.intelligent.android.imessage.data.request.DeleteChannelAssociationPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.databinding.ActivityChannelSettingBinding;
 import com.longx.intelligent.android.imessage.dialog.ConfirmDialog;
@@ -18,6 +21,8 @@ import com.longx.intelligent.android.imessage.net.retrofit.caller.PermissionApiC
 import com.longx.intelligent.android.imessage.net.retrofit.caller.RetrofitApiCaller;
 import com.longx.intelligent.android.imessage.util.UiUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,6 +48,8 @@ public class ChannelSettingActivity extends BaseActivity {
         ChatMessageAllow chatMessageAllowToMe = ChannelDatabaseManager.getInstance().findOneAssociation(channel.getImessageId()).getChatMessageAllowToMe();
         binding.switchVoiceMessage.setChecked(chatMessageAllowToMe.isAllowVoice());
         binding.switchNotice.setChecked(chatMessageAllowToMe.isAllowNotice());
+        ChannelCollectionItem oneChannelCollection = ChannelDatabaseManager.getInstance().findOneChannelCollection(channel.getImessageId());
+        binding.checkBoxCollect.setChecked(oneChannelCollection != null && oneChannelCollection.isActive());
     }
 
     private void setupYiers() {
@@ -51,7 +58,7 @@ public class ChannelSettingActivity extends BaseActivity {
             boolean changeTo = !binding.switchVoiceMessage.isChecked();
             boolean switchNoticeChecked = binding.switchNotice.isChecked();
             PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getImessageId(), new ChatMessageAllow(changeTo, switchNoticeChecked)),
-                    new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
+                    new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this) {
                         @Override
                         public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                             super.ok(data, raw, call);
@@ -73,7 +80,7 @@ public class ChannelSettingActivity extends BaseActivity {
             boolean switchVoiceMessageChecked = binding.switchVoiceMessage.isChecked();
             boolean changeTo = !binding.switchNotice.isChecked();
             PermissionApiCaller.changeAllowChatMessage(this, new ChangeAllowChatMessagePostBody(channel.getImessageId(), new ChatMessageAllow(switchVoiceMessageChecked, changeTo)),
-                    new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this){
+                    new RetrofitApiCaller.DelayedShowDialogCommonYier<OperationStatus>(this) {
                         @Override
                         public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                             super.ok(data, raw, call);
@@ -119,22 +126,63 @@ public class ChannelSettingActivity extends BaseActivity {
             intent.putExtra(ExtraKeys.IMESSAGE_ID, channel.getImessageId());
             startActivity(intent);
         });
+        binding.clickViewCollect.setOnClickListener(v -> {
+            UiUtil.setViewGroupEnabled(binding.clickViewCollect, false, true);
+            if (!binding.checkBoxCollect.isChecked()) {
+                ChannelApiCaller.addCollection(this, new AddChannelCollectionPostBody(List.of(channel.getImessageId())),
+                        new RetrofitApiCaller.DelayedShowDialogCommonYier<>(this) {
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(ChannelSettingActivity
+                                        .this, new int[]{}, () -> {
+                                    binding.checkBoxCollect.setChecked(true);
+                                });
+                            }
+
+                            @Override
+                            public synchronized void complete(Call<OperationStatus> call) {
+                                super.complete(call);
+                                UiUtil.setViewGroupEnabled(binding.clickViewCollect, true, true);
+                            }
+                        });
+            } else {
+                String uuid = ChannelDatabaseManager.getInstance().findOneChannelCollection(channel.getImessageId()).getUuid();
+                ChannelApiCaller.removeCollection(this, new RemoveChannelCollectionPostBody(List.of(uuid)),
+                        new RetrofitApiCaller.DelayedShowDialogCommonYier<>(this) {
+                            @Override
+                            public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
+                                super.ok(data, raw, call);
+                                data.commonHandleResult(ChannelSettingActivity
+                                        .this, new int[]{}, () -> {
+                                    binding.checkBoxCollect.setChecked(false);
+                                });
+                            }
+
+                            @Override
+                            public synchronized void complete(Call<OperationStatus> call) {
+                                super.complete(call);
+                                UiUtil.setViewGroupEnabled(binding.clickViewCollect, true, true);
+                            }
+                        });
+            }
+        });
     }
 
     private void deleteChannel() {
         DeleteChannelAssociationPostBody postBody = new DeleteChannelAssociationPostBody(channel.getImessageId());
-        ChannelApiCaller.deleteAssociatedChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this){
+        ChannelApiCaller.deleteAssociatedChannel(this, postBody, new RetrofitApiCaller.CommonYier<OperationStatus>(this) {
             @Override
             public void ok(OperationStatus data, Response<OperationStatus> raw, Call<OperationStatus> call) {
                 super.ok(data, raw, call);
                 data.commonHandleResult(getActivity(), new int[]{}, () -> {
                     ActivityOperator.getActivitiesOf(ChatActivity.class).forEach(chatActivity -> {
-                        if(chatActivity.getChannel().getImessageId().equals(channel.getImessageId())){
+                        if (chatActivity.getChannel().getImessageId().equals(channel.getImessageId())) {
                             chatActivity.finish();
                         }
                     });
                     ActivityOperator.getActivitiesOf(ChannelActivity.class).forEach(channelActivity -> {
-                        if(channelActivity.getChannel().getImessageId().equals(channel.getImessageId())){
+                        if (channelActivity.getChannel().getImessageId().equals(channel.getImessageId())) {
                             channelActivity.finish();
                         }
                     });

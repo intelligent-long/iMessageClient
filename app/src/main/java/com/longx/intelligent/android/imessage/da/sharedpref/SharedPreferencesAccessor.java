@@ -981,4 +981,36 @@ public class SharedPreferencesAccessor {
 
     }
 
+    public static class SortPref {
+        private static final String NAME = "sort";
+        private static class Key {
+            private static final String CHANNEL_COLLECTION_SORT_BY = "channel_collection_sort_by";
+            private static final String GROUP_CHANNEL_COLLECTION_SORT_BY = "group_channel_collection_sort_by";
+        }
+        
+        public static enum ChannelCollectionSortBy {
+            CUSTOM,
+            NEW_TO_OLD,
+            OLD_TO_NEW,
+            A_TO_Z,
+            Z_TO_A
+        }
+
+        private static SharedPreferences getSharedPreferences(Context context) {
+            return context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        }
+        
+        public static void saveChannelCollectionSortBy(Context context, ChannelCollectionSortBy sortBy){
+            getSharedPreferences(context)
+                    .edit()
+                    .putString(Key.CHANNEL_COLLECTION_SORT_BY, sortBy.name())
+                    .apply();
+        }
+
+        public static ChannelCollectionSortBy getChannelCollectionSortBy(Context context){
+            String name = getSharedPreferences(context).getString(Key.CHANNEL_COLLECTION_SORT_BY, ChannelCollectionSortBy.A_TO_Z.name());
+            return ChannelCollectionSortBy.valueOf(name);
+        }
+    }
+
 }

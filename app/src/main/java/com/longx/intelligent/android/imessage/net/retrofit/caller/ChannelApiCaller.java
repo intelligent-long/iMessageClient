@@ -3,10 +3,12 @@ package com.longx.intelligent.android.imessage.net.retrofit.caller;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.longx.intelligent.android.imessage.data.request.AcceptAddChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.AddChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddChannelTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.AddChannelsToTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.ChangeChannelTagNamePostBody;
 import com.longx.intelligent.android.imessage.data.request.DeleteChannelAssociationPostBody;
+import com.longx.intelligent.android.imessage.data.request.RemoveChannelCollectionPostBody;
 import com.longx.intelligent.android.imessage.data.request.RemoveChannelsOfTagPostBody;
 import com.longx.intelligent.android.imessage.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
@@ -16,6 +18,8 @@ import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
 import com.longx.intelligent.android.imessage.net.retrofit.api.ChannelApi;
 import com.xcheng.retrofit.CompletableCall;
+
+import retrofit2.http.Body;
 
 /**
  * Created by LONG on 2024/4/28 at 1:10 AM.
@@ -141,6 +145,24 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> setChannelTags(LifecycleOwner lifecycleOwner, SetChannelTagsPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().setChannelTags(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationData> fetchAllCollections(LifecycleOwner lifecycleOwner, BaseYier<OperationData> yier){
+        CompletableCall<OperationData> call = getApiImplementation().fetchAllCollections();
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> addCollection(LifecycleOwner lifecycleOwner, AddChannelCollectionPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().addCollection(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> removeCollection(LifecycleOwner lifecycleOwner, RemoveChannelCollectionPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().removeCollection(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

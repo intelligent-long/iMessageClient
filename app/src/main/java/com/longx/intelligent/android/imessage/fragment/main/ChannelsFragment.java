@@ -19,6 +19,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.ChannelActivity;
 import com.longx.intelligent.android.imessage.activity.ChannelAdditionsActivity;
+import com.longx.intelligent.android.imessage.activity.ChannelCollectionActivity;
 import com.longx.intelligent.android.imessage.activity.GroupChannelsActivity;
 import com.longx.intelligent.android.imessage.activity.ExtraKeys;
 import com.longx.intelligent.android.imessage.activity.InstanceStateKeys;
@@ -200,6 +201,9 @@ public class ChannelsFragment extends BaseMainFragment implements WrappableRecyc
                 startActivity(new Intent(requireContext(), SearchChannelActivity.class));
             }
             return false;
+        });
+        headerViewBinding.layoutFavorite.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), ChannelCollectionActivity.class));
         });
     }
 

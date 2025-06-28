@@ -104,7 +104,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         resetView(holder);
         if(activity.isPureContent()){
             UiUtil.setViewVisibility(holder.binding.topTranslucentOverlayWrap, View.GONE);

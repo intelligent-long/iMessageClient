@@ -1,6 +1,10 @@
 package com.longx.intelligent.android.imessage.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -134,6 +138,9 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         });
         headerViewBinding.layoutNotifications.setOnClickListener(v -> {
             startActivity(new Intent(this, GroupChannelNotificationsActivity.class));
+        });
+        headerViewBinding.layoutFavorite.setOnClickListener(v -> {
+
         });
     }
 
