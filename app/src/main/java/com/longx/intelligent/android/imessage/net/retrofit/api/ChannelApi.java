@@ -11,6 +11,7 @@ import com.longx.intelligent.android.imessage.data.request.RemoveChannelsOfTagPo
 import com.longx.intelligent.android.imessage.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
@@ -94,4 +95,7 @@ public interface ChannelApi {
 
     @POST("channel/collection/remove")
     CompletableCall<OperationStatus> removeCollection(@Body RemoveChannelCollectionPostBody postBody);
+
+    @POST("channel/collection/sort")
+    CompletableCall<OperationStatus> sortCollections(@Body SortTagsPostBody postBody);
 }

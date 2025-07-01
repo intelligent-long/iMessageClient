@@ -31,6 +31,8 @@ import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -40,8 +42,10 @@ import java.util.List;
 public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<ChannelCollectionAdapter.ViewHolder, ChannelCollectionAdapter.ItemData> {
     private final ChannelCollectionActivity activity;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
-    private final List<ItemData> itemDataList;
+    private List<ItemData> itemDataList;
     private SharedPreferencesAccessor.SortPref.ChannelCollectionSortBy sortBy;
+    private List<ItemData> pastItemDatas;
+    private boolean dragSortState;
 
     public ChannelCollectionAdapter(ChannelCollectionActivity activity, List<ItemData> itemDataList) {
         this.activity = activity;
@@ -54,9 +58,10 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
         private final char indexChar;
         private final Channel channel;
         private final Date addedAt;
-        private final int order;
+        private int order;
+        private final String uuid;
 
-        public ItemData(Channel channel, Date addedAt, int order) {
+        public ItemData(Channel channel, Date addedAt, int order, String uuid) {
             this.channel = channel;
             this.addedAt = addedAt;
             String name = channel.autoGetName();
@@ -68,6 +73,7 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
                 indexChar = '#';
             }
             this.order = order;
+            this.uuid = uuid;
         }
 
         public String getFullPinyin() {
@@ -84,6 +90,14 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
 
         public Date getAddedAt() {
             return addedAt;
+        }
+
+        public int getOrder() {
+            return order;
+        }
+
+        public String getUuid() {
+            return uuid;
         }
     }
 
@@ -138,6 +152,11 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
                     holder.binding.indexBar.setVisibility(VISIBLE);
                 }
             }
+        }
+        if(dragSortState) {
+            holder.binding.dragHandle.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.dragHandle.setVisibility(View.GONE);
         }
         setupYiers(holder, position);
     }
@@ -226,5 +245,49 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
             }
         }
         notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void switchDragSortState(boolean dragSortState) {
+        this.dragSortState = dragSortState;
+        notifyDataSetChanged();
+    }
+
+    public boolean isDragSortState() {
+        return dragSortState;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void moveAndShow(int from, int to){
+        if(pastItemDatas == null) {
+            pastItemDatas = new ArrayList<>(itemDataList);
+        }
+        if (from < to) {
+            if(to == itemDataList.size()) to --;
+            for (int i = from; i < to; i++) {
+                Collections.swap(itemDataList, i, i + 1);
+            }
+        } else {
+            for (int i = from; i > to; i--) {
+                Collections.swap(itemDataList, i, i - 1);
+            }
+        }
+        for (int i = 0; i < itemDataList.size(); i++) {
+            itemDataList.get(i).order = itemDataList.size() - 1 - i;
+        }
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void cancelMoveAndShow(){
+        if(pastItemDatas != null) {
+            itemDataList = new ArrayList<>(pastItemDatas);
+            pastItemDatas = null;
+            notifyDataSetChanged();
+        }
+    }
+
+    public List<ItemData> getItemDataList() {
+        return itemDataList;
     }
 }

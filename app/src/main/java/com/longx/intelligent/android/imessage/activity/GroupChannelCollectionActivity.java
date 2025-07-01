@@ -279,7 +279,6 @@ public class GroupChannelCollectionActivity extends BaseActivity implements Cont
                 });
             }
         });
-
     }
 
     private void updateSort() {

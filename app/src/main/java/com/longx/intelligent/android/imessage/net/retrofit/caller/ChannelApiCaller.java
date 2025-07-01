@@ -13,6 +13,7 @@ import com.longx.intelligent.android.imessage.data.request.RemoveChannelsOfTagPo
 import com.longx.intelligent.android.imessage.data.request.RequestAddChannelPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetChannelTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SetNoteToAssociatedChannelPostBody;
+import com.longx.intelligent.android.imessage.data.request.SortGroupTagsPostBody;
 import com.longx.intelligent.android.imessage.data.request.SortTagsPostBody;
 import com.longx.intelligent.android.imessage.data.response.OperationData;
 import com.longx.intelligent.android.imessage.data.response.OperationStatus;
@@ -163,6 +164,12 @@ public class ChannelApiCaller extends RetrofitApiCaller{
 
     public static CompletableCall<OperationStatus> removeCollection(LifecycleOwner lifecycleOwner, RemoveChannelCollectionPostBody postBody, BaseYier<OperationStatus> yier){
         CompletableCall<OperationStatus> call = getApiImplementation().removeCollection(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
+
+    public static CompletableCall<OperationStatus> sortCollections(LifecycleOwner lifecycleOwner, SortTagsPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().sortCollections(postBody);
         call.enqueue(lifecycleOwner, yier);
         return call;
     }

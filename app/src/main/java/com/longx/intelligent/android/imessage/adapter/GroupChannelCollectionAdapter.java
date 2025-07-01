@@ -59,7 +59,7 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
         private final GroupChannel groupChannel;
         private final Date addedAt;
         private int order;
-        private String uuid;
+        private final String uuid;
 
         public ItemData(GroupChannel groupChannel, Date addedAt, int order, String uuid) {
             this.groupChannel = groupChannel;
@@ -246,7 +246,6 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
         }
         notifyDataSetChanged();
     }
-
 
     @SuppressLint("NotifyDataSetChanged")
     public void switchDragSortState(boolean dragSortState) {

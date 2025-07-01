@@ -6,6 +6,7 @@
         android:id="@+id/cancel_sort"
         android:title="取消"
         app:showAsAction="always"
+        android:icon="@drawable/close_24px"
         android:visible="false"/>
 
     <item
