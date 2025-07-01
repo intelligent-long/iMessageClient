@@ -42,4 +42,19 @@
             </group>
         </menu>
     </item>
+
+    <item
+        android:id="@+id/cancel_sort"
+        android:icon="@drawable/close_24px"
+        android:visible="false"
+        android:title="取消排序"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/apply_sort"
+        android:icon="@drawable/check_24px"
+        android:visible="false"
+        android:title="应用排序"
+        app:showAsAction="always"/>
+
 </menu>

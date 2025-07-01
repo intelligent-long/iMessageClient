@@ -86,6 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/drag_handle_24px"/>
+            android:src="@drawable/menu_24px"/>
     </RelativeLayout>
 </com.aitsuki.swipe.SwipeLayout>

@@ -153,5 +153,7 @@ public interface GroupChannelApi {
     @POST("group_channel/collection/remove")
     CompletableCall<OperationStatus> removeGroupCollection(@Body RemoveGroupChannelCollectionPostBody postBody);
 
+    @POST("group_channel/collection/sort")
+    CompletableCall<OperationStatus> sortGroupCollections(@Body SortGroupTagsPostBody postBody);
 
 }

@@ -7,6 +7,7 @@ import static com.longx.intelligent.android.imessage.da.sharedpref.SharedPrefere
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.longx.intelligent.android.imessage.activity.GroupChannelActivity;
 import com.longx.intelligent.android.imessage.activity.GroupChannelCollectionActivity;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
 import com.longx.intelligent.android.imessage.data.Channel;
+import com.longx.intelligent.android.imessage.data.ChannelTag;
 import com.longx.intelligent.android.imessage.data.GroupChannel;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemChannelCollectionBinding;
 import com.longx.intelligent.android.imessage.databinding.RecyclerItemGroupChannelCollectionBinding;
@@ -29,6 +31,8 @@ import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -38,8 +42,10 @@ import java.util.List;
 public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<GroupChannelCollectionAdapter.ViewHolder, GroupChannelCollectionAdapter.ItemData> {
     private final GroupChannelCollectionActivity activity;
     private final com.longx.intelligent.android.lib.recyclerview.RecyclerView recyclerView;
-    private final List<ItemData> itemDataList;
+    private List<ItemData> itemDataList;
     private SharedPreferencesAccessor.SortPref.GroupChannelCollectionSortBy sortBy;
+    private List<ItemData> pastItemDatas;
+    private boolean dragSortState;
 
     public GroupChannelCollectionAdapter(GroupChannelCollectionActivity activity, List<ItemData> itemDataList) {
         this.activity = activity;
@@ -52,8 +58,10 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
         private final char indexChar;
         private final GroupChannel groupChannel;
         private final Date addedAt;
+        private int order;
+        private String uuid;
 
-        public ItemData(GroupChannel groupChannel, Date addedAt) {
+        public ItemData(GroupChannel groupChannel, Date addedAt, int order, String uuid) {
             this.groupChannel = groupChannel;
             this.addedAt = addedAt;
             String name = groupChannel.autoGetName();
@@ -64,6 +72,8 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
             } else {
                 indexChar = '#';
             }
+            this.order = order;
+            this.uuid = uuid;
         }
 
         public String getFullPinyin() {
@@ -80,6 +90,14 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
 
         public Date getAddedAt() {
             return addedAt;
+        }
+
+        public int getOrder() {
+            return order;
+        }
+
+        public String getUuid() {
+            return uuid;
         }
     }
 
@@ -135,6 +153,11 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
                 }
             }
         }
+        if(dragSortState) {
+            holder.binding.dragHandle.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.dragHandle.setVisibility(View.GONE);
+        }
         setupYiers(holder, position);
     }
 
@@ -184,7 +207,7 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
         this.sortBy = sortBy;
         switch (sortBy) {
             case CUSTOM -> {
-
+                itemDataList.sort((o1, o2) -> Integer.compare(o2.order, o1.order));
             }
             case NEW_TO_OLD -> {
                 itemDataList.sort((o1, o2) -> {
@@ -222,5 +245,50 @@ public class GroupChannelCollectionAdapter extends WrappableRecyclerViewAdapter<
             }
         }
         notifyDataSetChanged();
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void switchDragSortState(boolean dragSortState) {
+        this.dragSortState = dragSortState;
+        notifyDataSetChanged();
+    }
+
+    public boolean isDragSortState() {
+        return dragSortState;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void moveAndShow(int from, int to){
+        if(pastItemDatas == null) {
+            pastItemDatas = new ArrayList<>(itemDataList);
+        }
+        if (from < to) {
+            if(to == itemDataList.size()) to --;
+            for (int i = from; i < to; i++) {
+                Collections.swap(itemDataList, i, i + 1);
+            }
+        } else {
+            for (int i = from; i > to; i--) {
+                Collections.swap(itemDataList, i, i - 1);
+            }
+        }
+        for (int i = 0; i < itemDataList.size(); i++) {
+            itemDataList.get(i).order = itemDataList.size() - 1 - i;
+        }
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void cancelMoveAndShow(){
+        if(pastItemDatas != null) {
+            itemDataList = new ArrayList<>(pastItemDatas);
+            pastItemDatas = null;
+            notifyDataSetChanged();
+        }
+    }
+
+    public List<ItemData> getItemDataList() {
+        return itemDataList;
     }
 }

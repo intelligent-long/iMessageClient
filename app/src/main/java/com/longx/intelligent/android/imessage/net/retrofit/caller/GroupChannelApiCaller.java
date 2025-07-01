@@ -267,4 +267,10 @@ public class GroupChannelApiCaller extends RetrofitApiCaller {
         call.enqueue(lifecycleOwner, yier);
         return call;
     }
+
+    public static CompletableCall<OperationStatus> sortGroupCollections(LifecycleOwner lifecycleOwner, SortGroupTagsPostBody postBody, BaseYier<OperationStatus> yier){
+        CompletableCall<OperationStatus> call = getApiImplementation().sortGroupCollections(postBody);
+        call.enqueue(lifecycleOwner, yier);
+        return call;
+    }
 }

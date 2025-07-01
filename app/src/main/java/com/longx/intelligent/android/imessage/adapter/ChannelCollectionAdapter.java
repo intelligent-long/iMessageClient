@@ -27,6 +27,7 @@ import com.longx.intelligent.android.imessage.dialog.FastLocateDialog;
 import com.longx.intelligent.android.imessage.fragment.main.ChannelsFragment;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.util.PinyinUtil;
 import com.longx.intelligent.android.lib.recyclerview.WrappableRecyclerViewAdapter;
 
@@ -53,8 +54,9 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
         private final char indexChar;
         private final Channel channel;
         private final Date addedAt;
+        private final int order;
 
-        public ItemData(Channel channel, Date addedAt) {
+        public ItemData(Channel channel, Date addedAt, int order) {
             this.channel = channel;
             this.addedAt = addedAt;
             String name = channel.autoGetName();
@@ -65,6 +67,7 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
             } else {
                 indexChar = '#';
             }
+            this.order = order;
         }
 
         public String getFullPinyin() {
@@ -185,7 +188,7 @@ public class ChannelCollectionAdapter extends WrappableRecyclerViewAdapter<Chann
         this.sortBy = sortBy;
         switch (sortBy) {
             case CUSTOM -> {
-
+                itemDataList.sort((o1, o2) -> Integer.compare(o2.order, o1.order));
             }
             case NEW_TO_OLD -> {
                 itemDataList.sort((o1, o2) -> {

@@ -118,7 +118,7 @@ public class ChannelCollectionActivity extends BaseActivity implements ContentUp
         List<ChannelCollectionAdapter.ItemData> itemDataList = new ArrayList<>();
         for (ChannelCollectionItem channelCollectionItem : allChannelCollections) {
             Channel channel = ChannelDatabaseManager.getInstance().findOneChannel(channelCollectionItem.getChannelId());
-            itemDataList.add(new ChannelCollectionAdapter.ItemData(channel, channelCollectionItem.getAddTime()));
+            itemDataList.add(new ChannelCollectionAdapter.ItemData(channel, channelCollectionItem.getAddTime(), channelCollectionItem.getOrder()));
         }
         adapter = new ChannelCollectionAdapter(this, itemDataList);
         updateSort();
