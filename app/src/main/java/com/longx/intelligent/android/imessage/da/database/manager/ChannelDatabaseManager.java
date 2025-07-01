@@ -551,7 +551,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
     public List<ChannelCollectionItem> findAllChannelCollections(){
         List<ChannelCollectionItem> result = new ArrayList<>();
         openDatabaseIfClosed();
-        try(Cursor cursor = getDatabase().query(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS, null, ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true", null, null, null, ChannelDatabaseHelper.TableCollectionsColumns.ORDER)){
+        try(Cursor cursor = getDatabase().query(ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS, null, ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=1", null, null, null, ChannelDatabaseHelper.TableCollectionsColumns.ORDER)){
             while (cursor.moveToNext()){
                 String uuid = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableCollectionsColumns.UUID);
                 String owner = DatabaseUtil.getString(cursor, ChannelDatabaseHelper.TableCollectionsColumns.OWNER);
@@ -574,7 +574,7 @@ public class ChannelDatabaseManager extends BaseDatabaseManager{
                 ChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
                 null,
                 ChannelDatabaseHelper.TableCollectionsColumns.CHANNEL_ID + "=? AND " +
-                        ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true",
+                        ChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=1",
                 new String[]{channelId},
                 null, null, ChannelDatabaseHelper.TableCollectionsColumns.ORDER)) {
 

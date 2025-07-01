@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.longx.intelligent.android.imessage.da.database.helper.ChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.database.helper.GroupChannelDatabaseHelper;
 import com.longx.intelligent.android.imessage.da.sharedpref.SharedPreferencesAccessor;
+import com.longx.intelligent.android.imessage.data.Avatar;
 import com.longx.intelligent.android.imessage.data.Channel;
 import com.longx.intelligent.android.imessage.data.ChannelCollectionItem;
 import com.longx.intelligent.android.imessage.data.GroupAvatar;
@@ -500,7 +501,7 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
     public List<GroupChannelCollectionItem> findAllGroupChannelCollections(){
         List<GroupChannelCollectionItem> result = new ArrayList<>();
         openDatabaseIfClosed();
-        try(Cursor cursor = getDatabase().query(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS, null, GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true", null, null, null, GroupChannelDatabaseHelper.TableCollectionsColumns.ORDER)){
+        try(Cursor cursor = getDatabase().query(GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS, null, GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=1", null, null, null, GroupChannelDatabaseHelper.TableCollectionsColumns.ORDER)){
             while (cursor.moveToNext()){
                 String uuid = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.UUID);
                 String owner = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableCollectionsColumns.OWNER);
@@ -523,7 +524,7 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
                 GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_COLLECTIONS,
                 null,
                 GroupChannelDatabaseHelper.TableCollectionsColumns.GROUP_CHANNEL_ID + "=? AND " +
-                        GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=true",
+                        GroupChannelDatabaseHelper.TableCollectionsColumns.IS_ACTIVE + "=1",
                 new String[]{groupChannelId},
                 null, null, GroupChannelDatabaseHelper.TableCollectionsColumns.ORDER)) {
 
@@ -574,5 +575,62 @@ public class GroupChannelDatabaseManager extends BaseDatabaseManager{
             releaseDatabaseIfUnused();
         }
         return isSuccess;
+    }
+
+    public List<GroupChannel> search(String str){
+        openDatabaseIfClosed();
+        String sql = "SELECT * FROM " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNELS + " ca " +
+                "LEFT JOIN " + GroupChannelDatabaseHelper.DatabaseInfo.TABLE_NAME_GROUP_CHANNEL_ASSOCIATIONS + " gca ON " +
+                "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID + " = gca." + GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.GROUP_CHANNEL_ID + " " +
+                "WHERE ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER + " LIKE \"%" + str + "%\" OR " +
+                "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME + " LIKE \"%" + str + "%\" OR " +
+                "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE + " LIKE \"%" + str + "%\" OR " +
+                "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_NAME + " LIKE \"%" + str + "%\" OR " +
+                "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_NAME + " LIKE \"%" + str + "%\" OR " +
+                "ca." + GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_NAME + " LIKE \"%" + str + "%\"";
+        try(Cursor cursor = getDatabase().rawQuery(sql, null)) {
+            List<GroupChannel> result = new ArrayList<>();
+            while (cursor.moveToNext()){
+                String groupChannelId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID);
+                String groupChannelIdUser = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_CHANNEL_ID_USER);
+                String owner = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.OWNER);
+                String name = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NAME);
+                String note = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.NOTE);
+                Long createTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.CREATE_TIME);
+                Integer firstRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_ADCODE);
+                String firstRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.FIRST_REGION_NAME);
+                Integer secondRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_ADCODE);
+                String secondRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.SECOND_REGION_NAME);
+                Integer thirdRegionAdcode = DatabaseUtil.getInteger(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_ADCODE);
+                String thirdRegionName = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.THIRD_REGION_NAME);
+                String avatarHash = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.AVATAR_HASH);
+                Boolean joinVerification = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.GROUP_JOIN_VERIFICATION);
+                String avatarHash1 = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableAvatarsColumns.AVATAR_HASH);
+                String groupChannelId1 = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableAvatarsColumns.GROUP_CHANNEL_ID);
+                String avatarExtension = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableAvatarsColumns.EXTENSION);
+                Long avatarTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableAvatarsColumns.TIME);
+                Boolean isTerminated = DatabaseUtil.getBoolean(cursor, GroupChannelDatabaseHelper.TableGroupChannelsColumns.IS_TERMINATED);
+                GroupChannel groupChannel = new GroupChannel(new GroupAvatar(avatarHash1, groupChannelId1, avatarExtension, avatarTime == null ? null : new Date(avatarTime)), groupChannelId, groupChannelIdUser, owner, name, note, createTime == null ? null : new Date(createTime), new Region(firstRegionAdcode, firstRegionName), new Region(secondRegionAdcode, secondRegionName), new Region(thirdRegionAdcode, thirdRegionName), avatarHash, joinVerification, Boolean.TRUE.equals(isTerminated));
+                String associationId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ASSOCIATION_ID);
+                String channelImessageId = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.CHANNEL_IMESSAGE_ID);
+                String requester = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.REQUESTER_CHANNEL_IMESSAGE_ID);
+                String requesterMessage = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.REQUESTER_MESSAGE);
+                Long requesterTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.REQUESTER_TIME);
+                Long acceptTime = DatabaseUtil.getLong(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.ACCEPT_TIME);
+                String inviteUuid = DatabaseUtil.getString(cursor, GroupChannelDatabaseHelper.TableGroupChannelAssociationsColumns.INVITE_UUID);
+                Channel requesterChannel = ChannelDatabaseManager.getInstance().findOneChannel(requester);
+                GroupChannelAssociation groupChannelAssociation = new GroupChannelAssociation(associationId, groupChannelId, channelImessageId, requesterChannel, requesterMessage, requesterTime == null ? null : new Date(requesterTime), acceptTime == null ? null : new Date(acceptTime), inviteUuid);
+                int index = result.indexOf(groupChannel);
+                if(index >= 0){
+                    result.get(index).addGroupChannelAssociation(groupChannelAssociation);
+                }else {
+                    groupChannel.addGroupChannelAssociation(groupChannelAssociation);
+                    result.add(groupChannel);
+                }
+            }
+            return result;
+        }finally {
+            releaseDatabaseIfUnused();
+        }
     }
 }

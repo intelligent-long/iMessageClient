@@ -12,7 +12,12 @@ public class DatabaseUtil {
 
     @SuppressLint("Range")
     public static String getString(Cursor cursor, String columnName){
-        return cursor.getString(cursor.getColumnIndex(columnName));
+        int columnIndex = cursor.getColumnIndex(columnName);
+        if (cursor.isNull(columnIndex)) {
+            return null;
+        } else {
+            return cursor.getString(columnIndex);
+        }
     }
 
     @SuppressLint("Range")

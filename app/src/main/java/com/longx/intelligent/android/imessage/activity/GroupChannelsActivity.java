@@ -7,11 +7,14 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.longx.intelligent.android.imessage.R;
 import com.longx.intelligent.android.imessage.activity.helper.BaseActivity;
 import com.longx.intelligent.android.imessage.adapter.GroupChannelsRecyclerAdapter;
 import com.longx.intelligent.android.imessage.behaviorcomponents.ContentUpdater;
@@ -141,6 +144,12 @@ public class GroupChannelsActivity extends BaseActivity implements ContentUpdate
         });
         headerViewBinding.layoutFavorite.setOnClickListener(v -> {
             startActivity(new Intent(this, GroupChannelCollectionActivity.class));
+        });
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.search){
+                startActivity(new Intent(GroupChannelsActivity.this, SearchGroupChannelActivity.class));
+            }
+            return true;
         });
     }
 

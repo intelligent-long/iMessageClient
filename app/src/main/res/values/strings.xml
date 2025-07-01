@@ -105,6 +105,7 @@
     <string name="title_forward">转发</string>
     <string name="title_search_channel">搜索频道</string>
     <string name="title_search_chat_message">搜索消息</string>
+    <string name="title_search_group_channel">搜索群频道</string>
     <string name="title_version">版本</string>
     <string name="do_not_find_channel">没有找到频道</string>
     <string name="need_central_server">需要使用中央服务器</string>

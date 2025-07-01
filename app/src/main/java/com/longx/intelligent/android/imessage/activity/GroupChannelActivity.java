@@ -25,6 +25,7 @@ import com.longx.intelligent.android.imessage.databinding.ActivityGroupChannelBi
 import com.longx.intelligent.android.imessage.data.AvatarType;
 import com.longx.intelligent.android.imessage.net.dataurl.NetDataUrls;
 import com.longx.intelligent.android.imessage.ui.glide.GlideApp;
+import com.longx.intelligent.android.imessage.util.ErrorLogger;
 import com.longx.intelligent.android.imessage.yier.CopyTextOnLongClickYier;
 import com.longx.intelligent.android.imessage.yier.GlobalYiersHolder;
 
@@ -76,11 +77,14 @@ public class GroupChannelActivity extends BaseActivity implements ContentUpdater
         if(groupChannel.getOwner().equals(currentUserImessageId)){
             isOwner = true;
         }
-        for (GroupChannelAssociation groupChannelAssociation : groupChannel.getGroupChannelAssociations()) {
-            if(groupChannelAssociation.getRequester().getImessageId().equals(currentUserImessageId)){
-                inGroup = true;
-                break;
+        try {
+            for (GroupChannelAssociation groupChannelAssociation : groupChannel.getGroupChannelAssociations()) {
+                if (groupChannelAssociation.getRequester().getImessageId().equals(currentUserImessageId)) {
+                    inGroup = true;
+                    break;
+                }
             }
+        } catch (Exception ignore) {
         }
         networkFetch = getIntent().getBooleanExtra(ExtraKeys.MAY_NOT_ASSOCIATED, false);
         inviteUuid = getIntent().getStringExtra(ExtraKeys.INVITE_UUID);
