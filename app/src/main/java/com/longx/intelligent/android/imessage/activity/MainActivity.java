@@ -204,7 +204,8 @@ public class MainActivity extends BaseActivity implements ContentUpdater.OnServe
         new PermissionOperator(this, toRequestPermissionsList,
                 new PermissionOperator.ShowCommonMessagePermissionResultCallback(this))
                 .startRequestPermissions(this);
-        if (!SpecialPermissionOperator.isExternalStorageManager()) {
+        Boolean isExternalStorageManager = SpecialPermissionOperator.isExternalStorageManager();
+        if (isExternalStorageManager != null && !isExternalStorageManager) {
             MessageDisplayer.showToast(this, "请允许本应用的所有文件访问权限", Toast.LENGTH_LONG);
             boolean success = SpecialPermissionOperator.requestManageExternalStorage(this);
             if(!success){

@@ -40,11 +40,11 @@ public class SpecialPermissionOperator {
         }
     }
 
-    public static boolean isExternalStorageManager(){
+    public static Boolean isExternalStorageManager(){
         if (PermissionRequirementChecker.needManageExternalStoragePermission()) {
             return Environment.isExternalStorageManager();
         }else {
-            return false;
+            return null;
         }
     }
 
