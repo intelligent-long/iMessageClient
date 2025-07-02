@@ -2,6 +2,7 @@ package com.longx.intelligent.android.imessage.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -245,6 +246,12 @@ public class WindowAndSystemUiUtil {
         if(decorView.getSystemUiVisibility() != systemUiVisibility) {
             decorView.setSystemUiVisibility(systemUiVisibility);
         }
+    }
+
+    public static boolean isDarkMode(Context context) {
+        int nightModeFlags =
+                context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
     }
 
 }
